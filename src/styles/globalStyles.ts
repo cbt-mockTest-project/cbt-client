@@ -81,6 +81,9 @@ const Globalstyles = createGlobalStyle`
     -ms-user-select: none;
     user-select: none;
   }
+  .ml-auto {
+    margin-left : auto;
+  }
 `;
 
 export default Globalstyles;
