@@ -22,6 +22,6 @@ const LayoutContainer = styled.div`
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    width: 1280px;
+    max-width: 1280px;
   }
 `;
