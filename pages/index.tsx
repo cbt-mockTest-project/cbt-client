@@ -1,9 +1,7 @@
-import Layout from '@components/layout/Layout';
+import React from 'react';
 
-export default function Home() {
-  return (
-    <Layout>
-      <div>main</div>
-    </Layout>
-  );
-}
+const Home = () => {
+  return <div>Home</div>;
+};
+
+export default Home;
