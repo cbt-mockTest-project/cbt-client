@@ -2,14 +2,23 @@ import palette from '@styles/palette';
 import { Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import LoginForm from '@components/common/modal/LoginForm';
+import Modal from '@components/common/modal/Modal';
+import { useReactiveVar } from '@apollo/client';
+import { authTokenVar } from '@modules/apollo';
 
 const Nav = () => {
+  const authToken = useReactiveVar(authTokenVar);
   const { pathname } = useRouter();
+  const [modalVisible, setModalVisible] = useState(false);
   const isHome = pathname === '/';
   const isCommunity = pathname === '/community';
   const isRegister = pathname.includes('/register');
+  const openLoginModal = () => setModalVisible(true);
+  const closeLoginModal = () => setModalVisible(false);
+
   const navItems = [
     {
       key: '/',
@@ -23,39 +32,56 @@ const Nav = () => {
     },
   ];
   return (
-    <NavContainer>
-      <div className="nav-contents-wrapper">
-        <Link href="/">
-          <span className="nav-home-link-text">실기CBT</span>
-        </Link>
-        {navItems.map((item) => {
-          return (
-            <Link href={item.key} key={item.key}>
-              <span
-                className={`nav-item-link-text ${item.selected && 'selected'}`}
-              >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-        <Link href="/register/confirm">
-          <span
-            className={`nav-item-link-text ml-auto ${isRegister && 'selected'}`}
-          >
-            회원가입
-          </span>
-        </Link>
-        <Button>로그인</Button>
-      </div>
-    </NavContainer>
+    <>
+      <NavContainer>
+        <div className="nav-contents-wrapper">
+          <Link href="/">
+            <span className="nav-home-link-text">실기CBT</span>
+          </Link>
+          {navItems.map((item) => {
+            return (
+              <Link href={item.key} key={item.key}>
+                <span
+                  className={`nav-item-link-text ${
+                    item.selected && 'selected'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+          {authToken ? (
+            <p className="nav-user-content ml-auto">안녕하세요</p>
+          ) : (
+            <>
+              <Link href="/register/confirm">
+                <span
+                  className={`nav-item-link-text ml-auto ${
+                    isRegister && 'selected'
+                  }`}
+                >
+                  회원가입
+                </span>
+              </Link>
+              <Button onClick={openLoginModal} htmlType="button">
+                로그인
+              </Button>
+            </>
+          )}
+        </div>
+      </NavContainer>
+      <Modal open={modalVisible} onClose={closeLoginModal}>
+        <LoginForm />
+      </Modal>
+    </>
   );
 };
 
 export default Nav;
 
 const NavContainer = styled.div`
-  padding: 25px 0;
+  padding: 25px 0px;
   height: 60px;
   border-bottom: 1.5px solid ${palette.gray_200};
   display: flex;
@@ -73,6 +99,7 @@ const NavContainer = styled.div`
   .nav-home-link-text {
     font-size: 1.5rem;
     font-weight: bold;
+    cursor: pointer;
   }
   .nav-item-link-text,
   .nav-register-link-text {

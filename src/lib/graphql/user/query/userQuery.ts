@@ -27,3 +27,21 @@ export const EMAIL_VERIFICATION_MUTATION = gql`
     }
   }
 `;
+
+export const LOGIN_MUTATION = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      error
+      ok
+      token
+    }
+  }
+`;
+
+export const ME_QUERY = gql`
+  query Me {
+    me {
+      nickname
+    }
+  }
+`;
