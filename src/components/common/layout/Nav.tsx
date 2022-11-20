@@ -9,7 +9,7 @@ const Nav = () => {
   const { pathname } = useRouter();
   const isHome = pathname === '/';
   const isCommunity = pathname === '/community';
-  const isRegister = pathname === '/register';
+  const isRegister = pathname.includes('/register');
   const navItems = [
     {
       key: '/',
@@ -39,7 +39,7 @@ const Nav = () => {
             </Link>
           );
         })}
-        <Link href="/register">
+        <Link href="/register/confirm">
           <span
             className={`nav-item-link-text ml-auto ${isRegister && 'selected'}`}
           >
