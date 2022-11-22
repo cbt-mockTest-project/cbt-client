@@ -11,3 +11,13 @@ export const READ_EXAM_CATEGORIES_QUERY = gql`
     }
   }
 `;
+
+export const READ_EXAM_TITLES_QUERY = gql`
+  query ReadMockExamTitlesByCateory($input: ReadMockExamTitlesByCateoryInput!) {
+    readMockExamTitlesByCateory(input: $input) {
+      titles
+      ok
+      error
+    }
+  }
+`;

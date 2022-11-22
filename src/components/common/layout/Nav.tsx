@@ -6,11 +6,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LoginForm from '@components/common/modal/LoginForm';
 import Modal from '@components/common/modal/Modal';
-import { useReactiveVar } from '@apollo/client';
-import { authTokenVar } from '@modules/apollo';
 
 const Nav = () => {
-  const authToken = useReactiveVar(authTokenVar);
   const { pathname } = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
   const isHome = pathname === '/';
@@ -18,7 +15,6 @@ const Nav = () => {
   const isRegister = pathname.includes('/register');
   const openLoginModal = () => setModalVisible(true);
   const closeLoginModal = () => setModalVisible(false);
-
   const navItems = [
     {
       key: '/',
@@ -51,7 +47,7 @@ const Nav = () => {
               </Link>
             );
           })}
-          {authToken ? (
+          {false ? (
             <p className="nav-user-content ml-auto">안녕하세요</p>
           ) : (
             <>
