@@ -7,7 +7,7 @@ import { useApollo } from '@modules/apollo';
 import CoreContainer from '@components/common/core/CoreContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const client = useApollo(pageProps);
+  const client = useApollo({}, '');
   return (
     <>
       <ApolloProvider client={client}>
