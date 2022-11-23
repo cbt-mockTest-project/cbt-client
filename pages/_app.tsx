@@ -1,5 +1,8 @@
-import type { AppProps } from 'next/app';
 import 'antd/dist/antd.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import type { AppProps } from 'next/app';
 import Globalstyles from '@styles/globalStyles';
 import Layout from '@components/common/layout/Layout';
 import { ApolloProvider } from '@apollo/client';

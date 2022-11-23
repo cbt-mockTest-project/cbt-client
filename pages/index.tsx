@@ -8,12 +8,12 @@ import { Button, Checkbox, message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
 import { addApolloState, initializeApollo } from '@modules/apollo';
-import {
-  READ_EXAM_CATEGORIES_QUERY,
-  READ_EXAM_TITLES_QUERY,
-} from '@lib/graphql/user/query/examQuery';
+import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
+import MainBanner from '@components/banner/MainBanner';
+import { useRouter } from 'next/router';
 
 const Home = () => {
+  const router = useRouter();
   const { data: categoriesQueryData } = useReadExamCategories();
   const [readExamTitles, { data: examTitlesQueryData }] = useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
@@ -52,13 +52,23 @@ const Home = () => {
     setSelectedTitle(value);
   };
 
+  const gotoExamPage = () => {
+    if (!selectedTitle) return;
+    router.push({
+      pathname: '/exam',
+      query: {
+        title: selectedTitle,
+      },
+    });
+  };
+
   return (
     <HomeContainer>
-      <div className="home-main-banner">배너01</div>
+      <MainBanner />
       <div className="home-wrapper">
         <div className="home-sub-banner-wrapper">
-          <div className="home-sub-banner">배너02</div>
-          <div className="home-sub-banner">배너03</div>
+          <div className="home-sub-banner">광고문의01</div>
+          <div className="home-sub-banner">광고문의02</div>
         </div>
         <div className="home-content-wrapper">
           <div>시험선택</div>
@@ -73,8 +83,16 @@ const Home = () => {
             <Checkbox />
             <div>문제순서 랜덤</div>
           </div>
-          <Button type="primary">문제풀기</Button>
-          <Button type="primary">문제/해답 보기</Button>
+          <Button
+            type="primary"
+            onClick={gotoExamPage}
+            disabled={!Boolean(selectedTitle)}
+          >
+            문제풀기
+          </Button>
+          <Button type="primary" disabled={!Boolean(selectedTitle)}>
+            문제/해답 보기
+          </Button>
         </div>
       </div>
     </HomeContainer>
@@ -91,15 +109,6 @@ export async function getServerSideProps() {
 }
 
 const HomeContainer = styled.div`
-  .home-main-banner {
-    width: 100%;
-    height: 180px;
-    background-color: ${palette.gray_300};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   .home-sub-banner-wrapper {
     display: flex;
     flex-direction: column;
@@ -109,7 +118,7 @@ const HomeContainer = styled.div`
   .home-sub-banner {
     width: 250px;
     height: 180px;
-    background-color: ${palette.gray_300};
+    background-color: ${palette.gray_200};
     display: flex;
     justify-content: center;
     align-items: center;
