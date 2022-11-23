@@ -372,6 +372,7 @@ export type Query = {
   readMockExam: ReadMockExamOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
   readMockExamQuestionNumbers: ReadMockExamQuestionNumbersOutput;
+  readMockExamQuestionsByMockExamTitle: ReadMockExamQuestionsByMockExamTitleOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
   searchMockExam: SearchMockExamOutput;
   userProfile: UserProfileOutput;
@@ -395,6 +396,11 @@ export type QueryReadMockExamQuestionArgs = {
 
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
+};
+
+
+export type QueryReadMockExamQuestionsByMockExamTitleArgs = {
+  input: ReadMockExamQuestionsByMockExamTitleInput;
 };
 
 
@@ -484,6 +490,18 @@ export type ReadMockExamQuestionOutput = {
   error?: Maybe<Scalars['String']>;
   mockExamQusetion: MockExamQuestion;
   ok: Scalars['Boolean'];
+};
+
+export type ReadMockExamQuestionsByMockExamTitleInput = {
+  title: Scalars['String'];
+};
+
+export type ReadMockExamQuestionsByMockExamTitleOutput = {
+  __typename?: 'ReadMockExamQuestionsByMockExamTitleOutput';
+  count: Scalars['Float'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questions: Array<MockExamQuestion>;
 };
 
 export type ReadMockExamQuestionsByStateInput = {
