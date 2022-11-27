@@ -10,6 +10,9 @@ export const FULL_QUESTION_FRAGMENT = gql`
     solution_img {
       url
     }
+    state {
+      state
+    }
     id
     number
     approved

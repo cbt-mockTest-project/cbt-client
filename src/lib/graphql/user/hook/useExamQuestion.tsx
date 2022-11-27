@@ -1,12 +1,19 @@
 import { useLazyQuery } from '@apollo/client';
-import { READ_QUESTIONS_BY_TITLE } from '../query/questionQuery';
+import { READ_QUESTION, READ_QUESTIONS_BY_ID } from '../query/questionQuery';
 import {
-  ReadMockExamQuestionsByMockExamTitleQuery,
-  ReadMockExamQuestionsByMockExamTitleQueryVariables,
+  ReadMockExamQuestionQuery,
+  ReadMockExamQuestionQueryVariables,
+  ReadMockExamQuestionsByMockExamIdQuery,
+  ReadMockExamQuestionsByMockExamIdQueryVariables,
 } from '../query/questionQuery.generated';
 
-export const useReadQuestionsByExamTitle = () =>
+export const useReadQuestionsByExamId = () =>
   useLazyQuery<
-    ReadMockExamQuestionsByMockExamTitleQuery,
-    ReadMockExamQuestionsByMockExamTitleQueryVariables
-  >(READ_QUESTIONS_BY_TITLE);
+    ReadMockExamQuestionsByMockExamIdQuery,
+    ReadMockExamQuestionsByMockExamIdQueryVariables
+  >(READ_QUESTIONS_BY_ID);
+
+export const useReadQuestion = () =>
+  useLazyQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(
+    READ_QUESTION
+  );
