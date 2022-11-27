@@ -87,6 +87,12 @@ const Globalstyles = createGlobalStyle`
   .ml-auto {
     margin-left : auto;
   }
+  .select-none {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 `;
 
 export default Globalstyles;
