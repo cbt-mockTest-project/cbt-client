@@ -1,11 +1,7 @@
-import {
-  CaretDownOutlined,
-  CaretLeftOutlined,
-  CaretRightOutlined,
-} from '@ant-design/icons';
+import { CaretDownOutlined } from '@ant-design/icons';
 import MainBanner from '@components/banner/MainBanner';
-import BasicBox from '@components/common/box/BasicBox';
 import Label from '@components/common/label/Label';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
 import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import palette from '@styles/palette';
 import { Button } from 'antd';
@@ -23,9 +19,10 @@ const ExamComponent = () => {
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [questionCount, setQuestionCount] = useState(0);
   const [questionState, setQuestionState] = useState('core');
-  const questionIndex = Number(router.query.q);
   const [questionAndSolution, setQuestionAndSolution] =
     useState<QuestionType>(null);
+  const [modalState, setModalState] = useState(false);
+  const questionIndex = Number(router.query.q);
   const [readQuestions, { data: questionQueryData }] =
     useReadQuestionsByExamId();
 
@@ -57,58 +54,76 @@ const ExamComponent = () => {
           ? questions[questionIndex - 1].state[0].state
           : 'core';
       setQuestionState(currentQuestionState);
+      setAnswerboxVisible(false);
     }
   }, [questionQueryData, router.query.q]);
-  useEffect(() => {}, [questionState]);
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
+  const onToggleModal = () => setModalState(!modalState);
+  const onConfirmModal = () => {
+    setModalState(false);
+    router.push('/exam/result');
+  };
 
   return (
-    <ExamContainer answerboxVisible={answerboxVisible}>
-      <MainBanner />
-      <QuestionAndSolutionBox
-        label="문제"
-        content={{
-          content: `${questionAndSolution?.number}. ${questionAndSolution?.question}`,
-          img: questionAndSolution?.question_img,
-          title: String(router.query.t || ''),
-        }}
-      />
-      <Label content="답 작성" />
-      <TextArea autoSize={{ minRows: 3, maxRows: 8 }} />
-      <button
-        className="exam-solution-check-wrapper"
-        onClick={onToggleAnswerboxVisible}
-      >
-        <Label content="답 확인" className="exam-solution-check-label" />
-        <CaretDownOutlined className="exam-answer-visible-button" />
-      </button>
-      <QuestionAndSolutionBox
-        content={{
-          content: questionAndSolution?.solution,
-          img: questionAndSolution?.solution_img,
-        }}
-        visible={answerboxVisible}
-      />
+    <>
+      <ExamContainer answerboxVisible={answerboxVisible}>
+        <MainBanner />
+        <QuestionAndSolutionBox
+          label="문제"
+          content={{
+            content: `${questionAndSolution?.number}. ${questionAndSolution?.question}`,
+            img: questionAndSolution?.question_img,
+            title: String(router.query.t || ''),
+          }}
+        />
+        <Label content="답 작성" />
+        <TextArea autoSize={{ minRows: 3, maxRows: 8 }} />
+        <button
+          className="exam-solution-check-wrapper"
+          onClick={onToggleAnswerboxVisible}
+        >
+          <Label content="답 확인" className="exam-solution-check-label" />
+          <CaretDownOutlined className="exam-answer-visible-button" />
+        </button>
+        <QuestionAndSolutionBox
+          content={{
+            content: questionAndSolution?.solution,
+            img: questionAndSolution?.solution_img,
+          }}
+          visible={answerboxVisible}
+        />
 
-      <div className="exam-question-menubar-wrapper">
-        <Button type="primary" className="exam-question-menubar-report-button">
-          잘못된 문제 신고
-        </Button>
-        <div className="exam-question-menubar">
-          <AchievementCheck
-            questionIndex={questionIndex}
-            questionQueryData={questionQueryData}
-            setQuestionState={setQuestionState}
-            questionState={questionState}
-          />
-          <MoveQuestion
-            questionIndex={questionIndex}
-            questionCount={questionCount}
-          />
+        <div className="exam-question-menubar-wrapper">
+          <Button
+            type="primary"
+            className="exam-question-menubar-report-button"
+          >
+            잘못된 문제 신고
+          </Button>
+          <div className="exam-question-menubar">
+            <AchievementCheck
+              questionIndex={questionIndex}
+              questionQueryData={questionQueryData}
+              setQuestionState={setQuestionState}
+              questionState={questionState}
+            />
+            <MoveQuestion
+              questionIndex={questionIndex}
+              questionCount={questionCount}
+              setModalState={setModalState}
+            />
+          </div>
         </div>
-      </div>
-    </ExamContainer>
+      </ExamContainer>
+      <ConfirmModal
+        open={modalState}
+        content={['마지막 문제입니다.', '결과를 확인하시겠습니까?']}
+        onClose={onToggleModal}
+        onCancel={onToggleModal}
+        onConfirm={onConfirmModal}
+      />
+    </>
   );
 };
 
