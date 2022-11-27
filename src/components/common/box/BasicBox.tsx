@@ -1,12 +1,14 @@
 import palette from '@styles/palette';
 import React from 'react';
 import styled from 'styled-components';
+import Label from '../label/Label';
 
 interface BasicBoxProps {
   children?: React.ReactNode;
   className?: string;
   maxHeight?: number;
   minHeight?: number;
+  label?: string;
 }
 
 const BasicBox: React.FC<BasicBoxProps> = ({
@@ -14,15 +16,19 @@ const BasicBox: React.FC<BasicBoxProps> = ({
   className,
   maxHeight = 240,
   minHeight = 24,
+  label,
 }) => {
   return (
-    <BasicBoxContainer
-      className={className}
-      maxHeight={maxHeight}
-      minHeight={minHeight}
-    >
-      {children}
-    </BasicBoxContainer>
+    <>
+      {label && <Label content={label} />}
+      <BasicBoxContainer
+        className={className}
+        maxHeight={maxHeight}
+        minHeight={minHeight}
+      >
+        {children}
+      </BasicBoxContainer>
+    </>
   );
 };
 
