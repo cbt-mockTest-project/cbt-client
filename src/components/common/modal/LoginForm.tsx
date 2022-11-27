@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { LoginInput } from 'types';
 import ErrorText from '../layout/errorText/ErrorText';
 import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
+import { setCookie } from 'cookies-next';
+import { authTokenVar } from '@reactiveVar/authVar';
 
 const LoginForm = () => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
@@ -17,6 +19,9 @@ const LoginForm = () => {
       if (login.error) {
         return message.error({ content: login.error });
       }
+      setCookie('jwt-token', login.token);
+      authTokenVar(login.token);
+      location.reload();
     }
   };
   return (

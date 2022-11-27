@@ -6,8 +6,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LoginForm from '@components/common/modal/LoginForm';
 import Modal from '@components/common/modal/Modal';
+import { useReactiveVar } from '@apollo/client';
+import { authTokenVar } from '@reactiveVar/authVar';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const Nav = () => {
+  const authToken = useReactiveVar(authTokenVar);
+  const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
   const isHome = pathname === '/';
@@ -47,8 +52,8 @@ const Nav = () => {
               </Link>
             );
           })}
-          {false ? (
-            <p className="nav-user-content ml-auto">안녕하세요</p>
+          {authToken ? (
+            <p className="nav-user-content ml-auto">{meQuery?.me.nickname}</p>
           ) : (
             <>
               <Link href="/register/confirm">

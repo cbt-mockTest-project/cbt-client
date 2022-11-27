@@ -13,7 +13,7 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', titles: Array<string>, ok: boolean, error?: string | null } };
+export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string }> } };
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
@@ -34,7 +34,10 @@ export function useReadAllMockExamCategoriesQuery(options?: Omit<Urql.UseQueryAr
 export const ReadMockExamTitlesByCateoryDocument = gql`
     query ReadMockExamTitlesByCateory($input: ReadMockExamTitlesByCateoryInput!) {
   readMockExamTitlesByCateory(input: $input) {
-    titles
+    titles {
+      id
+      title
+    }
     ok
     error
   }

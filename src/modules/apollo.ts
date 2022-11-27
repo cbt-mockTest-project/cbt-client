@@ -1,19 +1,43 @@
+import { isServer } from '@lib/graphql/user/utils/utils';
 import {
   ApolloClient,
+  createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import React from 'react';
+import { authTokenVar } from '@reactiveVar/authVar';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
+const jwtToken = authTokenVar();
+const httpLink = createHttpLink({
+  uri: process.env.NEXT_PUBLIC_API_URL,
+});
+const authLink = setContext((request, previousContext) => ({
+  headers: { 'jwt-token': jwtToken || '' },
+}));
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 export const createApolloClient = (token: string) => {
   return new ApolloClient({
-    ssrMode: typeof window === 'undefined',
-    uri: process.env.NEXT_PUBLIC_API_URL,
-    cache: new InMemoryCache(),
+    ssrMode: isServer(),
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            token: {
+              read() {
+                return authTokenVar();
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 };
 
@@ -26,7 +50,7 @@ export const initializeApollo = (initialState = {}, token: string) => {
   }
 
   // for server side rendering(or generation) always create a new apollo client
-  if (typeof window === 'undefined') {
+  if (isServer()) {
     return client;
   }
 

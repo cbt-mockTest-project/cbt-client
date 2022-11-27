@@ -41,8 +41,8 @@ const Home = () => {
         return message.success(readMockExamTitlesByCateory.error);
       }
       const titles = readMockExamTitlesByCateory.titles.map((title) => ({
-        value: title,
-        label: title,
+        value: title.id,
+        label: title.title,
       }));
       setTitles(titles);
     }
@@ -57,7 +57,9 @@ const Home = () => {
     router.push({
       pathname: '/exam',
       query: {
-        title: selectedTitle,
+        e: selectedTitle,
+        q: '1',
+        t: examTitlesQueryData?.readMockExamTitlesByCateory.titles[0].title,
       },
     });
   };
