@@ -8,7 +8,7 @@ export type CreateOrUpdateMockExamQuestionStateMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateOrUpdateMockExamQuestionStateMutation = { __typename?: 'Mutation', createOrUpdateMockExamQuestionState: { __typename?: 'CreateOrUpdateMockExamQuestionStateOutput', error?: string | null, message?: string | null, currentState: Types.QuestionState, ok: boolean } };
+export type CreateOrUpdateMockExamQuestionStateMutation = { __typename?: 'Mutation', createOrUpdateMockExamQuestionState: { __typename?: 'CreateOrUpdateMockExamQuestionStateOutput', error?: string | null, message?: string | null, currentState?: Types.QuestionState | null, ok: boolean } };
 
 
 export const CreateOrUpdateMockExamQuestionStateDocument = gql`

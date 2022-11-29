@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   EMAIL_VERIFICATION_MUTATION,
   LOGIN_MUTATION,
+  LOGOUT_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
   SEND_VERIFICATION_MAIL_MUTATION,
@@ -11,6 +12,8 @@ import {
   EmailVerificationMutationVariables,
   LoginMutation,
   LoginMutationVariables,
+  LogoutMutation,
+  LogoutMutationVariables,
   MeQuery,
   MeQueryVariables,
   RegisterMutation,
@@ -37,3 +40,6 @@ export const useLoginMutation = () =>
   useMutation<LoginMutation, LoginMutationVariables>(LOGIN_MUTATION);
 
 export const useMeQuery = () => useQuery<MeQuery, MeQueryVariables>(ME_QUERY);
+
+export const useLogoutMutation = () =>
+  useMutation<LogoutMutation, LogoutMutationVariables>(LOGOUT_MUTATION);

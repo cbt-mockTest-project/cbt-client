@@ -31,10 +31,15 @@ export type LoginMutationVariables = Types.Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginOutput', error?: string | null, ok: boolean, token?: string | null } };
 
+export type LogoutMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', nickname: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user: { __typename?: 'User', nickname: string } } };
 
 
 export const RegisterDocument = gql`
@@ -87,10 +92,26 @@ export const LoginDocument = gql`
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
 };
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout {
+    error
+    ok
+  }
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
 export const MeDocument = gql`
     query Me {
   me {
-    nickname
+    ok
+    user {
+      nickname
+    }
+    error
   }
 }
     `;
