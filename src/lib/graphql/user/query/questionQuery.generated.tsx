@@ -18,6 +18,13 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 
 export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, state?: Types.QuestionState | null, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState }> } } };
 
+export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamQuestionsByStateInput;
+}>;
+
+
+export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState }> }> } };
+
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
     query ReadMockExamQuestionsByMockExamId($input: ReadMockExamQuestionsByMockExamIdInput!) {
@@ -50,4 +57,19 @@ export const ReadMockExamQuestionDocument = gql`
 
 export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
+};
+export const ReadMockExamQuestionsByStateDocument = gql`
+    query ReadMockExamQuestionsByState($input: ReadMockExamQuestionsByStateInput!) {
+  readMockExamQuestionsByState(input: $input) {
+    error
+    mockExamQusetions {
+      ...FullQuestionParts
+    }
+    ok
+  }
+}
+    ${FullQuestionPartsFragmentDoc}`;
+
+export function useReadMockExamQuestionsByStateQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByStateQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamQuestionsByStateQuery, ReadMockExamQuestionsByStateQueryVariables>({ query: ReadMockExamQuestionsByStateDocument, ...options });
 };
