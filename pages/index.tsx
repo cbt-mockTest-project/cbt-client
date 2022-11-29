@@ -9,8 +9,11 @@ import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
-import MainBanner from '@components/banner/MainBanner';
+import * as cookie from 'cookie';
 import { useRouter } from 'next/router';
+import Layout from '@components/common/layout/Layout';
+import { READ_AUTH_TOKEN_QUERY } from '@lib/graphql/user/query/client';
+import { GetServerSideProps } from 'next';
 
 const Home = () => {
   const router = useRouter();
@@ -65,50 +68,49 @@ const Home = () => {
   };
 
   return (
-    <HomeContainer>
-      <MainBanner />
-      <div className="home-wrapper">
-        <div className="home-sub-banner-wrapper">
-          <div className="home-sub-banner">광고문의01</div>
-          <div className="home-sub-banner">광고문의02</div>
-        </div>
-        <div className="home-content-wrapper">
-          <div>시험선택</div>
-          <Select options={categories} onChange={onCategoryChange} />
-          <div>회차선택</div>
-          <Select
-            options={titles}
-            value={selectedTitle}
-            onChange={onTitleChange}
-          />
-          <div className="home-checkbox-wrapper">
-            <Checkbox />
-            <div>문제순서 랜덤</div>
+    <Layout mainBanner={true} sideBanner={true}>
+      <HomeContainer>
+        <div className="home-wrapper">
+          <div className="home-content-wrapper">
+            <div>시험선택</div>
+            <Select options={categories} onChange={onCategoryChange} />
+            <div>회차선택</div>
+            <Select
+              options={titles}
+              value={selectedTitle}
+              onChange={onTitleChange}
+            />
+            <div className="home-checkbox-wrapper">
+              <Checkbox />
+              <div>문제순서 랜덤</div>
+            </div>
+            <Button
+              type="primary"
+              onClick={gotoExamPage}
+              disabled={!Boolean(selectedTitle)}
+            >
+              문제풀기
+            </Button>
+            <Button type="primary" disabled={!Boolean(selectedTitle)}>
+              문제/해답 보기
+            </Button>
           </div>
-          <Button
-            type="primary"
-            onClick={gotoExamPage}
-            disabled={!Boolean(selectedTitle)}
-          >
-            문제풀기
-          </Button>
-          <Button type="primary" disabled={!Boolean(selectedTitle)}>
-            문제/해답 보기
-          </Button>
         </div>
-      </div>
-    </HomeContainer>
+      </HomeContainer>
+    </Layout>
   );
 };
 export default Home;
 
-export async function getServerSideProps() {
-  const apolloClient = initializeApollo({}, '');
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const parsedCookies = cookie.parse(context.req.headers.cookie as string);
+  const token = parsedCookies['jwt-token'];
+  const apolloClient = initializeApollo({}, token);
   await apolloClient.query({
     query: READ_EXAM_CATEGORIES_QUERY,
   });
   return addApolloState(apolloClient, { props: {} });
-}
+};
 
 const HomeContainer = styled.div`
   .home-sub-banner-wrapper {

@@ -7,37 +7,25 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import React from 'react';
-import { authTokenVar } from '@reactiveVar/authVar';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
-const jwtToken = authTokenVar();
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_API_URL,
+  credentials: 'include',
 });
-const authLink = setContext((request, previousContext) => ({
-  headers: { 'jwt-token': jwtToken || '' },
-}));
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 export const createApolloClient = (token: string) => {
+  const authLink = setContext((request, previousContext) => ({}));
+  // const authLink = setContext((request, previousContext) => ({
+  //   headers: { 'jwt-token': token || '' },
+  // }));
   return new ApolloClient({
     ssrMode: isServer(),
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            token: {
-              read() {
-                return authTokenVar();
-              },
-            },
-          },
-        },
-      },
-    }),
+    cache: new InMemoryCache(),
   });
 };
 
