@@ -12,7 +12,6 @@ import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
 import * as cookie from 'cookie';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
-import { READ_AUTH_TOKEN_QUERY } from '@lib/graphql/user/query/client';
 import { GetServerSideProps } from 'next';
 
 const Home = () => {

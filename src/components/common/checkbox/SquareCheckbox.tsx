@@ -1,10 +1,10 @@
 import palette from '@styles/palette';
-import { checkbokOption } from 'customTypes';
+import { checkboxOption } from 'customTypes';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface SquareCheckboxProps {
-  option: checkbokOption;
+  option: checkboxOption;
   minWidth?: number;
   height?: number;
   width?: number;

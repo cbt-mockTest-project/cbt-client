@@ -1,10 +1,10 @@
-import { checkbokOption } from 'customTypes';
+import { checkboxOption } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SquareCheckbox from './SquareCheckbox';
 
 interface SquareCheckboxGroupProps {
-  options: checkbokOption[];
+  options: checkboxOption[];
   gap?: number;
   onChange?: (value: any[]) => void;
 }
