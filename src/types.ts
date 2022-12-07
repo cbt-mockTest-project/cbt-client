@@ -193,7 +193,7 @@ export type MeOutput = {
   __typename?: 'MeOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 export type MockExam = {
