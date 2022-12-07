@@ -1,4 +1,4 @@
-import { isServer } from '@lib/graphql/user/utils/utils';
+import { isServer } from '@lib/utils/utils';
 import {
   ApolloClient,
   createHttpLink,
@@ -19,9 +19,6 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 export const createApolloClient = (token: string) => {
   const authLink = setContext((request, previousContext) => ({}));
-  // const authLink = setContext((request, previousContext) => ({
-  //   headers: { 'jwt-token': token || '' },
-  // }));
   return new ApolloClient({
     ssrMode: isServer(),
     link: authLink.concat(httpLink),
