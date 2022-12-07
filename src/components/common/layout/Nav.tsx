@@ -2,24 +2,39 @@ import palette from '@styles/palette';
 import { Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import LoginForm from '@components/common/modal/LoginForm';
 import Modal from '@components/common/modal/Modal';
-import { useReactiveVar } from '@apollo/client';
-import { authTokenVar } from '@reactiveVar/authVar';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { initializeApollo } from '@modules/apollo';
 
 const Nav = () => {
-  const authToken = useReactiveVar(authTokenVar);
+  const loginModal = 'longinModal';
   const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+  const { modalName } = useAppSelector((state) => state.core);
   const isHome = pathname === '/';
   const isCommunity = pathname === '/community';
   const isRegister = pathname.includes('/register');
-  const openLoginModal = () => setModalVisible(true);
-  const closeLoginModal = () => setModalVisible(false);
+
+  const openLoginModal = () => {
+    dispatch(coreActions.openModal(loginModal));
+  };
+  const closeLoginModal = () => {
+    dispatch(coreActions.closeModal());
+  };
+  const onLogout = async () => {
+    await logout();
+    location.reload();
+  };
   const navItems = [
     {
       key: '/',
@@ -52,8 +67,10 @@ const Nav = () => {
               </Link>
             );
           })}
-          {authToken ? (
-            <p className="nav-user-content ml-auto">{meQuery?.me.nickname}</p>
+          {meQuery?.me.user ? (
+            <p className="nav-user-content ml-auto">
+              {meQuery?.me.user.nickname}
+            </p>
           ) : (
             <>
               <Link href="/register/confirm">
@@ -71,8 +88,9 @@ const Nav = () => {
             </>
           )}
         </div>
+        <button onClick={onLogout}>로그아웃</button>
       </NavContainer>
-      <Modal open={modalVisible} onClose={closeLoginModal}>
+      <Modal open={modalName === loginModal} onClose={closeLoginModal}>
         <LoginForm />
       </Modal>
     </>

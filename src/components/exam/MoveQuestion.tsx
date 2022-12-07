@@ -1,16 +1,18 @@
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface MoveQuestionProps {
   questionIndex: number;
   questionCount: number;
+  setModalState: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const MoveQuestion: React.FC<MoveQuestionProps> = ({
   questionCount,
   questionIndex,
+  setModalState,
 }) => {
   const router = useRouter();
   const goPrevQuestion = () => {
@@ -24,7 +26,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
   };
   const goNextQuestion = () => {
     if (questionIndex >= questionCount) {
-      alert('테스트를 종료할꺼냐');
+      setModalState(true);
     }
     if (questionIndex < questionCount || questionCount === 0) {
       const query = { ...router.query, q: String(questionIndex + 1) };

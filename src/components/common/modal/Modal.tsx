@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
+import ClearIcon from '@mui/icons-material/Clear';
+import palette from '@styles/palette';
 interface ModalProps {
   open: boolean;
   children: React.ReactNode;
@@ -13,11 +14,8 @@ const Modal: React.FC<ModalProps> = ({ open = false, children, onClose }) => {
     <>
       <ModalContainer>
         <div className="modal-wrapper">
-          <span
-            onClick={onClose}
-            className="material-symbols-outlined modal-close-button"
-          >
-            close
+          <span onClick={onClose} className="modal-close-button">
+            <ClearIcon />
           </span>
           {children}
         </div>
@@ -65,6 +63,10 @@ const ModalContainer = styled.div`
     right: -35px;
     font-size: 1.2rem;
     cursor: pointer;
+    transition: color 0.2s ease-in;
+    :hover {
+      color: ${palette.antd_blue_01};
+    }
   }
 `;
 

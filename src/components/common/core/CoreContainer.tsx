@@ -2,7 +2,7 @@ import React from 'react';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const CoreContainer = () => {
-  // useMeQuery();
+  const { data: meQuery } = useMeQuery();
   return null;
 };
 

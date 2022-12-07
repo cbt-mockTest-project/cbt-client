@@ -13,6 +13,12 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type CoreOutput = {
+  __typename?: 'CoreOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateMockExamCategoryInput = {
   name: Scalars['String'];
 };
@@ -67,7 +73,7 @@ export type CreateOrUpdateMockExamQuestionStateInput = {
 
 export type CreateOrUpdateMockExamQuestionStateOutput = {
   __typename?: 'CreateOrUpdateMockExamQuestionStateOutput';
-  currentState: QuestionState;
+  currentState?: Maybe<QuestionState>;
   error?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
@@ -183,6 +189,13 @@ export type LoginOutput = {
   token?: Maybe<Scalars['String']>;
 };
 
+export type MeOutput = {
+  __typename?: 'MeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  user?: Maybe<User>;
+};
+
 export type MockExam = {
   __typename?: 'MockExam';
   approved: Scalars['Boolean'];
@@ -268,6 +281,7 @@ export type Mutation = {
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
+  logout: CoreOutput;
   register: RegisterOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
@@ -365,7 +379,7 @@ export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  me: User;
+  me: MeOutput;
   readAllMockExam: ReadAllMockExamsOutput;
   readAllMockExamCategories: ReadAllMockExamCategoriesOutput;
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
@@ -515,7 +529,7 @@ export type ReadMockExamQuestionsByMockExamIdOutput = {
 
 export type ReadMockExamQuestionsByStateInput = {
   examId: Scalars['Float'];
-  state: QuestionState;
+  states: Array<QuestionState>;
 };
 
 export type ReadMockExamQuestionsByStateOutput = {

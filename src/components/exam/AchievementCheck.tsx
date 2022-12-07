@@ -6,7 +6,7 @@ import { Button, message } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
-
+import ClearIcon from '@mui/icons-material/Clear';
 interface AchievementCheckProps {
   questionIndex: number;
   questionState: string;
@@ -115,7 +115,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
         value="ROW"
         onClick={onChangeQusetionState}
       >
-        ×
+        <ClearIcon />
       </Button>
     </AchievementCheckContainer>
   );
@@ -135,8 +135,9 @@ const AchievementCheckContainer = styled.div`
     margin-left: 5px;
   }
   .x {
-    font-weight: 2000;
-    font-size: 1.1rem;
+    svg {
+      width: 40px;
+    }
   }
   .active-button {
     color: ${palette.antd_blue_01};

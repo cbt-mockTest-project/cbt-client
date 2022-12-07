@@ -1,4 +1,5 @@
 import BasicBox from '@components/common/box/BasicBox';
+import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
@@ -34,15 +35,17 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           <p className="question-and-solution-box-title">{content.title}</p>
         )}
         <pre>{content.content}</pre>
-        {content.img &&
-          content.img.map((el, index) => (
-            <a
-              key={index}
-              href={el.url}
-              target="_blank"
-              rel="noreferrer"
-            >{`이미지${String(index).padStart(2, '0')}`}</a>
-          ))}
+        <div className="question-and-solution-box-link-wrapper">
+          {content.img &&
+            content.img.map((el, index) => (
+              <a
+                key={index}
+                href={el.url}
+                target="_blank"
+                rel="noreferrer"
+              >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
+            ))}
+        </div>
       </BasicBox>
     </QuestionAndSolutionBoxContainer>
   );
@@ -51,8 +54,20 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
 export default QuestionAndSolutionBox;
 
 const QuestionAndSolutionBoxContainer = styled.div`
+  pre {
+    white-space: pre-wrap;
+  }
   .question-and-solution-box-title {
     margin-bottom: 10px;
     font-weight: 600;
+  }
+  .question-and-solution-box-link-wrapper {
+    margin-top: 20px;
+    a {
+      color: ${palette.antd_blue_01};
+      + a {
+        margin-left: 15px;
+      }
+    }
   }
 `;

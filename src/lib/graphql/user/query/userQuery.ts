@@ -38,10 +38,23 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
+export const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    logout {
+      error
+      ok
+    }
+  }
+`;
+
 export const ME_QUERY = gql`
   query Me {
     me {
-      nickname
+      ok
+      user {
+        nickname
+      }
+      error
     }
   }
 `;

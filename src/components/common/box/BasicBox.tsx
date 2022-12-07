@@ -35,6 +35,7 @@ const BasicBox: React.FC<BasicBoxProps> = ({
 export default BasicBox;
 
 const BasicBoxContainer = styled.pre<BasicBoxProps>`
+  white-space: pre-wrap;
   border: 1px solid ${palette.gray_300};
   border-radius: 2px;
   position: relative;
