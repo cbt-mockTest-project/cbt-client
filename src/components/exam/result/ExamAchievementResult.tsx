@@ -1,6 +1,7 @@
 import BasicBox from '@components/common/box/BasicBox';
 import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { convertStateToIcon } from '@lib/utils/utils';
+import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -28,17 +29,9 @@ const ExamAchievementResult = () => {
       maxHeight={280}
     >
       <ul>
-        {questions.slice(0, 10).map((question, idx) => (
+        {questions.map((question, idx) => (
           <li key={idx}>
-            <p>{idx + 1}. </p>
-            <p>{convertStateToIcon(question.state[0].state)}</p>
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {questions.slice(10).map((question, idx) => (
-          <li key={idx}>
-            <p>{idx + 1}. </p>
+            <p className="achieve-result-index">{idx + 1}. </p>
             <p>{convertStateToIcon(question.state[0].state)}</p>
           </li>
         ))}
@@ -50,17 +43,36 @@ const ExamAchievementResult = () => {
 export default ExamAchievementResult;
 
 const ExamAchievementResultContainer = styled(BasicBox)`
+  margin-top: 20px;
+  ul {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 0;
+  }
   li {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 5px;
+
     p {
       width: 25px;
+      text-align: center;
     }
-    svg {
-      position: relative;
-      top: 5px;
-      right: 3px;
+    .circle-icon {
+      width: 80% !important;
+      color: ${palette.antd_blue_02};
     }
+    .triangle-icon {
+      color: ${palette.yellow_500};
+    }
+    .clear-icon {
+      width: 100% !important;
+      color: ${palette.red_500};
+    }
+  }
+  .achieve-result-index {
+    margin-left: 20px;
   }
 `;

@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
 import { checkboxOption } from 'customTypes';
 import { QuestionState } from 'types';
 import SquareSelectboxGroup from '../selectbox/SquareSelectboxGroup';
-import { circleIcon, triangleIcon } from '@lib/constants';
+import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 
 interface AchievCheckButtonGroupProps {
   onCheckboxChange: (value: checkboxOption['value']) => Promise<void>;
@@ -19,7 +18,7 @@ const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
   const checkboxOptions: checkboxOption[] = [
     { value: QuestionState.High, label: circleIcon },
     { value: QuestionState.Middle, label: triangleIcon },
-    { value: QuestionState.Row, label: <ClearIcon /> },
+    { value: QuestionState.Row, label: clearIcon },
   ];
   return (
     <AchievCheckButtonGroupContainer>
@@ -37,6 +36,7 @@ export default AchievCheckButtonGroup;
 const AchievCheckButtonGroupContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 20px;
   .achiev-check-button-group {
     width: 30px;
     height: 30px;
@@ -44,12 +44,6 @@ const AchievCheckButtonGroupContainer = styled.div`
     justify-content: center;
     align-items: center;
     margin-left: 5px;
-  }
-
-  .x {
-    svg {
-      width: 40px;
-    }
   }
   .active-button {
     .ant-btn:focus {

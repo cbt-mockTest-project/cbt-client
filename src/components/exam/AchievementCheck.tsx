@@ -1,17 +1,25 @@
 import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
-import palette from '@styles/palette';
-import { Button, message } from 'antd';
-import React from 'react';
+import { message } from 'antd';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
-import ClearIcon from '@mui/icons-material/Clear';
+import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
+import { checkboxOption, QuestionStateType } from 'customTypes';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import Modal from '@components/common/modal/Modal';
+import LoginForm from '@components/common/modal/LoginForm';
 interface AchievementCheckProps {
   questionIndex: number;
-  questionState: string;
-  setQuestionState: React.Dispatch<React.SetStateAction<string>>;
-  questionQueryData: ReadMockExamQuestionsByMockExamIdQuery | undefined;
+  questionState: QuestionState;
+  setQuestionState: React.Dispatch<React.SetStateAction<QuestionState>>;
+  questionQueryData: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const AchievementCheck: React.FC<AchievementCheckProps> = ({
@@ -20,37 +28,32 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   questionIndex,
   questionQueryData,
 }) => {
+  const loginModal = 'loginModal';
   const client = useApollo({}, '');
   const [changeQuestionState] = useChangeQuestionState();
-  const onChangeQusetionState = async (
-    e: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => {
-    if (e.currentTarget.value === questionState) return;
-    if (questionQueryData) {
-      const {
-        readMockExamQuestionsByMockExamId: { questions },
-      } = questionQueryData;
-      const questionId = questions[questionIndex - 1].id;
-      let state: QuestionState;
-      switch (e.currentTarget.value) {
-        case 'HIGH':
-          state = QuestionState.High;
-          break;
-        case 'MIDDLE':
-          state = QuestionState.Middle;
-          break;
-        case 'ROW':
-          state = QuestionState.Row;
-          break;
-        default:
-          state = QuestionState.Core;
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
+  const { modalName } = useAppSelector((state) => state.core);
+  const onCloseModal = () => dispatch(coreActions.closeModal());
+  const onOpenModal = () => dispatch(coreActions.openModal(loginModal));
+  const {
+    readMockExamQuestionsByMockExamId: { questions },
+  } = questionQueryData;
+  const currentQuestion = questions[questionIndex - 1];
+  const onCheckboxChange = async (state: checkboxOption['value']) => {
+    try {
+      if (!meQuery?.me.user) {
+        onOpenModal();
+        return;
       }
-      setQuestionState(e.currentTarget.value);
+      if (state === questionState) return;
+
+      setQuestionState(state as QuestionState);
       const changeQuestionStateQuery = await changeQuestionState({
         variables: {
           input: {
-            state: state,
-            questionId: questionId,
+            state: state as QuestionState,
+            questionId: currentQuestion.id,
           },
         },
       });
@@ -63,7 +66,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
         }
         if (ok && currentState) {
           client.cache.modify({
-            id: `MockExamQuestion:${questionId}`,
+            id: `MockExamQuestion:${currentQuestion.id}`,
             fields: {
               state(state) {
                 return state.length === 1
@@ -82,41 +85,24 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
           });
         }
       }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
     <AchievementCheckContainer>
       <span className="select-none">성취도체크</span>
-      <Button
-        className={`exam-question-menu ${
-          questionState === 'HIGH' && 'active-button'
-        }`}
-        type="default"
-        value="HIGH"
-        onClick={onChangeQusetionState}
-      >
-        ●
-      </Button>
-      <Button
-        className={`exam-question-menu ${
-          questionState === 'MIDDLE' && 'active-button'
-        }`}
-        type="default"
-        value="MIDDLE"
-        onClick={onChangeQusetionState}
-      >
-        ▲
-      </Button>
-      <Button
-        className={`exam-question-menu x ${
-          questionState === 'ROW' && 'active-button'
-        }`}
-        type="default"
-        value="ROW"
-        onClick={onChangeQusetionState}
-      >
-        <ClearIcon />
-      </Button>
+      <AchievCheckButtonGroup
+        onCheckboxChange={onCheckboxChange}
+        initialSelectedValue={
+          currentQuestion.state.length >= 1
+            ? currentQuestion.state[0].state
+            : QuestionState.Core
+        }
+      />
+      <Modal onClose={onCloseModal} open={loginModal === modalName}>
+        <LoginForm />
+      </Modal>
     </AchievementCheckContainer>
   );
 };
@@ -126,21 +112,4 @@ export default AchievementCheck;
 const AchievementCheckContainer = styled.div`
   display: flex;
   align-items: center;
-  .exam-question-menu {
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 5px;
-  }
-  .x {
-    svg {
-      width: 40px;
-    }
-  }
-  .active-button {
-    color: ${palette.antd_blue_01};
-    border-color: ${palette.antd_blue_01};
-  }
 `;

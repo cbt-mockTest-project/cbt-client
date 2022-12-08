@@ -1,5 +1,5 @@
 import ClearIcon from '@mui/icons-material/Clear';
-import { triangleIcon } from '../constants/index';
+import { clearIcon, triangleIcon } from '../constants/index';
 import { QuestionState } from '../../types';
 import { circleIcon } from '@lib/constants';
 import { checkboxOption } from 'customTypes';
@@ -14,8 +14,8 @@ export const convertStateToIcon = (
     case QuestionState.Middle:
       return triangleIcon;
     case QuestionState.Row:
-      return <ClearIcon />;
+      return clearIcon;
     default:
-      return <ClearIcon />;
+      return clearIcon;
   }
 };
