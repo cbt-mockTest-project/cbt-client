@@ -1,6 +1,7 @@
 import { CaretDownOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
+import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
@@ -30,6 +31,7 @@ const ExamComponent = () => {
     useState<QuestionType>(null);
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
+  const [progressModalState, setProgressModalState] = useState(false);
   const questionIndex = Number(router.query.q);
   const [readQuestions, { data: questionQueryData }] =
     useReadQuestionsByExamId();
@@ -42,6 +44,7 @@ const ExamComponent = () => {
     }
   }, [router.query.e]);
   useEffect(() => {
+    setProgressModalState(false);
     if (questionQueryData) {
       const {
         readMockExamQuestionsByMockExamId: { count, questions },
@@ -127,13 +130,22 @@ const ExamComponent = () => {
         />
 
         <div className="exam-question-menubar-wrapper">
-          <Button
-            type="primary"
-            className="exam-question-menubar-report-button"
-            onClick={onToggleFeedBackModal}
-          >
-            잘못된 문제 신고
-          </Button>
+          <div className="exam-question-menubar-modal-button-wrapper">
+            <Button
+              type="primary"
+              className="exam-question-menubar-report-button"
+              onClick={onToggleFeedBackModal}
+            >
+              잘못된 문제 신고
+            </Button>
+            <Button
+              type="primary"
+              className="exam-question-menubar-check-button"
+              onClick={() => setProgressModalState(true)}
+            >
+              진도 확인
+            </Button>
+          </div>
           <div className="exam-question-menubar">
             {questionQueryData && (
               <AchievementCheck
@@ -153,10 +165,11 @@ const ExamComponent = () => {
       </ExamContainer>
       <ConfirmModal
         open={finishModalState}
-        content={['마지막 문제입니다.', '결과를 확인하시겠습니까?']}
+        content={['마지막 문제입니다.', '학습을 종료하시겠습니까?']}
         onClose={onToggleFinishModal}
         onCancel={onToggleFinishModal}
         onConfirm={onFinishConfirmModal}
+        confirmLabel="종료하기"
       />
       <ReportModal
         open={feedBackModalState}
@@ -167,6 +180,12 @@ const ExamComponent = () => {
         onChange={(value) => {
           reportValue.current = value;
         }}
+        confirmLabel="신고하기"
+        title={[String(examTitle), String(questionIndex) + '번 문제']}
+      />
+      <ProgressModal
+        open={progressModalState}
+        onClose={() => setProgressModalState(false)}
       />
     </>
   );
@@ -222,6 +241,13 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   }
   .exam-solution-check-label {
     margin: 0;
+  }
+  .exam-question-menubar-modal-button-wrapper {
+    button {
+      + button {
+        margin-left: 15px;
+      }
+    }
   }
 
   pre {

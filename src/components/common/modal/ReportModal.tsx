@@ -14,6 +14,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
   onCancel,
   onConfirm,
   onChange,
+  confirmLabel,
   title,
 }) => {
   return (
@@ -24,6 +25,7 @@ const ReportModal: React.FC<ReportModalProps> = ({
         onClose={onClose}
         onCancel={onCancel}
         onConfirm={onConfirm}
+        confirmLabel={confirmLabel}
       />
     </ReportModalContainer>
   );

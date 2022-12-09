@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
@@ -6,13 +6,19 @@ interface ModalProps {
   open: boolean;
   children: React.ReactNode;
   onClose: () => void;
+  className?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ open = false, children, onClose }) => {
+const Modal: React.FC<ModalProps> = ({
+  open = false,
+  children,
+  onClose,
+  className,
+}) => {
   if (!open) return null;
   return (
     <>
-      <ModalContainer>
+      <ModalContainer className={className}>
         <div className="modal-wrapper">
           <span onClick={onClose} className="modal-close-button">
             <ClearIcon />

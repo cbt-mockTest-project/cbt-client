@@ -62,7 +62,6 @@ const LayoutContainer = styled.div`
   .layout-wrapper {
     margin-top: 40px;
     display: flex;
-    gap: 30px;
   }
   .layout-children-wrapper {
     margin: 0 auto;
