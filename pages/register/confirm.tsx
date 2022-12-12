@@ -1,4 +1,5 @@
 import ErrorText from '@components/common/layout/errorText/ErrorText';
+import Layout from '@components/common/layout/Layout';
 import { useSendVerificationMailMutation } from '@lib/graphql/user/hook/useUser';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
@@ -21,6 +22,9 @@ const Confirm = () => {
     });
     if (result.data) {
       const { sendVerificationMail } = result.data;
+      if (sendVerificationMail.ok === false) {
+        message.error({ content: sendVerificationMail.error });
+      }
       if (sendVerificationMail.ok === true) {
         message.success({ content: '인증메일이 전송되었습니다.' });
         setButtonDisabled(true);
@@ -28,29 +32,31 @@ const Confirm = () => {
     }
   };
   return (
-    <ConfirmContainer onSubmit={handleSubmit(onSubmit)}>
-      <h1>가입을 위해 이메일을 인증해주세요.</h1>
-      <div className="email-confirm-input-wrapper">
-        <label className="email-confirm-input-label">이메일</label>
-        <Controller
-          control={control}
-          name="email"
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Input onChange={field.onChange} type="email" />
-          )}
-        />
-        {formState.errors['email']?.type === 'required' && (
-          <ErrorText
-            content="이메일을 입력해주세요."
-            className="register-error-text"
+    <Layout>
+      <ConfirmContainer onSubmit={handleSubmit(onSubmit)}>
+        <h1>가입을 위해 이메일을 인증해주세요.</h1>
+        <div className="email-confirm-input-wrapper">
+          <label className="email-confirm-input-label">이메일</label>
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input onChange={field.onChange} type="email" />
+            )}
           />
-        )}
-      </div>
-      <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
-        이메일 인증요청
-      </Button>
-    </ConfirmContainer>
+          {formState.errors['email']?.type === 'required' && (
+            <ErrorText
+              content="이메일을 입력해주세요."
+              className="register-error-text"
+            />
+          )}
+        </div>
+        <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
+          이메일 인증요청
+        </Button>
+      </ConfirmContainer>
+    </Layout>
   );
 };
 

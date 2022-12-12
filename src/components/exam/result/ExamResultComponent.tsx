@@ -1,4 +1,3 @@
-import ClearIcon from '@mui/icons-material/Clear';
 import { Button, message } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -6,7 +5,6 @@ import styled from 'styled-components';
 import SquareCheckboxGroup from '@components/common/checkbox/SquareCheckboxGroup';
 import { QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
-import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import ExamAchievementResult from './ExamAchievementResult';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 

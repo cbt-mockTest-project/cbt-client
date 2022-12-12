@@ -2,11 +2,11 @@ import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState'
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
 import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
-import { checkboxOption, QuestionStateType } from 'customTypes';
+import { checkboxOption } from 'customTypes';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import {
   useAppDispatch,
