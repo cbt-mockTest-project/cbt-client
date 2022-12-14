@@ -10,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { RegisterInput } from 'types';
+import Layout from '@components/common/layout/Layout';
 
 const Register = () => {
   const router = useRouter();
@@ -69,46 +70,48 @@ const Register = () => {
     }
   };
   return (
-    <RegisterContainer onSubmit={handleSubmit(onSubmit)}>
-      <h1>실기CBT 회원가입</h1>
-      <div className="register-input-wrapper">
-        <label className="register-label">이메일</label>
-        <Input value={email} disabled={true} />
-        <label className="register-label">닉네임</label>
-        <Controller
-          control={control}
-          name="nickname"
-          rules={{ required: true }}
-          render={({ field }) => <Input onChange={field.onChange} />}
-        />
-        {formState.errors['nickname']?.type === 'required' && (
-          <ErrorText
-            content="닉네임을 입력해주세요."
-            className="register-error-text"
+    <Layout>
+      <RegisterContainer onSubmit={handleSubmit(onSubmit)}>
+        <h1>실기CBT 회원가입</h1>
+        <div className="register-input-wrapper">
+          <label className="register-label">이메일</label>
+          <Input value={email} disabled={true} />
+          <label className="register-label">닉네임</label>
+          <Controller
+            control={control}
+            name="nickname"
+            rules={{ required: true }}
+            render={({ field }) => <Input onChange={field.onChange} />}
           />
-        )}
-      </div>
-      <div className="register-input-wrapper">
-        <label className="register-label">비밀번호</label>
-        <Controller
-          control={control}
-          name="password"
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Input onChange={field.onChange} type="password" />
+          {formState.errors['nickname']?.type === 'required' && (
+            <ErrorText
+              content="닉네임을 입력해주세요."
+              className="register-error-text"
+            />
           )}
-        />
-        {formState.errors['password']?.type === 'required' && (
-          <ErrorText
-            content="비밀번호를 입력해주세요."
-            className="register-error-text"
+        </div>
+        <div className="register-input-wrapper">
+          <label className="register-label">비밀번호</label>
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input onChange={field.onChange} type="password" />
+            )}
           />
-        )}
-      </div>
-      <Button type="primary" htmlType="submit" loading={registerLoading}>
-        회원가입
-      </Button>
-    </RegisterContainer>
+          {formState.errors['password']?.type === 'required' && (
+            <ErrorText
+              content="비밀번호를 입력해주세요."
+              className="register-error-text"
+            />
+          )}
+        </div>
+        <Button type="primary" htmlType="submit" loading={registerLoading}>
+          회원가입
+        </Button>
+      </RegisterContainer>
+    </Layout>
   );
 };
 

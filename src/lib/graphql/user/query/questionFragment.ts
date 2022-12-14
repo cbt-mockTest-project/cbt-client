@@ -12,6 +12,7 @@ export const FULL_QUESTION_FRAGMENT = gql`
     }
     state {
       state
+      answer
     }
     id
     number

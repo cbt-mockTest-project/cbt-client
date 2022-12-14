@@ -8,7 +8,7 @@ import SquareSelectbox from './SquareSelectbox';
 interface SquareSelectboxGroupProps {
   options: checkboxOption[];
   gap?: number;
-  onChange?: (value: checkboxOption['value']) => Promise<void>;
+  onClick: (value: checkboxOption['value']) => void;
   initialSelectedValue: string;
 }
 
@@ -17,39 +17,29 @@ interface SquareSelectboxGroupCssProps
 
 const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
   options,
-  onChange,
+  onClick,
   initialSelectedValue,
   gap = 10,
 }) => {
   const router = useRouter();
-  const [selectedValue, setselectedValue] =
+  const [selectedValue, setSelectedValue] =
     useState<checkboxOption['value']>('CORE');
-  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setselectedValue(initialSelectedValue);
-    setMounted(true);
-  }, [router.query]);
+    setSelectedValue(initialSelectedValue);
+  }, [router.query.q]);
 
-  useEffect(() => {
-    if (onChange && mounted) {
-      onChange(selectedValue);
-    }
-  }, [selectedValue]);
-  const onSelectBoxClick = (value: checkboxOption['value']) => {
-    if (value === selectedValue) return;
-    setselectedValue(value);
-  };
   return (
-    <SquareSelectboxGroupContainer gap={gap}>
+    <SquareSelectboxGroupContainer gap={gap} id="square-select-box-group">
       {options.map((option, index) => {
-        // console.log(option.value);
-        // console.log(selectedValue);
         return (
           <SquareSelectbox
             option={option}
             key={index}
             selected={option.value === selectedValue}
-            onClick={() => onSelectBoxClick(option.value)}
+            onClick={() => {
+              setSelectedValue(option.value);
+              onClick(option.value);
+            }}
           />
         );
       })}

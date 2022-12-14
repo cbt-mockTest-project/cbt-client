@@ -1,48 +1,21 @@
 import BasicBox from '@components/common/box/BasicBox';
-import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { convertStateToIcon } from '@lib/utils/utils';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import ExamAchievementResultList from '../common/ExamAchievementResultList';
 
-const ExamAchievementResult = () => {
-  const router = useRouter();
-  const [readQuestions, { data: questionQueryData }] =
-    useReadQuestionsByExamId();
-  useEffect(() => {
-    readQuestions({
-      variables: {
-        input: {
-          id: Number(router.query.e),
-        },
-      },
-    });
-  }, [router.query.e]);
-  if (!questionQueryData) return null;
-  const {
-    readMockExamQuestionsByMockExamId: { questions },
-  } = questionQueryData;
+interface ExamAchievementResultProps {
+  className?: string;
+}
+
+const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
+  className,
+}) => {
   return (
     <ExamAchievementResultContainer
-      className="exam-result-achieve-check-box not-draggable"
+      className={`exam-result-achieve-check-box not-draggable ${className}`}
       maxHeight={280}
     >
-      <ul>
-        {questions.slice(0, 10).map((question, idx) => (
-          <li key={idx}>
-            <p>{idx + 1}. </p>
-            <p>{convertStateToIcon(question.state[0].state)}</p>
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {questions.slice(10).map((question, idx) => (
-          <li key={idx}>
-            <p>{idx + 1}. </p>
-            <p>{convertStateToIcon(question.state[0].state)}</p>
-          </li>
-        ))}
-      </ul>
+      <ExamAchievementResultList />
     </ExamAchievementResultContainer>
   );
 };
@@ -50,17 +23,5 @@ const ExamAchievementResult = () => {
 export default ExamAchievementResult;
 
 const ExamAchievementResultContainer = styled(BasicBox)`
-  li {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    p {
-      width: 25px;
-    }
-    svg {
-      position: relative;
-      top: 5px;
-      right: 3px;
-    }
-  }
+  margin-top: 20px;
 `;

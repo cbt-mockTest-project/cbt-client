@@ -5,15 +5,11 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { LoginInput } from 'types';
 import ErrorText from '../layout/errorText/ErrorText';
-import { useLoginMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { coreActions } from '@modules/redux/slices/core';
+import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
 
 const LoginForm = () => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
-  const dispatch = useAppDispatch();
   const [loginMutation] = useLoginMutation();
-  const { refetch: refetchMe } = useMeQuery();
   const onSubmit = async (data: LoginInput) => {
     const res = await loginMutation({ variables: { input: data } });
     if (res.data) {
@@ -21,8 +17,7 @@ const LoginForm = () => {
       if (login.error) {
         return message.error({ content: login.error });
       }
-      refetchMe();
-      dispatch(coreActions.closeModal());
+      location.reload();
     }
   };
   return (

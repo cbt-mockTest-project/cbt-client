@@ -256,6 +256,7 @@ export type MockExamQuestionImageInputType = {
 
 export type MockExamQuestionState = {
   __typename?: 'MockExamQuestionState';
+  answer: Scalars['String'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   question: MockExamQuestion;

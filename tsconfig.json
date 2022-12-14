@@ -20,7 +20,7 @@
       "@lib/*" : ["lib/*"],
       "@styles/*" : ["styles/*"],
       "@modules/*" : ["modules/*"],
-      "@reactiveVar/*" : ["reactiveVar/*"],
+      "@assets/*" : ["assets/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

@@ -18,21 +18,9 @@ const SquareSelectbox: React.FC<SquareSelectboxProps> = ({
   minWidth = 35,
   height = 35,
   width = 35,
-  onChange,
   onClick,
   selected = false,
 }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (onChange && mounted) {
-      onChange({ selected, value: option.value });
-    }
-  }, [selected]);
-
   return (
     <SquareSelectboxContainer minWidth={minWidth} height={height} width={width}>
       <label
