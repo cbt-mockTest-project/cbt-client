@@ -11,3 +11,8 @@ export const triangleIcon = (
 export const clearIcon = (
   <ClearIcon className="clear-icon" style={{ width: '180%' }} />
 );
+
+/**
+ * 로컬스토리지 답안 임시저장 key
+ */
+export const tempAnswerKey = 'tempAnswerKey';
