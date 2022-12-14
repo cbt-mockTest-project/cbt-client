@@ -1,6 +1,6 @@
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import React, { SetStateAction } from 'react';
+import React, { SetStateAction, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface MoveQuestionProps {
@@ -36,6 +36,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
       });
     }
   };
+
   return (
     <MoveQuestionContainer>
       <span className="exam-question-move-button-label select-none">

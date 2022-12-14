@@ -8,68 +8,178 @@ export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByMockExamIdInput;
 }>;
 
-
-export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState }> }> } };
+export type ReadMockExamQuestionsByMockExamIdQuery = {
+  __typename?: 'Query';
+  readMockExamQuestionsByMockExamId: {
+    __typename?: 'ReadMockExamQuestionsByMockExamIdOutput';
+    count: number;
+    error?: string | null;
+    ok: boolean;
+    questions: Array<{
+      __typename?: 'MockExamQuestion';
+      question: string;
+      solution: string;
+      id: number;
+      number: number;
+      approved: boolean;
+      question_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      solution_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      state: Array<{
+        __typename?: 'MockExamQuestionState';
+        state: Types.QuestionState;
+        answer: string;
+      }>;
+    }>;
+  };
+};
 
 export type ReadMockExamQuestionQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionInput;
 }>;
 
-
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, state?: Types.QuestionState | null, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState }> } } };
+export type ReadMockExamQuestionQuery = {
+  __typename?: 'Query';
+  readMockExamQuestion: {
+    __typename?: 'ReadMockExamQuestionOutput';
+    error?: string | null;
+    ok: boolean;
+    state?: Types.QuestionState | null;
+    mockExamQusetion: {
+      __typename?: 'MockExamQuestion';
+      question: string;
+      solution: string;
+      id: number;
+      number: number;
+      approved: boolean;
+      question_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      solution_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      state: Array<{
+        __typename?: 'MockExamQuestionState';
+        state: Types.QuestionState;
+        answer: string;
+      }>;
+    };
+  };
+};
 
 export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByStateInput;
 }>;
 
-
-export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState }> }> } };
-
+export type ReadMockExamQuestionsByStateQuery = {
+  __typename?: 'Query';
+  readMockExamQuestionsByState: {
+    __typename?: 'ReadMockExamQuestionsByStateOutput';
+    error?: string | null;
+    ok: boolean;
+    mockExamQusetions: Array<{
+      __typename?: 'MockExamQuestion';
+      question: string;
+      solution: string;
+      id: number;
+      number: number;
+      approved: boolean;
+      question_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      solution_img?: Array<{
+        __typename?: 'MockExamImageType';
+        url: string;
+      }> | null;
+      state: Array<{
+        __typename?: 'MockExamQuestionState';
+        state: Types.QuestionState;
+        answer: string;
+      }>;
+    }>;
+  };
+};
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
-    query ReadMockExamQuestionsByMockExamId($input: ReadMockExamQuestionsByMockExamIdInput!) {
-  readMockExamQuestionsByMockExamId(input: $input) {
-    count
-    error
-    ok
-    questions {
-      ...FullQuestionParts
+  query ReadMockExamQuestionsByMockExamId(
+    $input: ReadMockExamQuestionsByMockExamIdInput!
+  ) {
+    readMockExamQuestionsByMockExamId(input: $input) {
+      count
+      error
+      ok
+      questions {
+        ...FullQuestionParts
+      }
     }
   }
-}
-    ${FullQuestionPartsFragmentDoc}`;
+  ${FullQuestionPartsFragmentDoc}
+`;
 
-export function useReadMockExamQuestionsByMockExamIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByMockExamIdQueryVariables>, 'query'>) {
-  return Urql.useQuery<ReadMockExamQuestionsByMockExamIdQuery, ReadMockExamQuestionsByMockExamIdQueryVariables>({ query: ReadMockExamQuestionsByMockExamIdDocument, ...options });
-};
+export function useReadMockExamQuestionsByMockExamIdQuery(
+  options: Omit<
+    Urql.UseQueryArgs<ReadMockExamQuestionsByMockExamIdQueryVariables>,
+    'query'
+  >
+) {
+  return Urql.useQuery<
+    ReadMockExamQuestionsByMockExamIdQuery,
+    ReadMockExamQuestionsByMockExamIdQueryVariables
+  >({ query: ReadMockExamQuestionsByMockExamIdDocument, ...options });
+}
 export const ReadMockExamQuestionDocument = gql`
-    query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
-  readMockExamQuestion(input: $input) {
-    mockExamQusetion {
-      ...FullQuestionParts
+  query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
+    readMockExamQuestion(input: $input) {
+      mockExamQusetion {
+        ...FullQuestionParts
+      }
+      error
+      ok
+      state
     }
-    error
-    ok
-    state
   }
-}
-    ${FullQuestionPartsFragmentDoc}`;
+  ${FullQuestionPartsFragmentDoc}
+`;
 
-export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
-  return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
-};
+export function useReadMockExamQuestionQuery(
+  options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>
+) {
+  return Urql.useQuery<
+    ReadMockExamQuestionQuery,
+    ReadMockExamQuestionQueryVariables
+  >({ query: ReadMockExamQuestionDocument, ...options });
+}
 export const ReadMockExamQuestionsByStateDocument = gql`
-    query ReadMockExamQuestionsByState($input: ReadMockExamQuestionsByStateInput!) {
-  readMockExamQuestionsByState(input: $input) {
-    error
-    mockExamQusetions {
-      ...FullQuestionParts
+  query ReadMockExamQuestionsByState(
+    $input: ReadMockExamQuestionsByStateInput!
+  ) {
+    readMockExamQuestionsByState(input: $input) {
+      error
+      mockExamQusetions {
+        ...FullQuestionParts
+      }
+      ok
     }
-    ok
   }
-}
-    ${FullQuestionPartsFragmentDoc}`;
+  ${FullQuestionPartsFragmentDoc}
+`;
 
-export function useReadMockExamQuestionsByStateQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByStateQueryVariables>, 'query'>) {
-  return Urql.useQuery<ReadMockExamQuestionsByStateQuery, ReadMockExamQuestionsByStateQueryVariables>({ query: ReadMockExamQuestionsByStateDocument, ...options });
-};
+export function useReadMockExamQuestionsByStateQuery(
+  options: Omit<
+    Urql.UseQueryArgs<ReadMockExamQuestionsByStateQueryVariables>,
+    'query'
+  >
+) {
+  return Urql.useQuery<
+    ReadMockExamQuestionsByStateQuery,
+    ReadMockExamQuestionsByStateQueryVariables
+  >({ query: ReadMockExamQuestionsByStateDocument, ...options });
+}

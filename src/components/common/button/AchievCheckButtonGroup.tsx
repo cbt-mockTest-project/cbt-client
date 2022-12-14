@@ -24,7 +24,7 @@ const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
     <AchievCheckButtonGroupContainer>
       <SquareSelectboxGroup
         options={checkboxOptions}
-        onChange={(value: checkboxOption['value']) => onCheckboxChange(value)}
+        onClick={onCheckboxChange}
         initialSelectedValue={initialSelectedValue}
       />
     </AchievCheckButtonGroupContainer>

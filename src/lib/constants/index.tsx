@@ -16,3 +16,5 @@ export const clearIcon = (
  * 로컬스토리지 답안 임시저장 key
  */
 export const tempAnswerKey = 'tempAnswerKey';
+
+export const loginModal = 'loginModal';

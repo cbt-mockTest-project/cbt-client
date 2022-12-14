@@ -1,22 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CoreState {
-  modalState: boolean;
+  modalName: string;
 }
 
 const coreState: CoreState = {
-  modalState: false,
+  modalName: '',
 };
 
 const coreSlice = createSlice({
   name: 'core',
   initialState: coreState,
   reducers: {
-    openModal: (state) => {
-      state.modalState = true;
+    openModal: (state, action: PayloadAction<string>) => {
+      state.modalName = action.payload;
     },
     closeModal: (state) => {
-      state.modalState = false;
+      state.modalName = '';
     },
   },
 });
