@@ -3,14 +3,16 @@ import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface ExamAchievementResultProps {
   className?: string;
+  onListClick?: (value: number) => void;
 }
 
 const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   className,
+  onListClick,
 }) => {
   const router = useRouter();
   const [readQuestions, { data: questionQueryData }] =
@@ -35,15 +37,21 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
     });
   };
   return (
-    <ExamAchievementResultContainer className={className}>
+    <ExamAchievementResultContainer
+      className={className}
+      isHoverEffect={!!onListClick}
+    >
       {questions.map((question, idx) => (
         <li
           key={idx}
           className="not-draggable"
-          onClick={() => onMoveQuestion(idx + 1)}
+          onClick={() => onListClick && onListClick(idx + 1)}
         >
           <p className="achieve-result-index">{idx + 1}. </p>
-          <p>{convertStateToIcon(question.state[0].state)}</p>
+          <p>
+            {question.state.length >= 1 &&
+              convertStateToIcon(question.state[0].state)}
+          </p>
         </li>
       ))}
     </ExamAchievementResultContainer>
@@ -52,7 +60,7 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
 
 export default ExamAchievementResultList;
 
-const ExamAchievementResultContainer = styled.ul`
+const ExamAchievementResultContainer = styled.ul<{ isHoverEffect: boolean }>`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -61,11 +69,16 @@ const ExamAchievementResultContainer = styled.ul`
     display: flex;
     align-items: center;
     gap: 5px;
-    :hover {
-      background-color: ${palette.gray_100};
-      cursor: pointer;
-      border-radius: 5px;
-    }
+    ${(props) =>
+      props.isHoverEffect &&
+      css`
+        :hover {
+          background-color: ${palette.gray_100};
+          cursor: pointer;
+          border-radius: 5px;
+        }
+      `}
+
     p {
       width: 25px;
       text-align: center;

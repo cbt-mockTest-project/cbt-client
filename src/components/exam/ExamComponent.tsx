@@ -3,14 +3,16 @@ import Label from '@components/common/label/Label';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
+import { tempAnswerKey } from '@lib/constants';
 import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { LocalStorage } from '@lib/utils/localStorage';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { QuestionType } from 'customTypes';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { QuestionState } from 'types';
@@ -20,19 +22,21 @@ import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 
 const ExamComponent = () => {
   const router = useRouter();
+  const storage = new LocalStorage();
   const examTitle = router.query.t;
+  const questionIndex = Number(router.query.q);
+  const tempAnswerIndex = String(examTitle) + questionIndex;
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
-  const [questionCount, setQuestionCount] = useState(0);
+  const [answerValue, setAnswerValue] = useState('');
   const [questionState, setQuestionState] = useState<QuestionState>(
     QuestionState.Core
   );
   const [questionAndSolution, setQuestionAndSolution] =
-    useState<QuestionType>(null);
+    useState<QuestionType | null>(null);
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
-  const questionIndex = Number(router.query.q);
   const [readQuestions, { data: questionQueryData }] =
     useReadQuestionsByExamId();
   const [createFeedBack] = useCreateFeedBack();
@@ -45,36 +49,39 @@ const ExamComponent = () => {
   }, [router.query.e]);
   useEffect(() => {
     setProgressModalState(false);
+    setFeedBackModalState(false);
+    setFinishModalState(false);
+    setAnswerboxVisible(false);
+
     if (questionQueryData) {
       const {
-        readMockExamQuestionsByMockExamId: { count, questions },
+        readMockExamQuestionsByMockExamId: { questions },
       } = questionQueryData;
-
-      if (questionCount === 0) {
-        setQuestionCount(count);
-      }
-      setQuestionAndSolution(() => ({
+      setQuestionAndSolution({
         question: questions[questionIndex - 1].question,
         number: questions[questionIndex - 1].number,
         question_img: questions[questionIndex - 1].question_img,
         solution: questions[questionIndex - 1].solution,
         solution_img: questions[questionIndex - 1].solution_img,
         id: questions[questionIndex - 1].id,
-      }));
+        state: questions[questionIndex - 1].state,
+      });
       const currentQuestionState =
         questions[questionIndex - 1].state.length >= 1
           ? questions[questionIndex - 1].state[0].state
           : QuestionState.Core;
       setQuestionState(currentQuestionState);
-      setAnswerboxVisible(false);
+      const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      setAnswerValue(currentAnswer);
     }
-  }, [questionQueryData, router.query.q]);
+  }, [router.query.q, questionQueryData]);
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => setFinishModalState(!finishModalState);
   const onToggleFeedBackModal = () =>
     setFeedBackModalState(!feedBackModalState);
   const onFinishConfirmModal = () => {
+    storage.remove(tempAnswerKey);
     setFinishModalState(false);
     router.push({
       pathname: '/exam/result',
@@ -84,7 +91,6 @@ const ExamComponent = () => {
   const onReport = async () => {
     try {
       const content = reportValue.current;
-      console.log(content.length);
       if (content.length <= 4) {
         return message.warn('5글자 이상 입력해주세요.');
       }
@@ -101,19 +107,34 @@ const ExamComponent = () => {
     }
   };
 
+  const onChangeAnswer = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const currentValue = e.target.value;
+    setAnswerValue(currentValue);
+    const prevAnswer = storage.get(tempAnswerKey) || {};
+    const tempAnswer: { [key: string]: string } = prevAnswer;
+    tempAnswer[tempAnswerIndex] = currentValue;
+    storage.set(tempAnswerKey, tempAnswer);
+  };
+
   return (
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
         <QuestionAndSolutionBox
           label="문제"
           content={{
-            content: `${questionAndSolution?.number}. ${questionAndSolution?.question}`,
+            content: questionAndSolution
+              ? `${questionAndSolution.number}. ${questionAndSolution.question}`
+              : '',
             img: questionAndSolution?.question_img,
             title: String(examTitle || ''),
           }}
         />
         <Label content="답 작성" />
-        <TextArea autoSize={{ minRows: 3, maxRows: 8 }} />
+        <TextArea
+          autoSize={{ minRows: 3, maxRows: 8 }}
+          value={answerValue}
+          onChange={onChangeAnswer}
+        />
         <button
           className="exam-solution-check-wrapper"
           onClick={onToggleAnswerboxVisible}
@@ -123,8 +144,8 @@ const ExamComponent = () => {
         </button>
         <QuestionAndSolutionBox
           content={{
-            content: questionAndSolution?.solution,
-            img: questionAndSolution?.solution_img,
+            content: questionAndSolution ? questionAndSolution.solution : '',
+            img: questionAndSolution && questionAndSolution.solution_img,
           }}
           visible={answerboxVisible}
         />
@@ -146,21 +167,23 @@ const ExamComponent = () => {
               진도 확인
             </Button>
           </div>
-          <div className="exam-question-menubar">
-            {questionQueryData && (
+          {questionQueryData && (
+            <div className="exam-question-menubar" id="exam-question-menubar">
               <AchievementCheck
                 questionIndex={questionIndex}
                 questionQueryData={questionQueryData}
                 setQuestionState={setQuestionState}
                 questionState={questionState}
               />
-            )}
-            <MoveQuestion
-              questionIndex={questionIndex}
-              questionCount={questionCount}
-              setModalState={setFinishModalState}
-            />
-          </div>
+              <MoveQuestion
+                questionIndex={questionIndex}
+                questionCount={
+                  questionQueryData.readMockExamQuestionsByMockExamId.count
+                }
+                setModalState={setFinishModalState}
+              />
+            </div>
+          )}
         </div>
       </ExamContainer>
       <ConfirmModal
@@ -248,6 +271,11 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
         margin-left: 15px;
       }
     }
+  }
+  .exam-question-solution-label-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   pre {

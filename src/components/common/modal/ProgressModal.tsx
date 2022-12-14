@@ -1,5 +1,6 @@
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import palette from '@styles/palette';
+import { useRouter } from 'next/router';
 import React, { ComponentProps } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
@@ -8,11 +9,21 @@ interface ProgressModalProps
   extends Pick<ComponentProps<typeof Modal>, 'open' | 'onClose'> {}
 
 const ProgressModal: React.FC<ProgressModalProps> = ({ onClose, open }) => {
+  const router = useRouter();
+  const onMoveQuestion = (questionIndex: number) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, q: questionIndex },
+    });
+  };
   return (
     <ProgressModalContainer>
       <Modal open={open} onClose={onClose} className="progress-modal-container">
         <h2 className="progress-modal-title">진도체크</h2>
-        <ExamAchievementResultList className="progress-modal-achievement-result-list" />
+        <ExamAchievementResultList
+          className="progress-modal-achievement-result-list"
+          onListClick={onMoveQuestion}
+        />
         <p className="progress-modal-info">
           번호를 클릭하면 해당 문제로 이동 합니다.
         </p>
