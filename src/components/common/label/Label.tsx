@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface LabelProps {
-  content: string;
+  content: string | JSX.Element;
   className?: string;
 }
 

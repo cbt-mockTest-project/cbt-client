@@ -18,7 +18,7 @@ interface Content {
 interface QuestionAndSolutionBoxProps {
   content: Content;
   visible?: boolean;
-  label?: string;
+  label?: string | JSX.Element;
 }
 
 const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
@@ -26,7 +26,6 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   visible = true,
   label,
 }) => {
-  const router = useRouter();
   if (!visible) return null;
   return (
     <QuestionAndSolutionBoxContainer>

@@ -52,7 +52,7 @@ const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
         </Button>
       </div>
       <div className="exam-result-end-block">
-        <h2>성취도체크</h2>
+        <h2>성취도 결과</h2>
         <ExamAchievementResult />
       </div>
     </ExamResultComponentContainer>

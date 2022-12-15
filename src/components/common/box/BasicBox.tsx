@@ -8,7 +8,7 @@ interface BasicBoxProps {
   className?: string;
   maxHeight?: number;
   minHeight?: number;
-  label?: string;
+  label?: string | JSX.Element;
 }
 
 const BasicBox: React.FC<BasicBoxProps> = ({

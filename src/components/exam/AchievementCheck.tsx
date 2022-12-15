@@ -15,6 +15,7 @@ import {
 import { coreActions } from '@modules/redux/slices/core';
 import Modal from '@components/common/modal/Modal';
 import LoginForm from '@components/common/modal/LoginForm';
+import { loginModal } from '@lib/constants';
 interface AchievementCheckProps {
   questionIndex: number;
   questionState: QuestionState;
@@ -28,7 +29,6 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   questionIndex,
   questionQueryData,
 }) => {
-  const loginModal = 'loginModal';
   const client = useApollo({}, '');
   const [changeQuestionState] = useChangeQuestionState();
   const { data: meQuery } = useMeQuery();

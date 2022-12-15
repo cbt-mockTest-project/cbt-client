@@ -1,11 +1,6 @@
 import { QueryResult } from '@apollo/client';
-import BasicBox from '@components/common/box/BasicBox';
-import {
-  useLazyReadQuestionsByState,
-  useReadQuestionsByExamId,
-  useReadQuestionsByState,
-} from '@lib/graphql/user/hook/useExamQuestion';
 import { ReadMockExamQuestionsByStateQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -26,8 +21,6 @@ const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
   questionsQuery,
 }) => {
   const router = useRouter();
-  const [readQuestions, { data: questionQueryData }] =
-    useReadQuestionsByExamId();
   const { data } = questionsQuery;
   return (
     <SelectedResultComponentContainer>
@@ -40,7 +33,16 @@ const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
               className="selected-result-question-and-solution-wrapper"
             >
               <QuestionAndSolutionBox
-                label="문제"
+                label={
+                  <div className="selected-result-question-label-wrapper">
+                    <p>문제</p>
+                    <div
+                      className={`selected-result-question-label-achievement-icon ${question.state[0].state}`}
+                    >
+                      {convertStateToIcon(question.state[0].state)}
+                    </div>
+                  </div>
+                }
                 content={{
                   content: `${question?.number}. ${question?.question}`,
                   img: question?.question_img,
@@ -78,5 +80,20 @@ const SelectedResultComponentContainer = styled.div`
     + div {
       margin-top: 40px;
     }
+  }
+  .selected-result-question-label-wrapper {
+    display: flex;
+    gap: 10px;
+    .MIDDLE {
+      position: relative;
+      top: 2px;
+    }
+  }
+  .selected-result-question-label-achievement-icon {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    /* bottom: 5px; */
+    color: ${palette.antd_blue_02};
   }
 `;
