@@ -17,8 +17,10 @@ const httpLink = createHttpLink({
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
-export const createApolloClient = (token: string) => {
-  const authLink = setContext((request, previousContext) => ({}));
+export const createApolloClient = (cookie: string) => {
+  const authLink = setContext(() => ({
+    headers: { Cookie: cookie },
+  }));
   return new ApolloClient({
     ssrMode: isServer(),
     link: authLink.concat(httpLink),

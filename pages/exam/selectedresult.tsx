@@ -31,9 +31,7 @@ export default SelectedResult;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query } = context;
-  const parsedCookies = cookie.parse(context.req.headers.cookie as string);
-  const token = parsedCookies['jwt-token'];
-  const apolloClient = initializeApollo({}, token);
+  const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const states: QuestionState[] = JSON.parse(String(query.c));
   const examId = Number(query.e);
   const readQuestionByStateInput = { states, examId };
