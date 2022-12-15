@@ -20,14 +20,14 @@ interface AchievementCheckProps {
   questionIndex: number;
   questionState: QuestionState;
   setQuestionState: React.Dispatch<React.SetStateAction<QuestionState>>;
-  questionQueryData: ReadMockExamQuestionsByMockExamIdQuery;
+  questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const AchievementCheck: React.FC<AchievementCheckProps> = ({
   questionState,
   setQuestionState,
   questionIndex,
-  questionQueryData,
+  questionsQuery,
 }) => {
   const client = useApollo({}, '');
   const [changeQuestionState] = useChangeQuestionState();
@@ -38,7 +38,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   const onOpenModal = () => dispatch(coreActions.openModal(loginModal));
   const {
     readMockExamQuestionsByMockExamId: { questions },
-  } = questionQueryData;
+  } = questionsQuery;
   const currentQuestion = questions[questionIndex - 1];
   const onCheckboxChange = async (state: checkboxOption['value']) => {
     try {

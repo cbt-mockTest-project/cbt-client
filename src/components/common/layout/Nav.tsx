@@ -12,18 +12,42 @@ import {
   useAppSelector,
 } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
+import { UserOutlined } from '@ant-design/icons';
+import DropBox, { DropBoxOption } from '../dropbox/DropBox';
+import OuterClick from '../outerClick/OuterClick';
+import { loginModal } from '@lib/constants';
 
 const Nav = () => {
-  const loginModal = 'longinModal';
+  const router = useRouter();
   const [sticky, setSticky] = useState(false);
+  const [profileDropBoxState, setProfileDropBoxState] = useState(false);
   const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
   const { modalName } = useAppSelector((state) => state.core);
   const isHome = pathname === '/';
-  const isCommunity = pathname === '/community';
   const isRegister = pathname.includes('/register');
+  const onLogout = async () => {
+    await logout();
+    location.reload();
+  };
+  const dropBoxOptions: DropBoxOption[] = [
+    {
+      label: '활동내역',
+      onClick: () => {},
+    },
+    {
+      label: '프로필수정',
+      onClick: () => {
+        router.push('/me/edit');
+      },
+    },
+    {
+      label: '로그아웃',
+      onClick: onLogout,
+    },
+  ];
   const onScroll = () => {
     if (window.scrollY > 60 && !sticky) {
       return setSticky(true);
@@ -42,9 +66,9 @@ const Nav = () => {
   const closeLoginModal = () => {
     dispatch(coreActions.closeModal());
   };
-  const onLogout = async () => {
-    await logout();
-    location.reload();
+
+  const onProfileClick = () => {
+    setProfileDropBoxState(!profileDropBoxState);
   };
   const navItems = [
     {
@@ -52,15 +76,10 @@ const Nav = () => {
       label: '문제풀이',
       selected: isHome,
     },
-    {
-      key: '/community',
-      label: '커뮤니티',
-      selected: isCommunity,
-    },
   ];
   return (
     <>
-      <NavContainer sticky={sticky}>
+      <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
         <div className="nav-contents-wrapper">
           <Link href="/">
             <span className="nav-home-link-text">실기CBT</span>
@@ -79,9 +98,24 @@ const Nav = () => {
             );
           })}
           {meQuery?.me.user ? (
-            <p className="nav-user-content ml-auto">
-              {meQuery?.me.user.nickname}
-            </p>
+            <div className="nav-user-content-wrapper ml-auto">
+              <button className="nav-user-content" onClick={onProfileClick}>
+                <span className="nav-user-content-profile-image">
+                  <UserOutlined />
+                </span>
+                <span>{meQuery?.me.user.nickname}</span>
+              </button>
+              <OuterClick
+                callback={() => {
+                  setProfileDropBoxState(false);
+                }}
+              >
+                <DropBox
+                  isOpen={profileDropBoxState}
+                  options={dropBoxOptions}
+                />
+              </OuterClick>
+            </div>
           ) : (
             <>
               <Link href="/register/confirm">
@@ -99,7 +133,6 @@ const Nav = () => {
             </>
           )}
         </div>
-        <button onClick={onLogout}>로그아웃</button>
       </NavContainer>
       <Modal open={modalName === loginModal} onClose={closeLoginModal}>
         <LoginForm />
@@ -110,7 +143,10 @@ const Nav = () => {
 
 export default Nav;
 
-const NavContainer = styled.div<{ sticky: boolean }>`
+const NavContainer = styled.div<{
+  sticky: boolean;
+  profileDropBoxState: boolean;
+}>`
   padding: 25px 0px;
   height: 60px;
   border-bottom: 1.5px solid ${palette.gray_200};
@@ -151,5 +187,32 @@ const NavContainer = styled.div<{ sticky: boolean }>`
   }
   .selected {
     color: ${palette.antd_blue_01};
+  }
+  .nav-user-content-wrapper {
+    position: relative;
+  }
+  .nav-user-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: ${palette.gray_700};
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+    ${(props) =>
+      props.profileDropBoxState &&
+      css`
+        color: ${palette.antd_blue_01};
+      `}
+    :hover {
+      color: ${palette.antd_blue_01};
+    }
+    .nav-user-content-profile-image {
+      span {
+        font-size: 1.3rem;
+      }
+    }
+    span {
+      font-size: 0.9rem;
+    }
   }
 `;

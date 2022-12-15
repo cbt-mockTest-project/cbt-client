@@ -4,11 +4,12 @@ import styled from 'styled-components';
 interface LabelProps {
   content: string | JSX.Element;
   className?: string;
+  htmlFor?: string;
 }
 
-const Label: React.FC<LabelProps> = ({ content, className }) => {
+const Label: React.FC<LabelProps> = ({ content, className, htmlFor }) => {
   return (
-    <LabelContainer className={`select-none ${className}`}>
+    <LabelContainer className={`select-none ${className}`} htmlFor={htmlFor}>
       {content}
     </LabelContainer>
   );
@@ -16,7 +17,7 @@ const Label: React.FC<LabelProps> = ({ content, className }) => {
 
 export default Label;
 
-const LabelContainer = styled.div`
+const LabelContainer = styled.label`
   margin: 15px 0 2px 0;
   font-size: 0.9rem;
   font-weight: 600;
