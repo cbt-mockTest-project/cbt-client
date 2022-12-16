@@ -1,4 +1,3 @@
-import ClearIcon from '@mui/icons-material/Clear';
 import { clearIcon, triangleIcon } from '../constants/index';
 import { QuestionState } from '../../types';
 import { circleIcon } from '@lib/constants';
@@ -17,5 +16,30 @@ export const convertStateToIcon = (
       return clearIcon;
     default:
       return clearIcon;
+  }
+};
+
+interface tryCatchHandlerParams {
+  callback: Function;
+  params?: any;
+  errorCallback?: Function;
+  errorCallbackParams?: any;
+}
+
+export const tryCatchHandler = async ({
+  callback,
+  params,
+  errorCallback,
+  errorCallbackParams,
+}: tryCatchHandlerParams) => {
+  try {
+    params ? await callback(params) : await callback();
+  } catch (error) {
+    console.log('error', error);
+    if (errorCallback) {
+      errorCallbackParams
+        ? await errorCallback(errorCallbackParams)
+        : await errorCallback();
+    }
   }
 };
