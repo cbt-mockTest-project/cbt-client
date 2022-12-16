@@ -13,6 +13,16 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type CheckPasswordInput = {
+  password: Scalars['String'];
+};
+
+export type CheckPasswordOutput = {
+  __typename?: 'CheckPasswordOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CoreOutput = {
   __typename?: 'CoreOutput';
   error?: Maybe<Scalars['String']>;
@@ -160,6 +170,17 @@ export type EditMockExamQuestionOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type EditProfileInput = {
+  nickname?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+};
+
+export type EditProfileOutput = {
+  __typename?: 'EditProfileOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EmailVerificationInput = {
   code: Scalars['String'];
 };
@@ -267,6 +288,7 @@ export type MockExamQuestionState = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  checkPassword: CheckPasswordOutput;
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
   createMockExamQuestion: CreateMockExamQuestionOutput;
@@ -276,16 +298,24 @@ export type Mutation = {
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
+  deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
   editMockExamQuestion: EditMockExamQuestionOutput;
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
+  editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
   logout: CoreOutput;
   register: RegisterOutput;
+  restoreUser: CoreOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+};
+
+
+export type MutationCheckPasswordArgs = {
+  input: CheckPasswordInput;
 };
 
 
@@ -354,6 +384,11 @@ export type MutationEditMockExamQuestionFeedbackArgs = {
 };
 
 
+export type MutationEditProfileArgs = {
+  input: EditProfileInput;
+};
+
+
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
@@ -366,6 +401,11 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
+};
+
+
+export type MutationRestoreUserArgs = {
+  input: RestoreUserInput;
 };
 
 
@@ -563,6 +603,10 @@ export type RegisterOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type RestoreUserInput = {
+  id: Scalars['Float'];
+};
+
 export type SearchMockExamInput = {
   query: Scalars['String'];
 };
@@ -600,6 +644,7 @@ export type UpdateApprovedStateOfMockExamQuestionOutput = {
 export type User = {
   __typename?: 'User';
   created_at: Scalars['DateTime'];
+  deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['Float'];
   mockExamQuestionState: Array<MockExamQuestionState>;

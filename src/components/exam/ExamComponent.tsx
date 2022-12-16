@@ -4,8 +4,8 @@ import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { tempAnswerKey } from '@lib/constants';
-import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
@@ -20,7 +20,14 @@ import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 
-const ExamComponent = () => {
+interface ExamComponentProps {
+  questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
+}
+
+const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
+  const {
+    readMockExamQuestionsByMockExamId: { questions },
+  } = questionsQuery;
   const router = useRouter();
   const storage = new LocalStorage();
   const examTitle = router.query.t;
@@ -37,44 +44,32 @@ const ExamComponent = () => {
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
-  const [readQuestions, { data: questionQueryData }] =
-    useReadQuestionsByExamId();
   const [createFeedBack] = useCreateFeedBack();
   useEffect(() => {
-    if (router.query.e) {
-      readQuestions({
-        variables: { input: { id: Number(router.query.e) } },
-      });
-    }
-  }, [router.query.e]);
-  useEffect(() => {
+    const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+    const currentQuestionState =
+      questions[questionIndex - 1].state.length >= 1
+        ? questions[questionIndex - 1].state[0].state
+        : QuestionState.Core;
+    /**
+     * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+     */
+    setAnswerValue(currentAnswer);
+    setQuestionState(currentQuestionState);
     setProgressModalState(false);
     setFeedBackModalState(false);
     setFinishModalState(false);
     setAnswerboxVisible(false);
-
-    if (questionQueryData) {
-      const {
-        readMockExamQuestionsByMockExamId: { questions },
-      } = questionQueryData;
-      setQuestionAndSolution({
-        question: questions[questionIndex - 1].question,
-        number: questions[questionIndex - 1].number,
-        question_img: questions[questionIndex - 1].question_img,
-        solution: questions[questionIndex - 1].solution,
-        solution_img: questions[questionIndex - 1].solution_img,
-        id: questions[questionIndex - 1].id,
-        state: questions[questionIndex - 1].state,
-      });
-      const currentQuestionState =
-        questions[questionIndex - 1].state.length >= 1
-          ? questions[questionIndex - 1].state[0].state
-          : QuestionState.Core;
-      setQuestionState(currentQuestionState);
-      const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
-      setAnswerValue(currentAnswer);
-    }
-  }, [router.query.q, questionQueryData]);
+    setQuestionAndSolution({
+      question: questions[questionIndex - 1].question,
+      number: questions[questionIndex - 1].number,
+      question_img: questions[questionIndex - 1].question_img,
+      solution: questions[questionIndex - 1].solution,
+      solution_img: questions[questionIndex - 1].solution_img,
+      id: questions[questionIndex - 1].id,
+      state: questions[questionIndex - 1].state,
+    });
+  }, [router.query.q]);
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => setFinishModalState(!finishModalState);
@@ -167,23 +162,21 @@ const ExamComponent = () => {
               진도 확인
             </Button>
           </div>
-          {questionQueryData && (
-            <div className="exam-question-menubar" id="exam-question-menubar">
-              <AchievementCheck
-                questionIndex={questionIndex}
-                questionQueryData={questionQueryData}
-                setQuestionState={setQuestionState}
-                questionState={questionState}
-              />
-              <MoveQuestion
-                questionIndex={questionIndex}
-                questionCount={
-                  questionQueryData.readMockExamQuestionsByMockExamId.count
-                }
-                setModalState={setFinishModalState}
-              />
-            </div>
-          )}
+          <div className="exam-question-menubar" id="exam-question-menubar">
+            <AchievementCheck
+              questionIndex={questionIndex}
+              questionsQuery={questionsQuery}
+              setQuestionState={setQuestionState}
+              questionState={questionState}
+            />
+            <MoveQuestion
+              questionIndex={questionIndex}
+              questionCount={
+                questionsQuery.readMockExamQuestionsByMockExamId.count
+              }
+              setModalState={setFinishModalState}
+            />
+          </div>
         </div>
       </ExamContainer>
       <ConfirmModal

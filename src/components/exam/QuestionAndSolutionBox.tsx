@@ -1,24 +1,20 @@
 import BasicBox from '@components/common/box/BasicBox';
 import palette from '@styles/palette';
-import { useRouter } from 'next/router';
+import { QuestionType } from 'customTypes';
 import React from 'react';
 import styled from 'styled-components';
+import { MockExamImageType } from 'types';
 
 interface Content {
   content?: string;
-  img?:
-    | {
-        __typename?: 'MockExamImageType' | undefined;
-        url: string;
-      }[]
-    | null;
+  img?: QuestionType['question_img'];
   title?: string;
 }
 
 interface QuestionAndSolutionBoxProps {
   content: Content;
   visible?: boolean;
-  label?: string;
+  label?: string | JSX.Element;
 }
 
 const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
@@ -26,7 +22,6 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   visible = true,
   label,
 }) => {
-  const router = useRouter();
   if (!visible) return null;
   return (
     <QuestionAndSolutionBoxContainer>

@@ -41,6 +41,25 @@ export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string } | null } };
 
+export type EditProfileMutationVariables = Types.Exact<{
+  input: Types.EditProfileInput;
+}>;
+
+
+export type EditProfileMutation = { __typename?: 'Mutation', editProfile: { __typename?: 'EditProfileOutput', error?: string | null, ok: boolean } };
+
+export type CheckPasswordMutationVariables = Types.Exact<{
+  input: Types.CheckPasswordInput;
+}>;
+
+
+export type CheckPasswordMutation = { __typename?: 'Mutation', checkPassword: { __typename?: 'CheckPasswordOutput', error?: string | null, ok: boolean } };
+
+export type DeleteUserMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -118,4 +137,40 @@ export const MeDocument = gql`
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
   return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });
+};
+export const EditProfileDocument = gql`
+    mutation EditProfile($input: EditProfileInput!) {
+  editProfile(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditProfileMutation() {
+  return Urql.useMutation<EditProfileMutation, EditProfileMutationVariables>(EditProfileDocument);
+};
+export const CheckPasswordDocument = gql`
+    mutation CheckPassword($input: CheckPasswordInput!) {
+  checkPassword(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCheckPasswordMutation() {
+  return Urql.useMutation<CheckPasswordMutation, CheckPasswordMutationVariables>(CheckPasswordDocument);
+};
+export const DeleteUserDocument = gql`
+    mutation DeleteUser {
+  deleteUser {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteUserMutation() {
+  return Urql.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument);
 };

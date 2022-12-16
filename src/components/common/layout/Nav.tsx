@@ -2,8 +2,8 @@ import palette from '@styles/palette';
 import { Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import styled, { css } from 'styled-components';
 import LoginForm from '@components/common/modal/LoginForm';
 import Modal from '@components/common/modal/Modal';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -12,28 +12,65 @@ import {
   useAppSelector,
 } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import { initializeApollo } from '@modules/apollo';
+import { UserOutlined } from '@ant-design/icons';
+import DropBox, { DropBoxOption } from '../dropbox/DropBox';
+import OuterClick from '../outerClick/OuterClick';
+import { loginModal } from '@lib/constants';
+import { tryCatchHandler } from '@lib/utils/utils';
 
 const Nav = () => {
-  const loginModal = 'longinModal';
+  const router = useRouter();
+  const [sticky, setSticky] = useState(false);
+  const [profileDropBoxState, setProfileDropBoxState] = useState(false);
   const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
-  const [logout] = useLogoutMutation();
+  const [logoutMutation] = useLogoutMutation();
   const dispatch = useAppDispatch();
   const { modalName } = useAppSelector((state) => state.core);
   const isHome = pathname === '/';
-  const isCommunity = pathname === '/community';
   const isRegister = pathname.includes('/register');
-
+  const requestLogout = async () => {
+    await logoutMutation();
+    location.reload();
+  };
+  const tryRequestLogout = () => tryCatchHandler({ callback: requestLogout });
+  const dropBoxOptions: DropBoxOption[] = [
+    {
+      label: '활동내역',
+      onClick: () => {},
+    },
+    {
+      label: '프로필수정',
+      onClick: () => {
+        router.push('/me/edit');
+      },
+    },
+    {
+      label: '로그아웃',
+      onClick: tryRequestLogout,
+    },
+  ];
+  const onScroll = () => {
+    if (window.scrollY > 60 && !sticky) {
+      return setSticky(true);
+    }
+    if (window.scrollY <= 60 && sticky) {
+      return setSticky(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [sticky]);
   const openLoginModal = () => {
     dispatch(coreActions.openModal(loginModal));
   };
   const closeLoginModal = () => {
     dispatch(coreActions.closeModal());
   };
-  const onLogout = async () => {
-    await logout();
-    location.reload();
+
+  const onProfileClick = () => {
+    setProfileDropBoxState(!profileDropBoxState);
   };
   const navItems = [
     {
@@ -41,15 +78,10 @@ const Nav = () => {
       label: '문제풀이',
       selected: isHome,
     },
-    {
-      key: '/community',
-      label: '커뮤니티',
-      selected: isCommunity,
-    },
   ];
   return (
     <>
-      <NavContainer>
+      <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
         <div className="nav-contents-wrapper">
           <Link href="/">
             <span className="nav-home-link-text">실기CBT</span>
@@ -68,9 +100,24 @@ const Nav = () => {
             );
           })}
           {meQuery?.me.user ? (
-            <p className="nav-user-content ml-auto">
-              {meQuery?.me.user.nickname}
-            </p>
+            <div className="nav-user-content-wrapper ml-auto">
+              <button className="nav-user-content" onClick={onProfileClick}>
+                <span className="nav-user-content-profile-image">
+                  <UserOutlined />
+                </span>
+                <span>{meQuery?.me.user.nickname}</span>
+              </button>
+              <OuterClick
+                callback={() => {
+                  setProfileDropBoxState(false);
+                }}
+              >
+                <DropBox
+                  isOpen={profileDropBoxState}
+                  options={dropBoxOptions}
+                />
+              </OuterClick>
+            </div>
           ) : (
             <>
               <Link href="/register/confirm">
@@ -88,7 +135,6 @@ const Nav = () => {
             </>
           )}
         </div>
-        <button onClick={onLogout}>로그아웃</button>
       </NavContainer>
       <Modal open={modalName === loginModal} onClose={closeLoginModal}>
         <LoginForm />
@@ -99,14 +145,26 @@ const Nav = () => {
 
 export default Nav;
 
-const NavContainer = styled.div`
+const NavContainer = styled.div<{
+  sticky: boolean;
+  profileDropBoxState: boolean;
+}>`
   padding: 25px 0px;
   height: 60px;
   border-bottom: 1.5px solid ${palette.gray_200};
   display: flex;
   flex-direction: row;
   position: sticky;
+  top: 0px;
+  z-index: 500;
+  background-color: white;
   width: 100vw;
+  transition: box-shadow 0.2s ease-in;
+  ${(props) =>
+    props.sticky &&
+    css`
+      box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 4px;
+    `}
   .nav-contents-wrapper {
     width: 100vw;
     max-width: 1280px;
@@ -131,5 +189,32 @@ const NavContainer = styled.div`
   }
   .selected {
     color: ${palette.antd_blue_01};
+  }
+  .nav-user-content-wrapper {
+    position: relative;
+  }
+  .nav-user-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: ${palette.gray_700};
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+    ${(props) =>
+      props.profileDropBoxState &&
+      css`
+        color: ${palette.antd_blue_01};
+      `}
+    :hover {
+      color: ${palette.antd_blue_01};
+    }
+    .nav-user-content-profile-image {
+      span {
+        font-size: 1.3rem;
+      }
+    }
+    span {
+      font-size: 0.9rem;
+    }
   }
 `;

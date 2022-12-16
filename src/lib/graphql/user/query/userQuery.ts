@@ -58,3 +58,30 @@ export const ME_QUERY = gql`
     }
   }
 `;
+
+export const EDIT_PROFILE_MUTATION = gql`
+  mutation EditProfile($input: EditProfileInput!) {
+    editProfile(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const CHECK_PASSWORD_MUTATION = gql`
+  mutation CheckPassword($input: CheckPasswordInput!) {
+    checkPassword(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const DELETE_USER_MUTATION = gql`
+  mutation DeleteUser {
+    deleteUser {
+      error
+      ok
+    }
+  }
+`;

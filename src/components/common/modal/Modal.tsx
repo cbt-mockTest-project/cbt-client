@@ -52,7 +52,7 @@ const ModalContainer = styled.div`
   left: 0;
   right: 0;
   max-width: 350px;
-  z-index: 2;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   .modal-container {
@@ -77,7 +77,7 @@ const ModalContainer = styled.div`
 `;
 
 const Dimmed = styled.div`
-  z-index: 1;
+  z-index: 900;
   position: fixed;
   display: flex;
   top: 0;

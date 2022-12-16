@@ -1,6 +1,6 @@
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import React, { SetStateAction, useEffect } from 'react';
+import React, { SetStateAction } from 'react';
 import styled from 'styled-components';
 
 interface MoveQuestionProps {
