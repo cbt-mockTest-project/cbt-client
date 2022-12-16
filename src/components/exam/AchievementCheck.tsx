@@ -16,6 +16,7 @@ import { coreActions } from '@modules/redux/slices/core';
 import Modal from '@components/common/modal/Modal';
 import LoginForm from '@components/common/modal/LoginForm';
 import { loginModal } from '@lib/constants';
+import { tryCatchHandler } from '@lib/utils/utils';
 interface AchievementCheckProps {
   questionIndex: number;
   questionState: QuestionState;
@@ -40,60 +41,57 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
   const currentQuestion = questions[questionIndex - 1];
-  const onCheckboxChange = async (state: checkboxOption['value']) => {
-    try {
-      if (!meQuery?.me.user) {
-        onOpenModal();
-        return;
-      }
-      if (state === questionState) return;
-
-      setQuestionState(state as QuestionState);
-      const changeQuestionStateQuery = await changeQuestionState({
-        variables: {
-          input: {
-            state: state as QuestionState,
-            questionId: currentQuestion.id,
-          },
+  const requestChangeState = async (state: checkboxOption['value']) => {
+    if (!meQuery?.me.user) {
+      onOpenModal();
+      return;
+    }
+    if (state === questionState) return;
+    setQuestionState(state as QuestionState);
+    const changeQuestionStateQuery = await changeQuestionState({
+      variables: {
+        input: {
+          state: state as QuestionState,
+          questionId: currentQuestion.id,
         },
-      });
-      if (changeQuestionStateQuery.data) {
-        const {
-          createOrUpdateMockExamQuestionState: { ok, error, currentState },
-        } = changeQuestionStateQuery.data;
-        if (error) {
-          message.error({ content: error });
-        }
-        if (ok && currentState) {
-          client.cache.modify({
-            id: `MockExamQuestion:${currentQuestion.id}`,
-            fields: {
-              state(state) {
-                return state.length === 1
-                  ? state.map((state: MockExamQuestionState) => ({
-                      ...state,
-                      state: currentState,
-                    }))
-                  : [
-                      {
-                        state: currentState,
-                        __typename: 'MockExamQuestionState',
-                      },
-                    ];
-              },
-            },
-          });
-        }
+      },
+    });
+    if (changeQuestionStateQuery.data) {
+      const {
+        createOrUpdateMockExamQuestionState: { ok, error, currentState },
+      } = changeQuestionStateQuery.data;
+      if (error) {
+        message.error({ content: error });
       }
-    } catch (error) {
-      console.log(error);
+      if (ok && currentState) {
+        client.cache.modify({
+          id: `MockExamQuestion:${currentQuestion.id}`,
+          fields: {
+            state(state) {
+              return state.length === 1
+                ? state.map((state: MockExamQuestionState) => ({
+                    ...state,
+                    state: currentState,
+                  }))
+                : [
+                    {
+                      state: currentState,
+                      __typename: 'MockExamQuestionState',
+                    },
+                  ];
+            },
+          },
+        });
+      }
     }
   };
+  const tryRequestChangeState = (state: checkboxOption['value']) =>
+    tryCatchHandler({ callback: requestChangeState, params: state });
   return (
     <AchievementCheckContainer>
       <span className="select-none">성취도체크</span>
       <AchievCheckButtonGroup
-        onCheckboxChange={onCheckboxChange}
+        onCheckboxChange={tryRequestChangeState}
         initialSelectedValue={
           currentQuestion.state.length >= 1
             ? currentQuestion.state[0].state

@@ -16,6 +16,7 @@ import { UserOutlined } from '@ant-design/icons';
 import DropBox, { DropBoxOption } from '../dropbox/DropBox';
 import OuterClick from '../outerClick/OuterClick';
 import { loginModal } from '@lib/constants';
+import { tryCatchHandler } from '@lib/utils/utils';
 
 const Nav = () => {
   const router = useRouter();
@@ -23,15 +24,16 @@ const Nav = () => {
   const [profileDropBoxState, setProfileDropBoxState] = useState(false);
   const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
-  const [logout] = useLogoutMutation();
+  const [logoutMutation] = useLogoutMutation();
   const dispatch = useAppDispatch();
   const { modalName } = useAppSelector((state) => state.core);
   const isHome = pathname === '/';
   const isRegister = pathname.includes('/register');
-  const onLogout = async () => {
-    await logout();
+  const requestLogout = async () => {
+    await logoutMutation();
     location.reload();
   };
+  const tryRequestLogout = () => tryCatchHandler({ callback: requestLogout });
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',
@@ -45,7 +47,7 @@ const Nav = () => {
     },
     {
       label: '로그아웃',
-      onClick: onLogout,
+      onClick: tryRequestLogout,
     },
   ];
   const onScroll = () => {
