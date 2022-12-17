@@ -19,19 +19,19 @@ export const convertStateToIcon = (
   }
 };
 
-interface tryCatchHandlerParams {
+interface tryCatchHandlerParams<T, K> {
   callback: Function;
-  params?: any;
+  params?: T;
   errorCallback?: Function;
-  errorCallbackParams?: any;
+  errorCallbackParams?: K;
 }
 
-export const tryCatchHandler = async ({
+export const tryCatchHandler = async <T = unknown, K = unknown>({
   callback,
   params,
   errorCallback,
   errorCallbackParams,
-}: tryCatchHandlerParams) => {
+}: tryCatchHandlerParams<T, K>) => {
   try {
     params ? await callback(params) : await callback();
   } catch (error) {

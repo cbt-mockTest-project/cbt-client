@@ -86,7 +86,10 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
     }
   };
   const tryRequestChangeState = (state: checkboxOption['value']) =>
-    tryCatchHandler({ callback: requestChangeState, params: state });
+    tryCatchHandler<Parameters<typeof requestChangeState>[0]>({
+      callback: requestChangeState,
+      params: state,
+    });
   return (
     <AchievementCheckContainer>
       <span className="select-none">성취도체크</span>

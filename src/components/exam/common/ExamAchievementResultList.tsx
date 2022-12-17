@@ -1,5 +1,5 @@
 import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { convertStateToIcon } from '@lib/utils/utils';
+import { convertStateToIcon, tryCatchHandler } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -15,16 +15,21 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   onListClick,
 }) => {
   const router = useRouter();
-  const [readQuestions, { data: questionQueryData }] =
+  const [readQuestionsMutation, { data: questionQueryData }] =
     useReadQuestionsByExamId();
-  useEffect(() => {
-    readQuestions({
-      variables: {
-        input: {
-          id: Number(router.query.e),
+  const tryReadQuestionsMutation = () =>
+    tryCatchHandler<Parameters<typeof readQuestionsMutation>[0]>({
+      callback: readQuestionsMutation,
+      params: {
+        variables: {
+          input: {
+            id: Number(router.query.e),
+          },
         },
       },
     });
+  useEffect(() => {
+    tryReadQuestionsMutation();
   }, [router.query.e]);
   if (!questionQueryData) return null;
   const {
