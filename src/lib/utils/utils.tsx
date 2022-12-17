@@ -33,11 +33,11 @@ export const tryCatchHandler = async <T = unknown, K = unknown>({
   errorCallbackParams,
 }: tryCatchHandlerParams<T, K>) => {
   try {
-    params ? await callback(params) : await callback();
+    return params ? await callback(params) : await callback();
   } catch (error) {
-    console.log('error', error);
+    console.log(error);
     if (errorCallback) {
-      errorCallbackParams
+      return errorCallbackParams
         ? await errorCallback(errorCallbackParams)
         : await errorCallback();
     }

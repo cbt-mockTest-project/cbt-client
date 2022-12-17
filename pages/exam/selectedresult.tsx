@@ -2,6 +2,7 @@ import Layout from '@components/common/layout/Layout';
 import SelectedResultComponent from '@components/exam/selectedResult/SelectedResultComponent';
 import { useReadQuestionsByState } from '@lib/graphql/user/hook/useExamQuestion';
 import { READ_QUESTIONS_BY_STATE } from '@lib/graphql/user/query/questionQuery';
+import { tryCatchHandler } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import * as cookie from 'cookie';
 import { GetServerSideProps, NextPage } from 'next';
@@ -35,14 +36,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const states: QuestionState[] = JSON.parse(String(query.c));
   const examId = Number(query.e);
   const readQuestionByStateInput = { states, examId };
-  await apolloClient.query({
-    query: READ_QUESTIONS_BY_STATE,
-    variables: {
-      input: {
-        states,
-        examId,
+  const tryReadQuestionsByState = () =>
+    tryCatchHandler<Parameters<typeof apolloClient.query>[0]>({
+      callback: apolloClient.query,
+      params: {
+        query: READ_QUESTIONS_BY_STATE,
+        variables: {
+          input: {
+            states,
+            examId,
+          },
+        },
       },
-    },
-  });
+    });
+  await tryReadQuestionsByState();
   return addApolloState(apolloClient, { props: { readQuestionByStateInput } });
 };
