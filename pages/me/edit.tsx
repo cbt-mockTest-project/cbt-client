@@ -19,13 +19,14 @@ export default Edit;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
-  const tryMeQuery = convertWithErrorHandlingFunc({
-    callback: async () =>
-      await apolloClient.query<MeQuery>({
-        query: ME_QUERY,
-      }),
+  const request = async () =>
+    await apolloClient.query<MeQuery>({
+      query: ME_QUERY,
+    });
+  const tryRequest = convertWithErrorHandlingFunc({
+    callback: async () => await request(),
   });
-  const res = await tryMeQuery();
+  const res = await tryRequest();
   let user: MeQuery['me']['user'];
   if (res?.data.me) {
     user = res.data.me.user;

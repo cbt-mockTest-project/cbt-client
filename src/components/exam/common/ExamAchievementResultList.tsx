@@ -21,7 +21,10 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   const [readQuestionsMutation, { data: questionQueryData }] =
     useReadQuestionsByExamId();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
-    callback: readQuestionsMutation,
+    callback: async () =>
+      await readQuestionsMutation({
+        variables: { input: { id: Number(router.query.e) } },
+      }),
   });
   useEffect(() => {
     tryReadQuestionsMutation();

@@ -9,15 +9,21 @@ import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
-import * as cookie from 'cookie';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import { GetServerSideProps } from 'next';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
+import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 
 const Home = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { data: categoriesQueryData } = useReadExamCategories();
+  const { data: meQuery } = useMeQuery();
   const [readExamTitles, { data: examTitlesQueryData }] = useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
@@ -56,6 +62,9 @@ const Home = () => {
   };
 
   const gotoExamPage = () => {
+    if (!meQuery?.me.ok) {
+      dispatch(coreActions.openModal(loginModal));
+    }
     if (!selectedTitle) return;
     router.push({
       pathname: '/exam',
@@ -103,16 +112,19 @@ const Home = () => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const parsedCookies = cookie.parse(context.req.headers.cookie as string);
-  const token = parsedCookies['jwt-token'];
-  const apolloClient = initializeApollo({}, token);
-  const tryReadExamCategoriesQuery = convertWithErrorHandlingFunc({
-    callback: async () =>
-      await apolloClient.query({
-        query: READ_EXAM_CATEGORIES_QUERY,
-      }),
+  const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
+  const request = async () => {
+    await apolloClient.query({
+      query: READ_EXAM_CATEGORIES_QUERY,
+    });
+    await apolloClient.query({
+      query: ME_QUERY,
+    });
+  };
+  const tryRequest = convertWithErrorHandlingFunc({
+    callback: async () => await request(),
   });
-  await tryReadExamCategoriesQuery();
+  await tryRequest();
   return addApolloState(apolloClient, { props: {} });
 };
 
