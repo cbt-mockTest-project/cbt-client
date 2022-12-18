@@ -60,6 +60,20 @@ export type DeleteUserMutationVariables = Types.Exact<{ [key: string]: never; }>
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
 
+export type ChangePasswordAfterVerifyingMutationVariables = Types.Exact<{
+  input: Types.ChangePasswordAfterVerifyingInput;
+}>;
+
+
+export type ChangePasswordAfterVerifyingMutation = { __typename?: 'Mutation', changePasswordAfterVerifying: { __typename?: 'ChangePasswordAfterVerifyingOutput', error?: string | null, ok: boolean } };
+
+export type SendFindPasswordMailMutationVariables = Types.Exact<{
+  input: Types.SendFindPasswordMailInput;
+}>;
+
+
+export type SendFindPasswordMailMutation = { __typename?: 'Mutation', sendFindPasswordMail: { __typename?: 'SendFindPasswordMailOutput', error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -173,4 +187,28 @@ export const DeleteUserDocument = gql`
 
 export function useDeleteUserMutation() {
   return Urql.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument);
+};
+export const ChangePasswordAfterVerifyingDocument = gql`
+    mutation ChangePasswordAfterVerifying($input: ChangePasswordAfterVerifyingInput!) {
+  changePasswordAfterVerifying(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useChangePasswordAfterVerifyingMutation() {
+  return Urql.useMutation<ChangePasswordAfterVerifyingMutation, ChangePasswordAfterVerifyingMutationVariables>(ChangePasswordAfterVerifyingDocument);
+};
+export const SendFindPasswordMailDocument = gql`
+    mutation SendFindPasswordMail($input: SendFindPasswordMailInput!) {
+  sendFindPasswordMail(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useSendFindPasswordMailMutation() {
+  return Urql.useMutation<SendFindPasswordMailMutation, SendFindPasswordMailMutationVariables>(SendFindPasswordMailDocument);
 };

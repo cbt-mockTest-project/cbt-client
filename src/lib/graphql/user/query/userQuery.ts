@@ -85,3 +85,23 @@ export const DELETE_USER_MUTATION = gql`
     }
   }
 `;
+
+export const CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION = gql`
+  mutation ChangePasswordAfterVerifying(
+    $input: ChangePasswordAfterVerifyingInput!
+  ) {
+    changePasswordAfterVerifying(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const SEND_FIND_PASSWORD_MAIL_MUTATION = gql`
+  mutation SendFindPasswordMail($input: SendFindPasswordMailInput!) {
+    sendFindPasswordMail(input: $input) {
+      error
+      ok
+    }
+  }
+`;
