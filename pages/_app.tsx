@@ -8,6 +8,7 @@ import { ApolloProvider } from '@apollo/client';
 import { APOLLO_STATE_PROP_NAME, useApollo } from '@modules/apollo';
 import { Provider } from 'react-redux';
 import store from '@modules/redux/store/configureStore';
+import CommonModalContainer from '@components/common/core/CommonModalContainer';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -16,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       <ApolloProvider client={client}>
         <Provider store={store}>
           <Globalstyles />
+          <CommonModalContainer />
           <Component {...pageProps} />
         </Provider>
       </ApolloProvider>

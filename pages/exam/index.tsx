@@ -40,9 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 
   const tryRequest = convertWithErrorHandlingFunc({
-    callback: async () => {
-      return await request();
-    },
+    callback: request,
   });
   const res = await tryRequest();
   const questionsQuery = res?.data;

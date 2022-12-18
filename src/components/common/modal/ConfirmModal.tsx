@@ -1,11 +1,10 @@
 import { Button } from 'antd';
 import React, { ComponentProps } from 'react';
 import styled from 'styled-components';
-import Modal from './Modal';
+import Modal, { ModalProps } from './Modal';
 
 type ContentType = string | string[] | JSX.Element;
-interface ConfirmModalProps
-  extends Pick<ComponentProps<typeof Modal>, 'open' | 'onClose'> {
+interface ConfirmModalProps extends Pick<ModalProps, 'open' | 'onClose'> {
   content: ContentType;
   onConfirm: () => void;
   onCancel: () => void;

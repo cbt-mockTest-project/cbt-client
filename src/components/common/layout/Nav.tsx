@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import LoginForm from '@components/common/modal/LoginForm';
+import LoginForm from '@components/common/form/LoginForm';
 import Modal from '@components/common/modal/Modal';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
 import {
@@ -66,9 +66,6 @@ const Nav = () => {
   }, [sticky]);
   const openLoginModal = () => {
     dispatch(coreActions.openModal(loginModal));
-  };
-  const closeLoginModal = () => {
-    dispatch(coreActions.closeModal());
   };
 
   const onProfileClick = () => {
@@ -138,9 +135,6 @@ const Nav = () => {
           )}
         </div>
       </NavContainer>
-      <Modal open={modalName === loginModal} onClose={closeLoginModal}>
-        <LoginForm />
-      </Modal>
     </>
   );
 };

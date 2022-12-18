@@ -14,7 +14,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import Modal from '@components/common/modal/Modal';
-import LoginForm from '@components/common/modal/LoginForm';
+import LoginForm from '@components/common/form/LoginForm';
 import { loginModal } from '@lib/constants';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 interface AchievementCheckProps {

@@ -1,4 +1,5 @@
 import Label from '@components/common/label/Label';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
 import {
   useCheckPasswordMutation,
   useDeleteUser,
@@ -24,6 +25,8 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const [checkPasswordMutation] = useCheckPasswordMutation();
   const [deleteUserMutation] = useDeleteUser();
   const [logoutMutation] = useLogoutMutation();
+  const [withdrawalModalState, setWithdrawalModalState] = useState(false);
+  const [passwordChecked, setPasswordChecked] = useState(false);
   const { value: nickname, onChange: onChangeNicknameValue } = useInput(
     user?.nickname || ''
   );
@@ -31,7 +34,6 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     useInput('');
   const { value: newPassword, onChange: onChangeNewPasswordValue } =
     useInput('');
-  const [passwordChecked, setPasswordChecked] = useState(false);
   const requestChangeNickname = async () => {
     const res = await editProfileMutation({
       variables: { input: { nickname } },
@@ -93,6 +95,8 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const tryRequestWithdrawal = convertWithErrorHandlingFunc({
     callback: requestWithdrawal,
   });
+  const onToggleWithdrawalModal = () =>
+    setWithdrawalModalState(!withdrawalModalState);
   return (
     <EditComponentContainer>
       <h1>회원정보 변경</h1>
@@ -110,9 +114,12 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
           <Input
             value={prevPassword}
             onChange={onChangePrevPasswordValue}
+            disabled={passwordChecked}
             type="password"
           />
-          <Button onClick={tryRequestCheckPassword}>확인하기</Button>
+          <Button onClick={tryRequestCheckPassword} disabled={passwordChecked}>
+            확인하기
+          </Button>
         </div>
         <Label content={'변경할 비밀번호'} className="edit-sub-label" />
         <div className="edit-input-and-button-wrapper">
@@ -133,15 +140,23 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
       <div className="edit-block">
         <div className="edit-input-and-button-wrapper ">
           <div className="edit-withdrawl-label-wrapper">
-            <Label content={'탈퇴하기'} />
+            <Label content="탈퇴하기" />
             <Label
               content={'회원 탈퇴 시 재가입이 불가능 합니다.'}
               className="edit-sub-label"
             />
           </div>
-          <Button onClick={tryRequestWithdrawal}>탈퇴하기</Button>
+          <Button onClick={onToggleWithdrawalModal}>탈퇴하기</Button>
         </div>
       </div>
+      <ConfirmModal
+        open={withdrawalModalState}
+        confirmLabel="탈퇴하기"
+        content={['탈퇴 후 재가입이 불가능합니다.', '탈퇴 하시겠습니까?']}
+        onConfirm={tryRequestWithdrawal}
+        onClose={onToggleWithdrawalModal}
+        onCancel={onToggleWithdrawalModal}
+      />
     </EditComponentContainer>
   );
 };

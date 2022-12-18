@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       query: ME_QUERY,
     });
   const tryRequest = convertWithErrorHandlingFunc({
-    callback: async () => await request(),
+    callback: request,
   });
   const res = await tryRequest();
   let user: MeQuery['me']['user'];

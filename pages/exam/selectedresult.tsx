@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({
-    callback: async () => await request(),
+    callback: request,
   });
 
   const res = await tryRequest();
