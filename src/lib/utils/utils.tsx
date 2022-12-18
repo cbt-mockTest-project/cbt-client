@@ -19,27 +19,31 @@ export const convertStateToIcon = (
   }
 };
 
-interface tryCatchHandlerParams<T, K> {
-  callback: Function;
-  params?: T;
-  errorCallback?: Function;
-  errorCallbackParams?: K;
+interface ConvertWithErrorHandlingFuncParams<
+  T extends (...args: any[]) => ReturnType<T>
+> {
+  callback: T | ((...args: any[]) => ReturnType<T>);
+  errorCallback?: (...args: any[]) => ReturnType<T>;
 }
 
-export const tryCatchHandler = async <T = unknown, K = unknown>({
+declare type ConvertWithErrorHandlingFunc = <
+  T extends (...args: any[]) => ReturnType<T>
+>({
   callback,
-  params,
   errorCallback,
-  errorCallbackParams,
-}: tryCatchHandlerParams<T, K>) => {
-  try {
-    return params ? await callback(params) : await callback();
-  } catch (error) {
-    console.log(error);
-    if (errorCallback) {
-      return errorCallbackParams
-        ? await errorCallback(errorCallbackParams)
-        : await errorCallback();
+}: ConvertWithErrorHandlingFuncParams<T>) => () => Promise<
+  ReturnType<T> | undefined
+>;
+
+export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
+  ({ callback, errorCallback }) =>
+  async () => {
+    try {
+      return await callback();
+    } catch (error) {
+      console.log(error);
+      if (errorCallback) {
+        return await errorCallback();
+      }
     }
-  }
-};
+  };

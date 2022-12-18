@@ -7,7 +7,7 @@ import {
 } from '@lib/graphql/user/hook/useUser';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { tryCatchHandler } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
@@ -49,8 +49,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
-  const tryRequestChangeNickname = () =>
-    tryCatchHandler({ callback: requestChangeNickname });
+  const tryRequestChangeNickname = convertWithErrorHandlingFunc({
+    callback: requestChangeNickname,
+  });
   const requestChangePassword = async () => {
     const res = await editProfileMutation({
       variables: { input: { password: newPassword } },
@@ -63,8 +64,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
-  const tryRequestChangePassword = () =>
-    tryCatchHandler({ callback: requestChangePassword });
+  const tryRequestChangePassword = convertWithErrorHandlingFunc({
+    callback: requestChangePassword,
+  });
   const requestCheckPassword = async () => {
     const res = await checkPasswordMutation({
       variables: { input: { password: prevPassword } },
@@ -75,8 +77,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.checkPassword.error });
   };
-  const tryRequestCheckPassword = () =>
-    tryCatchHandler({ callback: requestCheckPassword });
+  const tryRequestCheckPassword = convertWithErrorHandlingFunc({
+    callback: requestCheckPassword,
+  });
   const requestWithdrawal = async () => {
     const res = await deleteUserMutation();
     if (res.data?.deleteUser.ok) {
@@ -87,8 +90,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.deleteUser.error });
   };
-  const tryRequestWithdrawal = () =>
-    tryCatchHandler({ callback: requestWithdrawal });
+  const tryRequestWithdrawal = convertWithErrorHandlingFunc({
+    callback: requestWithdrawal,
+  });
   return (
     <EditComponentContainer>
       <h1>회원정보 변경</h1>

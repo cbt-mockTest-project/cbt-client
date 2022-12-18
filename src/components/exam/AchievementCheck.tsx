@@ -16,7 +16,7 @@ import { coreActions } from '@modules/redux/slices/core';
 import Modal from '@components/common/modal/Modal';
 import LoginForm from '@components/common/modal/LoginForm';
 import { loginModal } from '@lib/constants';
-import { tryCatchHandler } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 interface AchievementCheckProps {
   questionIndex: number;
   questionState: QuestionState;
@@ -85,16 +85,12 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
       }
     }
   };
-  const tryRequestChangeState = (state: checkboxOption['value']) =>
-    tryCatchHandler<Parameters<typeof requestChangeState>[0]>({
-      callback: requestChangeState,
-      params: state,
-    });
+
   return (
     <AchievementCheckContainer>
       <span className="select-none">성취도체크</span>
       <AchievCheckButtonGroup
-        onCheckboxChange={tryRequestChangeState}
+        onCheckboxChange={requestChangeState}
         initialSelectedValue={
           currentQuestion.state.length >= 1
             ? currentQuestion.state[0].state

@@ -13,7 +13,7 @@ import * as cookie from 'cookie';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import { GetServerSideProps } from 'next';
-import { tryCatchHandler } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 
 const Home = () => {
   const router = useRouter();
@@ -106,13 +106,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const parsedCookies = cookie.parse(context.req.headers.cookie as string);
   const token = parsedCookies['jwt-token'];
   const apolloClient = initializeApollo({}, token);
-  const tryReadExamCategoriesQuery = () =>
-    tryCatchHandler<Parameters<typeof apolloClient.query>[0]>({
-      callback: apolloClient.query,
-      params: {
+  const tryReadExamCategoriesQuery = convertWithErrorHandlingFunc({
+    callback: async () =>
+      await apolloClient.query({
         query: READ_EXAM_CATEGORIES_QUERY,
-      },
-    });
+      }),
+  });
   await tryReadExamCategoriesQuery();
   return addApolloState(apolloClient, { props: {} });
 };

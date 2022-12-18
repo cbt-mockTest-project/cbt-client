@@ -16,7 +16,7 @@ import { UserOutlined } from '@ant-design/icons';
 import DropBox, { DropBoxOption } from '../dropbox/DropBox';
 import OuterClick from '../outerClick/OuterClick';
 import { loginModal } from '@lib/constants';
-import { tryCatchHandler } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 
 const Nav = () => {
   const router = useRouter();
@@ -33,7 +33,9 @@ const Nav = () => {
     await logoutMutation();
     location.reload();
   };
-  const tryRequestLogout = () => tryCatchHandler({ callback: requestLogout });
+  const tryRequestLogout = convertWithErrorHandlingFunc({
+    callback: requestLogout,
+  });
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',

@@ -1,3 +1,4 @@
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -27,7 +28,12 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
   useEffect(() => {
     setSelectedValue(initialSelectedValue);
   }, [router.query.q]);
-
+  const requestOnclick = (value: string) => {
+    setSelectedValue(value);
+    onClick(value);
+  };
+  const tryOnClick = (value: string) =>
+    convertWithErrorHandlingFunc({ callback: () => requestOnclick(value) });
   return (
     <SquareSelectboxGroupContainer gap={gap} id="square-select-box-group">
       {options.map((option, index) => {
@@ -36,10 +42,7 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
             option={option}
             key={index}
             selected={option.value === selectedValue}
-            onClick={() => {
-              setSelectedValue(option.value);
-              onClick(option.value);
-            }}
+            onClick={() => tryOnClick(option.value)()}
           />
         );
       })}
