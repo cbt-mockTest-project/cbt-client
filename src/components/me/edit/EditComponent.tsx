@@ -1,4 +1,5 @@
 import Label from '@components/common/label/Label';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
 import {
   useCheckPasswordMutation,
   useDeleteUser,
@@ -7,7 +8,7 @@ import {
 } from '@lib/graphql/user/hook/useUser';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { tryCatchHandler } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
@@ -24,6 +25,8 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const [checkPasswordMutation] = useCheckPasswordMutation();
   const [deleteUserMutation] = useDeleteUser();
   const [logoutMutation] = useLogoutMutation();
+  const [withdrawalModalState, setWithdrawalModalState] = useState(false);
+  const [passwordChecked, setPasswordChecked] = useState(false);
   const { value: nickname, onChange: onChangeNicknameValue } = useInput(
     user?.nickname || ''
   );
@@ -31,7 +34,6 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     useInput('');
   const { value: newPassword, onChange: onChangeNewPasswordValue } =
     useInput('');
-  const [passwordChecked, setPasswordChecked] = useState(false);
   const requestChangeNickname = async () => {
     const res = await editProfileMutation({
       variables: { input: { nickname } },
@@ -49,8 +51,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
-  const tryRequestChangeNickname = () =>
-    tryCatchHandler({ callback: requestChangeNickname });
+  const tryRequestChangeNickname = convertWithErrorHandlingFunc({
+    callback: requestChangeNickname,
+  });
   const requestChangePassword = async () => {
     const res = await editProfileMutation({
       variables: { input: { password: newPassword } },
@@ -63,8 +66,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
-  const tryRequestChangePassword = () =>
-    tryCatchHandler({ callback: requestChangePassword });
+  const tryRequestChangePassword = convertWithErrorHandlingFunc({
+    callback: requestChangePassword,
+  });
   const requestCheckPassword = async () => {
     const res = await checkPasswordMutation({
       variables: { input: { password: prevPassword } },
@@ -75,8 +79,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.checkPassword.error });
   };
-  const tryRequestCheckPassword = () =>
-    tryCatchHandler({ callback: requestCheckPassword });
+  const tryRequestCheckPassword = convertWithErrorHandlingFunc({
+    callback: requestCheckPassword,
+  });
   const requestWithdrawal = async () => {
     const res = await deleteUserMutation();
     if (res.data?.deleteUser.ok) {
@@ -87,8 +92,11 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.deleteUser.error });
   };
-  const tryRequestWithdrawal = () =>
-    tryCatchHandler({ callback: requestWithdrawal });
+  const tryRequestWithdrawal = convertWithErrorHandlingFunc({
+    callback: requestWithdrawal,
+  });
+  const onToggleWithdrawalModal = () =>
+    setWithdrawalModalState(!withdrawalModalState);
   return (
     <EditComponentContainer>
       <h1>회원정보 변경</h1>
@@ -106,9 +114,12 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
           <Input
             value={prevPassword}
             onChange={onChangePrevPasswordValue}
+            disabled={passwordChecked}
             type="password"
           />
-          <Button onClick={tryRequestCheckPassword}>확인하기</Button>
+          <Button onClick={tryRequestCheckPassword} disabled={passwordChecked}>
+            확인하기
+          </Button>
         </div>
         <Label content={'변경할 비밀번호'} className="edit-sub-label" />
         <div className="edit-input-and-button-wrapper">
@@ -129,15 +140,23 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
       <div className="edit-block">
         <div className="edit-input-and-button-wrapper ">
           <div className="edit-withdrawl-label-wrapper">
-            <Label content={'탈퇴하기'} />
+            <Label content="탈퇴하기" />
             <Label
               content={'회원 탈퇴 시 재가입이 불가능 합니다.'}
               className="edit-sub-label"
             />
           </div>
-          <Button onClick={tryRequestWithdrawal}>탈퇴하기</Button>
+          <Button onClick={onToggleWithdrawalModal}>탈퇴하기</Button>
         </div>
       </div>
+      <ConfirmModal
+        open={withdrawalModalState}
+        confirmLabel="탈퇴하기"
+        content={['탈퇴 후 재가입이 불가능합니다.', '탈퇴 하시겠습니까?']}
+        onConfirm={tryRequestWithdrawal}
+        onClose={onToggleWithdrawalModal}
+        onCancel={onToggleWithdrawalModal}
+      />
     </EditComponentContainer>
   );
 };

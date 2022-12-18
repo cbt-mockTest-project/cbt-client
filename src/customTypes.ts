@@ -15,7 +15,7 @@ export interface QuestionType
 export type QuestionStateType = 'Core' | 'High' | 'Middle' | 'Row';
 
 export type checkboxOption = {
-  value: string | { [key: string]: string | number };
+  value: string;
   label: string | JSX.Element;
 };
 

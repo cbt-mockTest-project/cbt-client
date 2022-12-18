@@ -18,3 +18,5 @@ export const clearIcon = (
 export const tempAnswerKey = 'tempAnswerKey';
 
 export const loginModal = 'loginModal';
+
+export const widhDrawalModal = 'widhDrawalModal';

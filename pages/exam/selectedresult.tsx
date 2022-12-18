@@ -2,27 +2,26 @@ import Layout from '@components/common/layout/Layout';
 import SelectedResultComponent from '@components/exam/selectedResult/SelectedResultComponent';
 import { useReadQuestionsByState } from '@lib/graphql/user/hook/useExamQuestion';
 import { READ_QUESTIONS_BY_STATE } from '@lib/graphql/user/query/questionQuery';
+import { ReadMockExamQuestionsByStateQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
-import * as cookie from 'cookie';
 import { GetServerSideProps, NextPage } from 'next';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { QuestionState } from 'types';
 
 interface SelectedResultPageProps {
-  readQuestionByStateInput: {
-    states: QuestionState[];
-    examId: number;
-  };
+  questionsQuery: ReadMockExamQuestionsByStateQuery;
 }
 
-const SelectedResult: NextPage<SelectedResultPageProps> = (pageProps) => {
-  const data = useReadQuestionsByState({
-    input: pageProps.readQuestionByStateInput,
-  });
-
+const SelectedResult: NextPage<SelectedResultPageProps> = ({
+  questionsQuery,
+}) => {
   return (
     <Layout mainBanner={true}>
-      <SelectedResultComponent questionsQuery={data} />
+      {questionsQuery && (
+        <SelectedResultComponent questionsQuery={questionsQuery} />
+      )}
     </Layout>
   );
 };
@@ -34,15 +33,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const states: QuestionState[] = JSON.parse(String(query.c));
   const examId = Number(query.e);
-  const readQuestionByStateInput = { states, examId };
-  await apolloClient.query({
-    query: READ_QUESTIONS_BY_STATE,
-    variables: {
-      input: {
-        states,
-        examId,
+  const request = async () => {
+    await apolloClient.query({
+      query: ME_QUERY,
+    });
+    return await apolloClient.query<ReadMockExamQuestionsByStateQuery>({
+      query: READ_QUESTIONS_BY_STATE,
+      variables: {
+        input: {
+          states,
+          examId,
+        },
       },
-    },
+    });
+  };
+  const tryRequest = convertWithErrorHandlingFunc({
+    callback: request,
   });
-  return addApolloState(apolloClient, { props: { readQuestionByStateInput } });
+
+  const res = await tryRequest();
+  const questionsQuery = res?.data;
+  return addApolloState(apolloClient, { props: { questionsQuery } });
 };

@@ -13,6 +13,17 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type ChangePasswordAfterVerifyingInput = {
+  code: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type ChangePasswordAfterVerifyingOutput = {
+  __typename?: 'ChangePasswordAfterVerifyingOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CheckPasswordInput = {
   password: Scalars['String'];
 };
@@ -288,6 +299,7 @@ export type MockExamQuestionState = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
   checkPassword: CheckPasswordOutput;
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
@@ -309,8 +321,14 @@ export type Mutation = {
   logout: CoreOutput;
   register: RegisterOutput;
   restoreUser: CoreOutput;
+  sendFindPasswordMail: SendFindPasswordMailOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+};
+
+
+export type MutationChangePasswordAfterVerifyingArgs = {
+  input: ChangePasswordAfterVerifyingInput;
 };
 
 
@@ -406,6 +424,11 @@ export type MutationRegisterArgs = {
 
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
+};
+
+
+export type MutationSendFindPasswordMailArgs = {
+  input: SendFindPasswordMailInput;
 };
 
 
@@ -617,6 +640,16 @@ export type SearchMockExamOutput = {
   mockExams: Array<MockExam>;
   ok: Scalars['Boolean'];
   totalResults: Scalars['Float'];
+};
+
+export type SendFindPasswordMailInput = {
+  email: Scalars['String'];
+};
+
+export type SendFindPasswordMailOutput = {
+  __typename?: 'SendFindPasswordMailOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type SendVerificationMailInput = {

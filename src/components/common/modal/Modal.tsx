@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
-interface ModalProps {
+export interface ModalProps {
   open: boolean;
   children: React.ReactNode;
   onClose: () => void;

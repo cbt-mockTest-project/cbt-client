@@ -5,63 +5,55 @@ import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
-import { Exact, ReadMockExamQuestionsByStateInput } from 'types';
 import QuestionAndSolutionBox from '../QuestionAndSolutionBox';
 
 interface SelectedResultComponentProps {
-  questionsQuery: QueryResult<
-    ReadMockExamQuestionsByStateQuery,
-    Exact<{
-      input: ReadMockExamQuestionsByStateInput;
-    }>
-  >;
+  questionsQuery: ReadMockExamQuestionsByStateQuery;
 }
 
 const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
   questionsQuery,
 }) => {
   const router = useRouter();
-  const { data } = questionsQuery;
+  const { readMockExamQuestionsByState } = questionsQuery;
   return (
     <SelectedResultComponentContainer>
       <h1>{router.query.title}</h1>
-      {data?.readMockExamQuestionsByState.mockExamQusetions.map(
-        (question, index) => {
-          return (
-            <div
-              key={index}
-              className="selected-result-question-and-solution-wrapper"
-            >
-              <QuestionAndSolutionBox
-                label={
-                  <div className="selected-result-question-label-wrapper">
-                    <p>문제</p>
-                    <div
-                      className={`selected-result-question-label-achievement-icon ${question.state[0].state}`}
-                    >
-                      {convertStateToIcon(question.state[0].state)}
-                    </div>
+      {readMockExamQuestionsByState.mockExamQusetions.map((question, index) => {
+        return (
+          <div
+            key={index}
+            className="selected-result-question-and-solution-wrapper"
+          >
+            <QuestionAndSolutionBox
+              label={
+                <div className="selected-result-question-label-wrapper">
+                  <p>문제</p>
+                  <div
+                    className={`selected-result-question-label-achievement-icon ${question.state[0].state}`}
+                  >
+                    {convertStateToIcon(question.state[0].state)}
                   </div>
-                }
-                content={{
-                  content: `${question?.number}. ${question?.question}`,
-                  img: question?.question_img,
-                  title: String(router.query.t || ''),
-                }}
-              />
-              <QuestionAndSolutionBox
-                key={index}
-                label="정답"
-                content={{
-                  content: `${question?.solution}`,
-                  img: question?.solution_img,
-                  title: String(router.query.t || ''),
-                }}
-              />
-            </div>
-          );
-        }
-      )}
+                </div>
+              }
+              content={{
+                content: `${question?.number}. ${question?.question}`,
+                img: question?.question_img,
+                title: String(router.query.t || ''),
+              }}
+            />
+            <QuestionAndSolutionBox
+              key={index}
+              label="정답"
+              content={{
+                content: `${question?.solution}`,
+                img: question?.solution_img,
+                title: String(router.query.t || ''),
+              }}
+            />
+          </div>
+        );
+      })}
     </SelectedResultComponentContainer>
   );
 };
