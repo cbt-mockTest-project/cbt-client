@@ -25,6 +25,7 @@ export default Exam;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const examId = context.query.e;
+  const isRandom = context.query.r === 'true' ? true : false;
   const request = async () => {
     await apolloClient.query({
       query: ME_QUERY,
@@ -34,11 +35,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       variables: {
         input: {
           id: Number(String(examId)),
+          isRandom,
         },
       },
     });
   };
-
   const tryRequest = convertWithErrorHandlingFunc({
     callback: request,
   });

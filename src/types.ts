@@ -532,8 +532,8 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
-  category?: InputMaybe<Scalars['String']>;
-  query?: InputMaybe<Scalars['String']>;
+  category?: Scalars['String'];
+  query?: Scalars['String'];
 };
 
 export type ReadAllMockExamsOutput = {
@@ -581,6 +581,7 @@ export type ReadMockExamQuestionOutput = {
 
 export type ReadMockExamQuestionsByMockExamIdInput = {
   id: Scalars['Float'];
+  isRandom?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ReadMockExamQuestionsByMockExamIdOutput = {

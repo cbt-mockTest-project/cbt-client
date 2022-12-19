@@ -118,7 +118,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           label="문제"
           content={{
             content: questionAndSolution
-              ? `${questionAndSolution.number}. ${questionAndSolution.question}`
+              ? `${questionIndex}. ${questionAndSolution.question}`
               : '',
             img: questionAndSolution?.question_img,
             title: String(examTitle || ''),
