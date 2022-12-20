@@ -3,6 +3,7 @@ import palette from '@styles/palette';
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
+import Footer from './Footer';
 import Nav from './Nav';
 import SubNav from './SubNav';
 
@@ -65,6 +66,7 @@ const Layout: React.FC<LayoutProps> = ({
           )}
         </>
       </div>
+      <Footer />
     </LayoutContainer>
   );
 };

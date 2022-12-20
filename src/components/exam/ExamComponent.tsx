@@ -182,7 +182,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       </ExamContainer>
       <ConfirmModal
         open={finishModalState}
-        content={['마지막 문제입니다.', '학습을 종료하시겠습니까?']}
+        content={'마지막 문제입니다.\n학습을 종료하시겠습니까?'}
         onClose={onToggleFinishModal}
         onCancel={onToggleFinishModal}
         onConfirm={onFinishConfirmModal}
@@ -197,10 +197,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           reportValue.current = value;
         }}
         confirmLabel="신고하기"
-        title={[
-          String(examTitle),
-          `Q. ${ellipsisText(String(questionAndSolution?.question), 10)}`,
-        ]}
+        title={`${String(examTitle)}\nQ. ${ellipsisText(
+          String(questionAndSolution?.question),
+          10
+        )}`}
       />
       <ProgressModal
         open={progressModalState}
