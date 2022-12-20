@@ -23,6 +23,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({ onClose, open }) => {
         <ExamAchievementResultList
           className="progress-modal-achievement-result-list"
           onListClick={onMoveQuestion}
+          examId={Number(router.query.e)}
         />
         <p className="progress-modal-info">
           번호를 클릭하면 해당 문제로 이동 합니다.

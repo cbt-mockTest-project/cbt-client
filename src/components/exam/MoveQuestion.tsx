@@ -18,10 +18,14 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
   const goPrevQuestion = () => {
     if (questionIndex > 1) {
       const query = { ...router.query, q: String(questionIndex - 1) };
-      router.push({
-        pathname: router.pathname,
-        query,
-      });
+      router.push(
+        {
+          pathname: router.pathname,
+          query,
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   };
   const goNextQuestion = () => {
@@ -30,10 +34,14 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
     }
     if (questionIndex < questionCount || questionCount === 0) {
       const query = { ...router.query, q: String(questionIndex + 1) };
-      router.push({
-        pathname: router.pathname,
-        query,
-      });
+      router.push(
+        {
+          pathname: router.pathname,
+          query,
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   };
 

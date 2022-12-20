@@ -1,10 +1,10 @@
 import TextArea from 'antd/lib/input/TextArea';
 import React, { ChangeEvent, ComponentProps, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ConfirmModal from './ConfirmModal';
+import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 
-interface ReportModalProps extends ComponentProps<typeof ConfirmModal> {
-  title?: string | string[];
+interface ReportModalProps extends Omit<ConfirmModalProps, 'content'> {
+  title: string | string[];
   onChange?: (value: string) => void;
 }
 
@@ -45,23 +45,12 @@ const Content: React.FC<Content> = ({ title, onChange }) => {
       onChange(value);
     }
   }, [value]);
-  const Title: React.FC<Pick<ReportModalProps, 'title'>> = ({ title }) => {
-    if (Array.isArray(title)) {
-      return (
-        <>
-          {title.map((el, idx) => (
-            <p key={idx}>{el}</p>
-          ))}
-        </>
-      );
-    }
-    return <p>{title}</p>;
-  };
+
   return (
     <ContentContainer>
-      <Title title={title} />
+      <pre>{title}</pre>
       <TextArea
-        autoSize={{ minRows: 3, maxRows: 5 }}
+        autoSize={{ minRows: 6, maxRows: 10 }}
         value={value}
         onChange={onChangeValue}
       />
@@ -72,9 +61,11 @@ const Content: React.FC<Content> = ({ title, onChange }) => {
 const ReportModalContainer = styled.div``;
 
 const ContentContainer = styled.div`
-  margin-top: --30px;
+  pre {
+    text-align: center;
+    font-weight: bold;
+  }
   textarea {
-    margin-top: 50px;
-    margin-bottom: -20px;
+    margin-top: 25px;
   }
 `;

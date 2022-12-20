@@ -2,6 +2,7 @@ import { clearIcon, triangleIcon } from '../constants/index';
 import { QuestionState } from '../../types';
 import { circleIcon } from '@lib/constants';
 import { checkboxOption } from 'customTypes';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 export const isServer = () => typeof window === 'undefined';
 export const convertStateToIcon = (
@@ -15,7 +16,7 @@ export const convertStateToIcon = (
     case QuestionState.Row:
       return clearIcon;
     default:
-      return clearIcon;
+      return '';
   }
 };
 
@@ -47,3 +48,11 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
       }
     }
   };
+
+export const ellipsisText = (string: string, count: number) =>
+  string.slice(0, count) + '...';
+
+export const extractKeysOfCache = (
+  client: ApolloClient<NormalizedCacheObject>,
+  commonKey: string
+) => Object.keys(client.extract()).filter((el) => el.includes(commonKey));

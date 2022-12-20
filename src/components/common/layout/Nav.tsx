@@ -4,13 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import LoginForm from '@components/common/form/LoginForm';
-import Modal from '@components/common/modal/Modal';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { UserOutlined } from '@ant-design/icons';
 import DropBox, { DropBoxOption } from '../dropbox/DropBox';
@@ -26,7 +21,6 @@ const Nav = () => {
   const { pathname } = useRouter();
   const [logoutMutation] = useLogoutMutation();
   const dispatch = useAppDispatch();
-  const { modalName } = useAppSelector((state) => state.core);
   const isHome = pathname === '/';
   const isRegister = pathname.includes('/register');
   const requestLogout = async () => {
@@ -39,13 +33,11 @@ const Nav = () => {
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',
-      onClick: () => {},
+      onClick: () => router.push('/me?l=eh'),
     },
     {
       label: '프로필수정',
-      onClick: () => {
-        router.push('/me/edit');
-      },
+      onClick: () => router.push('/me/edit'),
     },
     {
       label: '로그아웃',
@@ -79,63 +71,56 @@ const Nav = () => {
     },
   ];
   return (
-    <>
-      <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
-        <div className="nav-contents-wrapper">
-          <Link href="/">
-            <span className="nav-home-link-text">실기CBT</span>
-          </Link>
-          {navItems.map((item) => {
-            return (
-              <Link href={item.key} key={item.key}>
-                <span
-                  className={`nav-item-link-text ${
-                    item.selected && 'selected'
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-          {meQuery?.me.user ? (
-            <div className="nav-user-content-wrapper ml-auto">
-              <button className="nav-user-content" onClick={onProfileClick}>
-                <span className="nav-user-content-profile-image">
-                  <UserOutlined />
-                </span>
-                <span>{meQuery?.me.user.nickname}</span>
-              </button>
-              <OuterClick
-                callback={() => {
-                  setProfileDropBoxState(false);
-                }}
+    <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
+      <div className="nav-contents-wrapper">
+        <Link href="/">
+          <span className="nav-home-link-text">실기CBT</span>
+        </Link>
+        {navItems.map((item) => {
+          return (
+            <Link href={item.key} key={item.key}>
+              <span
+                className={`nav-item-link-text ${item.selected && 'selected'}`}
               >
-                <DropBox
-                  isOpen={profileDropBoxState}
-                  options={dropBoxOptions}
-                />
-              </OuterClick>
-            </div>
-          ) : (
-            <>
-              <Link href="/register/confirm">
-                <span
-                  className={`nav-item-link-text ml-auto ${
-                    isRegister && 'selected'
-                  }`}
-                >
-                  회원가입
-                </span>
-              </Link>
-              <Button onClick={openLoginModal} htmlType="button">
-                로그인
-              </Button>
-            </>
-          )}
-        </div>
-      </NavContainer>
-    </>
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+        {meQuery?.me.user ? (
+          <div className="nav-user-content-wrapper ml-auto">
+            <button className="nav-user-content" onClick={onProfileClick}>
+              <span className="nav-user-content-profile-image">
+                <UserOutlined />
+              </span>
+              <span>{meQuery?.me.user.nickname}</span>
+            </button>
+            <OuterClick
+              callback={() => {
+                setProfileDropBoxState(false);
+              }}
+            >
+              <DropBox isOpen={profileDropBoxState} options={dropBoxOptions} />
+            </OuterClick>
+          </div>
+        ) : (
+          <>
+            <Link href="/register/confirm">
+              <span
+                className={`nav-item-link-text ml-auto ${
+                  isRegister && 'selected'
+                }`}
+              >
+                회원가입
+              </span>
+            </Link>
+            <Button onClick={openLoginModal} htmlType="button">
+              로그인
+            </Button>
+          </>
+        )}
+      </div>
+    </NavContainer>
   );
 };
 
@@ -145,7 +130,6 @@ const NavContainer = styled.div<{
   sticky: boolean;
   profileDropBoxState: boolean;
 }>`
-  padding: 25px 0px;
   height: 60px;
   border-bottom: 1.5px solid ${palette.gray_200};
   display: flex;

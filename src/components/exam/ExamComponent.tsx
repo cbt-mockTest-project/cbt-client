@@ -7,6 +7,7 @@ import { tempAnswerKey } from '@lib/constants';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
+import { ellipsisText } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -118,7 +119,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           label="문제"
           content={{
             content: questionAndSolution
-              ? `${questionAndSolution.number}. ${questionAndSolution.question}`
+              ? `${questionIndex}. ${questionAndSolution.question}`
               : '',
             img: questionAndSolution?.question_img,
             title: String(examTitle || ''),
@@ -181,7 +182,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       </ExamContainer>
       <ConfirmModal
         open={finishModalState}
-        content={['마지막 문제입니다.', '학습을 종료하시겠습니까?']}
+        content={'마지막 문제입니다.\n학습을 종료하시겠습니까?'}
         onClose={onToggleFinishModal}
         onCancel={onToggleFinishModal}
         onConfirm={onFinishConfirmModal}
@@ -189,7 +190,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       />
       <ReportModal
         open={feedBackModalState}
-        content={String(examTitle)}
         onClose={onToggleFeedBackModal}
         onCancel={onToggleFeedBackModal}
         onConfirm={onReport}
@@ -197,7 +197,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           reportValue.current = value;
         }}
         confirmLabel="신고하기"
-        title={[String(examTitle), String(questionIndex) + '번 문제']}
+        title={`${String(examTitle)}\nQ. ${ellipsisText(
+          String(questionAndSolution?.question),
+          10
+        )}`}
       />
       <ProgressModal
         open={progressModalState}

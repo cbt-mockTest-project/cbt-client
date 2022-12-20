@@ -1,10 +1,11 @@
 import { Button } from 'antd';
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 
-type ContentType = string | string[] | JSX.Element;
-interface ConfirmModalProps extends Pick<ModalProps, 'open' | 'onClose'> {
+type ContentType = string | JSX.Element;
+export interface ConfirmModalProps
+  extends Pick<ModalProps, 'open' | 'onClose'> {
   content: ContentType;
   onConfirm: () => void;
   onCancel: () => void;
@@ -22,17 +23,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelLabel = '취소하기',
 }) => {
   const Content: React.FC<{ data: ContentType }> = ({ data }) => {
-    if (Array.isArray(data)) {
-      return (
-        <>
-          {data.map((value, index) => (
-            <p key={index}>{value}</p>
-          ))}
-        </>
-      );
-    }
     if (typeof data === 'string') {
-      return <p>{data}</p>;
+      return <pre>{data}</pre>;
     }
     return data;
   };
@@ -63,14 +55,14 @@ const ConfirmModalContainer = styled.div`
     justify-content: center;
     flex-direction: column;
     gap: 20px;
-  }
-  .confirm-modal-content {
-    padding: 50px 0;
-    margin: auto 0;
-    p {
+    padding: 20px 0;
+    pre {
       text-align: center;
       font-weight: bold;
     }
+  }
+  .confirm-modal-content {
+    margin: auto 0;
   }
   .confirm-modal-button-wrapper {
     button {

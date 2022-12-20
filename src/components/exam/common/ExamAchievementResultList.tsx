@@ -10,35 +10,30 @@ import styled, { css } from 'styled-components';
 
 interface ExamAchievementResultProps {
   className?: string;
+  examId: number;
   onListClick?: (value: number) => void;
 }
 
 const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   className,
   onListClick,
+  examId,
 }) => {
-  const router = useRouter();
   const [readQuestionsMutation, { data: questionQueryData }] =
     useReadQuestionsByExamId();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
     callback: async () =>
       await readQuestionsMutation({
-        variables: { input: { id: Number(router.query.e) } },
+        variables: { input: { id: Number(examId) } },
       }),
   });
   useEffect(() => {
     tryReadQuestionsMutation();
-  }, [router.query.e]);
+  }, [examId]);
   if (!questionQueryData) return null;
   const {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionQueryData;
-  const onMoveQuestion = (questionIndex: number) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, q: questionIndex },
-    });
-  };
   return (
     <ExamAchievementResultContainer
       className={className}

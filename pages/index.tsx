@@ -16,8 +16,9 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import { loginModal } from '@lib/constants';
+import { loginModal, tempAnswerKey } from '@lib/constants';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
+import { LocalStorage } from '@lib/utils/localStorage';
 
 const Home = () => {
   const router = useRouter();
@@ -28,7 +29,8 @@ const Home = () => {
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedTitle, setSelectedTitle] = useState<string>('');
-
+  const [isRandom, setIsRandom] = useState(false);
+  const storage = new LocalStorage();
   useEffect(() => {
     if (categoriesQueryData) {
       const categoires =
@@ -66,12 +68,14 @@ const Home = () => {
       dispatch(coreActions.openModal(loginModal));
     }
     if (!selectedTitle) return;
+    storage.remove(tempAnswerKey);
     router.push({
       pathname: '/exam',
       query: {
         e: selectedTitle,
         q: '1',
         t: examTitlesQueryData?.readMockExamTitlesByCateory.titles[0].title,
+        r: isRandom,
       },
     });
   };
@@ -90,7 +94,10 @@ const Home = () => {
               onChange={onTitleChange}
             />
             <div className="home-checkbox-wrapper">
-              <Checkbox />
+              <Checkbox
+                onChange={() => setIsRandom(!isRandom)}
+                checked={isRandom}
+              />
               <div>문제순서 랜덤</div>
             </div>
             <Button

@@ -10,6 +10,13 @@ export type CreateOrUpdateMockExamQuestionStateMutationVariables = Types.Exact<{
 
 export type CreateOrUpdateMockExamQuestionStateMutation = { __typename?: 'Mutation', createOrUpdateMockExamQuestionState: { __typename?: 'CreateOrUpdateMockExamQuestionStateOutput', error?: string | null, message?: string | null, currentState?: Types.QuestionState | null, ok: boolean } };
 
+export type ResetMyExamQuestionStateMutationVariables = Types.Exact<{
+  input: Types.ResetMyExamQuestionStateInput;
+}>;
+
+
+export type ResetMyExamQuestionStateMutation = { __typename?: 'Mutation', resetMyExamQuestionState: { __typename?: 'ResetMyExamQuestionStateOutput', error?: string | null, ok: boolean } };
+
 
 export const CreateOrUpdateMockExamQuestionStateDocument = gql`
     mutation CreateOrUpdateMockExamQuestionState($input: CreateOrUpdateMockExamQuestionStateInput!) {
@@ -24,4 +31,16 @@ export const CreateOrUpdateMockExamQuestionStateDocument = gql`
 
 export function useCreateOrUpdateMockExamQuestionStateMutation() {
   return Urql.useMutation<CreateOrUpdateMockExamQuestionStateMutation, CreateOrUpdateMockExamQuestionStateMutationVariables>(CreateOrUpdateMockExamQuestionStateDocument);
+};
+export const ResetMyExamQuestionStateDocument = gql`
+    mutation ResetMyExamQuestionState($input: ResetMyExamQuestionStateInput!) {
+  resetMyExamQuestionState(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useResetMyExamQuestionStateMutation() {
+  return Urql.useMutation<ResetMyExamQuestionStateMutation, ResetMyExamQuestionStateMutationVariables>(ResetMyExamQuestionStateDocument);
 };
