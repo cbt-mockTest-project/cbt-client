@@ -73,12 +73,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
                     ...state,
                     state: currentState,
                   }))
-                : [
-                    {
-                      state: currentState,
-                      __typename: 'MockExamQuestionState',
-                    },
-                  ];
+                : state;
             },
           },
         });
