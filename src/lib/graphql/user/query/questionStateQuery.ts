@@ -11,3 +11,12 @@ export const CREATE_OR_UPDATE_QUESTION_STATE = gql`
     }
   }
 `;
+
+export const RESET_QUESTION_STATE_MUTATION = gql`
+  mutation ResetMyExamQuestionState($input: ResetMyExamQuestionStateInput!) {
+    resetMyExamQuestionState(input: $input) {
+      error
+      ok
+    }
+  }
+`;
