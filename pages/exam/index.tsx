@@ -38,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           isRandom,
         },
       },
+      fetchPolicy: 'network-only',
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({

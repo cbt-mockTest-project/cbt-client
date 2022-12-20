@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 
 type ContentType = string | string[] | JSX.Element;
-interface ConfirmModalProps extends Pick<ModalProps, 'open' | 'onClose'> {
+export interface ConfirmModalProps
+  extends Pick<ModalProps, 'open' | 'onClose'> {
   content: ContentType;
   onConfirm: () => void;
   onCancel: () => void;
