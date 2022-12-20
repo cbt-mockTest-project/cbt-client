@@ -24,3 +24,16 @@ export const READ_EXAM_TITLES_QUERY = gql`
     }
   }
 `;
+
+export const FIND_MY_EXAM_HISTORY_QUERY = gql`
+  query FindMyExamHistory {
+    findMyExamHistory {
+      error
+      ok
+      titleAndId {
+        id
+        title
+      }
+    }
+  }
+`;

@@ -15,6 +15,11 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 
 export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string }> } };
 
+export type FindMyExamHistoryQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type FindMyExamHistoryQuery = { __typename?: 'Query', findMyExamHistory: { __typename?: 'FindMyExamHistoryOutput', error?: string | null, ok: boolean, titleAndId?: Array<{ __typename?: 'TitleAndId', id?: number | null, title?: string | null }> | null } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories {
@@ -46,4 +51,20 @@ export const ReadMockExamTitlesByCateoryDocument = gql`
 
 export function useReadMockExamTitlesByCateoryQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamTitlesByCateoryQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamTitlesByCateoryQuery, ReadMockExamTitlesByCateoryQueryVariables>({ query: ReadMockExamTitlesByCateoryDocument, ...options });
+};
+export const FindMyExamHistoryDocument = gql`
+    query FindMyExamHistory {
+  findMyExamHistory {
+    error
+    ok
+    titleAndId {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useFindMyExamHistoryQuery(options?: Omit<Urql.UseQueryArgs<FindMyExamHistoryQueryVariables>, 'query'>) {
+  return Urql.useQuery<FindMyExamHistoryQuery, FindMyExamHistoryQueryVariables>({ query: FindMyExamHistoryDocument, ...options });
 };
