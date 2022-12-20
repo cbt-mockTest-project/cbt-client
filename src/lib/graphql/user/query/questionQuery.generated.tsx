@@ -1,6 +1,7 @@
 import * as Types from '../../../../types';
 
 import gql from 'graphql-tag';
+import { FullQuestionIncludingExamIdPartsFragmentDoc } from './questionFragment.generated';
 import { FullQuestionPartsFragmentDoc } from './questionFragment.generated';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -9,7 +10,7 @@ export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }> }> } };
 
 export type ReadMockExamQuestionQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionInput;
@@ -33,11 +34,11 @@ export const ReadMockExamQuestionsByMockExamIdDocument = gql`
     error
     ok
     questions {
-      ...FullQuestionParts
+      ...FullQuestionIncludingExamIdParts
     }
   }
 }
-    ${FullQuestionPartsFragmentDoc}`;
+    ${FullQuestionIncludingExamIdPartsFragmentDoc}`;
 
 export function useReadMockExamQuestionsByMockExamIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByMockExamIdQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionsByMockExamIdQuery, ReadMockExamQuestionsByMockExamIdQueryVariables>({ query: ReadMockExamQuestionsByMockExamIdDocument, ...options });
