@@ -11,6 +11,7 @@ import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -24,7 +25,8 @@ interface QuestionOption {
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
   const [reportModalState, setReportModalState] = useState(false);
-  const [createFeedBack] = useCreateFeedBack();
+  const { data: meQuery } = useMeQuery();
+  const [createFeedBack, { error }] = useCreateFeedBack();
   const reportValue = useRef('');
   const [currentQuestion, setCurrentQuestion] = useState<QuestionOption | null>(
     null
@@ -35,24 +37,34 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
     setReportModalState(true);
   };
   const requestReport = async () => {
-    try {
-      const content = reportValue.current;
-      if (content.length <= 4) {
-        return message.warn('5글자 이상 입력해주세요.');
-      }
-      if (currentQuestion && content) {
-        const questionId = currentQuestion.id;
-        await createFeedBack({
-          variables: { input: { content, questionId } },
-        });
+    if (!meQuery?.me.user) {
+      return message.warn('로그인이 필요합니다');
+    }
+    const content = reportValue.current;
+    if (content.length <= 4) {
+      return message.warn('5글자 이상 입력해주세요.');
+    }
+    if (currentQuestion && content) {
+      const questionId = currentQuestion.id;
+      const res = await createFeedBack({
+        variables: { input: { content, questionId } },
+      });
+      if (res.data?.createMockExamQuestionFeedback.ok) {
         message.success('신고가 접수되었습니다.');
         setReportModalState(false);
+        return;
       }
-    } catch (e) {
-      console.log(e);
+      return message.error({
+        content: res.data?.createMockExamQuestionFeedback.error,
+      });
     }
   };
-  const tryReport = convertWithErrorHandlingFunc({ callback: requestReport });
+  const tryReport = convertWithErrorHandlingFunc({
+    callback: requestReport,
+    errorCallback: async (error) => {
+      message.error('알수 없는 에러입니다.');
+    },
+  });
   return (
     <Layout>
       <SolutionBlock>
