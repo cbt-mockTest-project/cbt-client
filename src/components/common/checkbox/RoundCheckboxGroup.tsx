@@ -6,7 +6,7 @@ import RoundCheckbox from './RoundCheckbox';
 interface RoundCheckboxGroupProps {
   options: checkboxOption[];
   gap?: number;
-  onChange?: (value: any[]) => void;
+  onChange: (value: checkboxOption['value'][]) => void;
 }
 
 interface RoundCheckboxGroupCssProps
@@ -29,7 +29,7 @@ const RoundCheckboxGroup: React.FC<RoundCheckboxGroupProps> = ({
   };
 
   useEffect(() => {
-    onChange && onChange(checkedValues);
+    onChange(checkedValues);
   }, [checkedValues]);
   return (
     <RoundCheckboxGroupContainer gap={gap}>

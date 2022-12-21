@@ -7,7 +7,7 @@ import { tempAnswerKey } from '@lib/constants';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
-import { ellipsisText } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -84,7 +84,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       query: { title: String(examTitle || ''), e: router.query.e },
     });
   };
-  const onReport = async () => {
+  const requestReport = async () => {
     try {
       const content = reportValue.current;
       if (content.length <= 4) {
@@ -102,6 +102,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       console.log(e);
     }
   };
+
+  const tryReport = convertWithErrorHandlingFunc({ callback: requestReport });
 
   const onChangeAnswer = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const currentValue = e.target.value;
@@ -153,7 +155,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              잘못된 문제 신고
+              잘못된 해설 신고
             </Button>
             <Button
               type="primary"
@@ -192,7 +194,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         open={feedBackModalState}
         onClose={onToggleFeedBackModal}
         onCancel={onToggleFeedBackModal}
-        onConfirm={onReport}
+        onConfirm={tryReport}
         onChange={(value) => {
           reportValue.current = value;
         }}

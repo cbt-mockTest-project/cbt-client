@@ -209,6 +209,19 @@ export type ExamTitleAndId = {
   title: Scalars['String'];
 };
 
+export type Feedback = {
+  __typename?: 'Feedback';
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type FindMyExamHistoryInput = {
+  categoryIds: Array<Scalars['Float']>;
+};
+
 export type FindMyExamHistoryOutput = {
   __typename?: 'FindMyExamHistoryOutput';
   error?: Maybe<Scalars['String']>;
@@ -286,6 +299,7 @@ export type MockExamQuestionFeedback = {
   id: Scalars['Float'];
   mockExamQuestion: MockExamQuestion;
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamQuestionImageInputType = {
@@ -475,6 +489,11 @@ export type Query = {
 };
 
 
+export type QueryFindMyExamHistoryArgs = {
+  input: FindMyExamHistoryInput;
+};
+
+
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
@@ -548,8 +567,8 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
-  category?: Scalars['String'];
-  query?: Scalars['String'];
+  category?: InputMaybe<Scalars['String']>;
+  query?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadAllMockExamsOutput = {
@@ -712,10 +731,12 @@ export type User = {
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
+  feedback: Array<Feedback>;
   id: Scalars['Float'];
   mockExamQuestionState: Array<MockExamQuestionState>;
   nickname: Scalars['String'];
   password: Scalars['String'];
+  questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
 };

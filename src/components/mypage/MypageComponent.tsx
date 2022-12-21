@@ -2,7 +2,7 @@ import RoundCheckboxGroup from '@components/common/checkbox/RoundCheckboxGroup';
 import Modal from '@components/common/modal/Modal';
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import {
-  useFindMyExamHistory,
+  useLazyFindMyExamHistory,
   useReadExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
@@ -28,20 +28,22 @@ interface MypageComponentProps {
 const MypageComponent: React.FC<MypageComponentProps> = ({
   examHistoryQuery,
 }) => {
-  const router = useRouter();
   const [resetQuestionStateMutate] = useResetQuestionState();
+  const [findMyExamHistoryLazyQuery] = useLazyFindMyExamHistory();
   const { data: categoriesQueryData } = useReadExamCategories();
+  const [mounted, setMounted] = useState(false);
   const [categories, setCategories] = useState<checkboxOption[]>([]);
   const [achieveModalState, setAchieveModalState] = useState(false);
   const [examId, setExamId] = useState(0);
   const client = useApollo({}, '');
   useEffect(() => {
+    setMounted(true);
+  }, []);
+  useEffect(() => {
     if (categoriesQueryData) {
       const categoires =
         categoriesQueryData.readAllMockExamCategories.categories;
-      setCategories(
-        categoires.map((el) => ({ value: el.name, label: el.name }))
-      );
+      setCategories(categoires.map((el) => ({ value: el.id, label: el.name })));
     }
   }, [categoriesQueryData]);
 
@@ -89,10 +91,18 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
   const tryResetQuestionState = convertWithErrorHandlingFunc({
     callback: requestResetQuestionState,
   });
+  const onCategoryChange = (values: checkboxOption['value'][]) => {
+    if (mounted) {
+      const categoryIds = values.map((el) => Number(el));
+      findMyExamHistoryLazyQuery({
+        variables: { input: { categoryIds } },
+      });
+    }
+  };
   return (
     <MypageComponentContainer>
       <div className="mypage-exam-check-box-group-wrapper">
-        <RoundCheckboxGroup options={categories} />
+        <RoundCheckboxGroup options={categories} onChange={onCategoryChange} />
         <div className="blur" />
       </div>
       <div className="mypage-exam-list-wrapper">
@@ -119,7 +129,19 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
                     다시 풀기
                   </Link>
                 </Button>
-                <Button onClick={() => {}}>문제/해설</Button>
+                <Button>
+                  <Link
+                    href={{
+                      pathname: '/exam/solution',
+                      query: {
+                        e: el.id,
+                        t: el.title,
+                      },
+                    }}
+                  >
+                    문제/해설
+                  </Link>
+                </Button>
               </div>
             </li>
           ))}

@@ -31,13 +31,11 @@ const Footer: React.FC<FooterProps> = () => {
 export default Footer;
 
 const FooterContainer = styled.div`
-  margin-top: 50px;
+  width: 100%;
   padding: 20px 0;
+  height: 60px;
   border-top: 1px solid ${palette.gray_200};
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  background-color: white;
   .footer-wrapper {
     display: flex;
     align-items: center;
