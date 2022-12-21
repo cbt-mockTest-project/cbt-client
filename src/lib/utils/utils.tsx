@@ -44,7 +44,7 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
     } catch (error) {
       console.log(error);
       if (errorCallback) {
-        return await errorCallback();
+        return await errorCallback(error);
       }
     }
   };
