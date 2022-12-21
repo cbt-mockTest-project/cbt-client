@@ -19,6 +19,7 @@ import { coreActions } from '@modules/redux/slices/core';
 import { loginModal, tempAnswerKey } from '@lib/constants';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { LocalStorage } from '@lib/utils/localStorage';
+import Link from 'next/link';
 
 const Home = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const Home = () => {
   const [readExamTitles, { data: examTitlesQueryData }] = useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
-  const [selectedTitle, setSelectedTitle] = useState<string>('');
+  const [selectedExamId, setSelectedExamId] = useState<string>('');
   const [isRandom, setIsRandom] = useState(false);
   const storage = new LocalStorage();
   useEffect(() => {
@@ -42,7 +43,7 @@ const Home = () => {
   }, [categoriesQueryData]);
 
   const onCategoryChange = async (value: string) => {
-    setSelectedTitle('');
+    setSelectedExamId('');
     const { data } = await readExamTitles({
       variables: { input: { name: value } },
     });
@@ -60,19 +61,19 @@ const Home = () => {
   };
 
   const onTitleChange = async (value: string) => {
-    setSelectedTitle(value);
+    setSelectedExamId(value);
   };
 
   const gotoExamPage = () => {
     if (!meQuery?.me.ok) {
       dispatch(coreActions.openModal(loginModal));
     }
-    if (!selectedTitle) return;
+    if (!selectedExamId) return;
     storage.remove(tempAnswerKey);
     router.push({
       pathname: '/exam',
       query: {
-        e: selectedTitle,
+        e: selectedExamId,
         q: '1',
         t: examTitlesQueryData?.readMockExamTitlesByCateory.titles[0].title,
         r: isRandom,
@@ -90,7 +91,7 @@ const Home = () => {
             <div>회차선택</div>
             <Select
               options={titles}
-              value={selectedTitle}
+              value={selectedExamId}
               onChange={onTitleChange}
             />
             <div className="home-checkbox-wrapper">
@@ -103,12 +104,23 @@ const Home = () => {
             <Button
               type="primary"
               onClick={gotoExamPage}
-              disabled={!Boolean(selectedTitle)}
+              disabled={!Boolean(selectedExamId)}
             >
               문제풀기
             </Button>
-            <Button type="primary" disabled={!Boolean(selectedTitle)}>
-              문제/해답 보기
+            <Button type="primary" disabled={!Boolean(selectedExamId)}>
+              <Link
+                href={{
+                  pathname: '/exam/solution',
+                  query: {
+                    e: selectedExamId,
+                    t: examTitlesQueryData?.readMockExamTitlesByCateory
+                      .titles[0].title,
+                  },
+                }}
+              >
+                문제/해답 보기
+              </Link>
             </Button>
           </div>
         </div>

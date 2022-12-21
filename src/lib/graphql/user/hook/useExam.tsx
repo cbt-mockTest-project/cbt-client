@@ -25,8 +25,7 @@ export const useReadExamTitles = () =>
     ReadMockExamTitlesByCateoryQueryVariables
   >(READ_EXAM_TITLES_QUERY);
 
-export const useFindMyExamHistory = () =>
-  useQuery<FindMyExamHistoryQuery, FindMyExamHistoryQueryVariables>(
-    FIND_MY_EXAM_HISTORY_QUERY,
-    { fetchPolicy: 'cache-only' }
+export const useLazyFindMyExamHistory = () =>
+  useLazyQuery<FindMyExamHistoryQuery, FindMyExamHistoryQueryVariables>(
+    FIND_MY_EXAM_HISTORY_QUERY
   );

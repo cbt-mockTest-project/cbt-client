@@ -7,7 +7,7 @@ interface RoundCheckboxProps {
   option: checkboxOption;
   height?: number;
   defaultChecked?: boolean;
-  onChange?: (checked: boolean, value: string) => void;
+  onChange: (checked: boolean, value: string) => void;
 }
 
 const RoundCheckbox: React.FC<RoundCheckboxProps> = ({
@@ -18,8 +18,8 @@ const RoundCheckbox: React.FC<RoundCheckboxProps> = ({
   const [checked, setChecked] = useState(defaultChecked);
   const [value, setValue] = useState('');
   useEffect(() => {
-    onChange && onChange(checked, value);
-  }, [checked]);
+    value && onChange(checked, value);
+  }, [checked, value]);
 
   const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);

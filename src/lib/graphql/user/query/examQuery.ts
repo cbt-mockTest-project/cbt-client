@@ -5,6 +5,7 @@ export const READ_EXAM_CATEGORIES_QUERY = gql`
     readAllMockExamCategories {
       categories {
         name
+        id
       }
       error
       ok
@@ -26,8 +27,8 @@ export const READ_EXAM_TITLES_QUERY = gql`
 `;
 
 export const FIND_MY_EXAM_HISTORY_QUERY = gql`
-  query FindMyExamHistory {
-    findMyExamHistory {
+  query FindMyExamHistory($input: FindMyExamHistoryInput!) {
+    findMyExamHistory(input: $input) {
       error
       ok
       titleAndId {

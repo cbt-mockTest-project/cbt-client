@@ -36,6 +36,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
     return await apolloClient.query<FindMyExamHistoryQuery>({
       query: FIND_MY_EXAM_HISTORY_QUERY,
+      variables: {
+        input: {
+          categoryIds: [],
+        },
+      },
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({
@@ -43,5 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const result = await tryRequest();
   const examHistoryQuery = result?.data;
-  return addApolloState(apolloClient, { props: { examHistoryQuery } });
+  return addApolloState(apolloClient, {
+    props: { examHistoryQuery: examHistoryQuery || null },
+  });
 };

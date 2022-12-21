@@ -74,6 +74,7 @@ const Layout: React.FC<LayoutProps> = ({
 export default Layout;
 
 const LayoutContainer = styled.div`
+  position: relative;
   .layout-sub-banner-wrapper {
     display: flex;
     flex-direction: column;
@@ -105,5 +106,6 @@ const LayoutContainer = styled.div`
     flex-direction: column;
     max-width: 1024px;
     margin-top: 45px;
+    min-height: calc(100vh - 165px);
   }
 `;
