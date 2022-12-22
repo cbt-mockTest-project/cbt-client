@@ -3,6 +3,7 @@ import { QuestionState } from '../../types';
 import { circleIcon } from '@lib/constants';
 import { checkboxOption } from 'customTypes';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { message } from 'antd';
 
 export const isServer = () => typeof window === 'undefined';
 export const convertStateToIcon = (
@@ -41,8 +42,10 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
   async () => {
     try {
       return await callback();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.message === 'Forbidden resource') {
+        message.error({ content: '로그인이 필요합니다' });
+      }
       if (errorCallback) {
         return await errorCallback(error);
       }

@@ -25,8 +25,7 @@ interface QuestionOption {
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
   const [reportModalState, setReportModalState] = useState(false);
-  const { data: meQuery } = useMeQuery();
-  const [createFeedBack, { error }] = useCreateFeedBack();
+  const [createFeedBack] = useCreateFeedBack();
   const reportValue = useRef('');
   const [currentQuestion, setCurrentQuestion] = useState<QuestionOption | null>(
     null
@@ -37,9 +36,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
     setReportModalState(true);
   };
   const requestReport = async () => {
-    if (!meQuery?.me.user) {
-      return message.warn('로그인이 필요합니다');
-    }
     const content = reportValue.current;
     if (content.length <= 4) {
       return message.warn('5글자 이상 입력해주세요.');
@@ -61,9 +57,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
   };
   const tryReport = convertWithErrorHandlingFunc({
     callback: requestReport,
-    errorCallback: async (error) => {
-      message.error('알수 없는 에러입니다.');
-    },
   });
   return (
     <Layout>
