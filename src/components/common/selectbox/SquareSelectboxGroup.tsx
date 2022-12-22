@@ -42,7 +42,7 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
             option={option}
             key={index}
             selected={option.value === selectedValue}
-            onClick={() => tryOnClick(option.value)()}
+            onClick={() => tryOnClick(String(option.value))()}
           />
         );
       })}

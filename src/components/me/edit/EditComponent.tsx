@@ -152,7 +152,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
       <ConfirmModal
         open={withdrawalModalState}
         confirmLabel="탈퇴하기"
-        content={['탈퇴 후 재가입이 불가능합니다.', '탈퇴 하시겠습니까?']}
+        content={
+          <pre>{`탈퇴 후 재가입이 불가능합니다.\n탈퇴 하시겠습니까?`}</pre>
+        }
         onConfirm={tryRequestWithdrawal}
         onClose={onToggleWithdrawalModal}
         onCancel={onToggleWithdrawalModal}
