@@ -87,6 +87,9 @@ const Globalstyles = createGlobalStyle`
   .ml-auto {
     margin-left : auto;
   }
+  .mr-auto {
+    margin-left : auto;
+  }
   .select-none {
     -webkit-user-select: none;
     -moz-user-select: none;
