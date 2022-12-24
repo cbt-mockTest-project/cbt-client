@@ -1,5 +1,5 @@
 const config = {
-  schema: 'http://localhost:8070/graphql',
+  schema: 'http://localhost:80/graphql',
   documents: ['src/**/!(*.generated).{ts,tsx}'],
   generates: {
     'src/types.ts': ['typescript'],

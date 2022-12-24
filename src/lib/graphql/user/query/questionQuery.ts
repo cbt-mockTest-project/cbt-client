@@ -12,6 +12,7 @@ export const READ_QUESTIONS_BY_ID = gql`
       count
       error
       ok
+      title
       questions {
         ...FullQuestionIncludingExamIdParts
       }

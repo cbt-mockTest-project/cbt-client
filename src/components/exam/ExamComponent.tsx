@@ -31,7 +31,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   } = questionsQuery;
   const router = useRouter();
   const storage = new LocalStorage();
-  const examTitle = router.query.t;
+  const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
   const questionIndex = Number(router.query.q);
   const tempAnswerIndex = String(examTitle) + questionIndex;
   const reportValue = useRef('');

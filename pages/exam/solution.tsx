@@ -11,11 +11,9 @@ import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
-  title: string;
 }
 
 interface QuestionOption {
@@ -23,7 +21,8 @@ interface QuestionOption {
   id: number;
 }
 
-const Solution: NextPage<SolutionProps> = ({ questionsQuery, title }) => {
+const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
+  const title = questionsQuery.readMockExamQuestionsByMockExamId.title;
   const [reportModalState, setReportModalState] = useState(false);
   const [createFeedBack] = useCreateFeedBack();
   const reportValue = useRef('');
@@ -127,7 +126,6 @@ export default Solution;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const examId = context.query.e;
-  const title = context.query.t;
   const isRandom = context.query.r === 'true' ? true : false;
   const request = async () => {
     await apolloClient.query({
@@ -149,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const res = await tryRequest();
   const questionsQuery = res?.data;
-  return addApolloState(apolloClient, { props: { questionsQuery, title } });
+  return addApolloState(apolloClient, { props: { questionsQuery } });
 };
 
 const SolutionBlock = styled.div`

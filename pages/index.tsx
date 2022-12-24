@@ -75,7 +75,6 @@ const Home = () => {
       query: {
         e: selectedExamId,
         q: '1',
-        t: examTitlesQueryData?.readMockExamTitlesByCateory.titles[0].title,
         r: isRandom,
       },
     });

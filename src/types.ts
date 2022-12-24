@@ -625,6 +625,7 @@ export type ReadMockExamQuestionsByMockExamIdOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   questions: Array<MockExamQuestion>;
+  title: Scalars['String'];
 };
 
 export type ReadMockExamQuestionsByStateInput = {
