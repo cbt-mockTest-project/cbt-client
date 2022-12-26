@@ -16,7 +16,6 @@ import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
@@ -29,7 +28,8 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
   examHistoryQuery,
 }) => {
   const [resetQuestionStateMutate] = useResetQuestionState();
-  const [findMyExamHistoryLazyQuery] = useLazyFindMyExamHistory();
+  const [findMyExamHistoryLazyQuery, { data: lazyExamHistoryQuery }] =
+    useLazyFindMyExamHistory();
   const { data: categoriesQueryData } = useReadExamCategories();
   const [mounted, setMounted] = useState(false);
   const [categories, setCategories] = useState<checkboxOption[]>([]);
@@ -91,10 +91,10 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
   const tryResetQuestionState = convertWithErrorHandlingFunc({
     callback: requestResetQuestionState,
   });
-  const onCategoryChange = (values: checkboxOption['value'][]) => {
+  const onCategoryChange = async (values: checkboxOption['value'][]) => {
     if (mounted) {
       const categoryIds = values.map((el) => Number(el));
-      findMyExamHistoryLazyQuery({
+      await findMyExamHistoryLazyQuery({
         variables: { input: { categoryIds } },
       });
     }
@@ -107,7 +107,9 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
       </div>
       <div className="mypage-exam-list-wrapper">
         <ul>
-          {examHistoryQuery.findMyExamHistory.titleAndId?.map((el, idx) => (
+          {(
+            lazyExamHistoryQuery || examHistoryQuery
+          ).findMyExamHistory.titleAndId?.map((el, idx) => (
             <li key={el.id}>
               <span>{el.title}</span>
               <div className="mypage-exam-list-button-wrapper">
