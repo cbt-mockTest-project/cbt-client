@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import Layout from '@components/common/layout/Layout';
@@ -52,38 +53,44 @@ const Password: NextPage<PasswordProps> = () => {
     callback: requestChangePassword,
   });
   return (
-    <Layout>
-      <PasswordContainer>
-        <h1>실기CBT 비밀번호 변경</h1>
-        <Label content="비밀번호" className="password-label" />
-        <Input
-          value={password}
-          onChange={onPasswordChange}
-          disabled={disabledState}
-          type="password"
-        />
-        <Label content="비밀번호 확인" className="password-label" />
-        <Input
-          value={passwordCheck}
-          onChange={onPasswordCheckChange}
-          disabled={disabledState}
-          type="password"
-        />
-        {errorState && (
-          <ErrorText
-            content="비밀번호가 일치하지 않습니다."
-            className="password-error-text"
+    <>
+      <WithHead
+        title="비밀번호변경 | 실기CBT"
+        pageHeadingTitle="비밀번호변경 페이지"
+      />
+      <Layout>
+        <PasswordContainer>
+          <h1>실기CBT 비밀번호 변경</h1>
+          <Label content="비밀번호" className="password-label" />
+          <Input
+            value={password}
+            onChange={onPasswordChange}
+            disabled={disabledState}
+            type="password"
           />
-        )}
-        <Button
-          type="primary"
-          disabled={disabledState}
-          onClick={tryRequestChangePassword}
-        >
-          비밀번호 변경
-        </Button>
-      </PasswordContainer>
-    </Layout>
+          <Label content="비밀번호 확인" className="password-label" />
+          <Input
+            value={passwordCheck}
+            onChange={onPasswordCheckChange}
+            disabled={disabledState}
+            type="password"
+          />
+          {errorState && (
+            <ErrorText
+              content="비밀번호가 일치하지 않습니다."
+              className="password-error-text"
+            />
+          )}
+          <Button
+            type="primary"
+            disabled={disabledState}
+            onClick={tryRequestChangePassword}
+          >
+            비밀번호 변경
+          </Button>
+        </PasswordContainer>
+      </Layout>
+    </>
   );
 };
 

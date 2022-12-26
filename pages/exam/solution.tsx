@@ -11,6 +11,7 @@ import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import WithHead from '@components/common/head/WithHead';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -58,66 +59,72 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
     callback: requestReport,
   });
   return (
-    <Layout>
-      <SolutionBlock>
-        <h1>{title} 문제/해설</h1>
-        <ul>
-          {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
-            (el, index) => (
-              <li key={index}>
-                <pre className="solution-page-question">
-                  {`Q${el.number}. ${el.question}`}
-                  {el.question_img &&
-                    el.question_img.map((el, index) => (
-                      <a
-                        className="solution-page-image-link"
-                        key={index}
-                        href={el.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-                    ))}
-                </pre>
-                <pre className="solution-page-solution">{el.solution}</pre>
-                <div>
-                  {el.solution_img &&
-                    el.solution_img.map((el, index) => (
-                      <a
-                        className="solution-page-image-link"
-                        key={index}
-                        href={el.url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-                    ))}
-                </div>
-                <Button
-                  type="primary"
-                  className="solution-page-report-button"
-                  onClick={() => openReportModal(el.question, el.id)}
-                >
-                  잘못된 해설신고
-                </Button>
-              </li>
-            )
-          )}
-        </ul>
-        <ReportModal
-          open={reportModalState}
-          onChange={(value) => {
-            reportValue.current = value;
-          }}
-          onClose={onToggleReportModalState}
-          onCancel={onToggleReportModalState}
-          onConfirm={tryReport}
-          confirmLabel="신고하기"
-          title={`${String(title)}\nQ. ${ellipsisText(
-            String(currentQuestion?.title),
-            10
-          )}`}
-        />
-      </SolutionBlock>
-    </Layout>
+    <>
+      <WithHead
+        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 | 실기CBT`}
+        pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 페이지`}
+      />
+      <Layout>
+        <SolutionBlock>
+          <h1>{title} 문제/해설</h1>
+          <ul>
+            {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
+              (el, index) => (
+                <li key={index}>
+                  <pre className="solution-page-question">
+                    {`Q${el.number}. ${el.question}`}
+                    {el.question_img &&
+                      el.question_img.map((el, index) => (
+                        <a
+                          className="solution-page-image-link"
+                          key={index}
+                          href={el.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
+                      ))}
+                  </pre>
+                  <pre className="solution-page-solution">{el.solution}</pre>
+                  <div>
+                    {el.solution_img &&
+                      el.solution_img.map((el, index) => (
+                        <a
+                          className="solution-page-image-link"
+                          key={index}
+                          href={el.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
+                      ))}
+                  </div>
+                  <Button
+                    type="primary"
+                    className="solution-page-report-button"
+                    onClick={() => openReportModal(el.question, el.id)}
+                  >
+                    잘못된 해설신고
+                  </Button>
+                </li>
+              )
+            )}
+          </ul>
+          <ReportModal
+            open={reportModalState}
+            onChange={(value) => {
+              reportValue.current = value;
+            }}
+            onClose={onToggleReportModalState}
+            onCancel={onToggleReportModalState}
+            onConfirm={tryReport}
+            confirmLabel="신고하기"
+            title={`${String(title)}\nQ. ${ellipsisText(
+              String(currentQuestion?.title),
+              10
+            )}`}
+          />
+        </SolutionBlock>
+      </Layout>
+    </>
   );
 };
 

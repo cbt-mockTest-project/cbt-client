@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import SelectedResultComponent from '@components/exam/selectedResult/SelectedResultComponent';
 import { useReadQuestionsByState } from '@lib/graphql/user/hook/useExamQuestion';
@@ -18,11 +19,17 @@ const SelectedResult: NextPage<SelectedResultPageProps> = ({
   questionsQuery,
 }) => {
   return (
-    <Layout mainBanner={true}>
-      {questionsQuery && (
-        <SelectedResultComponent questionsQuery={questionsQuery} />
-      )}
-    </Layout>
+    <>
+      <WithHead
+        title={`선택된 성취도 문제 | 실기CBT`}
+        pageHeadingTitle={`선택된 성취도 문제 페이지`}
+      />
+      <Layout mainBanner={true}>
+        {questionsQuery && (
+          <SelectedResultComponent questionsQuery={questionsQuery} />
+        )}
+      </Layout>
+    </>
   );
 };
 

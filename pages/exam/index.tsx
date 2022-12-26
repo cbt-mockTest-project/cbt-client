@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import ExamComponent from '@components/exam/ExamComponent';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
@@ -13,10 +14,17 @@ interface ExamProps {
 }
 
 const Exam: NextPage<ExamProps> = ({ questionsQuery }) => {
+  questionsQuery.readMockExamQuestionsByMockExamId.title;
   return (
-    <Layout mainBanner={true}>
-      {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
-    </Layout>
+    <>
+      <WithHead
+        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} | 실기CBT`}
+        pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
+      />
+      <Layout mainBanner={true}>
+        {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
+      </Layout>
+    </>
   );
 };
 

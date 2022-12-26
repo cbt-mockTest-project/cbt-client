@@ -20,6 +20,7 @@ import { loginModal, tempAnswerKey } from '@lib/constants';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
+import WithHead from '@components/common/head/WithHead';
 
 const Home = () => {
   const router = useRouter();
@@ -81,50 +82,56 @@ const Home = () => {
   };
 
   return (
-    <Layout mainBanner={true} sideBanner={true}>
-      <HomeContainer>
-        <div className="home-wrapper">
-          <div className="home-content-wrapper">
-            <div>시험선택</div>
-            <Select options={categories} onChange={onCategoryChange} />
-            <div>회차선택</div>
-            <Select
-              options={titles}
-              value={selectedExamId}
-              onChange={onTitleChange}
-            />
-            <div className="home-checkbox-wrapper">
-              <Checkbox
-                onChange={() => setIsRandom(!isRandom)}
-                checked={isRandom}
+    <>
+      <WithHead
+        title="실기CBT | 국가고시 실기시험 부시기!"
+        pageHeadingTitle="실기CBT 서비스 메인페이지"
+      />
+      <Layout mainBanner={true} sideBanner={true}>
+        <HomeContainer>
+          <div className="home-wrapper">
+            <div className="home-content-wrapper">
+              <div>시험선택</div>
+              <Select options={categories} onChange={onCategoryChange} />
+              <div>회차선택</div>
+              <Select
+                options={titles}
+                value={selectedExamId}
+                onChange={onTitleChange}
               />
-              <div>문제순서 랜덤</div>
-            </div>
-            <Button
-              type="primary"
-              onClick={gotoExamPage}
-              disabled={!Boolean(selectedExamId)}
-            >
-              문제풀기
-            </Button>
-            <Button type="primary" disabled={!Boolean(selectedExamId)}>
-              <Link
-                href={{
-                  pathname: '/exam/solution',
-                  query: {
-                    e: selectedExamId,
-                    t: examTitlesQueryData?.readMockExamTitlesByCateory
-                      .titles[0]?.title,
-                  },
-                }}
+              <div className="home-checkbox-wrapper">
+                <Checkbox
+                  onChange={() => setIsRandom(!isRandom)}
+                  checked={isRandom}
+                />
+                <div>문제순서 랜덤</div>
+              </div>
+              <Button
+                type="primary"
+                onClick={gotoExamPage}
+                disabled={!Boolean(selectedExamId)}
               >
-                문제/해답 보기
-              </Link>
-            </Button>
+                문제풀기
+              </Button>
+              <Button type="primary" disabled={!Boolean(selectedExamId)}>
+                <Link
+                  href={{
+                    pathname: '/exam/solution',
+                    query: {
+                      e: selectedExamId,
+                      t: examTitlesQueryData?.readMockExamTitlesByCateory
+                        .titles[0]?.title,
+                    },
+                  }}
+                >
+                  문제/해답 보기
+                </Link>
+              </Button>
+            </div>
           </div>
-        </div>
-      </HomeContainer>
-    </Layout>
+        </HomeContainer>
+      </Layout>
+    </>
   );
 };
 export default Home;

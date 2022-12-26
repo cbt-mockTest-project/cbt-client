@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import MypageComponent from '@components/mypage/MypageComponent';
 import {
@@ -17,9 +18,12 @@ interface MypageProps {
 
 const Mypage: NextPage<MypageProps> = ({ examHistoryQuery }) => {
   return (
-    <Layout subNav={true}>
-      <MypageComponent examHistoryQuery={examHistoryQuery} />
-    </Layout>
+    <>
+      <WithHead title="마이페이지 | 실기CBT" pageHeadingTitle="마이페이지" />
+      <Layout subNav={true}>
+        <MypageComponent examHistoryQuery={examHistoryQuery} />
+      </Layout>
+    </>
   );
 };
 
