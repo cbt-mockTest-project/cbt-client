@@ -7,6 +7,7 @@ import { tempAnswerKey } from '@lib/constants';
 import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
+import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
@@ -278,5 +279,14 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
 
   pre {
     white-space: pre-wrap;
+  }
+  @media (max-width: ${responsive.medium}) {
+    .exam-question-menubar-wrapper {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: flex-start;
+    }
   }
 `;

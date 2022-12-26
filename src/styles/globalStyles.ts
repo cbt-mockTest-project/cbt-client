@@ -1,3 +1,4 @@
+import { responsive } from '@lib/utils/responsive';
 import { createGlobalStyle } from 'styled-components';
 
 const Globalstyles = createGlobalStyle`
@@ -95,6 +96,19 @@ const Globalstyles = createGlobalStyle`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+  .visible-on-mobile {
+    display: none;
+    @media (max-width: ${responsive.medium}) {
+      display: block;
+    }
+  }
+
+  .visible-on-pc {
+    display: block;
+    @media (max-width: ${responsive.medium}) {
+      display: none;
+    }
   }
 `;
 

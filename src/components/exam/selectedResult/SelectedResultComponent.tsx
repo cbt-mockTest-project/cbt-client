@@ -74,9 +74,11 @@ const SelectedResultComponentContainer = styled.div`
     border-radius: 5px;
     border-top-left-radius: 0px;
     background-color: ${palette.gray_100};
+    white-space: pre-wrap;
   }
   .selected-result-solution {
     margin: 20px 0 20px 20px;
+    white-space: pre-wrap;
   }
   .selected-result-image-link {
     margin-left: 20px;

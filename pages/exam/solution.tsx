@@ -157,12 +157,14 @@ const SolutionBlock = styled.div`
     font-size: 1.5rem;
   }
   .solution-page-question {
+    white-space: pre-wrap;
     margin-top: 20px;
     padding: 20px;
     border-radius: 5px;
     background-color: ${palette.gray_100};
   }
   .solution-page-solution {
+    white-space: pre-wrap;
     margin: 20px 0 20px 20px;
   }
   .solution-page-image-link {

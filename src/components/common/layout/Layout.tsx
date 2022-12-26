@@ -1,4 +1,5 @@
 import MainBanner from '@components/banner/MainBanner';
+import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import Image from 'next/image';
 import React from 'react';
@@ -107,5 +108,17 @@ const LayoutContainer = styled.div`
     max-width: 1024px;
     margin-top: 45px;
     min-height: calc(100vh - 165px);
+  }
+
+  @media (max-width: ${responsive.medium}) {
+    .layout-sub-banner-wrapper {
+      display: none;
+    }
+    .home-wrapper {
+    }
+    .home-content-wrapper {
+      justify-content: center;
+      align-items: center;
+    }
   }
 `;
