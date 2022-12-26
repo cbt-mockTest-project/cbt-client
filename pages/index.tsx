@@ -114,7 +114,7 @@ const Home = () => {
                   query: {
                     e: selectedExamId,
                     t: examTitlesQueryData?.readMockExamTitlesByCateory
-                      .titles[0].title,
+                      .titles[0]?.title,
                   },
                 }}
               >
