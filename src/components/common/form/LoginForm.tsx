@@ -7,7 +7,11 @@ import { LoginInput } from 'types';
 import ErrorText from '../layout/errorText/ErrorText';
 import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
 
-const LoginForm = () => {
+interface LoginFormProps {
+  isMobile?: boolean;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const [loginMutation] = useLoginMutation();
   const onSubmit = async (data: LoginInput) => {
@@ -17,7 +21,7 @@ const LoginForm = () => {
       if (login.error) {
         return message.error({ content: login.error });
       }
-      location.reload();
+      isMobile ? location.replace('/') : location.reload();
     }
   };
   return (
