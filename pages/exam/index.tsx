@@ -35,9 +35,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const examId = context.query.e;
   const isRandom = context.query.r === 'true' ? true : false;
   const request = async () => {
-    await apolloClient.query({
-      query: ME_QUERY,
-    });
     return await apolloClient.query<ReadMockExamQuestionsByMockExamIdQuery>({
       query: READ_QUESTIONS_BY_ID,
       variables: {

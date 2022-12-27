@@ -35,9 +35,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await apolloClient.query({
       query: READ_EXAM_CATEGORIES_QUERY,
     });
-    await apolloClient.query({
-      query: ME_QUERY,
-    });
     return await apolloClient.query<FindMyExamHistoryQuery>({
       query: FIND_MY_EXAM_HISTORY_QUERY,
       variables: {

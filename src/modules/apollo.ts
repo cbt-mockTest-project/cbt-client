@@ -17,9 +17,9 @@ const httpLink = createHttpLink({
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
-export const createApolloClient = (cookie: string) => {
+export const createApolloClient = (Cookie: string) => {
   const authLink = setContext(() => ({
-    headers: { Cookie: cookie },
+    headers: { Cookie },
   }));
   return new ApolloClient({
     ssrMode: isServer(),
@@ -28,8 +28,8 @@ export const createApolloClient = (cookie: string) => {
   });
 };
 
-export const initializeApollo = (initialState = {}, token: string) => {
-  const client = _apolloClient ?? createApolloClient(token);
+export const initializeApollo = (initialState = {}, Cookie: string) => {
+  const client = _apolloClient ?? createApolloClient(Cookie);
 
   if (initialState) {
     const existCache = client.extract();

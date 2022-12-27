@@ -138,12 +138,10 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
+
   const request = async () => {
     await apolloClient.query({
       query: READ_EXAM_CATEGORIES_QUERY,
-    });
-    await apolloClient.query({
-      query: ME_QUERY,
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({

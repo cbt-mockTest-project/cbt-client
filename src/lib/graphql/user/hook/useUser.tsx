@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
   CHECK_PASSWORD_MUTATION,

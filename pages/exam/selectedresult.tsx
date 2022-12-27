@@ -41,9 +41,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const states: QuestionState[] = JSON.parse(String(query.c));
   const examId = Number(query.e);
   const request = async () => {
-    await apolloClient.query({
-      query: ME_QUERY,
-    });
     return await apolloClient.query<ReadMockExamQuestionsByStateQuery>({
       query: READ_QUESTIONS_BY_STATE,
       variables: {
