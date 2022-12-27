@@ -149,7 +149,7 @@ const Nav = () => {
                   </span>
                   <span>{meQuery?.me.user.nickname}</span>
                 </div>
-                <Link href="/me">
+                <Link href="/me?l=eh">
                   <span className={`mobile-nav-item-link-text`}>활동내역</span>
                 </Link>
                 <Link href="/me/edit">

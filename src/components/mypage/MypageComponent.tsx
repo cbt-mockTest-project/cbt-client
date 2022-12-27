@@ -211,6 +211,7 @@ const MypageComponentContainer = styled.div`
   @media (max-width: ${responsive.medium}) {
     padding: 0 10px;
     .mypage-exam-list-wrapper {
+      margin-top: 20px;
       li {
         flex-direction: column;
         border-color: ${palette.gray_300};
@@ -218,6 +219,9 @@ const MypageComponentContainer = styled.div`
     }
     .mypage-exam-list-button-wrapper {
       margin: 10px 0 !important;
+    }
+    .mypage-exam-check-box-group-wrapper {
+      margin-top: 20px;
     }
   }
 `;

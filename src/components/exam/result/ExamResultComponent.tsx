@@ -7,6 +7,7 @@ import { QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 import ExamAchievementResult from './ExamAchievementResult';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
+import { responsive } from '@lib/utils/responsive';
 
 interface ExamResultComponentProps {}
 
@@ -53,7 +54,7 @@ const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
       </div>
       <div className="exam-result-end-block">
         <h2>성취도 결과</h2>
-        <ExamAchievementResult />
+        <ExamAchievementResult className="exam-result-box" />
       </div>
     </ExamResultComponentContainer>
   );
@@ -96,5 +97,17 @@ const ExamResultComponentContainer = styled.div`
     display: flex;
     flex-direction: row;
     gap: 20px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    .exam-result-end-block {
+      margin-top: 25px;
+    }
+    .exam-result-box {
+      min-width: 250px;
+    }
   }
 `;
