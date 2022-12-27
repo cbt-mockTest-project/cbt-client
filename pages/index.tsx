@@ -16,7 +16,12 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import { loginModal, tempAnswerKey } from '@lib/constants';
+import {
+  loginModal,
+  selectExamCategoryHistory,
+  selectExamHistory,
+  tempAnswerKey,
+} from '@lib/constants';
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
@@ -32,8 +37,10 @@ const Home = () => {
   const [readExamTitles, { data: examTitlesQueryData }] = useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
-  const [selectedExamId, setSelectedExamId] = useState<string>('');
+  const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [isRandom, setIsRandom] = useState(false);
+  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
   const storage = new LocalStorage();
   useEffect(() => {
     if (categoriesQueryData) {
@@ -45,8 +52,24 @@ const Home = () => {
     }
   }, [categoriesQueryData]);
 
+  useEffect(() => {
+    const savedCategory = localStorage.getItem(selectExamCategoryHistory);
+    const savedTitle = localStorage.getItem(selectExamHistory);
+    (async () => {
+      if (savedCategory) {
+        const currentTitles: DefaultOptionType[] = await onCategoryChange(
+          savedCategory
+        );
+        if (savedTitle && currentTitles) {
+          onTitleChange(Number(savedTitle), currentTitles);
+        }
+      }
+    })();
+  }, []);
+
   const onCategoryChange = async (value: string) => {
-    setSelectedExamId('');
+    setSelectedExamId(0);
+    setCategory(value);
     const { data } = await readExamTitles({
       variables: { input: { name: value } },
     });
@@ -55,16 +78,24 @@ const Home = () => {
       if (readMockExamTitlesByCateory.error) {
         return message.success(readMockExamTitlesByCateory.error);
       }
-      const titles = readMockExamTitlesByCateory.titles.map((title) => ({
-        value: title.id,
-        label: title.title,
-      }));
+      const titles: DefaultOptionType[] =
+        readMockExamTitlesByCateory.titles.map((title) => ({
+          value: title.id,
+          label: title.title,
+        }));
+      localStorage.setItem(selectExamCategoryHistory, value);
       setTitles(titles);
+      return titles;
     }
   };
 
-  const onTitleChange = async (value: string) => {
+  const onTitleChange = async (value: number, titles: DefaultOptionType[]) => {
+    const currentTitle = titles.filter((title) => title.value === value);
     setSelectedExamId(value);
+    if (currentTitle[0]) {
+      setTitle(String(currentTitle[0].label));
+      localStorage.setItem(selectExamHistory, String(value));
+    }
   };
 
   const gotoExamPage = () => {
@@ -96,12 +127,16 @@ const Home = () => {
           <div className="home-wrapper">
             <div className="home-content-wrapper">
               <div>시험선택</div>
-              <Select options={categories} onChange={onCategoryChange} />
+              <Select
+                options={categories}
+                onChange={onCategoryChange}
+                value={category}
+              />
               <div>회차선택</div>
               <Select
                 options={titles}
-                value={selectedExamId}
-                onChange={onTitleChange}
+                value={title}
+                onChange={(value) => onTitleChange(Number(value), titles)}
               />
               <div className="home-checkbox-wrapper">
                 <Checkbox

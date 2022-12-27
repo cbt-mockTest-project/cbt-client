@@ -20,3 +20,7 @@ export const tempAnswerKey = 'tempAnswerKey';
 export const loginModal = 'loginModal';
 
 export const widhDrawalModal = 'widhDrawalModal';
+
+export const selectExamCategoryHistory = 'selectExamCategoryHistory';
+
+export const selectExamHistory = 'selectExamHistory';
