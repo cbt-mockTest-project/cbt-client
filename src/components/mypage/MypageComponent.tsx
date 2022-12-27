@@ -7,6 +7,7 @@ import {
 } from '@lib/graphql/user/hook/useExam';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { FindMyExamHistoryQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { responsive } from '@lib/utils/responsive';
 import {
   convertWithErrorHandlingFunc,
   extractKeysOfCache,
@@ -205,6 +206,18 @@ const MypageComponentContainer = styled.div`
     button {
       margin-top: 20px;
       width: 100%;
+    }
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding: 0 10px;
+    .mypage-exam-list-wrapper {
+      li {
+        flex-direction: column;
+        border-color: ${palette.gray_300};
+      }
+    }
+    .mypage-exam-list-button-wrapper {
+      margin: 10px 0 !important;
     }
   }
 `;

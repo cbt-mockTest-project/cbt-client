@@ -6,7 +6,6 @@ import {
   READ_EXAM_CATEGORIES_QUERY,
 } from '@lib/graphql/user/query/examQuery';
 import { FindMyExamHistoryQuery } from '@lib/graphql/user/query/examQuery.generated';
-import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { GetServerSideProps, NextPage } from 'next';
