@@ -30,7 +30,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
     <LoginModalContainer>
       <Modal open={open} onClose={onClose} className="login-modal">
         {currentTab === 'login' && <LoginForm />}
-
         {currentTab === 'findPassword' && <FindPasswordForm />}
         <div className="login-modal-find-password">
           <Link href="/register/confirm">회원가입</Link>

@@ -5,6 +5,7 @@ import { checkboxOption } from 'customTypes';
 import { QuestionState } from 'types';
 import SquareSelectboxGroup from '../selectbox/SquareSelectboxGroup';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
+import { responsive } from '@lib/utils/responsive';
 
 interface AchievCheckButtonGroupProps {
   onCheckboxChange: (value: checkboxOption['value']) => Promise<void>;
@@ -52,5 +53,8 @@ const AchievCheckButtonGroupContainer = styled.div`
     }
     color: ${palette.antd_blue_01} !important;
     border-color: ${palette.antd_blue_01} !important;
+  }
+  @media (max-width: ${responsive.medium}) {
+    margin-left: 0;
   }
 `;

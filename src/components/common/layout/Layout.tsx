@@ -120,5 +120,11 @@ const LayoutContainer = styled.div`
       justify-content: center;
       align-items: center;
     }
+    .layout-children-wrapper {
+      margin-top: -2px;
+    }
+    .layout-children-wrapper {
+      min-height: calc(100vh - 125px);
+    }
   }
 `;

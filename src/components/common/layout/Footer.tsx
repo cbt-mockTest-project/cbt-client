@@ -1,3 +1,4 @@
+import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -47,5 +48,8 @@ const FooterContainer = styled.div`
     button {
       color: ${palette.antd_blue_01};
     }
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding: 20px 15px;
   }
 `;

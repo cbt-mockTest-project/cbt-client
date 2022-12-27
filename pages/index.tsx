@@ -21,6 +21,7 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
 import useIsMobile from '@lib/hooks/useIsMobile';
+import { responsive } from '@lib/utils/responsive';
 
 const Home = () => {
   const router = useRouter();
@@ -193,5 +194,10 @@ const HomeContainer = styled.div`
     gap: 10px;
     align-items: center;
     margin: 20px 0;
+  }
+  @media (max-width: ${responsive.medium}) {
+    .home-wrapper {
+      margin-top: 0px;
+    }
   }
 `;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper';
+import { responsive } from '@lib/utils/responsive';
 
 const MainBanner = () => {
   return (
@@ -60,5 +61,11 @@ const MainBannerContainer = styled.div`
   .home-main-banner-swiper {
     width: 100%;
     height: 180px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    .home-main-banner-swiper {
+      width: 100%;
+      height: 180px;
+    }
   }
 `;

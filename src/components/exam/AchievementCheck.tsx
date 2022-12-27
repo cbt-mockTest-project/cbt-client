@@ -17,6 +17,7 @@ import Modal from '@components/common/modal/Modal';
 import LoginForm from '@components/common/form/LoginForm';
 import { loginModal } from '@lib/constants';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { responsive } from '@lib/utils/responsive';
 interface AchievementCheckProps {
   questionIndex: number;
   questionState: QuestionState;
@@ -83,7 +84,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
 
   return (
     <AchievementCheckContainer>
-      <span className="select-none">성취도체크</span>
+      <span className="achievement-check-label select-none">성취도체크</span>
       <AchievCheckButtonGroup
         onCheckboxChange={requestChangeState}
         initialSelectedValue={
@@ -104,4 +105,9 @@ export default AchievementCheck;
 const AchievementCheckContainer = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: ${responsive.medium}) {
+    .achievement-check-label {
+      display: none;
+    }
+  }
 `;

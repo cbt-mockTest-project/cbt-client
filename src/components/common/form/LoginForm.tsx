@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,11 +14,14 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const [loginMutation] = useLoginMutation();
+  const [buttonState, setButtonState] = useState(false);
   const onSubmit = async (data: LoginInput) => {
+    setButtonState(true);
     const res = await loginMutation({ variables: { input: data } });
     if (res.data) {
       const { login } = res.data;
       if (login.error) {
+        setButtonState(false);
         return message.error({ content: login.error });
       }
       isMobile ? location.replace('/') : location.reload();
@@ -55,7 +58,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
           className="register-error-text"
         />
       )}
-      <Button type="primary" htmlType="submit">
+      <Button type="primary" htmlType="submit" disabled={buttonState}>
         로그인
       </Button>
     </LoginFormContainer>

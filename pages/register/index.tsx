@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { RegisterInput } from 'types';
 import Layout from '@components/common/layout/Layout';
 import WithHead from '@components/common/head/WithHead';
+import { responsive } from '@lib/utils/responsive';
 
 const Register = () => {
   const router = useRouter();
@@ -149,5 +150,16 @@ const RegisterContainer = styled.form`
   }
   .register-error-text {
     margin-top: 5px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    justify-content: center;
+    align-items: center;
+    input {
+      width: 100%;
+      min-width: 250px;
+    }
+    button {
+      min-width: 250px;
+    }
   }
 `;

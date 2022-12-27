@@ -2,6 +2,7 @@ import WithHead from '@components/common/head/WithHead';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import Layout from '@components/common/layout/Layout';
 import { useSendVerificationMailMutation } from '@lib/graphql/user/hook/useUser';
+import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import React, { useState } from 'react';
@@ -97,5 +98,20 @@ const ConfirmContainer = styled.form`
   }
   .register-error-text {
     margin-top: 5px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    justify-content: center;
+    align-items: center;
+    h1 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      min-width: 250px;
+    }
+    button {
+      min-width: 250px;
+    }
   }
 `;
