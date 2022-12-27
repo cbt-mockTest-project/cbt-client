@@ -1,8 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -350,121 +356,97 @@ export type Mutation = {
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
 };
 
-
 export type MutationChangePasswordAfterVerifyingArgs = {
   input: ChangePasswordAfterVerifyingInput;
 };
-
 
 export type MutationCheckPasswordArgs = {
   input: CheckPasswordInput;
 };
 
-
 export type MutationCreateMockExamArgs = {
   input: CreateMockExamInput;
 };
-
 
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
 };
 
-
 export type MutationCreateMockExamQuestionArgs = {
   input: CreateMockExamQuestionInput;
 };
-
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
-
 
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
 
-
 export type MutationDeleteMockExamCategoryArgs = {
   input: DeleteMockExamCategoryInput;
 };
-
 
 export type MutationDeleteMockExamQuestionArgs = {
   input: DeleteMockExamQuestionInput;
 };
 
-
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
-
 
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
 
-
 export type MutationEditMockExamCategoryArgs = {
   input: EditMockExamCategoryInput;
 };
-
 
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
 };
 
-
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
 };
-
 
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
 
-
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
-
 
 export type MutationLoginArgs = {
   input: LoginInput;
 };
 
-
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
-
 
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
 
-
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
 };
-
 
 export type MutationSendFindPasswordMailArgs = {
   input: SendFindPasswordMailInput;
 };
 
-
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
-
 
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
@@ -488,51 +470,41 @@ export type Query = {
   userProfile: UserProfileOutput;
 };
 
-
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
 };
-
 
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
 
-
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
-
 
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
 };
 
-
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
 };
-
 
 export type QueryReadMockExamQuestionsByMockExamIdArgs = {
   input: ReadMockExamQuestionsByMockExamIdInput;
 };
 
-
 export type QueryReadMockExamQuestionsByStateArgs = {
   input: ReadMockExamQuestionsByStateInput;
 };
-
 
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
 };
 
-
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
-
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
@@ -542,7 +514,7 @@ export enum QuestionState {
   Core = 'CORE',
   High = 'HIGH',
   Middle = 'MIDDLE',
-  Row = 'ROW'
+  Row = 'ROW',
 }
 
 export type ReadAllMockExamCategoriesOutput = {
@@ -755,5 +727,5 @@ export type UserProfileOutput = {
 
 export enum UserRole {
   Admin = 'ADMIN',
-  Client = 'CLIENT'
+  Client = 'CLIENT',
 }
