@@ -1,6 +1,9 @@
+import { useCreateFeedback } from '@lib/graphql/user/hook/useFeedBack';
 import { responsive } from '@lib/utils/responsive';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import React, { useState } from 'react';
+import { message } from 'antd';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import ReportModal from '../modal/ReportModal';
 
@@ -8,7 +11,28 @@ interface FooterProps {}
 
 const Footer: React.FC<FooterProps> = () => {
   const year = new Date().getFullYear();
+  const [createFeedback] = useCreateFeedback();
   const [reportModalState, setReportModalState] = useState(false);
+  const reportValue = useRef('');
+  const requestFeedback = async () => {
+    const res = await createFeedback({
+      variables: {
+        input: {
+          content: reportValue.current,
+        },
+      },
+    });
+    if (res.data?.createFeedback.ok) {
+      message.success({ content: '피드백 남겨주셔서 감사합니다' });
+      setReportModalState(false);
+      return;
+    }
+    message.error({ content: res.data?.createFeedback.error });
+  };
+  const tryRequestFeedback = convertWithErrorHandlingFunc({
+    callback: requestFeedback,
+  });
+
   const onToggleReportModalState = () => setReportModalState(!reportModalState);
   return (
     <FooterContainer>
@@ -21,7 +45,8 @@ const Footer: React.FC<FooterProps> = () => {
         open={reportModalState}
         onCancel={onToggleReportModalState}
         onClose={onToggleReportModalState}
-        onConfirm={() => {}}
+        onChange={(value) => (reportValue.current = value)}
+        onConfirm={tryRequestFeedback}
         title="피드백을 남겨주세요"
         confirmLabel="피드백 전송"
       />

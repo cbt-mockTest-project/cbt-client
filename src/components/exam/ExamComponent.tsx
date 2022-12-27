@@ -4,7 +4,7 @@ import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { tempAnswerKey } from '@lib/constants';
-import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
@@ -46,7 +46,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
-  const [createFeedBack] = useCreateFeedBack();
+  const [createFeedBack] = useCreateQuestionFeedBack();
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
     const currentQuestionState =

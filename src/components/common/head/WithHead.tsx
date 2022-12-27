@@ -20,8 +20,6 @@ const WithHead: React.FC<IProps> = ({
 }) => {
   const { asPath } = useRouter();
   const CURRENT_URL = `${process.env.NEXT_PUBLIC_CLIENT_URL}${asPath}`;
-  console.log(CURRENT_URL);
-
   return (
     <>
       <Head>

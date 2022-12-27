@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import { GetServerSideProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo } from '@modules/apollo';
-import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
-import { useCreateFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import WithHead from '@components/common/head/WithHead';
 
 interface SolutionProps {
@@ -25,7 +24,7 @@ interface QuestionOption {
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   const title = questionsQuery.readMockExamQuestionsByMockExamId.title;
   const [reportModalState, setReportModalState] = useState(false);
-  const [createFeedBack] = useCreateFeedBack();
+  const [createFeedBack] = useCreateQuestionFeedBack();
   const reportValue = useRef('');
   const [currentQuestion, setCurrentQuestion] = useState<QuestionOption | null>(
     null

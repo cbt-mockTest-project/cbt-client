@@ -10,6 +10,13 @@ export type CreateMockExamQuestionFeedbackMutationVariables = Types.Exact<{
 
 export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean } };
 
+export type CreateFeedbackMutationVariables = Types.Exact<{
+  input: Types.CreateFeedbackInput;
+}>;
+
+
+export type CreateFeedbackMutation = { __typename?: 'Mutation', createFeedback: { __typename?: 'CreateFeedbackOutput', error?: string | null, ok: boolean } };
+
 
 export const CreateMockExamQuestionFeedbackDocument = gql`
     mutation CreateMockExamQuestionFeedback($input: CreateMockExamQuestionFeedbackInput!) {
@@ -22,4 +29,16 @@ export const CreateMockExamQuestionFeedbackDocument = gql`
 
 export function useCreateMockExamQuestionFeedbackMutation() {
   return Urql.useMutation<CreateMockExamQuestionFeedbackMutation, CreateMockExamQuestionFeedbackMutationVariables>(CreateMockExamQuestionFeedbackDocument);
+};
+export const CreateFeedbackDocument = gql`
+    mutation CreateFeedback($input: CreateFeedbackInput!) {
+  createFeedback(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCreateFeedbackMutation() {
+  return Urql.useMutation<CreateFeedbackMutation, CreateFeedbackMutationVariables>(CreateFeedbackDocument);
 };
