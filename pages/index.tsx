@@ -17,13 +17,14 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal, tempAnswerKey } from '@lib/constants';
-import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
+import useIsMobile from '@lib/hooks/useIsMobile';
 
 const Home = () => {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
   const { data: categoriesQueryData } = useReadExamCategories();
   const { data: meQuery } = useMeQuery();
@@ -67,7 +68,9 @@ const Home = () => {
 
   const gotoExamPage = () => {
     if (!meQuery?.me.ok) {
-      dispatch(coreActions.openModal(loginModal));
+      return isMobile
+        ? router.push('/mobile/login')
+        : dispatch(coreActions.openModal(loginModal));
     }
     if (!selectedExamId) return;
     storage.remove(tempAnswerKey);

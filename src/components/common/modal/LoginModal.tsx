@@ -52,9 +52,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
 export default LoginModal;
 
 const LoginModalContainer = styled.div`
-  .login-modal {
-    height: 320px;
-  }
   .login-modal-find-password {
     width: 100%;
     margin-top: 15px;
