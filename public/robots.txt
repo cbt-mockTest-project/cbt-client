@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: http://www.moducbt.com
-
-# Sitemaps
-Sitemap: http://www.moducbt.com/sitemap.xml
