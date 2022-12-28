@@ -1,4 +1,4 @@
-import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import {
   convertStateToIcon,
   convertWithErrorHandlingFunc,
@@ -20,7 +20,7 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   examId,
 }) => {
   const [readQuestionsMutation, { data: questionQueryData }] =
-    useReadQuestionsByExamId();
+    useLazyReadQuestionsByExamId();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
     callback: async () =>
       await readQuestionsMutation({

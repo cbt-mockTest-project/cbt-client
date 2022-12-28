@@ -2,9 +2,9 @@ import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState'
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestionState, QuestionState } from 'types';
+import { MockExamQuestion, MockExamQuestionState, QuestionState } from 'types';
 import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
 import { checkboxOption } from 'customTypes';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -16,18 +16,13 @@ import { coreActions } from '@modules/redux/slices/core';
 import Modal from '@components/common/modal/Modal';
 import LoginForm from '@components/common/form/LoginForm';
 import { loginModal } from '@lib/constants';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { responsive } from '@lib/utils/responsive';
 interface AchievementCheckProps {
   questionIndex: number;
-  questionState: QuestionState;
-  setQuestionState: React.Dispatch<React.SetStateAction<QuestionState>>;
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const AchievementCheck: React.FC<AchievementCheckProps> = ({
-  questionState,
-  setQuestionState,
   questionIndex,
   questionsQuery,
 }) => {
@@ -42,18 +37,17 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
   const currentQuestion = questions[questionIndex - 1];
+  const currentQuestionId = currentQuestion.id;
   const requestChangeState = async (state: checkboxOption['value']) => {
     if (!meQuery?.me.user) {
       onOpenModal();
       return;
     }
-    if (state === questionState) return;
-    setQuestionState(state as QuestionState);
     const changeQuestionStateQuery = await changeQuestionState({
       variables: {
         input: {
           state: state as QuestionState,
-          questionId: currentQuestion.id,
+          questionId: currentQuestionId,
         },
       },
     });
@@ -66,7 +60,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
       }
       if (ok && currentState) {
         client.cache.modify({
-          id: `MockExamQuestion:${currentQuestion.id}`,
+          id: `MockExamQuestion:${currentQuestionId}`,
           fields: {
             state(state) {
               return state.length === 1
@@ -81,17 +75,12 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
       }
     }
   };
-
   return (
     <AchievementCheckContainer>
       <span className="achievement-check-label select-none">성취도체크</span>
       <AchievCheckButtonGroup
         onCheckboxChange={requestChangeState}
-        initialSelectedValue={
-          currentQuestion.state.length >= 1
-            ? currentQuestion.state[0].state
-            : QuestionState.Core
-        }
+        currentQuestionId={currentQuestionId}
       />
       <Modal onClose={onCloseModal} open={loginModal === modalName}>
         <LoginForm />

@@ -59,3 +59,8 @@ export const extractKeysOfCache = (
   client: ApolloClient<NormalizedCacheObject>,
   commonKey: string
 ) => Object.keys(client.extract()).filter((el) => el.includes(commonKey));
+
+export const extractCache = (
+  client: ApolloClient<NormalizedCacheObject>,
+  key: string
+) => client.extract()[key];

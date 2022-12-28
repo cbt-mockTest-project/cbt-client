@@ -24,7 +24,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
           query,
         },
         undefined,
-        { shallow: true }
+        { shallow: false }
       );
     }
   };
@@ -40,7 +40,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
           query,
         },
         undefined,
-        { shallow: true }
+        { shallow: false }
       );
     }
   };
@@ -50,10 +50,25 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
       <span className="exam-question-move-button-label select-none">
         문제이동
       </span>
-      <button className="exam-question-move-button" onClick={goPrevQuestion}>
+      <button
+        onClick={() => {
+          alert('asd');
+        }}
+      >
+        테스트
+      </button>
+      <button
+        className="exam-question-move-button"
+        type="button"
+        onClick={goPrevQuestion}
+      >
         <CaretLeftOutlined />
       </button>
-      <button className="exam-question-move-button" onClick={goNextQuestion}>
+      <button
+        className="exam-question-move-button"
+        type="button"
+        onClick={goNextQuestion}
+      >
         <CaretRightOutlined />
       </button>
     </MoveQuestionContainer>

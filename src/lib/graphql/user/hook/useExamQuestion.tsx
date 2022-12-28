@@ -1,4 +1,5 @@
 import { useLazyQuery, useQuery } from '@apollo/client';
+import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import {
   READ_QUESTION,
   READ_QUESTIONS_BY_ID,
@@ -13,11 +14,22 @@ import {
   ReadMockExamQuestionsByStateQueryVariables,
 } from '../query/questionQuery.generated';
 
-export const useReadQuestionsByExamId = () =>
+export const useLazyReadQuestionsByExamId = () =>
   useLazyQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
   >(READ_QUESTIONS_BY_ID);
+
+export const useReadQuestionsByExamIdQuery = (
+  input: ReadMockExamQuestionsByMockExamIdInput
+) =>
+  useQuery<
+    ReadMockExamQuestionsByMockExamIdQuery,
+    ReadMockExamQuestionsByMockExamIdQueryVariables
+  >(READ_QUESTIONS_BY_ID, {
+    variables: { input },
+    fetchPolicy: 'network-only',
+  });
 
 export const useReadQuestion = () =>
   useLazyQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(

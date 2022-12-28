@@ -7,13 +7,14 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
+import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
 interface ExamProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
+  questionsQueryInput: ReadMockExamQuestionsByMockExamIdInput;
 }
 
-const Exam: NextPage<ExamProps> = ({ questionsQuery }) => {
-  questionsQuery.readMockExamQuestionsByMockExamId.title;
+const Exam: NextPage<ExamProps> = ({ questionsQuery, questionsQueryInput }) => {
   return (
     <>
       <WithHead
@@ -30,17 +31,22 @@ const Exam: NextPage<ExamProps> = ({ questionsQuery }) => {
 export default Exam;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  // context.res.setHeader(
+  //   'Cache-Control',
+  //   'public, s-maxage=1800, stale-while-revalidate=86400'
+  // );
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const examId = context.query.e;
   const isRandom = context.query.r === 'true' ? true : false;
+  const questionsQueryInput: ReadMockExamQuestionsByMockExamIdInput = {
+    id: Number(String(examId)),
+    isRandom,
+  };
   const request = async () => {
     return await apolloClient.query<ReadMockExamQuestionsByMockExamIdQuery>({
       query: READ_QUESTIONS_BY_ID,
       variables: {
-        input: {
-          id: Number(String(examId)),
-          isRandom,
-        },
+        input: questionsQueryInput,
       },
       fetchPolicy: 'network-only',
     });
@@ -50,5 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const res = await tryRequest();
   const questionsQuery = res?.data;
-  return addApolloState(apolloClient, { props: { questionsQuery } });
+  return addApolloState(apolloClient, {
+    props: { questionsQuery, questionsQueryInput },
+  });
 };

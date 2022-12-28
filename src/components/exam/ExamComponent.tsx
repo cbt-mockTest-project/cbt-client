@@ -17,7 +17,6 @@ import { useRouter } from 'next/router';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import styled, { css } from 'styled-components';
-import { QuestionState } from 'types';
 import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
@@ -38,26 +37,19 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
-  const [questionState, setQuestionState] = useState<QuestionState>(
-    QuestionState.Core
-  );
   const [questionAndSolution, setQuestionAndSolution] =
     useState<QuestionType | null>(null);
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [createFeedBack] = useCreateQuestionFeedBack();
+
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
-    const currentQuestionState =
-      questions[questionIndex - 1].state.length >= 1
-        ? questions[questionIndex - 1].state[0].state
-        : QuestionState.Core;
     /**
      * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
      */
     setAnswerValue(currentAnswer);
-    setQuestionState(currentQuestionState);
     setProgressModalState(false);
     setFeedBackModalState(false);
     setFinishModalState(false);
@@ -170,8 +162,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             <AchievementCheck
               questionIndex={questionIndex}
               questionsQuery={questionsQuery}
-              setQuestionState={setQuestionState}
-              questionState={questionState}
             />
             <MoveQuestion
               questionIndex={questionIndex}

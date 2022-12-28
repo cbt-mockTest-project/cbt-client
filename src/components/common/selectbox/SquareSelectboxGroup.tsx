@@ -1,16 +1,17 @@
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc, extractCache } from '@lib/utils/utils';
+import { useApollo } from '@modules/apollo';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { QuestionState } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import SquareSelectbox from './SquareSelectbox';
 
 interface SquareSelectboxGroupProps {
   options: checkboxOption[];
   gap?: number;
   onClick: (value: checkboxOption['value']) => void;
-  initialSelectedValue: string;
+  currentQuestionId: number;
 }
 
 interface SquareSelectboxGroupCssProps
@@ -19,19 +20,28 @@ interface SquareSelectboxGroupCssProps
 const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
   options,
   onClick,
-  initialSelectedValue,
   gap = 10,
+  currentQuestionId,
 }) => {
   const router = useRouter();
-  const [selectedValue, setSelectedValue] =
-    useState<checkboxOption['value']>('CORE');
+  const client = useApollo({}, '');
+  const [selectedState, setSelectedState] = useState<string>(
+    QuestionState.Core
+  );
+  const cachedCurrentQuestion = extractCache(
+    client,
+    `MockExamQuestion:${currentQuestionId}`
+  ) as MockExamQuestion;
   useEffect(() => {
-    setSelectedValue(initialSelectedValue);
+    if (cachedCurrentQuestion && cachedCurrentQuestion.state.length >= 1) {
+      setSelectedState(cachedCurrentQuestion.state[0].state);
+    }
   }, [router.query.q]);
   const requestOnclick = (value: string) => {
-    setSelectedValue(value);
     onClick(value);
+    setSelectedState(value);
   };
+
   const tryOnClick = (value: string) =>
     convertWithErrorHandlingFunc({ callback: () => requestOnclick(value) });
   return (
@@ -41,7 +51,7 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
           <SquareSelectbox
             option={option}
             key={index}
-            selected={option.value === selectedValue}
+            selected={option.value === selectedState}
             onClick={() => tryOnClick(String(option.value))()}
           />
         );

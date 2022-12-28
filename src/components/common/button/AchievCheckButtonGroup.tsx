@@ -6,15 +6,14 @@ import { QuestionState } from 'types';
 import SquareSelectboxGroup from '../selectbox/SquareSelectboxGroup';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
-
 interface AchievCheckButtonGroupProps {
   onCheckboxChange: (value: checkboxOption['value']) => Promise<void>;
-  initialSelectedValue: QuestionState;
+  currentQuestionId: number;
 }
 
 const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
   onCheckboxChange,
-  initialSelectedValue,
+  currentQuestionId,
 }) => {
   const checkboxOptions: checkboxOption[] = [
     { value: QuestionState.High, label: circleIcon },
@@ -26,7 +25,7 @@ const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
       <SquareSelectboxGroup
         options={checkboxOptions}
         onClick={onCheckboxChange}
-        initialSelectedValue={initialSelectedValue}
+        currentQuestionId={currentQuestionId}
       />
     </AchievCheckButtonGroupContainer>
   );
