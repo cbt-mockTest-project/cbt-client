@@ -3,7 +3,6 @@ import Layout from '@components/common/layout/Layout';
 import ExamComponent from '@components/exam/ExamComponent';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { GetServerSideProps, NextPage } from 'next';

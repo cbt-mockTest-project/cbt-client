@@ -176,8 +176,11 @@ const Home = () => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=1800, stale-while-revalidate=86400'
+  );
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
-
   const request = async () => {
     await apolloClient.query({
       query: READ_EXAM_CATEGORIES_QUERY,
