@@ -500,6 +500,7 @@ export type Query = {
   readMockExamQuestionsByMockExamId: ReadMockExamQuestionsByMockExamIdOutput;
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
+  readMyExamQuestionState: ReadMyExamQuestionStateOutput;
   searchMockExam: SearchMockExamOutput;
   userProfile: UserProfileOutput;
 };
@@ -542,6 +543,11 @@ export type QueryReadMockExamQuestionsByStateArgs = {
 
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
+};
+
+
+export type QueryReadMyExamQuestionStateArgs = {
+  input: ReadMyExamQuestionStateInput;
 };
 
 
@@ -665,6 +671,17 @@ export type ReadMockExamTitlesByCateoryOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   titles: Array<ExamTitleAndId>;
+};
+
+export type ReadMyExamQuestionStateInput = {
+  questionId: Scalars['Float'];
+};
+
+export type ReadMyExamQuestionStateOutput = {
+  __typename?: 'ReadMyExamQuestionStateOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  state: MockExamQuestionState;
 };
 
 export type RegisterInput = {

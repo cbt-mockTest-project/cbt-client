@@ -3,12 +3,15 @@ import Label from '@components/common/label/Label';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
-import { tempAnswerKey } from '@lib/constants';
+import { loginModal, tempAnswerKey } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -30,6 +33,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { data: meQuery } = useMeQuery();
+  const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
   const questionIndex = Number(router.query.q);
@@ -66,9 +72,24 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   }, [router.query.q]);
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
-  const onToggleFinishModal = () => setFinishModalState(!finishModalState);
-  const onToggleFeedBackModal = () =>
+  const onToggleFinishModal = () => {
+    setFinishModalState(!finishModalState);
+  };
+  const onToggleProgressModal = () => {
+    if (!meQuery?.me.user) {
+      onOpenLoginModal();
+      return;
+    }
+    setProgressModalState(!progressModalState);
+  };
+  const onToggleFeedBackModal = () => {
+    if (!meQuery?.me.user) {
+      onOpenLoginModal();
+      return;
+    }
     setFeedBackModalState(!feedBackModalState);
+  };
+
   const onFinishConfirmModal = () => {
     storage.remove(tempAnswerKey);
     setFinishModalState(false);
@@ -78,21 +99,20 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     });
   };
   const requestReport = async () => {
-    try {
-      const content = reportValue.current;
-      if (content.length <= 4) {
-        return message.warn('5글자 이상 입력해주세요.');
-      }
-      if (questionAndSolution && content) {
-        const questionId = questionAndSolution.id;
-        await createFeedBack({
-          variables: { input: { content, questionId } },
-        });
+    const content = reportValue.current;
+    if (content.length <= 4) {
+      return message.warn('5글자 이상 입력해주세요.');
+    }
+    if (questionAndSolution && content) {
+      const questionId = questionAndSolution.id;
+      const res = await createFeedBack({
+        variables: { input: { content, questionId } },
+      });
+      if (res.data?.createMockExamQuestionFeedback.ok) {
         message.success('신고가 접수되었습니다.');
         setFeedBackModalState(false);
+        return;
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -153,7 +173,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             <Button
               type="primary"
               className="exam-question-menubar-check-button"
-              onClick={() => setProgressModalState(true)}
+              onClick={onToggleProgressModal}
             >
               진도 확인
             </Button>
@@ -197,7 +217,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       />
       <ProgressModal
         open={progressModalState}
-        onClose={() => setProgressModalState(false)}
+        onClose={onToggleProgressModal}
       />
     </>
   );

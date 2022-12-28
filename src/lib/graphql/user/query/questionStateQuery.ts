@@ -20,3 +20,15 @@ export const RESET_QUESTION_STATE_MUTATION = gql`
     }
   }
 `;
+
+export const READ_QUESTION_STATE_QUERY = gql`
+  query ReadMyExamQuestionState($input: ReadMyExamQuestionStateInput!) {
+    readMyExamQuestionState(input: $input) {
+      error
+      ok
+      state {
+        state
+      }
+    }
+  }
+`;

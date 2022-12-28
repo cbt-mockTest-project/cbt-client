@@ -1,4 +1,5 @@
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import {
   convertStateToIcon,
   convertWithErrorHandlingFunc,
@@ -7,6 +8,7 @@ import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { QuestionState } from 'types';
 
 interface ExamAchievementResultProps {
   className?: string;
@@ -21,6 +23,7 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
 }) => {
   const [readQuestionsMutation, { data: questionQueryData }] =
     useLazyReadQuestionsByExamId();
+  const { data: meQuery } = useMeQuery();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
     callback: async () =>
       await readQuestionsMutation({
@@ -48,7 +51,9 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
           <p className="achieve-result-index">{idx + 1}. </p>
           <p>
             {question.state.length >= 1 &&
-              convertStateToIcon(question.state[0].state)}
+              convertStateToIcon(
+                meQuery?.me.user ? question.state[0].state : QuestionState.Core
+              )}
           </p>
         </li>
       ))}

@@ -2,19 +2,14 @@ import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState'
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion, MockExamQuestionState, QuestionState } from 'types';
+import { MockExamQuestionState, QuestionState } from 'types';
 import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
 import { checkboxOption } from 'customTypes';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import Modal from '@components/common/modal/Modal';
-import LoginForm from '@components/common/form/LoginForm';
 import { loginModal } from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
 interface AchievementCheckProps {
@@ -30,9 +25,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   const [changeQuestionState] = useChangeQuestionState();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
-  const { modalName } = useAppSelector((state) => state.core);
-  const onCloseModal = () => dispatch(coreActions.closeModal());
-  const onOpenModal = () => dispatch(coreActions.openModal(loginModal));
+  const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
@@ -40,7 +33,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   const currentQuestionId = currentQuestion.id;
   const requestChangeState = async (state: checkboxOption['value']) => {
     if (!meQuery?.me.user) {
-      onOpenModal();
+      onOpenLoginModal();
       return;
     }
     const changeQuestionStateQuery = await changeQuestionState({
@@ -82,9 +75,6 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
         onCheckboxChange={requestChangeState}
         currentQuestionId={currentQuestionId}
       />
-      <Modal onClose={onCloseModal} open={loginModal === modalName}>
-        <LoginForm />
-      </Modal>
     </AchievementCheckContainer>
   );
 };

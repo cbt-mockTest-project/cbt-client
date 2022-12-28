@@ -17,6 +17,13 @@ export type ResetMyExamQuestionStateMutationVariables = Types.Exact<{
 
 export type ResetMyExamQuestionStateMutation = { __typename?: 'Mutation', resetMyExamQuestionState: { __typename?: 'ResetMyExamQuestionStateOutput', error?: string | null, ok: boolean } };
 
+export type ReadMyExamQuestionStateQueryVariables = Types.Exact<{
+  input: Types.ReadMyExamQuestionStateInput;
+}>;
+
+
+export type ReadMyExamQuestionStateQuery = { __typename?: 'Query', readMyExamQuestionState: { __typename?: 'ReadMyExamQuestionStateOutput', error?: string | null, ok: boolean, state: { __typename?: 'MockExamQuestionState', state: Types.QuestionState } } };
+
 
 export const CreateOrUpdateMockExamQuestionStateDocument = gql`
     mutation CreateOrUpdateMockExamQuestionState($input: CreateOrUpdateMockExamQuestionStateInput!) {
@@ -43,4 +50,19 @@ export const ResetMyExamQuestionStateDocument = gql`
 
 export function useResetMyExamQuestionStateMutation() {
   return Urql.useMutation<ResetMyExamQuestionStateMutation, ResetMyExamQuestionStateMutationVariables>(ResetMyExamQuestionStateDocument);
+};
+export const ReadMyExamQuestionStateDocument = gql`
+    query ReadMyExamQuestionState($input: ReadMyExamQuestionStateInput!) {
+  readMyExamQuestionState(input: $input) {
+    error
+    ok
+    state {
+      state
+    }
+  }
+}
+    `;
+
+export function useReadMyExamQuestionStateQuery(options: Omit<Urql.UseQueryArgs<ReadMyExamQuestionStateQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMyExamQuestionStateQuery, ReadMyExamQuestionStateQueryVariables>({ query: ReadMyExamQuestionStateDocument, ...options });
 };

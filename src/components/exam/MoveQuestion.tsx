@@ -51,13 +51,6 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
         문제이동
       </span>
       <button
-        onClick={() => {
-          alert('asd');
-        }}
-      >
-        테스트
-      </button>
-      <button
         className="exam-question-move-button"
         type="button"
         onClick={goPrevQuestion}

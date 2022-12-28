@@ -99,11 +99,6 @@ const Home = () => {
   };
 
   const gotoExamPage = () => {
-    if (!meQuery?.me.ok) {
-      return isMobile
-        ? router.push('/mobile/login')
-        : dispatch(coreActions.openModal(loginModal));
-    }
     if (!selectedExamId) return;
     storage.remove(tempAnswerKey);
     router.push({

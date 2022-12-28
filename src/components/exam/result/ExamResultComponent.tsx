@@ -6,14 +6,25 @@ import SquareCheckboxGroup from '@components/common/checkbox/SquareCheckboxGroup
 import { QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 import ExamAchievementResult from './ExamAchievementResult';
-import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
+import {
+  circleIcon,
+  clearIcon,
+  loginModal,
+  triangleIcon,
+} from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
 
 interface ExamResultComponentProps {}
 
 const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
   const router = useRouter();
   const title = router.query.title;
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
+  const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [checkedValues, setCheckedValues] = useState<QuestionState[]>([]);
   const checkboxOptions: checkboxOption[] = [
     { value: QuestionState.High, label: circleIcon },
@@ -24,6 +35,10 @@ const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
     setCheckedValues(value);
   };
   const onClickResultView = async () => {
+    if (!meQuery?.me.user) {
+      onOpenLoginModal();
+      return;
+    }
     if (checkedValues.length === 0) {
       return message.error('성취도를 체크해주세요');
     }
