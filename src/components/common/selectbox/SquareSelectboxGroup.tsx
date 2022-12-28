@@ -1,3 +1,4 @@
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { convertWithErrorHandlingFunc, extractCache } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { checkboxOption } from 'customTypes';
@@ -28,14 +29,35 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
   const [selectedState, setSelectedState] = useState<string>(
     QuestionState.Core
   );
-  const cachedCurrentQuestion = extractCache(
-    client,
-    `MockExamQuestion:${currentQuestionId}`
-  ) as MockExamQuestion;
-  useEffect(() => {
+
+  const requestReadQuestions = async () => {
+    await client.query({
+      query: READ_QUESTIONS_BY_ID,
+      variables: {
+        input: {
+          id: Number(router.query.e),
+          isRandom: router.query.r === 'true' ? true : false,
+        },
+      },
+      fetchPolicy: 'network-only',
+    });
+    const cachedCurrentQuestion = extractCache(
+      client,
+      `MockExamQuestion:${currentQuestionId}`
+    ) as MockExamQuestion;
     if (cachedCurrentQuestion && cachedCurrentQuestion.state.length >= 1) {
       setSelectedState(cachedCurrentQuestion.state[0].state);
+    } else {
+      setSelectedState(QuestionState.Core);
     }
+  };
+
+  const tryReadQusetions = convertWithErrorHandlingFunc({
+    callback: requestReadQuestions,
+  });
+
+  useEffect(() => {
+    tryReadQusetions();
   }, [router.query.q]);
   const requestOnclick = (value: string) => {
     onClick(value);

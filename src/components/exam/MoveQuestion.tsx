@@ -24,7 +24,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
           query,
         },
         undefined,
-        { shallow: false }
+        { shallow: true }
       );
     }
   };
@@ -40,7 +40,7 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
           query,
         },
         undefined,
-        { shallow: false }
+        { shallow: true }
       );
     }
   };

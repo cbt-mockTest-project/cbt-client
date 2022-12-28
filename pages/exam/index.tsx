@@ -4,17 +4,16 @@ import ExamComponent from '@components/exam/ExamComponent';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-import { addApolloState, initializeApollo } from '@modules/apollo';
+import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
 interface ExamProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
-  questionsQueryInput: ReadMockExamQuestionsByMockExamIdInput;
 }
 
-const Exam: NextPage<ExamProps> = ({ questionsQuery, questionsQueryInput }) => {
+const Exam: NextPage<ExamProps> = ({ questionsQuery }) => {
   return (
     <>
       <WithHead
@@ -22,7 +21,7 @@ const Exam: NextPage<ExamProps> = ({ questionsQuery, questionsQueryInput }) => {
         pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
       />
       <Layout mainBanner={true}>
-        {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
+        <ExamComponent questionsQuery={questionsQuery} />
       </Layout>
     </>
   );
@@ -31,10 +30,10 @@ const Exam: NextPage<ExamProps> = ({ questionsQuery, questionsQueryInput }) => {
 export default Exam;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // context.res.setHeader(
-  //   'Cache-Control',
-  //   'public, s-maxage=1800, stale-while-revalidate=86400'
-  // );
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=1800, stale-while-revalidate=86400'
+  );
   const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
   const examId = context.query.e;
   const isRandom = context.query.r === 'true' ? true : false;
@@ -48,7 +47,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       variables: {
         input: questionsQueryInput,
       },
-      fetchPolicy: 'network-only',
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({

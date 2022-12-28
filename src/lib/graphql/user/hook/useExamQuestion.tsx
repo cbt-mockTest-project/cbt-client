@@ -18,7 +18,9 @@ export const useLazyReadQuestionsByExamId = () =>
   useLazyQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID);
+  >(READ_QUESTIONS_BY_ID, {
+    fetchPolicy: 'no-cache',
+  });
 
 export const useReadQuestionsByExamIdQuery = (
   input: ReadMockExamQuestionsByMockExamIdInput

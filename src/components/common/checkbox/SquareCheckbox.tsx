@@ -56,7 +56,7 @@ const SquareCheckboxContainer = styled.div<Partial<SquareCheckboxProps>>`
     display: none;
   }
   label {
-    transition: all 0.2s ease-in;
+    transition: all 0.1s ease-in;
     cursor: pointer;
     display: flex;
     align-items: center;
