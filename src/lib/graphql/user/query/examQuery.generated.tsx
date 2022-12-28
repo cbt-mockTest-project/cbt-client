@@ -22,6 +22,13 @@ export type FindMyExamHistoryQueryVariables = Types.Exact<{
 
 export type FindMyExamHistoryQuery = { __typename?: 'Query', findMyExamHistory: { __typename?: 'FindMyExamHistoryOutput', error?: string | null, ok: boolean, titleAndId?: Array<{ __typename?: 'TitleAndId', id?: number | null, title?: string | null }> | null } };
 
+export type ReadAllMockExamQueryVariables = Types.Exact<{
+  input: Types.ReadAllMockExamsInput;
+}>;
+
+
+export type ReadAllMockExamQuery = { __typename?: 'Query', readAllMockExam: { __typename?: 'ReadAllMockExamsOutput', error?: string | null, ok: boolean, mockExams: Array<{ __typename?: 'MockExam', id: number }> } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories {
@@ -70,4 +77,19 @@ export const FindMyExamHistoryDocument = gql`
 
 export function useFindMyExamHistoryQuery(options: Omit<Urql.UseQueryArgs<FindMyExamHistoryQueryVariables>, 'query'>) {
   return Urql.useQuery<FindMyExamHistoryQuery, FindMyExamHistoryQueryVariables>({ query: FindMyExamHistoryDocument, ...options });
+};
+export const ReadAllMockExamDocument = gql`
+    query ReadAllMockExam($input: ReadAllMockExamsInput!) {
+  readAllMockExam(input: $input) {
+    error
+    mockExams {
+      id
+    }
+    ok
+  }
+}
+    `;
+
+export function useReadAllMockExamQuery(options: Omit<Urql.UseQueryArgs<ReadAllMockExamQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadAllMockExamQuery, ReadAllMockExamQueryVariables>({ query: ReadAllMockExamDocument, ...options });
 };

@@ -38,3 +38,15 @@ export const FIND_MY_EXAM_HISTORY_QUERY = gql`
     }
   }
 `;
+
+export const READ_ALL_MOCK_EXAM = gql`
+  query ReadAllMockExam($input: ReadAllMockExamsInput!) {
+    readAllMockExam(input: $input) {
+      error
+      mockExams {
+        id
+      }
+      ok
+    }
+  }
+`;

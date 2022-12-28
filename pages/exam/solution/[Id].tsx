@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { GetServerSideProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
@@ -11,6 +11,9 @@ import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import WithHead from '@components/common/head/WithHead';
+import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
+import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -22,7 +25,7 @@ interface QuestionOption {
 }
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
-  const title = questionsQuery.readMockExamQuestionsByMockExamId.title;
+  const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;
   const [reportModalState, setReportModalState] = useState(false);
   const [createFeedBack] = useCreateQuestionFeedBack();
   const reportValue = useRef('');
@@ -129,18 +132,45 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
 
 export default Solution;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
-  const examId = context.query.e;
-  const isRandom = context.query.r === 'true' ? true : false;
+export const getStaticPaths: GetStaticPaths = async (context) => {
+  const apolloClient = initializeApollo({}, '');
+  let paths: { params: { Id: string } }[] = [];
+  try {
+    const res = await apolloClient.query<ReadAllMockExamQuery>({
+      query: READ_ALL_MOCK_EXAM,
+      variables: {
+        input: {
+          category: '',
+          query: '',
+        },
+      },
+    });
+    if (res.data.readAllMockExam.mockExams) {
+      paths = res.data.readAllMockExam.mockExams.map((el) => ({
+        params: { Id: String(el.id) },
+      }));
+    }
+    return { paths, fallback: false };
+  } catch (err) {
+    return {
+      paths,
+      fallback: false,
+    };
+  }
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const apolloClient = initializeApollo({}, '');
+  const examId = context.params?.Id;
+  const questionsQueryInput: ReadMockExamQuestionsByMockExamIdInput = {
+    id: Number(String(examId)),
+    isRandom: false,
+  };
   const request = async () => {
     return await apolloClient.query<ReadMockExamQuestionsByMockExamIdQuery>({
       query: READ_QUESTIONS_BY_ID,
       variables: {
-        input: {
-          id: Number(String(examId)),
-          isRandom,
-        },
+        input: questionsQueryInput,
       },
       fetchPolicy: 'network-only',
     });
@@ -150,7 +180,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const res = await tryRequest();
   const questionsQuery = res?.data;
-  return addApolloState(apolloClient, { props: { questionsQuery } });
+  return addApolloState(apolloClient, {
+    props: { questionsQuery },
+    revalidate: 86400,
+  });
 };
 
 const SolutionBlock = styled.div`

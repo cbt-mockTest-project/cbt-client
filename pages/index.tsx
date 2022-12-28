@@ -15,9 +15,7 @@ import { GetServerSideProps } from 'next';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { coreActions } from '@modules/redux/slices/core';
 import {
-  loginModal,
   selectExamCategoryHistory,
   selectExamHistory,
   tempAnswerKey,
@@ -30,11 +28,8 @@ import { responsive } from '@lib/utils/responsive';
 
 const Home = () => {
   const router = useRouter();
-  const isMobile = useIsMobile();
-  const dispatch = useAppDispatch();
   const { data: categoriesQueryData } = useReadExamCategories();
-  const { data: meQuery } = useMeQuery();
-  const [readExamTitles, { data: examTitlesQueryData }] = useReadExamTitles();
+  const [readExamTitles] = useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
@@ -134,11 +129,11 @@ const Home = () => {
                 onChange={(value) => onTitleChange(Number(value), titles)}
               />
               <div className="home-checkbox-wrapper">
-                <Checkbox
+                {/* <Checkbox
                   onChange={() => setIsRandom(!isRandom)}
                   checked={isRandom}
                 />
-                <div>문제순서 랜덤</div>
+                <div>문제순서 랜덤</div> */}
               </div>
               <Button
                 type="primary"
@@ -148,16 +143,7 @@ const Home = () => {
                 문제풀기
               </Button>
               <Button type="primary" disabled={!Boolean(selectedExamId)}>
-                <Link
-                  href={{
-                    pathname: '/exam/solution',
-                    query: {
-                      e: selectedExamId,
-                      t: examTitlesQueryData?.readMockExamTitlesByCateory
-                        .titles[0]?.title,
-                    },
-                  }}
-                >
+                <Link href={`/exam/solution/${selectedExamId}`}>
                   문제/해답 보기
                 </Link>
               </Button>
