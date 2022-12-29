@@ -133,17 +133,7 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
                   </Link>
                 </Button>
                 <Button>
-                  <Link
-                    href={{
-                      pathname: '/exam/solution',
-                      query: {
-                        e: el.id,
-                        t: el.title,
-                      },
-                    }}
-                  >
-                    문제/해설
-                  </Link>
+                  <Link href={`/exam/solution/${el.id}`}>문제/해설</Link>
                 </Button>
               </div>
             </li>
