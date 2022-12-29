@@ -4,14 +4,14 @@ import {
   useReadExamTitles,
 } from '@lib/graphql/user/hook/useExam';
 import palette from '@styles/palette';
-import { Button, Checkbox, message, Select } from 'antd';
+import { Button, message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import {
   selectExamCategoryHistory,
@@ -22,28 +22,24 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
 import { responsive } from '@lib/utils/responsive';
+import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 
-const Home = () => {
+interface HomeProps {
+  categoriesQuery: ReadAllMockExamCategoriesQuery;
+}
+
+const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   const router = useRouter();
-  const { data: categoriesQueryData } = useReadExamCategories();
   const [readExamTitles] = useReadExamTitles();
-  const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [isRandom, setIsRandom] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const storage = new LocalStorage();
-  useEffect(() => {
-    if (categoriesQueryData) {
-      const categoires =
-        categoriesQueryData.readAllMockExamCategories.categories;
-      setCategories(
-        categoires.map((el) => ({ value: el.name, label: el.name }))
-      );
-    }
-  }, [categoriesQueryData]);
-
+  const categories = categoriesQuery.readAllMockExamCategories.categories.map(
+    (el) => ({ value: el.name, label: el.name })
+  );
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
@@ -153,22 +149,23 @@ const Home = () => {
 };
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=1800, stale-while-revalidate=86400'
-  );
-  const apolloClient = initializeApollo({}, String(context.req.headers.cookie));
-  const request = async () => {
-    await apolloClient.query({
+export const getStaticProps: GetStaticProps = async (context) => {
+  const apolloClient = initializeApollo({}, '');
+  const request = async () =>
+    await apolloClient.query<ReadAllMockExamCategoriesQuery>({
       query: READ_EXAM_CATEGORIES_QUERY,
     });
-  };
+
   const tryRequest = convertWithErrorHandlingFunc({
     callback: request,
   });
-  await tryRequest();
-  return addApolloState(apolloClient, { props: {} });
+
+  const res = await tryRequest();
+  const categoriesQuery = res?.data;
+  return addApolloState(apolloClient, {
+    props: { categoriesQuery },
+    revalidate: 86400,
+  });
 };
 
 const HomeContainer = styled.div`
