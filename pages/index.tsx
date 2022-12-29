@@ -13,8 +13,6 @@ import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import { GetServerSideProps } from 'next';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
 import {
   selectExamCategoryHistory,
   selectExamHistory,
@@ -23,7 +21,6 @@ import {
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
-import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
 
 const Home = () => {

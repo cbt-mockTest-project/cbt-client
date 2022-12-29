@@ -14,6 +14,10 @@ import WithHead from '@components/common/head/WithHead';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -26,7 +30,9 @@ interface QuestionOption {
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;
+  const dispatch = useAppDispatch();
   const [reportModalState, setReportModalState] = useState(false);
+  const { data: meQuery } = useMeQuery();
   const [createFeedBack] = useCreateQuestionFeedBack();
   const reportValue = useRef('');
   const [currentQuestion, setCurrentQuestion] = useState<QuestionOption | null>(
@@ -34,6 +40,9 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   );
   const onToggleReportModalState = () => setReportModalState(!reportModalState);
   const openReportModal = (title: string, id: number) => {
+    if (!meQuery?.me.ok) {
+      return dispatch(coreActions.openModal(loginModal));
+    }
     setCurrentQuestion({ title, id });
     setReportModalState(true);
   };

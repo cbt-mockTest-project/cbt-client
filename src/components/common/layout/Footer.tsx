@@ -1,6 +1,10 @@
+import { loginModal } from '@lib/constants';
 import { useCreateFeedback } from '@lib/graphql/user/hook/useFeedBack';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React, { useRef, useState } from 'react';
@@ -12,6 +16,8 @@ interface FooterProps {}
 const Footer: React.FC<FooterProps> = () => {
   const year = new Date().getFullYear();
   const [createFeedback] = useCreateFeedback();
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
   const [reportModalState, setReportModalState] = useState(false);
   const reportValue = useRef('');
   const requestFeedback = async () => {
@@ -33,12 +39,17 @@ const Footer: React.FC<FooterProps> = () => {
     callback: requestFeedback,
   });
 
-  const onToggleReportModalState = () => setReportModalState(!reportModalState);
+  const onToggleReportModalState = () => {
+    if (!meQuery?.me.ok) {
+      return dispatch(coreActions.openModal(loginModal));
+    }
+    setReportModalState(!reportModalState);
+  };
   return (
     <FooterContainer>
       <div className="footer-wrapper">
-        <div>{`© ${year} EunGwang`}</div>
-        <a href="mailto:eungwang1203@gmail.com">Mail</a>
+        <div>{`© ${year} Moducbt`}</div>
+        <a href="mailto:moducbt@gmail.com">Mail</a>
         <button onClick={onToggleReportModalState}>Feedback</button>
       </div>
       <ReportModal
