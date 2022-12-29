@@ -92,6 +92,7 @@ const Register = () => {
           content: register.error,
         });
       }
+      setRegisterButtonDisabled(true);
       return message.success({
         content: '회원가입에 성공했습니다.',
         onClose: () => {
