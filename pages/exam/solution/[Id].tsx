@@ -118,7 +118,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
                         <b>[solution]</b>
                         <br />
                         <br />
-                        {`${el.question}`}
+                        {`${el.solution}`}
                         {el.solution_img && el.solution_img.length >= 1 && (
                           <a
                             className="solution-page-image-link"
@@ -274,6 +274,8 @@ const SolutionBlock = styled.div`
   }
   .solution-page-question-image {
     width: 100%;
+    height: 100%;
+    object-fit: contain;
     max-height: 220px;
   }
 
