@@ -1,27 +1,36 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import ExamComponent from '@components/exam/ExamComponent';
-import { useReadQuestionsByExamIdQuery } from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByExamIdQuery } from '@lib/graphql/user/hook/useExamQuestion';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Exam: NextPage = () => {
   const router = useRouter();
   const examId = Number(router.query.e);
-  const { data: questionsQuery } = useReadQuestionsByExamIdQuery({
-    id: examId,
-    isRandom: router.query.r === 'true' ? true : false,
-  });
-  if (!questionsQuery) return null;
+  const [readQuestions, { data: questionsQuery }] =
+    useLazyReadQuestionsByExamIdQuery();
+  useEffect(() => {
+    if (router.isReady) {
+      readQuestions({
+        variables: {
+          input: {
+            id: examId,
+            isRandom: router.query.r === 'true' ? true : false,
+          },
+        },
+      });
+    }
+  }, [router.isReady]);
   return (
     <>
       <WithHead
-        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} | 모두CBT`}
-        pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
+        title={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} | 모두CBT`}
+        pageHeadingTitle={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
       />
       <Layout mainBanner={true}>
-        <ExamComponent questionsQuery={questionsQuery} />
+        {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
       </Layout>
     </>
   );

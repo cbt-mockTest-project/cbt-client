@@ -33,6 +33,12 @@ export const useReadQuestionsByExamIdQuery = (
     fetchPolicy: 'network-only',
   });
 
+export const useLazyReadQuestionsByExamIdQuery = () =>
+  useLazyQuery<
+    ReadMockExamQuestionsByMockExamIdQuery,
+    ReadMockExamQuestionsByMockExamIdQueryVariables
+  >(READ_QUESTIONS_BY_ID);
+
 export const useReadQuestion = () =>
   useLazyQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(
     READ_QUESTION

@@ -1,10 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import SelectedResultComponent from '@components/exam/selectedResult/SelectedResultComponent';
-import {
-  useLazyReadQuestionsByState,
-  useReadQuestionsByState,
-} from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByState } from '@lib/graphql/user/hook/useExamQuestion';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
