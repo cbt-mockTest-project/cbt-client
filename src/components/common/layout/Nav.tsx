@@ -91,7 +91,7 @@ const Nav = () => {
             />
           </div>
         </Link>
-        {navItems.map((item) => {
+        {/* {navItems.map((item) => {
           return (
             <Link href={item.key} key={item.key}>
               <span
@@ -101,7 +101,7 @@ const Nav = () => {
               </span>
             </Link>
           );
-        })}
+        })} */}
         {meQuery?.me.user ? (
           <div className="nav-user-content-wrapper ml-auto">
             <button className="nav-user-content" onClick={onProfileClick}>
