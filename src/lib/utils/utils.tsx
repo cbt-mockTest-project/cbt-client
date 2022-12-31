@@ -64,3 +64,8 @@ export const extractCache = (
   client: ApolloClient<NormalizedCacheObject>,
   key: string
 ) => client.extract()[key];
+
+export const convertExamTitle = (title: string) => {
+  const splited = title.split('-');
+  return splited[0] + '-' + splited.at(-1);
+};

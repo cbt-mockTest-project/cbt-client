@@ -12,7 +12,10 @@ import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import { GetStaticProps, NextPage } from 'next';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import {
+  convertExamTitle,
+  convertWithErrorHandlingFunc,
+} from '@lib/utils/utils';
 import {
   selectExamCategoryHistory,
   selectExamHistory,
@@ -69,7 +72,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
       const titles: DefaultOptionType[] =
         readMockExamTitlesByCateory.titles.map((title) => ({
           value: title.id,
-          label: title.title,
+          label: convertExamTitle(title.title),
         }));
       localStorage.setItem(selectExamCategoryHistory, value);
       setTitles(titles);
