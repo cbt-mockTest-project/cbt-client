@@ -29,7 +29,7 @@ const Exam: NextPage = () => {
         title={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} | 모두CBT`}
         pageHeadingTitle={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
       />
-      <Layout mainBanner={true}>
+      <Layout>
         {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
       </Layout>
     </>

@@ -5,6 +5,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ['cbteungwangnestjs961203.s3.amazonaws.com'],
+  },
   webpack: (config) => {
     // 아래를 추가합니다.
     config.module.rules.push({

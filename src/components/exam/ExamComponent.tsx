@@ -130,6 +130,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   return (
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
+        <h1 className="exam-container-title">{examTitle}</h1>
         <QuestionAndSolutionBox
           label="문제"
           content={{
@@ -228,6 +229,10 @@ export default ExamComponent;
 const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   display: flex;
   flex-direction: column;
+  .exam-container-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
   .exam-answer-visible-button {
     transition: transform 0.3s linear;
     ${(props) =>
