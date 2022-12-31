@@ -55,12 +55,12 @@ const Password: NextPage<PasswordProps> = () => {
   return (
     <>
       <WithHead
-        title="비밀번호변경 | 실기CBT"
+        title="비밀번호변경 | 모두CBT"
         pageHeadingTitle="비밀번호변경 페이지"
       />
       <Layout>
         <PasswordContainer>
-          <h1>실기CBT 비밀번호 변경</h1>
+          <h1>모두CBT 비밀번호 변경</h1>
           <Label content="비밀번호" className="password-label" />
           <Input
             value={password}

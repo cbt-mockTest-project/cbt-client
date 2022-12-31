@@ -51,11 +51,17 @@ class MainDocument extends Document {
           />
           <meta
             name="description"
-            content="산업안전기사실기, 산업안전기사, 산업기사, 전자문제집 , 실기cbt, cbt"
+            content="산업안전기사실기, 산업안전기사, 산업기사, 전자문제집 , 모두CBT, cbt"
           />
           <meta
             name="keywords"
-            content="산업안전기사, 산업안전기사실기, 실기cbt"
+            content="산업안전기사, 산업안전기사실기, 모두CBT"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/png/favicon-32x32.png"
           />
         </Head>
         <body>

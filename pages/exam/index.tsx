@@ -17,7 +17,7 @@ const Exam: NextPage = () => {
   return (
     <>
       <WithHead
-        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} | 실기CBT`}
+        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} | 모두CBT`}
         pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
       />
       <Layout mainBanner={true}>

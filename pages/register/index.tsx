@@ -103,10 +103,10 @@ const Register = () => {
   };
   return (
     <>
-      <WithHead title="회원가입 | 실기CBT" pageHeadingTitle="회원가입 페이지" />
+      <WithHead title="회원가입 | 모두CBT" pageHeadingTitle="회원가입 페이지" />
       <Layout>
         <RegisterContainer onSubmit={handleSubmit(onSubmit)}>
-          <h1>실기CBT 회원가입</h1>
+          <h1>모두CBT 회원가입</h1>
           <div className="register-input-wrapper">
             <label className="register-label">이메일</label>
             <Input value={email} disabled={true} className="register-input" />

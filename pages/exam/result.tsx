@@ -7,7 +7,7 @@ const result = () => {
   return (
     <>
       <WithHead
-        title={`문제 풀이 결과 | 실기CBT`}
+        title={`문제 풀이 결과 | 모두CBT`}
         pageHeadingTitle={`문제 풀이 결과 페이지`}
       />
       <Layout mainBanner={true} sideBanner={true}>

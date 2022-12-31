@@ -36,7 +36,7 @@ const Confirm = () => {
   return (
     <>
       <WithHead
-        title="이메일 인증 | 실기CBT"
+        title="이메일 인증 | 모두CBT"
         pageHeadingTitle="이메일 인증 페이지"
       />
       <Layout>

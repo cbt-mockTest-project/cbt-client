@@ -102,8 +102,8 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   return (
     <>
       <WithHead
-        title="실기CBT | 국가고시 실기시험 부시기!"
-        pageHeadingTitle="실기CBT 서비스 메인페이지"
+        title="모두CBT | 국가고시 실기시험 부시기!"
+        pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
       <Layout mainBanner={true} sideBanner={true}>
         <HomeContainer>

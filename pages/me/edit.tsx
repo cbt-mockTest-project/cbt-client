@@ -11,7 +11,7 @@ const Edit: NextPage = () => {
   return (
     <>
       <WithHead
-        title="회원정보 변경 | 실기CBT"
+        title="회원정보 변경 | 모두CBT"
         pageHeadingTitle="회원정보 변경 페이지"
       />
       <Layout>

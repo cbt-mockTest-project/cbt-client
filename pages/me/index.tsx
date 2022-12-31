@@ -9,7 +9,7 @@ const Mypage: NextPage = () => {
   const { data: examHistoryQuery } = useFineMyExamHistory({ categoryIds: [] });
   return (
     <>
-      <WithHead title="마이페이지 | 실기CBT" pageHeadingTitle="마이페이지" />
+      <WithHead title="마이페이지 | 모두CBT" pageHeadingTitle="마이페이지" />
       <Layout subNav={true}>
         {examHistoryQuery && (
           <MypageComponent examHistoryQuery={examHistoryQuery} />

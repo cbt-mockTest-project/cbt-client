@@ -14,6 +14,7 @@ import { loginModal } from '@lib/constants';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
+import Image from 'next/image';
 
 const Nav = () => {
   const router = useRouter();
@@ -80,7 +81,15 @@ const Nav = () => {
     <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
       <div className="pc-nav-contents-wrapper">
         <Link href="/">
-          <span className="nav-home-link-text">실기CBT</span>
+          <div className="nav-home-logo-wrapper">
+            <Image
+              src={'/png/logo01.png'}
+              alt="logo-img"
+              width={320}
+              height={200}
+              layout="responsive"
+            />
+          </div>
         </Link>
         {navItems.map((item) => {
           return (
@@ -128,7 +137,15 @@ const Nav = () => {
       </div>
       <div className="mobile-nav-contents-wrapper">
         <Link href="/">
-          <span className="mobile-nav-home-link-text">실기CBT</span>
+          <div className="nav-home-logo-wrapper">
+            <Image
+              src={'/png/logo01.png'}
+              alt="logo-img"
+              width={320}
+              height={200}
+              layout="responsive"
+            />
+          </div>
         </Link>
         <button className="mobile-menu-button" onClick={onToggleMenu}>
           <MenuIcon />
@@ -211,10 +228,13 @@ const NavContainer = styled.div<NavContainerProps>`
     gap: 40px;
     align-items: center;
   }
-  .nav-home-link-text {
+  .nav-home-logo-wrapper {
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
+    width: 80px;
+    height: 50px;
+    /* width: 100px; */
   }
   .nav-item-link-text,
   .nav-register-link-text {
@@ -266,11 +286,6 @@ const NavContainer = styled.div<NavContainerProps>`
       width: 100%;
       justify-content: space-between;
       align-items: center;
-    }
-    .mobile-nav-home-link-text {
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
     }
     .mobile-login-button {
       width: 100% !important;

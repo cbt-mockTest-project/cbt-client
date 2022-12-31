@@ -72,7 +72,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   return (
     <>
       <WithHead
-        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 | 실기CBT`}
+        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 | 모두CBT`}
         pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 페이지`}
       />
       <Layout>

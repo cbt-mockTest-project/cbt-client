@@ -29,7 +29,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   };
   return (
     <LoginFormContainer onSubmit={handleSubmit(onSubmit)}>
-      <h1>실기CBT 로그인</h1>
+      <h1>모두CBT 로그인</h1>
       <label className="login-form-label">이메일</label>
       <Controller
         control={control}
