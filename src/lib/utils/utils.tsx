@@ -65,7 +65,12 @@ export const extractCache = (
   key: string
 ) => client.extract()[key];
 
-export const convertExamTitle = (title: string) => {
+export const convertExamTurn = (title: string) => {
   const splited = title.split('-');
   return splited[0] + '-' + splited.at(-1);
+};
+
+export const convertExamTitle = (title: string) => {
+  const splited = title.split('-');
+  return splited[0] + ' ' + splited[1] + '실기' + ' ' + splited[2];
 };

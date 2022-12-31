@@ -5,7 +5,11 @@ import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
-import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import {
+  convertExamTitle,
+  convertWithErrorHandlingFunc,
+  ellipsisText,
+} from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import ReportModal from '@components/common/modal/ReportModal';
@@ -72,12 +76,12 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   return (
     <>
       <WithHead
-        title={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 | 모두CBT`}
-        pageHeadingTitle={`${questionsQuery.readMockExamQuestionsByMockExamId.title} 해설 페이지`}
+        title={`${convertExamTitle(title)} 해설 | 모두CBT`}
+        pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
       />
       <Layout>
         <SolutionBlock>
-          <h1>{title} 문제/해설</h1>
+          <h1>{convertExamTitle(title)} 문제/해설</h1>
           <ul>
             {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
               (el, index) => (

@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import { GetStaticProps, NextPage } from 'next';
 import {
-  convertExamTitle,
+  convertExamTurn,
   convertWithErrorHandlingFunc,
 } from '@lib/utils/utils';
 import {
@@ -72,7 +72,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
       const titles: DefaultOptionType[] =
         readMockExamTitlesByCateory.titles.map((title) => ({
           value: title.id,
-          label: convertExamTitle(title.title),
+          label: convertExamTurn(title.title),
         }));
       localStorage.setItem(selectExamCategoryHistory, value);
       setTitles(titles);
