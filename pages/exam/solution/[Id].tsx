@@ -201,6 +201,11 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  if (!context.params?.id) {
+    return {
+      notFound: true,
+    };
+  }
   const apolloClient = initializeApollo({}, '');
   const examId = context.params?.Id;
   const questionsQueryInput: ReadMockExamQuestionsByMockExamIdInput = {
