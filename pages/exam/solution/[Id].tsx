@@ -192,7 +192,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
         params: { Id: String(el.id) },
       }));
     }
-    return { paths, fallback: false };
+    return { paths, fallback: 'blocking' };
   } catch (err) {
     return {
       paths,
