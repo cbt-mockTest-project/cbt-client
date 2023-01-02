@@ -91,15 +91,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
                     <div className="solution-page-question-pre-wrapper">
                       <pre className="solution-page-question">
                         {`Q${el.number}. ${el.question}`}
-                        {el.question_img && el.question_img.length >= 1 && (
-                          <a
-                            className="solution-page-image-link"
-                            key={index}
-                            href={el.question_img[0].url}
-                            target="_blank"
-                            rel="noreferrer"
-                          >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-                        )}
                       </pre>
                     </div>
                     {el.question_img && el.question_img.length >= 1 && (
@@ -292,12 +283,13 @@ const SolutionBlock = styled.div`
   }
 
   @media (max-width: ${responsive.medium}) {
-    .solution-page-image-link {
-      display: block;
+    .solution-page-question-wrapper {
+      flex-direction: column;
+      gap: 0px;
     }
-    .question-image-wrapper,
     .solution-page-question-image-wrapper {
-      display: none;
+      border: none;
+      border-bottom: 1px solid ${palette.gray_300};
     }
   }
 `;

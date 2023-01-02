@@ -28,19 +28,6 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
     <QuestionAndSolutionBoxContainer>
       <BasicBox minHeight={72} className="question-and-solution-box">
         <pre>{content.content}</pre>
-        {content.img && content.img.length >= 1 && (
-          <div className="question-and-solution-box-link-wrapper">
-            {content.img &&
-              content.img.map((el, index) => (
-                <a
-                  key={index}
-                  href={el.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-              ))}
-          </div>
-        )}
       </BasicBox>
       {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">
@@ -94,11 +81,6 @@ const QuestionAndSolutionBoxContainer = styled.div`
     }
   }
   @media (max-width: ${responsive.medium}) {
-    .question-and-solution-image-box {
-      display: none;
-    }
-    .question-and-solution-box-link-wrapper {
-      display: block;
-    }
+    flex-direction: column;
   }
 `;
