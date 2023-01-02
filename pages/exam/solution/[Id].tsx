@@ -202,7 +202,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  if (!context.params?.id) {
+  if (!context.params?.Id) {
     return {
       notFound: true,
     };
