@@ -183,6 +183,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
         input: {
           category: '',
           query: '',
+          all: true,
         },
       },
     });

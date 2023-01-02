@@ -156,8 +156,8 @@ export type EditMockExamCategoryInput = {
 };
 
 export type EditMockExamInput = {
+  approved?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['Float'];
-  title: Scalars['String'];
 };
 
 export type EditMockExamOutput = {
@@ -356,6 +356,7 @@ export type Mutation = {
   register: RegisterOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   restoreUser: CoreOutput;
+  revalidate: RevalidateOutput;
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
@@ -469,6 +470,11 @@ export type MutationResetMyExamQuestionStateArgs = {
 
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
+};
+
+
+export type MutationRevalidateArgs = {
+  input: RevalidateInput;
 };
 
 
@@ -589,6 +595,7 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
+  all?: InputMaybe<Scalars['Boolean']>;
   category?: InputMaybe<Scalars['String']>;
   query?: InputMaybe<Scalars['String']>;
 };
@@ -708,6 +715,16 @@ export type ResetMyExamQuestionStateOutput = {
 
 export type RestoreUserInput = {
   id: Scalars['Float'];
+};
+
+export type RevalidateInput = {
+  path: Scalars['String'];
+};
+
+export type RevalidateOutput = {
+  __typename?: 'RevalidateOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type SearchMockExamInput = {
