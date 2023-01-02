@@ -109,7 +109,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         variables: { input: { content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
-        message.success('신고가 접수되었습니다.');
+        message.success('요청이 접수되었습니다.');
         setFeedBackModalState(false);
         return;
       }
@@ -169,7 +169,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              잘못된 해설 신고
+              문제수정 요청
             </Button>
             <Button
               type="primary"
@@ -210,7 +210,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         onChange={(value) => {
           reportValue.current = value;
         }}
-        confirmLabel="신고하기"
+        confirmLabel="요청하기"
         title={`${String(examTitle)}\nQ. ${ellipsisText(
           String(questionAndSolution?.question),
           10

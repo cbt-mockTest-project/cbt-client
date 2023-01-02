@@ -62,7 +62,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         variables: { input: { content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
-        message.success('신고가 접수되었습니다.');
+        message.success('요청이 접수되었습니다.');
         setReportModalState(false);
         return;
       }
@@ -145,7 +145,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
                     className="solution-page-report-button"
                     onClick={() => openReportModal(el.question, el.id)}
                   >
-                    잘못된 해설신고
+                    문제수정 요청
                   </Button>
                 </li>
               )
@@ -159,7 +159,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
             onClose={onToggleReportModalState}
             onCancel={onToggleReportModalState}
             onConfirm={tryReport}
-            confirmLabel="신고하기"
+            confirmLabel="요청하기"
             title={`${String(title)}\nQ. ${ellipsisText(
               String(currentQuestion?.title),
               10
