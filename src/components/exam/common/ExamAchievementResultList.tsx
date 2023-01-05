@@ -67,6 +67,7 @@ const ExamAchievementResultContainer = styled.ul<{ isHoverEffect: boolean }>`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  overflow: auto;
   padding: 10px 0;
   li {
     display: flex;

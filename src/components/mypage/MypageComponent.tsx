@@ -145,7 +145,10 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
         onClose={onToggleAchieveModalState}
         className="achievement-modal-wrapper"
       >
-        <ExamAchievementResultList examId={examId} />
+        <ExamAchievementResultList
+          examId={examId}
+          className="achievement-modal-result-list"
+        />
         <Button type="primary" onClick={tryResetQuestionState}>
           성취도 초기화
         </Button>
@@ -175,6 +178,9 @@ const MypageComponentContainer = styled.div`
       bottom: 0;
       filter: blur(6px);
     }
+  }
+  .achievement-modal-result-list {
+    max-height: 350px;
   }
   .mypage-exam-list-wrapper {
     margin-top: 50px;

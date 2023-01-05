@@ -17,7 +17,10 @@ const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
       className={`exam-result-achieve-check-box not-draggable ${className}`}
       maxHeight={280}
     >
-      <ExamAchievementResultList examId={Number(router.query.e)} />
+      <ExamAchievementResultList
+        examId={Number(router.query.e)}
+        className="exam-result-achieve-check-box-result-list"
+      />
     </ExamAchievementResultContainer>
   );
 };
@@ -26,4 +29,7 @@ export default ExamAchievementResult;
 
 const ExamAchievementResultContainer = styled(BasicBox)`
   margin-top: 20px;
+  .exam-result-achieve-check-box-result-list {
+    width: 100%;
+  }
 `;
