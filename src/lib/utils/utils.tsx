@@ -72,5 +72,8 @@ export const convertExamTurn = (title: string) => {
 
 export const convertExamTitle = (title: string) => {
   const splited = title.split('-');
-  return splited[0] + ' ' + splited[1] + ' ' + splited[2];
+  if (splited.length === 3) {
+    return splited[0] + ' ' + splited[1] + ' ' + splited[2];
+  }
+  return splited[0] + ' ' + splited.at(-1);
 };
