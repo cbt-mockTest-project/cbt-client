@@ -9,6 +9,7 @@ export const FULL_QUESTION_COMMENT_FRAGMENT = gql`
     id
     user {
       nickname
+      id
     }
   }
 `;

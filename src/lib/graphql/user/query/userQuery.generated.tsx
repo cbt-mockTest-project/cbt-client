@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string } | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string, id: number } | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -143,6 +143,7 @@ export const MeDocument = gql`
     ok
     user {
       nickname
+      id
     }
     error
   }
