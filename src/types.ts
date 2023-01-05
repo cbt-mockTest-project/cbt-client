@@ -78,6 +78,7 @@ export type CreateMockExamQuestionCommentInput = {
 
 export type CreateMockExamQuestionCommentOutput = {
   __typename?: 'CreateMockExamQuestionCommentOutput';
+  comment: MockExamQuestionComment;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -198,6 +199,7 @@ export type EditMockExamQuestionCommentLikeInput = {
 
 export type EditMockExamQuestionCommentLikeOutput = {
   __typename?: 'EditMockExamQuestionCommentLikeOutput';
+  currentState: Scalars['Boolean'];
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -352,6 +354,7 @@ export type MockExamQuestionComment = {
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   likeState: Scalars['Boolean'];
+  likesCount: Scalars['Float'];
   question: MockExamQuestion;
   updated_at: Scalars['DateTime'];
   user: User;
@@ -591,7 +594,7 @@ export type Query = {
   readMockExam: ReadMockExamOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
   readMockExamQuestionCommentLikesByQuestinId: ReadMockExamQuestionCommentLikesByQuestinIdOutput;
-  readMockExamQuestionCommentsByQuestinId: ReadMockExamQuestionCommentsByQuestinIdOutput;
+  readMockExamQuestionCommentsByQuestionId: ReadMockExamQuestionCommentsByQuestionIdOutput;
   readMockExamQuestionNumbers: ReadMockExamQuestionNumbersOutput;
   readMockExamQuestionsByMockExamId: ReadMockExamQuestionsByMockExamIdOutput;
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
@@ -627,8 +630,8 @@ export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
 };
 
 
-export type QueryReadMockExamQuestionCommentsByQuestinIdArgs = {
-  input: ReadMockExamQuestionCommentsByQuestinIdInput;
+export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
+  input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
 
 
@@ -730,12 +733,12 @@ export type ReadMockExamQuestionCommentLikesByQuestinIdOutput = {
   ok: Scalars['Boolean'];
 };
 
-export type ReadMockExamQuestionCommentsByQuestinIdInput = {
+export type ReadMockExamQuestionCommentsByQuestionIdInput = {
   questionId: Scalars['Float'];
 };
 
-export type ReadMockExamQuestionCommentsByQuestinIdOutput = {
-  __typename?: 'ReadMockExamQuestionCommentsByQuestinIdOutput';
+export type ReadMockExamQuestionCommentsByQuestionIdOutput = {
+  __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput';
   comments?: Maybe<Array<MockExamQuestionComment>>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];

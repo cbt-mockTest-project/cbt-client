@@ -1,3 +1,4 @@
+import { FULL_QUESTION_COMMENT_FRAGMENT } from './questionCommentFragment';
 import { gql } from '@apollo/client';
 
 export const CREATE_QUESTION_COMMENT = gql`
@@ -7,8 +8,12 @@ export const CREATE_QUESTION_COMMENT = gql`
     createMockExamQuestionComment(input: $input) {
       error
       ok
+      comment {
+        ...QusetionCommentParts
+      }
     }
   }
+  ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
 export const DELETE_QUESTION_COMMENT = gql`
@@ -34,14 +39,15 @@ export const EDIT_QUESTION_COMMENT = gql`
 `;
 
 export const READ_QUESTION_COMMENT = gql`
-  query ReadMockExamQuestionCommentsByQuestinId(
-    $input: ReadMockExamQuestionCommentsByQuestinIdInput!
+  query ReadMockExamQuestionCommentsByQuestionId(
+    $input: ReadMockExamQuestionCommentsByQuestionIdInput!
   ) {
-    readMockExamQuestionCommentsByQuestinId(input: $input) {
+    readMockExamQuestionCommentsByQuestionId(input: $input) {
       comments {
         created_at
         content
         likeState
+        likesCount
         id
         user {
           nickname

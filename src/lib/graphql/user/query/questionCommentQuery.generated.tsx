@@ -1,6 +1,7 @@
 import * as Types from '../../../../types';
 
 import gql from 'graphql-tag';
+import { QusetionCommentPartsFragmentDoc } from './questionCommentFragment.generated';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type CreateMockExamQuestionCommentMutationVariables = Types.Exact<{
@@ -8,7 +9,7 @@ export type CreateMockExamQuestionCommentMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamQuestionCommentMutation = { __typename?: 'Mutation', createMockExamQuestionComment: { __typename?: 'CreateMockExamQuestionCommentOutput', error?: string | null, ok: boolean } };
+export type CreateMockExamQuestionCommentMutation = { __typename?: 'Mutation', createMockExamQuestionComment: { __typename?: 'CreateMockExamQuestionCommentOutput', error?: string | null, ok: boolean, comment: { __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string } } } };
 
 export type DeleteMockExamQuestionCommentMutationVariables = Types.Exact<{
   input: Types.DeleteMockExamQuestionCommentInput;
@@ -24,12 +25,12 @@ export type EditMockExamQuestionCommentMutationVariables = Types.Exact<{
 
 export type EditMockExamQuestionCommentMutation = { __typename?: 'Mutation', editMockExamQuestionComment: { __typename?: 'EditMockExamQuestionCommentOutput', error?: string | null, ok: boolean } };
 
-export type ReadMockExamQuestionCommentsByQuestinIdQueryVariables = Types.Exact<{
-  input: Types.ReadMockExamQuestionCommentsByQuestinIdInput;
+export type ReadMockExamQuestionCommentsByQuestionIdQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamQuestionCommentsByQuestionIdInput;
 }>;
 
 
-export type ReadMockExamQuestionCommentsByQuestinIdQuery = { __typename?: 'Query', readMockExamQuestionCommentsByQuestinId: { __typename?: 'ReadMockExamQuestionCommentsByQuestinIdOutput', comments?: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, id: number, user: { __typename?: 'User', nickname: string } }> | null } };
+export type ReadMockExamQuestionCommentsByQuestionIdQuery = { __typename?: 'Query', readMockExamQuestionCommentsByQuestionId: { __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput', comments?: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string } }> | null } };
 
 
 export const CreateMockExamQuestionCommentDocument = gql`
@@ -37,9 +38,12 @@ export const CreateMockExamQuestionCommentDocument = gql`
   createMockExamQuestionComment(input: $input) {
     error
     ok
+    comment {
+      ...QusetionCommentParts
+    }
   }
 }
-    `;
+    ${QusetionCommentPartsFragmentDoc}`;
 
 export function useCreateMockExamQuestionCommentMutation() {
   return Urql.useMutation<CreateMockExamQuestionCommentMutation, CreateMockExamQuestionCommentMutationVariables>(CreateMockExamQuestionCommentDocument);
@@ -68,13 +72,14 @@ export const EditMockExamQuestionCommentDocument = gql`
 export function useEditMockExamQuestionCommentMutation() {
   return Urql.useMutation<EditMockExamQuestionCommentMutation, EditMockExamQuestionCommentMutationVariables>(EditMockExamQuestionCommentDocument);
 };
-export const ReadMockExamQuestionCommentsByQuestinIdDocument = gql`
-    query ReadMockExamQuestionCommentsByQuestinId($input: ReadMockExamQuestionCommentsByQuestinIdInput!) {
-  readMockExamQuestionCommentsByQuestinId(input: $input) {
+export const ReadMockExamQuestionCommentsByQuestionIdDocument = gql`
+    query ReadMockExamQuestionCommentsByQuestionId($input: ReadMockExamQuestionCommentsByQuestionIdInput!) {
+  readMockExamQuestionCommentsByQuestionId(input: $input) {
     comments {
       created_at
       content
       likeState
+      likesCount
       id
       user {
         nickname
@@ -84,6 +89,6 @@ export const ReadMockExamQuestionCommentsByQuestinIdDocument = gql`
 }
     `;
 
-export function useReadMockExamQuestionCommentsByQuestinIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionCommentsByQuestinIdQueryVariables>, 'query'>) {
-  return Urql.useQuery<ReadMockExamQuestionCommentsByQuestinIdQuery, ReadMockExamQuestionCommentsByQuestinIdQueryVariables>({ query: ReadMockExamQuestionCommentsByQuestinIdDocument, ...options });
+export function useReadMockExamQuestionCommentsByQuestionIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionCommentsByQuestionIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamQuestionCommentsByQuestionIdQuery, ReadMockExamQuestionCommentsByQuestionIdQueryVariables>({ query: ReadMockExamQuestionCommentsByQuestionIdDocument, ...options });
 };

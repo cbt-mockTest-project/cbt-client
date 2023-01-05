@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables } from '../query/questionCommentLikeQuery.generated';
 import {
   CREATE_QUESTION_COMMENT,
@@ -13,7 +13,8 @@ import {
   DeleteMockExamQuestionCommentMutationVariables,
   EditMockExamQuestionCommentMutation,
   EditMockExamQuestionCommentMutationVariables,
-  ReadMockExamQuestionCommentsByQuestinIdQuery,
+  ReadMockExamQuestionCommentsByQuestionIdQuery,
+  ReadMockExamQuestionCommentsByQuestionIdQueryVariables,
 } from '../query/questionCommentQuery.generated';
 
 export const useCreateQuestionCommnet = () =>
@@ -33,6 +34,11 @@ export const useEditQuestionCommnet = () =>
   >(EDIT_QUESTION_COMMENT);
 export const useLazyReadQuestionComment = () =>
   useLazyQuery<
-    ReadMockExamQuestionCommentsByQuestinIdQuery,
-    ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables
+    ReadMockExamQuestionCommentsByQuestionIdQuery,
+    ReadMockExamQuestionCommentsByQuestionIdQueryVariables
   >(READ_QUESTION_COMMENT);
+export const useReadQuestionComment = (questionId: number) =>
+  useQuery<
+    ReadMockExamQuestionCommentsByQuestionIdQuery,
+    ReadMockExamQuestionCommentsByQuestionIdQueryVariables
+  >(READ_QUESTION_COMMENT, { variables: { input: { questionId } } });

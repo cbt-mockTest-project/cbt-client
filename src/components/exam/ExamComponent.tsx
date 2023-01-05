@@ -1,5 +1,6 @@
 import { CaretDownOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
+import CommentModal from '@components/common/modal/CommentModal';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
@@ -48,6 +49,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
+  const [commentModalState, setCommentModalState] = useState(false);
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
@@ -88,6 +90,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       return;
     }
     setFeedBackModalState(!feedBackModalState);
+  };
+  const onToggleCommentModal = () => {
+    setCommentModalState(!commentModalState);
   };
 
   const onFinishConfirmModal = () => {
@@ -178,6 +183,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             >
               진도 확인
             </Button>
+            <Button
+              type="primary"
+              className="exam-question-menubar-check-button"
+              onClick={onToggleCommentModal}
+            >
+              댓글
+            </Button>
           </div>
           <div className="exam-question-menubar" id="exam-question-menubar">
             <AchievementCheck
@@ -219,6 +231,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       <ProgressModal
         open={progressModalState}
         onClose={onToggleProgressModal}
+      />
+      <CommentModal
+        open={commentModalState}
+        onClose={onToggleCommentModal}
+        title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
+        questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
     </>
   );

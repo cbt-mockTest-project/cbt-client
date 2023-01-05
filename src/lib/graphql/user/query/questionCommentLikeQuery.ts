@@ -7,6 +7,7 @@ export const EDIT_QUESTION_COMMENT_LIKE = gql`
     editMockExamQuestionCommentLike(input: $input) {
       error
       ok
+      currentState
     }
   }
 `;

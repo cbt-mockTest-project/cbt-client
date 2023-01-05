@@ -8,7 +8,7 @@ export type EditMockExamQuestionCommentLikeMutationVariables = Types.Exact<{
 }>;
 
 
-export type EditMockExamQuestionCommentLikeMutation = { __typename?: 'Mutation', editMockExamQuestionCommentLike: { __typename?: 'EditMockExamQuestionCommentLikeOutput', error?: string | null, ok: boolean } };
+export type EditMockExamQuestionCommentLikeMutation = { __typename?: 'Mutation', editMockExamQuestionCommentLike: { __typename?: 'EditMockExamQuestionCommentLikeOutput', error?: string | null, ok: boolean, currentState: boolean } };
 
 export type ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionCommentLikesByQuestinIdInput;
@@ -23,6 +23,7 @@ export const EditMockExamQuestionCommentLikeDocument = gql`
   editMockExamQuestionCommentLike(input: $input) {
     error
     ok
+    currentState
   }
 }
     `;
