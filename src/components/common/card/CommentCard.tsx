@@ -19,6 +19,7 @@ import useInput from '@lib/hooks/useInput';
 import { FULL_QUESTION_COMMENT_FRAGMENT } from '@lib/graphql/user/query/questionCommentFragment';
 import { useEditQuestionCommentLike } from '@lib/graphql/user/hook/useQusetionCommentLike';
 import { addHours, format, parseISO } from 'date-fns';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface CommentCardOption {
   nickname: string;
@@ -28,6 +29,7 @@ interface CommentCardOption {
   likeState: boolean;
   likesCount: number;
   questionId: number;
+  userId: number;
 }
 
 interface CommentCardProps {
@@ -35,6 +37,7 @@ interface CommentCardProps {
 }
 
 const CommentCard: React.FC<CommentCardProps> = ({ option }) => {
+  const { data: meQuery } = useMeQuery();
   const [editState, setEditState] = useState(false);
   const { value: content, onChange: onChangeContent } = useInput(
     option.content
@@ -133,12 +136,16 @@ const CommentCard: React.FC<CommentCardProps> = ({ option }) => {
           <div className="comment-card-time">
             {format(addHours(parseISO(option.time), 9), 'yyyy-MM-dd hh:mm')}
           </div>
-          <button onClick={toggleEdit}>
-            <EditIcon />
-          </button>
-          <button onClick={tryDelete}>
-            <DeleteIcon />
-          </button>
+          {meQuery?.me.user?.id === option.userId && (
+            <>
+              <button onClick={toggleEdit}>
+                <EditIcon />
+              </button>
+              <button onClick={tryDelete}>
+                <DeleteIcon />
+              </button>
+            </>
+          )}
         </div>
         {editState && (
           <>

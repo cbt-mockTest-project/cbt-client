@@ -15,6 +15,7 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
@@ -30,6 +31,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
   const { data: commentQuery } = useReadQuestionComment(questionId);
   const { value: content, onChange: onChangeContent } = useInput('');
+  const { data: meQuery } = useMeQuery();
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({
       variables: {
@@ -69,6 +71,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
     convertWithErrorHandlingFunc({
       callback: () => requestCreateComment(questionId),
     });
+  const isLogedIn = Boolean(meQuery?.me.user);
   return (
     <CommentModalContainer onClose={onClose} open={open}>
       <pre className="comment-title">{title}</pre>
@@ -77,11 +80,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
           autoSize={{ minRows: 3, maxRows: 3 }}
           onChange={onChangeContent}
           value={content}
+          disabled={!isLogedIn}
+          placeholder={!isLogedIn ? '로그인 후 이용해주세요' : ''}
         />
         <Button
           type="primary"
           onClick={tryCreateComment(questionId)}
           loading={loading}
+          disabled={!isLogedIn}
         >
           댓글등록
         </Button>
@@ -98,6 +104,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 id: comment.id,
                 time: comment.created_at,
                 questionId,
+                userId: comment.user.id,
               }}
               key={comment.id}
             />

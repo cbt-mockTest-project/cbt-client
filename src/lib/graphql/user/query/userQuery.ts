@@ -53,6 +53,7 @@ export const ME_QUERY = gql`
       ok
       user {
         nickname
+        id
       }
       error
     }
