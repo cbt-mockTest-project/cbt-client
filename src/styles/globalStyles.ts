@@ -120,6 +120,13 @@ const Globalstyles = createGlobalStyle`
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
   }
+  .hidden-scroll {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+  }
 `;
 
 export default Globalstyles;

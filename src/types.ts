@@ -71,6 +71,18 @@ export type CreateMockExamOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateMockExamQuestionCommentInput = {
+  content: Scalars['String'];
+  questionId: Scalars['Float'];
+};
+
+export type CreateMockExamQuestionCommentOutput = {
+  __typename?: 'CreateMockExamQuestionCommentOutput';
+  comment: MockExamQuestionComment;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateMockExamQuestionFeedbackInput = {
   content: Scalars['String'];
   questionId: Scalars['Float'];
@@ -130,6 +142,16 @@ export type DeleteMockExamOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type DeleteMockExamQuestionCommentInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteMockExamQuestionCommentOutput = {
+  __typename?: 'DeleteMockExamQuestionCommentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeleteMockExamQuestionFeedbackInput = {
   id: Scalars['Float'];
 };
@@ -162,6 +184,28 @@ export type EditMockExamInput = {
 
 export type EditMockExamOutput = {
   __typename?: 'EditMockExamOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type EditMockExamQuestionCommentInput = {
+  content: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+export type EditMockExamQuestionCommentLikeInput = {
+  commentId: Scalars['Float'];
+};
+
+export type EditMockExamQuestionCommentLikeOutput = {
+  __typename?: 'EditMockExamQuestionCommentLikeOutput';
+  currentState: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type EditMockExamQuestionCommentOutput = {
+  __typename?: 'EditMockExamQuestionCommentOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -292,6 +336,7 @@ export type MockExamQuestion = {
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExam: MockExam;
+  mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   number: Scalars['Float'];
   question: Scalars['String'];
@@ -300,6 +345,28 @@ export type MockExamQuestion = {
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
   updated_at: Scalars['DateTime'];
+};
+
+export type MockExamQuestionComment = {
+  __typename?: 'MockExamQuestionComment';
+  commentLike: Array<MockExamQuestionCommentLike>;
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  likeState: Scalars['Boolean'];
+  likesCount: Scalars['Float'];
+  question: MockExamQuestion;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type MockExamQuestionCommentLike = {
+  __typename?: 'MockExamQuestionCommentLike';
+  comment: MockExamQuestionComment;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamQuestionFeedback = {
@@ -338,16 +405,20 @@ export type Mutation = {
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
   createMockExamQuestion: CreateMockExamQuestionOutput;
+  createMockExamQuestionComment: CreateMockExamQuestionCommentOutput;
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
+  deleteMockExamQuestionComment: DeleteMockExamQuestionCommentOutput;
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
   deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
   editMockExamQuestion: EditMockExamQuestionOutput;
+  editMockExamQuestionComment: EditMockExamQuestionCommentOutput;
+  editMockExamQuestionCommentLike: EditMockExamQuestionCommentLikeOutput;
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
@@ -393,6 +464,11 @@ export type MutationCreateMockExamQuestionArgs = {
 };
 
 
+export type MutationCreateMockExamQuestionCommentArgs = {
+  input: CreateMockExamQuestionCommentInput;
+};
+
+
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
@@ -418,6 +494,11 @@ export type MutationDeleteMockExamQuestionArgs = {
 };
 
 
+export type MutationDeleteMockExamQuestionCommentArgs = {
+  input: DeleteMockExamQuestionCommentInput;
+};
+
+
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
@@ -435,6 +516,16 @@ export type MutationEditMockExamCategoryArgs = {
 
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
+};
+
+
+export type MutationEditMockExamQuestionCommentArgs = {
+  input: EditMockExamQuestionCommentInput;
+};
+
+
+export type MutationEditMockExamQuestionCommentLikeArgs = {
+  input: EditMockExamQuestionCommentLikeInput;
 };
 
 
@@ -502,6 +593,8 @@ export type Query = {
   readAllMockExamQuestionFeedback: ReadAllMockExamQuestionFeedbackOutput;
   readMockExam: ReadMockExamOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
+  readMockExamQuestionCommentLikesByQuestinId: ReadMockExamQuestionCommentLikesByQuestinIdOutput;
+  readMockExamQuestionCommentsByQuestionId: ReadMockExamQuestionCommentsByQuestionIdOutput;
   readMockExamQuestionNumbers: ReadMockExamQuestionNumbersOutput;
   readMockExamQuestionsByMockExamId: ReadMockExamQuestionsByMockExamIdOutput;
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
@@ -529,6 +622,16 @@ export type QueryReadMockExamArgs = {
 
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
+};
+
+
+export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
+  input: ReadMockExamQuestionCommentLikesByQuestinIdInput;
+};
+
+
+export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
+  input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
 
 
@@ -617,6 +720,28 @@ export type ReadMockExamOutput = {
   mockExam: MockExam;
   ok: Scalars['Boolean'];
   questionNumbers: Array<Scalars['Float']>;
+};
+
+export type ReadMockExamQuestionCommentLikesByQuestinIdInput = {
+  commentId: Scalars['Float'];
+};
+
+export type ReadMockExamQuestionCommentLikesByQuestinIdOutput = {
+  __typename?: 'ReadMockExamQuestionCommentLikesByQuestinIdOutput';
+  count: Scalars['Float'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type ReadMockExamQuestionCommentsByQuestionIdInput = {
+  questionId: Scalars['Float'];
+};
+
+export type ReadMockExamQuestionCommentsByQuestionIdOutput = {
+  __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput';
+  comments?: Maybe<Array<MockExamQuestionComment>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadMockExamQuestionInput = {
@@ -784,6 +909,8 @@ export type User = {
   email: Scalars['String'];
   feedback: Array<Feedback>;
   id: Scalars['Float'];
+  mockExamQuestionComment: Array<MockExamQuestionComment>;
+  mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
   mockExamQuestionState: Array<MockExamQuestionState>;
   nickname: Scalars['String'];
   password: Scalars['String'];
