@@ -12,6 +12,7 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal } from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
+import Tooltip from '@components/common/tooltip/Tooltip';
 interface AchievementCheckProps {
   questionIndex: number;
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -70,6 +71,15 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   };
   return (
     <AchievementCheckContainer>
+      <Tooltip className="achievement-check-tooltip">
+        <p className="achievement-check-tooltip-content">
+          성취도체크를 통해 학습기록을 남길 수 있습니다.
+          <br />
+          학습기록은 진도확인 버튼을 클릭해 확인 할 수 있습니다.
+          <br />
+          문제풀이가 끝난 이후에는 활동내역에서 확인할 수 있습니다.
+        </p>
+      </Tooltip>
       <span className="achievement-check-label select-none">성취도체크</span>
       <AchievCheckButtonGroup
         onCheckboxChange={requestChangeState}
@@ -84,8 +94,23 @@ export default AchievementCheck;
 const AchievementCheckContainer = styled.div`
   display: flex;
   align-items: center;
+  .achievement-check-tooltip {
+    position: relative;
+    top: 5px;
+    right: 3px;
+  }
+  .achievement-check-tooltip-content {
+    font-size: 0.8rem;
+    color: white;
+  }
   @media (max-width: ${responsive.medium}) {
     .achievement-check-label {
+      margin: 0 10px;
+    }
+  }
+  @media (max-width: ${responsive.small}) {
+    .achievement-check-label,
+    .achievement-check-tooltip {
       display: none;
     }
   }
