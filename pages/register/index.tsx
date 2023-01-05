@@ -93,12 +93,10 @@ const Register = () => {
         });
       }
       setRegisterButtonDisabled(true);
-      return message.success({
+      message.success({
         content: '회원가입에 성공했습니다.',
-        onClose: () => {
-          router.push('/');
-        },
       });
+      return router.push('/');
     }
   };
   return (

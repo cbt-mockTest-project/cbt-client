@@ -6,9 +6,12 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-const Exam: NextPage = () => {
+const Exam: NextPage = (asd) => {
   const router = useRouter();
   const examId = Number(router.query.e);
+  const title = router.query.t
+    ? router.query.c + ' ' + router.query.t + ' | '
+    : '';
   const [readQuestions, { data: questionsQuery }] =
     useLazyReadQuestionsByExamIdQuery();
   useEffect(() => {
@@ -26,8 +29,8 @@ const Exam: NextPage = () => {
   return (
     <>
       <WithHead
-        title={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} | 모두CBT`}
-        pageHeadingTitle={`${questionsQuery?.readMockExamQuestionsByMockExamId.title} 문제풀이 페이지`}
+        title={`${title}모두CBT`}
+        pageHeadingTitle={`${title} 문제풀이 페이지`}
       />
       <Layout>
         {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}

@@ -98,6 +98,8 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
         e: selectedExamId,
         q: '1',
         r: isRandom,
+        t: title,
+        c: category,
       },
     });
   };
