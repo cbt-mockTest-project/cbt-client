@@ -19,6 +19,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
+  className?: string;
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
@@ -26,11 +27,16 @@ const CommentModal: React.FC<CommentModalProps> = ({
   open,
   title,
   questionId,
+  className,
 }) => {
   const client = useApollo({}, '');
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
   const { data: commentQuery } = useReadQuestionComment(questionId);
-  const { value: content, onChange: onChangeContent } = useInput('');
+  const {
+    value: content,
+    setValue: setContent,
+    onChange: onChangeContent,
+  } = useInput('');
   const { data: meQuery } = useMeQuery();
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({
@@ -39,6 +45,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
       },
     });
     if (res.data?.createMockExamQuestionComment.ok) {
+      setContent('');
       const newComment = res.data.createMockExamQuestionComment.comment;
       const queryResult =
         client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
@@ -61,7 +68,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
           variables: { input: { questionId } },
         });
       }
-
       return message.success('댓글이 등록되었습니다.');
     }
     message.error(res.data?.createMockExamQuestionComment.error);
@@ -73,7 +79,11 @@ const CommentModal: React.FC<CommentModalProps> = ({
     });
   const isLogedIn = Boolean(meQuery?.me.user);
   return (
-    <CommentModalContainer onClose={onClose} open={open}>
+    <CommentModalContainer
+      onClose={onClose}
+      open={open}
+      className={className || ''}
+    >
       <pre className="comment-title">{title}</pre>
       <div className="comment-input-wrapper">
         <TextArea
