@@ -62,6 +62,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     setFeedBackModalState(false);
     setFinishModalState(false);
     setAnswerboxVisible(false);
+    setCommentModalState(false);
     setQuestionAndSolution({
       question: questions[questionIndex - 1].question,
       number: questions[questionIndex - 1].number,

@@ -132,8 +132,9 @@ const CommentModalContainer = styled(Modal)`
   width: 500px;
   background-color: ${palette.gray_100};
   .comment-title {
-    display: contents;
     font-weight: bold;
+    white-space: pre-line;
+    display: block;
   }
   .modal-wrapper {
     display: flex;
@@ -166,5 +167,9 @@ const CommentModalContainer = styled(Modal)`
   @media (max-width: ${responsive.small}) {
     width: 100%;
     animation: slideFromBottom 0.5s;
+    .comment-title {
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
   }
 `;
