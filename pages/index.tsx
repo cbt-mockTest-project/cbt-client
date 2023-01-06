@@ -110,7 +110,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
         title="모두CBT | 국가고시 실기시험 부시기!"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      <Layout mainBanner={true} sideBanner={true}>
+      <Layout mainBanner={true}>
         <HomeContainer>
           <div className="home-wrapper">
             <div className="home-content-wrapper">
@@ -174,22 +174,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const HomeContainer = styled.div`
-  .home-sub-banner-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    flex: 1;
-  }
-  .home-sub-banner {
-    width: 250px;
-    height: 180px;
-    background-color: ${palette.gray_200};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   .home-wrapper {
-    margin-top: 40px;
+    margin: 40px auto;
     display: flex;
     gap: 30px;
   }
@@ -199,11 +185,13 @@ const HomeContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: 250px;
+    margin: 0 auto;
     .ant-select {
-      width: 50%;
+      width: 100%;
     }
     button {
-      width: 50%;
+      width: 100%;
       height: 45px;
     }
   }
@@ -212,10 +200,5 @@ const HomeContainer = styled.div`
     gap: 10px;
     align-items: center;
     margin: 20px 0;
-  }
-  @media (max-width: ${responsive.medium}) {
-    .home-wrapper {
-      margin-top: 0px;
-    }
   }
 `;
