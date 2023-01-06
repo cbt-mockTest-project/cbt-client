@@ -152,6 +152,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
           onChange={onChangeAnswer}
+          placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         />
         <button
           className="exam-solution-check-wrapper"

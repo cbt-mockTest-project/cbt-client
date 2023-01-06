@@ -107,7 +107,12 @@ const Register = () => {
           <h1>모두CBT 회원가입</h1>
           <div className="register-input-wrapper">
             <label className="register-label">이메일</label>
-            <Input value={email} disabled={true} className="register-input" />
+            <Input
+              value={email}
+              disabled={true}
+              className="register-input"
+              placeholder="example@google.com"
+            />
             <label className="register-label">닉네임</label>
             <Controller
               control={control}

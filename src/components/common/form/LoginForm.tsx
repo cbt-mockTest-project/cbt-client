@@ -35,7 +35,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
         control={control}
         name="email"
         rules={{ required: true }}
-        render={({ field }) => <Input onChange={field.onChange} type="email" />}
+        render={({ field }) => (
+          <Input
+            onChange={field.onChange}
+            type="email"
+            placeholder="example@google.com"
+          />
+        )}
       />
       {formState.errors['email']?.type === 'required' && (
         <ErrorText

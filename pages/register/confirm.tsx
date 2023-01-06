@@ -49,7 +49,11 @@ const Confirm = () => {
               name="email"
               rules={{ required: true }}
               render={({ field }) => (
-                <Input onChange={field.onChange} type="email" />
+                <Input
+                  placeholder="example@google.com"
+                  onChange={field.onChange}
+                  type="email"
+                />
               )}
             />
             {formState.errors['email']?.type === 'required' && (
