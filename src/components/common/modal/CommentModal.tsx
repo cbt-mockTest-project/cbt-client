@@ -1,6 +1,6 @@
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
@@ -33,6 +33,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const router = useRouter();
   const client = useApollo({}, '');
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
+  const [submitButtonState, setSubmitButtonState] = useState(false);
   const [readQuestionComment, { data: commentQuery }] =
     useLazyReadQuestionComment();
   const {
@@ -42,10 +43,18 @@ const CommentModal: React.FC<CommentModalProps> = ({
   } = useInput('');
   const { data: meQuery } = useMeQuery();
   useEffect(() => {
+    if (content.length >= 1) {
+      setSubmitButtonState(true);
+    } else {
+      setSubmitButtonState(false);
+    }
+  }, [content]);
+  useEffect(() => {
     if (router.isReady && questionId) {
       readQuestionComment({ variables: { input: { questionId } } });
     }
   }, [router.isReady, questionId]);
+
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({
       variables: {
@@ -105,7 +114,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
           type="primary"
           onClick={tryCreateComment(questionId)}
           loading={loading}
-          disabled={!isLogedIn}
+          disabled={!submitButtonState}
         >
           댓글등록
         </Button>
