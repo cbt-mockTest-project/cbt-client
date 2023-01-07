@@ -236,9 +236,15 @@ const ExamSolutionListContainer = styled.li`
       flex-direction: column;
       gap: 0px;
     }
+
     .solution-page-question-image-wrapper {
       border: none;
       border-bottom: 1px solid ${palette.gray_300};
+    }
+  }
+  @media (max-width: ${responsive.small}) {
+    .solution-page-comment-modal {
+      width: 100%;
     }
   }
 `;
