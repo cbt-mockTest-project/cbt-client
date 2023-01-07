@@ -1,6 +1,6 @@
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
@@ -9,13 +9,14 @@ import { responsive } from '@lib/utils/responsive';
 import useInput from '@lib/hooks/useInput';
 import {
   useCreateQuestionCommnet,
-  useReadQuestionComment,
+  useLazyReadQuestionComment,
 } from '@lib/graphql/user/hook/useQusetionComment';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useRouter } from 'next/router';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
@@ -29,15 +30,22 @@ const CommentModal: React.FC<CommentModalProps> = ({
   questionId,
   className,
 }) => {
+  const router = useRouter();
   const client = useApollo({}, '');
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
-  const { data: commentQuery } = useReadQuestionComment(questionId);
+  const [readQuestionComment, { data: commentQuery }] =
+    useLazyReadQuestionComment();
   const {
     value: content,
     setValue: setContent,
     onChange: onChangeContent,
   } = useInput('');
   const { data: meQuery } = useMeQuery();
+  useEffect(() => {
+    if (router.isReady && questionId) {
+      readQuestionComment({ variables: { input: { questionId } } });
+    }
+  }, [router.isReady, questionId]);
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({
       variables: {
