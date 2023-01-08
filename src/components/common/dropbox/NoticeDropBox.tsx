@@ -15,6 +15,7 @@ import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 
 export interface NoticeDropBoxOption extends DropBoxOption {
   confirmed: boolean;
+  time: string;
 }
 
 interface NoticeDropBoxProps extends Omit<DropBoxProps, 'options'> {
@@ -110,6 +111,7 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
                   className="notice-content-click-button"
                 >
                   <pre>{option.label}</pre>
+                  <div className="notice-content-time">{option.time}</div>
                 </button>
                 <button
                   onClick={tryDeleteNotice(Number(option.value))}
@@ -152,17 +154,25 @@ const NoticeDropBoxContainer = styled.div`
     flex-direction: column;
     .notice-content-click-button {
       width: 100%;
+      :hover {
+        background-color: ${palette.gray_50};
+      }
+    }
+    .notice-content-time {
+      font-size: 0.7rem;
+      padding: 0 10px;
+      text-align: right;
+      margin-right: 10px;
+      color: ${palette.gray_300};
+      font-weight: bold;
     }
     pre {
+      text-align: left;
       white-space: pre-wrap;
       word-break: break-all;
       cursor: pointer;
       padding: 10px;
       border-radius: 5px;
-      text-align: left;
-      :hover {
-        background-color: ${palette.gray_50};
-      }
     }
     li {
       display: flex;
@@ -186,6 +196,7 @@ const NoticeDropBoxContainer = styled.div`
       width: 20px;
       height: 20px;
       position: relative;
+
       ::before {
         position: absolute;
         transform: translateY(-50%);

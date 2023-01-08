@@ -18,6 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
 import NoticeDropBox, { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
+import { addHours, format, parseISO } from 'date-fns';
 
 const Nav = () => {
   const router = useRouter();
@@ -51,6 +52,10 @@ const Nav = () => {
       value: notice.id,
       label: notice.content,
       confirmed: notice.confirm,
+      time: format(
+        addHours(parseISO(notice.created_at), 9),
+        'yyyy-MM-dd hh:mm'
+      ),
     })) || [];
   const hasNotices = notices && notices.length >= 1;
   const dropBoxOptions: DropBoxOption[] = [
