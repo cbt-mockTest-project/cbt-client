@@ -5,24 +5,33 @@ import styled from 'styled-components';
 export interface DropBoxOption {
   label: string;
   value?: string | number;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-interface DropBoxProps {
+export interface DropBoxProps {
   isOpen: boolean;
-  options: DropBoxOption[];
+  options?: DropBoxOption[];
+  children?: React.ReactNode;
+  className?: string;
 }
 
-const DropBox: React.FC<DropBoxProps> = ({ isOpen, options }) => {
+const DropBox: React.FC<DropBoxProps> = ({
+  isOpen,
+  options,
+  children,
+  className,
+}) => {
   if (!isOpen) return null;
 
   return (
-    <DropBoxContainer>
-      {options.map((option, index) => (
-        <li key={index}>
-          <button onClick={option.onClick}>{option.label}</button>
-        </li>
-      ))}
+    <DropBoxContainer className={className}>
+      {options
+        ? options.map((option, index) => (
+            <li key={index}>
+              <button onClick={option.onClick}>{option.label}</button>
+            </li>
+          ))
+        : children}
     </DropBoxContainer>
   );
 };
@@ -37,6 +46,7 @@ const DropBoxContainer = styled.ul`
   border-radius: 5px;
   box-shadow: rgb(0 56 68 / 20%) 0px 5px 7px 0px;
   width: 100px;
+  right: 0;
   top: 35px;
   li {
     padding: 5px 10px;
