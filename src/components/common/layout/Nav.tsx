@@ -8,6 +8,7 @@ import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { UserOutlined } from '@ant-design/icons';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DropBox, { DropBoxOption } from '../dropbox/DropBox';
 import OuterClick from '../outerClick/OuterClick';
 import { loginModal } from '@lib/constants';
@@ -15,17 +16,27 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
+import NoticeDropBox, { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
+import useToggle from '@lib/hooks/useToggle';
 
 const Nav = () => {
   const router = useRouter();
   const [sticky, setSticky] = useState(false);
   const [menuState, setMenuState] = useState(false);
-  const [profileDropBoxState, setProfileDropBoxState] = useState(false);
+  const {
+    value: profileDropBoxState,
+    setValue: setProfileDropBoxState,
+    onToggle: onToggleProfileDropBox,
+  } = useToggle();
+  const {
+    value: noticesDropBoxState,
+    setValue: setNoticesDropBoxState,
+    onToggle: onToggleNoticesDropBox,
+  } = useToggle();
   const { data: meQuery } = useMeQuery();
   const { pathname } = useRouter();
   const [logoutMutation] = useLogoutMutation();
   const dispatch = useAppDispatch();
-  const isHome = pathname === '/';
   const isRegister = pathname.includes('/register');
   const requestLogout = async () => {
     await logoutMutation();
@@ -34,6 +45,14 @@ const Nav = () => {
   const tryRequestLogout = convertWithErrorHandlingFunc({
     callback: requestLogout,
   });
+  const notices = meQuery?.me.notices;
+  const noticeBoxOptions: NoticeDropBoxOption[] =
+    notices?.map((notice) => ({
+      value: notice.id,
+      label: notice.content,
+      confirmed: notice.confirm,
+    })) || [];
+  const hasNotices = notices && notices.length >= 1;
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',
@@ -60,23 +79,10 @@ const Nav = () => {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, [sticky]);
-  const openLoginModal = () => {
-    dispatch(coreActions.openModal(loginModal));
-  };
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
 
-  const onProfileClick = () => {
-    setProfileDropBoxState(!profileDropBoxState);
-  };
-  const navItems = [
-    {
-      key: '/',
-      label: '문제풀이',
-      selected: isHome,
-    },
-  ];
-  const onToggleMenu = () => {
-    setMenuState(!menuState);
-  };
+  const onToggleMenu = () => setMenuState(!menuState);
+
   return (
     <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
       <div className="pc-nav-contents-wrapper">
@@ -91,30 +97,40 @@ const Nav = () => {
             />
           </div>
         </Link>
-        {/* {navItems.map((item) => {
-          return (
-            <Link href={item.key} key={item.key}>
-              <span
-                className={`nav-item-link-text ${item.selected && 'selected'}`}
-              >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })} */}
         {meQuery?.me.user ? (
           <div className="nav-user-content-wrapper ml-auto">
-            <button className="nav-user-content" onClick={onProfileClick}>
-              <span className="nav-user-content-profile-image">
-                <UserOutlined />
-              </span>
-              <span>{meQuery?.me.user.nickname}</span>
-            </button>
             <OuterClick
-              callback={() => {
-                setProfileDropBoxState(false);
-              }}
+              callback={() =>
+                noticesDropBoxState && setNoticesDropBoxState(false)
+              }
             >
+              <button
+                onClick={onToggleNoticesDropBox}
+                className={`nav-user-content-notice-button ${
+                  hasNotices && 'active'
+                }`}
+              >
+                <NotificationsNoneOutlinedIcon />
+              </button>
+            </OuterClick>
+            <NoticeDropBox
+              isOpen={noticesDropBoxState}
+              options={noticeBoxOptions}
+            />
+            <OuterClick
+              callback={() =>
+                profileDropBoxState && setProfileDropBoxState(false)
+              }
+            >
+              <button
+                className="nav-user-content"
+                onClick={onToggleProfileDropBox}
+              >
+                <span className="nav-user-content-profile-image">
+                  <UserOutlined />
+                </span>
+                <span>{meQuery?.me.user.nickname}</span>
+              </button>
               <DropBox isOpen={profileDropBoxState} options={dropBoxOptions} />
             </OuterClick>
           </div>
@@ -249,7 +265,38 @@ const NavContainer = styled.div<NavContainerProps>`
     color: ${palette.antd_blue_01};
   }
   .nav-user-content-wrapper {
+    display: flex;
+    gap: 15px;
+    align-items: center;
     position: relative;
+  }
+  .nav-user-content-notice-button {
+    position: relative;
+
+    svg {
+      color: ${palette.gray_700};
+      transition: color 0.2s ease-in;
+    }
+    position: relative;
+    top: 1.5px;
+    cursor: pointer;
+    :hover {
+      svg {
+        color: ${palette.antd_blue_01};
+      }
+    }
+  }
+  .nav-user-content-notice-button.active {
+    ::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: ${palette.antd_blue_01};
+      top: 2px;
+      right: 3px;
+      position: absolute;
+    }
   }
   .nav-user-content {
     display: flex;
