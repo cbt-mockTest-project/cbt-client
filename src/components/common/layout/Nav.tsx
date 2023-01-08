@@ -112,11 +112,12 @@ const Nav = () => {
               >
                 <NotificationsNoneOutlinedIcon />
               </button>
+              <NoticeDropBox
+                isOpen={noticesDropBoxState}
+                options={noticeBoxOptions}
+              />
             </OuterClick>
-            <NoticeDropBox
-              isOpen={noticesDropBoxState}
-              options={noticeBoxOptions}
-            />
+
             <OuterClick
               callback={() =>
                 profileDropBoxState && setProfileDropBoxState(false)
