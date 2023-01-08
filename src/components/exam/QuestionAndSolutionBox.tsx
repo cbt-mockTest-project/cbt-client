@@ -82,5 +82,8 @@ const QuestionAndSolutionBoxContainer = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     flex-direction: column;
+    pre {
+      font-size: 0.9rem;
+    }
   }
 `;

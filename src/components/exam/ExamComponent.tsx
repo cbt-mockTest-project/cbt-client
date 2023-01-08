@@ -136,12 +136,14 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   return (
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
-        <h1 className="exam-container-title">{examTitle}</h1>
+        <h2 className="exam-container-title">
+          {examTitle}-{questionIndex}번 문제
+        </h2>
         <QuestionAndSolutionBox
           label="문제"
           content={{
             content: questionAndSolution
-              ? `${questionIndex}. ${questionAndSolution.question}`
+              ? `${questionAndSolution.question}`
               : '',
             img: questionAndSolution?.question_img,
             title: String(examTitle || ''),
@@ -250,7 +252,7 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   display: flex;
   flex-direction: column;
   .exam-container-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-bottom: 20px;
   }
   .exam-answer-visible-button {
@@ -316,12 +318,16 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     white-space: pre-wrap;
   }
   @media (max-width: ${responsive.medium}) {
+    padding: 20px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
       flex-direction: column;
       gap: 20px;
       align-items: flex-start;
+    }
+    .exam-container-title {
+      font-size: 1rem;
     }
   }
 `;

@@ -241,6 +241,9 @@ const ExamSolutionListContainer = styled.li`
       border: none;
       border-bottom: 1px solid ${palette.gray_300};
     }
+    pre {
+      font-size: 0.9rem;
+    }
   }
   @media (max-width: ${responsive.small}) {
     .solution-page-comment-modal {

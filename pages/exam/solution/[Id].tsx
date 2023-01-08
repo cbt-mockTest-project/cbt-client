@@ -114,8 +114,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 const SolutionBlock = styled.div`
   margin-bottom: 50px;
+  padding: 20px;
   h1 {
-    padding: 0px 20px 20px 20px;
-    font-size: 1.5rem;
+    padding: 0px 20px 0px 20px;
+    font-size: 1.3rem;
+  }
+  @media (max-width: ${responsive.medium}) {
+    h1 {
+      font-size: 1.1rem;
+    }
   }
 `;
