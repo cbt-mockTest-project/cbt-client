@@ -109,6 +109,18 @@ export type CreateMockExamQuestionOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateNoticeInput = {
+  content: Scalars['String'];
+  reservationTime?: InputMaybe<Scalars['DateTime']>;
+  userId: Scalars['Float'];
+};
+
+export type CreateNoticeOutput = {
+  __typename?: 'CreateNoticeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateOrUpdateMockExamQuestionStateInput = {
   questionId: Scalars['Float'];
   state: QuestionState;
@@ -168,6 +180,16 @@ export type DeleteMockExamQuestionInput = {
 
 export type DeleteMockExamQuestionOutput = {
   __typename?: 'DeleteMockExamQuestionOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteNoticeInput = {
+  noticeId: Scalars['Float'];
+};
+
+export type DeleteNoticeOutput = {
+  __typename?: 'DeleteNoticeOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -235,6 +257,19 @@ export type EditMockExamQuestionOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type EditNoticeInput = {
+  confirm?: InputMaybe<Scalars['Boolean']>;
+  content?: InputMaybe<Scalars['String']>;
+  noticeId: Scalars['Float'];
+  reservationTime?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type EditNoticeOutput = {
+  __typename?: 'EditNoticeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EditProfileInput = {
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
@@ -298,6 +333,7 @@ export type LoginOutput = {
 export type MeOutput = {
   __typename?: 'MeOutput';
   error?: Maybe<Scalars['String']>;
+  notices?: Maybe<Array<Notice>>;
   ok: Scalars['Boolean'];
   user?: Maybe<User>;
 };
@@ -407,12 +443,15 @@ export type Mutation = {
   createMockExamQuestion: CreateMockExamQuestionOutput;
   createMockExamQuestionComment: CreateMockExamQuestionCommentOutput;
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
+  createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
+  deleteAllNoticesOfMe: CoreOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
   deleteMockExamQuestionComment: DeleteMockExamQuestionCommentOutput;
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
+  deleteNotice: DeleteNoticeOutput;
   deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
@@ -420,6 +459,7 @@ export type Mutation = {
   editMockExamQuestionComment: EditMockExamQuestionCommentOutput;
   editMockExamQuestionCommentLike: EditMockExamQuestionCommentLikeOutput;
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
+  editNotice: EditNoticeOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
@@ -474,6 +514,11 @@ export type MutationCreateMockExamQuestionFeedbackArgs = {
 };
 
 
+export type MutationCreateNoticeArgs = {
+  input: CreateNoticeInput;
+};
+
+
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
@@ -504,6 +549,11 @@ export type MutationDeleteMockExamQuestionFeedbackArgs = {
 };
 
 
+export type MutationDeleteNoticeArgs = {
+  input: DeleteNoticeInput;
+};
+
+
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
@@ -531,6 +581,11 @@ export type MutationEditMockExamQuestionCommentLikeArgs = {
 
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
+};
+
+
+export type MutationEditNoticeArgs = {
+  input: EditNoticeInput;
 };
 
 
@@ -581,6 +636,17 @@ export type MutationSendVerificationMailArgs = {
 
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
+};
+
+export type Notice = {
+  __typename?: 'Notice';
+  confirm: Scalars['Boolean'];
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  reservationTime?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type Query = {
@@ -913,6 +979,7 @@ export type User = {
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
   mockExamQuestionState: Array<MockExamQuestionState>;
   nickname: Scalars['String'];
+  notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;

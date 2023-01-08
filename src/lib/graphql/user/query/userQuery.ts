@@ -55,6 +55,12 @@ export const ME_QUERY = gql`
         nickname
         id
       }
+      notices {
+        content
+        id
+        created_at
+        confirm
+      }
       error
     }
   }
