@@ -107,6 +107,10 @@ const AchievementCheckContainer = styled.div`
     .achievement-check-label {
       margin: 0 10px;
     }
+    .achievement-check-label,
+    .achievement-check-tooltip {
+      display: none;
+    }
   }
   @media (max-width: ${responsive.small}) {
     .achievement-check-label,
