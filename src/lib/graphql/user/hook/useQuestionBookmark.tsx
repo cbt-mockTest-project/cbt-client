@@ -1,5 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
-import { useMutation } from 'urql';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   EDIT_QUESTION_BOOKMARK,
   READ_QUESTION_BOOKMARK,

@@ -37,6 +37,11 @@ export const FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT = gql`
       }
       answer
     }
+    mockExamQuestionBookmark {
+      user {
+        id
+      }
+    }
     id
     number
     approved

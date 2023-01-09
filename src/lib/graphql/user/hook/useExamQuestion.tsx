@@ -18,20 +18,13 @@ export const useLazyReadQuestionsByExamId = () =>
   useLazyQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID, {
-    fetchPolicy: 'no-cache',
-  });
+  >(READ_QUESTIONS_BY_ID, { fetchPolicy: 'network-only' });
 
-export const useReadQuestionsByExamIdQuery = (
-  input: ReadMockExamQuestionsByMockExamIdInput
-) =>
+export const useReadQuestionsByExamId = () =>
   useQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID, {
-    variables: { input },
-    fetchPolicy: 'network-only',
-  });
+  >(READ_QUESTIONS_BY_ID);
 
 export const useLazyReadQuestionsByExamIdQuery = () =>
   useLazyQuery<
