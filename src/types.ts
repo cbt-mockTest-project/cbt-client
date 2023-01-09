@@ -210,6 +210,17 @@ export type EditMockExamOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type EditMockExamQuestionBookmarkInput = {
+  questionId: Scalars['Float'];
+};
+
+export type EditMockExamQuestionBookmarkOutput = {
+  __typename?: 'EditMockExamQuestionBookmarkOutput';
+  currentState: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EditMockExamQuestionCommentInput = {
   content: Scalars['String'];
   id: Scalars['Float'];
@@ -372,6 +383,7 @@ export type MockExamQuestion = {
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExam: MockExam;
+  mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   number: Scalars['Float'];
@@ -381,6 +393,15 @@ export type MockExamQuestion = {
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
   updated_at: Scalars['DateTime'];
+};
+
+export type MockExamQuestionBookmark = {
+  __typename?: 'MockExamQuestionBookmark';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  question: MockExamQuestion;
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamQuestionComment = {
@@ -456,6 +477,7 @@ export type Mutation = {
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
   editMockExamQuestion: EditMockExamQuestionOutput;
+  editMockExamQuestionBookmark: EditMockExamQuestionBookmarkOutput;
   editMockExamQuestionComment: EditMockExamQuestionCommentOutput;
   editMockExamQuestionCommentLike: EditMockExamQuestionCommentLikeOutput;
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
@@ -569,6 +591,11 @@ export type MutationEditMockExamQuestionArgs = {
 };
 
 
+export type MutationEditMockExamQuestionBookmarkArgs = {
+  input: EditMockExamQuestionBookmarkInput;
+};
+
+
 export type MutationEditMockExamQuestionCommentArgs = {
   input: EditMockExamQuestionCommentInput;
 };
@@ -659,6 +686,7 @@ export type Query = {
   readAllMockExamQuestionFeedback: ReadAllMockExamQuestionFeedbackOutput;
   readMockExam: ReadMockExamOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
+  readMockExamQuestionBookmark: ReadMockExamQuestionBookmarkOutput;
   readMockExamQuestionCommentLikesByQuestinId: ReadMockExamQuestionCommentLikesByQuestinIdOutput;
   readMockExamQuestionCommentsByQuestionId: ReadMockExamQuestionCommentsByQuestionIdOutput;
   readMockExamQuestionNumbers: ReadMockExamQuestionNumbersOutput;
@@ -688,6 +716,11 @@ export type QueryReadMockExamArgs = {
 
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
+};
+
+
+export type QueryReadMockExamQuestionBookmarkArgs = {
+  input: ReadMockExamQuestionBookmarkInput;
 };
 
 
@@ -786,6 +819,17 @@ export type ReadMockExamOutput = {
   mockExam: MockExam;
   ok: Scalars['Boolean'];
   questionNumbers: Array<Scalars['Float']>;
+};
+
+export type ReadMockExamQuestionBookmarkInput = {
+  examId: Scalars['Float'];
+};
+
+export type ReadMockExamQuestionBookmarkOutput = {
+  __typename?: 'ReadMockExamQuestionBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questions: Array<MockExamQuestion>;
 };
 
 export type ReadMockExamQuestionCommentLikesByQuestinIdInput = {
@@ -975,6 +1019,7 @@ export type User = {
   email: Scalars['String'];
   feedback: Array<Feedback>;
   id: Scalars['Float'];
+  mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
   mockExamQuestionState: Array<MockExamQuestionState>;
