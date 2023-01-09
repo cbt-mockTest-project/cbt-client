@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { FULL_QUESTION_FRAGMENT } from './questionFragment';
+import { PURE_QUESTION_FRAGMENT } from './questionFragment';
 
 export const EDIT_QUESTION_BOOKMARK = gql`
   mutation EditMockExamQuestionBookmark(
@@ -21,9 +21,22 @@ export const READ_QUESTION_BOOKMARK = gql`
       error
       ok
       questions {
-        ...FullQuestionParts
+        ...PureQuestionParts
       }
     }
   }
-  ${FULL_QUESTION_FRAGMENT}
+  ${PURE_QUESTION_FRAGMENT}
+`;
+
+export const READ_EXAM_TITLE_AND_ID_OF_BOOKMARKED_QUESTION = gql`
+  query ReadExamTitleAndIdOfBookmarkedQuestion {
+    readExamTitleAndIdOfBookmarkedQuestion {
+      error
+      ok
+      titleAndId {
+        id
+        title
+      }
+    }
+  }
 `;

@@ -1,7 +1,7 @@
 import * as Types from '../../../../types';
 
 import gql from 'graphql-tag';
-import { FullQuestionPartsFragmentDoc } from './questionFragment.generated';
+import { PureQuestionPartsFragmentDoc } from './questionFragment.generated';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type EditMockExamQuestionBookmarkMutationVariables = Types.Exact<{
@@ -16,7 +16,12 @@ export type ReadMockExamQuestionBookmarkQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionBookmarkQuery = { __typename?: 'Query', readMockExamQuestionBookmark: { __typename?: 'ReadMockExamQuestionBookmarkOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+export type ReadMockExamQuestionBookmarkQuery = { __typename?: 'Query', readMockExamQuestionBookmark: { __typename?: 'ReadMockExamQuestionBookmarkOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null }> } };
+
+export type ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadExamTitleAndIdOfBookmarkedQuestionQuery = { __typename?: 'Query', readExamTitleAndIdOfBookmarkedQuestion: { __typename?: 'ReadExamTitleAndIdOfBookmarkedQuestionOutput', error?: string | null, ok: boolean, titleAndId?: Array<{ __typename?: 'TitleAndId', id?: number | null, title?: string | null }> | null } };
 
 
 export const EditMockExamQuestionBookmarkDocument = gql`
@@ -38,12 +43,28 @@ export const ReadMockExamQuestionBookmarkDocument = gql`
     error
     ok
     questions {
-      ...FullQuestionParts
+      ...PureQuestionParts
     }
   }
 }
-    ${FullQuestionPartsFragmentDoc}`;
+    ${PureQuestionPartsFragmentDoc}`;
 
 export function useReadMockExamQuestionBookmarkQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionBookmarkQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionBookmarkQuery, ReadMockExamQuestionBookmarkQueryVariables>({ query: ReadMockExamQuestionBookmarkDocument, ...options });
+};
+export const ReadExamTitleAndIdOfBookmarkedQuestionDocument = gql`
+    query ReadExamTitleAndIdOfBookmarkedQuestion {
+  readExamTitleAndIdOfBookmarkedQuestion {
+    error
+    ok
+    titleAndId {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useReadExamTitleAndIdOfBookmarkedQuestionQuery(options?: Omit<Urql.UseQueryArgs<ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadExamTitleAndIdOfBookmarkedQuestionQuery, ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables>({ query: ReadExamTitleAndIdOfBookmarkedQuestionDocument, ...options });
 };

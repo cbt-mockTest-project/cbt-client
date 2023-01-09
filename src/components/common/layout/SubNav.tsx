@@ -6,11 +6,14 @@ import { useRouter } from 'next/router';
 
 const SubNav = () => {
   const router = useRouter();
-  const moveQuery = (query: string) => {
-    if (query === router.query.l) return;
-    router.push({ pathname: router.pathname, query: { l: query } });
+  const onCategoryChange = (path: string) => {
+    if (router.pathname.indexOf(path) > -1) return;
+    router.push({ pathname: `/me/${path}` });
   };
-  const subNavOptions = [{ label: '시험내역', value: 'eh' }];
+  const subNavOptions = [
+    { label: '시험내역', value: 'examhistory' },
+    { label: '저장된 문제', value: 'bookmark' },
+  ];
   return (
     <SubNavContainer>
       <div className="sub-nav-contents-wrapper">
@@ -20,10 +23,12 @@ const SubNav = () => {
               <li className="sub-nav-link-list" key={index}>
                 <button
                   className="sub-nav-link-list-button"
-                  onClick={() => moveQuery(option.value)}
+                  onClick={() => onCategoryChange(option.value)}
                 >
                   {option.label}
-                  {option.value === router.query.l && <ArrowDropUpIcon />}
+                  {router.pathname.indexOf(option.value) > -1 && (
+                    <ArrowDropUpIcon />
+                  )}
                 </button>
               </li>
             );
