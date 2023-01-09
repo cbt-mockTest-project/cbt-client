@@ -68,7 +68,7 @@ class MainDocument extends Document {
             name="description"
             content="산업안전기사실기, 산업안전기사, 산업기사, 전기기사,전기기사실기,전기기사실기단답형, 전자문제집 , 모두CBT, cbt"
           />
-          <meta name="theme-color" content="#ffff" />
+          <meta name="theme-color" content="#ffffff" />
           <meta
             name="keywords"
             content="산업안전기사,산업안전기사실기,전기기사,전기기사실기,전기기사실기단답형,전자문제집,모두CBT"

@@ -1,11 +1,6 @@
 {
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/",
-  "name": "\ubaa8\ub450CBT",
-  "short_name": "\ubaa8\ub450CBT",
-  "description": "\uc0b0\uc5c5\uc548\uc804\uae30\uc0ac,\uc0b0\uc5c5\uc548\uc804\uae30\uc0ac\uc2e4\uae30,\uc804\uae30\uae30\uc0ac,\uc804\uae30\uae30\uc0ac\uc2e4\uae30,\uc804\uae30\uae30\uc0ac\uc2e4\uae30\ub2e8\ub2f5\ud615,\uc804\uc790\ubb38\uc81c\uc9d1,\ubaa8\ub450CBT",
+  "name": "모두CBT",
+  "short_name": "모두CBT",
   "icons": [
     {
       "src": "./icons/icon-192x192.png",
@@ -63,5 +58,9 @@
       "type": "image/png",
       "density": "4.0"
     }
-  ]
+  ],
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }
