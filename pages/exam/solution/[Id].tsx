@@ -24,7 +24,7 @@ interface SolutionProps {
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   const [readQuestions, { data: questionsQueryOnClientSide }] =
-    useLazyReadQuestionsByExamId();
+    useLazyReadQuestionsByExamId('network-only');
   const client = useApollo({}, '');
   const router = useRouter();
   const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;

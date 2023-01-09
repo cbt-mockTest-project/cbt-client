@@ -10,6 +10,7 @@ export interface QuestionType
     | 'number'
     | 'id'
     | 'state'
+    | 'mockExamQuestionBookmark'
   > {}
 
 export type QuestionStateType = 'Core' | 'High' | 'Middle' | 'Row';

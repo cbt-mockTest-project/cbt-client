@@ -1,4 +1,6 @@
 import { CaretDownOutlined } from '@ant-design/icons';
+import * as _ from 'lodash';
+import Bookmark from '@components/common/bookmark/Bookmark';
 import Label from '@components/common/label/Label';
 import CommentModal from '@components/common/modal/CommentModal';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
@@ -6,11 +8,14 @@ import ProgressModal from '@components/common/modal/ProgressModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { loginModal, tempAnswerKey } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
@@ -33,6 +38,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
+  const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
@@ -43,6 +49,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const tempAnswerIndex = String(examTitle) + questionIndex;
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
+  const [bookmarkState, setBookmarkState] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
   const [questionAndSolution, setQuestionAndSolution] =
     useState<QuestionType | null>(null);
@@ -50,6 +57,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
@@ -63,6 +71,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     setFinishModalState(false);
     setAnswerboxVisible(false);
     setCommentModalState(false);
+    setBookmarkState(
+      questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
+    );
     setQuestionAndSolution({
       question: questions[questionIndex - 1].question,
       number: questions[questionIndex - 1].number,
@@ -71,6 +82,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       solution_img: questions[questionIndex - 1].solution_img,
       id: questions[questionIndex - 1].id,
       state: questions[questionIndex - 1].state,
+      mockExamQuestionBookmark:
+        questions[questionIndex - 1].mockExamQuestionBookmark,
     });
   }, [router.query.q]);
 
@@ -121,6 +134,85 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       }
     }
   };
+  const requestEditBookmark = async () => {
+    const res = await editBookmark({
+      variables: { input: { questionId: Number(questionAndSolution?.id) } },
+    });
+    if (res.data?.editMockExamQuestionBookmark.ok) {
+      const queryResult =
+        client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+          query: READ_QUESTIONS_BY_ID,
+          variables: {
+            input: {
+              id: Number(router.query.e),
+              isRandom: router.query.r === 'true' ? true : false,
+            },
+          },
+        });
+
+      if (res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
+        setBookmarkState(true);
+        const newQuestions =
+          queryResult.readMockExamQuestionsByMockExamId.questions.map(
+            (prevQuestion) => {
+              if (prevQuestion.id === questionAndSolution?.id) {
+                return {
+                  ...prevQuestion,
+                  mockExamQuestionBookmark: [
+                    {
+                      ...prevQuestion.mockExamQuestionBookmark[0],
+                      user: _.omit(meQuery?.me.user, 'nickname'),
+                    },
+                  ],
+                };
+              }
+              return prevQuestion;
+            }
+          );
+        client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+          query: READ_QUESTIONS_BY_ID,
+          data: {
+            readMockExamQuestionsByMockExamId: {
+              ...queryResult.readMockExamQuestionsByMockExamId,
+              questions: newQuestions,
+            },
+          },
+        });
+
+        message.success('북마크가 등록됐습니다.');
+      }
+      if (!res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
+        setBookmarkState(false);
+        const newQuestions =
+          queryResult.readMockExamQuestionsByMockExamId.questions.map(
+            (prevQuestion) => {
+              if (prevQuestion.id === questionAndSolution?.id) {
+                return { ...prevQuestion, mockExamQuestionBookmark: [] };
+              }
+              return prevQuestion;
+            }
+          );
+
+        client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+          query: READ_QUESTIONS_BY_ID,
+          data: {
+            readMockExamQuestionsByMockExamId: {
+              ...queryResult.readMockExamQuestionsByMockExamId,
+              questions: newQuestions,
+            },
+          },
+        });
+
+        message.success('북마크가 취소됐습니다.');
+      }
+      return;
+    }
+    return message.error(res.data?.editMockExamQuestionBookmark.error);
+  };
+
+  const tryEditBookmark = convertWithErrorHandlingFunc({
+    callback: requestEditBookmark,
+  });
 
   const tryReport = convertWithErrorHandlingFunc({ callback: requestReport });
 
@@ -137,7 +229,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
         <h2 className="exam-container-title">
-          {examTitle}-{questionIndex}번 문제
+          {examTitle}-{questionIndex}번 문제{' '}
+          <Bookmark
+            active={bookmarkState}
+            onClick={tryEditBookmark}
+            className="exam-container-bookmark"
+          />
         </h2>
         <QuestionAndSolutionBox
           label="문제"
@@ -313,6 +410,10 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     align-items: center;
     gap: 10px;
   }
+  .exam-container-bookmark {
+    position: relative;
+    top: 3px;
+  }
 
   pre {
     white-space: pre-wrap;
@@ -328,6 +429,9 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     }
     .exam-container-title {
       font-size: 1rem;
+    }
+    .exam-container-bookmark {
+      top: 5px;
     }
   }
 `;
