@@ -61,7 +61,7 @@ const Nav = () => {
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',
-      onClick: () => router.push('/me?l=eh'),
+      onClick: () => router.push('/me/examhistory'),
     },
     {
       label: '프로필수정',
@@ -188,7 +188,7 @@ const Nav = () => {
                   </span>
                   <span>{meQuery?.me.user.nickname}</span>
                 </div>
-                <Link href="/me?l=eh">
+                <Link href="/me/examhistory">
                   <span className={`mobile-nav-item-link-text`}>활동내역</span>
                 </Link>
                 <Link href="/me/edit">

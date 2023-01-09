@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery, WatchQueryFetchPolicy } from '@apollo/client';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import {
   READ_QUESTION,
@@ -14,27 +14,16 @@ import {
   ReadMockExamQuestionsByStateQueryVariables,
 } from '../query/questionQuery.generated';
 
-export const useLazyReadQuestionsByExamId = () =>
-  useLazyQuery<
-    ReadMockExamQuestionsByMockExamIdQuery,
-    ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID, {
-    fetchPolicy: 'no-cache',
-  });
-
-export const useReadQuestionsByExamIdQuery = (
-  input: ReadMockExamQuestionsByMockExamIdInput
+export const useLazyReadQuestionsByExamId = (
+  fetchPolicy: WatchQueryFetchPolicy
 ) =>
-  useQuery<
+  useLazyQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID, {
-    variables: { input },
-    fetchPolicy: 'network-only',
-  });
+  >(READ_QUESTIONS_BY_ID, { fetchPolicy });
 
-export const useLazyReadQuestionsByExamIdQuery = () =>
-  useLazyQuery<
+export const useReadQuestionsByExamId = () =>
+  useQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
   >(READ_QUESTIONS_BY_ID);

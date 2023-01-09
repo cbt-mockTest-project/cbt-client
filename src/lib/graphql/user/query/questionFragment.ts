@@ -1,5 +1,21 @@
 import { gql } from '@apollo/client';
 
+export const PURE_QUESTION_FRAGMENT = gql`
+  fragment PureQuestionParts on MockExamQuestion {
+    question
+    solution
+    question_img {
+      url
+    }
+    solution_img {
+      url
+    }
+    id
+    number
+    approved
+  }
+`;
+
 export const FULL_QUESTION_FRAGMENT = gql`
   fragment FullQuestionParts on MockExamQuestion {
     question
@@ -36,6 +52,11 @@ export const FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT = gql`
         id
       }
       answer
+    }
+    mockExamQuestionBookmark {
+      user {
+        id
+      }
     }
     id
     number

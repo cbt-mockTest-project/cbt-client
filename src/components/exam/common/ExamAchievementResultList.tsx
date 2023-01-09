@@ -22,7 +22,7 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   examId,
 }) => {
   const [readQuestions, { data: questionQueryData }] =
-    useLazyReadQuestionsByExamId();
+    useLazyReadQuestionsByExamId('cache-and-network');
   const { data: meQuery } = useMeQuery();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
     callback: async () =>
