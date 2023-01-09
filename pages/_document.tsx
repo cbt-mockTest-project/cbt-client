@@ -71,7 +71,7 @@ class MainDocument extends Document {
           <meta name="theme-color" content="#ffffff" />
           <meta
             name="keywords"
-            content="산업안전기사,산업안전기사실기,전기기사,전기기사실기,전기기사실기단답형,전자문제집,모두CBT"
+            content="산업안전기사,산업안전기사실기,산업안전기사실기CBT,전기기사,전기기사실기,전기기사실기CBT,전기기사실기단답형,전자문제집,모두CBT,정보처리기사,정보처리기사실기,정보처리기사실기CBT"
           />
           <link
             rel="icon"
