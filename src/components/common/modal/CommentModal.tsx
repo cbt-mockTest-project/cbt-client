@@ -50,10 +50,10 @@ const CommentModal: React.FC<CommentModalProps> = ({
     }
   }, [content]);
   useEffect(() => {
-    if (router.isReady && questionId) {
+    if (router.isReady && questionId && open) {
       readQuestionComment({ variables: { input: { questionId } } });
     }
-  }, [router.isReady, questionId]);
+  }, [router.isReady, questionId, open]);
 
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({

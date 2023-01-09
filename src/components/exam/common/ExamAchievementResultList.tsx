@@ -21,12 +21,12 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   onListClick,
   examId,
 }) => {
-  const [readQuestionsMutation, { data: questionQueryData }] =
+  const [readQuestions, { data: questionQueryData }] =
     useLazyReadQuestionsByExamId();
   const { data: meQuery } = useMeQuery();
   const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
     callback: async () =>
-      await readQuestionsMutation({
+      await readQuestions({
         variables: { input: { id: Number(examId) } },
       }),
   });
