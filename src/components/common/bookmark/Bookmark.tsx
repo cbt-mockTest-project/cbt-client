@@ -27,6 +27,7 @@ const BookmarkBlock = styled.button`
   position: relative;
   cursor: pointer;
   .star-icon {
+    color: ${palette.gray_900};
   }
   .star-icon.active {
     color: ${palette.yellow_500};

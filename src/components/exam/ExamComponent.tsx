@@ -179,7 +179,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           },
         });
 
-        message.success('북마크가 등록됐습니다.');
+        message.success('문제가 저장됐습니다.');
       }
       if (!res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
         setBookmarkState(false);
@@ -203,7 +203,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           },
         });
 
-        message.success('북마크가 취소됐습니다.');
+        message.success('문제 저장이 해제됐습니다.');
       }
       return;
     }

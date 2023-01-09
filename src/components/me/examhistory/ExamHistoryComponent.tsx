@@ -1,4 +1,6 @@
-import RoundCheckboxGroup from '@components/common/checkbox/RoundCheckboxGroup';
+import RoundCheckboxGroup, {
+  RoundCheckboxGroupOnChangeValueType,
+} from '@components/common/checkbox/RoundCheckboxGroup';
 import Modal from '@components/common/modal/Modal';
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import {
@@ -20,14 +22,13 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
+import RoundCheckboxGroupBlurTemplete from '../common/RoundBoxGroupBlurTemplete';
 
-interface MypageComponentProps {
+interface ExamHistoryProps {
   examHistoryQuery: FindMyExamHistoryQuery;
 }
 
-const MypageComponent: React.FC<MypageComponentProps> = ({
-  examHistoryQuery,
-}) => {
+const ExamHistory: React.FC<ExamHistoryProps> = ({ examHistoryQuery }) => {
   const [resetQuestionStateMutate] = useResetQuestionState();
   const [findMyExamHistoryLazyQuery, { data: lazyExamHistoryQuery }] =
     useLazyFindMyExamHistory();
@@ -92,8 +93,10 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
   const tryResetQuestionState = convertWithErrorHandlingFunc({
     callback: requestResetQuestionState,
   });
-  const onCategoryChange = async (values: checkboxOption['value'][]) => {
-    if (mounted) {
+  const onCategoryChange = async (
+    values: RoundCheckboxGroupOnChangeValueType
+  ) => {
+    if (mounted && Array.isArray(values)) {
       const categoryIds = values.map((el) => Number(el));
       await findMyExamHistoryLazyQuery({
         variables: { input: { categoryIds } },
@@ -101,11 +104,12 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
     }
   };
   return (
-    <MypageComponentContainer>
-      <div className="mypage-exam-check-box-group-wrapper">
-        <RoundCheckboxGroup options={categories} onChange={onCategoryChange} />
-        <div className="blur" />
-      </div>
+    <ExamHistoryContainer>
+      <RoundCheckboxGroupBlurTemplete
+        options={categories}
+        onChange={onCategoryChange}
+        type="checkbox"
+      />
       <div className="mypage-exam-list-wrapper">
         <ul>
           {(
@@ -153,13 +157,13 @@ const MypageComponent: React.FC<MypageComponentProps> = ({
           성취도 초기화
         </Button>
       </Modal>
-    </MypageComponentContainer>
+    </ExamHistoryContainer>
   );
 };
 
-export default MypageComponent;
+export default ExamHistory;
 
-const MypageComponentContainer = styled.div`
+const ExamHistoryContainer = styled.div`
   .mypage-exam-check-box-group-wrapper {
     position: relative;
     white-space: nowrap;
@@ -187,7 +191,7 @@ const MypageComponentContainer = styled.div`
     li {
       display: flex;
       padding: 10px 0;
-      border-bottom: 1px solid ${palette.gray_500};
+      border-bottom: 1px solid ${palette.gray_200};
     }
     .mypage-exam-list-button-wrapper {
       margin-left: auto;
@@ -205,16 +209,21 @@ const MypageComponentContainer = styled.div`
     }
   }
   @media (max-width: ${responsive.medium}) {
-    padding: 0 10px;
+    padding: 0 15px;
     .mypage-exam-list-wrapper {
       margin-top: 20px;
       li {
+        font-size: 0.9rem;
         flex-direction: column;
         border-color: ${palette.gray_300};
       }
     }
     .mypage-exam-list-button-wrapper {
       margin: 10px 0 !important;
+      button {
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
     }
     .mypage-exam-check-box-group-wrapper {
       margin-top: 20px;

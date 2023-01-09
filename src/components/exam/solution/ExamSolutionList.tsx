@@ -59,7 +59,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       document.body.style.overflow = 'unset';
     };
   }, [reportModalState, commentModalState]);
-  const openReportModal = (title: string, id: number) => {
+  const openReportModal = () => {
     if (!meQuery?.me.ok) {
       return dispatch(coreActions.openModal(loginModal));
     }
@@ -92,11 +92,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     if (res.data?.editMockExamQuestionBookmark.ok) {
       if (res.data?.editMockExamQuestionBookmark.currentState) {
         setBookmarkState(true);
-        message.success('북마크가 등록됐습니다.');
+        message.success('문제가 저장됐습니다.');
       }
       if (!res.data?.editMockExamQuestionBookmark.currentState) {
         setBookmarkState(false);
-        message.success('북마크가 취소됐습니다.');
+        message.success('문제 저장이 해제됐습니다.');
       }
       return;
     }
@@ -158,7 +158,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       <Button
         type="primary"
         className="solution-page-report-button"
-        onClick={() => openReportModal(question.question, question.id)}
+        onClick={openReportModal}
       >
         문제수정 요청
       </Button>
