@@ -1,12 +1,17 @@
 import { checkboxOption } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Navigation } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import RoundCheckbox from './RoundCheckbox';
 
-interface RoundCheckboxGroupProps {
+export type RoundCheckboxGroupOnChangeValueType =
+  | checkboxOption['value'][]
+  | checkboxOption['value'];
+export interface RoundCheckboxGroupProps {
   options: checkboxOption[];
   gap?: number;
-  onChange: (value: checkboxOption['value'][]) => void;
+  onChange: (value: RoundCheckboxGroupOnChangeValueType) => void;
 }
 
 interface RoundCheckboxGroupCssProps
@@ -32,15 +37,21 @@ const RoundCheckboxGroup: React.FC<RoundCheckboxGroupProps> = ({
     onChange(checkedValues);
   }, [checkedValues]);
   return (
-    <RoundCheckboxGroupContainer gap={gap}>
-      {options.map((option, index) => (
-        <RoundCheckbox
-          option={option}
-          key={index}
-          onChange={onCheckboxChange}
-        />
-      ))}
-    </RoundCheckboxGroupContainer>
+    <StyledSwiper
+      slidesPerView={'auto'}
+      threshold={10}
+      spaceBetween={15}
+      modules={[Navigation]}
+      className="round-check-box-group-swiper"
+    >
+      <RoundCheckboxGroupContainer gap={gap}>
+        {options.map((option, index) => (
+          <SwiperSlide key={index}>
+            <RoundCheckbox option={option} onChange={onCheckboxChange} />
+          </SwiperSlide>
+        ))}
+      </RoundCheckboxGroupContainer>
+    </StyledSwiper>
   );
 };
 
@@ -48,4 +59,9 @@ export default RoundCheckboxGroup;
 
 const RoundCheckboxGroupContainer = styled.ul<RoundCheckboxGroupCssProps>`
   display: inline-block;
+`;
+const StyledSwiper = styled(Swiper)`
+  .swiper-slide {
+    width: unset;
+  }
 `;
