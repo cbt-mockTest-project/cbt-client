@@ -15,7 +15,7 @@ const WithHead: React.FC<IProps> = ({
   title,
   description = '모두CBT는 국가고시 실기시험 준비를 도와주는 서비스 입니다',
   image = '/png/logo01.png',
-  keywords = '실기CBT,모두CBT,산업안전기사실기, 산업안전기사실기 필답형pdf,산업안전기사, 정보처리기사, 정보처리기사실기',
+  keywords = '산업안전기사,산업안전기사실기,산업안전기사실기CBT,전기기사,전기기사실기,전기기사실기CBT,전기기사실기단답형,전자문제집,모두CBT,정보처리기사,정보처리기사실기,정보처리기사실기CBT',
   pageHeadingTitle,
 }) => {
   const { asPath } = useRouter();
