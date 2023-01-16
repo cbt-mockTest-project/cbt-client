@@ -6,7 +6,7 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   runtimeCaching,
 });
-const nextConfig = withPWA({
+const settings = {
   reactStrictMode: true,
   swcMinify: true,
   pwa: {
@@ -27,6 +27,8 @@ const nextConfig = withPWA({
     });
     return config;
   },
-});
+};
+const nextConfig =
+  process.env.NODE_ENV === 'development' ? settings : withPWA(settings);
 
 module.exports = nextConfig;
