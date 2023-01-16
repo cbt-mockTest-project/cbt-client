@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import { DropBoxOption } from '../dropbox/DropBox';
+import { DropBoxOption } from '../../dropbox/DropBox';
 import { loginModal } from '@lib/constants';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-import { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
+import { NoticeDropBoxOption } from '../../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
 import { addHours, format, parseISO } from 'date-fns';
 import NavView from './NavView';
@@ -77,7 +77,12 @@ const NavContainer = () => {
   }, [sticky]);
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const onToggleMenu = () => setMenuState(!menuState);
-
+  const onOuterClickForNoticeDropBox = () =>
+    noticesDropBoxState && setNoticesDropBoxState(false);
+  const onOuterClickForProfileDropBox = () =>
+    profileDropBoxState && setProfileDropBoxState(false);
+  const isSelectedNavItem = (path: string) =>
+    router.pathname.indexOf(path) > -1;
   const NavProps = {
     sticky,
     profileDropBoxState,
@@ -85,8 +90,6 @@ const NavContainer = () => {
     noticesDropBoxState,
     isRegister,
     menuState,
-    setNoticesDropBoxState,
-    setProfileDropBoxState,
     meQuery,
     onToggleNoticesDropBox,
     onToggleProfileDropBox,
@@ -95,6 +98,9 @@ const NavContainer = () => {
     dropBoxOptions,
     openLoginModal,
     tryRequestLogout,
+    onOuterClickForNoticeDropBox,
+    onOuterClickForProfileDropBox,
+    isSelectedNavItem,
   };
 
   return <NavView {...NavProps} />;
