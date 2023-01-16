@@ -5,7 +5,7 @@ import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import Footer from './Footer';
-import Nav from './Nav';
+import Nav from './NavContainer';
 import SubNav from './SubNav';
 
 interface LayoutProps {

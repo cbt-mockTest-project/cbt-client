@@ -1,95 +1,43 @@
 import palette from '@styles/palette';
 import { Button, Drawer } from 'antd';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
-import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { coreActions } from '@modules/redux/slices/core';
 import { UserOutlined } from '@ant-design/icons';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DropBox, { DropBoxOption } from '../dropbox/DropBox';
 import OuterClick from '../outerClick/OuterClick';
-import { loginModal } from '@lib/constants';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
 import NoticeDropBox, { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
-import useToggle from '@lib/hooks/useToggle';
-import { addHours, format, parseISO } from 'date-fns';
+import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 
-const Nav = () => {
-  const router = useRouter();
-  const [sticky, setSticky] = useState(false);
-  const [menuState, setMenuState] = useState(false);
-  const {
-    value: profileDropBoxState,
-    setValue: setProfileDropBoxState,
-    onToggle: onToggleProfileDropBox,
-  } = useToggle();
-  const {
-    value: noticesDropBoxState,
-    setValue: setNoticesDropBoxState,
-    onToggle: onToggleNoticesDropBox,
-  } = useToggle();
-  const { data: meQuery } = useMeQuery();
-  const { pathname } = useRouter();
-  const [logoutMutation] = useLogoutMutation();
-  const dispatch = useAppDispatch();
-  const isRegister = pathname.includes('/register');
-  const requestLogout = async () => {
-    await logoutMutation();
-    location.reload();
-  };
-  const tryRequestLogout = convertWithErrorHandlingFunc({
-    callback: requestLogout,
-  });
-  const notices = meQuery?.me.notices;
-  const noticeBoxOptions: NoticeDropBoxOption[] =
-    notices?.map((notice) => ({
-      value: notice.id,
-      label: notice.content,
-      confirmed: notice.confirm,
-      time: format(
-        addHours(parseISO(notice.created_at), 9),
-        'yyyy-MM-dd hh:mm'
-      ),
-    })) || [];
-  const hasNotices = notices && notices.length >= 1;
-  const dropBoxOptions: DropBoxOption[] = [
-    {
-      label: '활동내역',
-      onClick: () => router.push('/me/examhistory'),
-    },
-    {
-      label: '프로필수정',
-      onClick: () => router.push('/me/edit'),
-    },
-    {
-      label: '로그아웃',
-      onClick: tryRequestLogout,
-    },
-  ];
-  const onScroll = () => {
-    if (window.scrollY > 60 && !sticky) {
-      return setSticky(true);
-    }
-    if (window.scrollY <= 60 && sticky) {
-      return setSticky(false);
-    }
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [sticky]);
-  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
+interface NavViewProps {
+  sticky: boolean;
+  profileDropBoxState: boolean;
+  hasNotices: boolean | null | undefined;
+  noticesDropBoxState: boolean;
+  isRegister: boolean;
+  menuState: boolean;
+  setNoticesDropBoxState: Dispatch<SetStateAction<boolean>>;
+  setProfileDropBoxState: Dispatch<SetStateAction<boolean>>;
+  meQuery: MeQuery | undefined;
+  onToggleNoticesDropBox: React.MouseEventHandler<Element>;
+  onToggleProfileDropBox: React.MouseEventHandler<Element>;
+  onToggleMenu: () => void;
+  noticeBoxOptions: NoticeDropBoxOption[];
+  dropBoxOptions: DropBoxOption[];
+  openLoginModal: React.MouseEventHandler<Element>;
+  tryRequestLogout: React.MouseEventHandler<Element>;
+}
 
-  const onToggleMenu = () => setMenuState(!menuState);
-
+const NavView: React.FC<NavViewProps> = (props) => {
   return (
-    <NavContainer sticky={sticky} profileDropBoxState={profileDropBoxState}>
+    <NavBlock
+      sticky={props.sticky}
+      profileDropBoxState={props.profileDropBoxState}
+    >
       <div className="pc-nav-contents-wrapper">
         <Link href="/">
           <div className="nav-home-logo-wrapper">
@@ -102,42 +50,45 @@ const Nav = () => {
             />
           </div>
         </Link>
-        {meQuery?.me.user ? (
+        {props.meQuery?.me.user ? (
           <div className="nav-user-content-wrapper ml-auto">
             <OuterClick
               callback={() =>
-                noticesDropBoxState && setNoticesDropBoxState(false)
+                props.noticesDropBoxState && props.setNoticesDropBoxState(false)
               }
             >
               <button
-                onClick={onToggleNoticesDropBox}
+                onClick={props.onToggleNoticesDropBox}
                 className={`nav-user-content-notice-button ${
-                  hasNotices && 'active'
+                  props.hasNotices && 'active'
                 }`}
               >
                 <NotificationsNoneOutlinedIcon />
               </button>
               <NoticeDropBox
-                isOpen={noticesDropBoxState}
-                options={noticeBoxOptions}
+                isOpen={props.noticesDropBoxState}
+                options={props.noticeBoxOptions}
               />
             </OuterClick>
 
             <OuterClick
               callback={() =>
-                profileDropBoxState && setProfileDropBoxState(false)
+                props.profileDropBoxState && props.setProfileDropBoxState(false)
               }
             >
               <button
                 className="nav-user-content"
-                onClick={onToggleProfileDropBox}
+                onClick={props.onToggleProfileDropBox}
               >
                 <span className="nav-user-content-profile-image">
                   <UserOutlined />
                 </span>
-                <span>{meQuery?.me.user.nickname}</span>
+                <span>{props.meQuery?.me.user.nickname}</span>
               </button>
-              <DropBox isOpen={profileDropBoxState} options={dropBoxOptions} />
+              <DropBox
+                isOpen={props.profileDropBoxState}
+                options={props.dropBoxOptions}
+              />
             </OuterClick>
           </div>
         ) : (
@@ -145,13 +96,13 @@ const Nav = () => {
             <Link href="/register/confirm">
               <span
                 className={`nav-item-link-text ml-auto ${
-                  isRegister && 'selected'
+                  props.isRegister && 'selected'
                 }`}
               >
                 회원가입
               </span>
             </Link>
-            <Button onClick={openLoginModal} htmlType="button">
+            <Button onClick={props.openLoginModal} htmlType="button">
               로그인
             </Button>
           </>
@@ -169,24 +120,24 @@ const Nav = () => {
             />
           </div>
         </Link>
-        <button className="mobile-menu-button" onClick={onToggleMenu}>
+        <button className="mobile-menu-button" onClick={props.onToggleMenu}>
           <MenuIcon />
         </button>
         <StyledDrawer
-          open={menuState}
-          onClose={onToggleMenu}
+          open={props.menuState}
+          onClose={props.onToggleMenu}
           className="mobile-menu-drawer"
           title="메뉴"
           width={200}
         >
           <div className="mobile-menu-drawer-wrapper">
-            {meQuery?.me.user ? (
+            {props.meQuery?.me.user ? (
               <>
                 <div className="mobile-nav-user-content">
                   <span className="mobile-nav-user-content-profile-image">
                     <UserOutlined />
                   </span>
-                  <span>{meQuery?.me.user.nickname}</span>
+                  <span>{props.meQuery?.me.user.nickname}</span>
                 </div>
                 <Link href="/me/examhistory">
                   <span className={`mobile-nav-item-link-text`}>활동내역</span>
@@ -196,7 +147,9 @@ const Nav = () => {
                     프로필수정
                   </span>
                 </Link>
-                <StyledButton onClick={tryRequestLogout}>로그아웃</StyledButton>
+                <StyledButton onClick={props.tryRequestLogout}>
+                  로그아웃
+                </StyledButton>
               </>
             ) : (
               <>
@@ -211,18 +164,18 @@ const Nav = () => {
           </div>
         </StyledDrawer>
       </div>
-    </NavContainer>
+    </NavBlock>
   );
 };
 
-export default Nav;
+export default NavView;
 
-interface NavContainerProps {
+interface NavBlockProps {
   sticky: boolean;
   profileDropBoxState: boolean;
 }
 
-const NavContainer = styled.div<NavContainerProps>`
+const NavBlock = styled.div<NavBlockProps>`
   height: 60px;
   border-bottom: 1.5px solid ${palette.gray_200};
   display: flex;
