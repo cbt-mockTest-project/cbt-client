@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import CommunityList from './CommunityList';
 import { categorys, mockPosts } from './Community.constants';
 import Link from 'next/link';
+import { responsive } from '@lib/utils/responsive';
 
 interface CommunityViewProps {
   checkCategoryMatching: (query: string) => boolean;
@@ -42,6 +43,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
           {mockPosts.map((post) => (
             <CommunityList
               key={post.id}
+              id={post.id}
               category={post.category}
               commentCount={post.commentCount}
               date={post.date}
@@ -114,5 +116,8 @@ const CommunityViewBlock = styled.div`
   .community-board-title {
     width: 100%;
     padding-bottom: 10px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding: 20px;
   }
 `;

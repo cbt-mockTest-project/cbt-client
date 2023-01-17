@@ -4,6 +4,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import palette from '@styles/palette';
+import Link from 'next/link';
 
 export interface CommunityListProps {
   title: string;
@@ -13,40 +14,43 @@ export interface CommunityListProps {
   viewCount: number;
   likeCount: number;
   commentCount: number;
+  id: number;
 }
 
 const CommunityList: React.FC<CommunityListProps> = (props) => {
   return (
-    <CommunityListBlock>
-      <div className="community-board-list-left-contents">
-        <div className="community-board-list-left-contents-top">
-          {props.title}
-        </div>
-        <div className="community-board-list-left-contents-bottom">
-          <div className="community-board-list-left-contents-bottom-category">
-            {props.category} |
+    <Link href={`/post/${props.id}`}>
+      <CommunityListBlock>
+        <div className="community-board-list-left-contents">
+          <div className="community-board-list-left-contents-top">
+            {props.title}
           </div>
-          <div className="community-board-list-left-contents-bottom-uesrname">
-            &nbsp;{props.userName}
+          <div className="community-board-list-left-contents-bottom">
+            <div className="community-board-list-left-contents-bottom-category">
+              {props.category} |
+            </div>
+            <div className="community-board-list-left-contents-bottom-uesrname">
+              &nbsp;{props.userName}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="community-board-list-right-contents">
-        <div>{props.date}</div>
-        <div className="community-board-list-right-icon view">
-          <VisibilityIcon />
-          <span>{props.viewCount}</span>
+        <div className="community-board-list-right-contents">
+          <div>{props.date}</div>
+          <div className="community-board-list-right-icon view">
+            <VisibilityIcon />
+            <span>{props.viewCount}</span>
+          </div>
+          <div className="community-board-list-right-icon heart">
+            <FavoriteIcon />
+            <span>{props.likeCount}</span>
+          </div>
+          <div className="community-board-list-right-icon comment">
+            <CommentIcon />
+            <span>{props.commentCount}</span>
+          </div>
         </div>
-        <div className="community-board-list-right-icon heart">
-          <FavoriteIcon />
-          <span>{props.likeCount}</span>
-        </div>
-        <div className="community-board-list-right-icon comment">
-          <CommentIcon />
-          <span>{props.commentCount}</span>
-        </div>
-      </div>
-    </CommunityListBlock>
+      </CommunityListBlock>
+    </Link>
   );
 };
 

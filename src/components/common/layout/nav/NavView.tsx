@@ -1,7 +1,7 @@
 import palette from '@styles/palette';
-import { Button, Drawer } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';

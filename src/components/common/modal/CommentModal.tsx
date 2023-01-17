@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
-import CommentCard from '../card/CommentCard';
 import { responsive } from '@lib/utils/responsive';
 import useInput from '@lib/hooks/useInput';
 import {
@@ -17,6 +16,8 @@ import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQu
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useRouter } from 'next/router';
+import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
+import { addHours, format, parseISO } from 'date-fns';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
@@ -122,14 +123,17 @@ const CommentModal: React.FC<CommentModalProps> = ({
       <div className="comment-box">
         {commentQuery?.readMockExamQuestionCommentsByQuestionId.comments?.map(
           (comment) => (
-            <CommentCard
+            <QuestionCommentContainer
               option={{
                 likesCount: comment.likesCount,
                 likeState: comment.likeState,
                 nickname: comment.user.nickname,
                 content: comment.content,
                 id: comment.id,
-                time: comment.created_at,
+                time: format(
+                  addHours(parseISO(comment.created_at), 9),
+                  'yyyy-MM-dd hh:mm'
+                ),
                 questionId,
                 userId: comment.user.id,
               }}
