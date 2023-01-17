@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useReadExamCategories,
-  useReadExamTitles,
-} from '@lib/graphql/user/hook/useExam';
-import palette from '@styles/palette';
+import { useReadExamTitles } from '@lib/graphql/user/hook/useExam';
 import { Button, message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
@@ -24,7 +20,6 @@ import {
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
-import { responsive } from '@lib/utils/responsive';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 
 interface HomeProps {
