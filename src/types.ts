@@ -134,6 +134,17 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreatePostInput = {
+  content: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type CreatePostOutput = {
+  __typename?: 'CreatePostOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeleteMockExamCategoryInput = {
   id: Scalars['Float'];
 };
@@ -190,6 +201,16 @@ export type DeleteNoticeInput = {
 
 export type DeleteNoticeOutput = {
   __typename?: 'DeleteNoticeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeletePostInput = {
+  id: Scalars['Float'];
+};
+
+export type DeletePostOutput = {
+  __typename?: 'DeletePostOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -279,6 +300,20 @@ export type EditNoticeOutput = {
   __typename?: 'EditNoticeOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type EditPostInput = {
+  content?: InputMaybe<Scalars['String']>;
+  id: Scalars['Float'];
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type EditPostOutput = {
+  __typename?: 'EditPostOutput';
+  content?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  title?: Maybe<Scalars['String']>;
 };
 
 export type EditProfileInput = {
@@ -466,6 +501,7 @@ export type Mutation = {
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
   createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
+  createPost: CreatePostOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
@@ -473,6 +509,7 @@ export type Mutation = {
   deleteMockExamQuestionComment: DeleteMockExamQuestionCommentOutput;
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
   deleteNotice: DeleteNoticeOutput;
+  deletePost: DeletePostOutput;
   deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
@@ -482,10 +519,12 @@ export type Mutation = {
   editMockExamQuestionCommentLike: EditMockExamQuestionCommentLikeOutput;
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
   editNotice: EditNoticeOutput;
+  editPost: EditPostOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
   logout: CoreOutput;
+  naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   restoreUser: CoreOutput;
@@ -546,6 +585,11 @@ export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
 };
 
 
+export type MutationCreatePostArgs = {
+  input: CreatePostInput;
+};
+
+
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
@@ -573,6 +617,11 @@ export type MutationDeleteMockExamQuestionFeedbackArgs = {
 
 export type MutationDeleteNoticeArgs = {
   input: DeleteNoticeInput;
+};
+
+
+export type MutationDeletePostArgs = {
+  input: DeletePostInput;
 };
 
 
@@ -616,6 +665,11 @@ export type MutationEditNoticeArgs = {
 };
 
 
+export type MutationEditPostArgs = {
+  input: EditPostInput;
+};
+
+
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
@@ -628,6 +682,11 @@ export type MutationEmailVerificationArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+
+export type MutationNaverBlogViewMacroArgs = {
+  input: NaverBlogViewMacroInput;
 };
 
 
@@ -665,6 +724,30 @@ export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
 
+export type NaverBlogViewMacroInput = {
+  blogUrl?: InputMaybe<Scalars['String']>;
+};
+
+export type NaverBlogViewMacroOutput = {
+  __typename?: 'NaverBlogViewMacroOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type NaverViewTapCrawlerInput = {
+  blogName: Scalars['String'];
+  keyword: Scalars['String'];
+};
+
+export type NaverViewTapCrawlerOutput = {
+  __typename?: 'NaverViewTapCrawlerOutput';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  postInfo?: Maybe<PostInfo>;
+  searchCount?: Maybe<SearchCount>;
+};
+
 export type Notice = {
   __typename?: 'Notice';
   confirm: Scalars['Boolean'];
@@ -676,10 +759,29 @@ export type Notice = {
   user: User;
 };
 
+export type Post = {
+  __typename?: 'Post';
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  title: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PostInfo = {
+  __typename?: 'PostInfo';
+  content: Scalars['String'];
+  link: Scalars['String'];
+  thumb: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
   me: MeOutput;
+  naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
   readAllMockExamCategories: ReadAllMockExamCategoriesOutput;
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
@@ -695,6 +797,8 @@ export type Query = {
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
+  readPost: ReadPostOutput;
+  readPosts: ReadPostsOutput;
   searchMockExam: SearchMockExamOutput;
   userProfile: UserProfileOutput;
 };
@@ -702,6 +806,11 @@ export type Query = {
 
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
+};
+
+
+export type QueryNaverViewTapCrawlerTestArgs = {
+  input: NaverViewTapCrawlerInput;
 };
 
 
@@ -757,6 +866,16 @@ export type QueryReadMockExamTitlesByCateoryArgs = {
 
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
+};
+
+
+export type QueryReadPostArgs = {
+  input: ReadPostInput;
+};
+
+
+export type QueryReadPostsArgs = {
+  input: ReadPostsInput;
 };
 
 
@@ -935,6 +1054,30 @@ export type ReadMyExamQuestionStateOutput = {
   state: MockExamQuestionState;
 };
 
+export type ReadPostInput = {
+  id: Scalars['Float'];
+};
+
+export type ReadPostOutput = {
+  __typename?: 'ReadPostOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  post?: Maybe<Post>;
+};
+
+export type ReadPostsInput = {
+  limit: Scalars['Float'];
+  page: Scalars['Float'];
+};
+
+export type ReadPostsOutput = {
+  __typename?: 'ReadPostsOutput';
+  count: Scalars['Float'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  posts?: Maybe<Array<Post>>;
+};
+
 export type RegisterInput = {
   code: Scalars['String'];
   nickname: Scalars['String'];
@@ -969,6 +1112,12 @@ export type RevalidateOutput = {
   __typename?: 'RevalidateOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type SearchCount = {
+  __typename?: 'SearchCount';
+  all: Scalars['Float'];
+  blog: Scalars['Float'];
 };
 
 export type SearchMockExamInput = {
@@ -1035,6 +1184,7 @@ export type User = {
   nickname: Scalars['String'];
   notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
+  post?: Maybe<Array<Post>>;
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
