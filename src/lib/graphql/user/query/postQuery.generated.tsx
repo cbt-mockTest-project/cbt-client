@@ -9,14 +9,14 @@ export type ReadPostQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
+export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
 
 export type ReadPostsQueryVariables = Types.Exact<{
   input: Types.ReadPostsInput;
 }>;
 
 
-export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> }> | null } };
+export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> }> | null } };
 
 export type CreatePostMutationVariables = Types.Exact<{
   input: Types.CreatePostInput;
@@ -38,6 +38,13 @@ export type EditPostMutationVariables = Types.Exact<{
 
 
 export type EditPostMutation = { __typename?: 'Mutation', editPost: { __typename?: 'EditPostOutput', content?: string | null, error?: string | null, ok: boolean, title?: string | null } };
+
+export type ViewPostMutationVariables = Types.Exact<{
+  input: Types.ViewPostInput;
+}>;
+
+
+export type ViewPostMutation = { __typename?: 'Mutation', viewPost: { __typename?: 'ViewPostOutput', error?: string | null, ok: boolean } };
 
 
 export const ReadPostDocument = gql`
@@ -108,4 +115,16 @@ export const EditPostDocument = gql`
 
 export function useEditPostMutation() {
   return Urql.useMutation<EditPostMutation, EditPostMutationVariables>(EditPostDocument);
+};
+export const ViewPostDocument = gql`
+    mutation ViewPost($input: ViewPostInput!) {
+  viewPost(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useViewPostMutation() {
+  return Urql.useMutation<ViewPostMutation, ViewPostMutationVariables>(ViewPostDocument);
 };

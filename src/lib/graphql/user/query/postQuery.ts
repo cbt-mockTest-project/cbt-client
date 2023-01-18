@@ -56,3 +56,12 @@ export const EDIT_POST = gql`
     }
   }
 `;
+
+export const VIEW_POST = gql`
+  mutation ViewPost($input: ViewPostInput!) {
+    viewPost(input: $input) {
+      error
+      ok
+    }
+  }
+`;
