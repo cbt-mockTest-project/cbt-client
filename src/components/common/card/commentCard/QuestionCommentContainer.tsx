@@ -43,7 +43,7 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
           client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
             query: READ_QUESTION_COMMENT,
             variables: {
-              input: { questionId: option.questionId },
+              input: { questionId: option.parrentId },
             },
           });
         const prevComments =
@@ -58,7 +58,7 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
                 comments: newComments,
               },
             },
-            variables: { input: { questionId: option.questionId } },
+            variables: { input: { questionId: option.parrentId } },
           });
         }
         return message.success('댓글이 삭제됐습니다.');

@@ -134,6 +134,18 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreatePostCommentInput = {
+  content: Scalars['String'];
+  postId: Scalars['Float'];
+};
+
+export type CreatePostCommentOutput = {
+  __typename?: 'CreatePostCommentOutput';
+  comment: PostComment;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreatePostInput = {
   content: Scalars['String'];
   title: Scalars['String'];
@@ -201,6 +213,16 @@ export type DeleteNoticeInput = {
 
 export type DeleteNoticeOutput = {
   __typename?: 'DeleteNoticeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeletePostCommentInput = {
+  id: Scalars['Float'];
+};
+
+export type DeletePostCommentOutput = {
+  __typename?: 'DeletePostCommentOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -298,6 +320,17 @@ export type EditNoticeInput = {
 
 export type EditNoticeOutput = {
   __typename?: 'EditNoticeOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type EditPostCommentInput = {
+  content: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+export type EditPostCommentOutput = {
+  __typename?: 'EditPostCommentOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -513,6 +546,7 @@ export type Mutation = {
   createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
+  createPostComment: CreatePostCommentOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
@@ -521,6 +555,7 @@ export type Mutation = {
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
   deleteNotice: DeleteNoticeOutput;
   deletePost: DeletePostOutput;
+  deletePostComment: DeletePostCommentOutput;
   deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
@@ -531,6 +566,7 @@ export type Mutation = {
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
   editNotice: EditNoticeOutput;
   editPost: EditPostOutput;
+  editPostComment: EditPostCommentOutput;
   editPostLike: EditPostLikeOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
@@ -603,6 +639,11 @@ export type MutationCreatePostArgs = {
 };
 
 
+export type MutationCreatePostCommentArgs = {
+  input: CreatePostCommentInput;
+};
+
+
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
@@ -635,6 +676,11 @@ export type MutationDeleteNoticeArgs = {
 
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
+};
+
+
+export type MutationDeletePostCommentArgs = {
+  input: DeletePostCommentInput;
 };
 
 
@@ -680,6 +726,11 @@ export type MutationEditNoticeArgs = {
 
 export type MutationEditPostArgs = {
   input: EditPostInput;
+};
+
+
+export type MutationEditPostCommentArgs = {
+  input: EditPostCommentInput;
 };
 
 

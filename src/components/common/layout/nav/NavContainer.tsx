@@ -45,7 +45,7 @@ const NavContainer = () => {
       confirmed: notice.confirm,
       time: format(
         addHours(parseISO(notice.created_at), 9),
-        'yyyy-MM-dd hh:mm'
+        'yyyy-MM-dd hh:mm a'
       ),
     })) || [];
   const hasNotices = notices && notices.length >= 1;
