@@ -1,5 +1,4 @@
 import Layout from '@components/common/layout/Layout';
-import PostDetailContainer from '@components/post/PostDetailContainer';
 import { useLazyReadPost, useViewPost } from '@lib/graphql/user/hook/usePost';
 import { READ_POST, READ_POSTS } from '@lib/graphql/user/query/postQuery';
 import {
@@ -14,6 +13,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { postViewCookie } from '@lib/constants/cookie';
+import PostDetailContainer from '@components/post/detail/PostDetailContainer';
 interface PostPageProps {
   postQuery: ReadPostQuery;
 }
