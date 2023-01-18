@@ -1,5 +1,6 @@
+import { PostCategory } from './../../types';
 export const categorys = [
-  { label: '자유게시판', path: '/community', query: { c: 'free' } },
+  { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
 ];
 
 export const mockPosts = [

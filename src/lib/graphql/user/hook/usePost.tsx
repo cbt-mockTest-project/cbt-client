@@ -35,10 +35,8 @@ export const useLazyReadPost = (fetchPolicy: WatchQueryFetchPolicy) =>
     fetchPolicy,
   });
 
-export const useLazyReadPosts = (fetchPolicy: WatchQueryFetchPolicy) =>
-  useLazyQuery<ReadPostsQuery, ReadPostsQueryVariables>(READ_POSTS, {
-    fetchPolicy,
-  });
+export const useLazyReadPosts = () =>
+  useLazyQuery<ReadPostsQuery, ReadPostsQueryVariables>(READ_POSTS);
 
 export const useCreatePost = () =>
   useMutation<CreatePostMutation, CreatePostMutationVariables>(CREATE_POST);
