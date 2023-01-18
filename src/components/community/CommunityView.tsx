@@ -2,14 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import { Button } from 'antd';
-import CommunityList from './CommunityList';
+import CommunityListView from './CommunityListView';
 import { categorys, mockPosts } from './Community.constants';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
-
-interface CommunityViewProps {
-  checkCategoryMatching: (query: string) => boolean;
-}
+import { CommunityViewProps } from './Community.interface';
+import { addHours, format, parseISO } from 'date-fns';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
   return (
@@ -40,17 +38,20 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-board">
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
-          {mockPosts.map((post) => (
-            <CommunityList
+          {props.postsQuery?.readPosts.posts?.map((post) => (
+            <CommunityListView
               key={post.id}
               id={post.id}
-              category={post.category}
-              commentCount={post.commentCount}
-              date={post.date}
-              likeCount={post.likeCount}
+              category={'자유게시판'}
+              commentCount={post.commentsCount}
+              date={format(
+                addHours(parseISO(post.created_at), 9),
+                'yyyy-MM-dd hh:mm a'
+              )}
+              likeCount={post.likesCount}
               title={post.title}
-              userName={post.userName}
-              viewCount={post.viewCount}
+              userName={post.user.nickname}
+              viewCount={post.view}
             />
           ))}
         </ul>
