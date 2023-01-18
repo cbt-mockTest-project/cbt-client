@@ -2,6 +2,7 @@ import * as Types from '../../../../types';
 
 import gql from 'graphql-tag';
 import { PostPartsFragmentDoc } from './postFragment.generated';
+import { PostCommentPartsFragmentDoc } from './postCommentFragment.generated';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type ReadPostQueryVariables = Types.Exact<{
@@ -9,7 +10,7 @@ export type ReadPostQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
+export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, comment: Array<{ __typename?: 'PostComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number } }>, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
 
 export type ReadPostsQueryVariables = Types.Exact<{
   input: Types.ReadPostsInput;
@@ -54,10 +55,14 @@ export const ReadPostDocument = gql`
     ok
     post {
       ...PostParts
+      comment {
+        ...PostCommentParts
+      }
     }
   }
 }
-    ${PostPartsFragmentDoc}`;
+    ${PostPartsFragmentDoc}
+${PostCommentPartsFragmentDoc}`;
 
 export function useReadPostQuery(options: Omit<Urql.UseQueryArgs<ReadPostQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadPostQuery, ReadPostQueryVariables>({ query: ReadPostDocument, ...options });

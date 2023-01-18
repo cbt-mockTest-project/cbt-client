@@ -11,5 +11,12 @@ export const FULL_POST_FRAGMENT = gql`
       id
       nickname
     }
+    like {
+      id
+    }
+    commentsCount
+    likesCount
+    likeState
+    view
   }
 `;

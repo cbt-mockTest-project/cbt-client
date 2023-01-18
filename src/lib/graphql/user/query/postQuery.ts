@@ -1,3 +1,4 @@
+import { FULL_POST_COMMENT_FRAGMENT } from './postCommentFragment';
 import { FULL_POST_FRAGMENT } from './postFragment';
 import { gql } from '@apollo/client';
 
@@ -8,10 +9,14 @@ export const READ_POST = gql`
       ok
       post {
         ...PostParts
+        comment {
+          ...PostCommentParts
+        }
       }
     }
   }
   ${FULL_POST_FRAGMENT}
+  ${FULL_POST_COMMENT_FRAGMENT}
 `;
 
 export const READ_POSTS = gql`
