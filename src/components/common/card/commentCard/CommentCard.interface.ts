@@ -8,7 +8,7 @@ export interface CommentCardOption {
   likeState: boolean;
   likesCount: number;
   userId: number;
-  questionId?: number;
+  parrentId: number;
 }
 
 export interface QuestionCommentContainerProps {
