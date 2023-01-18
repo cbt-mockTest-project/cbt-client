@@ -9,14 +9,14 @@ export type ReadPostQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, user: { __typename?: 'User', id: number, nickname: string } } | null } };
+export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
 
 export type ReadPostsQueryVariables = Types.Exact<{
   input: Types.ReadPostsInput;
 }>;
 
 
-export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, view: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> }> | null } };
 
 export type CreatePostMutationVariables = Types.Exact<{
   input: Types.CreatePostInput;

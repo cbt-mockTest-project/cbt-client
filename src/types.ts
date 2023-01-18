@@ -308,6 +308,17 @@ export type EditPostInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type EditPostLikeInput = {
+  postId: Scalars['Float'];
+};
+
+export type EditPostLikeOutput = {
+  __typename?: 'EditPostLikeOutput';
+  currentState: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EditPostOutput = {
   __typename?: 'EditPostOutput';
   content?: Maybe<Scalars['String']>;
@@ -520,6 +531,7 @@ export type Mutation = {
   editMockExamQuestionFeedback: EditMockExamQuestionFeedbackOutput;
   editNotice: EditNoticeOutput;
   editPost: EditPostOutput;
+  editPostLike: EditPostLikeOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
@@ -532,6 +544,7 @@ export type Mutation = {
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+  viewPost: ViewPostOutput;
 };
 
 
@@ -670,6 +683,11 @@ export type MutationEditPostArgs = {
 };
 
 
+export type MutationEditPostLikeArgs = {
+  input: EditPostLikeInput;
+};
+
+
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
@@ -724,6 +742,11 @@ export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
 
+
+export type MutationViewPostArgs = {
+  input: ViewPostInput;
+};
+
 export type NaverBlogViewMacroInput = {
   blogUrl?: InputMaybe<Scalars['String']>;
 };
@@ -761,10 +784,43 @@ export type Notice = {
 
 export type Post = {
   __typename?: 'Post';
+  category: PostCategory;
+  comment: Array<PostComment>;
+  commentsCount: Scalars['Float'];
   content: Scalars['String'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  like: Array<PostLike>;
+  likeState: Scalars['Boolean'];
+  likesCount: Scalars['Float'];
   title: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+  view: Scalars['Float'];
+};
+
+export enum PostCategory {
+  Free = 'FREE'
+}
+
+export type PostComment = {
+  __typename?: 'PostComment';
+  commentLike: Array<PostCommentLike>;
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  likeState: Scalars['Boolean'];
+  likesCount: Scalars['Float'];
+  post: Post;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PostCommentLike = {
+  __typename?: 'PostCommentLike';
+  comment: PostComment;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -775,6 +831,15 @@ export type PostInfo = {
   link: Scalars['String'];
   thumb: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type PostLike = {
+  __typename?: 'PostLike';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  post: Post;
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type Query = {
@@ -1066,7 +1131,9 @@ export type ReadPostOutput = {
 };
 
 export type ReadPostsInput = {
-  limit: Scalars['Float'];
+  all?: InputMaybe<Scalars['Boolean']>;
+  category?: InputMaybe<PostCategory>;
+  limit?: InputMaybe<Scalars['Float']>;
   page: Scalars['Float'];
 };
 
@@ -1185,6 +1252,7 @@ export type User = {
   notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
   post?: Maybe<Array<Post>>;
+  postComment: Array<PostComment>;
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
@@ -1205,3 +1273,13 @@ export enum UserRole {
   Admin = 'ADMIN',
   Client = 'CLIENT'
 }
+
+export type ViewPostInput = {
+  postId: Scalars['Float'];
+};
+
+export type ViewPostOutput = {
+  __typename?: 'ViewPostOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
