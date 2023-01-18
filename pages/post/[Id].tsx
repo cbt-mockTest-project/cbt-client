@@ -1,5 +1,5 @@
 import Layout from '@components/common/layout/Layout';
-import PostDetailContainer from '@components/post/PostDetailContainer';
+import PostDetailContainer from '@components/post/detail/PostDetailContainer';
 import { NextPage } from 'next';
 import React from 'react';
 

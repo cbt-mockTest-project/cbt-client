@@ -16,7 +16,9 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
     <CommunityViewBlock>
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
-        <Button className="community-header-write-button">글쓰기</Button>
+        <Link href="/post/write">
+          <Button className="community-header-write-button">글쓰기</Button>
+        </Link>
       </section>
       <section className="community-category">
         <b className="community-category-title">카테고리</b>
