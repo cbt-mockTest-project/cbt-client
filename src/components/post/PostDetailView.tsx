@@ -5,59 +5,98 @@ import styled from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import TextArea from 'antd/lib/input/TextArea';
 import { Button } from 'antd';
-import { comments } from './PostDetail.constants';
 import PostCommentContainer from '@components/common/card/commentCard/PostCommentContainer';
+import { PostDetailViewProps } from './PostDetail.interface';
+import { addHours, format, parseISO } from 'date-fns';
 
-interface PostDetailViewProps {}
-
-const PostDetailView: React.FC<PostDetailViewProps> = () => {
+const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
+  const {
+    postQuery,
+    tryEditPostLike,
+    commentValue,
+    onChangeCommentValue,
+    tryCreatePostComment,
+    createPostCommentLoading,
+  } = props;
+  if (!postQuery.readPost.ok || !postQuery.readPost.post) return null;
+  const { post } = postQuery.readPost;
   return (
     <PostDetailViewBlock>
       <div className="post-detail-wrapper">
         <section className="post-detail-top-section">
-          <div className="post-detail-top-title">타이틀 들어갈 자리</div>
+          <div className="post-detail-top-title">{post.title}</div>
           <div className="post-detail-top-profile-wrapper">
             <div className="post-detail-top-profile">
               <div className="post-detail-top-profile-user-info">
                 <UserOutlined />
-                <div>부우부</div>
+                <div>{post.user.nickname}</div>
               </div>
-              <div className="post-detail-top-date">2023.01.02</div>
+              <div className="post-detail-top-date">
+                {format(
+                  addHours(parseISO(post.created_at), 9),
+                  'yyyy-MM-dd hh:mm a'
+                )}
+              </div>
             </div>
             <div className="post-detail-top-view-count">
               <VisibilityIcon />
-              <span>5</span>
+              <span>{post.view}</span>
             </div>
           </div>
         </section>
         <section className="post-detail-center-section">
           <div className="post-detail-center-section-contents-wrapper">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. In, eaque
-            corporis expedita pariatur dignissimos mollitia officia voluptates,
-            laborum harum dolore qui dicta adipisci id doloremque blanditiis
-            minus aut dolorem ducimus.
+            {post.content}
           </div>
           <div className="post-detail-center-section-like-wrapper">
-            <FavoriteBorderOutlinedIcon />
-            <span>5</span>
+            <button onClick={tryEditPostLike}>
+              {post.likeState ? (
+                <FavoriteOutlinedIcon />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </button>
+            <span>{post.likesCount}</span>
           </div>
         </section>
         <section className="post-detail-bottom-section">
           <div className="post-detail-bottom-section-comments-count-wrapper">
             <div>댓글</div>
-            <div className="post-detail-bottom-section-comments-count">5</div>
+            <div className="post-detail-bottom-section-comments-count">
+              {post.commentsCount}
+            </div>
           </div>
-          <TextArea autoSize={{ minRows: 3, maxRows: 3 }} />
-          <Button className="post-detail-bottom-section-comments-submit-button">
+          <TextArea
+            autoSize={{ minRows: 3, maxRows: 3 }}
+            value={commentValue}
+            onChange={onChangeCommentValue}
+            placeholder="댓글을 입력해주세요."
+          />
+          <Button
+            className="post-detail-bottom-section-comments-submit-button"
+            onClick={tryCreatePostComment}
+            disabled={createPostCommentLoading || !commentValue}
+            type="primary"
+          >
             등록하기
           </Button>
           <ul className="post-detail-comment-section">
-            {comments.map((comment) => (
+            {post.comment.map((comment) => (
               <li key={comment.id} className="post-detail-comment-list">
                 <PostCommentContainer
-                  option={comment}
+                  option={{
+                    content: comment.content,
+                    id: comment.id,
+                    likesCount: comment.likesCount,
+                    likeState: comment.likeState,
+                    nickname: comment.user.nickname,
+                    time: comment.created_at,
+                    userId: comment.user.id,
+                    parrentId: post.id,
+                  }}
                   className="post-detail-comment-container"
                 />
               </li>
@@ -137,10 +176,13 @@ const PostDetailViewBlock = styled.div`
     justify-content: center;
     align-items: center;
     gap: 5px;
+    button {
+      position: relative;
+      top: 3px;
+    }
     svg {
       cursor: pointer;
       position: relative;
-      top: 1px;
       font-size: 1.2rem;
       color: ${palette.red_500};
     }
