@@ -10,6 +10,7 @@ import { NoticeDropBoxOption } from '../../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
 import { addHours, format, parseISO } from 'date-fns';
 import NavView from './NavView';
+import { NavViewProps } from './Nav.interface';
 
 const NavContainer = () => {
   const router = useRouter();
@@ -81,9 +82,10 @@ const NavContainer = () => {
     noticesDropBoxState && setNoticesDropBoxState(false);
   const onOuterClickForProfileDropBox = () =>
     profileDropBoxState && setProfileDropBoxState(false);
-  const isSelectedNavItem = (path: string) =>
-    router.pathname.indexOf(path) > -1;
-  const NavProps = {
+  const isSelectedNavItem = (key: string[]) =>
+    key.findIndex((value) => router.pathname.includes(value)) > -1;
+
+  const NavProps: NavViewProps = {
     sticky,
     profileDropBoxState,
     hasNotices,
