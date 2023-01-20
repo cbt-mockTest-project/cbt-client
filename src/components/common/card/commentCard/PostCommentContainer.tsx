@@ -2,6 +2,7 @@ import {
   useDeletePostComment,
   useEditPostComment,
 } from '@lib/graphql/user/hook/usePostComment';
+import { useEditPostCommentLike } from '@lib/graphql/user/hook/usePostCommentLike';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { FULL_POST_COMMENT_FRAGMENT } from '@lib/graphql/user/query/postCommentFragment';
 import { READ_POST } from '@lib/graphql/user/query/postQuery';
@@ -29,6 +30,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
   );
   const [deleteComment] = useDeletePostComment();
   const [editComment, { loading: editLoading }] = useEditPostComment();
+  const [editCommentLike, { loading: likeLoading }] = useEditPostCommentLike();
   const client = useApollo({}, '');
   const [editState, setEditState] = useState(false);
   const toggleEdit = () => {
@@ -88,10 +90,28 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
       return message.error(res.data?.editPostComment.error);
     }
   };
+  const requestLike = async () => {
+    const res = await editCommentLike({
+      variables: { input: { commentId: option.id } },
+    });
+    if (res.data?.editPostCommentLike.ok) {
+      client.writeFragment({
+        id: `PostComment:${option.id}`,
+        fragment: FULL_POST_COMMENT_FRAGMENT,
+        data: {
+          likeState: res.data.editPostCommentLike.currentState,
+          likesCount: res.data.editPostCommentLike.currentState
+            ? option.likesCount + 1
+            : option.likesCount - 1,
+        },
+      });
+      return;
+    }
+    return message.error(res.data?.editPostCommentLike.error);
+  };
   const tryDelete = convertWithErrorHandlingFunc({ callback: requestDelete });
   const tryEdit = convertWithErrorHandlingFunc({ callback: requestEdit });
-  const tryLike = () => {};
-  const likeLoading = false;
+  const tryLike = convertWithErrorHandlingFunc({ callback: requestLike });
   const commentCardProps: CommentCardProps = {
     option,
     meQuery,
