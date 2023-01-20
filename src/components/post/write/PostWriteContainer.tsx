@@ -21,7 +21,6 @@ import {
 } from '@lib/graphql/user/hook/usePost';
 import { message } from 'antd';
 import { EditPostInput } from 'types';
-import { useRevalidate } from '@lib/graphql/user/hook/useRevalidate';
 
 interface PostWriteContainerProps {}
 
@@ -44,7 +43,6 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const isEditPage = router.pathname.indexOf('edit') > -1;
   const [readPost, { data: readPostQuery }] = useLazyReadPost('network-only');
   const postId = Number(router.query.Id);
-  const [revalidate] = useRevalidate();
   useEffect(() => {
     if (postId) {
       readPost({ variables: { input: { id: postId } } });
