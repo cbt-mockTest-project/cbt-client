@@ -8,6 +8,7 @@ import BasicBox from '../../box/BasicBox';
 import TextArea from 'antd/lib/input/TextArea';
 import { Button } from 'antd';
 import { CommentCardProps } from './CommentCard.interface';
+import { responsive } from '@lib/utils/responsive';
 
 const CommentCardView: React.FC<CommentCardProps> = (props) => {
   return (
@@ -17,7 +18,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
       <div className="comment-card-left-section">
         <div className="comment-card-top-section">
           <div className="comment-card-user-name">{props.option.nickname}</div>
-          <div className="comment-card-time">{props.option.time}</div>
+          <div className="comment-card-time pc-only">{props.option.time}</div>
           {props.meQuery?.me.user?.id === props.option.userId && (
             <>
               <button onClick={props.toggleEdit}>
@@ -29,6 +30,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
             </>
           )}
         </div>
+
         {props.editState && (
           <>
             <TextArea
@@ -52,6 +54,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
             {props.option.content}
           </pre>
         )}
+        <div className="comment-card-time mobile-only">{props.option.time}</div>
       </div>
       <div className="comment-card-right-section">
         <button disabled={props.likeLoading} onClick={props.tryLike}>
@@ -79,6 +82,9 @@ const CommentCardContainer = styled.div`
   background-color: white;
   padding: 10px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  .mobile-only {
+    display: none;
+  }
   .comment-card-top-section {
     display: flex;
     align-items: center;
@@ -127,7 +133,7 @@ const CommentCardContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 2;
+    flex: 1.2;
     .comment-card-like-box {
       font-weight: bold;
       font-size: 1.1rem;
@@ -153,5 +159,23 @@ const CommentCardContainer = styled.div`
   .comment-card-like-count {
     position: relative;
     bottom: 5px;
+  }
+
+  @media (max-width: ${responsive.medium}) {
+    .comment-card-content-section {
+      padding-right: 10px;
+    }
+    .pc-only {
+      display: none;
+    }
+    .mobile-only {
+      display: block;
+    }
+    .comment-card-time {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: ${palette.gray_700};
+    }
   }
 `;

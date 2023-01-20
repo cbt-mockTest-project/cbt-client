@@ -6,6 +6,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import palette from '@styles/palette';
 import Link from 'next/link';
 import { CommunityListProps } from './Community.interface';
+import { responsive } from '@lib/utils/responsive';
 
 const CommunityListView: React.FC<CommunityListProps> = (props) => {
   return (
@@ -16,16 +17,21 @@ const CommunityListView: React.FC<CommunityListProps> = (props) => {
             {props.title}
           </div>
           <div className="community-board-list-left-contents-bottom">
-            <div className="community-board-list-left-contents-bottom-category">
+            <div className="community-board-list-left-contents-bottom-category pc-only">
               {props.category} |
             </div>
             <div className="community-board-list-left-contents-bottom-uesrname">
               &nbsp;{props.userName}
             </div>
+            <div className="community-board-list-leftt-contents-bottom-date mobile-only">
+              {props.date}
+            </div>
           </div>
         </div>
         <div className="community-board-list-right-contents">
-          <div>{props.date}</div>
+          <div className="community-board-list-right-date pc-only">
+            {props.date}
+          </div>
           <div className="community-board-list-right-icon view">
             <VisibilityIcon />
             <span>{props.viewCount}</span>
@@ -52,6 +58,9 @@ const CommunityListBlock = styled.li`
   align-items: center;
   border-bottom: 1px solid ${palette.gray_100};
   cursor: pointer;
+  .mobile-only {
+    display: none;
+  }
   :first-child {
     border-top: 1px solid ${palette.gray_300};
   }
@@ -98,6 +107,18 @@ const CommunityListBlock = styled.li`
     gap: 5px;
     svg {
       font-size: 0.8rem;
+    }
+  }
+  @media (max-width: ${responsive.medium}) {
+    .mobile-only {
+      display: block;
+    }
+    .pc-only {
+      display: none;
+    }
+    .community-board-list-leftt-contents-bottom-date {
+      color: ${palette.gray_500};
+      margin-left: 5px;
     }
   }
 `;

@@ -132,7 +132,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 id: comment.id,
                 time: format(
                   addHours(parseISO(comment.created_at), 9),
-                  'yyyy-MM-dd hh:mm a'
+                  'yy.MM.dd HH:mm'
                 ),
                 parrentId: questionId,
                 userId: comment.user.id,
