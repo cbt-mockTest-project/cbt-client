@@ -49,14 +49,22 @@ class MainDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=optional"
             rel="stylesheet"
           />
-          <meta
-            name="description"
-            content="산업안전기사실기, 산업안전기사, 산업기사, 전자문제집 , 모두CBT, cbt"
+          <link
+            href="/icons/favicon-16x16.png"
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
           />
-          <meta
-            name="keywords"
-            content="산업안전기사, 산업안전기사실기, 모두CBT"
+          <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+          <link
+            href="/icons/favicon-32x32.png"
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
           />
+          <meta name="msapplication-TileColor" content="#1990ff"></meta>
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#ffffff" />
           <link
             rel="icon"
             type="image/png"

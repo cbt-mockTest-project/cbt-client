@@ -1,28 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
-import { addApolloState, initializeApollo } from '@modules/apollo';
+import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import {
   convertExamTitle,
   convertWithErrorHandlingFunc,
 } from '@lib/utils/utils';
-import palette from '@styles/palette';
 import WithHead from '@components/common/head/WithHead';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useRouter } from 'next/router';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
+  const [readQuestions, { data: questionsQueryOnClientSide }] =
+    useLazyReadQuestionsByExamId('network-only');
+  const client = useApollo({}, '');
+  const router = useRouter();
   const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;
+  useEffect(() => {
+    (async () => {
+      if (router.query.Id) {
+        const res = await readQuestions({
+          variables: {
+            input: { id: Number(String(router.query.Id)), isRandom: false },
+          },
+        });
+        if (res.data?.readMockExamQuestionsByMockExamId.ok) {
+          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+            query: READ_QUESTIONS_BY_ID,
+            data: {
+              readMockExamQuestionsByMockExamId:
+                res.data.readMockExamQuestionsByMockExamId,
+            },
+          });
+        }
+      }
+    })();
+  }, [router.query.Id]);
 
   return (
     <>
@@ -32,17 +57,17 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
       />
       <Layout>
         <SolutionBlock>
-          <h1>{convertExamTitle(title)} 문제/해설</h1>
+          <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
           <ul>
-            {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
-              (el, index) => (
-                <ExamSolutionList
-                  key={index}
-                  question={el}
-                  title={convertExamTitle(title)}
-                />
-              )
-            )}
+            {(
+              questionsQueryOnClientSide || questionsQuery
+            ).readMockExamQuestionsByMockExamId.questions.map((el, index) => (
+              <ExamSolutionList
+                key={index}
+                question={el}
+                title={convertExamTitle(title)}
+              />
+            ))}
           </ul>
         </SolutionBlock>
       </Layout>
@@ -98,7 +123,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       variables: {
         input: questionsQueryInput,
       },
-      fetchPolicy: 'network-only',
     });
   };
   const tryRequest = convertWithErrorHandlingFunc({
@@ -107,7 +131,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const res = await tryRequest();
   const questionsQuery = res?.data;
   return addApolloState(apolloClient, {
-    props: { questionsQuery },
+    props: { questionsQuery, questionsQueryInput },
     revalidate: 86400,
   });
 };

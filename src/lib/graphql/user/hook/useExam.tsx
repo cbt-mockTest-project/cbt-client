@@ -18,7 +18,7 @@ export const useReadExamCategories = () =>
   useQuery<
     ReadAllMockExamCategoriesQuery,
     ReadAllMockExamCategoriesQueryVariables
-  >(READ_EXAM_CATEGORIES_QUERY, { fetchPolicy: 'cache-only' });
+  >(READ_EXAM_CATEGORIES_QUERY);
 
 export const useReadExamTitles = () =>
   useLazyQuery<

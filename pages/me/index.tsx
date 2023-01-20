@@ -1,6 +1,6 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
-import MypageComponent from '@components/mypage/MypageComponent';
+import MypageComponent from '@components/me/examhistory/ExamHistoryComponent';
 import { useFineMyExamHistory } from '@lib/graphql/user/hook/useExam';
 import { NextPage } from 'next';
 import React from 'react';

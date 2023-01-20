@@ -1,7 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import ExamComponent from '@components/exam/ExamComponent';
-import { useLazyReadQuestionsByExamIdQuery } from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -13,7 +13,7 @@ const Exam: NextPage = (asd) => {
     ? router.query.c + ' ' + router.query.t + ' | '
     : '';
   const [readQuestions, { data: questionsQuery }] =
-    useLazyReadQuestionsByExamIdQuery();
+    useLazyReadQuestionsByExamId('cache-and-network');
   useEffect(() => {
     if (router.isReady) {
       readQuestions({

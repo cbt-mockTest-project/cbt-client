@@ -21,34 +21,7 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
-          <iframe
-            src="https://ads-partners.coupang.com/widgets.html?id=620466&template=carousel&trackingCode=AF8104485&subId=&width=1024&height=180"
-            width="1024"
-            height="180"
-            frameBorder="0"
-            scrolling="no"
-            referrerPolicy="unsafe-url"
-          ></iframe>
-        </SwiperSlide>
-        <SwiperSlide>
-          <iframe
-            src="https://ads-partners.coupang.com/widgets.html?id=620466&template=carousel&trackingCode=AF8104485&subId=&width=1024&height=180"
-            width="1024"
-            height="180"
-            frameBorder="0"
-            scrolling="no"
-            referrerPolicy="unsafe-url"
-          ></iframe>
-        </SwiperSlide>
-        <SwiperSlide>
-          <iframe
-            src="https://ads-partners.coupang.com/widgets.html?id=620466&template=carousel&trackingCode=AF8104485&subId=&width=1024&height=180"
-            width="1024"
-            height="180"
-            frameBorder="0"
-            scrolling="no"
-            referrerPolicy="unsafe-url"
-          ></iframe>
+          <div className="home-main-banner-box" />
         </SwiperSlide>
       </Swiper>
     </MainBannerContainer>
@@ -62,10 +35,23 @@ const MainBannerContainer = styled.div`
     width: 100%;
     height: 180px;
   }
-  @media (max-width: ${responsive.medium}) {
+  .home-main-banner-box {
+    width: 100%;
+    height: 100%;
+    background-image: url('/png/banner/main-banner-pc01.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  @media (max-width: ${responsive.small}) {
     .home-main-banner-swiper {
-      width: 100%;
-      height: 180px;
+      height: 140px;
+    }
+  }
+  @media (max-width: 720px) {
+    .home-main-banner-box {
+      background-image: url('/png/banner/main-banner-mobile01.png') !important;
     }
   }
 `;

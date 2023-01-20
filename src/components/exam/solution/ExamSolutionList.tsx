@@ -1,9 +1,12 @@
+import Bookmark from '@components/common/bookmark/Bookmark';
 import CommentModal from '@components/common/modal/CommentModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
@@ -12,11 +15,6 @@ import palette from '@styles/palette';
 import { Button, Image, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-
-interface QuestionOption {
-  title: string;
-  id: number;
-}
 
 interface ExamSolutionListProps {
   question: ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
@@ -27,20 +25,30 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   question,
   title,
 }) => {
-  const [commentModalState, setCommentModalState] = useState(false);
-  const [reportModalState, setReportModalState] = useState(false);
+  const [editBookmark] = useEditQuestionBookmark();
+  const [bookmarkState, setBookmarkState] = useState(false);
+  const { value: commentModalState, onToggle: onToggleCommentModal } =
+    useToggle();
+  const {
+    value: reportModalState,
+    setValue: setReportModalState,
+    onToggle: onToggleReportModal,
+  } = useToggle();
   const [createFeedBack] = useCreateQuestionFeedBack();
   const reportValue = useRef('');
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionOption | null>(
-    null
-  );
 
   const dispatch = useAppDispatch();
 
   const { data: meQuery } = useMeQuery();
 
-  const onToggleReportModalState = () => setReportModalState(!reportModalState);
-  const onToggleCommentModal = () => setCommentModalState(!commentModalState);
+  useEffect(() => {
+    if (question.mockExamQuestionBookmark.length >= 1) {
+      setBookmarkState(true);
+    } else {
+      setBookmarkState(false);
+    }
+  }, [question.mockExamQuestionBookmark]);
+
   useEffect(() => {
     if (reportModalState || commentModalState) {
       document.body.style.overflow = 'hidden';
@@ -51,11 +59,10 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       document.body.style.overflow = 'unset';
     };
   }, [reportModalState, commentModalState]);
-  const openReportModal = (title: string, id: number) => {
+  const openReportModal = () => {
     if (!meQuery?.me.ok) {
       return dispatch(coreActions.openModal(loginModal));
     }
-    setCurrentQuestion({ title, id });
     setReportModalState(true);
   };
   const requestReport = async () => {
@@ -63,8 +70,8 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     if (content.length <= 4) {
       return message.warn('5글자 이상 입력해주세요.');
     }
-    if (currentQuestion && content) {
-      const questionId = currentQuestion.id;
+    if (content) {
+      const questionId = question.id;
       const res = await createFeedBack({
         variables: { input: { content, questionId } },
       });
@@ -78,6 +85,26 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       });
     }
   };
+  const requestEditBookmark = async () => {
+    const res = await editBookmark({
+      variables: { input: { questionId: question.id } },
+    });
+    if (res.data?.editMockExamQuestionBookmark.ok) {
+      if (res.data?.editMockExamQuestionBookmark.currentState) {
+        setBookmarkState(true);
+        message.success('문제가 저장됐습니다.');
+      }
+      if (!res.data?.editMockExamQuestionBookmark.currentState) {
+        setBookmarkState(false);
+        message.success('문제 저장이 해제됐습니다.');
+      }
+      return;
+    }
+    return message.error(res.data?.editMockExamQuestionBookmark.error);
+  };
+  const tryEditBookmark = convertWithErrorHandlingFunc({
+    callback: requestEditBookmark,
+  });
   const tryReport = convertWithErrorHandlingFunc({
     callback: requestReport,
   });
@@ -85,6 +112,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
         <div className="solution-page-question-pre-wrapper">
+          <Bookmark active={bookmarkState} onClick={tryEditBookmark} />
           <pre className="solution-page-question">
             {`Q${question.number}. ${question.question}`}
           </pre>
@@ -130,7 +158,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       <Button
         type="primary"
         className="solution-page-report-button"
-        onClick={() => openReportModal(question.question, question.id)}
+        onClick={openReportModal}
       >
         문제수정 요청
       </Button>
@@ -153,12 +181,12 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         onChange={(value) => {
           reportValue.current = value;
         }}
-        onClose={onToggleReportModalState}
-        onCancel={onToggleReportModalState}
+        onClose={onToggleReportModal}
+        onCancel={onToggleReportModal}
         onConfirm={tryReport}
         confirmLabel="요청하기"
         title={`${String(title)}\nQ. ${ellipsisText(
-          String(currentQuestion?.title),
+          String(question.question),
           10
         )}`}
       />
