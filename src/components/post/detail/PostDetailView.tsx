@@ -8,9 +8,11 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import TextArea from 'antd/lib/input/TextArea';
 import { Button } from 'antd';
+import parse from 'html-react-parser';
 import PostCommentContainer from '@components/common/card/commentCard/PostCommentContainer';
-import { PostDetailViewProps } from './PostDetail.interface';
 import { addHours, format, parseISO } from 'date-fns';
+import { PostDetailViewProps } from './PostDetail.interface';
+import Link from 'next/link';
 
 const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
   const {
@@ -20,6 +22,8 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
     onChangeCommentValue,
     tryCreatePostComment,
     createPostCommentLoading,
+    tryDeletePost,
+    meQuery,
   } = props;
   if (!postQuery.readPost.ok || !postQuery.readPost.post) return null;
   const { post } = postQuery.readPost;
@@ -27,7 +31,15 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
     <PostDetailViewBlock>
       <div className="post-detail-wrapper">
         <section className="post-detail-top-section">
-          <div className="post-detail-top-title">{post.title}</div>
+          <div className="post-detail-top-section-title-and-button-wrapper">
+            <div className="post-detail-top-title">{post.title}</div>
+            {meQuery?.me.user?.id === post.user.id && (
+              <div className="post-detail-top-button-wrapper">
+                <Link href={`/post/edit/${post.id}`}>수정</Link>
+                <button onClick={tryDeletePost}>삭제</button>
+              </div>
+            )}
+          </div>
           <div className="post-detail-top-profile-wrapper">
             <div className="post-detail-top-profile">
               <div className="post-detail-top-profile-user-info">
@@ -49,8 +61,9 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
         </section>
         <section className="post-detail-center-section">
           <div className="post-detail-center-section-contents-wrapper">
-            {post.content}
+            {parse(post.content)}
           </div>
+
           <div className="post-detail-center-section-like-wrapper">
             <button onClick={tryEditPostLike}>
               {post.likeState ? (
@@ -93,7 +106,10 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
                     likesCount: comment.likesCount,
                     likeState: comment.likeState,
                     nickname: comment.user.nickname,
-                    time: comment.created_at,
+                    time: format(
+                      addHours(parseISO(comment.created_at), 9),
+                      'yyyy-MM-dd hh:mm a'
+                    ),
                     userId: comment.user.id,
                     parrentId: post.id,
                   }}
@@ -170,6 +186,9 @@ const PostDetailViewBlock = styled.div`
   .post-detail-center-section-contents-wrapper {
     padding: 20px 15px;
     font-size: 0.9rem;
+    img {
+      max-width: 100%;
+    }
   }
   .post-detail-center-section-like-wrapper {
     display: flex;
@@ -213,6 +232,25 @@ const PostDetailViewBlock = styled.div`
   .post-detail-comment-container {
     box-shadow: none;
     border-bottom: 1px solid ${palette.gray_200};
+  }
+  .post-detail-top-section-title-and-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .post-detail-top-button-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    button,
+    a {
+      color: ${palette.gray_500};
+      font-size: 0.8rem;
+      transition: color 0.2s ease-in-out;
+      :hover {
+        color: ${palette.antd_blue_01};
+      }
+    }
   }
   @media (max-width: ${responsive.medium}) {
     .post-detail-wrapper {
