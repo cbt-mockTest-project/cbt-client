@@ -33,12 +33,6 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
         <section className="post-detail-top-section">
           <div className="post-detail-top-section-title-and-button-wrapper">
             <div className="post-detail-top-title">{post.title}</div>
-            {meQuery?.me.user?.id === post.user.id && (
-              <div className="post-detail-top-button-wrapper">
-                <Link href={`/post/edit/${post.id}`}>수정</Link>
-                <button onClick={tryDeletePost}>삭제</button>
-              </div>
-            )}
           </div>
           <div className="post-detail-top-profile-wrapper">
             <div className="post-detail-top-profile">
@@ -49,7 +43,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
               <div className="post-detail-top-date">
                 {format(
                   addHours(parseISO(post.created_at), 9),
-                  'yyyy-MM-dd hh:mm a'
+                  'yy.MM.dd HH:mm'
                 )}
               </div>
             </div>
@@ -57,6 +51,12 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
               <VisibilityIcon />
               <span>{post.view}</span>
             </div>
+            {meQuery?.me.user?.id === post.user.id && (
+              <div className="post-detail-top-button-wrapper">
+                <Link href={`/post/edit/${post.id}`}>수정</Link>
+                <button onClick={tryDeletePost}>삭제</button>
+              </div>
+            )}
           </div>
         </section>
         <section className="post-detail-center-section">
@@ -108,7 +108,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
                     nickname: comment.user.nickname,
                     time: format(
                       addHours(parseISO(comment.created_at), 9),
-                      'yyyy-MM-dd hh:mm a'
+                      'yy.MM.dd HH:mm'
                     ),
                     userId: comment.user.id,
                     parrentId: post.id,
@@ -174,7 +174,6 @@ const PostDetailViewBlock = styled.div`
     color: ${palette.gray_500};
     svg {
       position: relative;
-      top: 1px;
       font-size: 0.8rem;
     }
   }
@@ -242,10 +241,13 @@ const PostDetailViewBlock = styled.div`
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-left: 10px;
+    margin-top: auto;
+
     button,
     a {
       color: ${palette.gray_500};
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       transition: color 0.2s ease-in-out;
       :hover {
         color: ${palette.antd_blue_01};
