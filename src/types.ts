@@ -329,6 +329,17 @@ export type EditPostCommentInput = {
   id: Scalars['Float'];
 };
 
+export type EditPostCommentLikeInput = {
+  commentId: Scalars['Float'];
+};
+
+export type EditPostCommentLikeOutput = {
+  __typename?: 'EditPostCommentLikeOutput';
+  currentState: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EditPostCommentOutput = {
   __typename?: 'EditPostCommentOutput';
   error?: Maybe<Scalars['String']>;
@@ -567,6 +578,7 @@ export type Mutation = {
   editNotice: EditNoticeOutput;
   editPost: EditPostOutput;
   editPostComment: EditPostCommentOutput;
+  editPostCommentLike: EditPostCommentLikeOutput;
   editPostLike: EditPostLikeOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
@@ -734,6 +746,11 @@ export type MutationEditPostCommentArgs = {
 };
 
 
+export type MutationEditPostCommentLikeArgs = {
+  input: EditPostCommentLikeInput;
+};
+
+
 export type MutationEditPostLikeArgs = {
   input: EditPostLikeInput;
 };
@@ -837,6 +854,8 @@ export type Post = {
   __typename?: 'Post';
   category: PostCategory;
   comment: Array<PostComment>;
+  commentLikeState: Scalars['Boolean'];
+  commentLikesCount: Scalars['Float'];
   commentsCount: Scalars['Float'];
   content: Scalars['String'];
   created_at: Scalars['DateTime'];

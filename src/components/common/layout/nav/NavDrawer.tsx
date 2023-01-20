@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
-import { NavViewProps } from './NavView';
+import { NavViewProps } from './Nav.interface';
 
 interface NavDrawerProps
   extends Pick<
