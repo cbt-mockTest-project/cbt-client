@@ -1,4 +1,10 @@
-import React, { ComponentProps, useEffect, useMemo, useRef } from 'react';
+import React, {
+  ComponentProps,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { CreatePostInput, PostWriteProps } from './PostWrite.interface';
 import PostWriteView from './PostWriteView';
@@ -7,7 +13,7 @@ import dynamic from 'next/dynamic';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc, removeHtmlTag } from '@lib/utils/utils';
 import {
   useCreatePost,
   useEditPost,
@@ -15,6 +21,7 @@ import {
 } from '@lib/graphql/user/hook/usePost';
 import { message } from 'antd';
 import { EditPostInput } from 'types';
+import { useRevalidate } from '@lib/graphql/user/hook/useRevalidate';
 
 interface PostWriteContainerProps {}
 
@@ -30,12 +37,14 @@ const ReactQuillWrapper = dynamic(
 
 const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const router = useRouter();
-  const [createPost] = useCreatePost();
+  const [createPost, { loading: createPostLoading }] = useCreatePost();
+  const [editPost, { loading: editPostLoading }] = useEditPost();
+  const [formValidate, setFormValidate] = useState(false);
   const reactQuillRef = useRef<ReactQuill | null>(null);
   const isEditPage = router.pathname.indexOf('edit') > -1;
-  const [editPost] = useEditPost();
   const [readPost, { data: readPostQuery }] = useLazyReadPost('network-only');
   const postId = Number(router.query.Id);
+  const [revalidate] = useRevalidate();
   useEffect(() => {
     if (postId) {
       readPost({ variables: { input: { id: postId } } });
@@ -50,15 +59,23 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
       if (input.files) {
         const file = input.files[0];
         const formData = new FormData();
-        formData.append('file', file); // formData는 키-밸류 구조
-        const result = await axios.post(
-          'http://localhost:80/uploads',
-          formData
-        );
-        const IMG_URL = result.data.url;
+        formData.append('file', file);
         if (reactQuillRef.current) {
           const range = reactQuillRef.current.getEditorSelection();
+          const loadingText = '이미지 로딩중 ....';
           if (range) {
+            reactQuillRef.current
+              .getEditor()
+              .insertText(range.index, loadingText);
+            const result = await axios.post(
+              'http://localhost:80/uploads',
+              formData
+            );
+            reactQuillRef.current
+              .getEditor()
+              .deleteText(range.index, loadingText.length);
+
+            const IMG_URL = result.data.url;
             reactQuillRef.current
               .getEditor()
               .insertEmbed(range.index, 'image', IMG_URL);
@@ -111,6 +128,13 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   ];
   const onCancle = () => router.back();
   const requestPost = async ({ title, content }: CreatePostInput) => {
+    if (!formValidate) {
+      setFormValidate(true);
+    }
+    if (!title || !removeHtmlTag(content)) return;
+    const confirmed = confirm('글을 작성하시겠습니까?');
+    if (!confirmed) return;
+    console.log(removeHtmlTag(String(content)));
     const res = await createPost({ variables: { input: { title, content } } });
     if (res.data?.createPost.ok) {
       message.success('게시글이 작성됐습니다.');
@@ -119,6 +143,13 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     return message.error(res.data?.createPost.error);
   };
   const requestEdit = async ({ title, content, id }: EditPostInput) => {
+    if (!formValidate) {
+      setFormValidate(true);
+    }
+    if (!title || !removeHtmlTag(String(content))) return;
+
+    const confirmed = confirm('글을 수정하시겠습니까?');
+    if (!confirmed) return;
     const res = await editPost({
       variables: { input: { title, content, id } },
     });
@@ -137,6 +168,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
       callback: () => requestEdit({ title, content, id: postId }),
     });
   const postWriteProps: PostWriteProps = {
+    formValidate,
     categoryOptions,
     ReactQuillWrapper,
     reactQuillRef,
@@ -144,7 +176,9 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     modules,
     onCancle,
     onPost: isEditPage ? tryEdit : tryPost,
+    postButtonLabel: isEditPage ? '수정하기' : '작성하기',
     readPostQuery,
+    postLoading: isEditPage ? editPostLoading : createPostLoading,
   };
   return <PostWriteView {...postWriteProps} />;
 };

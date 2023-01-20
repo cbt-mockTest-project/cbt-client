@@ -1,4 +1,5 @@
 import useInput from '@lib/hooks/useInput';
+import { removeHtmlTag } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Input, Select } from 'antd';
 import React, { useEffect } from 'react';
@@ -14,6 +15,9 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
     onCancle,
     onPost,
     readPostQuery,
+    postButtonLabel,
+    formValidate,
+    postLoading,
   } = props;
 
   const { value: content, setValue: setContent } = useInput('');
@@ -39,6 +43,9 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
         defaultValue={props.categoryOptions[0]}
       />
       <Input placeholder="제목" value={title} onChange={onChangeTitle} />
+      {formValidate && title.length <= 1 && (
+        <p className="post-write-error-text">제목을 입력해주세요</p>
+      )}
       <ReactQuillWrapper
         theme="snow"
         forwardedRef={reactQuillRef}
@@ -47,14 +54,18 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
         formats={formats}
         modules={modules}
       />
+      {formValidate && removeHtmlTag(content).length <= 1 && (
+        <p className="post-write-error-text">내용을 입력해주세요</p>
+      )}
       <div className="post-write-button-wrapper">
         <Button onClick={onCancle}>취소하기</Button>
         <Button
           type="primary"
           htmlType="button"
+          loading={postLoading}
           onClick={() => onPost({ title, content })()}
         >
-          작성하기
+          {postButtonLabel}
         </Button>
       </div>
     </PostWriteViewBlock>
@@ -81,5 +92,13 @@ const PostWriteViewBlock = styled.div`
     gap: 10px;
     justify-content: center;
     align-items: center;
+  }
+  .post-write-error-text {
+    font-size: 0.8rem;
+    color: ${palette.red_500};
+    line-height: 1;
+    position: relative;
+    padding: 0 5px;
+    bottom: 5px;
   }
 `;

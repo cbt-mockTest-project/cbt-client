@@ -10,6 +10,7 @@ export interface CreatePostInput {
 }
 
 export interface PostWriteProps {
+  formValidate: boolean;
   categoryOptions: DefaultOptionType[];
   ReactQuillWrapper: any;
   reactQuillRef: any;
@@ -17,6 +18,8 @@ export interface PostWriteProps {
   modules: ComponentProps<typeof ReactQuill>['modules'];
   onCancle: React.MouseEventHandler<HTMLElement>;
   readPostQuery?: ReadPostQuery | undefined;
+  postButtonLabel: string;
+  postLoading: boolean;
   onPost: ({
     title,
     content,
