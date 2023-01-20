@@ -14,6 +14,7 @@ import React, { useEffect } from 'react';
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { postViewCookie } from '@lib/constants/cookie';
 import PostDetailContainer from '@components/post/detail/PostDetailContainer';
+import WithHead from '@components/common/head/WithHead';
 interface PostPageProps {
   postQuery: ReadPostQuery;
 }
@@ -24,6 +25,7 @@ const PostPage: NextPage<PostPageProps> = ({ postQuery }) => {
   const [viewPost] = useViewPost();
   const client = useApollo({}, '');
   const router = useRouter();
+  const pageTitle = postQuery.readPost.post?.title;
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
@@ -56,9 +58,15 @@ const PostPage: NextPage<PostPageProps> = ({ postQuery }) => {
     })();
   }, [router.query.Id]);
   return (
-    <Layout>
-      <PostDetailContainer postQuery={postQueryOnClientSide || postQuery} />
-    </Layout>
+    <>
+      <WithHead
+        title={`${pageTitle} | 모두CBT`}
+        pageHeadingTitle={`${pageTitle} | 커뮤니티`}
+      />
+      <Layout>
+        <PostDetailContainer postQuery={postQueryOnClientSide || postQuery} />
+      </Layout>
+    </>
   );
 };
 
