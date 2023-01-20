@@ -1,4 +1,8 @@
+import { loginModal } from '@lib/constants';
 import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { PostCategory } from 'types';
@@ -9,6 +13,9 @@ interface CommunityContainerProps {}
 
 const CommunityContainer: React.FC<CommunityContainerProps> = () => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   // 추후 캐시 최적화 예정
   const [readPosts, { data: postsQuery, loading: readPostsLoading }] =
     useLazyReadPosts('network-only');
@@ -29,6 +36,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = () => {
   const communityViewProps: CommunityViewProps = {
     checkCategoryMatching,
     postsQuery,
+    meQuery,
+    openLoginModal,
   };
   return <CommunityView {...communityViewProps} />;
 };

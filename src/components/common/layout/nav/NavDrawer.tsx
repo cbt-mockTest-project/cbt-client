@@ -14,6 +14,13 @@ interface NavDrawerProps
   > {}
 
 const NavDrawer: React.FC<NavDrawerProps> = (props) => {
+  const CommonNavItemComponent = () => (
+    <div className="mobile-nav-common-wrapper">
+      <Link href="/community?c=FREE">
+        <span className="mobile-nav-item-link-text">커뮤니티</span>
+      </Link>
+    </div>
+  );
   return (
     <StyledDrawer
       open={props.menuState}
@@ -31,24 +38,30 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
               </span>
               <span>{props.meQuery?.me.user.nickname}</span>
             </div>
-            <Link href="/me/examhistory">
-              <span className={`mobile-nav-item-link-text`}>활동내역</span>
-            </Link>
-            <Link href="/me/edit">
-              <span className={`mobile-nav-item-link-text`}>프로필수정</span>
-            </Link>
+            {CommonNavItemComponent()}
+            <div className="mobile-nav-item-wrapper">
+              <Link href="/me/examhistory">
+                <span className="mobile-nav-item-link-text">활동내역</span>
+              </Link>
+              <Link href="/me/edit">
+                <span className="mobile-nav-item-link-text">프로필수정</span>
+              </Link>
+            </div>
             <StyledButton onClick={props.tryRequestLogout}>
               로그아웃
             </StyledButton>
           </>
         ) : (
           <>
-            <Link href="/mobile/login">
-              <StyledButton>로그인</StyledButton>
-            </Link>
-            <Link href="/register/confirm">
-              <StyledButton type="primary">회원가입</StyledButton>
-            </Link>
+            <div className="mobile-nav-item-wrapper-logout">
+              <Link href="/mobile/login">
+                <StyledButton>로그인</StyledButton>
+              </Link>
+              <Link href="/register/confirm">
+                <StyledButton type="primary">회원가입</StyledButton>
+              </Link>
+            </div>
+            {CommonNavItemComponent()}
           </>
         )}
       </div>
@@ -81,6 +94,23 @@ const StyledDrawer = styled(Drawer)`
       :hover {
         color: ${palette.antd_blue_01};
       }
+    }
+    .mobile-nav-item-wrapper,
+    .mobile-nav-common-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mobile-nav-item-wrapper {
+      padding: 10px 0;
+      border-top: 1px solid ${palette.gray_200};
+    }
+    .mobile-nav-item-wrapper-logout {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid ${palette.gray_200};
     }
   }
 `;

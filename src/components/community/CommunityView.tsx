@@ -15,9 +15,18 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
     <CommunityViewBlock>
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
-        <Link href="/post/write">
-          <Button className="community-header-write-button">글쓰기</Button>
-        </Link>
+        {props.meQuery?.me.ok ? (
+          <Link href="/post/write">
+            <Button className="community-header-write-button">글쓰기</Button>
+          </Link>
+        ) : (
+          <Button
+            onClick={props.openLoginModal}
+            className="community-header-write-button"
+          >
+            글쓰기
+          </Button>
+        )}
       </section>
       <section className="community-category">
         <b className="community-category-title">카테고리</b>
@@ -49,7 +58,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
               commentCount={post.commentsCount}
               date={format(
                 addHours(parseISO(post.created_at), 9),
-                'yyyy-MM-dd hh:mm a'
+                'yy.MM.dd HH:mm'
               )}
               likeCount={post.likesCount}
               title={post.title}
