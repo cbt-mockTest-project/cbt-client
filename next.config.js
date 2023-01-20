@@ -23,6 +23,6 @@ const settings = {
     return config;
   },
 };
-const nextConfig = process.env.NODE_ENV === withPWA(settings);
+const nextConfig = withPWA(settings);
 
 module.exports = nextConfig;
