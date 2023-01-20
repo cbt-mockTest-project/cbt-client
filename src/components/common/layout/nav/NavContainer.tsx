@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
-import { DropBoxOption } from '../dropbox/DropBox';
+import { DropBoxOption } from '../../dropbox/DropBox';
 import { loginModal } from '@lib/constants';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-import { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
+import { NoticeDropBoxOption } from '../../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
 import { addHours, format, parseISO } from 'date-fns';
 import NavView from './NavView';
+import { NavViewProps } from './Nav.interface';
 
 const NavContainer = () => {
   const router = useRouter();
@@ -45,7 +46,7 @@ const NavContainer = () => {
       confirmed: notice.confirm,
       time: format(
         addHours(parseISO(notice.created_at), 9),
-        'yyyy-MM-dd hh:mm'
+        'yyyy-MM-dd hh:mm a'
       ),
     })) || [];
   const hasNotices = notices && notices.length >= 1;
@@ -77,16 +78,20 @@ const NavContainer = () => {
   }, [sticky]);
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const onToggleMenu = () => setMenuState(!menuState);
+  const onOuterClickForNoticeDropBox = () =>
+    noticesDropBoxState && setNoticesDropBoxState(false);
+  const onOuterClickForProfileDropBox = () =>
+    profileDropBoxState && setProfileDropBoxState(false);
+  const isSelectedNavItem = (key: string[]) =>
+    key.findIndex((value) => router.pathname.includes(value)) > -1;
 
-  const NavProps = {
+  const NavProps: NavViewProps = {
     sticky,
     profileDropBoxState,
     hasNotices,
     noticesDropBoxState,
     isRegister,
     menuState,
-    setNoticesDropBoxState,
-    setProfileDropBoxState,
     meQuery,
     onToggleNoticesDropBox,
     onToggleProfileDropBox,
@@ -95,6 +100,9 @@ const NavContainer = () => {
     dropBoxOptions,
     openLoginModal,
     tryRequestLogout,
+    onOuterClickForNoticeDropBox,
+    onOuterClickForProfileDropBox,
+    isSelectedNavItem,
   };
 
   return <NavView {...NavProps} />;

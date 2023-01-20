@@ -77,3 +77,6 @@ export const convertExamTitle = (title: string) => {
   }
   return splited[0] + ' ' + splited.at(-1);
 };
+
+export const removeHtmlTag = (String: string) =>
+  String.replace(/<[^>]*>?/g, '');

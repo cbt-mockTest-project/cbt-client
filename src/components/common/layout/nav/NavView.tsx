@@ -1,36 +1,19 @@
 import palette from '@styles/palette';
-import { Button, Drawer } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import DropBox, { DropBoxOption } from '../dropbox/DropBox';
-import OuterClick from '../outerClick/OuterClick';
+import DropBox from '../../dropbox/DropBox';
+import OuterClick from '../../outerClick/OuterClick';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
-import NoticeDropBox, { NoticeDropBoxOption } from '../dropbox/NoticeDropBox';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
-
-interface NavViewProps {
-  sticky: boolean;
-  profileDropBoxState: boolean;
-  hasNotices: boolean | null | undefined;
-  noticesDropBoxState: boolean;
-  isRegister: boolean;
-  menuState: boolean;
-  setNoticesDropBoxState: Dispatch<SetStateAction<boolean>>;
-  setProfileDropBoxState: Dispatch<SetStateAction<boolean>>;
-  meQuery: MeQuery | undefined;
-  onToggleNoticesDropBox: React.MouseEventHandler<Element>;
-  onToggleProfileDropBox: React.MouseEventHandler<Element>;
-  onToggleMenu: () => void;
-  noticeBoxOptions: NoticeDropBoxOption[];
-  dropBoxOptions: DropBoxOption[];
-  openLoginModal: React.MouseEventHandler<Element>;
-  tryRequestLogout: React.MouseEventHandler<Element>;
-}
+import NoticeDropBox from '../../dropbox/NoticeDropBox';
+import NavDrawer from './NavDrawer';
+import { navItems } from './Nav.constants';
+import { NavViewProps } from './Nav.interface';
 
 const NavView: React.FC<NavViewProps> = (props) => {
   return (
@@ -50,13 +33,20 @@ const NavView: React.FC<NavViewProps> = (props) => {
             />
           </div>
         </Link>
+        {navItems.map((item) => (
+          <Link href={item.path} key={item.path}>
+            <span
+              className={`nav-item ${
+                props.isSelectedNavItem(item.key) && 'active'
+              }`}
+            >
+              {item.label}
+            </span>
+          </Link>
+        ))}
         {props.meQuery?.me.user ? (
           <div className="nav-user-content-wrapper ml-auto">
-            <OuterClick
-              callback={() =>
-                props.noticesDropBoxState && props.setNoticesDropBoxState(false)
-              }
-            >
+            <OuterClick callback={props.onOuterClickForNoticeDropBox}>
               <button
                 onClick={props.onToggleNoticesDropBox}
                 className={`nav-user-content-notice-button ${
@@ -71,11 +61,7 @@ const NavView: React.FC<NavViewProps> = (props) => {
               />
             </OuterClick>
 
-            <OuterClick
-              callback={() =>
-                props.profileDropBoxState && props.setProfileDropBoxState(false)
-              }
-            >
+            <OuterClick callback={props.onOuterClickForProfileDropBox}>
               <button
                 className="nav-user-content"
                 onClick={props.onToggleProfileDropBox}
@@ -123,46 +109,12 @@ const NavView: React.FC<NavViewProps> = (props) => {
         <button className="mobile-menu-button" onClick={props.onToggleMenu}>
           <MenuIcon />
         </button>
-        <StyledDrawer
-          open={props.menuState}
-          onClose={props.onToggleMenu}
-          className="mobile-menu-drawer"
-          title="메뉴"
-          width={200}
-        >
-          <div className="mobile-menu-drawer-wrapper">
-            {props.meQuery?.me.user ? (
-              <>
-                <div className="mobile-nav-user-content">
-                  <span className="mobile-nav-user-content-profile-image">
-                    <UserOutlined />
-                  </span>
-                  <span>{props.meQuery?.me.user.nickname}</span>
-                </div>
-                <Link href="/me/examhistory">
-                  <span className={`mobile-nav-item-link-text`}>활동내역</span>
-                </Link>
-                <Link href="/me/edit">
-                  <span className={`mobile-nav-item-link-text`}>
-                    프로필수정
-                  </span>
-                </Link>
-                <StyledButton onClick={props.tryRequestLogout}>
-                  로그아웃
-                </StyledButton>
-              </>
-            ) : (
-              <>
-                <Link href="/mobile/login">
-                  <StyledButton>로그인</StyledButton>
-                </Link>
-                <Link href="/register/confirm">
-                  <StyledButton type="primary">회원가입</StyledButton>
-                </Link>
-              </>
-            )}
-          </div>
-        </StyledDrawer>
+        <NavDrawer
+          menuState={props.menuState}
+          onToggleMenu={props.onToggleMenu}
+          meQuery={props.meQuery}
+          tryRequestLogout={props.tryRequestLogout}
+        />
       </div>
     </NavBlock>
   );
@@ -192,6 +144,17 @@ const NavBlock = styled.div<NavBlockProps>`
     css`
       box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 4px;
     `}
+  .nav-item {
+    font-size: 0.9rem;
+    color: ${palette.gray_700};
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+    position: relative;
+    top: 5px;
+  }
+  .nav-item.active {
+    color: ${palette.antd_blue_01};
+  }
   .mobile-nav-contents-wrapper {
     display: none;
   }
@@ -305,38 +268,5 @@ const NavBlock = styled.div<NavBlockProps>`
       position: relative;
       top: 4px;
     }
-  }
-`;
-
-const StyledDrawer = styled(Drawer)`
-  @media (max-width: ${responsive.medium}) {
-    .mobile-menu-drawer-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .mobile-nav-user-content {
-      display: flex;
-      width: 100%;
-      align-items: center;
-      gap: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid ${palette.gray_200};
-    }
-    .mobile-nav-item-link-text {
-      font-size: 0.9rem;
-      cursor: pointer;
-      padding: 5px 0;
-      transition: color 0.2s ease-in;
-      :hover {
-        color: ${palette.antd_blue_01};
-      }
-    }
-  }
-`;
-
-const StyledButton = styled(Button)`
-  @media (max-width: ${responsive.medium}) {
-    width: 100%;
   }
 `;
