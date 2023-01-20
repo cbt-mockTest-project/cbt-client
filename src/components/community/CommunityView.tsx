@@ -8,13 +8,16 @@ import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { CommunityViewProps } from './Community.interface';
 import { addHours, format, parseISO } from 'date-fns';
+import CommunityPagination from './CommunityPagination';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
   return (
     <CommunityViewBlock>
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
-        <Button className="community-header-write-button">글쓰기</Button>
+        <Link href="/post/write">
+          <Button className="community-header-write-button">글쓰기</Button>
+        </Link>
       </section>
       <section className="community-category">
         <b className="community-category-title">카테고리</b>
@@ -56,6 +59,9 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
           ))}
         </ul>
       </section>
+      {props.postsQuery && (
+        <CommunityPagination total={props.postsQuery.readPosts.count} />
+      )}
     </CommunityViewBlock>
   );
 };
@@ -64,6 +70,7 @@ export default CommunityView;
 const CommunityViewBlock = styled.div`
   width: 100%;
   max-width: 800px;
+  min-height: calc(100vh- 105px);
   margin-left: auto;
   margin-bottom: 50px;
   .community-header {
@@ -79,7 +86,7 @@ const CommunityViewBlock = styled.div`
     margin-left: auto;
   }
   .community-category {
-    padding: 40px 0;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     gap: 15px;
