@@ -4,7 +4,6 @@ import { NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import PostWriteContainer from '@components/post/write/PostWriteContainer';
 
-const PostEditBlock = styled.div``;
 
 interface PostEditProps {}
 

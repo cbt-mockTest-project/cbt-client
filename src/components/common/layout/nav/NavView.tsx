@@ -5,37 +5,15 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import DropBox, { DropBoxOption } from '../../dropbox/DropBox';
+import DropBox from '../../dropbox/DropBox';
 import OuterClick from '../../outerClick/OuterClick';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
-import NoticeDropBox, {
-  NoticeDropBoxOption,
-} from '../../dropbox/NoticeDropBox';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import NoticeDropBox from '../../dropbox/NoticeDropBox';
 import NavDrawer from './NavDrawer';
 import { navItems } from './Nav.constants';
-
-export interface NavViewProps {
-  sticky: boolean;
-  profileDropBoxState: boolean;
-  hasNotices: boolean | null | undefined;
-  noticesDropBoxState: boolean;
-  isRegister: boolean;
-  menuState: boolean;
-  meQuery: MeQuery | undefined;
-  onToggleNoticesDropBox: React.MouseEventHandler<Element>;
-  onToggleProfileDropBox: React.MouseEventHandler<Element>;
-  onToggleMenu: () => void;
-  noticeBoxOptions: NoticeDropBoxOption[];
-  dropBoxOptions: DropBoxOption[];
-  openLoginModal: React.MouseEventHandler<Element>;
-  tryRequestLogout: React.MouseEventHandler<Element>;
-  onOuterClickForNoticeDropBox: React.MouseEventHandler<Element>;
-  onOuterClickForProfileDropBox: React.MouseEventHandler<Element>;
-  isSelectedNavItem: (path: string) => boolean;
-}
+import { NavViewProps } from './Nav.interface';
 
 const NavView: React.FC<NavViewProps> = (props) => {
   return (
@@ -59,7 +37,7 @@ const NavView: React.FC<NavViewProps> = (props) => {
           <Link href={item.path} key={item.path}>
             <span
               className={`nav-item ${
-                props.isSelectedNavItem(item.path) && 'active'
+                props.isSelectedNavItem(item.key) && 'active'
               }`}
             >
               {item.label}

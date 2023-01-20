@@ -29,14 +29,13 @@ const PostPage: NextPage<PostPageProps> = ({ postQuery }) => {
       if (router.query.Id) {
         const id = Number(router.query.Id);
         const postViewCookieValue = getCookie(postViewCookie);
-        const parsedPostViewCookie: number[] = JSON.parse(
-          String(postViewCookieValue)
-        );
-        console.log(parsedPostViewCookie);
+        const parsedPostViewCookie: number[] = postViewCookieValue
+          ? JSON.parse(String(postViewCookieValue))
+          : [];
         const hasPostViewCookie = parsedPostViewCookie.includes(id);
         if (!hasPostViewCookie) {
-          viewPost({ variables: { input: { postId: id } } });
           // 조회수 30분에 한번씩 카운트
+          viewPost({ variables: { input: { postId: id } } });
           setCookie(postViewCookie, [...parsedPostViewCookie, id], {
             maxAge: 60 * 30,
           });
