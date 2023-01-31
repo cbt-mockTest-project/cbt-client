@@ -24,3 +24,8 @@ export const widhDrawalModal = 'widhDrawalModal';
 export const selectExamCategoryHistory = 'selectExamCategoryHistory';
 
 export const selectExamHistory = 'selectExamHistory';
+
+export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
+export const KAKAO_REST_API = process.env.NEXT_PUBLIC_KAKAO_REST_API;
+export const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+export const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY;
