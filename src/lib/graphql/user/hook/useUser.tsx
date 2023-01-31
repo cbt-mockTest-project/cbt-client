@@ -5,6 +5,7 @@ import {
   DELETE_USER_MUTATION,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
+  KAKAO_LOGIN,
   LOGIN_MUTATION,
   LOGOUT_MUTATION,
   ME_QUERY,
@@ -23,6 +24,8 @@ import {
   EditProfileMutationVariables,
   EmailVerificationMutation,
   EmailVerificationMutationVariables,
+  KakaoLoginMutation,
+  KakaoLoginMutationVariables,
   LoginMutation,
   LoginMutationVariables,
   LogoutMutation,
@@ -85,3 +88,6 @@ export const useSendFindPasswordMail = () =>
     SendFindPasswordMailMutation,
     SendFindPasswordMailMutationVariables
   >(SEND_FIND_PASSWORD_MAIL_MUTATION);
+
+export const useKakaoLogin = () =>
+  useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KAKAO_LOGIN);
