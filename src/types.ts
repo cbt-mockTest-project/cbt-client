@@ -419,6 +419,16 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type KakaoLoginInput = {
+  code: Scalars['String'];
+};
+
+export type KakaoLoginOutput = {
+  __typename?: 'KakaoLoginOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -582,6 +592,7 @@ export type Mutation = {
   editPostLike: EditPostLikeOutput;
   editProfile: EditProfileOutput;
   emailVerification: EmailVerificationOutput;
+  kakaoLogin: KakaoLoginOutput;
   login: LoginOutput;
   logout: CoreOutput;
   naverBlogViewMacro: NaverBlogViewMacroOutput;
@@ -763,6 +774,11 @@ export type MutationEditProfileArgs = {
 
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
+};
+
+
+export type MutationKakaoLoginArgs = {
+  input: KakaoLoginInput;
 };
 
 

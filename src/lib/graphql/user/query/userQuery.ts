@@ -112,3 +112,12 @@ export const SEND_FIND_PASSWORD_MAIL_MUTATION = gql`
     }
   }
 `;
+
+export const KAKAO_LOGIN = gql`
+  mutation KakaoLogin($input: KakaoLoginInput!) {
+    kakaoLogin(input: $input) {
+      error
+      ok
+    }
+  }
+`;
