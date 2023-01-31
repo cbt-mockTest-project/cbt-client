@@ -13,6 +13,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
+import { message } from 'antd';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -28,6 +29,11 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       router.events.off('hashChangeComplete', handleRouteChange);
     };
   }, [router.events]);
+  useEffect(() => {
+    if (router.query.message) {
+      message.error(router.query.message);
+    }
+  }, [router.query.message]);
   return (
     <>
       <Script
