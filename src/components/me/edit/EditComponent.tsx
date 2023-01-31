@@ -35,6 +35,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const { value: newPassword, onChange: onChangeNewPasswordValue } =
     useInput('');
   const requestChangeNickname = async () => {
+    if (nickname.length <= 2) {
+      return message.error('2글자 이상 입력해주세요.');
+    }
     const res = await editProfileMutation({
       variables: { input: { nickname } },
     });
@@ -55,6 +58,9 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     callback: requestChangeNickname,
   });
   const requestChangePassword = async () => {
+    if (newPassword.length < 4) {
+      return message.error('비밀번호를 4글자 이상 입력해주세요.');
+    }
     const res = await editProfileMutation({
       variables: { input: { password: newPassword } },
     });

@@ -80,6 +80,7 @@ const Register = () => {
   };
 
   const onSubmit = async (data: RegisterInput) => {
+    if (registerButtonDisabled) return;
     const result = await registerMutation({
       variables: {
         input: data,
@@ -129,18 +130,21 @@ const Register = () => {
             <Controller
               control={control}
               name="password"
-              rules={{ required: true }}
+              rules={{ required: true, minLength: 4 }}
               render={({ field }) => (
                 <Input
                   onChange={field.onChange}
                   type="password"
                   className="register-input"
+                  placeholder="4글자 이상 입력해주세요."
                 />
               )}
             />
-            {formState.errors['password']?.type === 'required' && (
+            {['minLength', 'required'].includes(
+              String(formState.errors['password']?.type)
+            ) && (
               <ErrorText
-                content="비밀번호를 입력해주세요."
+                content="비밀번호를 4글자 이상 입력해주세요."
                 className="register-error-text"
               />
             )}
