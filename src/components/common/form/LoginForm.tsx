@@ -6,8 +6,14 @@ import styled from 'styled-components';
 import { LoginInput } from 'types';
 import ErrorText from '../layout/errorText/ErrorText';
 import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
+import GoogleIconSVG from '@mui/icons-material/Google';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import { KAKAO_REDIRECT_URI, KAKAO_REST_API } from '@lib/constants';
+import {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_REDIRECT_URI,
+  KAKAO_REDIRECT_URI,
+  KAKAO_REST_API,
+} from '@lib/constants';
 
 interface LoginFormProps {
   isMobile?: boolean;
@@ -17,8 +23,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const [loginMutation] = useLoginMutation();
   const [buttonState, setButtonState] = useState(false);
-  const gotoSocialLogin = () => {
+  const onKakaoAuth = () => {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+  };
+  const onGoogleAuth = () => {
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}`;
   };
   const onSubmit = async (data: LoginInput) => {
     setButtonState(true);
@@ -71,10 +80,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
         로그인
       </Button>
       <div className="login-or-line" />
-      <Button onClick={() => gotoSocialLogin()} className="login-social-button">
-        <div className="login-social-button-inner">
+      <Button
+        onClick={() => onKakaoAuth()}
+        className="login-social-button kakao"
+      >
+        <div className="login-social-button-inner kakao">
           <KakaoIconSVG />
           <span>카카오 로그인</span>
+        </div>
+      </Button>
+      <Button
+        onClick={() => onGoogleAuth()}
+        className="login-social-button google"
+      >
+        <div className="login-social-button-inner google">
+          <GoogleIconSVG />
+          <span>구글 로그인</span>
         </div>
       </Button>
     </LoginFormContainer>
@@ -125,14 +146,18 @@ const LoginFormContainer = styled.form`
   }
 
   .login-social-button {
-    background-color: #fee500;
     border: none;
     :hover {
       color: unset;
       opacity: 0.8;
     }
   }
-
+  .login-social-button.kakao {
+    background-color: #fee500;
+  }
+  .login-social-button.google {
+    background-color: #374151;
+  }
   .login-social-button-inner {
     display: flex;
     flex-direction: row;
@@ -141,9 +166,20 @@ const LoginFormContainer = styled.form`
     position: relative;
     svg {
       position: absolute;
-      width: 18px;
       left: 35px;
+    }
+  }
+  .login-social-button-inner.kakao {
+    svg {
+      width: 18px;
       height: 18px;
+    }
+  }
+  .login-social-button-inner.google {
+    color: white;
+    svg {
+      width: 20px;
+      height: 20px;
     }
   }
 `;

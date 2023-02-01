@@ -27,5 +27,9 @@ export const selectExamHistory = 'selectExamHistory';
 
 export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
 export const KAKAO_REST_API = process.env.NEXT_PUBLIC_KAKAO_REST_API;
-export const KAKAO_REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
-export const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY;
+export const KAKAO_REDIRECT_URI =
+  process.env.NEXT_PUBLIC_REDIRECT_URI + '/kakao';
+export const GOOGLE_REDIRECT_URI =
+  process.env.NEXT_PUBLIC_REDIRECT_URI + '/google';
+export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+export const GOOGLE_SECRET_KEY = process.env.NEXT_PUBLIC_GOOGLE_SECRET;
