@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper';
 import { responsive } from '@lib/utils/responsive';
+import Link from 'next/link';
 
 const MainBanner = () => {
   return (
@@ -21,7 +22,9 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
-          <div className="home-main-banner-box" />
+          <Link href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1">
+            <div className="home-main-banner-box" />
+          </Link>
         </SwiperSlide>
       </Swiper>
     </MainBannerContainer>
@@ -38,7 +41,7 @@ const MainBannerContainer = styled.div`
   .home-main-banner-box {
     width: 100%;
     height: 100%;
-    background-image: url('/png/banner/main-banner-pc01.png');
+    background-image: url('/png/banner/main-banner-pc02.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -51,7 +54,7 @@ const MainBannerContainer = styled.div`
   }
   @media (max-width: 720px) {
     .home-main-banner-box {
-      background-image: url('/png/banner/main-banner-mobile01.png') !important;
+      background-image: url('/png/banner/main-banner-mobile02.png') !important;
     }
   }
 `;
