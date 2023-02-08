@@ -22,9 +22,13 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
-          <Link href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
+            target="_blank"
+            rel="noreferrer"
+          >
             <div className="home-main-banner-box" />
-          </Link>
+          </a>
         </SwiperSlide>
       </Swiper>
     </MainBannerContainer>
