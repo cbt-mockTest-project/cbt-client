@@ -14,8 +14,10 @@ import NoticeDropBox from '../../dropbox/NoticeDropBox';
 import NavDrawer from './NavDrawer';
 import { navItems } from './Nav.constants';
 import { NavViewProps } from './Nav.interface';
+import useIsMobile from '@lib/hooks/useIsMobile';
 
 const NavView: React.FC<NavViewProps> = (props) => {
+  const isMobile = useIsMobile();
   return (
     <NavBlock
       sticky={props.sticky}
@@ -94,44 +96,46 @@ const NavView: React.FC<NavViewProps> = (props) => {
           </>
         )}
       </div>
-      <div className="mobile-nav-contents-wrapper">
-        <Link href="/">
-          <div className="nav-home-logo-wrapper">
-            <Image
-              src={'/png/logo01.png'}
-              alt="logo-img"
-              width={320}
-              height={200}
-              layout="responsive"
-            />
+      {isMobile && (
+        <div className="mobile-nav-contents-wrapper">
+          <Link href="/">
+            <div className="nav-home-logo-wrapper">
+              <Image
+                src={'/png/logo01.png'}
+                alt="logo-img"
+                width={320}
+                height={200}
+                layout="responsive"
+              />
+            </div>
+          </Link>
+          <div className="nav-user-content-notice-button-wrapper">
+            <OuterClick callback={props.onOuterClickForNoticeDropBox}>
+              <button
+                onClick={props.onToggleNoticesDropBox}
+                className={`nav-user-content-notice-button ${
+                  props.hasNotices && 'active'
+                }`}
+              >
+                <NotificationsNoneOutlinedIcon />
+              </button>
+              <NoticeDropBox
+                isOpen={props.noticesDropBoxState}
+                options={props.noticeBoxOptions}
+              />
+            </OuterClick>
           </div>
-        </Link>
-        <div className="nav-user-content-notice-button-wrapper">
-          <OuterClick callback={props.onOuterClickForNoticeDropBox}>
-            <button
-              onClick={props.onToggleNoticesDropBox}
-              className={`nav-user-content-notice-button ${
-                props.hasNotices && 'active'
-              }`}
-            >
-              <NotificationsNoneOutlinedIcon />
-            </button>
-            <NoticeDropBox
-              isOpen={props.noticesDropBoxState}
-              options={props.noticeBoxOptions}
-            />
-          </OuterClick>
+          <button className="mobile-menu-button" onClick={props.onToggleMenu}>
+            <MenuIcon />
+          </button>
+          <NavDrawer
+            menuState={props.menuState}
+            onToggleMenu={props.onToggleMenu}
+            meQuery={props.meQuery}
+            tryRequestLogout={props.tryRequestLogout}
+          />
         </div>
-        <button className="mobile-menu-button" onClick={props.onToggleMenu}>
-          <MenuIcon />
-        </button>
-        <NavDrawer
-          menuState={props.menuState}
-          onToggleMenu={props.onToggleMenu}
-          meQuery={props.meQuery}
-          tryRequestLogout={props.tryRequestLogout}
-        />
-      </div>
+      )}
     </NavBlock>
   );
 };
