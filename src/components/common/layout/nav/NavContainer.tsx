@@ -76,8 +76,9 @@ const NavContainer = () => {
   }, [sticky]);
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const onToggleMenu = () => setMenuState(!menuState);
-  const onOuterClickForNoticeDropBox = () =>
+  const onOuterClickForNoticeDropBox = () => {
     noticesDropBoxState && setNoticesDropBoxState(false);
+  };
   const onOuterClickForProfileDropBox = () =>
     profileDropBoxState && setProfileDropBoxState(false);
   const isSelectedNavItem = (key: string[]) =>
