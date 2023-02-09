@@ -263,6 +263,8 @@ const NoticeDropBoxContainer = styled.div`
       overflow-y: auto;
       left: 0;
       right: 0;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
     }
   }
 `;
