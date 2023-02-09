@@ -4,11 +4,24 @@ import {
   createHttpLink,
   InMemoryCache,
   NormalizedCacheObject,
+  split,
 } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
 import { setContext } from '@apollo/client/link/context';
 import React from 'react';
+import { getMainDefinition } from '@apollo/client/utilities';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
+const wsLink = !isServer()
+  ? new WebSocketLink({
+      // if you instantiate in the server, the error will be thrown
+      uri: `ws://localhost:80/graphql`,
+      options: {
+        reconnect: true,
+      },
+    })
+  : null;
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_API_URL,
@@ -21,9 +34,23 @@ export const createApolloClient = (Cookie: string) => {
   const authLink = setContext(() => ({
     headers: { Cookie },
   }));
+  const splitLink =
+    !isServer() && wsLink
+      ? split(
+          ({ query }) => {
+            const definition = getMainDefinition(query);
+            return (
+              definition.kind === 'OperationDefinition' &&
+              definition.operation === 'subscription'
+            );
+          },
+          wsLink,
+          authLink.concat(httpLink)
+        )
+      : authLink.concat(httpLink);
   return new ApolloClient({
     ssrMode: isServer(),
-    link: authLink.concat(httpLink),
+    link: splitLink,
     cache: new InMemoryCache(),
   });
 };
