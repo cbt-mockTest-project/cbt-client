@@ -63,7 +63,9 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
         client.writeQuery({
           query: ME_QUERY,
           data: {
+            ...queryResult,
             me: {
+              ...queryResult.me,
               notices: newNotices,
             },
           },
@@ -74,14 +76,21 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
   const requestDeleteAllNotices = async () => {
     const res = await deleteAllNotices();
     if (res.data?.deleteAllNoticesOfMe.ok) {
-      client.writeQuery({
+      const queryResult = client.readQuery<MeQuery>({
         query: ME_QUERY,
-        data: {
-          me: {
-            notices: null,
-          },
-        },
       });
+      if (queryResult) {
+        client.writeQuery({
+          query: ME_QUERY,
+          data: {
+            ...queryResult,
+            me: {
+              ...queryResult.me,
+              notices: null,
+            },
+          },
+        });
+      }
     }
   };
   const tryDeleteNotice = (noticeId: number) =>
