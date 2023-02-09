@@ -13,6 +13,7 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import Link from 'next/link';
+import { responsive } from '@lib/utils/responsive';
 
 export interface NoticeDropBoxOption extends DropBoxOption {
   confirmed: boolean;
@@ -249,6 +250,19 @@ const NoticeDropBoxContainer = styled.div`
       ::before {
         background-color: ${palette.antd_blue_01};
       }
+    }
+  }
+  @media (max-width: ${responsive.medium}) {
+    .notice-drop-box {
+      max-width: none;
+      width: unset;
+      top: 58px;
+      transform: translate(0%);
+      position: fixed;
+      max-height: 400px;
+      overflow-y: auto;
+      left: 0;
+      right: 0;
     }
   }
 `;
