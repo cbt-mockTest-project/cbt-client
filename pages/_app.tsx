@@ -14,9 +14,11 @@ import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
 import { message } from 'antd';
+import { usePostCommentNotice } from '@lib/graphql/user/hook/useNotice';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
+
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {

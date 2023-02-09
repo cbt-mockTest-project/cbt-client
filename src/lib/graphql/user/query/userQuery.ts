@@ -60,6 +60,7 @@ export const ME_QUERY = gql`
         id
         created_at
         confirm
+        link
       }
       error
     }

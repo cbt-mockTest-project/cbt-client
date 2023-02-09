@@ -44,6 +44,7 @@ const NavContainer = () => {
       value: notice.id,
       label: notice.content,
       confirmed: notice.confirm,
+      link: notice.link,
       time: format(addHours(parseISO(notice.created_at), 9), 'yy.MM.dd HH:mm'),
     })) || [];
   const hasNotices = notices && notices.length >= 1;

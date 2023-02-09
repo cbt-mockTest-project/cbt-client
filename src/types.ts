@@ -111,6 +111,7 @@ export type CreateMockExamQuestionOutput = {
 
 export type CreateNoticeInput = {
   content: Scalars['String'];
+  link?: InputMaybe<Scalars['String']>;
   reservationTime?: InputMaybe<Scalars['DateTime']>;
   userId: Scalars['Float'];
 };
@@ -427,6 +428,7 @@ export type KakaoLoginOutput = {
   __typename?: 'KakaoLoginOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type LoginInput = {
@@ -440,6 +442,13 @@ export type LoginOutput = {
   ok: Scalars['Boolean'];
   token?: Maybe<Scalars['String']>;
 };
+
+export enum LoginType {
+  Email = 'EMAIL',
+  Google = 'GOOGLE',
+  Kakao = 'KAKAO',
+  Naver = 'NAVER'
+}
 
 export type MeOutput = {
   __typename?: 'MeOutput';
@@ -861,6 +870,7 @@ export type Notice = {
   content: Scalars['String'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  link?: Maybe<Scalars['String']>;
   reservationTime?: Maybe<Scalars['DateTime']>;
   updated_at: Scalars['DateTime'];
   user: User;
@@ -1305,6 +1315,11 @@ export type SendVerificationMailOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  postCommentUpdates: CoreOutput;
+};
+
 export type TitleAndId = {
   __typename?: 'TitleAndId';
   id?: Maybe<Scalars['Float']>;
@@ -1325,6 +1340,7 @@ export type UpdateApprovedStateOfMockExamQuestionOutput = {
 
 export type User = {
   __typename?: 'User';
+  LoginType: LoginType;
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
