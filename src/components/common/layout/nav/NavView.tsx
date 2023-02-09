@@ -23,79 +23,81 @@ const NavView: React.FC<NavViewProps> = (props) => {
       sticky={props.sticky}
       profileDropBoxState={props.profileDropBoxState}
     >
-      <div className="pc-nav-contents-wrapper">
-        <Link href="/">
-          <div className="nav-home-logo-wrapper">
-            <Image
-              src={'/png/logo01.png'}
-              alt="logo-img"
-              width={320}
-              height={200}
-              layout="responsive"
-            />
-          </div>
-        </Link>
-        {navItems.map((item) => (
-          <Link href={item.path} key={item.path}>
-            <span
-              className={`nav-item ${
-                props.isSelectedNavItem(item.key) && 'active'
-              }`}
-            >
-              {item.label}
-            </span>
+      {!isMobile && (
+        <div className="pc-nav-contents-wrapper">
+          <Link href="/">
+            <div className="nav-home-logo-wrapper">
+              <Image
+                src={'/png/logo01.png'}
+                alt="logo-img"
+                width={320}
+                height={200}
+                layout="responsive"
+              />
+            </div>
           </Link>
-        ))}
-        {props.meQuery?.me.user ? (
-          <div className="nav-user-content-wrapper ml-auto">
-            <OuterClick callback={props.onOuterClickForNoticeDropBox}>
-              <button
-                onClick={props.onToggleNoticesDropBox}
-                className={`nav-user-content-notice-button ${
-                  props.hasNotices && 'active'
-                }`}
-              >
-                <NotificationsNoneOutlinedIcon />
-              </button>
-              <NoticeDropBox
-                isOpen={props.noticesDropBoxState}
-                options={props.noticeBoxOptions}
-              />
-            </OuterClick>
-
-            <OuterClick callback={props.onOuterClickForProfileDropBox}>
-              <button
-                className="nav-user-content"
-                onClick={props.onToggleProfileDropBox}
-              >
-                <span className="nav-user-content-profile-image">
-                  <UserOutlined />
-                </span>
-                <span>{props.meQuery?.me.user.nickname}</span>
-              </button>
-              <DropBox
-                isOpen={props.profileDropBoxState}
-                options={props.dropBoxOptions}
-              />
-            </OuterClick>
-          </div>
-        ) : (
-          <>
-            <Link href="/register/confirm">
+          {navItems.map((item) => (
+            <Link href={item.path} key={item.path}>
               <span
-                className={`nav-item-link-text ml-auto ${
-                  props.isRegister && 'selected'
+                className={`nav-item ${
+                  props.isSelectedNavItem(item.key) && 'active'
                 }`}
               >
-                회원가입
+                {item.label}
               </span>
             </Link>
-            <Button onClick={props.openLoginModal} htmlType="button">
-              로그인
-            </Button>
-          </>
-        )}
-      </div>
+          ))}
+          {props.meQuery?.me.user ? (
+            <div className="nav-user-content-wrapper ml-auto">
+              <OuterClick callback={props.onOuterClickForNoticeDropBox}>
+                <button
+                  onClick={props.onToggleNoticesDropBox}
+                  className={`nav-user-content-notice-button ${
+                    props.hasNotices && 'active'
+                  }`}
+                >
+                  <NotificationsNoneOutlinedIcon />
+                </button>
+                <NoticeDropBox
+                  isOpen={props.noticesDropBoxState}
+                  options={props.noticeBoxOptions}
+                />
+              </OuterClick>
+
+              <OuterClick callback={props.onOuterClickForProfileDropBox}>
+                <button
+                  className="nav-user-content"
+                  onClick={props.onToggleProfileDropBox}
+                >
+                  <span className="nav-user-content-profile-image">
+                    <UserOutlined />
+                  </span>
+                  <span>{props.meQuery?.me.user.nickname}</span>
+                </button>
+                <DropBox
+                  isOpen={props.profileDropBoxState}
+                  options={props.dropBoxOptions}
+                />
+              </OuterClick>
+            </div>
+          ) : (
+            <>
+              <Link href="/register/confirm">
+                <span
+                  className={`nav-item-link-text ml-auto ${
+                    props.isRegister && 'selected'
+                  }`}
+                >
+                  회원가입
+                </span>
+              </Link>
+              <Button onClick={props.openLoginModal} htmlType="button">
+                로그인
+              </Button>
+            </>
+          )}
+        </div>
+      )}
       {isMobile && (
         <div className="mobile-nav-contents-wrapper">
           <Link href="/">
