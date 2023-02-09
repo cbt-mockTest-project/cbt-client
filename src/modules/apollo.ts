@@ -16,7 +16,7 @@ let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 const wsLink = !isServer()
   ? new WebSocketLink({
       // if you instantiate in the server, the error will be thrown
-      uri: `ws://localhost:80/graphql`,
+      uri: `${process.env.NEXT_PUBLIC_API_SOCKET_URL}`,
       options: {
         reconnect: true,
       },
