@@ -133,28 +133,28 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
                   </button>
                 </li>
               ) : (
-                <Link key={option.value} href={option.link}>
-                  <li>
-                    <div
-                      className={`notice-content-confirm-check ${
-                        !option.confirmed && 'active'
-                      }`}
-                    />
-                    <button
-                      onClick={tryNoticeClick(Number(option.value))}
-                      className="notice-content-click-button"
-                    >
+                <li key={option.value}>
+                  <div
+                    className={`notice-content-confirm-check ${
+                      !option.confirmed && 'active'
+                    }`}
+                  />
+                  <button
+                    onClick={tryNoticeClick(Number(option.value))}
+                    className="notice-content-click-button"
+                  >
+                    <Link href={option.link}>
                       <pre>{option.label}</pre>
-                      <div className="notice-content-time">{option.time}</div>
-                    </button>
-                    <button
-                      onClick={tryDeleteNotice(Number(option.value))}
-                      className="notice-content-clear-button"
-                    >
-                      <ClearIcon />
-                    </button>
-                  </li>
-                </Link>
+                    </Link>
+                    <div className="notice-content-time">{option.time}</div>
+                  </button>
+                  <button
+                    onClick={tryDeleteNotice(Number(option.value))}
+                    className="notice-content-clear-button"
+                  >
+                    <ClearIcon />
+                  </button>
+                </li>
               )
             )}
           {!hasNotices && <li className="not-draggable">알림이 없습니다.</li>}
