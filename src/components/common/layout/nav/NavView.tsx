@@ -106,6 +106,22 @@ const NavView: React.FC<NavViewProps> = (props) => {
             />
           </div>
         </Link>
+        <div className="nav-user-content-notice-button-wrapper">
+          <OuterClick callback={props.onOuterClickForNoticeDropBox}>
+            <button
+              onClick={props.onToggleNoticesDropBox}
+              className={`nav-user-content-notice-button ${
+                props.hasNotices && 'active'
+              }`}
+            >
+              <NotificationsNoneOutlinedIcon />
+            </button>
+            <NoticeDropBox
+              isOpen={props.noticesDropBoxState}
+              options={props.noticeBoxOptions}
+            />
+          </OuterClick>
+        </div>
         <button className="mobile-menu-button" onClick={props.onToggleMenu}>
           <MenuIcon />
         </button>
@@ -267,6 +283,12 @@ const NavBlock = styled.div<NavBlockProps>`
     .mobile-menu-button {
       position: relative;
       top: 4px;
+    }
+    .nav-user-content-notice-button-wrapper {
+      position: relative;
+      margin-left: auto;
+      margin-right: 30px;
+      margin-top: 5px;
     }
   }
 `;
