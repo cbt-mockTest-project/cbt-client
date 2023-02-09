@@ -12,10 +12,12 @@ import { useApollo } from '@modules/apollo';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
+import Link from 'next/link';
 
 export interface NoticeDropBoxOption extends DropBoxOption {
   confirmed: boolean;
   time: string;
+  link?: string | null;
 }
 
 interface NoticeDropBoxProps extends Omit<DropBoxProps, 'options'> {
@@ -99,28 +101,53 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
         </div>
         <ul className="notice-content-list">
           {hasNotices &&
-            options?.map((option) => (
-              <li key={option.value}>
-                <div
-                  className={`notice-content-confirm-check ${
-                    !option.confirmed && 'active'
-                  }`}
-                />
-                <button
-                  onClick={tryNoticeClick(Number(option.value))}
-                  className="notice-content-click-button"
-                >
-                  <pre>{option.label}</pre>
-                  <div className="notice-content-time">{option.time}</div>
-                </button>
-                <button
-                  onClick={tryDeleteNotice(Number(option.value))}
-                  className="notice-content-clear-button"
-                >
-                  <ClearIcon />
-                </button>
-              </li>
-            ))}
+            options?.map((option) =>
+              !option.link ? (
+                <li key={option.value}>
+                  <div
+                    className={`notice-content-confirm-check ${
+                      !option.confirmed && 'active'
+                    }`}
+                  />
+                  <button
+                    onClick={tryNoticeClick(Number(option.value))}
+                    className="notice-content-click-button"
+                  >
+                    <pre>{option.label}</pre>
+                    <div className="notice-content-time">{option.time}</div>
+                  </button>
+                  <button
+                    onClick={tryDeleteNotice(Number(option.value))}
+                    className="notice-content-clear-button"
+                  >
+                    <ClearIcon />
+                  </button>
+                </li>
+              ) : (
+                <Link key={option.value} href={option.link}>
+                  <li>
+                    <div
+                      className={`notice-content-confirm-check ${
+                        !option.confirmed && 'active'
+                      }`}
+                    />
+                    <button
+                      onClick={tryNoticeClick(Number(option.value))}
+                      className="notice-content-click-button"
+                    >
+                      <pre>{option.label}</pre>
+                      <div className="notice-content-time">{option.time}</div>
+                    </button>
+                    <button
+                      onClick={tryDeleteNotice(Number(option.value))}
+                      className="notice-content-clear-button"
+                    >
+                      <ClearIcon />
+                    </button>
+                  </li>
+                </Link>
+              )
+            )}
           {!hasNotices && <li className="not-draggable">알림이 없습니다.</li>}
         </ul>
       </DropBox>

@@ -59,6 +59,11 @@ export const useLoginMutation = () =>
 
 export const useMeQuery = () => useQuery<MeQuery, MeQueryVariables>(ME_QUERY);
 
+export const useLazyMeQuery = () =>
+  useLazyQuery<MeQuery, MeQueryVariables>(ME_QUERY, {
+    fetchPolicy: 'network-only',
+  });
+
 export const useLogoutMutation = () =>
   useMutation<LogoutMutation, LogoutMutationVariables>(LOGOUT_MUTATION);
 
