@@ -1,9 +1,9 @@
 import MainBanner from '@components/banner/MainBanner';
+import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import Image from 'next/image';
 import React from 'react';
-import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import Footer from './Footer';
 import Nav from './nav/NavContainer';
@@ -22,6 +22,7 @@ const Layout: React.FC<LayoutProps> = ({
   sideBanner,
   subNav,
 }) => {
+  const isMobile = useIsMobile();
   return (
     <LayoutContainer>
       <Nav />
