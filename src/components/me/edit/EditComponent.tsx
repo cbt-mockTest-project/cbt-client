@@ -35,7 +35,7 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const { value: newPassword, onChange: onChangeNewPasswordValue } =
     useInput('');
   const requestChangeNickname = async () => {
-    if (nickname.length <= 2) {
+    if (nickname.length <= 1) {
       return message.error('2글자 이상 입력해주세요.');
     }
     const res = await editProfileMutation({
