@@ -419,6 +419,8 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     white-space: pre-wrap;
   }
   @media (max-width: ${responsive.medium}) {
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
     padding: 20px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
