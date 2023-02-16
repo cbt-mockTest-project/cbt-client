@@ -362,6 +362,8 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   }
 
   .exam-question-menubar-wrapper {
+    background-color: white;
+    bottom: 0;
     display: flex;
     margin-top: 10px;
     justify-content: space-between;
@@ -420,12 +422,21 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
+    height: calc(100vh - 177px);
+    overflow-y: scroll;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
+      margin-left: -20px;
+      margin-right: -20px;
       display: flex;
       flex-direction: column;
       gap: 20px;
       align-items: flex-start;
+      width: 100%;
+      position: fixed;
+      background-color: white;
+      box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 4px;
+      padding: 15px 20px;
     }
     .exam-container-title {
       font-size: 1rem;
