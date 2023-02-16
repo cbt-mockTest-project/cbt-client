@@ -61,6 +61,31 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
+    if (window) {
+      let prevVisualViewport = window.visualViewport?.height;
+      const handleVisualViewportResize = () => {
+        const currentVisualViewport = Number(window.visualViewport?.height);
+        if (
+          prevVisualViewport &&
+          prevVisualViewport - 30 > currentVisualViewport
+        ) {
+          const scrollHeight = Number(
+            window.document.scrollingElement?.scrollHeight
+          );
+          const scrollTop =
+            scrollHeight - Number(window.visualViewport?.height);
+          window.scrollTo(0, scrollTop); // 입력창이 키보드에 가려지지 않도록 조절
+        }
+        prevVisualViewport = Number(window.visualViewport?.height);
+      };
+
+      if (window.visualViewport) {
+        window.visualViewport.onresize = handleVisualViewportResize;
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
     /**
      * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
@@ -246,6 +271,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             title: String(examTitle || ''),
           }}
         />
+
         <Label content="답 작성" />
         <TextArea
           autoSize={{ minRows: 3, maxRows: 8 }}
@@ -253,6 +279,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           onChange={onChangeAnswer}
           placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         />
+
         <button
           className="exam-solution-check-wrapper"
           onClick={onToggleAnswerboxVisible}
@@ -419,8 +446,7 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     white-space: pre-wrap;
   }
   @media (max-width: ${responsive.medium}) {
-    height: calc(100vh - 60px);
-    overflow-y: scroll;
+    width: 100%;
     padding: 20px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
