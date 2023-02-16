@@ -61,6 +61,31 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
+    if (window) {
+      let prevVisualViewport = window.visualViewport?.height;
+      const handleVisualViewportResize = () => {
+        const currentVisualViewport = Number(window.visualViewport?.height);
+        if (
+          prevVisualViewport &&
+          prevVisualViewport - 30 > currentVisualViewport
+        ) {
+          const scrollHeight = Number(
+            window.document.scrollingElement?.scrollHeight
+          );
+          const scrollTop =
+            scrollHeight - Number(window.visualViewport?.height);
+          window.scrollTo({ top: scrollTop - 80, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
+        }
+        prevVisualViewport = Number(window.visualViewport?.height);
+      };
+
+      if (window.visualViewport) {
+        window.visualViewport.onresize = handleVisualViewportResize;
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
     /**
      * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
