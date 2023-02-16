@@ -107,5 +107,6 @@ const ExamAchievementResultContainer = styled.ul<{ isHoverEffect: boolean }>`
   }
   .achieve-result-index {
     margin-left: 20px;
+    width: max-content;
   }
 `;
