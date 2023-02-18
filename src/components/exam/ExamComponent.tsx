@@ -72,11 +72,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           const scrollHeight = Number(
             window.document.scrollingElement?.scrollHeight
           );
-          const scrollTop =
-            scrollHeight - Number(window.visualViewport?.height);
-          window.scrollTo({ top: scrollTop - 80, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
+          const scrollTop = scrollHeight - currentVisualViewport;
+          window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
         }
-        prevVisualViewport = Number(window.visualViewport?.height);
+        prevVisualViewport = currentVisualViewport;
       };
 
       if (window.visualViewport) {
@@ -261,6 +260,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             className="exam-container-bookmark"
           />
         </h2>
+
         <QuestionAndSolutionBox
           label="문제"
           content={{
@@ -483,7 +483,7 @@ const BottomMenuBar = styled.div`
   @media (max-width: ${responsive.small}) {
     display: flex;
     padding: 10px 0;
-    position: sticky;
+    position: fixed;
     background-color: white;
     justify-content: center;
     align-items: center;
