@@ -459,6 +459,8 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   }
   @media (max-width: ${responsive.small}) {
     padding: 20px;
+    padding-bottom: 75px;
+
     .exam-question-menubar {
       display: none;
     }
@@ -488,10 +490,10 @@ const BottomMenuBar = styled.div`
     justify-content: center;
     align-items: center;
     font-weight: 600;
+    bottom: 0;
     color: ${palette.gray_700};
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     width: 100%;
-    bottom: 0;
     .exam-question-move-button-label {
       margin-left: 40px;
       margin-right: 5px;
