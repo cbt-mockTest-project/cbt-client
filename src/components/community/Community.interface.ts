@@ -14,6 +14,7 @@ export interface CommunityListProps {
 export interface CommunityViewProps {
   checkCategoryMatching: (query: string) => boolean;
   postsQuery: ReadPostsQuery | undefined;
+  readPostsLoading: boolean;
   meQuery: MeQuery | undefined;
   openLoginModal: React.MouseEventHandler<Element>;
 }

@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
 import { message } from 'antd';
-import { usePostCommentNotice } from '@lib/graphql/user/hook/useNotice';
+import Head from 'next/head';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -38,6 +38,12 @@ export default function App({ Component, pageProps }: AppProps<any>) {
   }, [router.query.message]);
   return (
     <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=no"
+        />
+      </Head>
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}

@@ -9,6 +9,7 @@ import { responsive } from '@lib/utils/responsive';
 import { CommunityViewProps } from './Community.interface';
 import { addHours, format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
+import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
   return (
@@ -50,21 +51,27 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-board">
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
+          {!props.postsQuery?.readPosts.posts &&
+            [1, 2, 3].map((el, index) => (
+              <CommunityListViewSkeleton key={index} />
+            ))}
           {props.postsQuery?.readPosts.posts?.map((post) => (
-            <CommunityListView
-              key={post.id}
-              id={post.id}
-              category={'자유게시판'}
-              commentCount={post.commentsCount}
-              date={format(
-                addHours(parseISO(post.created_at), 9),
-                'yy.MM.dd HH:mm'
-              )}
-              likeCount={post.likesCount}
-              title={post.title}
-              userName={post.user.nickname}
-              viewCount={post.view}
-            />
+            <>
+              <CommunityListView
+                key={post.id}
+                id={post.id}
+                category={'자유게시판'}
+                commentCount={post.commentsCount}
+                date={format(
+                  addHours(parseISO(post.created_at), 9),
+                  'yy.MM.dd HH:mm'
+                )}
+                likeCount={post.likesCount}
+                title={post.title}
+                userName={post.user.nickname}
+                viewCount={post.view}
+              />
+            </>
           ))}
         </ul>
       </section>
