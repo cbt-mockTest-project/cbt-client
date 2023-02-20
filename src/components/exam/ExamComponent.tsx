@@ -287,7 +287,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         </button>
         <QuestionAndSolutionBox
           content={{
-            content: questionAndSolution ? questionAndSolution.solution : '',
+            content:
+              (questionAndSolution && questionAndSolution.solution) ?? '',
             img: questionAndSolution && questionAndSolution.solution_img,
           }}
           visible={answerboxVisible}
