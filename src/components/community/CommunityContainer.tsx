@@ -38,6 +38,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = () => {
     postsQuery,
     meQuery,
     openLoginModal,
+    readPostsLoading,
   };
   return <CommunityView {...communityViewProps} />;
 };
