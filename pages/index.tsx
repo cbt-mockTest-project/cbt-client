@@ -21,6 +21,8 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { useReadVisitCount } from '@lib/graphql/user/hook/useVisit';
+import palette from '@styles/palette';
 
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -34,7 +36,9 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   const [isRandom, setIsRandom] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
+  const { data: readVisitCountQuery } = useReadVisitCount();
   const storage = new LocalStorage();
+
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name })
   );
@@ -140,6 +144,9 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
                   문제/해답 보기
                 </Link>
               </Button>
+              {/* {readVisitCountQuery?.readVisitCount.ok && (
+                <div className="home-visit-count-box">{`오늘 ${readVisitCountQuery?.readVisitCount.count}`}</div>
+              )} */}
             </div>
           </div>
         </HomeContainer>
@@ -195,5 +202,13 @@ const HomeContainer = styled.div`
     gap: 10px;
     align-items: center;
     margin: 20px 0;
+  }
+  .home-visit-count-box {
+    padding: 5px 10px;
+    margin-left: auto;
+    text-align: right;
+    font-size: 0.8rem;
+    color: ${palette.gray_700};
+    margin-top: 20px;
   }
 `;

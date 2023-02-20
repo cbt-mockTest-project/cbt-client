@@ -15,10 +15,10 @@ import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
 import { message } from 'antd';
 import Head from 'next/head';
+import AppInner from '@components/common/container/AppInner';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
-
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -66,6 +66,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
         <Provider store={store}>
           <Globalstyles />
           <CommonModalContainer />
+          <AppInner />
           <Component {...pageProps} />
         </Provider>
       </ApolloProvider>

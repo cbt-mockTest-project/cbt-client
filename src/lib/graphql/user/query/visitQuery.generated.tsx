@@ -1,0 +1,41 @@
+import * as Types from '../../../../types';
+
+import gql from 'graphql-tag';
+import * as Urql from 'urql';
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type ReadVisitCountQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadVisitCountQuery = { __typename?: 'Query', readVisitCount: { __typename?: 'ReadVisitCountOutput', count?: number | null, error?: string | null, ok: boolean } };
+
+export type CreateVisitMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type CreateVisitMutation = { __typename?: 'Mutation', createVisit: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
+
+export const ReadVisitCountDocument = gql`
+    query ReadVisitCount {
+  readVisitCount {
+    count
+    error
+    ok
+  }
+}
+    `;
+
+export function useReadVisitCountQuery(options?: Omit<Urql.UseQueryArgs<ReadVisitCountQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadVisitCountQuery, ReadVisitCountQueryVariables>({ query: ReadVisitCountDocument, ...options });
+};
+export const CreateVisitDocument = gql`
+    mutation CreateVisit {
+  createVisit {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCreateVisitMutation() {
+  return Urql.useMutation<CreateVisitMutation, CreateVisitMutationVariables>(CreateVisitDocument);
+};
