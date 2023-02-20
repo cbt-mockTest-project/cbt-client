@@ -144,9 +144,14 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
                   문제/해답 보기
                 </Link>
               </Button>
-              {/* {readVisitCountQuery?.readVisitCount.ok && (
-                <div className="home-visit-count-box">{`오늘 ${readVisitCountQuery?.readVisitCount.count}`}</div>
-              )} */}
+              <div className="home-bottom-wrapper">
+                <a href="https://www.buymeacoffee.com/moducbts">
+                  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=moducbts&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff" />
+                </a>
+                {readVisitCountQuery?.readVisitCount.ok && (
+                  <div className="home-visit-count-box">{`오늘 ${readVisitCountQuery?.readVisitCount.count}`}</div>
+                )}
+              </div>
             </div>
           </div>
         </HomeContainer>
@@ -203,12 +208,15 @@ const HomeContainer = styled.div`
     align-items: center;
     margin: 20px 0;
   }
+  .home-bottom-wrapper {
+    margin: 0 auto;
+    margin-top: 10px;
+  }
   .home-visit-count-box {
-    padding: 5px 10px;
+    padding: 5px;
     margin-left: auto;
     text-align: right;
     font-size: 0.8rem;
     color: ${palette.gray_700};
-    margin-top: 20px;
   }
 `;
