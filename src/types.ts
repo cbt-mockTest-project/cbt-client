@@ -99,14 +99,27 @@ export type CreateMockExamQuestionInput = {
   number: Scalars['Float'];
   question: Scalars['String'];
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
-  solution: Scalars['String'];
+  solution?: InputMaybe<Scalars['String']>;
   solution_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
+};
+
+export type CreateMockExamQuestionMultipleChoiceInput = {
+  answer: Scalars['Float'];
+  options: Array<MockExamQuestionMultipleChoiceOption>;
+  questionId: Scalars['Float'];
+};
+
+export type CreateMockExamQuestionMultipleChoiceOutput = {
+  __typename?: 'CreateMockExamQuestionMultipleChoiceOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type CreateMockExamQuestionOutput = {
   __typename?: 'CreateMockExamQuestionOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  questionId?: Maybe<Scalars['Float']>;
 };
 
 export type CreateNoticeInput = {
@@ -476,14 +489,27 @@ export type MockExamCategory = {
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
+  type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
 };
+
+export enum MockExamCategoryTypes {
+  Practical = 'practical',
+  Written = 'written'
+}
 
 export type MockExamImageType = {
   __typename?: 'MockExamImageType';
   name: Scalars['String'];
   uid: Scalars['String'];
   url: Scalars['String'];
+};
+
+export type MockExamMultipleChoiceOption = {
+  __typename?: 'MockExamMultipleChoiceOption';
+  content: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  number: Scalars['Float'];
 };
 
 export type MockExamQuestion = {
@@ -495,10 +521,11 @@ export type MockExamQuestion = {
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
+  multipleChoice: Array<MockExamQuestionMultipleChoice>;
   number: Scalars['Float'];
   question: Scalars['String'];
   question_img?: Maybe<Array<MockExamImageType>>;
-  solution: Scalars['String'];
+  solution?: Maybe<Scalars['String']>;
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
   updated_at: Scalars['DateTime'];
@@ -551,6 +578,22 @@ export type MockExamQuestionImageInputType = {
   url: Scalars['String'];
 };
 
+export type MockExamQuestionMultipleChoice = {
+  __typename?: 'MockExamQuestionMultipleChoice';
+  answer: Scalars['Float'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  options: Array<MockExamMultipleChoiceOption>;
+  question: MockExamQuestion;
+  updated_at: Scalars['DateTime'];
+};
+
+export type MockExamQuestionMultipleChoiceOption = {
+  content: Scalars['String'];
+  image?: InputMaybe<Scalars['String']>;
+  number: Scalars['Float'];
+};
+
 export type MockExamQuestionState = {
   __typename?: 'MockExamQuestionState';
   answer: Scalars['String'];
@@ -573,6 +616,7 @@ export type Mutation = {
   createMockExamQuestion: CreateMockExamQuestionOutput;
   createMockExamQuestionComment: CreateMockExamQuestionCommentOutput;
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
+  createMutipleChoice: CreateMockExamQuestionMultipleChoiceOutput;
   createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
@@ -610,6 +654,7 @@ export type Mutation = {
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
   sendFindPasswordMail: SendFindPasswordMailOutput;
+  sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   viewPost: ViewPostOutput;
@@ -653,6 +698,11 @@ export type MutationCreateMockExamQuestionCommentArgs = {
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
+};
+
+
+export type MutationCreateMutipleChoiceArgs = {
+  input: CreateMockExamQuestionMultipleChoiceInput;
 };
 
 
@@ -826,6 +876,11 @@ export type MutationSendFindPasswordMailArgs = {
 };
 
 
+export type MutationSendMessageToAlramChannelOfTelegramArgs = {
+  input: SendMessageToAlramChannelOfTelegramInput;
+};
+
+
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
@@ -980,6 +1035,11 @@ export type QueryReadAllMockExamArgs = {
 };
 
 
+export type QueryReadAllMockExamCategoriesArgs = {
+  input?: InputMaybe<ReadAllMockExamCategoriesInput>;
+};
+
+
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
@@ -1055,6 +1115,11 @@ export enum QuestionState {
   Middle = 'MIDDLE',
   Row = 'ROW'
 }
+
+export type ReadAllMockExamCategoriesInput = {
+  all?: InputMaybe<Scalars['Boolean']>;
+  type?: InputMaybe<MockExamCategoryTypes>;
+};
 
 export type ReadAllMockExamCategoriesOutput = {
   __typename?: 'ReadAllMockExamCategoriesOutput';
@@ -1301,6 +1366,16 @@ export type SendFindPasswordMailInput = {
 
 export type SendFindPasswordMailOutput = {
   __typename?: 'SendFindPasswordMailOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type SendMessageToAlramChannelOfTelegramInput = {
+  message: Scalars['String'];
+};
+
+export type SendMessageToAlramChannelOfTelegramOutput = {
+  __typename?: 'SendMessageToAlramChannelOfTelegramOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
