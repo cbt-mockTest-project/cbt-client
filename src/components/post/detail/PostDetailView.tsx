@@ -41,10 +41,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
                 <div>{post.user.nickname}</div>
               </div>
               <div className="post-detail-top-date">
-                {format(
-                  addHours(parseISO(post.created_at), 9),
-                  'yy.MM.dd HH:mm'
-                )}
+                {format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
               </div>
             </div>
             <div className="post-detail-top-view-count">
@@ -107,7 +104,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
                     likeState: comment.likeState,
                     nickname: comment.user.nickname,
                     time: format(
-                      addHours(parseISO(comment.created_at), 9),
+                      parseISO(comment.created_at),
                       'yy.MM.dd HH:mm'
                     ),
                     userId: comment.user.id,

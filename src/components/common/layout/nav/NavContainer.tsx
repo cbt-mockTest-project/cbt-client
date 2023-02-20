@@ -45,7 +45,7 @@ const NavContainer = () => {
       label: notice.content,
       confirmed: notice.confirm,
       link: notice.link,
-      time: format(addHours(parseISO(notice.created_at), 9), 'yy.MM.dd HH:mm'),
+      time: format(parseISO(notice.created_at), 'yy.MM.dd HH:mm'),
     })) || [];
   const hasNotices = notices && notices.length >= 1;
   const dropBoxOptions: DropBoxOption[] = [
