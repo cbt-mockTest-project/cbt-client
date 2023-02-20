@@ -62,10 +62,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
                 id={post.id}
                 category={'자유게시판'}
                 commentCount={post.commentsCount}
-                date={format(
-                  addHours(parseISO(post.created_at), 9),
-                  'yy.MM.dd HH:mm'
-                )}
+                date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
                 likeCount={post.likesCount}
                 title={post.title}
                 userName={post.user.nickname}
