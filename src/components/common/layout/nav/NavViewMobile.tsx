@@ -9,10 +9,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NavDrawer from './NavDrawer';
 import { NavViewProps } from './Nav.interface';
 import { responsive } from '@lib/utils/responsive';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface NavViewMobileProps extends NavViewProps {}
 
 const NavViewMobile: React.FC<NavViewMobileProps> = (props) => {
+  const { data: meQuery } = useMeQuery();
   return (
     <NavViewMobileContainer>
       <Link href="/">
@@ -26,22 +28,24 @@ const NavViewMobile: React.FC<NavViewMobileProps> = (props) => {
           />
         </div>
       </Link>
-      <div className="nav-user-content-notice-button-wrapper">
-        <OuterClick callback={props.onOuterClickForNoticeDropBox}>
-          <button
-            onClick={props.onToggleNoticesDropBox}
-            className={`nav-user-content-notice-button ${
-              props.hasNotices && 'active'
-            }`}
-          >
-            <NotificationsNoneOutlinedIcon />
-          </button>
-          <NoticeDropBox
-            isOpen={props.noticesDropBoxState}
-            options={props.noticeBoxOptions}
-          />
-        </OuterClick>
-      </div>
+      {meQuery?.me.user && (
+        <div className="nav-user-content-notice-button-wrapper">
+          <OuterClick callback={props.onOuterClickForNoticeDropBox}>
+            <button
+              onClick={props.onToggleNoticesDropBox}
+              className={`nav-user-content-notice-button ${
+                props.hasNotices && 'active'
+              }`}
+            >
+              <NotificationsNoneOutlinedIcon />
+            </button>
+            <NoticeDropBox
+              isOpen={props.noticesDropBoxState}
+              options={props.noticeBoxOptions}
+            />
+          </OuterClick>
+        </div>
+      )}
       <button className="mobile-menu-button" onClick={props.onToggleMenu}>
         <MenuIcon />
       </button>
