@@ -621,6 +621,7 @@ export type Mutation = {
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
+  createVisit: CoreOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
@@ -1015,6 +1016,7 @@ export type Query = {
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
+  readVisitCount: ReadVisitCountOutput;
   searchMockExam: SearchMockExamOutput;
   userProfile: UserProfileOutput;
 };
@@ -1306,6 +1308,13 @@ export type ReadPostsOutput = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type ReadVisitCountOutput = {
+  __typename?: 'ReadVisitCountOutput';
+  count?: Maybe<Scalars['Float']>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type RegisterInput = {
   code: Scalars['String'];
   nickname: Scalars['String'];
@@ -1433,6 +1442,7 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
+  visit: Visit;
 };
 
 export type UserProfileInput = {
@@ -1459,4 +1469,12 @@ export type ViewPostOutput = {
   __typename?: 'ViewPostOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type Visit = {
+  __typename?: 'Visit';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
