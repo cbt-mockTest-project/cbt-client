@@ -303,7 +303,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              문제수정 요청
+              오류 신고
             </Button>
             <Button
               type="primary"
@@ -460,8 +460,10 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
   pre {
     white-space: pre-wrap;
   }
-  @media (max-width: ${responsive.small}) {
+  @media (max-width: ${responsive.medium}) {
     padding: 20px;
+  }
+  @media (max-width: ${responsive.small}) {
     padding-bottom: 75px;
 
     .exam-question-menubar {

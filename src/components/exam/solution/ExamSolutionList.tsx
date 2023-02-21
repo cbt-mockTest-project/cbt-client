@@ -160,7 +160,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         className="solution-page-report-button"
         onClick={openReportModal}
       >
-        문제수정 요청
+        오류 신고
       </Button>
       <Button
         type="primary"

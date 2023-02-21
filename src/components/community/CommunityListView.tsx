@@ -61,12 +61,7 @@ const CommunityListBlock = styled.li`
   .mobile-only {
     display: none;
   }
-  :first-child {
-    border-top: 1px solid ${palette.gray_300};
-  }
-  :last-child {
-    border-bottom: 1px solid ${palette.gray_300};
-  }
+
   :hover {
     background-color: ${palette.gray_50};
   }
