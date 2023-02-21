@@ -137,6 +137,7 @@ const CommunityViewBlock = styled.div`
   .community-board-title {
     width: 100%;
     padding-bottom: 10px;
+    border-bottom: 1px solid ${palette.gray_300};
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
