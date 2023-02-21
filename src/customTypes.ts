@@ -1,3 +1,4 @@
+import { MockExamQuestionComment } from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/user/query/questionQuery.generated';
 export interface QuestionType
@@ -11,6 +12,7 @@ export interface QuestionType
     | 'id'
     | 'state'
     | 'mockExamQuestionBookmark'
+    | 'mockExamQuestionComment'
   > {}
 
 export type QuestionStateType = 'Core' | 'High' | 'Middle' | 'Row';
