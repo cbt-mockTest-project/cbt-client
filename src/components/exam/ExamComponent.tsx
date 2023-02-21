@@ -57,6 +57,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const [isMobileKeyboardState, setIsMobileKeyboardState] = useState(false);
+  const [currentVisualViewport, setCurrentVisualViewport] = useState(0);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
@@ -69,11 +71,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           prevVisualViewport &&
           prevVisualViewport - 30 > currentVisualViewport
         ) {
-          const scrollHeight = Number(
-            window.document.scrollingElement?.scrollHeight
-          );
-          const scrollTop = scrollHeight - currentVisualViewport;
-          window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
+          // const scrollHeight = Number(
+          //   window.document.scrollingElement?.scrollHeight
+          // );
+          // const scrollTop = scrollHeight - currentVisualViewport;
+          // window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
+          setCurrentVisualViewport(currentVisualViewport);
+          setIsMobileKeyboardState(true);
+        } else {
+          setIsMobileKeyboardState(false);
         }
         prevVisualViewport = currentVisualViewport;
       };
@@ -253,7 +259,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
 
   return (
     <>
-      <ExamContainer answerboxVisible={answerboxVisible}>
+      <ExamContainer
+        currentVisualViewport={currentVisualViewport}
+        answerboxVisible={answerboxVisible}
+        isMobileKeyboardState={isMobileKeyboardState}
+      >
         <h2 className="exam-container-title">
           {examTitle}-{questionIndex}번 문제{' '}
           <Bookmark
@@ -374,7 +384,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
 
 export default ExamComponent;
 
-const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
+interface ExamContainerProps {
+  isMobileKeyboardState: boolean;
+  answerboxVisible: boolean;
+  currentVisualViewport: number;
+}
+
+const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
   .exam-container-title {
@@ -451,6 +467,22 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     padding: 20px;
   }
   @media (max-width: ${responsive.small}) {
+    ${(props) =>
+      props.isMobileKeyboardState
+        ? css`
+            bottom: 0;
+            position: fixed;
+            top: 60px;
+            overflow-y: scroll;
+            height: ${props.currentVisualViewport}px;
+          `
+        : css`
+            position: unset;
+            bottom: unset;
+            top: unset;
+            overflow-y: unset;
+            height: unset;
+          `}
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
