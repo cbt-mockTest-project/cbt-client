@@ -38,7 +38,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
-  const examContainerRef = useRef<HTMLDivElement>(null);
   const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -65,52 +64,40 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
-    if (examContainerRef.current) {
-      let prevVisualViewport = window.visualViewport?.height;
-      const handleVisualViewportResize = () => {
-        const currentVisualViewport = Number(window.visualViewport?.height);
-        if (
-          prevVisualViewport &&
-          prevVisualViewport - 30 > currentVisualViewport
-        ) {
-          const scrollHeight = Number(
-            window.document.scrollingElement?.scrollHeight
-          );
-          const scrollTop = scrollHeight - currentVisualViewport;
-          setIsMobileKeyboardState(true);
-          setCurrentVisualViewport(currentVisualViewport);
-          setMobileScrollValue(scrollTop);
-        } else {
-          setIsMobileKeyboardState(false);
-          setCurrentVisualViewport(0);
-          setMobileScrollValue(0);
-        }
-        prevVisualViewport = currentVisualViewport;
-      };
-
-      if (window.visualViewport) {
-        window.visualViewport.onresize = handleVisualViewportResize;
+    let prevVisualViewport = window.visualViewport?.height;
+    const handleVisualViewportResize = () => {
+      const currentVisualViewport = Number(window.visualViewport?.height);
+      if (
+        prevVisualViewport &&
+        prevVisualViewport - 30 > currentVisualViewport
+      ) {
+        const scrollHeight = Number(
+          window.document.scrollingElement?.scrollHeight
+        );
+        const scrollTop = scrollHeight - currentVisualViewport;
+        setIsMobileKeyboardState(true);
+        setCurrentVisualViewport(currentVisualViewport);
+        setMobileScrollValue(scrollTop);
+      } else {
+        setIsMobileKeyboardState(false);
+        setCurrentVisualViewport(0);
+        setMobileScrollValue(0);
       }
+      prevVisualViewport = currentVisualViewport;
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.onresize = handleVisualViewportResize;
     }
-  }, [examContainerRef]);
+  }, []);
   useEffect(() => {
-    if (
-      isMobileKeyboardState &&
-      currentVisualViewport &&
-      mobileScrollValue &&
-      examContainerRef.current
-    ) {
-      examContainerRef.current.scrollTo({
+    if (isMobileKeyboardState && currentVisualViewport && mobileScrollValue) {
+      window.scrollTo({
         top: mobileScrollValue,
         behavior: 'smooth',
       }); //
     }
-  }, [
-    isMobileKeyboardState,
-    currentVisualViewport,
-    mobileScrollValue,
-    examContainerRef,
-  ]);
+  }, [isMobileKeyboardState, currentVisualViewport, mobileScrollValue]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -285,7 +272,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         currentVisualViewport={currentVisualViewport}
         answerboxVisible={answerboxVisible}
         isMobileKeyboardState={isMobileKeyboardState}
-        ref={examContainerRef}
       >
         <h2 className="exam-container-title">
           {examTitle}-{questionIndex}번 문제{' '}
@@ -490,22 +476,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
     padding: 20px;
   }
   @media (max-width: ${responsive.small}) {
-    ${(props) =>
-      props.isMobileKeyboardState
-        ? css`
-            bottom: 0;
-            position: fixed;
-            top: 60px;
-            overflow-y: scroll;
-            height: ${props.currentVisualViewport}px;
-          `
-        : css`
-            position: unset;
-            bottom: unset;
-            top: unset;
-            overflow-y: unset;
-            height: unset;
-          `}
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
