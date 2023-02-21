@@ -7,7 +7,7 @@ import { categorys, mockPosts } from './Community.constants';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { CommunityViewProps } from './Community.interface';
-import { addHours, format, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
 import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 
@@ -17,7 +17,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
         {props.meQuery?.me.ok ? (
-          <Link href="/post/write">
+          <Link href="/post/write" className="ml-auto">
             <Button className="community-header-write-button">글쓰기</Button>
           </Link>
         ) : (
@@ -137,6 +137,7 @@ const CommunityViewBlock = styled.div`
   .community-board-title {
     width: 100%;
     padding-bottom: 10px;
+    border-bottom: 1px solid ${palette.gray_300};
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;

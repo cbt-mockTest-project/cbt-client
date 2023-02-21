@@ -127,6 +127,11 @@ const Globalstyles = createGlobalStyle`
       display: none; /* Chrome, Safari, Opera*/
     }
   }
+  a {
+    :hover{
+      color : unset ;
+    }
+  }
 `;
 
 export default Globalstyles;

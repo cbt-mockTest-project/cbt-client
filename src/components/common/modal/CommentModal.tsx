@@ -193,7 +193,7 @@ const CommentModalContainer = styled(Modal)`
     }
   }
   @media (max-width: ${responsive.small}) {
-    width: 100%;
+    width: 100% !important;
     animation: slideFromBottom 0.5s;
     .comment-title {
       margin-top: 30px;

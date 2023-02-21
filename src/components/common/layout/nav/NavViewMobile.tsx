@@ -19,13 +19,7 @@ const NavViewMobile: React.FC<NavViewMobileProps> = (props) => {
     <NavViewMobileContainer>
       <Link href="/">
         <div className="nav-home-logo-wrapper">
-          <Image
-            src={'/png/logo01.png'}
-            alt="logo-img"
-            width={320}
-            height={200}
-            layout="responsive"
-          />
+          <Image src={'/png/logo01.png'} alt="logo-img" fill />
         </div>
       </Link>
       {meQuery?.me.user && (
@@ -63,6 +57,9 @@ export default NavViewMobile;
 
 const NavViewMobileContainer = styled.div`
   display: none;
+  .nav-home-logo-wrapper {
+    position: relative;
+  }
 
   @media (max-width: ${responsive.medium}) {
     display: flex;

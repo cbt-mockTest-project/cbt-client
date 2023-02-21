@@ -33,7 +33,6 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   const [readExamTitles] = useReadExamTitles();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
-  const [isRandom, setIsRandom] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const { data: readVisitCountQuery } = useReadVisitCount();
@@ -96,7 +95,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
       query: {
         e: selectedExamId,
         q: '1',
-        r: isRandom,
+        r: false,
         t: title,
         c: category,
       },
@@ -125,17 +124,12 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
                 value={title}
                 onChange={(value) => onTitleChange(Number(value), titles)}
               />
-              <div className="home-checkbox-wrapper">
-                {/* <Checkbox
-                  onChange={() => setIsRandom(!isRandom)}
-                  checked={isRandom}
-                />
-                <div>문제순서 랜덤</div> */}
-              </div>
+
               <Button
                 type="primary"
                 onClick={gotoExamPage}
                 disabled={!Boolean(selectedExamId)}
+                className="home-content-question-button"
               >
                 문제풀기
               </Button>
@@ -146,7 +140,10 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
               </Button>
               <div className="home-bottom-wrapper">
                 <a href="https://www.buymeacoffee.com/moducbts">
-                  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=moducbts&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff" />
+                  <img
+                    src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=moducbts&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff"
+                    alt="buy me a coffee"
+                  />
                 </a>
                 {readVisitCountQuery?.readVisitCount.ok && (
                   <div className="home-visit-count-box">{`오늘 ${readVisitCountQuery?.readVisitCount.count}`}</div>
@@ -218,5 +215,8 @@ const HomeContainer = styled.div`
     text-align: right;
     font-size: 0.8rem;
     color: ${palette.gray_700};
+  }
+  .home-content-question-button {
+    margin-top: 15px;
   }
 `;

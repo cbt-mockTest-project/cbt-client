@@ -19,13 +19,7 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
     <NavViewPcContainer>
       <Link href="/">
         <div className="nav-home-logo-wrapper">
-          <Image
-            src={'/png/logo01.png'}
-            alt="logo-img"
-            width={320}
-            height={200}
-            layout="responsive"
-          />
+          <Image src={'/png/logo01.png'} alt="logo-img" fill />
         </div>
       </Link>
       {navItems.map((item) => (
@@ -74,7 +68,7 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
         </div>
       ) : (
         <>
-          <Link href="/register/confirm">
+          <Link href="/register/confirm" className="ml-auto">
             <span
               className={`nav-item-link-text ml-auto ${
                 props.isRegister && 'selected'
@@ -101,6 +95,9 @@ const NavViewPcContainer = styled.div`
   display: flex;
   gap: 40px;
   align-items: center;
+  .nav-home-logo-wrapper {
+    position: relative;
+  }
 
   @media (max-width: ${responsive.medium}) {
     display: none;
