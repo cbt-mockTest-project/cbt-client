@@ -108,6 +108,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       state: questions[questionIndex - 1].state,
       mockExamQuestionBookmark:
         questions[questionIndex - 1].mockExamQuestionBookmark,
+      mockExamQuestionComment:
+        questions[questionIndex - 1].mockExamQuestionComment,
     });
   }, [router.query.q]);
 
@@ -315,7 +317,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               className="exam-question-menubar-check-button"
               onClick={onToggleCommentModal}
             >
-              댓글
+              {`댓글 ${questionAndSolution?.mockExamQuestionComment.length}`}
             </Button>
           </div>
           <div className="exam-question-menubar" id="exam-question-menubar">

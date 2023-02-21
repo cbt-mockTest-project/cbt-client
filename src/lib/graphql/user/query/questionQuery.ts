@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { FULL_QUESTION_COMMENT_FRAGMENT } from './questionCommentFragment';
 import {
   FULL_QUESTION_FRAGMENT,
   FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT,
@@ -15,10 +16,14 @@ export const READ_QUESTIONS_BY_ID = gql`
       title
       questions {
         ...FullQuestionIncludingExamIdParts
+        mockExamQuestionComment {
+          ...QusetionCommentParts
+        }
       }
     }
   }
   ${FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT}
+  ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
 export const READ_QUESTION = gql`
