@@ -71,11 +71,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           prevVisualViewport &&
           prevVisualViewport - 30 > currentVisualViewport
         ) {
-          // const scrollHeight = Number(
-          //   window.document.scrollingElement?.scrollHeight
-          // );
-          // const scrollTop = scrollHeight - currentVisualViewport;
-          // window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
+          const scrollHeight = Number(
+            window.document.scrollingElement?.scrollHeight
+          );
+          const scrollTop = scrollHeight - currentVisualViewport;
+          window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
           setCurrentVisualViewport(currentVisualViewport);
           setIsMobileKeyboardState(true);
         } else {
