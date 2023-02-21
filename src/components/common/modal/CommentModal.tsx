@@ -2,10 +2,11 @@ import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Modal, { ModalProps } from './Modal';
+import Modal, { Dimmed, ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
 import { responsive } from '@lib/utils/responsive';
 import useInput from '@lib/hooks/useInput';
+import ClearIcon from '@mui/icons-material/Clear';
 import {
   useCreateQuestionCommnet,
   useLazyReadQuestionComment,
@@ -18,6 +19,9 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useRouter } from 'next/router';
 import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
 import { addHours, format, parseISO } from 'date-fns';
+import { AnimatePresence, motion, PanInfo } from 'framer-motion';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import shortid from 'shortid';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
@@ -96,67 +100,104 @@ const CommentModal: React.FC<CommentModalProps> = ({
       callback: () => requestCreateComment(questionId),
     });
   const isLogedIn = Boolean(meQuery?.me.user);
+  const onDragEnd = (
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
+    if (info.velocity.y > 100) {
+      onClose();
+    }
+  };
   return (
-    <CommentModalContainer
-      onClose={onClose}
-      open={open}
-      className={className || ''}
-    >
-      <pre className="comment-title">{title}</pre>
-      <div className="comment-input-wrapper">
-        <TextArea
-          autoSize={{ minRows: 3, maxRows: 3 }}
-          onChange={onChangeContent}
-          value={content}
-          disabled={!isLogedIn}
-          placeholder={!isLogedIn ? '로그인 후 이용해주세요' : ''}
-        />
-        <Button
-          type="primary"
-          onClick={tryCreateComment(questionId)}
-          loading={loading}
-          disabled={!submitButtonState}
-        >
-          댓글등록
-        </Button>
-      </div>
-      <div className="comment-box">
-        {commentQuery?.readMockExamQuestionCommentsByQuestionId.comments?.map(
-          (comment) => (
-            <QuestionCommentContainer
-              option={{
-                likesCount: comment.likesCount,
-                likeState: comment.likeState,
-                nickname: comment.user.nickname,
-                content: comment.content,
-                id: comment.id,
-                time: format(parseISO(comment.created_at), 'yy.MM.dd HH:mm'),
-                parrentId: questionId,
-                userId: comment.user.id,
+    <div>
+      <AnimatePresence>
+        {open && (
+          <>
+            <CommentModalContainer
+              className={className || ''}
+              drag="y"
+              dragConstraints={{
+                bottom: 0,
+                top: 0,
               }}
-              key={comment.id}
-            />
-          )
+              dragElastic={1}
+              initial={{ y: '100%' }}
+              animate={{ y: '0', transition: { duration: 0.4 } }}
+              exit={{ y: '100%', transition: { duration: 0.4 } }}
+              onDragEnd={onDragEnd}
+            >
+              <div className="modal-wrapper">
+                <span onClick={onClose} className="modal-close-button">
+                  <ClearIcon />
+                </span>
+                <span onClick={onClose} className="modal-drag-position">
+                  <DragHandleIcon />
+                </span>
+                <p className="comment-title">{title}</p>
+                <div className="comment-input-wrapper">
+                  <TextArea
+                    autoSize={{ minRows: 3, maxRows: 3 }}
+                    onChange={onChangeContent}
+                    value={content}
+                    disabled={!isLogedIn}
+                    placeholder={!isLogedIn ? '로그인 후 이용해주세요' : ''}
+                  />
+                  <Button
+                    type="primary"
+                    onClick={tryCreateComment(questionId)}
+                    loading={loading}
+                    disabled={!submitButtonState}
+                  >
+                    댓글등록
+                  </Button>
+                </div>
+                <div className="comment-box">
+                  {commentQuery?.readMockExamQuestionCommentsByQuestionId.comments?.map(
+                    (comment) => (
+                      <QuestionCommentContainer
+                        option={{
+                          likesCount: comment.likesCount,
+                          likeState: comment.likeState,
+                          nickname: comment.user.nickname,
+                          content: comment.content,
+                          id: comment.id,
+                          time: format(
+                            parseISO(comment.created_at),
+                            'yy.MM.dd HH:mm'
+                          ),
+                          parrentId: questionId,
+                          userId: comment.user.id,
+                        }}
+                        key={comment.id}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
+            </CommentModalContainer>
+            <Dimmed onClick={onClose} />
+          </>
         )}
-      </div>
-    </CommentModalContainer>
+      </AnimatePresence>
+    </div>
   );
 };
 
 export default CommentModal;
 
-const CommentModalContainer = styled(Modal)`
-  @keyframes slideFromBottom {
-    from {
-      transform: translateY(500px);
-    }
-    to {
-      transform: translateY(0px);
-    }
-  }
-  top: 0;
+const CommentModalContainer = styled(motion.div)`
+  position: fixed;
+  background-color: white;
+  padding: 30px 50px;
+  border-radius: 5px;
+  margin: auto;
+  top: 20%;
+  left: 0;
+  right: 0;
   bottom: 0;
-  max-width: none;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
   width: 500px;
   background-color: ${palette.gray_100};
   .comment-title {
@@ -192,12 +233,46 @@ const CommentModalContainer = styled(Modal)`
       box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
   }
-  @media (max-width: ${responsive.small}) {
-    width: 100% !important;
-    animation: slideFromBottom 0.5s;
+  .modal-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .modal-close-button {
+    position: absolute;
+    user-select: none;
+    top: -15px;
+    right: -35px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+    :hover {
+      color: ${palette.antd_blue_01};
+    }
+  }
+  .modal-drag-position {
+    display: none;
+  }
+  @media (max-width: ${responsive.medium}) {
     .comment-title {
-      margin-top: 30px;
+      margin-top: 10px;
       font-size: 0.9rem;
     }
+
+    .modal-drag-position {
+      display: block;
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      cursor: pointer;
+      svg {
+        font-size: 35px;
+      }
+    }
+  }
+  @media (max-width: ${responsive.small}) {
+    width: 100% !important;
+    padding-bottom: 0;
   }
 `;

@@ -76,7 +76,7 @@ const ModalContainer = styled.div`
   }
 `;
 
-const Dimmed = styled.div`
+export const Dimmed = styled.div`
   z-index: 900;
   position: fixed;
   display: flex;

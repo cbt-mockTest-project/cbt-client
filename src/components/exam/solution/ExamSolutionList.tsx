@@ -252,8 +252,6 @@ const ExamSolutionListContainer = styled.li`
     margin-left: 15px;
   }
   .solution-page-comment-modal {
-    top: 0;
-    bottom: 0;
     max-width: none;
     width: 500px;
     background-color: ${palette.gray_100};
