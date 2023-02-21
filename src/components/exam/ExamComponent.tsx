@@ -64,12 +64,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
-    let prevVisualViewport = window.visualViewport?.height;
+    let prevVisualViewport = 0;
     const handleVisualViewportResize = () => {
       const currentVisualViewport = Number(window.visualViewport?.height);
+
       if (
-        prevVisualViewport &&
-        prevVisualViewport - 30 > currentVisualViewport
+        prevVisualViewport - 30 > currentVisualViewport &&
+        prevVisualViewport - 100 < currentVisualViewport
       ) {
         const scrollHeight = Number(
           window.document.scrollingElement?.scrollHeight
@@ -91,11 +92,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     }
   }, []);
   useEffect(() => {
-    if (isMobileKeyboardState && currentVisualViewport && mobileScrollValue) {
+    if (isMobileKeyboardState) {
       window.scrollTo({
-        top: mobileScrollValue,
+        top: 1000000,
         behavior: 'smooth',
       }); //
+      setIsMobileKeyboardState(false);
     }
   }, [isMobileKeyboardState, currentVisualViewport, mobileScrollValue]);
 
@@ -273,7 +275,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         answerboxVisible={answerboxVisible}
         isMobileKeyboardState={isMobileKeyboardState}
       >
-        <h2 className="exam-container-title">
+        <h2
+          className="exam-container-title"
+          onClick={() => {
+            window.scrollTo({ top: 100000, behavior: 'smooth' });
+          }}
+        >
           {examTitle}-{questionIndex}번 문제{' '}
           <Bookmark
             active={bookmarkState}
@@ -294,6 +301,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         />
         <Label content="답 작성" />
         <TextArea
+          onClick={() => {
+            window.scrollTo({
+              top: 1000000,
+              behavior: 'smooth',
+            }); //
+          }}
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
           onChange={onChangeAnswer}
