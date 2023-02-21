@@ -335,20 +335,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           </div>
         </div>
       </ExamContainer>
-      <BottomMenuBar
-        className="exam-question-menubar"
-        id="exam-question-menubar"
-      >
-        <AchievementCheck
-          questionIndex={questionIndex}
-          questionsQuery={questionsQuery}
-        />
-        <MoveQuestion
-          questionIndex={questionIndex}
-          questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}
-          setModalState={setFinishModalState}
-        />
-      </BottomMenuBar>
+
       <ConfirmModal
         open={finishModalState}
         content={'마지막 문제입니다.\n학습을 종료하시겠습니까?'}
@@ -464,11 +451,6 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     padding: 20px;
   }
   @media (max-width: ${responsive.small}) {
-    padding-bottom: 75px;
-
-    .exam-question-menubar {
-      display: none;
-    }
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
@@ -481,43 +463,6 @@ const ExamContainer = styled.div<{ answerboxVisible: boolean }>`
     }
     .exam-container-bookmark {
       top: 5px;
-    }
-  }
-`;
-
-const BottomMenuBar = styled.div`
-  display: none;
-  @media (max-width: ${responsive.small}) {
-    display: flex;
-    padding: 10px 0;
-    position: fixed;
-    background-color: white;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-    bottom: 0;
-    color: ${palette.gray_700};
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    width: 100%;
-    .exam-question-move-button-label {
-      margin-left: 40px;
-      margin-right: 5px;
-    }
-    .exam-question-move-button-label {
-      margin-left: 40px;
-      margin-right: 5px;
-    }
-    .exam-question-move-button {
-      position: relative;
-      top: 2px;
-      transition: all 0.2s ease-in;
-      svg {
-        width: 25px;
-        height: 25px;
-      }
-      :hover {
-        color: ${palette.antd_blue_02};
-      }
     }
   }
 `;
