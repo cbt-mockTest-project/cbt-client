@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import palette from '@styles/palette';
-import Link from 'next/link';
 import { skeletonStyle } from '@styles/utils';
 
 const CommunityListViewSkeleton: React.FC = () => {

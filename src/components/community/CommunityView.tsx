@@ -7,7 +7,7 @@ import { categorys, mockPosts } from './Community.constants';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { CommunityViewProps } from './Community.interface';
-import { addHours, format, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
 import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 

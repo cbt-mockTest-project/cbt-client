@@ -167,7 +167,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         className="solution-page-comment-button"
         onClick={onToggleCommentModal}
       >
-        댓글
+        {`댓글 ${question.mockExamQuestionComment.length}`}
       </Button>
       <CommentModal
         className="solution-page-comment-modal"
