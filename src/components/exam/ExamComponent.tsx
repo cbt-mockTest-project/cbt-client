@@ -38,6 +38,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const {
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
+  const examContainerRef = useRef<HTMLDivElement>(null);
   const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -59,11 +60,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [commentModalState, setCommentModalState] = useState(false);
   const [isMobileKeyboardState, setIsMobileKeyboardState] = useState(false);
   const [currentVisualViewport, setCurrentVisualViewport] = useState(0);
+  const [mobileScrollValue, setMobileScrollValue] = useState(0);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
-    if (window) {
+    if (examContainerRef.current) {
       let prevVisualViewport = window.visualViewport?.height;
       const handleVisualViewportResize = () => {
         const currentVisualViewport = Number(window.visualViewport?.height);
@@ -75,11 +77,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             window.document.scrollingElement?.scrollHeight
           );
           const scrollTop = scrollHeight - currentVisualViewport;
-          window.scrollTo({ top: scrollTop, behavior: 'smooth' }); // 입력창이 키보드에 가려지지 않도록 조절
-          setCurrentVisualViewport(currentVisualViewport);
           setIsMobileKeyboardState(true);
+          setCurrentVisualViewport(currentVisualViewport);
+          setMobileScrollValue(scrollTop);
         } else {
           setIsMobileKeyboardState(false);
+          setCurrentVisualViewport(0);
+          setMobileScrollValue(0);
         }
         prevVisualViewport = currentVisualViewport;
       };
@@ -88,7 +92,25 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         window.visualViewport.onresize = handleVisualViewportResize;
       }
     }
-  }, []);
+  }, [examContainerRef]);
+  useEffect(() => {
+    if (
+      isMobileKeyboardState &&
+      currentVisualViewport &&
+      mobileScrollValue &&
+      examContainerRef.current
+    ) {
+      examContainerRef.current.scrollTo({
+        top: mobileScrollValue,
+        behavior: 'smooth',
+      }); //
+    }
+  }, [
+    isMobileKeyboardState,
+    currentVisualViewport,
+    mobileScrollValue,
+    examContainerRef,
+  ]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -263,6 +285,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         currentVisualViewport={currentVisualViewport}
         answerboxVisible={answerboxVisible}
         isMobileKeyboardState={isMobileKeyboardState}
+        ref={examContainerRef}
       >
         <h2 className="exam-container-title">
           {examTitle}-{questionIndex}번 문제{' '}
