@@ -64,14 +64,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
-    let prevVisualViewport = 0;
+    let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
       const currentVisualViewport = Number(window.visualViewport?.height);
 
-      if (
-        prevVisualViewport - 30 > currentVisualViewport &&
-        prevVisualViewport - 100 < currentVisualViewport
-      ) {
+      if (prevVisualViewport - 200 > currentVisualViewport) {
         const scrollHeight = Number(
           window.document.scrollingElement?.scrollHeight
         );
@@ -84,7 +81,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         setCurrentVisualViewport(0);
         setMobileScrollValue(0);
       }
-      prevVisualViewport = currentVisualViewport;
     };
 
     if (window.visualViewport) {
