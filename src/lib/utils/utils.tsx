@@ -61,30 +61,28 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
       let telegramMessage: string;
       if (error instanceof TypeError) {
         telegramMessage = `
-            name: typeError
-            message: 모두CBT ${error?.message}
-            pathname: ${typeof window !== 'undefined' ? window.location : ''}
-            userAgent: ${
-              typeof window !== 'undefined' ? window.navigator.userAgent : ''
-            }
+            name: typeError\nmessage: ${error?.message}\npathname: ${
+          typeof window !== 'undefined' ? window.location : ''
+        }\nuserAgent: ${
+          typeof window !== 'undefined' ? window.navigator.userAgent : ''
+        }
         `;
       } else {
         telegramMessage = `
           name: ${
             !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
-          }
-          message: 모두CBT ${
-            error?.response?.data ||
-            error?.response?.message ||
-            error?.message ||
-            error
-          }
-          __uri:${error?.response?.config?.url}
-          __status:${error?.response?.status}
-          pathname: ${typeof window !== 'undefined' ? window.location : ''}
-          userAgent: ${
-            typeof window !== 'undefined' ? window.navigator.userAgent : ''
-          }
+          }\nmessage: ${
+          error?.response?.data ||
+          error?.response?.message ||
+          error?.message ||
+          error
+        }\n__uri:${error?.response?.config?.url}\n__status:${
+          error?.response?.status
+        }\npathname: ${
+          typeof window !== 'undefined' ? window.location : ''
+        }\nuserAgent: ${
+          typeof window !== 'undefined' ? window.navigator.userAgent : ''
+        }
         `;
       }
       sendErrorToTelegram(telegramMessage);
