@@ -4,6 +4,8 @@ import { circleIcon } from '@lib/constants';
 import { checkboxOption } from 'customTypes';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { message } from 'antd';
+import { initializeApollo } from '@modules/apollo';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
 
 export const isServer = () => typeof window === 'undefined';
 export const convertStateToIcon = (
@@ -40,12 +42,50 @@ declare type ConvertWithErrorHandlingFunc = <
 export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
   ({ callback, errorCallback }) =>
   async () => {
+    const apolloClient = initializeApollo({}, '');
+    const sendErrorToTelegram = (message: string) =>
+      apolloClient.mutate({
+        mutation: PUSH_TO_TELEGRAM,
+        variables: {
+          input: {
+            message,
+          },
+        },
+      });
     try {
       return await callback();
     } catch (error: any) {
-      if (error.message === 'Forbidden resource') {
-        message.error({ content: '로그인이 필요합니다' });
+      if (error?.message === 'Forbidden resource') {
+        return message.error({ content: '로그인이 필요합니다' });
       }
+      let telegramMessage: string;
+      if (error instanceof TypeError) {
+        telegramMessage = `
+            name: typeError\nmessage: ${error?.message}\npathname: ${
+          typeof window !== 'undefined' ? window.location : ''
+        }\nuserAgent: ${
+          typeof window !== 'undefined' ? window.navigator.userAgent : ''
+        }
+        `;
+      } else {
+        telegramMessage = `
+          name: ${
+            !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
+          }\nmessage: ${
+          error?.response?.data ||
+          error?.response?.message ||
+          error?.message ||
+          error
+        }\n__uri:${error?.response?.config?.url}\n__status:${
+          error?.response?.status
+        }\npathname: ${
+          typeof window !== 'undefined' ? window.location : ''
+        }\nuserAgent: ${
+          typeof window !== 'undefined' ? window.navigator.userAgent : ''
+        }
+        `;
+      }
+      sendErrorToTelegram(telegramMessage);
       if (errorCallback) {
         return await errorCallback(error);
       }
