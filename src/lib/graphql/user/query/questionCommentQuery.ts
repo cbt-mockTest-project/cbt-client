@@ -52,6 +52,7 @@ export const READ_QUESTION_COMMENT = gql`
         user {
           nickname
           id
+          role
         }
       }
     }

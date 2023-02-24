@@ -1,4 +1,5 @@
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import { UserRole } from 'types';
 
 export interface CommentCardOption {
   nickname: string;
@@ -9,6 +10,7 @@ export interface CommentCardOption {
   likesCount: number;
   userId: number;
   parrentId: number;
+  role?: UserRole;
 }
 
 export interface QuestionCommentContainerProps {

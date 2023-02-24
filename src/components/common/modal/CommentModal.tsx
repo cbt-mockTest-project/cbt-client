@@ -160,6 +160,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                           likeState: comment.likeState,
                           nickname: comment.user.nickname,
                           content: comment.content,
+                          role: comment.user.role,
                           id: comment.id,
                           time: format(
                             parseISO(comment.created_at),

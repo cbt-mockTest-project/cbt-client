@@ -122,6 +122,17 @@ export type CreateMockExamQuestionOutput = {
   questionId?: Maybe<Scalars['Float']>;
 };
 
+export type CreateNoticeForAllUsersInput = {
+  content: Scalars['String'];
+  link?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateNoticeForAllUsersOutput = {
+  __typename?: 'CreateNoticeForAllUsersOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateNoticeInput = {
   content: Scalars['String'];
   link?: InputMaybe<Scalars['String']>;
@@ -618,6 +629,7 @@ export type Mutation = {
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
   createMutipleChoice: CreateMockExamQuestionMultipleChoiceOutput;
   createNotice: CreateNoticeOutput;
+  createNoticeForAllUsers: CreateNoticeForAllUsersOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
@@ -709,6 +721,11 @@ export type MutationCreateMutipleChoiceArgs = {
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
+};
+
+
+export type MutationCreateNoticeForAllUsersArgs = {
+  input: CreateNoticeForAllUsersInput;
 };
 
 
