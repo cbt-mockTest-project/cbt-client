@@ -57,9 +57,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
-  const [isMobileKeyboardState, setIsMobileKeyboardState] = useState(false);
-  const [currentVisualViewport, setCurrentVisualViewport] = useState(0);
-  const [mobileScrollValue, setMobileScrollValue] = useState(0);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
@@ -67,19 +64,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
       const currentVisualViewport = Number(window.visualViewport?.height);
-
       if (prevVisualViewport - 200 > currentVisualViewport) {
         const scrollHeight = Number(
           window.document.scrollingElement?.scrollHeight
         );
         const scrollTop = scrollHeight - currentVisualViewport;
-        setIsMobileKeyboardState(true);
-        setCurrentVisualViewport(currentVisualViewport);
-        setMobileScrollValue(scrollTop);
-      } else {
-        setIsMobileKeyboardState(false);
-        setCurrentVisualViewport(0);
-        setMobileScrollValue(0);
+        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
       }
     };
 
@@ -87,15 +77,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
       window.visualViewport.onresize = handleVisualViewportResize;
     }
   }, []);
-  useEffect(() => {
-    if (isMobileKeyboardState) {
-      window.scrollTo({
-        top: 1000000,
-        behavior: 'smooth',
-      }); //
-      setIsMobileKeyboardState(false);
-    }
-  }, [isMobileKeyboardState, currentVisualViewport, mobileScrollValue]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -266,17 +247,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
 
   return (
     <>
-      <ExamContainer
-        currentVisualViewport={currentVisualViewport}
-        answerboxVisible={answerboxVisible}
-        isMobileKeyboardState={isMobileKeyboardState}
-      >
-        <h2
-          className="exam-container-title"
-          onClick={() => {
-            window.scrollTo({ top: 100000, behavior: 'smooth' });
-          }}
-        >
+      <ExamContainer answerboxVisible={answerboxVisible}>
+        <h2 className="exam-container-title">
           {examTitle}-{questionIndex}번 문제{' '}
           <Bookmark
             active={bookmarkState}
@@ -297,12 +269,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         />
         <Label content="답 작성" />
         <TextArea
-          onClick={() => {
-            window.scrollTo({
-              top: 1000000,
-              behavior: 'smooth',
-            }); //
-          }}
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
           onChange={onChangeAnswer}
@@ -403,9 +369,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
 export default ExamComponent;
 
 interface ExamContainerProps {
-  isMobileKeyboardState: boolean;
   answerboxVisible: boolean;
-  currentVisualViewport: number;
 }
 
 const ExamContainer = styled.div<ExamContainerProps>`
