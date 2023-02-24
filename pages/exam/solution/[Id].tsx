@@ -17,6 +17,7 @@ import { responsive } from '@lib/utils/responsive';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useRouter } from 'next/router';
+import GoogleAd from '@components/common/googleAd/GoogleAd';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -62,11 +63,16 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
             {(
               questionsQueryOnClientSide || questionsQuery
             ).readMockExamQuestionsByMockExamId.questions.map((el, index) => (
-              <ExamSolutionList
-                key={index}
-                question={el}
-                title={convertExamTitle(title)}
-              />
+              <>
+                <ExamSolutionList
+                  key={index}
+                  question={el}
+                  title={convertExamTitle(title)}
+                />
+                {index % 3 === 0 && (
+                  <GoogleAd className="solution-page-google-ad" />
+                )}
+              </>
             ))}
           </ul>
         </SolutionBlock>
@@ -147,5 +153,8 @@ const SolutionBlock = styled.div`
     h1 {
       font-size: 1.1rem;
     }
+  }
+  .solution-page-google-ad {
+    margin-top: 20px;
   }
 `;
