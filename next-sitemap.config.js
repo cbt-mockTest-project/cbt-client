@@ -5,7 +5,13 @@ module.exports = {
   priority: 0.7,
   sitemapSize: 5000,
   generateRobotsTxt: true, // (optional)
-  exclude: ['/me*', '/register/*', '/exam/selectedresult', '/mobile/findpw'],
+  exclude: [
+    '/me*',
+    '/register/*',
+    '/exam/selectedresult',
+    '/mobile/findpw',
+    '/test',
+  ],
   // ...other options
   transform: async (config, path) => {
     return {
