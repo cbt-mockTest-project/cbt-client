@@ -6,17 +6,26 @@ import EditIcon from '@mui/icons-material/Mode';
 import ArrowUpIcon from '@mui/icons-material/KeyboardControlKey';
 import BasicBox from '../../box/BasicBox';
 import TextArea from 'antd/lib/input/TextArea';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { Button } from 'antd';
 import { CommentCardProps } from './CommentCard.interface';
 import { responsive } from '@lib/utils/responsive';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { UserRole } from 'types';
 
 const CommentCardView: React.FC<CommentCardProps> = (props) => {
+  const { data: meQuery } = useMeQuery();
   return (
     <CommentCardContainer
       className={props.className || 'comment-card-container'}
     >
       <div className="comment-card-left-section">
         <div className="comment-card-top-section">
+          {props.option.role === UserRole.Admin && (
+            <div className="comment-card-owner-icon">
+              <WorkspacePremiumIcon />
+            </div>
+          )}
           <div className="comment-card-user-name">{props.option.nickname}</div>
           <div className="comment-card-time pc-only">{props.option.time}</div>
           {props.meQuery?.me.user?.id === props.option.userId && (
@@ -159,6 +168,17 @@ const CommentCardContainer = styled.div`
   .comment-card-like-count {
     position: relative;
     bottom: 5px;
+  }
+  .comment-card-owner-icon {
+    margin: 2px 2px 0 0;
+    svg {
+      color: ${palette.yellow_500};
+      font-size: 1rem;
+      :hover {
+        color: unset;
+        cursor: unset;
+      }
+    }
   }
 
   @media (max-width: ${responsive.medium}) {

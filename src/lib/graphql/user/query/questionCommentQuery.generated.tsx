@@ -30,7 +30,7 @@ export type ReadMockExamQuestionCommentsByQuestionIdQueryVariables = Types.Exact
 }>;
 
 
-export type ReadMockExamQuestionCommentsByQuestionIdQuery = { __typename?: 'Query', readMockExamQuestionCommentsByQuestionId: { __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput', comments?: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number } }> | null } };
+export type ReadMockExamQuestionCommentsByQuestionIdQuery = { __typename?: 'Query', readMockExamQuestionCommentsByQuestionId: { __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput', comments?: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }> | null } };
 
 
 export const CreateMockExamQuestionCommentDocument = gql`
@@ -84,6 +84,7 @@ export const ReadMockExamQuestionCommentsByQuestionIdDocument = gql`
       user {
         nickname
         id
+        role
       }
     }
   }
