@@ -14,6 +14,7 @@ const Exam: NextPage = (asd) => {
     : '';
   const [readQuestions, { data: questionsQuery }] =
     useLazyReadQuestionsByExamId('cache-and-network');
+
   useEffect(() => {
     if (router.isReady) {
       readQuestions({
