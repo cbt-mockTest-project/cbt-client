@@ -57,26 +57,25 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
+  const test = () => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   useEffect(() => {
     let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
-      const currentVisualViewport = Number(window.visualViewport?.height);
+      let currentVisualViewport = Number(window.visualViewport?.height);
       if (prevVisualViewport - 200 > currentVisualViewport) {
-        const scrollHeight = Number(
-          window.document.scrollingElement?.scrollHeight
-        );
-        const scrollTop = scrollHeight - currentVisualViewport;
-        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
       }
     };
-
     if (window.visualViewport) {
       window.visualViewport.onresize = handleVisualViewportResize;
     }
-  }, []);
+  }, [scrollRef]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -256,7 +255,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
             className="exam-container-bookmark"
           />
         </h2>
-
+        <div ref={scrollRef} />
         <QuestionAndSolutionBox
           label="문제"
           content={{
