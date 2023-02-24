@@ -4,17 +4,28 @@ import styled from 'styled-components';
 interface TestProps {}
 
 const Test: React.FC<TestProps> = () => {
-  let testbutton: any;
+  let deferredPrompt: any;
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('beforeinstallprompt', (e) => {
-        testbutton = e;
+        deferredPrompt = e;
+      });
+
+      const installApp = document.getElementById('installApp');
+      installApp?.addEventListener('click', async () => {
+        if (deferredPrompt !== null) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            deferredPrompt = null;
+          }
+        }
       });
     }
   }, []);
   return (
     <TestContainer>
-      <button onClick={testbutton}>테스트</button>
+      <button id="installApp">Install</button>
     </TestContainer>
   );
 };
