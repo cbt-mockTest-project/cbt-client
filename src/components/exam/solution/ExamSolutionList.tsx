@@ -19,13 +19,16 @@ import styled from 'styled-components';
 interface ExamSolutionListProps {
   question: ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
   title: string;
+  isSolutionAllHide: boolean;
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   question,
   title,
+  isSolutionAllHide,
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
+  const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const { value: commentModalState, onToggle: onToggleCommentModal } =
     useToggle();
@@ -40,6 +43,10 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   const dispatch = useAppDispatch();
 
   const { data: meQuery } = useMeQuery();
+
+  useEffect(() => {
+    setIsSolutionHide(isSolutionAllHide);
+  }, [isSolutionAllHide]);
 
   useEffect(() => {
     if (question.mockExamQuestionBookmark.length >= 1) {
@@ -108,6 +115,9 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   const tryReport = convertWithErrorHandlingFunc({
     callback: requestReport,
   });
+  const onToggleSolutionHide = () => {
+    setIsSolutionHide(!isSolutionHide);
+  };
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
@@ -129,32 +139,34 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       </div>
       <div className="solution-page-question-wrapper">
         <div className="solution-page-solution-pre-wrapper">
-          <pre className="solution-page-question">
+          <pre
+            className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
+          >
             <b>[solution]</b>
             <br />
             <br />
             {`${question.solution}`}
-            {question.solution_img && question.solution_img.length >= 1 && (
-              <a
-                className="solution-page-image-link"
-                key={question.solution_img[0].url}
-                href={question.solution_img[0].url}
-                target="_blank"
-                rel="noreferrer"
-              >{`이미지${String(1).padStart(2, '0')}`}</a>
-            )}
           </pre>
         </div>
         {question.solution_img && question.solution_img.length >= 1 && (
-          <div className="solution-page-question-image-wrapper">
-            <Image
-              src={question.solution_img[0].url}
-              alt="question_image"
-              className="solution-page-question-image"
-            />
+          <div
+            className={`solution-page-question-image-wrapper ${
+              isSolutionHide ? 'hide' : ''
+            }`}
+          >
+            {!isSolutionHide && (
+              <Image
+                src={question.solution_img[0].url}
+                alt="question_image"
+                className={'solution-page-question-image'}
+              />
+            )}
           </div>
         )}
       </div>
+      <Button onClick={onToggleSolutionHide} type="primary">
+        {isSolutionHide ? '정답 보이기' : '정답 가리기'}
+      </Button>
       <Button
         type="primary"
         className="solution-page-report-button"
@@ -197,20 +209,24 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
 export default ExamSolutionList;
 
 const ExamSolutionListContainer = styled.li`
+  .hide {
+    filter: blur(10px);
+  }
+  .solution-page-question-solution-header {
+    display: flex;
+    justify-content: space-between;
+  }
   .solution-page-solution {
     white-space: pre-wrap;
     margin: 20px 0 20px 20px;
   }
 
-  .solution-page-report-button {
-    margin-top: 20px;
+  .solution-page-report-button,
+  .solution-page-comment-button {
+    margin-left: 10px;
+    margin-top: 15px;
   }
 
-  .solution-page-image-link {
-    display: none;
-    margin-top: 20px;
-    color: ${palette.antd_blue_01};
-  }
   .solution-page-question {
     white-space: pre-wrap;
     b {
@@ -248,9 +264,6 @@ const ExamSolutionListContainer = styled.li`
     gap: 20px;
   }
 
-  .solution-page-comment-button {
-    margin-left: 15px;
-  }
   .solution-page-comment-modal {
     max-width: none;
     width: 500px;

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RoundCheckboxGroupBlurTemplete from '../common/RoundBoxGroupBlurTemplete';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
+import { Button } from 'antd';
 
 interface BookmarkedQuestionsComponentProps {}
 
@@ -19,6 +20,7 @@ const BookmarkedQuestionsComponent: React.FC<
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
     checkboxOption[]
   >([]);
+  const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   useEffect(() => {
     if (examTitleAndIdQuery?.readExamTitleAndIdOfBookmarkedQuestion.ok) {
       const titleAndId =
@@ -43,7 +45,8 @@ const BookmarkedQuestionsComponent: React.FC<
     if (res.data?.readMockExamQuestionsByMockExamId.ok) {
     }
   };
-
+  const onToggleSolutionAllHide = () =>
+    setIsSolutionAllHide(!isSolutionAllHide);
   return (
     <BookmarkedQuestionsComponentBlock>
       <RoundCheckboxGroupBlurTemplete
@@ -51,9 +54,21 @@ const BookmarkedQuestionsComponent: React.FC<
         options={examTitleAndIdOptions}
         type="selectbox"
       />
+      {questionsQuery?.readMockExamQuestionsByMockExamId.questions &&
+        questionsQuery?.readMockExamQuestionsByMockExamId.questions.length >=
+          1 && (
+          <Button
+            onClick={onToggleSolutionAllHide}
+            className="bookmark-question-solution-all-hide-button"
+            type="primary"
+          >
+            {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+          </Button>
+        )}
       {questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
         (question) => (
           <ExamSolutionList
+            isSolutionAllHide={isSolutionAllHide}
             key={question.id}
             question={question}
             title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
@@ -66,6 +81,11 @@ const BookmarkedQuestionsComponent: React.FC<
 
 export default BookmarkedQuestionsComponent;
 const BookmarkedQuestionsComponentBlock = styled.div`
+  .bookmark-question-solution-all-hide-button {
+    margin-top: 20px;
+    margin-bottom: -10px;
+  }
+  margin-bottom: 20px;
   padding: 0 15px;
   li {
     list-style: none;

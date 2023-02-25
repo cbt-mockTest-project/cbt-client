@@ -18,6 +18,7 @@ import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useRouter } from 'next/router';
 import GoogleAd from '@components/common/googleAd/GoogleAd';
+import { Button } from 'antd';
 
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -26,6 +27,7 @@ interface SolutionProps {
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   const [readQuestions, { data: questionsQueryOnClientSide }] =
     useLazyReadQuestionsByExamId('network-only');
+  const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   const client = useApollo({}, '');
   const router = useRouter();
   const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;
@@ -49,7 +51,8 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
       }
     })();
   }, [router.query.Id]);
-
+  const onToggleSolutionAllHide = () =>
+    setIsSolutionAllHide(!isSolutionAllHide);
   return (
     <>
       <WithHead
@@ -58,6 +61,13 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
       />
       <Layout>
         <SolutionBlock>
+          <Button
+            onClick={onToggleSolutionAllHide}
+            className="exam-solution-page-solution-all-hide-button"
+            type="primary"
+          >
+            {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+          </Button>
           <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
           <ul>
             {(
@@ -65,6 +75,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
             ).readMockExamQuestionsByMockExamId.questions.map((el, index) => (
               <>
                 <ExamSolutionList
+                  isSolutionAllHide={isSolutionAllHide}
                   key={index}
                   question={el}
                   title={convertExamTitle(title)}
@@ -148,6 +159,9 @@ const SolutionBlock = styled.div`
   h1 {
     padding: 0px 20px 0px 20px;
     font-size: 1.3rem;
+  }
+  .exam-solution-page-solution-all-hide-button {
+    margin: 0 0 10px 15px;
   }
   @media (max-width: ${responsive.medium}) {
     h1 {
