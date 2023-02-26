@@ -7,6 +7,7 @@ import { addApolloState, initializeApollo } from '@modules/apollo';
 import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
+import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { GetStaticProps, NextPage } from 'next';
 import {
   convertExamTurn,
@@ -23,6 +24,7 @@ import WithHead from '@components/common/head/WithHead';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { useReadVisitCount } from '@lib/graphql/user/hook/useVisit';
 import palette from '@styles/palette';
+import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -33,6 +35,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   const [readExamTitles] = useReadExamTitles();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
+  const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const { data: readVisitCountQuery } = useReadVisitCount();
@@ -55,7 +58,8 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
       }
     })();
   }, []);
-
+  const onToggleKakaoChatModalState = () =>
+    setKakaoChatModalState(!kakaoChatModalState);
   const onCategoryChange = async (value: string) => {
     setSelectedExamId(0);
     setCategory(value);
@@ -124,20 +128,29 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
                 value={title}
                 onChange={(value) => onTitleChange(Number(value), titles)}
               />
-
-              <Button
-                type="primary"
-                onClick={gotoExamPage}
-                disabled={!Boolean(selectedExamId)}
-                className="home-content-question-button"
+              <div className="home-button-mode-wrapper">
+                <Button
+                  type="primary"
+                  onClick={gotoExamPage}
+                  disabled={!Boolean(selectedExamId)}
+                  className="home-content-question-button"
+                >
+                  풀이모드
+                </Button>
+                <Button type="primary" disabled={!Boolean(selectedExamId)}>
+                  <Link href={`/exam/solution/${selectedExamId}`}>
+                    해설모드
+                  </Link>
+                </Button>
+              </div>
+              <button
+                type="button"
+                className="home-kakao-open-chat-button-wrapper"
+                onClick={onToggleKakaoChatModalState}
               >
-                문제풀기
-              </Button>
-              <Button type="primary" disabled={!Boolean(selectedExamId)}>
-                <Link href={`/exam/solution/${selectedExamId}`}>
-                  문제/해답 보기
-                </Link>
-              </Button>
+                <KakaoIconSVG />
+                카카오톡 오픈채팅
+              </button>
               <div className="home-bottom-wrapper">
                 <a href="https://www.buymeacoffee.com/moducbts">
                   <img
@@ -152,6 +165,12 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
             </div>
           </div>
         </HomeContainer>
+        <>
+          <KakaoOpenChatModal
+            open={kakaoChatModalState}
+            onClose={onToggleKakaoChatModalState}
+          />
+        </>
       </Layout>
     </>
   );
@@ -179,7 +198,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 const HomeContainer = styled.div`
   .home-wrapper {
-    margin: 40px auto;
+    margin: 10px auto 40px auto;
     display: flex;
     gap: 30px;
   }
@@ -216,7 +235,25 @@ const HomeContainer = styled.div`
     font-size: 0.8rem;
     color: ${palette.gray_700};
   }
-  .home-content-question-button {
-    margin-top: 15px;
+  .home-button-mode-wrapper {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    gap: 10px;
+  }
+  .home-kakao-open-chat-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${palette.yellow_kakao};
+    font-size: 0.9rem;
+    gap: 10px;
+    transition: all 0.3s;
+    :hover {
+      opacity: 0.7;
+    }
+    svg {
+      height: 25px;
+    }
   }
 `;

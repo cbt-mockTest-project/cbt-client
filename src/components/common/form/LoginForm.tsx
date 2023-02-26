@@ -153,7 +153,7 @@ const LoginFormContainer = styled.form`
     }
   }
   .login-social-button.kakao {
-    background-color: #fee500;
+    background-color: ${palette.yellow_kakao};
   }
   .login-social-button.google {
     background-color: #374151;

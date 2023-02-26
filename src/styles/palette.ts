@@ -12,6 +12,7 @@ const palette = {
   orange_500: '#fe883c',
   yellow_100: '#FFF7D4',
   yellow_500: '#ecbd00',
+  yellow_kakao: '#fee500',
   red_100: '#fdf3f3',
   red_500: '#ff0322',
   indigo_500: '#005F74',
