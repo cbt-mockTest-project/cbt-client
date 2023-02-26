@@ -10,9 +10,9 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import LoginModal from '../modal/LoginModal';
 
-interface ModalContainerProps {}
+interface CoreContainerProps {}
 
-const CommonModalContainer: React.FC<ModalContainerProps> = () => {
+const CoreContainer: React.FC<CoreContainerProps> = () => {
   const { data } = usePostCommentNotice();
   const [requestMeQuery] = useLazyMeQuery();
   useEffect(() => {
@@ -26,14 +26,15 @@ const CommonModalContainer: React.FC<ModalContainerProps> = () => {
     dispatch(coreActions.closeModal());
   };
   return (
-    <ModalContainerContainer>
+    <CoreContainerBlock>
       {modalName === loginModal && (
         <LoginModal open={modalName === loginModal} onClose={onCloseModal} />
       )}
-    </ModalContainerContainer>
+      <div id="portal" />
+    </CoreContainerBlock>
   );
 };
 
-export default CommonModalContainer;
+export default CoreContainer;
 
-const ModalContainerContainer = styled.div``;
+const CoreContainerBlock = styled.div``;
