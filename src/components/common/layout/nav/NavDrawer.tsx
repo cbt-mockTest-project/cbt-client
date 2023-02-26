@@ -6,6 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { UserOutlined } from '@ant-design/icons';
 import { NavViewProps } from './Nav.interface';
+import { UserRole } from 'types';
 
 interface NavDrawerProps
   extends Pick<
@@ -47,6 +48,11 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
                 <span className="mobile-nav-item-link-text">프로필수정</span>
               </Link>
             </div>
+            {props.meQuery.me.user.role === UserRole.Admin && (
+              <Link href="/test">
+                <span className="mobile-nav-item-link-text">실험실</span>
+              </Link>
+            )}
             <StyledButton onClick={props.tryRequestLogout}>
               로그아웃
             </StyledButton>

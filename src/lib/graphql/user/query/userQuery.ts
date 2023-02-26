@@ -54,6 +54,7 @@ export const ME_QUERY = gql`
       user {
         nickname
         id
+        role
       }
       notices {
         content
