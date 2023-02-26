@@ -4,7 +4,10 @@ import { Button, message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
 import styled from 'styled-components';
 import { addApolloState, initializeApollo } from '@modules/apollo';
-import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
+import {
+  READ_EXAM_CATEGORIES_QUERY,
+  READ_EXAM_TITLES_QUERY,
+} from '@lib/graphql/user/query/examQuery';
 import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
@@ -21,16 +24,28 @@ import {
 import { LocalStorage } from '@lib/utils/localStorage';
 import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
-import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
+import {
+  ReadAllMockExamCategoriesQuery,
+  ReadMockExamTitlesByCateoryQuery,
+} from '@lib/graphql/user/query/examQuery.generated';
 import { useReadVisitCount } from '@lib/graphql/user/hook/useVisit';
 import palette from '@styles/palette';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
+import { ExamTitleAndId } from 'types';
 
+interface TitlesAndCategories {
+  category: string;
+  titles: ExamTitleAndId[];
+}
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
+  titlesAndCategories: TitlesAndCategories[];
 }
 
-const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
+const Home: NextPage<HomeProps> = ({
+  categoriesQuery,
+  titlesAndCategories,
+}) => {
   const router = useRouter();
   const [readExamTitles] = useReadExamTitles();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
@@ -63,23 +78,21 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
   const onCategoryChange = async (value: string) => {
     setSelectedExamId(0);
     setCategory(value);
-    const { data } = await readExamTitles({
-      variables: { input: { name: value } },
-    });
-    if (data) {
-      const { readMockExamTitlesByCateory } = data;
-      if (readMockExamTitlesByCateory.error) {
-        return message.success(readMockExamTitlesByCateory.error);
-      }
-      const titles: DefaultOptionType[] =
-        readMockExamTitlesByCateory.titles.map((title) => ({
-          value: title.id,
-          label: convertExamTurn(title.title),
-        }));
-      localStorage.setItem(selectExamCategoryHistory, value);
-      setTitles(titles);
-      return titles;
-    }
+    setTitle('');
+    const filteredTitles = titlesAndCategories.filter(
+      (el) => el.category === value
+    );
+
+    const titles: DefaultOptionType[] = filteredTitles[0].titles.map(
+      (title) => ({
+        value: title.id,
+        label: convertExamTurn(title.title),
+      })
+    );
+    localStorage.setItem(selectExamCategoryHistory, value);
+    setTitles(titles);
+    return titles;
+    // }
   };
 
   const onTitleChange = async (value: number, titles: DefaultOptionType[]) => {
@@ -125,6 +138,7 @@ const Home: NextPage<HomeProps> = ({ categoriesQuery }) => {
               <div>회차선택</div>
               <Select
                 options={titles}
+                // options={[{ value: 'value', label: 'label' }]}
                 value={title}
                 onChange={(value) => onTitleChange(Number(value), titles)}
               />
@@ -179,19 +193,43 @@ export default Home;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const apolloClient = initializeApollo({}, '');
-  const request = async () =>
+  const requestReadCategories = async () =>
     await apolloClient.query<ReadAllMockExamCategoriesQuery>({
       query: READ_EXAM_CATEGORIES_QUERY,
     });
 
-  const tryRequest = convertWithErrorHandlingFunc({
-    callback: request,
+  const requestReadExamTitles = async (category: string) =>
+    await apolloClient.query<ReadMockExamTitlesByCateoryQuery>({
+      query: READ_EXAM_TITLES_QUERY,
+      variables: {
+        input: {
+          name: category,
+        },
+      },
+    });
+  const titlesAndCategories: TitlesAndCategories[] = [];
+
+  const tryReadCategories = convertWithErrorHandlingFunc({
+    callback: requestReadCategories,
   });
 
-  const res = await tryRequest();
-  const categoriesQuery = res?.data;
+  const categoriesRes = await tryReadCategories();
+
+  const categoriesQuery = categoriesRes?.data;
+  if (categoriesQuery)
+    await Promise.all(
+      categoriesQuery?.readAllMockExamCategories.categories.map(
+        async (category) => {
+          const res = await requestReadExamTitles(category.name);
+          titlesAndCategories.push({
+            category: category.name,
+            titles: res.data.readMockExamTitlesByCateory.titles,
+          });
+        }
+      )
+    );
   return addApolloState(apolloClient, {
-    props: { categoriesQuery },
+    props: { categoriesQuery, titlesAndCategories },
     revalidate: 86400,
   });
 };
