@@ -47,7 +47,8 @@ const Home: NextPage<HomeProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
-  const [readExamTitles] = useReadExamTitles();
+  const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
+  const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
@@ -107,6 +108,7 @@ const Home: NextPage<HomeProps> = ({
   const gotoExamPage = () => {
     if (!selectedExamId) return;
     storage.remove(tempAnswerKey);
+    setGotoExamPageLoading(true);
     router.push({
       pathname: '/exam',
       query: {
@@ -116,6 +118,12 @@ const Home: NextPage<HomeProps> = ({
         t: title,
         c: category,
       },
+    });
+  };
+  const gotoSolutionPage = () => {
+    setGotoSolutionPageLoading(true);
+    router.push({
+      pathname: `/exam/solution/${selectedExamId}`,
     });
   };
 
@@ -147,14 +155,18 @@ const Home: NextPage<HomeProps> = ({
                   type="primary"
                   onClick={gotoExamPage}
                   disabled={!Boolean(selectedExamId)}
+                  loading={gotoExamPageLoading}
                   className="home-content-question-button"
                 >
                   풀이모드
                 </Button>
-                <Button type="primary" disabled={!Boolean(selectedExamId)}>
-                  <Link href={`/exam/solution/${selectedExamId}`}>
-                    해설모드
-                  </Link>
+                <Button
+                  type="primary"
+                  loading={gotoSolutionPageLoading}
+                  onClick={gotoSolutionPage}
+                  disabled={!Boolean(selectedExamId)}
+                >
+                  해설모드
                 </Button>
               </div>
               <button
