@@ -8,7 +8,6 @@ import { ApolloProvider } from '@apollo/client';
 import { APOLLO_STATE_PROP_NAME, useApollo } from '@modules/apollo';
 import { Provider } from 'react-redux';
 import store from '@modules/redux/store/configureStore';
-import CommonModalContainer from '@components/common/core/CommonModalContainer';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
@@ -16,6 +15,7 @@ import { useRouter } from 'next/router';
 import { message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
+import CoreContainer from '@components/common/core/CoreContainer';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -83,7 +83,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       <ApolloProvider client={client}>
         <Provider store={store}>
           <Globalstyles />
-          <CommonModalContainer />
+          <CoreContainer />
           <AppInner />
           <Component {...pageProps} />
         </Provider>

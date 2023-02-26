@@ -1,7 +1,7 @@
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Modal, { Dimmed, ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
 import { responsive } from '@lib/utils/responsive';
@@ -18,14 +18,15 @@ import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useRouter } from 'next/router';
 import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
-import { addHours, format, parseISO } from 'date-fns';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { format, parseISO } from 'date-fns';
 import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
-import shortid from 'shortid';
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
   questionId: number;
   className?: string;
+  type?: 'modal' | 'newPage';
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({
@@ -34,6 +35,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   title,
   questionId,
   className,
+  type = 'modal',
 }) => {
   const router = useRouter();
   const client = useApollo({}, '');
@@ -41,6 +43,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const [submitButtonState, setSubmitButtonState] = useState(false);
   const [readQuestionComment, { data: commentQuery }] =
     useLazyReadQuestionComment();
+  const isnewpage = type === 'newPage';
   const {
     value: content,
     setValue: setContent,
@@ -59,7 +62,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
       readQuestionComment({ variables: { input: { questionId } } });
     }
   }, [router.isReady, questionId, open]);
-
   const requestCreateComment = async (questionId: number) => {
     const res = await createCommentMutation({
       variables: {
@@ -108,6 +110,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
       onClose();
     }
   };
+  const onNewWindow = () => {
+    onClose();
+    window.open(
+      `/comment?questionId=${questionId}&title=${title}`,
+      '_blank',
+      'toolbar=no,status=no,menubar=no,resizable=yes, location=no, top=100,left=100,width=380,height=380,scrollbars=true'
+    );
+  };
   return (
     <div>
       <AnimatePresence>
@@ -115,24 +125,39 @@ const CommentModal: React.FC<CommentModalProps> = ({
           <>
             <CommentModalContainer
               className={className || ''}
-              drag="y"
-              dragConstraints={{
-                bottom: 0,
-                top: 0,
-              }}
-              dragElastic={1}
-              initial={{ y: '100%' }}
+              drag={!isnewpage && 'y'}
+              dragConstraints={
+                !isnewpage && {
+                  bottom: 0,
+                  top: 0,
+                }
+              }
+              dragElastic={!isnewpage && 1}
+              initial={{ y: isnewpage ? 0 : '100%' }}
               animate={{ y: '0', transition: { duration: 0.4 } }}
               exit={{ y: '100%', transition: { duration: 0.4 } }}
-              onDragEnd={onDragEnd}
+              onDragEnd={!isnewpage ? onDragEnd : () => {}}
+              isnewpage={isnewpage}
             >
               <div className="modal-wrapper">
-                <span onClick={onClose} className="modal-close-button">
-                  <ClearIcon />
-                </span>
-                <span onClick={onClose} className="modal-drag-position">
-                  <DragHandleIcon />
-                </span>
+                {!isnewpage && (
+                  <>
+                    <span onClick={onClose} className="modal-close-button">
+                      <ClearIcon />
+                    </span>
+                    <span onClick={onClose} className="modal-drag-position">
+                      <DragHandleIcon />
+                    </span>
+
+                    <button
+                      onClick={onNewWindow}
+                      className="modal-new-window-button"
+                      type="button"
+                    >
+                      <OpenInNewIcon />
+                    </button>
+                  </>
+                )}
                 <p className="comment-title">{title}</p>
                 <div className="comment-input-wrapper">
                   <TextArea
@@ -176,7 +201,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 </div>
               </div>
             </CommentModalContainer>
-            <Dimmed onClick={onClose} />
+            {!isnewpage && <Dimmed onClick={onClose} />}
           </>
         )}
       </AnimatePresence>
@@ -186,7 +211,11 @@ const CommentModal: React.FC<CommentModalProps> = ({
 
 export default CommentModal;
 
-const CommentModalContainer = styled(motion.div)`
+interface CommentModalContainerProps {
+  isnewpage: boolean;
+}
+
+const CommentModalContainer = styled(motion.div)<CommentModalContainerProps>`
   position: fixed;
   background-color: white;
   padding: 30px 50px;
@@ -201,6 +230,7 @@ const CommentModalContainer = styled(motion.div)`
   flex-direction: column;
   width: 500px;
   background-color: ${palette.gray_100};
+
   .comment-title {
     font-weight: bold;
     white-space: pre-line;
@@ -250,9 +280,29 @@ const CommentModalContainer = styled(motion.div)`
       color: ${palette.antd_blue_01};
     }
   }
+  .modal-new-window-button {
+    position: absolute;
+    top: -15px;
+    right: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease-in;
+    :hover {
+      color: ${palette.antd_blue_01};
+    }
+  }
   .modal-drag-position {
     display: none;
   }
+  ${(props) =>
+    props.isnewpage &&
+    css`
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100vw;
+    `}
   @media (max-width: ${responsive.medium}) {
     .comment-title {
       margin-top: 10px;
@@ -273,6 +323,9 @@ const CommentModalContainer = styled(motion.div)`
     }
   }
   @media (max-width: ${responsive.small}) {
+    .modal-new-window-button {
+      display: none;
+    }
     width: 100% !important;
     padding-bottom: 0;
   }
