@@ -129,13 +129,13 @@ const Home: NextPage<HomeProps> = ({
         <HomeContainer>
           <div className="home-wrapper">
             <div className="home-content-wrapper">
-              <div>시험선택</div>
+              <p className="home-content-title">시험선택</p>
               <Select
                 options={categories}
                 onChange={onCategoryChange}
                 value={category}
               />
-              <div>회차선택</div>
+              <p className="home-content-title">회차선택</p>
               <Select
                 options={titles}
                 // options={[{ value: 'value', label: 'label' }]}
@@ -278,6 +278,9 @@ const HomeContainer = styled.div`
     display: flex;
     width: 100%;
     gap: 10px;
+  }
+  .home-content-title {
+    margin-right: auto;
   }
   .home-kakao-open-chat-button-wrapper {
     display: flex;
