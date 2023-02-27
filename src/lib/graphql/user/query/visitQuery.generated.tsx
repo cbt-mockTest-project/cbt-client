@@ -13,6 +13,11 @@ export type CreateVisitMutationVariables = Types.Exact<{ [key: string]: never; }
 
 export type CreateVisitMutation = { __typename?: 'Mutation', createVisit: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
 
+export type ReadVisitHistoryQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadVisitHistoryQuery = { __typename?: 'Query', readVisitHistory: { __typename?: 'ReadVisitHistoryOutput', error?: string | null, ok: boolean, today?: number | null, total?: number | null, yesterday?: number | null } };
+
 
 export const ReadVisitCountDocument = gql`
     query ReadVisitCount {
@@ -38,4 +43,19 @@ export const CreateVisitDocument = gql`
 
 export function useCreateVisitMutation() {
   return Urql.useMutation<CreateVisitMutation, CreateVisitMutationVariables>(CreateVisitDocument);
+};
+export const ReadVisitHistoryDocument = gql`
+    query ReadVisitHistory {
+  readVisitHistory {
+    error
+    ok
+    today
+    total
+    yesterday
+  }
+}
+    `;
+
+export function useReadVisitHistoryQuery(options?: Omit<Urql.UseQueryArgs<ReadVisitHistoryQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadVisitHistoryQuery, ReadVisitHistoryQueryVariables>({ query: ReadVisitHistoryDocument, ...options });
 };
