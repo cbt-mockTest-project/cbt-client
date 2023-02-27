@@ -81,7 +81,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     if (window.visualViewport) {
       window.visualViewport.onresize = handleVisualViewportResize;
     }
-  }, [scrollRef]);
+  }, [scrollRef, isMobileKeyboardOpen]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
