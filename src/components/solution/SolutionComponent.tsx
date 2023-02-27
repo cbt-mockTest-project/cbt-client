@@ -13,6 +13,9 @@ import styled from 'styled-components';
 const ClickMonAd = dynamic(() => import('@components/common/ad/ClickMonAd'), {
   ssr: false,
 });
+const CoupangAd = dynamic(() => import('@components/common/ad/CoupangAd'), {
+  ssr: false,
+});
 
 interface SolutionComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -63,6 +66,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
       <ul>
         {questions.map((el, index) => {
+          const halfPercent = Math.random() > 0.5;
           return (
             <div key={index}>
               <ExamSolutionList
@@ -70,9 +74,9 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 question={el}
                 title={convertExamTitle(title)}
               />
-              {index % 3 === 1 && questions.length - 1 !== index && (
-                <ClickMonAd />
-              )}
+              {index % 2 === 1 &&
+                questions.length - 1 !== index &&
+                (halfPercent ? <ClickMonAd /> : <CoupangAd type="basic" />)}
             </div>
           );
         })}

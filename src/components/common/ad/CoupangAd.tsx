@@ -1,13 +1,15 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-interface CoupangAdProps {}
+interface CoupangAdProps {
+  type?: 'basic' | 'footer';
+}
 
-const CoupangAd: React.FC<CoupangAdProps> = () => {
+const CoupangAd: React.FC<CoupangAdProps> = ({ type = 'footer' }) => {
   return (
-    <CoupangAdContainer>
+    <CoupangAdContainer type={type}>
       <iframe
         src="https://ads-partners.coupang.com/widgets.html?id=620466&template=carousel&trackingCode=AF8104485&subId=&width=1024&height=180"
         width="1024"
@@ -20,19 +22,25 @@ const CoupangAd: React.FC<CoupangAdProps> = () => {
 
 export default CoupangAd;
 
-const CoupangAdContainer = styled.div`
+interface CoupangAdContainerProps extends Pick<CoupangAdProps, 'type'> {}
+
+const CoupangAdContainer = styled.div<CoupangAdContainerProps>`
   position: relative;
   text-align: center;
-  z-index: 999;
   width: 100%;
   height: 130px;
   margin-top: 20px;
   overflow: hidden;
+  ${(props) =>
+    props.type === 'footer' &&
+    css`
+      position: fixed;
+      bottom: 0;
+      z-index: 999;
+    `}
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  bottom: 0;
 
   iframe {
     position: absolute;
