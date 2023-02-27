@@ -6,9 +6,13 @@ import { responsive } from '@lib/utils/responsive';
 import { convertExamTitle } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { Button } from 'antd';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+const ClickMonAd = dynamic(() => import('@components/common/ad/ClickMonAd'), {
+  ssr: false,
+});
 
 interface SolutionComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -66,7 +70,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 question={el}
                 title={convertExamTitle(title)}
               />
-              {/* {index % 3 === 0 && <ClickMonAd />} */}
+              {index % 3 === 0 && <ClickMonAd />}
             </div>
           );
         })}
