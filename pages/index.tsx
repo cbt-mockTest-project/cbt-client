@@ -28,7 +28,10 @@ import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
-import { useReadVisitCount } from '@lib/graphql/user/hook/useVisit';
+import {
+  useReadVisitCount,
+  useReadVisitHistory,
+} from '@lib/graphql/user/hook/useVisit';
 import palette from '@styles/palette';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import { ExamTitleAndId } from 'types';
@@ -54,7 +57,7 @@ const Home: NextPage<HomeProps> = ({
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
-  const { data: readVisitCountQuery } = useReadVisitCount();
+  const { data: readVisitHistoryQuery } = useReadVisitHistory();
   const storage = new LocalStorage();
 
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
@@ -184,8 +187,12 @@ const Home: NextPage<HomeProps> = ({
                     alt="buy me a coffee"
                   />
                 </a>
-                {readVisitCountQuery?.readVisitCount.ok && (
-                  <div className="home-visit-count-box">{`오늘 ${readVisitCountQuery?.readVisitCount.count}`}</div>
+                {readVisitHistoryQuery?.readVisitHistory.ok && (
+                  <div className="home-visit-count-wrapper">
+                    <div className="home-visit-count-box">{`오늘 ${readVisitHistoryQuery?.readVisitHistory.today}`}</div>
+                    <div className="home-visit-count-box">{`어제 ${readVisitHistoryQuery?.readVisitHistory.yesterday}`}</div>
+                    <div className="home-visit-count-box">{`전체 ${readVisitHistoryQuery?.readVisitHistory.total}`}</div>
+                  </div>
                 )}
               </div>
             </div>
@@ -278,9 +285,14 @@ const HomeContainer = styled.div`
     margin: 0 auto;
     margin-top: 10px;
   }
+  .home-visit-count-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
   .home-visit-count-box {
-    padding: 5px;
-    margin-left: auto;
+    padding: 5px 0;
     text-align: right;
     font-size: 0.8rem;
     color: ${palette.gray_700};

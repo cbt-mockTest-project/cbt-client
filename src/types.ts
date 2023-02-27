@@ -122,17 +122,6 @@ export type CreateMockExamQuestionOutput = {
   questionId?: Maybe<Scalars['Float']>;
 };
 
-export type CreateNoticeForAllUsersInput = {
-  content: Scalars['String'];
-  link?: InputMaybe<Scalars['String']>;
-};
-
-export type CreateNoticeForAllUsersOutput = {
-  __typename?: 'CreateNoticeForAllUsersOutput';
-  error?: Maybe<Scalars['String']>;
-  ok: Scalars['Boolean'];
-};
-
 export type CreateNoticeInput = {
   content: Scalars['String'];
   link?: InputMaybe<Scalars['String']>;
@@ -180,6 +169,14 @@ export type CreatePostOutput = {
   __typename?: 'CreatePostOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateVisitHistoryOutput = {
+  __typename?: 'CreateVisitHistoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  todayViewCount?: Maybe<Scalars['Float']>;
+  totalViewCount?: Maybe<Scalars['Float']>;
 };
 
 export type DeleteMockExamCategoryInput = {
@@ -629,11 +626,11 @@ export type Mutation = {
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
   createMutipleChoice: CreateMockExamQuestionMultipleChoiceOutput;
   createNotice: CreateNoticeOutput;
-  createNoticeForAllUsers: CreateNoticeForAllUsersOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
   createVisit: CoreOutput;
+  createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
@@ -721,11 +718,6 @@ export type MutationCreateMutipleChoiceArgs = {
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
-};
-
-
-export type MutationCreateNoticeForAllUsersArgs = {
-  input: CreateNoticeForAllUsersInput;
 };
 
 
@@ -1034,6 +1026,7 @@ export type Query = {
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
   readVisitCount: ReadVisitCountOutput;
+  readVisitHistory: ReadVisitHistoryOutput;
   searchMockExam: SearchMockExamOutput;
   userProfile: UserProfileOutput;
 };
@@ -1330,6 +1323,15 @@ export type ReadVisitCountOutput = {
   count?: Maybe<Scalars['Float']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type ReadVisitHistoryOutput = {
+  __typename?: 'ReadVisitHistoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  today?: Maybe<Scalars['Float']>;
+  total?: Maybe<Scalars['Float']>;
+  yesterday?: Maybe<Scalars['Float']>;
 };
 
 export type RegisterInput = {

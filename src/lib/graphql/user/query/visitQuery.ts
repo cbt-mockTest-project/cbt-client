@@ -18,3 +18,15 @@ export const CREATE_VISIT = gql`
     }
   }
 `;
+
+export const READ_VISIT_HISTORY = gql`
+  query ReadVisitHistory {
+    readVisitHistory {
+      error
+      ok
+      today
+      total
+      yesterday
+    }
+  }
+`;
