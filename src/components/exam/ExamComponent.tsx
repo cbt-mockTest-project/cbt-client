@@ -29,15 +29,19 @@ import styled, { css } from 'styled-components';
 import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
+  const [readQuestions, { data: questionsQueryOnClientSide }] =
+    useLazyReadQuestionsByExamId('network-only');
+  const currentQuestionsQuery = questionsQueryOnClientSide || questionsQuery;
   const {
     readMockExamQuestionsByMockExamId: { questions },
-  } = questionsQuery;
+  } = currentQuestionsQuery;
   const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -45,7 +49,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
-  const questionIndex = Number(router.query.q);
+  const questionIndex = Number(router.query.q) || 1;
   const tempAnswerIndex = String(examTitle) + questionIndex;
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
@@ -61,15 +65,14 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
-  const test = () => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
   useEffect(() => {
     let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
       let currentVisualViewport = Number(window.visualViewport?.height);
       if (prevVisualViewport - 200 > currentVisualViewport) {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (!commentModalState) {
+          scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     };
     if (window.visualViewport) {
@@ -78,33 +81,39 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   }, [scrollRef]);
 
   useEffect(() => {
-    const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
-    /**
-     * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
-     */
-    setAnswerValue(currentAnswer);
-    setProgressModalState(false);
-    setFeedBackModalState(false);
-    setFinishModalState(false);
-    setAnswerboxVisible(false);
-    setCommentModalState(false);
-    setBookmarkState(
-      questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
-    );
-    setQuestionAndSolution({
-      question: questions[questionIndex - 1].question,
-      number: questions[questionIndex - 1].number,
-      question_img: questions[questionIndex - 1].question_img,
-      solution: questions[questionIndex - 1].solution,
-      solution_img: questions[questionIndex - 1].solution_img,
-      id: questions[questionIndex - 1].id,
-      state: questions[questionIndex - 1].state,
-      mockExamQuestionBookmark:
-        questions[questionIndex - 1].mockExamQuestionBookmark,
-      mockExamQuestionComment:
-        questions[questionIndex - 1].mockExamQuestionComment,
-    });
-  }, [router.query.q]);
+    if (questionIndex) {
+      const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      /**
+       * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+       */
+      setAnswerValue(currentAnswer);
+      setProgressModalState(false);
+      setFeedBackModalState(false);
+      setFinishModalState(false);
+      setAnswerboxVisible(false);
+      setCommentModalState(false);
+      setBookmarkState(
+        questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
+      );
+      setQuestionAndSolution({
+        question: questions[questionIndex - 1].question,
+        number: questions[questionIndex - 1].number,
+        question_img: questions[questionIndex - 1].question_img,
+        solution: questions[questionIndex - 1].solution,
+        solution_img: questions[questionIndex - 1].solution_img,
+        id: questions[questionIndex - 1].id,
+        state: questions[questionIndex - 1].state,
+        mockExamQuestionBookmark:
+          questions[questionIndex - 1].mockExamQuestionBookmark,
+        mockExamQuestionComment:
+          questions[questionIndex - 1].mockExamQuestionComment,
+      });
+    }
+  }, [questionIndex]);
+
+  useEffect(() => {
+    console.log('questionsQueryOnClientSide', questionsQueryOnClientSide);
+  }, [questionsQueryOnClientSide]);
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => {
@@ -133,7 +142,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     setFinishModalState(false);
     router.push({
       pathname: '/exam/result',
-      query: { title: String(examTitle || ''), e: router.query.e },
+      query: { title: String(examTitle || ''), e: router.query.Id },
     });
   };
   const requestReport = async () => {
@@ -163,7 +172,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           query: READ_QUESTIONS_BY_ID,
           variables: {
             input: {
-              id: Number(router.query.e),
+              id: Number(router.query.Id),
               isRandom: router.query.r === 'true' ? true : false,
             },
           },

@@ -22,7 +22,6 @@ import {
   tempAnswerKey,
 } from '@lib/constants';
 import { LocalStorage } from '@lib/utils/localStorage';
-import Link from 'next/link';
 import WithHead from '@components/common/head/WithHead';
 import {
   ReadAllMockExamCategoriesQuery,
@@ -110,9 +109,8 @@ const Home: NextPage<HomeProps> = ({
     storage.remove(tempAnswerKey);
     setGotoExamPageLoading(true);
     router.push({
-      pathname: '/exam',
+      pathname: `/exam/${selectedExamId}`,
       query: {
-        e: selectedExamId,
         q: '1',
         r: false,
         t: title,
