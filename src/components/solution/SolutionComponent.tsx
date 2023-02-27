@@ -1,4 +1,3 @@
-import GoogleAd from '@components/common/googleAd/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
@@ -59,14 +58,18 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <ul>
         {(
           questionsQueryOnClientSide || questionsQuery
-        ).readMockExamQuestionsByMockExamId.questions.map((el, index) => (
-          <ExamSolutionList
-            isSolutionAllHide={isSolutionAllHide}
-            key={index}
-            question={el}
-            title={convertExamTitle(title)}
-          />
-        ))}
+        ).readMockExamQuestionsByMockExamId.questions.map((el, index) => {
+          return (
+            <div key={index}>
+              <ExamSolutionList
+                isSolutionAllHide={isSolutionAllHide}
+                question={el}
+                title={convertExamTitle(title)}
+              />
+              {/* {index % 3 === 0 && <ClickMonAd />} */}
+            </div>
+          );
+        })}
       </ul>
     </SolutionComponentContainer>
   );
