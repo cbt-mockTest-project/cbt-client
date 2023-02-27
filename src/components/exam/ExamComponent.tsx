@@ -59,6 +59,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const [isMobileKeyboardOpen, setIsMobileKeyboardOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
@@ -67,14 +68,20 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
     let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
       let currentVisualViewport = Number(window.visualViewport?.height);
+      if (isMobileKeyboardOpen) {
+        setIsMobileKeyboardOpen(false);
+      }
       if (prevVisualViewport - 200 > currentVisualViewport) {
+        if (!isMobileKeyboardOpen) {
+          setIsMobileKeyboardOpen(true);
+        }
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
       }
     };
     if (window.visualViewport) {
       window.visualViewport.onresize = handleVisualViewportResize;
     }
-  }, [scrollRef]);
+  }, [scrollRef, isMobileKeyboardOpen]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -327,9 +334,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           </div>
         </div>
       </ExamContainer>
-      <Portal>
-        <CoupangAd />
-      </Portal>
+      {!isMobileKeyboardOpen && (
+        <Portal>
+          <CoupangAd />
+        </Portal>
+      )}
 
       <ConfirmModal
         open={finishModalState}
