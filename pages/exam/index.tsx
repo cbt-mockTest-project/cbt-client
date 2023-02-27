@@ -17,15 +17,18 @@ const Exam: NextPage = (asd) => {
     useLazyReadQuestionsByExamId('cache-and-network');
 
   useEffect(() => {
-    readQuestions({
-      variables: {
-        input: {
-          id: examId,
-          isRandom: router.query.r === 'true' ? true : false,
+    if (router.isReady) {
+      readQuestions({
+        variables: {
+          input: {
+            id: examId,
+            isRandom: router.query.r === 'true' ? true : false,
+          },
         },
-      },
-    });
-  }, []);
+      });
+    }
+  }, [router.isReady]);
+  console.log(questionsQuery);
   return (
     <>
       <WithHead
