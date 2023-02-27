@@ -29,6 +29,8 @@ import styled, { css } from 'styled-components';
 import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
+import Portal from '@components/common/portal/Portal';
+import CoupangAd from '@components/common/ad/CoupangAd';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -325,6 +327,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           </div>
         </div>
       </ExamContainer>
+      <Portal>
+        <CoupangAd />
+      </Portal>
 
       <ConfirmModal
         open={finishModalState}
@@ -371,6 +376,7 @@ interface ExamContainerProps {
 const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
+  padding-bottom: 150px;
   .exam-container-title {
     font-size: 1.3rem;
     margin-bottom: 20px;
@@ -443,8 +449,10 @@ const ExamContainer = styled.div<ExamContainerProps>`
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
+    padding-bottom: 130px;
   }
   @media (max-width: ${responsive.small}) {
+    padding-bottom: 110px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;

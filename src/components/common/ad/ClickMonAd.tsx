@@ -40,9 +40,6 @@ const ClickMonAdContainer = styled.div`
   height: 90px;
   margin-top: 20px;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   iframe {
     position: absolute;
     top: 0;

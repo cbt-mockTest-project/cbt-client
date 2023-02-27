@@ -47,6 +47,8 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       }
     })();
   }, [router.query.Id]);
+  const questions = (questionsQueryOnClientSide || questionsQuery)
+    .readMockExamQuestionsByMockExamId.questions;
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
   return (
@@ -60,9 +62,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       </Button>
       <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
       <ul>
-        {(
-          questionsQueryOnClientSide || questionsQuery
-        ).readMockExamQuestionsByMockExamId.questions.map((el, index) => {
+        {questions.map((el, index) => {
           return (
             <div key={index}>
               <ExamSolutionList
@@ -70,7 +70,9 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 question={el}
                 title={convertExamTitle(title)}
               />
-              {index % 3 === 0 && <ClickMonAd />}
+              {index % 3 === 1 && questions.length - 1 !== index && (
+                <ClickMonAd />
+              )}
             </div>
           );
         })}
