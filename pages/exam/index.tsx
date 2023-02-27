@@ -1,6 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import ExamComponent from '@components/exam/ExamComponent';
+import ExamSkeleton from '@components/exam/ExamSkeleton';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -16,17 +17,15 @@ const Exam: NextPage = (asd) => {
     useLazyReadQuestionsByExamId('cache-and-network');
 
   useEffect(() => {
-    if (router.isReady) {
-      readQuestions({
-        variables: {
-          input: {
-            id: examId,
-            isRandom: router.query.r === 'true' ? true : false,
-          },
+    readQuestions({
+      variables: {
+        input: {
+          id: examId,
+          isRandom: router.query.r === 'true' ? true : false,
         },
-      });
-    }
-  }, [router.isReady]);
+      },
+    });
+  }, []);
   return (
     <>
       <WithHead
@@ -34,7 +33,11 @@ const Exam: NextPage = (asd) => {
         pageHeadingTitle={`${title} 문제풀이 페이지`}
       />
       <Layout>
-        {questionsQuery && <ExamComponent questionsQuery={questionsQuery} />}
+        {questionsQuery ? (
+          <ExamComponent questionsQuery={questionsQuery} />
+        ) : (
+          <ExamSkeleton />
+        )}
       </Layout>
     </>
   );

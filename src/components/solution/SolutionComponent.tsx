@@ -60,14 +60,12 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         {(
           questionsQueryOnClientSide || questionsQuery
         ).readMockExamQuestionsByMockExamId.questions.map((el, index) => (
-          <>
-            <ExamSolutionList
-              isSolutionAllHide={isSolutionAllHide}
-              key={index}
-              question={el}
-              title={convertExamTitle(title)}
-            />
-          </>
+          <ExamSolutionList
+            isSolutionAllHide={isSolutionAllHide}
+            key={index}
+            question={el}
+            title={convertExamTitle(title)}
+          />
         ))}
       </ul>
     </SolutionComponentContainer>

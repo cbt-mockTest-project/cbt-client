@@ -61,9 +61,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
 
-  const test = () => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
   useEffect(() => {
     let prevVisualViewport = window.visualViewport?.height || 0;
     const handleVisualViewportResize = () => {
