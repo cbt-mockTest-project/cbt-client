@@ -43,11 +43,13 @@ interface TitlesAndCategories {
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
   titlesAndCategories: TitlesAndCategories[];
+  hideLinks: ExamTitleAndId[];
 }
 
 const Home: NextPage<HomeProps> = ({
   categoriesQuery,
   titlesAndCategories,
+  hideLinks,
 }) => {
   const router = useRouter();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
@@ -198,6 +200,14 @@ const Home: NextPage<HomeProps> = ({
             </div>
           </div>
         </HomeContainer>
+        <ExamLinkList className="home-exam-link-list">
+          <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
+          {hideLinks.map((link) => (
+            <li key={link.id} className="home-exam-link-item">
+              <Link href={`/exam/solution/${link.id}`}>{link.title}</Link>
+            </li>
+          ))}
+        </ExamLinkList>
         <>
           <KakaoOpenChatModal
             open={kakaoChatModalState}
@@ -247,15 +257,30 @@ export const getStaticProps: GetStaticProps = async (context) => {
         }
       )
     );
+  const hideLinks: ExamTitleAndId[] = [];
+  titlesAndCategories.forEach((el) => {
+    el.titles.forEach((title) => {
+      hideLinks.push(title);
+    });
+  });
+  hideLinks.sort((a, b) => {
+    if (a.title.includes('산업안전기사')) {
+      return -1;
+    }
+    if (a.title.includes('산업안전산업기사')) {
+      return -1;
+    }
+    return 0;
+  });
   return addApolloState(apolloClient, {
-    props: { categoriesQuery, titlesAndCategories },
+    props: { categoriesQuery, titlesAndCategories, hideLinks },
     revalidate: 86400,
   });
 };
 
 const HomeContainer = styled.div`
   .home-wrapper {
-    margin: 10px auto 40px auto;
+    margin: 10px auto 0 auto;
     display: flex;
     gap: 30px;
   }
@@ -319,6 +344,39 @@ const HomeContainer = styled.div`
     }
     svg {
       height: 25px;
+    }
+  }
+`;
+
+const ExamLinkList = styled.ul`
+  width: max-content;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  font-size: 0.8rem;
+  gap: 5px;
+  max-height: 300px;
+  overflow-y: scroll;
+  margin: 20px auto 40px auto;
+  border: 1px solid ${palette.gray_200};
+  position: relative;
+  .home-exam-link-title {
+    text-align: center;
+    position: sticky;
+    top: 0px;
+    background-color: white;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    box-shadow: rgb(0 0 0 / 10%) 0px 1px 5px 1px;
+  }
+  .home-exam-link-item {
+    text-align: center;
+    a {
+      padding: 10px 20px;
+      display: block;
+    }
+    :hover {
+      background-color: ${palette.gray_100};
     }
   }
 `;
