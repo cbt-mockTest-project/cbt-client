@@ -1,13 +1,19 @@
-import MainBanner from '@components/banner/MainBanner';
+import MainBannerSkeleton from '@components/banner/MainBannerSkeleton';
 import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import Footer from './Footer';
 import Nav from './nav/NavContainer';
 import SubNav from './SubNav';
+
+const MainBanner = dynamic(() => import('@components/banner/MainBanner'), {
+  ssr: false,
+  loading: () => <MainBannerSkeleton />,
+});
 
 interface LayoutProps {
   children: React.ReactNode;
