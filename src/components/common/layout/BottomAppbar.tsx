@@ -55,7 +55,7 @@ const BottomAppbarContainer = styled.div`
   .bottom-app-bar-item {
     flex: 1;
     text-align: center;
-    height: 70px;
+    height: 55px;
     display: flex;
     gap: 3px;
     flex-direction: column;
