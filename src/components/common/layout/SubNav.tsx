@@ -11,8 +11,8 @@ const SubNav = () => {
     router.push({ pathname: `/me/${path}` });
   };
   const subNavOptions = [
-    { label: '시험내역', value: 'examhistory' },
     { label: '저장된 문제', value: 'bookmark' },
+    { label: '시험내역', value: 'examhistory' },
   ];
   return (
     <SubNavContainer>

@@ -51,7 +51,7 @@ const NavContainer = () => {
   const dropBoxOptions: DropBoxOption[] = [
     {
       label: '활동내역',
-      onClick: () => router.push('/me/examhistory'),
+      onClick: () => router.push('/me/bookmark'),
     },
     {
       label: '프로필수정',
