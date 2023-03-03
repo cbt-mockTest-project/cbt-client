@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 import HomeIcon from '@mui/icons-material/Home';
@@ -6,38 +5,56 @@ import StarIcon from '@mui/icons-material/Star';
 import PersonIcon from '@mui/icons-material/Person';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface BottomAppbarProps {
   className: string;
 }
 
 const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
+  const { data: meQuery } = useMeQuery();
   const router = useRouter();
+  const authRoutes = ['/me/bookmark', '/me/edit'];
   const isBookmarkPage = router.pathname === '/me/bookmark';
   const isMypage = router.pathname === '/me/edit';
   const isMainPage = !isMypage && !isBookmarkPage;
+  const onRouteChange = (path: string) => {
+    if (!meQuery?.me.user && authRoutes.includes(path)) {
+      return router.push('/mobile/login');
+    }
+    return router.push(path);
+  };
   return (
     <BottomAppbarContainer className={className}>
-      <Link href="/" className="bottom-app-bar-item">
+      <button
+        onClick={() => onRouteChange('/')}
+        className="bottom-app-bar-item"
+      >
         <HomeIcon className={`${isMainPage && 'active'}`} />
         <span className={`bottom-app-bar-item-text ${isMainPage && 'active'}`}>
           홈
         </span>
-      </Link>
-      <Link href="/me/bookmark" className="bottom-app-bar-item">
+      </button>
+      <button
+        onClick={() => onRouteChange('/me/bookmark')}
+        className="bottom-app-bar-item"
+      >
         <StarIcon className={`${isBookmarkPage && 'active'}`} />
         <span
           className={`bottom-app-bar-item-text ${isBookmarkPage && 'active'}`}
         >
           북마크
         </span>
-      </Link>
-      <Link href="/me/edit" className="bottom-app-bar-item">
+      </button>
+      <button
+        onClick={() => onRouteChange('/me/edit')}
+        className="bottom-app-bar-item"
+      >
         <PersonIcon className={`${isMypage && 'active'}`} />
         <span className={`bottom-app-bar-item-text ${isMypage && 'active'}`}>
           프로필
         </span>
-      </Link>
+      </button>
     </BottomAppbarContainer>
   );
 };
