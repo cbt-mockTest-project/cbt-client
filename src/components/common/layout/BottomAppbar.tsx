@@ -61,9 +61,7 @@ const BottomAppbarContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    :hover {
-      color: ${palette.antd_blue_01};
-    }
+    cursor: pointer;
     .active {
       color: ${palette.antd_blue_01};
     }
