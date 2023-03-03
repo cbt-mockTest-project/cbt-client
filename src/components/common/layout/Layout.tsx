@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import React, { Suspense } from 'react';
 import styled from 'styled-components';
+import BottomAppbar from './BottomAppbar';
 import Footer from './Footer';
 import Nav from './nav/NavContainer';
 import SubNav from './SubNav';
@@ -28,7 +29,6 @@ const Layout: React.FC<LayoutProps> = ({
   sideBanner,
   subNav,
 }) => {
-  const isMobile = useIsMobile();
   return (
     <LayoutContainer>
       <Nav />
@@ -75,7 +75,10 @@ const Layout: React.FC<LayoutProps> = ({
           )}
         </>
       </div>
-      {!isMobile ? <Footer /> : null}
+      <footer>
+        <Footer className="layout-pc-footer" />
+        <BottomAppbar className="layout-mobile-bottom-app-bar" />
+      </footer>
     </LayoutContainer>
   );
 };
@@ -84,6 +87,7 @@ export default Layout;
 
 const LayoutContainer = styled.div`
   position: relative;
+
   .layout-sub-banner-wrapper {
     display: flex;
     flex-direction: column;
@@ -117,8 +121,17 @@ const LayoutContainer = styled.div`
     margin-top: 45px;
     min-height: calc(100vh - 165px);
   }
+  .layout-mobile-bottom-app-bar {
+    display: none;
+  }
 
   @media (max-width: ${responsive.medium}) {
+    .layout-pc-footer {
+      display: none;
+    }
+    .layout-mobile-bottom-app-bar {
+      display: flex;
+    }
     .layout-sub-banner-wrapper {
       display: none;
     }
@@ -132,7 +145,9 @@ const LayoutContainer = styled.div`
       margin-top: -2px;
     }
     .layout-children-wrapper {
-      min-height: calc(100vh - 125px);
+      /* min-height: calc(100vh - 125px); */
+      height: calc(100vh - 125px);
+      overflow-y: auto;
     }
   }
 `;

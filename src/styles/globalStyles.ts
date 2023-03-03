@@ -34,8 +34,8 @@ const Globalstyles = createGlobalStyle`
   *[hidden] {
       display: none;
   }
-  body {
-    overflow-x: hidden;
+  body,html {
+    overflow : hidden;
   }
   menu, ol, ul {
     list-style: none;
