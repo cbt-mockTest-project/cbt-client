@@ -110,6 +110,12 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     <EditComponentContainer>
       <h1>회원정보</h1>
       <div className="edit-block">
+        <Label content={'이메일'} />
+        <Input
+          value={user?.email}
+          onChange={onChangeNicknameValue}
+          disabled={true}
+        />
         <Label content={'닉네임'} />
         <div className="edit-input-and-button-wrapper">
           <Input value={nickname} onChange={onChangeNicknameValue} />
