@@ -91,11 +91,11 @@ const SolutionComponentContainer = styled.div`
   margin-bottom: 50px;
   padding: 20px;
   h1 {
-    padding: 0px 20px 0px 20px;
+    padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
   }
   .exam-solution-page-solution-all-hide-button {
-    margin: 0 0 10px 15px;
+    margin-bottom: 10px;
   }
   @media (max-width: ${responsive.medium}) {
     h1 {
