@@ -132,7 +132,6 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     if (!title || !removeHtmlTag(content)) return;
     const confirmed = confirm('글을 작성하시겠습니까?');
     if (!confirmed) return;
-    console.log(removeHtmlTag(String(content)));
     const res = await createPost({ variables: { input: { title, content } } });
     if (res.data?.createPost.ok) {
       message.success('게시글이 작성됐습니다.');

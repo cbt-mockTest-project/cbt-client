@@ -1,38 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Select } from 'antd';
-import { DefaultOptionType } from 'antd/lib/select';
-import styled from 'styled-components';
+import React from 'react';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import {
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_TITLES_QUERY,
 } from '@lib/graphql/user/query/examQuery';
-import { useRouter } from 'next/router';
 import Layout from '@components/common/layout/Layout';
-import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { GetStaticProps, NextPage } from 'next';
-import {
-  convertExamTurn,
-  convertWithErrorHandlingFunc,
-} from '@lib/utils/utils';
-import {
-  selectExamCategoryHistory,
-  selectExamHistory,
-  tempAnswerKey,
-} from '@lib/constants';
-import { LocalStorage } from '@lib/utils/localStorage';
-import Link from 'next/link';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+
 import WithHead from '@components/common/head/WithHead';
 import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
-import { useReadVisitHistory } from '@lib/graphql/user/hook/useVisit';
-import palette from '@styles/palette';
-import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import { ExamTitleAndId } from 'types';
 import MainComponent from '@components/main/MainComponent';
-import Portal from '@components/common/portal/Portal';
 
 interface TitlesAndCategories {
   category: string;
