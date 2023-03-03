@@ -327,9 +327,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           </div>
         </div>
       </ExamContainer>
-      <Portal>
+      {/* <Portal>
         <CoupangAd />
-      </Portal>
+      </Portal> */}
 
       <ConfirmModal
         open={finishModalState}
