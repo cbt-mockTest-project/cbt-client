@@ -32,18 +32,11 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     };
   }, [router.events]);
   useEffect(() => {
+    // 탈퇴유저에 대한 리다이렉트 메시지
     if (router.query.message) {
       message.error(router.query.message);
     }
   }, [router.query.message]);
-
-  // useEffect(() => {
-  //   if (window && (window as any).webviewChannel) {
-  //     (window as any).webviewChannel.postMessage(
-  //       document.documentElement.scrollHeight
-  //     );
-  //   }
-  // }, [router.asPath]);
 
   // useEffect(() => {
   //   (window as any).ChannelIO('boot', {
