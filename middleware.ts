@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     request.nextUrl.pathname.startsWith('/exam/selectedresult')
   ) {
     if (!request.cookies.get('jwt-token')) {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/mobile/login', request.url));
     }
   }
 }
