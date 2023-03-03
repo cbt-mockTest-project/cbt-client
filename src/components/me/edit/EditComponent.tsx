@@ -57,6 +57,10 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const tryRequestChangeNickname = convertWithErrorHandlingFunc({
     callback: requestChangeNickname,
   });
+  const requestLogout = async () => {
+    await logoutMutation();
+    location.reload();
+  };
   const requestChangePassword = async () => {
     if (newPassword.length < 4) {
       return message.error('비밀번호를 4글자 이상 입력해주세요.');
@@ -66,8 +70,7 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     });
     if (res.data?.editProfile.ok) {
       message.success({ content: '비밀번호가 변경되었습니다.' });
-      await logoutMutation();
-      location.reload();
+      requestLogout();
       return;
     }
     return message.error({ content: res.data?.editProfile.error });
@@ -144,6 +147,7 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
         </div>
       </div>
       <div className="edit-block">
+        <Button onClick={requestLogout}>로그아웃</Button>
         <div className="edit-input-and-button-wrapper ">
           <div className="edit-withdrawl-label-wrapper">
             <Label content="탈퇴하기" />
@@ -173,7 +177,7 @@ export default EditComponent;
 
 const EditComponentContainer = styled.div`
   max-width: 300px;
-  margin: 0 auto;
+  margin: 50px auto;
   h1 {
     font-size: 1.2rem;
     font-size: bold;
