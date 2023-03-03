@@ -41,7 +41,7 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
             </div>
             {CommonNavItemComponent()}
             <div className="mobile-nav-item-wrapper">
-              <Link href="/me/examhistory">
+              <Link href="/me/bookmark">
                 <span className="mobile-nav-item-link-text">활동내역</span>
               </Link>
               <Link href="/me/edit">

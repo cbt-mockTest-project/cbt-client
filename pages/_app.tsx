@@ -37,13 +37,21 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     }
   }, [router.query.message]);
 
-  useEffect(() => {
-    (window as any).ChannelIO('boot', {
-      pluginKey: process.env.NEXT_PUBLIC_CHANNER_TALK_KEY,
-      hideChannelButtonOnBoot: router.asPath === '/' ? false : true, // 메인 페이지에서만 노출
-      customLauncherSelector: '.channel-talk-custom, #channel-talk-custom',
-    });
-  }, [router.asPath]);
+  // useEffect(() => {
+  //   if (window && (window as any).webviewChannel) {
+  //     (window as any).webviewChannel.postMessage(
+  //       document.documentElement.scrollHeight
+  //     );
+  //   }
+  // }, [router.asPath]);
+
+  // useEffect(() => {
+  //   (window as any).ChannelIO('boot', {
+  //     pluginKey: process.env.NEXT_PUBLIC_CHANNER_TALK_KEY,
+  //     hideChannelButtonOnBoot: router.asPath === '/' ? false : true, // 메인 페이지에서만 노출
+  //     customLauncherSelector: '.channel-talk-custom, #channel-talk-custom',
+  //   });
+  // }, [router.asPath]);
 
   return (
     <>
@@ -71,7 +79,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           `,
         }}
       />
-      <Script
+      {/* <Script
         id="channer-talk-init"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
@@ -79,7 +87,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.")}var ch=function(){ch.c(arguments)};ch.q=[];ch.c=function(args){ch.q.push(args)};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x)}}if(document.readyState==="complete"){l()}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l)}})();
           `,
         }}
-      />
+      /> */}
       <ApolloProvider client={client}>
         <Provider store={store}>
           <Globalstyles />

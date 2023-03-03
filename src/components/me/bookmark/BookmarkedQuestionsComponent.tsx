@@ -4,9 +4,11 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import { checkboxOption } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import RoundCheckboxGroupBlurTemplete from '../common/RoundBoxGroupBlurTemplete';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
-import { Button } from 'antd';
+import { Button, Select } from 'antd';
+import { responsive } from '@lib/utils/responsive';
+import SkeletonBox from '@components/common/skeleton/SkeletonBox';
+import ExamSolutionListSkeleton from '@components/exam/solution/ExamSolutionListSkeleton';
 
 interface BookmarkedQuestionsComponentProps {}
 
@@ -15,11 +17,25 @@ const BookmarkedQuestionsComponent: React.FC<
 > = () => {
   const { data: examTitleAndIdQuery } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
-  const [readQuestions, { data: questionsQuery }] =
-    useLazyReadQuestionsByExamId('cache-and-network');
+  const [
+    readQuestions,
+    { data: questionsQuery, loading: questionsQueryLoading },
+  ] = useLazyReadQuestionsByExamId('cache-and-network');
+
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
     checkboxOption[]
   >([]);
+
+  useEffect(() => {
+    readQuestions({
+      variables: {
+        input: {
+          id: 0,
+          bookmarked: true,
+        },
+      },
+    });
+  }, []);
   const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   useEffect(() => {
     if (examTitleAndIdQuery?.readExamTitleAndIdOfBookmarkedQuestion.ok) {
@@ -30,7 +46,7 @@ const BookmarkedQuestionsComponent: React.FC<
           value: Number(el.id),
           label: String(el.title),
         }));
-        setExamTitleAndIdOptions(options);
+        setExamTitleAndIdOptions([{ value: 0, label: '전체' }, ...options]);
       }
     }
   }, [examTitleAndIdQuery]);
@@ -38,7 +54,6 @@ const BookmarkedQuestionsComponent: React.FC<
   const requsetReadBookmarkedQuestions = async (
     examId: RoundCheckboxGroupOnChangeValueType
   ) => {
-    if (!examId) return;
     const res = await readQuestions({
       variables: { input: { id: Number(examId), bookmarked: true } },
     });
@@ -47,40 +62,61 @@ const BookmarkedQuestionsComponent: React.FC<
   };
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
+
   return (
     <BookmarkedQuestionsComponentBlock>
-      <RoundCheckboxGroupBlurTemplete
-        onChange={requsetReadBookmarkedQuestions}
-        options={examTitleAndIdOptions}
-        type="selectbox"
-      />
-      {questionsQuery?.readMockExamQuestionsByMockExamId.questions &&
-        questionsQuery?.readMockExamQuestionsByMockExamId.questions.length >=
-          1 && (
-          <Button
-            onClick={onToggleSolutionAllHide}
-            className="bookmark-question-solution-all-hide-button"
-            type="primary"
-          >
-            {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
-          </Button>
-        )}
-      {questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
-        (question) => (
-          <ExamSolutionList
-            isSolutionAllHide={isSolutionAllHide}
-            key={question.id}
-            question={question}
-            title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
-          />
-        )
+      {examTitleAndIdOptions && examTitleAndIdOptions.length >= 1 ? (
+        <Select
+          className="bookmark-question-exam-title-select"
+          options={examTitleAndIdOptions}
+          defaultValue={examTitleAndIdOptions[0].value}
+          onChange={requsetReadBookmarkedQuestions}
+        />
+      ) : (
+        <SkeletonBox width="300px" height="30px" />
       )}
+      <div>
+        {questionsQueryLoading ? (
+          <SkeletonBox
+            className="bookmark-question-solution-all-hide-button"
+            width="130px"
+            height="32px"
+          />
+        ) : (
+          questionsQuery?.readMockExamQuestionsByMockExamId.questions &&
+          questionsQuery?.readMockExamQuestionsByMockExamId.questions.length >=
+            1 && (
+            <Button
+              onClick={onToggleSolutionAllHide}
+              className="bookmark-question-solution-all-hide-button"
+              type="primary"
+            >
+              {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+            </Button>
+          )
+        )}
+      </div>
+      {!questionsQueryLoading
+        ? questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
+            (question) => (
+              <ExamSolutionList
+                isSolutionAllHide={isSolutionAllHide}
+                key={question.id}
+                question={question}
+                title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
+              />
+            )
+          )
+        : [1, 2, 3, 4, 5].map((el) => <ExamSolutionListSkeleton key={el} />)}
     </BookmarkedQuestionsComponentBlock>
   );
 };
 
 export default BookmarkedQuestionsComponent;
 const BookmarkedQuestionsComponentBlock = styled.div`
+  .bookmark-question-exam-title-select {
+    width: 300px;
+  }
   .bookmark-question-solution-all-hide-button {
     margin-top: 20px;
     margin-bottom: -10px;
@@ -89,5 +125,8 @@ const BookmarkedQuestionsComponentBlock = styled.div`
   padding: 0 15px;
   li {
     list-style: none;
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding-top: 20px;
   }
 `;

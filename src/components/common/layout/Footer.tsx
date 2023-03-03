@@ -11,9 +11,11 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import ReportModal from '../modal/ReportModal';
 
-interface FooterProps {}
+interface FooterProps {
+  className: string;
+}
 
-const Footer: React.FC<FooterProps> = () => {
+const Footer: React.FC<FooterProps> = ({ className }) => {
   const year = new Date().getFullYear();
   const [createFeedback] = useCreateFeedback();
   const { data: meQuery } = useMeQuery();
@@ -46,7 +48,7 @@ const Footer: React.FC<FooterProps> = () => {
     setReportModalState(!reportModalState);
   };
   return (
-    <FooterContainer>
+    <FooterContainer className={className}>
       <div className="footer-wrapper">
         <div>{`© ${year} Moducbt`}</div>
         <a href="mailto:moducbt@gmail.com">Mail</a>
