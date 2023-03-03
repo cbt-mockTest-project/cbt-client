@@ -7,9 +7,11 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import NoticeDropBox from '@components/common/dropbox/NoticeDropBox';
 import MenuIcon from '@mui/icons-material/Menu';
 import NavDrawer from './NavDrawer';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { NavViewProps } from './Nav.interface';
 import { responsive } from '@lib/utils/responsive';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import palette from '@styles/palette';
 
 interface NavViewMobileProps extends NavViewProps {}
 
@@ -22,6 +24,14 @@ const NavViewMobile: React.FC<NavViewMobileProps> = (props) => {
           <Image src={'/png/logo01.png'} alt="logo-img" fill />
         </div>
       </Link>
+      <button
+        onClick={() => {
+          window.location.reload();
+        }}
+        className="nav-user-content-refresh-button-wrapper"
+      >
+        <RefreshIcon />
+      </button>
       {meQuery?.me.user && (
         <div className="nav-user-content-notice-button-wrapper">
           <OuterClick callback={props.onOuterClickForNoticeDropBox}>
@@ -78,9 +88,14 @@ const NavViewMobileContainer = styled.div`
       position: relative;
       top: 4px;
     }
+    .nav-user-content-refresh-button-wrapper {
+      margin-left: auto;
+      margin-right: 30px;
+      margin-top: 10px;
+      color: ${palette.gray_700};
+    }
     .nav-user-content-notice-button-wrapper {
       position: relative;
-      margin-left: auto;
       margin-right: 30px;
       margin-top: 5px;
     }
