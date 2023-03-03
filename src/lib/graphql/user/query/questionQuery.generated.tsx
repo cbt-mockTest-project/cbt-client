@@ -20,6 +20,11 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 
 export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, state?: Types.QuestionState | null, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> } } };
 
+export type ReadAllMockExamQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadAllMockExamQuestionQuery = { __typename?: 'Query', readAllMockExamQuestion: { __typename?: 'ReadAllMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQuestions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+
 export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByStateInput;
 }>;
@@ -64,6 +69,21 @@ export const ReadMockExamQuestionDocument = gql`
 
 export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
+};
+export const ReadAllMockExamQuestionDocument = gql`
+    query ReadAllMockExamQuestion {
+  readAllMockExamQuestion {
+    error
+    ok
+    mockExamQuestions {
+      ...FullQuestionParts
+    }
+  }
+}
+    ${FullQuestionPartsFragmentDoc}`;
+
+export function useReadAllMockExamQuestionQuery(options?: Omit<Urql.UseQueryArgs<ReadAllMockExamQuestionQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadAllMockExamQuestionQuery, ReadAllMockExamQuestionQueryVariables>({ query: ReadAllMockExamQuestionDocument, ...options });
 };
 export const ReadMockExamQuestionsByStateDocument = gql`
     query ReadMockExamQuestionsByState($input: ReadMockExamQuestionsByStateInput!) {

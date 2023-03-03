@@ -40,6 +40,19 @@ export const READ_QUESTION = gql`
   ${FULL_QUESTION_FRAGMENT}
 `;
 
+export const READ_ALL_QUESTION = gql`
+  query ReadAllMockExamQuestion {
+    readAllMockExamQuestion {
+      error
+      ok
+      mockExamQuestions {
+        ...FullQuestionParts
+      }
+    }
+  }
+  ${FULL_QUESTION_FRAGMENT}
+`;
+
 export const READ_QUESTIONS_BY_STATE = gql`
   query ReadMockExamQuestionsByState(
     $input: ReadMockExamQuestionsByStateInput!
