@@ -87,7 +87,6 @@ export default Layout;
 
 const LayoutContainer = styled.div`
   position: relative;
-
   .layout-sub-banner-wrapper {
     display: flex;
     flex-direction: column;
@@ -135,8 +134,7 @@ const LayoutContainer = styled.div`
     .layout-sub-banner-wrapper {
       display: none;
     }
-    .home-wrapper {
-    }
+
     .home-content-wrapper {
       justify-content: center;
       align-items: center;
@@ -145,9 +143,8 @@ const LayoutContainer = styled.div`
       margin-top: -2px;
     }
     .layout-children-wrapper {
-      /* min-height: calc(100vh - 125px); */
-      height: calc(100vh - 125px);
-      overflow-y: auto;
+      padding-bottom: 70px;
+      min-height: calc(100vh - 125px);
     }
   }
 `;

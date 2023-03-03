@@ -68,4 +68,7 @@ const BottomAppbarContainer = styled.div`
       color: ${palette.antd_blue_01};
     }
   }
+  .bottom-app-bar-item-text {
+    font-size: 0.7rem;
+  }
 `;
