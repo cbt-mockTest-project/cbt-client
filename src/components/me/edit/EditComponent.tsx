@@ -108,7 +108,7 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     setWithdrawalModalState(!withdrawalModalState);
   return (
     <EditComponentContainer>
-      <h1>회원정보 변경</h1>
+      <h1>회원정보</h1>
       <div className="edit-block">
         <Label content={'닉네임'} />
         <div className="edit-input-and-button-wrapper">

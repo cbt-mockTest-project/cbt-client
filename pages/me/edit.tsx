@@ -10,10 +10,7 @@ const Edit: NextPage = () => {
   if (!meQuery?.me.user) return null;
   return (
     <>
-      <WithHead
-        title="회원정보 변경 | 모두CBT"
-        pageHeadingTitle="회원정보 변경 페이지"
-      />
+      <WithHead title="회원정보 | 모두CBT" pageHeadingTitle="회원정보 페이지" />
       <Layout>
         <EditComponent user={meQuery.me.user} />
       </Layout>
