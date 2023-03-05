@@ -29,8 +29,8 @@ import styled, { css } from 'styled-components';
 import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
-import Portal from '@components/common/portal/Portal';
-import CoupangAd from '@components/common/ad/CoupangAd';
+import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
+import { isMobileOnly } from 'react-device-detect';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -55,26 +55,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [answerValue, setAnswerValue] = useState('');
   const [questionAndSolution, setQuestionAndSolution] =
     useState<QuestionType | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const [solutionWriteModalState, setSolutionWriteModalState] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
-
-  useEffect(() => {
-    let prevVisualViewport = window.visualViewport?.height || 0;
-    const handleVisualViewportResize = () => {
-      let currentVisualViewport = Number(window.visualViewport?.height);
-      if (prevVisualViewport - 200 > currentVisualViewport) {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
-    if (window.visualViewport) {
-      window.visualViewport.onresize = handleVisualViewportResize;
-    }
-  }, [scrollRef]);
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
@@ -125,6 +114,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   };
   const onToggleCommentModal = () => {
     setCommentModalState(!commentModalState);
+  };
+  const onToggleSolutionWriteModal = () => {
+    if (window && window.innerWidth < 500) {
+      setSolutionWriteModalState(!solutionWriteModalState);
+    }
+    return;
   };
 
   const onFinishConfirmModal = () => {
@@ -270,6 +265,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
           onChange={onChangeAnswer}
+          onMouseEnter={onToggleSolutionWriteModal}
           placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         />
         <button
@@ -289,6 +285,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         />
 
         <div className="exam-question-menubar-wrapper">
+          <AchievementCheck
+            questionIndex={questionIndex}
+            questionsQuery={questionsQuery}
+          />
           <div className="exam-question-menubar-modal-button-wrapper">
             <Button
               type="primary"
@@ -302,7 +302,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               className="exam-question-menubar-check-button"
               onClick={onToggleProgressModal}
             >
-              진도 확인
+              성취도
             </Button>
             <Button
               type="primary"
@@ -312,25 +312,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
               {`댓글 ${questionAndSolution?.mockExamQuestionComment.length}`}
             </Button>
           </div>
-          <div className="exam-question-menubar" id="exam-question-menubar">
-            <AchievementCheck
-              questionIndex={questionIndex}
-              questionsQuery={questionsQuery}
-            />
-            <MoveQuestion
-              questionIndex={questionIndex}
-              questionCount={
-                questionsQuery.readMockExamQuestionsByMockExamId.count
-              }
-              setModalState={setFinishModalState}
-            />
-          </div>
         </div>
+        <MoveQuestion
+          questionIndex={questionIndex}
+          questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}
+          setModalState={setFinishModalState}
+        />
       </ExamContainer>
-      {/* <Portal>
-        <CoupangAd />
-      </Portal> */}
-
       <ConfirmModal
         open={finishModalState}
         content={'마지막 문제입니다.\n학습을 종료하시겠습니까?'}
@@ -362,6 +350,21 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
         onClose={onToggleCommentModal}
         title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
+      />
+      <SolutionWriteModal
+        open={solutionWriteModalState}
+        onClose={onToggleSolutionWriteModal}
+        questionAndSolutionContent={{
+          content: questionAndSolution ? `${questionAndSolution.question}` : '',
+          img: questionAndSolution?.question_img,
+          title: String(examTitle || ''),
+        }}
+        textAreaOption={{
+          autoSize: { minRows: 3, maxRows: 8 },
+          value: answerValue,
+          onChange: onChangeAnswer,
+          placeholder: '답을 확인하기 전에 먼저 답을 작성해 보세요.',
+        }}
       />
     </>
   );
@@ -403,22 +406,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
     color: ${palette.gray_700};
   }
 
-  .exam-question-move-button-label {
-    margin-left: 40px;
-    margin-right: 5px;
-  }
-  .exam-question-move-button {
-    position: relative;
-    top: 2px;
-    transition: all 0.2s ease-in;
-    svg {
-      width: 25px;
-      height: 25px;
-    }
-    :hover {
-      color: ${palette.antd_blue_02};
-    }
-  }
   .exam-solution-check-wrapper {
     display: flex;
     align-items: center;
@@ -450,9 +437,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
     padding-bottom: 130px;
-  }
-  @media (max-width: ${responsive.small}) {
-    padding-bottom: 110px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
@@ -460,6 +444,10 @@ const ExamContainer = styled.div<ExamContainerProps>`
       gap: 20px;
       align-items: flex-start;
     }
+  }
+  @media (max-width: ${responsive.small}) {
+    padding-bottom: 110px;
+
     .exam-container-title {
       font-size: 1rem;
     }
