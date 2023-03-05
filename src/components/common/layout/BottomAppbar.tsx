@@ -20,7 +20,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const authRoutes = ['/me/bookmark', '/me/edit'];
   const isBookmarkPage = router.pathname === '/me/bookmark';
   const isMypage = router.pathname === '/me/edit';
-  const isMainPage = !isMypage && !isBookmarkPage;
+  const isHome = !router.asPath.startsWith('/me');
   const onRouteChange = (path: string) => {
     if (!meQuery?.me.user && authRoutes.includes(path)) {
       return router.push('/mobile/login');
@@ -28,6 +28,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
     return router.push(path);
   };
   const onHomeRouteHandler = () => {
+    if (isHome) return;
     const homeRouteStack = localStorage.get(homeRouteStackKey);
     if (homeRouteStack) {
       const beforeHomeRoute = homeRouteStack.pop();
@@ -43,8 +44,8 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   return (
     <BottomAppbarContainer className={className}>
       <button onClick={onHomeRouteHandler} className="bottom-app-bar-item">
-        <HomeIcon className={`${isMainPage && 'active'}`} />
-        <span className={`bottom-app-bar-item-text ${isMainPage && 'active'}`}>
+        <HomeIcon className={`${isHome && 'active'}`} />
+        <span className={`bottom-app-bar-item-text ${isHome && 'active'}`}>
           홈
         </span>
       </button>
