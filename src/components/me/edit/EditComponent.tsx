@@ -56,7 +56,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
-  if (!meQuery?.me.user) return <EditComponentSkeleton />;
+
   const tryRequestChangeNickname = convertWithErrorHandlingFunc({
     callback: requestChangeNickname,
   });
@@ -109,6 +109,8 @@ const EditComponent: React.FC<EditComponentProps> = () => {
   });
   const onToggleWithdrawalModal = () =>
     setWithdrawalModalState(!withdrawalModalState);
+
+  if (!meQuery?.me.user) return <EditComponentSkeleton />;
   return (
     <EditComponentContainer>
       <h1>회원정보</h1>

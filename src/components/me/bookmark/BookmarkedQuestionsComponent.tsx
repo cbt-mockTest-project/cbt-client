@@ -9,6 +9,7 @@ import { Button, Select } from 'antd';
 import { responsive } from '@lib/utils/responsive';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import ExamSolutionListSkeleton from '@components/exam/solution/ExamSolutionListSkeleton';
+import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
 
 interface BookmarkedQuestionsComponentProps {}
 
@@ -63,28 +64,22 @@ const BookmarkedQuestionsComponent: React.FC<
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
 
+  if (!questionsQuery) {
+    return <BookmarkedQuestionsComponentSkeleton />;
+  }
+
   return (
     <BookmarkedQuestionsComponentBlock>
-      {examTitleAndIdOptions && examTitleAndIdOptions.length >= 1 ? (
-        <Select
-          className="bookmark-question-exam-title-select"
-          options={examTitleAndIdOptions}
-          defaultValue={examTitleAndIdOptions[0].value}
-          onChange={requsetReadBookmarkedQuestions}
-        />
-      ) : (
-        <SkeletonBox width="300px" height="30px" />
-      )}
+      <Select
+        className="bookmark-question-exam-title-select"
+        options={examTitleAndIdOptions}
+        defaultValue={examTitleAndIdOptions[0].value}
+        onChange={requsetReadBookmarkedQuestions}
+      />
+
       <div>
-        {questionsQueryLoading ? (
-          <SkeletonBox
-            className="bookmark-question-solution-all-hide-button"
-            width="130px"
-            height="32px"
-          />
-        ) : (
-          questionsQuery?.readMockExamQuestionsByMockExamId.questions &&
-          questionsQuery?.readMockExamQuestionsByMockExamId.questions.length >=
+        {questionsQuery.readMockExamQuestionsByMockExamId.questions &&
+          questionsQuery.readMockExamQuestionsByMockExamId.questions.length >=
             1 && (
             <Button
               onClick={onToggleSolutionAllHide}
@@ -93,21 +88,18 @@ const BookmarkedQuestionsComponent: React.FC<
             >
               {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
             </Button>
-          )
-        )}
+          )}
       </div>
-      {!questionsQueryLoading
-        ? questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
-            (question) => (
-              <ExamSolutionList
-                isSolutionAllHide={isSolutionAllHide}
-                key={question.id}
-                question={question}
-                title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
-              />
-            )
-          )
-        : [1, 2, 3, 4, 5].map((el) => <ExamSolutionListSkeleton key={el} />)}
+      {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
+        (question) => (
+          <ExamSolutionList
+            isSolutionAllHide={isSolutionAllHide}
+            key={question.id}
+            question={question}
+            title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
+          />
+        )
+      )}
     </BookmarkedQuestionsComponentBlock>
   );
 };
