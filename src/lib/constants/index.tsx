@@ -16,14 +16,11 @@ export const clearIcon = (
  * 로컬스토리지 답안 임시저장 key
  */
 export const tempAnswerKey = 'tempAnswerKey';
-
 export const loginModal = 'loginModal';
-
 export const widhDrawalModal = 'widhDrawalModal';
-
 export const selectExamCategoryHistory = 'selectExamCategoryHistory';
-
 export const selectExamHistory = 'selectExamHistory';
+export const homeRouteStackKey = 'homeRouteStackKey';
 
 export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
 export const KAKAO_REST_API = process.env.NEXT_PUBLIC_KAKAO_REST_API;

@@ -52,11 +52,16 @@ const StyledModal = styled(Modal)`
   max-width: unset;
   overflow-y: scroll;
   .solution-write-question-box-wrapper {
-    margin-top: 20px;
+    margin-top: 0px;
     padding-bottom: 180px;
   }
   .modal-close-button {
-    right: -10px;
+    display: block;
+    width: 25px;
+    top: 0;
+    margin-left: auto;
+    position: sticky;
+    z-index: 999;
   }
 
   .solution-write-modal-text-area-wrapper {
