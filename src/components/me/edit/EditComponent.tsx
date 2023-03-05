@@ -5,6 +5,7 @@ import {
   useDeleteUser,
   useEditProfileMutation,
   useLogoutMutation,
+  useMeQuery,
 } from '@lib/graphql/user/hook/useUser';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import useInput from '@lib/hooks/useInput';
@@ -14,12 +15,11 @@ import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import EditComponentSkeleton from './EditComponentSkeleton';
 
-interface EditComponentProps {
-  user: MeQuery['me']['user'];
-}
+interface EditComponentProps {}
 
-const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
+const EditComponent: React.FC<EditComponentProps> = () => {
   const client = useApollo({}, '');
   const [editProfileMutation] = useEditProfileMutation();
   const [checkPasswordMutation] = useCheckPasswordMutation();
@@ -27,6 +27,8 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
   const [logoutMutation] = useLogoutMutation();
   const [withdrawalModalState, setWithdrawalModalState] = useState(false);
   const [passwordChecked, setPasswordChecked] = useState(false);
+  const { data: meQuery } = useMeQuery();
+  const user = meQuery?.me.user;
   const { value: nickname, onChange: onChangeNicknameValue } = useInput(
     user?.nickname || ''
   );
@@ -54,6 +56,7 @@ const EditComponent: React.FC<EditComponentProps> = ({ user }) => {
     }
     return message.error({ content: res.data?.editProfile.error });
   };
+  if (!meQuery?.me.user) return <EditComponentSkeleton />;
   const tryRequestChangeNickname = convertWithErrorHandlingFunc({
     callback: requestChangeNickname,
   });
