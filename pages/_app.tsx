@@ -27,36 +27,38 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
     };
+    const routeChangeStart = () => {
+      const isNotHome = router.asPath.startsWith('/me');
+      if (!isNotHome) {
+        const homeRouteStack = localStorage.get(homeRouteStackKey);
+        if (homeRouteStack) {
+          if (homeRouteStack.length > 10) {
+            homeRouteStack.shift();
+          }
+          homeRouteStack.push({ path: router.asPath, scrollY: window.scrollY });
+          localStorage.set(homeRouteStackKey, homeRouteStack);
+          return;
+        }
+        localStorage.set(homeRouteStackKey, [
+          { path: router.asPath, scrollY: window.scrollY },
+        ]);
+      }
+    };
+    router.events.on('routeChangeStart', routeChangeStart);
     router.events.on('routeChangeComplete', handleRouteChange);
     router.events.on('hashChangeComplete', handleRouteChange);
     return () => {
+      router.events.off('routeChangeStart', routeChangeStart);
       router.events.off('routeChangeComplete', handleRouteChange);
       router.events.off('hashChangeComplete', handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.events, router.asPath]);
   useEffect(() => {
     // 탈퇴유저에 대한 리다이렉트 메시지
     if (router.query.message) {
       message.error(router.query.message);
     }
   }, [router.query.message]);
-
-  useEffect(() => {
-    // 모바일 환경 홈화면 전환을 위한 RouteStack
-    const isNotHome = router.asPath.startsWith('/me');
-    if (!isNotHome) {
-      const homeRouteStack = localStorage.get(homeRouteStackKey);
-      if (homeRouteStack) {
-        if (homeRouteStack.length > 10) {
-          homeRouteStack.shift();
-        }
-        homeRouteStack.push(router.asPath);
-        localStorage.set(homeRouteStackKey, homeRouteStack);
-        return;
-      }
-      localStorage.set(homeRouteStackKey, [router.asPath]);
-    }
-  }, [router.asPath]);
 
   // useEffect(() => {
   //   (window as any).ChannelIO('boot', {
