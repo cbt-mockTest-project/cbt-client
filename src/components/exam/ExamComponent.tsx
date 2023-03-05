@@ -30,6 +30,7 @@ import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
+import MovePannel from './MovePannel';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -66,6 +67,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
 
   useEffect(() => {
     const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     /**
      * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
      */
@@ -316,6 +318,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
           questionIndex={questionIndex}
           questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}
           setModalState={setFinishModalState}
+        />
+        <MovePannel
+          questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}
+          questionIndex={questionIndex}
         />
       </ExamContainer>
       <ConfirmModal

@@ -73,6 +73,7 @@ const MoveQuestionContainer = styled.div`
   display: flex;
   align-items: center;
   position: fixed;
+  z-index: 999;
   bottom: 80px;
   right: 30px;
   gap: 10px;
@@ -99,6 +100,7 @@ const MoveQuestionContainer = styled.div`
     }
   }
   @media (max-width: ${responsive.medium}) {
+    position: fixed;
     bottom: 80px;
     right: 30px;
   }
