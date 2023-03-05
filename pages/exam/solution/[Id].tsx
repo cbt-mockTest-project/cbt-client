@@ -12,8 +12,13 @@ import WithHead from '@components/common/head/WithHead';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
-import SolutionComponent from '@components/solution/SolutionComponent';
+import dynamic from 'next/dynamic';
+import SolutionComponentSkeleton from '@components/solution/SolutionComponentSkeleton';
 
+const SolutionComponent = dynamic(
+  () => import('@components/solution/SolutionComponent'),
+  { loading: () => <SolutionComponentSkeleton /> }
+);
 interface SolutionProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
 }
