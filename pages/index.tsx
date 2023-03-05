@@ -93,7 +93,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     });
   });
   examLinks.sort((a, b) => {
-    if (a.title.includes('산업안전기사')) {
+    if (a.title.includes('산업안전기사실기(필답형)')) {
       return -1;
     }
     if (a.title.includes('산업안전산업기사')) {
