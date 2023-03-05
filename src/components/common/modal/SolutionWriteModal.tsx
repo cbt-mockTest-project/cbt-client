@@ -3,7 +3,7 @@ import QuestionAndSolutionBox, {
 } from '@components/exam/QuestionAndSolutionBox';
 import { TextAreaProps } from 'antd/lib/input';
 import TextArea from 'antd/lib/input/TextArea';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 
@@ -34,6 +34,7 @@ const SolutionWriteModal: React.FC<SolutionWriteModalProps> = ({
       <div className="solution-write-modal-text-area-wrapper">
         <TextArea
           {...textAreaOption}
+          autoFocus
           className="solution-write-modal-text-area"
         />
       </div>
