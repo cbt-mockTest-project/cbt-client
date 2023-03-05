@@ -28,18 +28,22 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
     return router.push(path);
   };
   const onHomeRouteHandler = () => {
-    if (isHome) return;
-    const homeRouteStack = localStorage.get(homeRouteStackKey);
-    if (homeRouteStack) {
-      const beforeHomeRoute = homeRouteStack.pop();
-      if (beforeHomeRoute && beforeHomeRoute.path && beforeHomeRoute.scrollY) {
-        router.push(beforeHomeRoute.path).then(() => {
-          window.scrollTo({ top: beforeHomeRoute.scrollY });
-        });
-        return;
+    try {
+      if (isHome) return;
+      const homeRouteStack = localStorage.get(homeRouteStackKey);
+      if (homeRouteStack) {
+        const beforeHomeRoute = homeRouteStack.pop();
+        if (beforeHomeRoute) {
+          router.push(beforeHomeRoute.path).then(() => {
+            window.scrollTo({ top: beforeHomeRoute.scrollY });
+          });
+          return;
+        }
       }
+      return router.push('/');
+    } catch {
+      return router.push('/');
     }
-    return router.push('/');
   };
   return (
     <BottomAppbarContainer className={className}>
