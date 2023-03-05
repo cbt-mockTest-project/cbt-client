@@ -31,11 +31,12 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
     const homeRouteStack = localStorage.get(homeRouteStackKey);
     if (homeRouteStack) {
       const beforeHomeRoute = homeRouteStack.pop();
-      if (beforeHomeRoute && beforeHomeRoute.path && beforeHomeRoute.scrollY)
+      if (beforeHomeRoute && beforeHomeRoute.path && beforeHomeRoute.scrollY) {
         router.push(beforeHomeRoute.path).then(() => {
           window.scrollTo({ top: beforeHomeRoute.scrollY });
         });
-      return;
+        return;
+      }
     }
     return router.push('/');
   };
