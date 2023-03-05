@@ -1,4 +1,6 @@
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { responsive } from '@lib/utils/responsive';
+import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { SetStateAction } from 'react';
 import styled from 'styled-components';
@@ -47,9 +49,6 @@ const MoveQuestion: React.FC<MoveQuestionProps> = ({
 
   return (
     <MoveQuestionContainer>
-      <span className="exam-question-move-button-label select-none">
-        문제이동
-      </span>
       <button
         className="exam-question-move-button"
         type="button"
@@ -73,4 +72,34 @@ export default MoveQuestion;
 const MoveQuestionContainer = styled.div`
   display: flex;
   align-items: center;
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+  gap: 10px;
+
+  .exam-question-move-button-label {
+    margin-left: 40px;
+    margin-right: 5px;
+  }
+  .exam-question-move-button {
+    position: relative;
+    transition: all 0.2s ease-in;
+    padding: 10px;
+    border: 1px solid ${palette.blue_200};
+    border-radius: 100%;
+    display: flex;
+    justify-content: content;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: ${palette.antd_blue_02};
+    color: white;
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+  }
+  @media (max-width: ${responsive.medium}) {
+    bottom: 80px;
+    right: 30px;
+  }
 `;

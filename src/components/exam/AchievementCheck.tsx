@@ -96,26 +96,21 @@ const AchievementCheckContainer = styled.div`
   align-items: center;
   .achievement-check-tooltip {
     position: relative;
-    top: 5px;
-    right: 3px;
+    top: 4px;
   }
   .achievement-check-tooltip-content {
     font-size: 0.8rem;
     color: white;
+    width: 330px;
   }
   @media (max-width: ${responsive.medium}) {
     .achievement-check-label {
-      margin: 0 10px;
-    }
-    .achievement-check-label,
-    .achievement-check-tooltip {
-      display: none;
+      margin: 0 10px 0 5px;
     }
   }
   @media (max-width: ${responsive.small}) {
-    .achievement-check-label,
-    .achievement-check-tooltip {
-      display: none;
+    .achievement-check-tooltip-content {
+      width: 280px;
     }
   }
 `;
