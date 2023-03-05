@@ -1,16 +1,26 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
-import BookmarkedQuestionsComponent from '@components/me/bookmark/BookmarkedQuestionsComponent';
-import MypageComponent from '@components/me/examhistory/ExamHistoryComponent';
-import { useFineMyExamHistory } from '@lib/graphql/user/hook/useExam';
+// import BookmarkedQuestionsComponent from '@components/me/bookmark/BookmarkedQuestionsComponent';
+import BookmarkedQuestionsComponentSkeleton from '@components/me/bookmark/BookmarkedQuestionsComponentSkeleton';
 import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import React from 'react';
 
+const BookmarkedQuestionsComponent = dynamic(
+  () => import('@components/me/bookmark/BookmarkedQuestionsComponent'),
+  {
+    ssr: false,
+    loading: () => <BookmarkedQuestionsComponentSkeleton />,
+  }
+);
+
 const Mypage: NextPage = () => {
-  const { data: examHistoryQuery } = useFineMyExamHistory({ categoryIds: [] });
   return (
     <>
-      <WithHead title="마이페이지 | 모두CBT" pageHeadingTitle="마이페이지" />
+      <WithHead
+        title="북마크페이지 | 모두CBT"
+        pageHeadingTitle="북마크페이지"
+      />
       <Layout subNav={true}>
         <BookmarkedQuestionsComponent />
       </Layout>
