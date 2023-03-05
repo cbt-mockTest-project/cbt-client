@@ -5,14 +5,14 @@ import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
 import React from 'react';
 import styled from 'styled-components';
-interface Content {
+export interface QuestionAndSolutionContent {
   content?: string;
   img?: QuestionType['question_img'];
   title?: string;
 }
 
 interface QuestionAndSolutionBoxProps {
-  content: Content;
+  content: QuestionAndSolutionContent;
   visible?: boolean;
   label?: string | JSX.Element;
 }

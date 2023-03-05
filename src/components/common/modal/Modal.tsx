@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
 export interface ModalProps {
@@ -7,10 +7,14 @@ export interface ModalProps {
   children: React.ReactNode;
   onClose: () => void;
   className?: string;
+  animationDirection?: 'top' | 'bottom';
+  animation?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
   open = false,
+  animation = true,
+  animationDirection = 'top',
   children,
   onClose,
   className,
@@ -18,7 +22,11 @@ const Modal: React.FC<ModalProps> = ({
   if (!open) return null;
   return (
     <>
-      <ModalContainer className={className}>
+      <ModalContainer
+        className={className}
+        animation={animation}
+        animationDirection={animationDirection}
+      >
         <div className="modal-wrapper">
           <span onClick={onClose} className="modal-close-button">
             <ClearIcon />
@@ -33,16 +41,27 @@ const Modal: React.FC<ModalProps> = ({
 
 export default Modal;
 
-const ModalContainer = styled.div`
+interface ModalContainerProps
+  extends Pick<ModalProps, 'animation' | 'animationDirection'> {}
+
+const ModalContainer = styled.div<ModalContainerProps>`
   @keyframes slidein {
     from {
-      transform: translateY(-500px);
+      transform: ${(props) =>
+        props.animationDirection === 'top'
+          ? 'translateY(-500px)'
+          : 'translateY(500px)'};
     }
     to {
       transform: translateY(0px);
     }
   }
-  animation: slidein 0.5s;
+  ${(props) =>
+    props.animation &&
+    css`
+      animation: slidein 0.5s;
+    `}
+
   position: fixed;
   background-color: white;
   padding: 30px 50px;
