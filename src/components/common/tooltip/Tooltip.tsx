@@ -2,70 +2,7 @@ import React, { useState } from 'react';
 import TooltipIconSVG from '@assets/svg/icon-noti-tooltip-question.svg';
 import styled, { css } from 'styled-components';
 import palette from '@styles/palette';
-
-interface TooltipBlockProps {
-  position: TooltipPosition;
-  tooltipHover: boolean;
-  padding: number;
-}
-
-const TooltipBlock = styled.div<TooltipBlockProps>`
-  position: relative;
-  svg {
-    cursor: pointer;
-  }
-
-  .tooltip-content {
-    opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
-    ${({ position }) =>
-      position === 'bottom'
-        ? css`
-            transform: translateY(calc(0% + (-8px)));
-          `
-        : position === 'top' &&
-          css`
-            transform: translateY(calc(-100% + (-23px)));
-          `};
-    background-color: ${palette.gray_900};
-    border-radius: 5px;
-    padding: ${({ padding }) => padding}px;
-    position: absolute;
-    font-weight: normal;
-    width: max-content;
-    word-break: break-all;
-    z-index: 1;
-    pre,
-    b {
-      color: white;
-      font-size: 14px;
-    }
-    b {
-      font-weight: bold;
-    }
-
-    ${({ position, tooltipHover }) => {
-      if (tooltipHover) {
-        if (position === 'bottom')
-          return css`
-            opacity: 1;
-            transform: translateY(calc(0% + (-1px)));
-          `;
-        if (position === 'top')
-          return css`
-            opacity: 1;
-            transform: translateY(calc(-100% + (-30px)));
-          `;
-        if (position === 'top-left')
-          return css`
-            opacity: 1;
-            transform: translateY(calc(-100% + (-30px)));
-            right: 5px;
-          `;
-      }
-    }}
-  }
-`;
+import { AnimatePresence, motion, Variant, Variants } from 'framer-motion';
 
 export type TooltipPosition = 'top' | 'bottom' | 'top-left';
 
@@ -87,13 +24,40 @@ const Tooltip: React.FC<TooltipProps> = ({
   className,
 }) => {
   const [tooltipHover, setTooltipHover] = useState(false);
+
+  const tootipVariants: Variants = {
+    initial: {
+      opacity: 0,
+      translateY:
+        position === 'bottom'
+          ? 'calc(0% + (-8px))'
+          : position === 'top'
+          ? 'calc(-100% + (-23px))'
+          : undefined,
+    },
+    animate: {
+      opacity: 1,
+      translateY:
+        position === 'bottom'
+          ? 'calc(0% + (-1px))'
+          : position === 'top'
+          ? 'calc(-100% + (-30px))'
+          : position === 'top-left'
+          ? 'calc(-100% + (-30px))'
+          : undefined,
+    },
+    exit: {
+      opacity: 0,
+      translateY:
+        position === 'bottom'
+          ? 'calc(0% + (-8px))'
+          : position === 'top'
+          ? 'calc(-100% + (-23px))'
+          : undefined,
+    },
+  };
   return (
-    <TooltipBlock
-      position={position}
-      tooltipHover={tooltipHover}
-      className={className}
-      padding={padding}
-    >
+    <TooltipBlock className={className} padding={padding}>
       <div
         className="tooltip-wrapper"
         onMouseOver={() => setTooltipHover(true)}
@@ -105,9 +69,53 @@ const Tooltip: React.FC<TooltipProps> = ({
           viewBox="0 0 24 24"
         />
       </div>
-      <div className="tooltip-content">{children}</div>
+      <AnimatePresence>
+        {tooltipHover && (
+          <motion.div
+            variants={tootipVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="tooltip-content"
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </TooltipBlock>
   );
 };
 
 export default Tooltip;
+
+interface TooltipBlockProps {
+  padding: number;
+}
+
+const TooltipBlock = styled.div<TooltipBlockProps>`
+  position: relative;
+  svg {
+    cursor: pointer;
+  }
+
+  .tooltip-content {
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    background-color: ${palette.gray_900};
+    border-radius: 5px;
+    padding: ${({ padding }) => padding}px;
+    position: absolute;
+    font-weight: normal;
+    width: max-content;
+    word-break: break-all;
+    z-index: 1;
+    pre,
+    b {
+      color: white;
+      font-size: 14px;
+    }
+    b {
+      font-weight: bold;
+    }
+  }
+`;

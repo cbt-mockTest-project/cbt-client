@@ -30,7 +30,6 @@ import AchievementCheck from './AchievementCheck';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
-import { isMobileOnly } from 'react-device-detect';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
