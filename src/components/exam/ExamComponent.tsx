@@ -33,15 +33,15 @@ import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
 import MovePannel from './MovePannel';
 import Tooltip from '@components/common/tooltip/Tooltip';
 import useIsMobile from '@lib/hooks/useIsMobile';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import ExamSkeleton from './ExamSkeleton';
 
-interface ExamComponentProps {
-  questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
-}
+interface ExamComponentProps {}
 
-const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
-  const {
-    readMockExamQuestionsByMockExamId: { questions },
-  } = questionsQuery;
+const ExamComponent: React.FC<ExamComponentProps> = () => {
+  const [readQuestions, { data: questionsQuery }] =
+    useLazyReadQuestionsByExamId('cache-and-network');
+  const questions = questionsQuery?.readMockExamQuestionsByMockExamId.questions;
   const client = useApollo({}, '');
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -49,9 +49,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const { data: meQuery } = useMeQuery();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
-  const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
+
   const questionIndex = Number(router.query.q);
-  const tempAnswerIndex = String(examTitle) + questionIndex;
+
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);
@@ -68,34 +68,56 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [createFeedBack] = useCreateQuestionFeedBack();
 
   useEffect(() => {
-    const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    /**
-     * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
-     */
-    setAnswerValue(currentAnswer);
-    setProgressModalState(false);
-    setFeedBackModalState(false);
-    setFinishModalState(false);
-    setAnswerboxVisible(false);
-    setCommentModalState(false);
-    setBookmarkState(
-      questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
-    );
-    setQuestionAndSolution({
-      question: questions[questionIndex - 1].question,
-      number: questions[questionIndex - 1].number,
-      question_img: questions[questionIndex - 1].question_img,
-      solution: questions[questionIndex - 1].solution,
-      solution_img: questions[questionIndex - 1].solution_img,
-      id: questions[questionIndex - 1].id,
-      state: questions[questionIndex - 1].state,
-      mockExamQuestionBookmark:
-        questions[questionIndex - 1].mockExamQuestionBookmark,
-      mockExamQuestionComment:
-        questions[questionIndex - 1].mockExamQuestionComment,
-    });
-  }, [router.query.q]);
+    if (router.isReady) {
+      readQuestions({
+        variables: {
+          input: {
+            id: Number(router.query.e),
+            isRandom: router.query.r === 'true' ? true : false,
+          },
+        },
+      });
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
+    if (questions) {
+      const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      /**
+       * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+       */
+      setAnswerValue(currentAnswer);
+      setProgressModalState(false);
+      setFeedBackModalState(false);
+      setFinishModalState(false);
+      setAnswerboxVisible(false);
+      setCommentModalState(false);
+      setBookmarkState(
+        questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
+      );
+      setQuestionAndSolution({
+        question: questions[questionIndex - 1].question,
+        number: questions[questionIndex - 1].number,
+        question_img: questions[questionIndex - 1].question_img,
+        solution: questions[questionIndex - 1].solution,
+        solution_img: questions[questionIndex - 1].solution_img,
+        id: questions[questionIndex - 1].id,
+        state: questions[questionIndex - 1].state,
+        mockExamQuestionBookmark:
+          questions[questionIndex - 1].mockExamQuestionBookmark,
+        mockExamQuestionComment:
+          questions[questionIndex - 1].mockExamQuestionComment,
+      });
+    }
+  }, [router.query.q, questions]);
+
+  if (!questionsQuery) {
+    return <ExamSkeleton />;
+  }
+
+  const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
+  const tempAnswerIndex = String(examTitle) + questionIndex;
 
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => {
