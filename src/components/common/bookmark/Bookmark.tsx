@@ -6,7 +6,7 @@ import palette from '@styles/palette';
 
 interface BookmarkProps {
   active: boolean;
-  onClick: React.MouseEventHandler<HTMLElement>;
+  onClick?: React.MouseEventHandler<HTMLElement>;
   className?: string;
 }
 

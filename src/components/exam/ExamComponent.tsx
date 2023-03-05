@@ -31,6 +31,8 @@ import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
 import MovePannel from './MovePannel';
+import Tooltip from '@components/common/tooltip/Tooltip';
+import useIsMobile from '@lib/hooks/useIsMobile';
 
 interface ExamComponentProps {
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -42,6 +44,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   } = questionsQuery;
   const client = useApollo({}, '');
   const router = useRouter();
+  const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
@@ -55,7 +58,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   const [answerValue, setAnswerValue] = useState('');
   const [questionAndSolution, setQuestionAndSolution] =
     useState<QuestionType | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
@@ -242,14 +244,35 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ questionsQuery }) => {
   return (
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
-        <h2 className="exam-container-title">
-          {examTitle}-{questionIndex}번 문제{' '}
-          <Bookmark
-            active={bookmarkState}
-            onClick={tryEditBookmark}
-            className="exam-container-bookmark"
-          />
-        </h2>
+        <div className="exam-container-title-wrapper">
+          <div className="exam-container-bookmark-button-wrapper">
+            <button
+              className="exam-container-bookmark-button"
+              onClick={tryEditBookmark}
+            >
+              <Bookmark
+                active={bookmarkState}
+                className="exam-container-bookmark-icon"
+              />
+              <p className="exam-container-bookmark-text">
+                {bookmarkState ? '저장됨' : '저장하기'}
+              </p>
+            </button>
+            <Tooltip
+              position="bottom"
+              className="exam-container-bookmark-tooltip"
+            >
+              <p className="exam-container-bookmark-tooltip-text">
+                {`저장된 문제는 ${
+                  isMobile ? '북마크탭' : '활동내역'
+                }에서\n확인할 수 있습니다.`}
+              </p>
+            </Tooltip>
+          </div>
+          <h2 className="exam-container-title">
+            {examTitle}-{questionIndex}번 문제
+          </h2>
+        </div>
         <div ref={scrollRef} />
         <QuestionAndSolutionBox
           label="문제"
@@ -385,10 +408,49 @@ const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
   padding-bottom: 150px;
+  .exam-container-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    gap: 5px;
+  }
   .exam-container-title {
     font-size: 1.3rem;
-    margin-bottom: 20px;
   }
+  .exam-container-bookmark-button-wrapper {
+    display: flex;
+    gap: 15px;
+  }
+  .exam-container-bookmark-button {
+    display: flex;
+    gap: 5px;
+    width: 110px;
+    height: 35px;
+    border: 1px solid ${palette.gray_100};
+    border-radius: 5px;
+    padding: 0 10px;
+    background-color: ${palette.gray_100};
+    justify-content: center;
+    align-items: center;
+  }
+  .exam-container-bookmark-tooltip {
+    top: 4px;
+  }
+  .exam-container-bookmark-tooltip-text {
+    color: white;
+    font-size: 0.8rem;
+    width: 150px;
+  }
+  .exam-container-bookmark-icon {
+    flex: 1;
+    height: 25px;
+  }
+  .exam-container-bookmark-text {
+    flex: 2;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
   .exam-answer-visible-button {
     transition: transform 0.3s linear;
     ${(props) =>
@@ -431,10 +493,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
     align-items: center;
     gap: 10px;
   }
-  .exam-container-bookmark {
-    position: relative;
-    top: 3px;
-  }
 
   pre {
     white-space: pre-wrap;
@@ -455,9 +513,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
 
     .exam-container-title {
       font-size: 1rem;
-    }
-    .exam-container-bookmark {
-      top: 5px;
     }
   }
 `;

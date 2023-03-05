@@ -12,6 +12,8 @@ import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, Image, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -121,8 +123,19 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
+        <button
+          className="solution-page-question-bookmark-button"
+          onClick={tryEditBookmark}
+        >
+          <Bookmark
+            className="solution-page-question-bookmark-icon"
+            active={bookmarkState}
+          />
+          <p className="solution-page-question-bookmark-text">
+            {bookmarkState ? '저장됨' : '저장하기'}
+          </p>
+        </button>
         <div className="solution-page-question-pre-wrapper">
-          <Bookmark active={bookmarkState} onClick={tryEditBookmark} />
           <pre className="solution-page-question">
             {`Q${question.number}. ${question.question}`}
           </pre>
@@ -138,6 +151,19 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         )}
       </div>
       <div className="solution-page-question-wrapper">
+        <button
+          className="solution-page-solution-hide-button"
+          onClick={onToggleSolutionHide}
+        >
+          {isSolutionHide ? (
+            <VisibilityOffIcon className="solution-page-solution-hide-icon" />
+          ) : (
+            <VisibilityIcon className="solution-page-solution-hide-icon" />
+          )}
+          <p className="solution-page-solution-hide-text">
+            {isSolutionHide ? '보이기' : '가리기'}
+          </p>
+        </button>
         <div className="solution-page-solution-pre-wrapper">
           <pre
             className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
@@ -164,9 +190,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </div>
         )}
       </div>
-      <Button onClick={onToggleSolutionHide} type="primary">
-        {isSolutionHide ? '정답 보이기' : '정답 가리기'}
-      </Button>
+
       <Button
         type="primary"
         className="solution-page-report-button"
@@ -223,7 +247,9 @@ const ExamSolutionListContainer = styled.li`
 
   .solution-page-report-button,
   .solution-page-comment-button {
-    margin-left: 10px;
+    + button {
+      margin-left: 10px;
+    }
     margin-top: 15px;
   }
 
@@ -237,11 +263,14 @@ const ExamSolutionListContainer = styled.li`
   .solution-page-question-pre-wrapper {
     background-color: ${palette.gray_100};
     border-radius: 5px;
+    border-top-left-radius: 0;
     padding: 20px;
     flex: 4;
   }
   .solution-page-solution-pre-wrapper {
+    position: relative;
     border-radius: 5px;
+    border-top-left-radius: 0;
     border: 1px solid ${palette.gray_300};
     padding: 20px;
     flex: 4;
@@ -260,7 +289,8 @@ const ExamSolutionListContainer = styled.li`
 
   .solution-page-question-wrapper {
     display: flex;
-    margin-top: 30px;
+    position: relative;
+    margin-top: 65px;
     gap: 20px;
   }
 
@@ -268,6 +298,50 @@ const ExamSolutionListContainer = styled.li`
     max-width: none;
     width: 500px;
     background-color: ${palette.gray_100};
+  }
+  .solution-page-question-bookmark-button {
+    display: flex;
+    position: absolute;
+    gap: 5px;
+    align-items: center;
+    width: 90px;
+    height: 35px;
+    top: -35px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid ${palette.gray_100};
+    background-color: ${palette.gray_100};
+    font-size: 0.8rem;
+  }
+  .solution-page-question-bookmark-text {
+    flex: 2;
+    text-align: left;
+  }
+  .solution-page-question-bookmark-icon {
+    flex: 1;
+    height: 25px;
+  }
+  .solution-page-solution-hide-button {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    align-items: center;
+    width: 90px;
+    height: 35px;
+    top: -35px;
+    border: 1px solid ${palette.gray_300};
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-width: 0;
+    font-size: 0.8rem;
+  }
+  .solution-page-solution-hide-icon {
+    flex: 1;
+    font-size: 1.2rem;
+  }
+  .solution-page-solution-hide-text {
+    flex: 2;
+    text-align: left;
   }
 
   @media (max-width: ${responsive.medium}) {
