@@ -1,13 +1,18 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
-import ExamComponent from '@components/exam/ExamComponent';
 import ExamSkeleton from '@components/exam/ExamSkeleton';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-const Exam: NextPage = (asd) => {
+const ExamComponent = dynamic(() => import('@components/exam/ExamComponent'), {
+  ssr: false,
+  loading: () => <ExamSkeleton />,
+});
+
+const Exam: NextPage = () => {
   const router = useRouter();
   const examId = Number(router.query.e);
   const title = router.query.t
@@ -34,13 +39,7 @@ const Exam: NextPage = (asd) => {
         title={`${title}모두CBT`}
         pageHeadingTitle={`${title} 문제풀이 페이지`}
       />
-      <Layout>
-        {questionsQuery ? (
-          <ExamComponent questionsQuery={questionsQuery} />
-        ) : (
-          <ExamSkeleton />
-        )}
-      </Layout>
+      <Layout>{<ExamComponent />}</Layout>
     </>
   );
 };

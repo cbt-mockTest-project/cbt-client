@@ -5,9 +5,15 @@ interface LabelProps {
   content: string | JSX.Element;
   className?: string;
   htmlFor?: string;
+  skeleton?: boolean;
 }
 
-const Label: React.FC<LabelProps> = ({ content, className, htmlFor }) => {
+const Label: React.FC<LabelProps> = ({
+  content,
+  className,
+  htmlFor,
+  skeleton,
+}) => {
   return (
     <LabelContainer className={`select-none ${className}`} htmlFor={htmlFor}>
       {content}
