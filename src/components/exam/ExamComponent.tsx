@@ -49,9 +49,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
-
   const questionIndex = Number(router.query.q);
-
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);

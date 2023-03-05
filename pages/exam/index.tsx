@@ -14,25 +14,10 @@ const ExamComponent = dynamic(() => import('@components/exam/ExamComponent'), {
 
 const Exam: NextPage = () => {
   const router = useRouter();
-  const examId = Number(router.query.e);
   const title = router.query.t
     ? router.query.c + ' ' + router.query.t + ' | '
     : '';
-  const [readQuestions, { data: questionsQuery }] =
-    useLazyReadQuestionsByExamId('cache-and-network');
 
-  useEffect(() => {
-    if (router.isReady) {
-      readQuestions({
-        variables: {
-          input: {
-            id: examId,
-            isRandom: router.query.r === 'true' ? true : false,
-          },
-        },
-      });
-    }
-  }, [router.isReady]);
   return (
     <>
       <WithHead
