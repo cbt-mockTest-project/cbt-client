@@ -28,7 +28,6 @@ const Exam: NextPage = (asd) => {
       });
     }
   }, [router.isReady]);
-  console.log(questionsQuery);
   return (
     <>
       <WithHead

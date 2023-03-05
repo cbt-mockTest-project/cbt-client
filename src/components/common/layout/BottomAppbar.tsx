@@ -6,6 +6,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { homeRouteStackKey } from '@lib/constants';
 
 interface BottomAppbarProps {
   className: string;
@@ -13,6 +15,7 @@ interface BottomAppbarProps {
 
 const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const { data: meQuery } = useMeQuery();
+  const localStorage = new LocalStorage();
   const router = useRouter();
   const authRoutes = ['/me/bookmark', '/me/edit'];
   const isBookmarkPage = router.pathname === '/me/bookmark';
@@ -24,12 +27,16 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
     }
     return router.push(path);
   };
+  const onHomeRouteHandler = () => {
+    const homeRouteStack = localStorage.get(homeRouteStackKey);
+    if (homeRouteStack) {
+      return router.push(homeRouteStack.pop());
+    }
+    return router.push('/');
+  };
   return (
     <BottomAppbarContainer className={className}>
-      <button
-        onClick={() => onRouteChange('/')}
-        className="bottom-app-bar-item"
-      >
+      <button onClick={onHomeRouteHandler} className="bottom-app-bar-item">
         <HomeIcon className={`${isMainPage && 'active'}`} />
         <span className={`bottom-app-bar-item-text ${isMainPage && 'active'}`}>
           홈

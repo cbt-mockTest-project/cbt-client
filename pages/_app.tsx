@@ -16,9 +16,12 @@ import { message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import CoreContainer from '@components/common/core/CoreContainer';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { homeRouteStackKey } from '@lib/constants';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
+  const localStorage = new LocalStorage();
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -37,6 +40,23 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       message.error(router.query.message);
     }
   }, [router.query.message]);
+
+  useEffect(() => {
+    // 모바일 환경 홈화면 전환을 위한 RouteStack
+    const isNotHome = router.asPath.startsWith('/me');
+    if (!isNotHome) {
+      const homeRouteStack = localStorage.get(homeRouteStackKey);
+      if (homeRouteStack) {
+        if (homeRouteStack.length > 10) {
+          homeRouteStack.shift();
+        }
+        homeRouteStack.push(router.asPath);
+        localStorage.set(homeRouteStackKey, homeRouteStack);
+        return;
+      }
+      localStorage.set(homeRouteStackKey, [router.asPath]);
+    }
+  }, [router.asPath]);
 
   // useEffect(() => {
   //   (window as any).ChannelIO('boot', {
