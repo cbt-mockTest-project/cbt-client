@@ -3,6 +3,7 @@ import TooltipIconSVG from '@assets/svg/icon-noti-tooltip-question.svg';
 import styled, { css } from 'styled-components';
 import palette from '@styles/palette';
 import { AnimatePresence, motion, Variant, Variants } from 'framer-motion';
+import useToggle from '@lib/hooks/useToggle';
 
 export type TooltipPosition = 'top' | 'bottom' | 'top-left';
 
@@ -23,8 +24,11 @@ const Tooltip: React.FC<TooltipProps> = ({
   padding = 16,
   className,
 }) => {
-  const [tooltipHover, setTooltipHover] = useState(false);
-
+  const {
+    value: tooltipState,
+    setValue: setTooltipState,
+    onToggle: onToggleTooltipState,
+  } = useToggle(false);
   const tootipVariants: Variants = {
     initial: {
       opacity: 0,
@@ -60,8 +64,9 @@ const Tooltip: React.FC<TooltipProps> = ({
     <TooltipBlock className={className} padding={padding}>
       <div
         className="tooltip-wrapper"
-        onMouseOver={() => setTooltipHover(true)}
-        onMouseLeave={() => setTooltipHover(false)}
+        onMouseOver={() => setTooltipState(true)}
+        onMouseLeave={() => setTooltipState(false)}
+        onClick={onToggleTooltipState}
       >
         <TooltipIconSVG
           width={iconWidth}
@@ -70,7 +75,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         />
       </div>
       <AnimatePresence>
-        {tooltipHover && (
+        {tooltipState && (
           <motion.div
             variants={tootipVariants}
             initial="initial"
