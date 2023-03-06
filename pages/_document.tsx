@@ -42,6 +42,10 @@ class MainDocument extends Document {
       <Html lang="ko">
         <Head>
           <script
+            defer
+            src="https://developers.kakao.com/sdk/js/kakao.min.js"
+          />
+          <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9145855450425143"
             crossOrigin="anonymous"

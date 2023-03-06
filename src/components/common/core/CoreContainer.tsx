@@ -9,6 +9,11 @@ import {
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import LoginModal from '../modal/LoginModal';
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 interface CoreContainerProps {}
 
@@ -25,6 +30,11 @@ const CoreContainer: React.FC<CoreContainerProps> = () => {
   const onCloseModal = () => {
     dispatch(coreActions.closeModal());
   };
+  useEffect(() => {
+    if (!window.Kakao.isInitialized() && window && window.Kakao) {
+      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+    }
+  }, []);
   return (
     <CoreContainerBlock>
       {modalName === loginModal && (
