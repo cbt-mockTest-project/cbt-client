@@ -1,0 +1,159 @@
+import QuestionCommentContainer from '@components/common/card/commentCard/QuestionCommentContainer';
+import {
+  useCreateQuestionCommnet,
+  useLazyReadQuestionComment,
+} from '@lib/graphql/user/hook/useQusetionComment';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
+import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
+import useInput from '@lib/hooks/useInput';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { useApollo } from '@modules/apollo';
+import { Button, message } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { format, parseISO } from 'date-fns';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+interface QuestionCommentProps {
+  questionId: number;
+}
+
+const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
+  const router = useRouter();
+  const client = useApollo({}, '');
+  const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
+  const [submitButtonState, setSubmitButtonState] = useState(false);
+  const [readQuestionComment, { data: commentQuery }] =
+    useLazyReadQuestionComment();
+  const {
+    value: content,
+    setValue: setContent,
+    onChange: onChangeContent,
+  } = useInput('');
+  const { data: meQuery } = useMeQuery();
+  useEffect(() => {
+    if (content.length >= 1) {
+      setSubmitButtonState(true);
+    } else {
+      setSubmitButtonState(false);
+    }
+  }, [content]);
+  useEffect(() => {
+    if (router.isReady && questionId) {
+      readQuestionComment({ variables: { input: { questionId } } });
+    }
+  }, [router.isReady, questionId]);
+  const requestCreateComment = async (questionId: number) => {
+    const res = await createCommentMutation({
+      variables: {
+        input: { questionId, content },
+      },
+    });
+    if (res.data?.createMockExamQuestionComment.ok) {
+      setContent('');
+      const newComment = res.data.createMockExamQuestionComment.comment;
+      const queryResult =
+        client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
+          query: READ_QUESTION_COMMENT,
+          variables: {
+            input: { questionId },
+          },
+        });
+      const prevComments =
+        queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
+      if (queryResult && prevComments) {
+        client.writeQuery({
+          query: READ_QUESTION_COMMENT,
+          data: {
+            readMockExamQuestionCommentsByQuestionId: {
+              ...queryResult.readMockExamQuestionCommentsByQuestionId,
+              comments: [...prevComments, newComment],
+            },
+          },
+          variables: { input: { questionId } },
+        });
+      }
+      return message.success('댓글이 등록되었습니다.');
+    }
+    message.error(res.data?.createMockExamQuestionComment.error);
+  };
+
+  const tryCreateComment = (questionId: number) =>
+    convertWithErrorHandlingFunc({
+      callback: () => requestCreateComment(questionId),
+    });
+  const isLogedIn = Boolean(meQuery?.me.user);
+
+  return (
+    <QuestionCommentBlock>
+      <p className="question-comment-title">댓글</p>
+      <div className="question-comment-input-wrapper">
+        <TextArea
+          autoSize={{ minRows: 3, maxRows: 3 }}
+          onChange={onChangeContent}
+          value={content}
+          disabled={!isLogedIn}
+          placeholder={!isLogedIn ? '로그인 후 이용해주세요' : ''}
+        />
+        <Button
+          type="primary"
+          onClick={tryCreateComment(questionId)}
+          loading={loading}
+          disabled={!submitButtonState}
+        >
+          댓글등록
+        </Button>
+      </div>
+      <div className="comment-box">
+        {commentQuery?.readMockExamQuestionCommentsByQuestionId.comments?.map(
+          (comment) => (
+            <QuestionCommentContainer
+              className="question-comment-item"
+              option={{
+                likesCount: comment.likesCount,
+                likeState: comment.likeState,
+                nickname: comment.user.nickname,
+                content: comment.content,
+                role: comment.user.role,
+                id: comment.id,
+                time: format(parseISO(comment.created_at), 'yy.MM.dd HH:mm'),
+                parrentId: questionId,
+                userId: comment.user.id,
+              }}
+              key={comment.id}
+            />
+          )
+        )}
+      </div>
+    </QuestionCommentBlock>
+  );
+};
+
+export default QuestionComment;
+
+const QuestionCommentBlock = styled.div`
+  margin-top: 30px;
+  .question-comment-item {
+    margin-top: 30px;
+  }
+  .question-comment-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .question-comment-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    button {
+      border-radius: 5px;
+      width: 100px;
+      margin-left: auto;
+    }
+    textarea {
+      border-radius: 5px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+  }
+`;
