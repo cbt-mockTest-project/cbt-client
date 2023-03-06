@@ -26,20 +26,51 @@ export const READ_QUESTIONS_BY_ID = gql`
   ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
+export const READ_ALL_QUESTIONS = gql`
+  query ReadAllQuestions {
+    readAllQuestions {
+      error
+      ok
+      questions {
+        id
+      }
+    }
+  }
+`;
+
 export const READ_QUESTION = gql`
   query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
     readMockExamQuestion(input: $input) {
       mockExamQusetion {
-        ...FullQuestionParts
+        question
+        solution
+        mockExam {
+          title
+        }
+        question_img {
+          url
+        }
+        solution_img {
+          url
+        }
+        id
+        number
+        approved
+        mockExamQuestionComment {
+          ...QusetionCommentParts
+        }
+        mockExamQuestionBookmark {
+          id
+        }
       }
       error
       ok
-      state
     }
   }
-  ${FULL_QUESTION_FRAGMENT}
+  ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
+// 북마크용 추후 네이밍 수정예정
 export const READ_ALL_QUESTION = gql`
   query ReadAllMockExamQuestion {
     readAllMockExamQuestion {

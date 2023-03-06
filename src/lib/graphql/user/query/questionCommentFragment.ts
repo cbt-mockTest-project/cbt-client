@@ -10,6 +10,7 @@ export const FULL_QUESTION_COMMENT_FRAGMENT = gql`
     user {
       nickname
       id
+      role
     }
   }
 `;
