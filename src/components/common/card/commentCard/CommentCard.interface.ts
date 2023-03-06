@@ -15,6 +15,7 @@ export interface CommentCardOption {
 
 export interface QuestionCommentContainerProps {
   option: CommentCardOption;
+  className?: string;
 }
 
 export interface CommentCardProps {

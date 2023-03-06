@@ -35,6 +35,8 @@ import Tooltip from '@components/common/tooltip/Tooltip';
 import useIsMobile from '@lib/hooks/useIsMobile';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import ExamSkeleton from './ExamSkeleton';
+import useToggle from '@lib/hooks/useToggle';
+import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 
 interface ExamComponentProps {}
 
@@ -60,6 +62,10 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const {
+    value: questionShareModalState,
+    onToggle: onToggleQuestionShareModal,
+  } = useToggle();
   const [solutionWriteModalState, setSolutionWriteModalState] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editBookmark] = useEditQuestionBookmark();
@@ -275,6 +281,16 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
       <ExamContainer answerboxVisible={answerboxVisible}>
         <div className="exam-container-title-wrapper">
           <div className="exam-container-bookmark-button-wrapper">
+            <Tooltip
+              position="bottom"
+              className="exam-container-bookmark-tooltip"
+            >
+              <p className="exam-container-bookmark-tooltip-text">
+                {`저장된 문제는 ${
+                  isMobile ? '북마크탭' : '활동내역'
+                }에서\n확인할 수 있습니다.`}
+              </p>
+            </Tooltip>
             <button
               className="exam-container-bookmark-button"
               onClick={tryEditBookmark}
@@ -287,16 +303,12 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
                 {bookmarkState ? '저장됨' : '저장하기'}
               </p>
             </button>
-            <Tooltip
-              position="bottom"
-              className="exam-container-bookmark-tooltip"
+            <button
+              className="exam-container-share-button"
+              onClick={onToggleQuestionShareModal}
             >
-              <p className="exam-container-bookmark-tooltip-text">
-                {`저장된 문제는 ${
-                  isMobile ? '북마크탭' : '활동내역'
-                }에서\n확인할 수 있습니다.`}
-              </p>
-            </Tooltip>
+              공유하기
+            </button>
           </div>
           <h2 className="exam-container-title">{pageSubTitle}</h2>
         </div>
@@ -354,7 +366,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              오류 신고
+              오류신고
             </Button>
             <Button
               type="primary"
@@ -414,6 +426,14 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
+      <QuestionShareModal
+        onClose={onToggleQuestionShareModal}
+        open={questionShareModalState}
+        questionId={questionAndSolution?.id || 0}
+        title={ellipsisText(questionAndSolution?.question || '', 10)}
+        shareTitle={pageSubTitle}
+        shareDescription={ellipsisText(questionAndSolution?.question || '', 50)}
+      />
       <SolutionWriteModal
         open={solutionWriteModalState}
         onClose={onToggleSolutionWriteModal}
@@ -458,7 +478,8 @@ const ExamContainer = styled.div<ExamContainerProps>`
     display: flex;
     gap: 15px;
   }
-  .exam-container-bookmark-button {
+  .exam-container-bookmark-button,
+  .exam-container-share-button {
     display: flex;
     gap: 5px;
     width: 110px;

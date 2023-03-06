@@ -10,11 +10,9 @@ import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { Button } from 'antd';
 import { CommentCardProps } from './CommentCard.interface';
 import { responsive } from '@lib/utils/responsive';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { UserRole } from 'types';
 
 const CommentCardView: React.FC<CommentCardProps> = (props) => {
-  const { data: meQuery } = useMeQuery();
   return (
     <CommentCardContainer
       className={props.className || 'comment-card-container'}

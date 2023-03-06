@@ -85,7 +85,10 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
         }
         `;
       }
-      sendErrorToTelegram(telegramMessage);
+      if (process.env.NODE_ENV !== 'development') {
+        sendErrorToTelegram(telegramMessage);
+      }
+
       if (errorCallback) {
         return await errorCallback(error);
       }
@@ -120,3 +123,29 @@ export const convertExamTitle = (title: string) => {
 
 export const removeHtmlTag = (String: string) =>
   String.replace(/<[^>]*>?/g, '');
+
+export const loadScript = ({
+  src,
+  type,
+  async,
+}: {
+  src: string;
+  type?: string;
+  async?: boolean;
+}) => {
+  return new Promise<void>((resolve) => {
+    const scriptEl = document.createElement('script');
+    if (async && type) {
+      scriptEl.async = async;
+      scriptEl.type = type;
+    }
+
+    scriptEl.src = src;
+    const { length } = document.getElementsByTagName('script');
+    const x = document.getElementsByTagName('script')[length - 1];
+    x.parentNode!.appendChild(scriptEl);
+    scriptEl.onload = () => {
+      resolve();
+    };
+  });
+};
