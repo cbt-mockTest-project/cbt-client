@@ -1,4 +1,4 @@
-import { CaretDownOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, ClearOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import Label from '@components/common/label/Label';
@@ -116,7 +116,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
 
   const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
   const tempAnswerIndex = String(examTitle) + questionIndex;
-
+  const pageSubTitle = `${examTitle}-${questionIndex}번 문제`;
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => {
     setFinishModalState(!finishModalState);
@@ -252,13 +252,22 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
 
   const tryReport = convertWithErrorHandlingFunc({ callback: requestReport });
 
+  const saveAnswerInStorage = (value: string) => {
+    const prevAnswer = storage.get(tempAnswerKey) || {};
+    const tempAnswer: { [key: string]: string } = prevAnswer;
+    tempAnswer[tempAnswerIndex] = value;
+    storage.set(tempAnswerKey, tempAnswer);
+  };
+
   const onChangeAnswer = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const currentValue = e.target.value;
     setAnswerValue(currentValue);
-    const prevAnswer = storage.get(tempAnswerKey) || {};
-    const tempAnswer: { [key: string]: string } = prevAnswer;
-    tempAnswer[tempAnswerIndex] = currentValue;
-    storage.set(tempAnswerKey, tempAnswer);
+    saveAnswerInStorage(currentValue);
+  };
+
+  const onClearAnswer = () => {
+    setAnswerValue('');
+    saveAnswerInStorage('');
   };
 
   return (
@@ -289,9 +298,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
               </p>
             </Tooltip>
           </div>
-          <h2 className="exam-container-title">
-            {examTitle}-{questionIndex}번 문제
-          </h2>
+          <h2 className="exam-container-title">{pageSubTitle}</h2>
         </div>
         <div ref={scrollRef} />
         <QuestionAndSolutionBox
@@ -304,7 +311,15 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
             title: String(examTitle || ''),
           }}
         />
-        <Label content="답 작성" />
+        <div className="exam-solution-write-label-wrapper">
+          <Label content="답 작성" />
+          <button
+            className="exam-solution-write-clear-button"
+            onClick={onClearAnswer}
+          >
+            <ClearOutlined />
+          </button>
+        </div>
         <TextArea
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
@@ -407,12 +422,14 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
           img: questionAndSolution?.question_img,
           title: String(examTitle || ''),
         }}
+        pageSubTitle={pageSubTitle}
         textAreaOption={{
           autoSize: { minRows: 3, maxRows: 8 },
           value: answerValue,
           onChange: onChangeAnswer,
           placeholder: '답을 확인하기 전에 먼저 답을 작성해 보세요.',
         }}
+        onClearAnswer={onClearAnswer}
       />
     </>
   );
@@ -512,6 +529,27 @@ const ExamContainer = styled.div<ExamContainerProps>`
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+  .exam-solution-write-label-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .exam-solution-write-clear-button {
+    top: 5px;
+    height: 18px;
+    width: 18px;
+    margin-top: 4px;
+    svg {
+      transition: all 0.3s;
+      width: 18px;
+      height: 18px;
+    }
+    :hover {
+      svg {
+        color: ${palette.antd_blue_01};
+      }
+    }
   }
 
   pre {
