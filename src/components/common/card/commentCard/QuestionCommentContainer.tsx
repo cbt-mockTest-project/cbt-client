@@ -20,6 +20,7 @@ import {
 
 const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
   option,
+  className,
 }) => {
   const { data: meQuery } = useMeQuery();
   const [editState, setEditState] = useState(false);
@@ -124,6 +125,7 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
     editState,
     editLoading,
     likeLoading,
+    className,
   };
 
   return <CommentCardView {...commentCardProps} />;

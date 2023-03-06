@@ -1,11 +1,14 @@
-import Bookmark from '@components/common/bookmark/Bookmark';
+// import Bookmark from '@components/common/bookmark/Bookmark';
 import CommentModal from '@components/common/modal/CommentModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import {
+  ReadMockExamQuestionQuery,
+  ReadMockExamQuestionsByMockExamIdQuery,
+} from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
@@ -16,24 +19,39 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, Image, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import styled from 'styled-components';
+import dynamic from 'next/dynamic';
+import QuestionComment from '@components/question/QuestionComment';
+import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 
+const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
+  ssr: false,
+  loading: () => <StarBorderOutlinedIcon />,
+});
+
+export type ExamQuestionType =
+  | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0]
+  | ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
 interface ExamSolutionListProps {
-  question: ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
+  question: ExamQuestionType;
   title: string;
   isSolutionAllHide: boolean;
+  commentType?: 'modal' | 'basic';
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   question,
   title,
   isSolutionAllHide,
+  commentType = 'modal',
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const { value: commentModalState, onToggle: onToggleCommentModal } =
     useToggle();
+  const { value: shareModalState, onToggle: onToggleShareModal } = useToggle();
   const {
     value: reportModalState,
     setValue: setReportModalState,
@@ -194,24 +212,37 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       <Button
         type="primary"
         className="solution-page-report-button"
-        onClick={openReportModal}
+        onClick={onToggleShareModal}
       >
-        오류 신고
+        공유하기
       </Button>
       <Button
         type="primary"
-        className="solution-page-comment-button"
-        onClick={onToggleCommentModal}
+        className="solution-page-report-button"
+        onClick={openReportModal}
       >
-        {`댓글 ${question.mockExamQuestionComment.length}`}
+        오류신고
       </Button>
-      <CommentModal
-        className="solution-page-comment-modal"
-        open={commentModalState}
-        onClose={onToggleCommentModal}
-        title={`${title}  ${question.number}번 문제`}
-        questionId={question.id || 0}
-      />
+      {commentType === 'modal' ? (
+        <>
+          <Button
+            type="primary"
+            className="solution-page-comment-button"
+            onClick={onToggleCommentModal}
+          >
+            {`댓글 ${question.mockExamQuestionComment.length}`}
+          </Button>
+          <CommentModal
+            className="solution-page-comment-modal"
+            open={commentModalState}
+            onClose={onToggleCommentModal}
+            title={`${title}  ${question.number}번 문제`}
+            questionId={question.id || 0}
+          />
+        </>
+      ) : (
+        <QuestionComment questionId={question.id} />
+      )}
       <ReportModal
         open={reportModalState}
         onChange={(value) => {
@@ -225,6 +256,14 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           String(question.question),
           10
         )}`}
+      />
+      <QuestionShareModal
+        title={ellipsisText(question.question, 15)}
+        questionId={question.id}
+        open={shareModalState}
+        onClose={onToggleShareModal}
+        shareTitle={`${title} ${question.number}번 문제`}
+        shareDescription={ellipsisText(question.question, 50)}
       />
     </ExamSolutionListContainer>
   );
