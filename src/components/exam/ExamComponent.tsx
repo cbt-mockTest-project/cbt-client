@@ -146,7 +146,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   };
 
   const onFinishConfirmModal = () => {
-    storage.remove(tempAnswerKey);
+    // storage.remove(tempAnswerKey);
     setFinishModalState(false);
     router.push({
       pathname: '/exam/result',

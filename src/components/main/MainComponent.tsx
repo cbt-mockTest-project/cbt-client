@@ -98,7 +98,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const gotoExamPage = () => {
     if (!selectedExamId) return;
-    storage.remove(tempAnswerKey);
+    // storage.remove(tempAnswerKey);
     setGotoExamPageLoading(true);
     router.push({
       pathname: '/exam',
