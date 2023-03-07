@@ -71,7 +71,7 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
           링크 복사
         </Button>
       </div>
-      {isAndroid && (
+      {isMobile && (
         <p className="question-share-modal-info-text">
           {
             '※ 카카오톡 공유하기가 작동하지 않을 경우\n어플을 최신버전으로 업데이트 해주세요.'
