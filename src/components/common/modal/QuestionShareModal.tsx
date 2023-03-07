@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Modal, { ModalProps } from './Modal';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import { Button, Input, message } from 'antd';
+import { Button, Input, InputRef, message } from 'antd';
 import { kakaoShare } from '@lib/utils/kakaoShare';
 import { getRandom } from 'random-useragent';
 
@@ -23,6 +23,7 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
   shareTitle,
   shareDescription,
 }) => {
+  const urlInputRef = useRef<InputRef>(null);
   useEffect(() => {
     // webview 작동을 위한 user-agent 컨트롤
     const originUserAgent = window.navigator.userAgent;
@@ -46,11 +47,10 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
     };
   }, [open]);
   const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionId}`;
-  const onCopyLink = () => {
-    window.navigator.clipboard
-      .writeText(questionPageLink)
-      .then(() => message.success('링크가 복사되었습니다.'))
-      .catch(() => message.error('링크 복사에 실패했습니다..'));
+  const onCopyLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    urlInputRef.current?.select();
+    e.currentTarget.focus();
+    document.execCommand('copy');
   };
   const onKakaoShare = () => {
     kakaoShare({
@@ -79,6 +79,7 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
       </button>
       <div className="question-share-modal-link-wrapper">
         <Input
+          ref={urlInputRef}
           className="question-share-modal-link-value"
           value={questionPageLink}
         />
