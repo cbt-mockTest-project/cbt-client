@@ -19,6 +19,16 @@ export const READ_QUESTIONS_BY_ID = gql`
         mockExamQuestionComment {
           ...QusetionCommentParts
         }
+        mockExamQuestionFeedback {
+          id
+          content
+          user {
+            nickname
+            id
+          }
+          created_at
+          updated_at
+        }
       }
     }
   }
@@ -61,6 +71,16 @@ export const READ_QUESTION = gql`
         }
         mockExamQuestionBookmark {
           id
+        }
+        mockExamQuestionFeedback {
+          id
+          content
+          user {
+            nickname
+            id
+          }
+          created_at
+          updated_at
         }
       }
       error
