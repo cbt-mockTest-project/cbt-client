@@ -35,7 +35,7 @@ export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, question: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> } }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -128,7 +128,10 @@ export const ReadMockExamQuestionsByStateDocument = gql`
   readMockExamQuestionsByState(input: $input) {
     error
     mockExamQusetions {
-      ...FullQuestionParts
+      state
+      question {
+        ...FullQuestionParts
+      }
     }
     ok
   }

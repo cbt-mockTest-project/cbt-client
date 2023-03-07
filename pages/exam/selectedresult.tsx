@@ -24,7 +24,7 @@ const SelectedResult: NextPage = () => {
         title={`선택된 성취도 문제 | 모두CBT`}
         pageHeadingTitle={`선택된 성취도 문제 페이지`}
       />
-      <Layout mainBanner={true}>
+      <Layout mainBanner={false}>
         {questionsQuery && (
           <SelectedResultComponent questionsQuery={questionsQuery} />
         )}

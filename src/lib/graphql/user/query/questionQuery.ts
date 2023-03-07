@@ -91,7 +91,10 @@ export const READ_QUESTIONS_BY_STATE = gql`
     readMockExamQuestionsByState(input: $input) {
       error
       mockExamQusetions {
-        ...FullQuestionParts
+        state
+        question {
+          ...FullQuestionParts
+        }
       }
       ok
     }

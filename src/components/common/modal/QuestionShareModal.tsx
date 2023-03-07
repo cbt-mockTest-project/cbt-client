@@ -24,8 +24,10 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
 }) => {
   const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionId}`;
   const onCopyLink = () => {
-    window.navigator.clipboard.writeText(questionPageLink);
-    message.success('링크가 복사되었습니다.');
+    window.navigator.clipboard
+      .writeText(questionPageLink)
+      .then(() => message.success('링크가 복사되었습니다.'))
+      .catch(() => message.error('링크 복사에 실패했습니다..'));
   };
   const onKakaoShare = () => {
     kakaoShare({

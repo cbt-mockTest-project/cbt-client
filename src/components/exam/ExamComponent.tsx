@@ -303,12 +303,12 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
                 {bookmarkState ? '저장됨' : '저장하기'}
               </p>
             </button>
-            <button
+            {/* <button
               className="exam-container-share-button"
               onClick={onToggleQuestionShareModal}
             >
               공유하기
-            </button>
+            </button> */}
           </div>
           <h2 className="exam-container-title">{pageSubTitle}</h2>
         </div>
@@ -426,14 +426,14 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
-      <QuestionShareModal
+      {/* <QuestionShareModal
         onClose={onToggleQuestionShareModal}
         open={questionShareModalState}
         questionId={questionAndSolution?.id || 0}
         title={ellipsisText(questionAndSolution?.question || '', 10)}
         shareTitle={pageSubTitle}
         shareDescription={ellipsisText(questionAndSolution?.question || '', 50)}
-      />
+      /> */}
       <SolutionWriteModal
         open={solutionWriteModalState}
         onClose={onToggleSolutionWriteModal}

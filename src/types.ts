@@ -1274,7 +1274,7 @@ export type ReadMockExamQuestionsByStateInput = {
 export type ReadMockExamQuestionsByStateOutput = {
   __typename?: 'ReadMockExamQuestionsByStateOutput';
   error?: Maybe<Scalars['String']>;
-  mockExamQusetions: Array<MockExamQuestion>;
+  mockExamQusetions: Array<MockExamQuestionState>;
   ok: Scalars['Boolean'];
 };
 
