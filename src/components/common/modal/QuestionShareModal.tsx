@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Modal, { ModalProps } from './Modal';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { Button, Input, message } from 'antd';
 import { kakaoShare } from '@lib/utils/kakaoShare';
+import { getRandom } from 'random-useragent';
 
 interface QuestionShareModalProps extends Omit<ModalProps, 'children'> {
   questionId: number;
@@ -22,6 +23,28 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
   shareTitle,
   shareDescription,
 }) => {
+  useEffect(() => {
+    // webview 작동을 위한 user-agent 컨트롤
+    const originUserAgent = window.navigator.userAgent;
+    if ((window.navigator as any).__defineGetter__) {
+      if (open) {
+        const randomUserAgent = getRandom();
+        (window.navigator as any).__defineGetter__('userAgent', function () {
+          return randomUserAgent;
+        });
+      } else {
+        (window.navigator as any).__defineGetter__('userAgent', function () {
+          return originUserAgent;
+        });
+      }
+    }
+
+    return () => {
+      (window.navigator as any).__defineGetter__('userAgent', function () {
+        return originUserAgent;
+      });
+    };
+  }, [open]);
   const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionId}`;
   const onCopyLink = () => {
     window.navigator.clipboard
