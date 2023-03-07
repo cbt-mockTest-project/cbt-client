@@ -62,11 +62,11 @@ const SolutionWriteModal: React.FC<SolutionWriteModalProps> = ({
 export default SolutionWriteModal;
 
 const StyledModal = styled(Modal)`
-  top: 15%;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 30px 20px;
+  padding: 20px 20px;
   max-width: unset;
   overflow-y: scroll;
   .solution-write-modal-label-wrapper {
@@ -98,6 +98,7 @@ const StyledModal = styled(Modal)`
     display: block;
     width: 25px;
     top: 0;
+    height: 15px;
     margin-left: auto;
     position: sticky;
     z-index: 999;

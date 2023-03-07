@@ -34,7 +34,7 @@ export const kakaoShare = ({
       ],
       success: (res: any) => console.log(res),
       fail: (res: any) => {
-        alert('실패할경우 앱을 업데이트 해줘');
+        alert('카카오톡 공유에 실패했습니다.');
       },
     });
   }
