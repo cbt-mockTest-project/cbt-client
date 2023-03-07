@@ -5,6 +5,8 @@ import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
 import React from 'react';
 import styled from 'styled-components';
+import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
+import { ExamQuestionType } from './solution/ExamSolutionList';
 export interface QuestionAndSolutionContent {
   content?: string;
   img?: QuestionType['question_img'];
@@ -13,21 +15,29 @@ export interface QuestionAndSolutionContent {
 
 interface QuestionAndSolutionBoxProps {
   content: QuestionAndSolutionContent;
+  question?: ExamQuestionType;
   visible?: boolean;
   label?: string | JSX.Element;
+  feedback?: boolean;
+  refetch?: ({ ...args }: any) => any;
 }
 
 const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   content,
   visible = true,
   label,
+  feedback,
+  question,
+  refetch,
 }) => {
   if (!visible) return null;
-  const hasImage = content.img && content.img.length >= 1;
   return (
     <QuestionAndSolutionBoxContainer>
       <BasicBox minHeight={72} className="question-and-solution-box">
         <pre>{content.content}</pre>
+        {feedback && question && (
+          <ExamSolutionFeedback question={question} refetch={refetch} />
+        )}
       </BasicBox>
       {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">

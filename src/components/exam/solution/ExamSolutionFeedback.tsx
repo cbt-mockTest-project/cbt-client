@@ -10,7 +10,7 @@ import { ExamQuestionType } from './ExamSolutionList';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
-  refetch: ({ ...args }?: any) => any;
+  refetch?: ({ ...args }?: any) => any;
 }
 
 const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
@@ -25,7 +25,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
       const res = await deleteQuestionFeedback({
         variables: { input: { id: questionId } },
       });
-      if (res.data?.deleteMockExamQuestionFeedback.ok) {
+      if (res.data?.deleteMockExamQuestionFeedback.ok && refetch) {
         refetch();
         return message.success('삭제되었습니다.');
       }
