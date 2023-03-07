@@ -7,6 +7,7 @@ import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 interface ReportModalProps extends Omit<ConfirmModalProps, 'content'> {
   title: string | string[];
   label?: string;
+  placeholder?: string;
   onChange?: (value: string) => void;
 }
 
@@ -19,13 +20,21 @@ const ReportModal: React.FC<ReportModalProps> = ({
   confirmLabel,
   title,
   label,
+  placeholder,
 }) => {
   return (
     <ReportModalContainer>
       <ConfirmModal
         className="report-confirm-modal"
         open={open}
-        content={<Content title={title} onChange={onChange} label={label} />}
+        content={
+          <Content
+            title={title}
+            onChange={onChange}
+            label={label}
+            placeholder={placeholder}
+          />
+        }
         onClose={onClose}
         onCancel={onCancel}
         onConfirm={onConfirm}
@@ -38,9 +47,17 @@ const ReportModal: React.FC<ReportModalProps> = ({
 export default ReportModal;
 
 interface Content
-  extends Pick<ReportModalProps, 'title' | 'onChange' | 'label'> {}
+  extends Pick<
+    ReportModalProps,
+    'title' | 'onChange' | 'label' | 'placeholder'
+  > {}
 
-const Content: React.FC<Content> = ({ title, onChange, label }) => {
+const Content: React.FC<Content> = ({
+  title,
+  onChange,
+  label,
+  placeholder,
+}) => {
   const [value, setValue] = useState('');
   const onChangeValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
@@ -54,8 +71,9 @@ const Content: React.FC<Content> = ({ title, onChange, label }) => {
   return (
     <ContentContainer>
       {label && <label className="content-label">{label}</label>}
-      <pre>{title}</pre>
+      <pre className="content-title">{title}</pre>
       <TextArea
+        placeholder={placeholder}
         autoSize={{ minRows: 6, maxRows: 10 }}
         value={value}
         onChange={onChangeValue}
@@ -66,7 +84,12 @@ const Content: React.FC<Content> = ({ title, onChange, label }) => {
 
 const ReportModalContainer = styled.div`
   .report-confirm-modal {
+    .modal-close-button {
+      top: -7px;
+      right: -15px;
+    }
     .confirm-modal {
+      padding: 20px 25px;
       max-width: 500px;
     }
     .confirm-modal-button-wrapper {
@@ -98,5 +121,12 @@ const ContentContainer = styled.div`
     border: 1px solid ${palette.antd_blue_01};
     padding: 5px 20px;
     border-radius: 50px;
+  }
+  .content-title {
+    font-size: 0.9rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
   }
 `;

@@ -258,6 +258,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         confirmLabel="답안추가"
         title={`${String(title)}\n${question.number}번 문제`}
         label="답안추가"
+        placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
       <QuestionShareModal
         title={`${title} ${question.number}번 문제`}
