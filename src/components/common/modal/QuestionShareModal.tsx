@@ -51,6 +51,7 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
     urlInputRef.current?.select();
     e.currentTarget.focus();
     document.execCommand('copy');
+    message.success('링크가 복사되었습니다.');
   };
   const onKakaoShare = () => {
     kakaoShare({
