@@ -33,7 +33,9 @@ export const kakaoShare = ({
         },
       ],
       success: (res: any) => console.log(res),
-      fail: (res: any) => console.log(res),
+      fail: (res: any) => {
+        alert('실패할경우 앱을 업데이트 해줘');
+      },
     });
   }
 };
