@@ -209,13 +209,13 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         )}
       </div>
 
-      <Button
+      {/* <Button
         type="primary"
         className="solution-page-report-button"
         onClick={onToggleShareModal}
       >
         공유하기
-      </Button>
+      </Button> */}
       <Button
         type="primary"
         className="solution-page-report-button"
