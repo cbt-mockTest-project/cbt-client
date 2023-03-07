@@ -17,8 +17,10 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 }) => {
   const router = useRouter();
   const client = useApollo({}, '');
-  const [readQuestion, { data: questionQueryOnClientSide }] =
-    useLazyReadQuestion('network-only');
+  const [
+    readQuestion,
+    { data: questionQueryOnClientSide, refetch: refetchReadQuestion },
+  ] = useLazyReadQuestion('network-only');
   const { data: meQuery } = useMeQuery();
   const question = (questionQueryOnClientSide || questionQuery)
     .readMockExamQuestion.mockExamQusetion;
@@ -46,6 +48,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     <QuestionComponentContainer>
       <h3>{title}</h3>
       <ExamSolutionList
+        refetch={refetchReadQuestion}
         isSolutionAllHide={false}
         title={question.question}
         commentType="basic"

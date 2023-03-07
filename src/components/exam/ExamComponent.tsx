@@ -303,12 +303,12 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
                 {bookmarkState ? '저장됨' : '저장하기'}
               </p>
             </button>
-            {/* <button
+            <button
               className="exam-container-share-button"
               onClick={onToggleQuestionShareModal}
             >
               공유하기
-            </button> */}
+            </button>
           </div>
           <h2 className="exam-container-title">{pageSubTitle}</h2>
         </div>
@@ -366,7 +366,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              오류신고
+              답안추가
             </Button>
             <Button
               type="primary"
@@ -410,7 +410,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         onChange={(value) => {
           reportValue.current = value;
         }}
-        confirmLabel="요청하기"
+        confirmLabel="답안추가"
         title={`${String(examTitle)}\nQ. ${ellipsisText(
           String(questionAndSolution?.question),
           10
@@ -426,14 +426,16 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
-      {/* <QuestionShareModal
+      <QuestionShareModal
         onClose={onToggleQuestionShareModal}
         open={questionShareModalState}
         questionId={questionAndSolution?.id || 0}
-        title={ellipsisText(questionAndSolution?.question || '', 10)}
-        shareTitle={pageSubTitle}
+        title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
+        shareTitle={`${String(examTitle)}  ${
+          questionAndSolution?.number
+        }번 문제`}
         shareDescription={ellipsisText(questionAndSolution?.question || '', 50)}
-      /> */}
+      />
       <SolutionWriteModal
         open={solutionWriteModalState}
         onClose={onToggleSolutionWriteModal}

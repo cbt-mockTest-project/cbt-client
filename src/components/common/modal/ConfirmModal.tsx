@@ -11,6 +11,7 @@ export interface ConfirmModalProps
   onCancel: () => void;
   confirmLabel?: string;
   cancelLabel?: string;
+  className?: string;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -19,6 +20,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onCancel,
   onConfirm,
   content,
+  className,
   confirmLabel = '확인하기',
   cancelLabel = '취소하기',
 }) => {
@@ -29,8 +31,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     return data;
   };
   return (
-    <ConfirmModalContainer>
-      <Modal open={open} onClose={onClose}>
+    <ConfirmModalContainer className={className}>
+      <Modal open={open} onClose={onClose} className="confirm-modal">
         <div className="confirm-modal-wrapper">
           <div className="confirm-modal-content">
             <Content data={content} />
