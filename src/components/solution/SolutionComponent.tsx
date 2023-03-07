@@ -24,18 +24,21 @@ interface SolutionComponentProps {
 const SolutionComponent: React.FC<SolutionComponentProps> = ({
   questionsQuery,
 }) => {
-  const [readQuestions, { data: questionsQueryOnClientSide }] =
-    useLazyReadQuestionsByExamId('network-only');
+  const [
+    readQuestions,
+    { data: questionsQueryOnClientSide, refetch: refetchReadQuestions },
+  ] = useLazyReadQuestionsByExamId('network-only');
   const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   const client = useApollo({}, '');
   const router = useRouter();
   const title = questionsQuery.readMockExamQuestionsByMockExamId.title;
+  const examId = Number(String(router.query.Id));
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
         const res = await readQuestions({
           variables: {
-            input: { id: Number(String(router.query.Id)), isRandom: false },
+            input: { id: examId, isRandom: false },
           },
         });
         if (res.data?.readMockExamQuestionsByMockExamId.ok) {
@@ -73,6 +76,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 isSolutionAllHide={isSolutionAllHide}
                 question={el}
                 title={convertExamTitle(title)}
+                refetch={refetchReadQuestions}
               />
               {index % 2 === 1 &&
                 questions.length - 1 !== index &&

@@ -20,7 +20,7 @@ const BookmarkedQuestionsComponent: React.FC<
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [
     readQuestions,
-    { data: questionsQuery, loading: questionsQueryLoading },
+    { data: questionsQuery, refetch: refetchReadQuestions },
   ] = useLazyReadQuestionsByExamId('cache-and-network');
 
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
@@ -93,6 +93,7 @@ const BookmarkedQuestionsComponent: React.FC<
       {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
         (question) => (
           <ExamSolutionList
+            refetch={refetchReadQuestions}
             isSolutionAllHide={isSolutionAllHide}
             key={question.id}
             question={question}

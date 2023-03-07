@@ -25,6 +25,10 @@ import dynamic from 'next/dynamic';
 import QuestionComment from '@components/question/QuestionComment';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 
+const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
+  ssr: false,
+});
+
 const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
   ssr: false,
   loading: () => <StarBorderOutlinedIcon />,
@@ -38,6 +42,7 @@ interface ExamSolutionListProps {
   title: string;
   isSolutionAllHide: boolean;
   commentType?: 'modal' | 'basic';
+  refetch: ({ ...args }?: any) => any;
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
@@ -45,6 +50,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   title,
   isSolutionAllHide,
   commentType = 'modal',
+  refetch,
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
@@ -103,7 +109,8 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         variables: { input: { content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
-        message.success('요청이 접수되었습니다.');
+        message.success('답안에 추가됐습니다.');
+        refetch();
         setReportModalState(false);
         return;
       }
@@ -186,10 +193,8 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           <pre
             className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
           >
-            <b>[solution]</b>
-            <br />
-            <br />
             {`${question.solution}`}
+            <ExamSolutionFeedback question={question} refetch={refetch} />
           </pre>
         </div>
         {question.solution_img && question.solution_img.length >= 1 && (
@@ -208,20 +213,19 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </div>
         )}
       </div>
-
-      {/* <Button
+      <Button
         type="primary"
         className="solution-page-report-button"
         onClick={onToggleShareModal}
       >
         공유하기
-      </Button> */}
+      </Button>
       <Button
         type="primary"
         className="solution-page-report-button"
         onClick={openReportModal}
       >
-        오류신고
+        답안추가
       </Button>
       {commentType === 'modal' ? (
         <>
@@ -251,14 +255,12 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         onClose={onToggleReportModal}
         onCancel={onToggleReportModal}
         onConfirm={tryReport}
-        confirmLabel="요청하기"
-        title={`${String(title)}\nQ. ${ellipsisText(
-          String(question.question),
-          10
-        )}`}
+        confirmLabel="답안추가"
+        title={`${String(title)}\n${question.number}번 문제`}
+        label="답안추가"
       />
       <QuestionShareModal
-        title={ellipsisText(question.question, 15)}
+        title={`${title} ${question.number}번 문제`}
         questionId={question.id}
         open={shareModalState}
         onClose={onToggleShareModal}
