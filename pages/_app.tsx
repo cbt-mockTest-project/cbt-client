@@ -18,6 +18,7 @@ import AppInner from '@components/common/container/AppInner';
 import CoreContainer from '@components/common/core/CoreContainer';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
+import { checkHomePage } from '@lib/constants/routes';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -28,8 +29,8 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       gtag.pageview(url);
     };
     const routeChangeStart = () => {
-      const isNotHome = router.asPath.startsWith('/me');
-      if (!isNotHome) {
+      const isHome = checkHomePage(router.asPath);
+      if (isHome) {
         const homeRouteStack = localStorage.get(homeRouteStackKey);
         if (homeRouteStack) {
           if (homeRouteStack.length > 10) {

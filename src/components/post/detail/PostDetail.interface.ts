@@ -1,10 +1,11 @@
 import { MeQuery } from './../../../lib/graphql/user/query/userQuery.generated';
 import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
 export interface PostDetailContainerProps {
-  postQuery: ReadPostQuery;
+  postQueryOnStaticProps: ReadPostQuery;
 }
 
-export interface PostDetailViewProps extends PostDetailContainerProps {
+export interface PostDetailViewProps
+  extends Omit<PostDetailContainerProps, 'postQueryOnStaticProps'> {
   tryEditPostLike: React.MouseEventHandler<HTMLElement>;
   tryCreatePostComment: React.MouseEventHandler<HTMLElement>;
   tryDeletePost: React.MouseEventHandler<HTMLElement>;
@@ -12,4 +13,5 @@ export interface PostDetailViewProps extends PostDetailContainerProps {
   onChangeCommentValue: React.ChangeEventHandler<HTMLTextAreaElement>;
   createPostCommentLoading: boolean;
   meQuery: MeQuery | undefined;
+  postQuery: ReadPostQuery;
 }

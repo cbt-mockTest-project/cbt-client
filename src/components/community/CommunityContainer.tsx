@@ -16,7 +16,6 @@ const CommunityContainer: React.FC<CommunityContainerProps> = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
-  // 추후 캐시 최적화 예정
   const [readPosts, { data: postsQuery, loading: readPostsLoading }] =
     useLazyReadPosts('network-only');
   useEffect(() => {
