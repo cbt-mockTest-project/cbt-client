@@ -105,6 +105,16 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
 export default BottomAppbar;
 
 const BottomAppbarContainer = styled.div`
+  @keyframes tabAnimation {
+    50% {
+      width: 100%;
+    }
+    100% {
+      opacity: 0;
+      width: 0%;
+    }
+  }
+
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -125,7 +135,26 @@ const BottomAppbarContainer = styled.div`
     .active {
       color: ${palette.antd_blue_01};
     }
+    position: relative;
+    ::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background-color: ${palette.blue_200};
+      opacity: 0;
+      border-radius: 50px;
+      transition: all 0.3s;
+    }
+    :hover {
+      ::before {
+        animation: tabAnimation 0.6s;
+        opacity: 0.3;
+      }
+    }
   }
+
   .bottom-app-bar-item-text {
     font-size: 0.7rem;
   }
