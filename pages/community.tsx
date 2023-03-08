@@ -1,7 +1,13 @@
 import Layout from '@components/common/layout/Layout';
 import React from 'react';
-import CommunityContainer from '@components/community/CommunityContainer';
 import WithHead from '@components/common/head/WithHead';
+import dynamic from 'next/dynamic';
+import CommunityViewSkeleton from '@components/community/CommunityViewSkeleton';
+
+const CommunityContainer = dynamic(
+  () => import('@components/community/CommunityContainer'),
+  { ssr: false, loading: () => <CommunityViewSkeleton /> }
+);
 
 const Community = () => {
   return (

@@ -3,15 +3,18 @@ import styled from 'styled-components';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import CommunityListView from './CommunityListView';
-import { categorys, mockPosts } from './Community.constants';
+import { categorys } from './Community.constants';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { CommunityViewProps } from './Community.interface';
 import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
-import CommunityListViewSkeleton from './CommunityListViewSkeleton';
+import CommunityViewSkeleton from './CommunityViewSkeleton';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
+  if (!props.postsQuery?.readPosts.posts) {
+    return <CommunityViewSkeleton />;
+  }
   return (
     <CommunityViewBlock>
       <section className="community-header">
@@ -51,10 +54,6 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-board">
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
-          {!props.postsQuery?.readPosts.posts &&
-            [1, 2, 3].map((el, index) => (
-              <CommunityListViewSkeleton key={index} />
-            ))}
           {props.postsQuery?.readPosts.posts?.map((post) => (
             <>
               <CommunityListView

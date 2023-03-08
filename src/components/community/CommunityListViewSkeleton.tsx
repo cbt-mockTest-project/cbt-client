@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import palette from '@styles/palette';
 import { skeletonStyle } from '@styles/utils';
 
 const CommunityListViewSkeleton: React.FC = () => {
@@ -23,13 +22,7 @@ const CommunityListBlock = styled.li`
   justify-content: space-between;
   padding: 15px 5px;
   align-items: center;
-  border-bottom: 1px solid ${palette.gray_100};
-  :first-child {
-    border-top: 1px solid ${palette.gray_300};
-  }
-  :last-child {
-    border-bottom: 1px solid ${palette.gray_300};
-  }
+
   .community-board-list-wrapper {
     display: flex;
     flex-direction: column;
