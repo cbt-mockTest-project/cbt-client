@@ -153,6 +153,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
               해설모드
             </Button>
           </div>
+          <Button>랜덤모의고사</Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
