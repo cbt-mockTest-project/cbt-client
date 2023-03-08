@@ -55,19 +55,17 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
           {props.postsQuery?.readPosts.posts?.map((post) => (
-            <>
-              <CommunityListView
-                key={post.id}
-                id={post.id}
-                category={'자유게시판'}
-                commentCount={post.commentsCount}
-                date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
-                likeCount={post.likesCount}
-                title={post.title}
-                userName={post.user.nickname}
-                viewCount={post.view}
-              />
-            </>
+            <CommunityListView
+              key={post.id}
+              id={post.id}
+              category={'자유게시판'}
+              commentCount={post.commentsCount}
+              date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
+              likeCount={post.likesCount}
+              title={post.title}
+              userName={post.user.nickname}
+              viewCount={post.view}
+            />
           ))}
         </ul>
       </section>

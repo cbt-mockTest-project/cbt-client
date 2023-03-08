@@ -1,4 +1,9 @@
-import { useDeletePost } from '@lib/graphql/user/hook/usePost';
+import { postViewCookie } from '@lib/constants/cookie';
+import {
+  useDeletePost,
+  useLazyReadPost,
+  useViewPost,
+} from '@lib/graphql/user/hook/usePost';
 import { useCreatePostComment } from '@lib/graphql/user/hook/usePostComment';
 import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -9,17 +14,23 @@ import useInput from '@lib/hooks/useInput';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
+import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   PostDetailContainerProps,
   PostDetailViewProps,
 } from './PostDetail.interface';
 import PostDetailView from './PostDetailView';
+import PostDetailViewSkeleton from './PostDetailViewSkeleton';
 
 const PostDetailContainer: React.FC<PostDetailContainerProps> = ({
-  postQuery,
+  postQueryOnStaticProps,
 }) => {
+  const [readPost, { data: postQueryOnClientSide }] =
+    useLazyReadPost('network-only');
+  const [viewPost] = useViewPost();
+  const postQuery = postQueryOnClientSide || postQueryOnStaticProps;
   const client = useApollo({}, '');
   const {
     value: commentValue,
@@ -32,6 +43,39 @@ const PostDetailContainer: React.FC<PostDetailContainerProps> = ({
   const { data: meQuery } = useMeQuery();
   const [editPostLike] = useEditPostLike();
   const [deletePost] = useDeletePost();
+
+  useEffect(() => {
+    (async () => {
+      if (router.query.Id) {
+        const id = Number(router.query.Id);
+        const postViewCookieValue = getCookie(postViewCookie);
+        const parsedPostViewCookie: number[] = postViewCookieValue
+          ? JSON.parse(String(postViewCookieValue))
+          : [];
+        const hasPostViewCookie = parsedPostViewCookie.includes(id);
+        if (!hasPostViewCookie) {
+          // 조회수 30분에 한번씩 카운트
+          viewPost({ variables: { input: { postId: id } } });
+          setCookie(postViewCookie, [...parsedPostViewCookie, id], {
+            maxAge: 60 * 30,
+          });
+        }
+
+        const res = await readPost({
+          variables: { input: { id } },
+        });
+        if (res.data?.readPost.ok) {
+          client.writeQuery<ReadPostQuery>({
+            query: READ_POST,
+            data: {
+              readPost: res.data.readPost,
+            },
+          });
+        }
+      }
+    })();
+  }, [router.query.Id]);
+
   const requestDeletePost = async () => {
     const post = postQuery.readPost.post;
     if (post) {
@@ -123,6 +167,10 @@ const PostDetailContainer: React.FC<PostDetailContainerProps> = ({
     createPostCommentLoading,
     meQuery,
   };
+  if (!postQuery) {
+    return <PostDetailViewSkeleton />;
+  }
+
   return <PostDetailView {...postDetailViewProps} />;
 };
 
