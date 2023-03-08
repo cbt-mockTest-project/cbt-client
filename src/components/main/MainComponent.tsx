@@ -98,7 +98,25 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const gotoExamPage = () => {
     if (!selectedExamId) return;
-    // storage.remove(tempAnswerKey);
+    const currentExamTitles = titlesAndCategories.filter(
+      (data) => data.category === category
+    );
+    if (currentExamTitles.length === 1) {
+      const currentExamTitle = currentExamTitles[0].titles.filter(
+        (title) => title.id === selectedExamId
+      )[0].title;
+      const answerRecords = storage.get(tempAnswerKey);
+      const selectedAnswerRecord = answerRecords[currentExamTitle];
+      if (selectedAnswerRecord) {
+        const confirmed = confirm(
+          '이전 작성 답안이 남아있습니다.\n삭제를 원하시면 확인을 눌러주세요.\n유지를 원하시면 취소를 눌러주세요.'
+        );
+        if (confirmed) {
+          delete answerRecords[currentExamTitle];
+          storage.set(tempAnswerKey, answerRecords);
+        }
+      }
+    }
     setGotoExamPageLoading(true);
     router.push({
       pathname: '/exam',
