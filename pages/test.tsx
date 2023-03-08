@@ -13,6 +13,7 @@ const Test: NextPage = () => {
     <div>
       <ClickMonAd />
       <button onClick={onToggle}>클릭</button>
+      <input type="file" />
       <QuestionShareModal
         open={value}
         onClose={onToggle}
