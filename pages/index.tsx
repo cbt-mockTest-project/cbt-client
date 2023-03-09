@@ -89,7 +89,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const examLinks: ExamTitleAndId[] = [];
   titlesAndCategories.forEach((el) => {
     el.titles.forEach((title) => {
-      examLinks.push(title);
+      examLinks.unshift(title);
     });
   });
   examLinks.sort((a, b) => {
