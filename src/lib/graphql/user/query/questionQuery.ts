@@ -29,6 +29,9 @@ export const READ_QUESTIONS_BY_ID = gql`
           created_at
           updated_at
         }
+        mockExam {
+          title
+        }
       }
     }
   }
@@ -114,6 +117,9 @@ export const READ_QUESTIONS_BY_STATE = gql`
         state
         question {
           ...FullQuestionParts
+        }
+        exam {
+          title
         }
       }
       ok

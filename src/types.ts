@@ -961,7 +961,8 @@ export type Post = {
 };
 
 export enum PostCategory {
-  Free = 'FREE'
+  Free = 'FREE',
+  Pass = 'PASS'
 }
 
 export type PostComment = {
@@ -1253,7 +1254,8 @@ export type ReadMockExamQuestionOutput = {
 
 export type ReadMockExamQuestionsByMockExamIdInput = {
   bookmarked?: InputMaybe<Scalars['Boolean']>;
-  id: Scalars['Float'];
+  id?: InputMaybe<Scalars['Float']>;
+  ids?: InputMaybe<Array<Scalars['Float']>>;
   isRandom?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1267,7 +1269,8 @@ export type ReadMockExamQuestionsByMockExamIdOutput = {
 };
 
 export type ReadMockExamQuestionsByStateInput = {
-  examId: Scalars['Float'];
+  examId?: InputMaybe<Scalars['Float']>;
+  questionIds?: InputMaybe<Array<Scalars['Float']>>;
   states: Array<QuestionState>;
 };
 
@@ -1355,7 +1358,8 @@ export type RegisterOutput = {
 };
 
 export type ResetMyExamQuestionStateInput = {
-  examId: Scalars['Float'];
+  examId?: InputMaybe<Scalars['Float']>;
+  questionIds?: InputMaybe<Array<Scalars['Float']>>;
 };
 
 export type ResetMyExamQuestionStateOutput = {
