@@ -278,6 +278,13 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
     setAnswerValue('');
     saveAnswerInStorage('');
   };
+  const onShareAction = () => {
+    if (window && (window as any)?.Share) {
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionAndSolution?.number}`;
+      return (window as any).Share.postMessage(questionPageLink);
+    }
+    onToggleQuestionShareModal();
+  };
 
   return (
     <>
@@ -308,7 +315,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
             </button>
             <button
               className="exam-container-share-button"
-              onClick={onToggleQuestionShareModal}
+              onClick={onShareAction}
             >
               공유하기
             </button>

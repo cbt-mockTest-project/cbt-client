@@ -53,6 +53,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
         title={question.question}
         commentType="basic"
         question={question}
+        hasNewWindowButton={false}
       />
     </QuestionComponentContainer>
   );

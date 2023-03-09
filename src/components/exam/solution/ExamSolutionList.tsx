@@ -45,6 +45,7 @@ interface ExamSolutionListProps {
   isSolutionAllHide: boolean;
   commentType?: 'modal' | 'basic';
   refetch: ({ ...args }?: any) => any;
+  hasNewWindowButton?: boolean;
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
@@ -53,6 +54,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   isSolutionAllHide,
   commentType = 'modal',
   refetch,
+  hasNewWindowButton = true,
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
@@ -147,6 +149,14 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   const onToggleSolutionHide = () => {
     setIsSolutionHide(!isSolutionHide);
   };
+
+  const onShareAction = () => {
+    if (window && (window as any)?.Share) {
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${question.id}`;
+      return (window as any).Share.postMessage(questionPageLink);
+    }
+    onToggleShareModal();
+  };
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
@@ -163,16 +173,18 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               {bookmarkState ? '저장됨' : '저장하기'}
             </p>
           </button>
-          <Tooltip placement="top" title="새창으로 보기">
-            <a
-              className="solution-page-question-detail-link"
-              href={`/question/${question.id}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <OpenInNewIcon />
-            </a>
-          </Tooltip>
+          {hasNewWindowButton && (
+            <Tooltip placement="top" title="새창으로 보기">
+              <a
+                className="solution-page-question-detail-link"
+                href={`/question/${question.id}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <OpenInNewIcon />
+              </a>
+            </Tooltip>
+          )}
         </div>
         <div className="solution-page-question-pre-wrapper">
           <pre className="solution-page-question">
@@ -230,7 +242,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       <Button
         type="primary"
         className="solution-page-report-button"
-        onClick={onToggleShareModal}
+        onClick={onShareAction}
       >
         공유하기
       </Button>
