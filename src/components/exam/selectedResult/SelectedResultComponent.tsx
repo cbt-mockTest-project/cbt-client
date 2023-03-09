@@ -22,12 +22,15 @@ const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
       <ul>
         {readMockExamQuestionsByState.mockExamQusetions.map((state, index) => (
           <li key={index}>
-            <div className="selected-result-question-label-achievement-icon-wrapper">
-              <div
-                className={`selected-result-question-label-achievement-icon ${state.state}`}
-              >
-                {convertStateToIcon(state.state)}
+            <div className="selected-result-question-top-wrapper">
+              <div className="selected-result-question-label-achievement-icon-wrapper">
+                <div
+                  className={`selected-result-question-label-achievement-icon ${state.state}`}
+                >
+                  {convertStateToIcon(state.state)}
+                </div>
               </div>
+              <p className="selected-result-page-sub-title">{`${state.exam.title}  ${state.question.number}번 문제`}</p>
             </div>
             <div className="selected-result-page-question-wrapper">
               <div className="selected-result-page-question-pre-wrapper">
@@ -59,45 +62,15 @@ const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
                 state.question.solution_img.length >= 1 && (
                   <div
                     className={`selected-result-page-question-image-wrapper`}
-                  ></div>
+                  >
+                    <Image
+                      src={state.question.solution_img[0].url}
+                      alt="question_image"
+                      className="selected-result-page-question-image"
+                    />
+                  </div>
                 )}
             </div>
-            {/* <div className="selected-result-question-label-achievement-icon-wrapper">
-              <div
-                className={`selected-result-question-label-achievement-icon ${el.state}`}
-              >
-                {convertStateToIcon(el.state)}
-              </div>
-            </div>
-            <pre className="selected-result-question">
-              {`Q${el.question.number}. ${el.question.question}`}
-              {el.question.question_img &&
-                el.question.question_img.map((el, index) => (
-                  <a
-                    className="selected-result-image-link"
-                    key={index}
-                    href={el.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-                ))}
-            </pre>
-
-            <pre className="selected-result-solution">
-              {el.question.solution}
-            </pre>
-            <div>
-              {el.question.solution_img &&
-                el.question.solution_img.map((el, index) => (
-                  <a
-                    className="selected-result-image-link"
-                    key={index}
-                    href={el.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >{`이미지${String(index + 1).padStart(2, '0')}`}</a>
-                ))}
-            </div> */}
           </li>
         ))}
       </ul>
@@ -110,25 +83,34 @@ export default SelectedResultComponent;
 const SelectedResultComponentContainer = styled.div`
   margin: 30px 0 100px 0;
   .selected-result-question-label-achievement-icon {
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 10px;
+    svg {
+      width: 100% !important;
+    }
+
     color: ${palette.antd_blue_02};
   }
-  .selected-result-question-label-achievement-icon-wrapper {
+  .selected-result-question-top-wrapper {
+    display: flex;
+    top: 25px;
     position: relative;
+    gap: 10px;
+  }
+  .selected-result-question-label-achievement-icon-wrapper {
     width: 40px;
     height: 30px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    top: 25px;
     background-color: ${palette.gray_100};
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .selected-result-page-title {
     font-size: 1.2rem;
+  }
+  .selected-result-page-sub-title {
+    font-size: 0.8rem;
+    color: ${palette.gray_700};
   }
   .selected-result-page-question-solution-header {
     display: flex;

@@ -1,17 +1,19 @@
 import palette from '@styles/palette';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef } from 'react';
+import React, { SetStateAction, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface MovePannelProps {
   questionCount: number;
   questionIndex: number;
+  setModalState: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const MovePannel: React.FC<MovePannelProps> = ({
   questionCount,
   questionIndex,
+  setModalState,
 }) => {
   const router = useRouter();
   const lists = Array.from({ length: questionCount }, (v, i) => i + 1);
@@ -40,6 +42,9 @@ const MovePannel: React.FC<MovePannelProps> = ({
           </li>
         </Link>
       ))}
+      <li className="move-pannel-finish-button-wrapper">
+        <button onClick={() => setModalState(true)}>제출</button>
+      </li>
     </MovePannelContainer>
   );
 };
@@ -62,6 +67,18 @@ const MovePannelContainer = styled.ol`
     width: 40px;
     border: 1px solid ${palette.gray_100};
     gap: 5px;
+  }
+  .move-pannel-finish-button-wrapper {
+    width: 80px;
+    transition: all 0.3s;
+    :hover {
+      color: ${palette.antd_blue_01};
+      border-color: ${palette.antd_blue_01};
+    }
+    button {
+      width: 100%;
+      height: 100%;
+    }
   }
   li.active {
     border-color: ${palette.antd_blue_01};

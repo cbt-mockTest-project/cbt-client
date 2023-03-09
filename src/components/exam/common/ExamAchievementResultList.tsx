@@ -1,42 +1,30 @@
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import {
-  convertStateToIcon,
-  convertWithErrorHandlingFunc,
-} from '@lib/utils/utils';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import { QuestionState } from 'types';
+import { QuestionState, ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
 interface ExamAchievementResultProps {
   className?: string;
   examId: number;
   onListClick?: (value: number) => void;
+  questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
 }
 
 const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   className,
   onListClick,
   examId,
+  questionQueryDataProps,
 }) => {
-  const [readQuestions, { data: questionQueryData }] =
-    useLazyReadQuestionsByExamId('cache-and-network');
+  console.log(questionQueryDataProps);
+
   const { data: meQuery } = useMeQuery();
-  const tryReadQuestionsMutation = convertWithErrorHandlingFunc({
-    callback: async () =>
-      await readQuestions({
-        variables: { input: { id: Number(examId) } },
-      }),
-  });
-  useEffect(() => {
-    tryReadQuestionsMutation();
-  }, [examId]);
-  if (!questionQueryData) return null;
-  const {
-    readMockExamQuestionsByMockExamId: { questions },
-  } = questionQueryData;
+  if (!questionQueryDataProps) return null;
+  const { questions } =
+    questionQueryDataProps.readMockExamQuestionsByMockExamId;
   return (
     <ExamAchievementResultContainer
       className={className}
