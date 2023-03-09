@@ -1,5 +1,7 @@
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import {
   convertWithErrorHandlingFunc,
   extractKeysOfCache,
@@ -10,17 +12,28 @@ import { Button, message } from 'antd';
 import { useRouter } from 'next/router';
 import React, { ComponentProps } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestionState, QuestionState } from 'types';
+import {
+  MockExamQuestionState,
+  QuestionState,
+  ReadMockExamQuestionsByMockExamIdInput,
+} from 'types';
 import Modal from './Modal';
 
 interface ProgressModalProps
-  extends Pick<ComponentProps<typeof Modal>, 'open' | 'onClose'> {}
+  extends Pick<ComponentProps<typeof Modal>, 'open' | 'onClose'> {
+  questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
+  readQuestionInput?: ReadMockExamQuestionsByMockExamIdInput;
+}
 
-const ProgressModal: React.FC<ProgressModalProps> = ({ onClose, open }) => {
+const ProgressModal: React.FC<ProgressModalProps> = ({
+  onClose,
+  open,
+  questionQueryDataProps,
+  readQuestionInput,
+}) => {
   const router = useRouter();
   const [resetQuestionStateMutate] = useResetQuestionState();
   const client = useApollo({}, '');
-  const examId = Number(router.query.e);
   const onMoveQuestion = (questionIndex: number) => {
     router.push({
       pathname: router.pathname,
@@ -28,24 +41,35 @@ const ProgressModal: React.FC<ProgressModalProps> = ({ onClose, open }) => {
     });
   };
   const requestResetQuestionState = async () => {
+    let questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
+    const questionsQuery =
+      client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+        query: READ_QUESTIONS_BY_ID,
+        variables: {
+          input: readQuestionInput,
+        },
+      });
+    const questionIds =
+      questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
+        (question) => question.id
+      );
+    questionKeys = questionKeys.filter((key) =>
+      questionIds?.includes(Number(key.split(':')[1]))
+    );
     const res = await resetQuestionStateMutate({
       variables: {
         input: {
-          examId,
+          questionIds,
         },
       },
     });
     if (res.data?.resetMyExamQuestionState.ok) {
-      const questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
       questionKeys.forEach((el) => {
         client.cache.modify({
           id: el,
           fields: {
             state(state) {
-              if (
-                state.length === 1 &&
-                state[0].exam.__ref === `MockExam:${examId}`
-              ) {
+              if (state.length === 1) {
                 return state.map((state: MockExamQuestionState) => ({
                   ...state,
                   state: QuestionState.Core,
@@ -72,6 +96,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({ onClose, open }) => {
           className="progress-modal-achievement-result-list"
           onListClick={onMoveQuestion}
           examId={Number(router.query.e)}
+          questionQueryDataProps={questionQueryDataProps}
         />
         <p className="progress-modal-info">
           번호를 클릭하면 해당 문제로 이동 합니다.

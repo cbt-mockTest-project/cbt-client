@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import ExamAchievementResultList from '../common/ExamAchievementResultList';
+import { questionsVar } from '../ExamComponent';
 
 interface ExamAchievementResultProps {
   className?: string;
@@ -20,6 +21,7 @@ const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
       <ExamAchievementResultList
         examId={Number(router.query.e)}
         className="exam-result-achieve-check-box-result-list"
+        questionQueryDataProps={questionsVar() || undefined}
       />
     </ExamAchievementResultContainer>
   );

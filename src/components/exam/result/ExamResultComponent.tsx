@@ -16,6 +16,7 @@ import { responsive } from '@lib/utils/responsive';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
+import { questionsVar } from '../ExamComponent';
 
 interface ExamResultComponentProps {}
 
@@ -35,6 +36,10 @@ const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
     setCheckedValues(value);
   };
   const onClickResultView = async () => {
+    const questionIds =
+      questionsVar()?.readMockExamQuestionsByMockExamId.questions.map(
+        (question) => question.id
+      );
     if (!meQuery?.me.user) {
       onOpenLoginModal();
       return;
@@ -44,7 +49,11 @@ const ExamResultComponent: React.FC<ExamResultComponentProps> = () => {
     }
     router.push({
       pathname: '/exam/selectedresult',
-      query: { ...router.query, c: JSON.stringify(checkedValues) },
+      query: {
+        ...router.query,
+        c: JSON.stringify(checkedValues),
+        qs: JSON.stringify(questionIds),
+      },
     });
   };
 

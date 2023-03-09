@@ -17,11 +17,11 @@ import palette from '@styles/palette';
 import Link from 'next/link';
 import Portal from '@components/common/portal/Portal';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
-import dynamic from 'next/dynamic';
-import MainViewCountSkeleton from './MainViewCountSkeleton';
 import MainViewCount from './MainViewCount';
+import useToggle from '@lib/hooks/useToggle';
+import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModal';
 
-interface TitlesAndCategories {
+export interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
 }
@@ -40,6 +40,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const router = useRouter();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
+  const {
+    value: randomSelectExamModalState,
+    onToggle: onToggleRandomSelectExamModal,
+  } = useToggle();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
@@ -51,6 +55,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name })
   );
+
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
@@ -65,6 +70,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
       }
     })();
   }, []);
+  useEffect(() => {
+    if (randomSelectExamModalState) {
+      document.body.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = 'scroll';
+    }
+    return () => {
+      document.body.style.overflowY = 'scroll';
+    };
+  }, [randomSelectExamModalState]);
   const onToggleKakaoChatModalState = () =>
     setKakaoChatModalState(!kakaoChatModalState);
   const onCategoryChange = async (value: string) => {
@@ -84,13 +99,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
     localStorage.setItem(selectExamCategoryHistory, value);
     setTitles(titles);
     return titles;
-    // }
   };
 
   const onTitleChange = async (value: number, titles: DefaultOptionType[]) => {
     const currentTitle = titles.filter((title) => title.value === value);
-    setSelectedExamId(value);
     if (currentTitle[0]) {
+      setSelectedExamId(value);
       setTitle(String(currentTitle[0].label));
       localStorage.setItem(selectExamHistory, String(value));
     }
@@ -148,7 +162,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <p className="home-content-title">회차선택</p>
           <Select
             options={titles}
-            // options={[{ value: 'value', label: 'label' }]}
             value={title}
             onChange={(value) => onTitleChange(Number(value), titles)}
           />
@@ -171,7 +184,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
               해설모드
             </Button>
           </div>
-          <Button>랜덤모의고사</Button>
+          <Button onClick={onToggleRandomSelectExamModal} type="ghost">
+            랜덤모의고사
+          </Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -203,6 +218,15 @@ const MainComponent: React.FC<MainComponentProps> = ({
         <KakaoOpenChatModal
           open={kakaoChatModalState}
           onClose={onToggleKakaoChatModalState}
+        />
+      </Portal>
+      <Portal>
+        <RandomSelectExamModal
+          categories={categories}
+          titles={titles}
+          open={randomSelectExamModalState}
+          onClose={onToggleRandomSelectExamModal}
+          titlesAndCategories={titlesAndCategories}
         />
       </Portal>
     </MainComponentContainer>

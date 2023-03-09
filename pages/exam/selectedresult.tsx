@@ -9,12 +9,16 @@ import React, { useEffect } from 'react';
 const SelectedResult: NextPage = () => {
   const router = useRouter();
   const states = router.query.c ? JSON.parse(String(router.query.c)) : [];
-  const examId = Number(router.query.e);
+  const questionIds = router.query.qs
+    ? JSON.parse(String(router.query.qs))
+    : [];
   const [readQuestionsQuery, { data: questionsQuery }] =
     useLazyReadQuestionsByState();
   useEffect(() => {
     if (router.isReady) {
-      readQuestionsQuery({ variables: { input: { states, examId } } });
+      readQuestionsQuery({
+        variables: { input: { states, questionIds } },
+      });
     }
   }, [router.isReady]);
 

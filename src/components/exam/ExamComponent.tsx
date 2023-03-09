@@ -14,7 +14,11 @@ import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import {
+  convertWithErrorHandlingFunc,
+  ellipsisText,
+  extractKeysOfCache,
+} from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
@@ -36,6 +40,11 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import ExamSkeleton from './ExamSkeleton';
 import useToggle from '@lib/hooks/useToggle';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
+import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
+import { makeVar } from '@apollo/client';
+
+export const questionsVar =
+  makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
 
 interface ExamComponentProps {}
 
@@ -55,6 +64,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
+  const isRandomExam = router.query.es ? true : false;
   const questionIndex = Number(router.query.q);
   const reportValue = useRef('');
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
@@ -73,27 +83,47 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
-
+  const [readQuestionInput, setReadQuestionInput] =
+    useState<ReadMockExamQuestionsByMockExamIdInput>();
   useEffect(() => {
-    if (router.isReady) {
-      readQuestions({
-        variables: {
-          input: {
-            id: Number(router.query.e),
+    (async () => {
+      if (router.isReady) {
+        if (!questionsQuery) {
+          const id = Number(router.query.e);
+          const answerRecords = storage.get(tempAnswerKey);
+          delete answerRecords['랜덤모의고사'];
+          storage.set(tempAnswerKey, answerRecords);
+          const ids = router.query.es
+            ? JSON.parse(String(router.query.es))
+            : null;
+          const readQuestionInput: ReadMockExamQuestionsByMockExamIdInput = {
+            id,
+            ids,
             isRandom: router.query.r === 'true' ? true : false,
-          },
-        },
-      });
-    }
+          };
+          setReadQuestionInput(readQuestionInput);
+          await readQuestions({
+            variables: {
+              input: readQuestionInput,
+            },
+          });
+        }
+      }
+    })();
   }, [router.isReady]);
 
   useEffect(() => {
     if (questions) {
-      let savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      const savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      let currentAnswer = '';
       if (savedAnswer) {
-        savedAnswer =
-          savedAnswer[String(questions[questionIndex - 1].number)] || '';
-        const currentAnswer = savedAnswer;
+        if (isRandomExam) {
+          currentAnswer = savedAnswer[questionIndex] || '';
+        } else {
+          currentAnswer =
+            savedAnswer[String(questions[questionIndex - 1].number)] || '';
+        }
+
         setAnswerValue(currentAnswer);
       }
 
@@ -150,10 +180,15 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   };
 
   const onFinishConfirmModal = () => {
+    questionsVar(questionsQuery);
     setFinishModalState(false);
     router.push({
       pathname: '/exam/result',
-      query: { title: String(examTitle || ''), e: router.query.e },
+      query: {
+        title: String(examTitle || ''),
+        e: router.query.e,
+        es: router.query.es,
+      },
     });
   };
   const requestReport = async () => {
@@ -183,13 +218,11 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
           query: READ_QUESTIONS_BY_ID,
           variables: {
-            input: {
-              id: Number(router.query.e),
-              isRandom: router.query.r === 'true' ? true : false,
-            },
+            input: readQuestionInput,
           },
         });
-
+      console.log('??');
+      console.log(res.data?.editMockExamQuestionBookmark.currentState);
       if (res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
         setBookmarkState(true);
         const newQuestions =
@@ -260,7 +293,12 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
     const prevAnswer = storage.get(tempAnswerKey) || {};
     const tempAnswer: { [key: string]: { [key: string]: string } } = prevAnswer;
     let valueObj: { [key: string]: string } = {};
-    valueObj[String(questionAndSolution?.number)] = value;
+    if (isRandomExam) {
+      valueObj[questionIndex] = value;
+    } else {
+      valueObj[String(questionAndSolution?.number)] = value;
+    }
+
     tempAnswer[tempAnswerIndex] = {
       ...prevAnswer[tempAnswerIndex],
       ...valueObj,
@@ -321,6 +359,12 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
             </button>
           </div>
           <h2 className="exam-container-title">{pageSubTitle}</h2>
+          {isRandomExam && (
+            <h3 className="exam-container-sub-title">
+              {`${questionAndSolution?.mockExam.title}
+                ${questionAndSolution?.number}번 문제`}
+            </h3>
+          )}
         </div>
         <div ref={scrollRef} />
         <QuestionAndSolutionBox
@@ -403,13 +447,14 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
           setModalState={setFinishModalState}
         />
         <MovePannel
+          setModalState={setFinishModalState}
           questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}
           questionIndex={questionIndex}
         />
       </ExamContainer>
       <ConfirmModal
         open={finishModalState}
-        content={'마지막 문제입니다.\n학습을 종료하시겠습니까?'}
+        content={'학습을 종료하시겠습니까?'}
         onClose={onToggleFinishModal}
         onCancel={onToggleFinishModal}
         onConfirm={onFinishConfirmModal}
@@ -430,11 +475,14 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
       <ProgressModal
         open={progressModalState}
         onClose={onToggleProgressModal}
+        questionQueryDataProps={questionsQuery}
+        readQuestionInput={readQuestionInput}
       />
       <CommentModal
         open={commentModalState}
         onClose={onToggleCommentModal}
-        title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
+        title={`${questionAndSolution?.mockExam.title}
+        ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
       <QuestionShareModal
@@ -486,6 +534,10 @@ const ExamContainer = styled.div<ExamContainerProps>`
   }
   .exam-container-title {
     font-size: 1.3rem;
+  }
+  .exam-container-sub-title {
+    font-size: 0.9rem;
+    color: ${palette.gray_700};
   }
   .exam-container-bookmark-button-wrapper {
     display: flex;
