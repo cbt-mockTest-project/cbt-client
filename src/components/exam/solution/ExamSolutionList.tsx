@@ -17,13 +17,15 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Button, Image, message } from 'antd';
+import { Button, Image, message, Tooltip } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import QuestionComment from '@components/question/QuestionComment';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Link from 'next/link';
 
 const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
   ssr: false,
@@ -148,18 +150,30 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
-        <button
-          className="solution-page-question-bookmark-button"
-          onClick={tryEditBookmark}
-        >
-          <Bookmark
-            className="solution-page-question-bookmark-icon"
-            active={bookmarkState}
-          />
-          <p className="solution-page-question-bookmark-text">
-            {bookmarkState ? '저장됨' : '저장하기'}
-          </p>
-        </button>
+        <div className="solution-page-question-bookmark-button-wrapper">
+          <button
+            className="solution-page-question-bookmark-button"
+            onClick={tryEditBookmark}
+          >
+            <Bookmark
+              className="solution-page-question-bookmark-icon"
+              active={bookmarkState}
+            />
+            <p className="solution-page-question-bookmark-text">
+              {bookmarkState ? '저장됨' : '저장하기'}
+            </p>
+          </button>
+          <Tooltip placement="top" title="새창으로 보기">
+            <a
+              className="solution-page-question-detail-link"
+              href={`/question/${question.id}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <OpenInNewIcon />
+            </a>
+          </Tooltip>
+        </div>
         <div className="solution-page-question-pre-wrapper">
           <pre className="solution-page-question">
             {`Q${question.number}. ${question.question}`}
@@ -341,19 +355,32 @@ const ExamSolutionListContainer = styled.li`
     width: 500px;
     background-color: ${palette.gray_100};
   }
-  .solution-page-question-bookmark-button {
+  .solution-page-question-bookmark-button-wrapper {
     display: flex;
     position: absolute;
     gap: 5px;
-    align-items: center;
+    top: -35px;
+  }
+  .solution-page-question-bookmark-button {
+    display: flex;
+    gap: 5px;
     width: 90px;
     height: 35px;
-    top: -35px;
+    align-items: center;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border: 1px solid ${palette.gray_100};
     background-color: ${palette.gray_100};
     font-size: 0.8rem;
+  }
+  .solution-page-question-detail-link {
+    svg {
+      height: 35px;
+      transition: color 0.2s;
+      :hover {
+        color: ${palette.antd_blue_01};
+      }
+    }
   }
   .solution-page-question-bookmark-text {
     flex: 2;
