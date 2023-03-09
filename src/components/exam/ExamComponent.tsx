@@ -21,7 +21,6 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { QuestionType } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useRef } from 'react';
@@ -90,12 +89,19 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
 
   useEffect(() => {
     if (questions) {
-      const currentAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      let savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+      if (savedAnswer) {
+        savedAnswer =
+          savedAnswer[String(questions[questionIndex - 1].number)] || '';
+        const currentAnswer = savedAnswer;
+        setAnswerValue(currentAnswer);
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
       /**
        * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
        */
-      setAnswerValue(currentAnswer);
+
       setProgressModalState(false);
       setFeedBackModalState(false);
       setFinishModalState(false);
@@ -113,7 +119,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   }
 
   const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
-  const tempAnswerIndex = String(examTitle) + questionIndex;
+  const tempAnswerIndex = String(examTitle);
   const pageSubTitle = `${examTitle}-${questionIndex}번 문제`;
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
   const onToggleFinishModal = () => {
@@ -144,7 +150,6 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   };
 
   const onFinishConfirmModal = () => {
-    // storage.remove(tempAnswerKey);
     setFinishModalState(false);
     router.push({
       pathname: '/exam/result',
@@ -253,8 +258,13 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
 
   const saveAnswerInStorage = (value: string) => {
     const prevAnswer = storage.get(tempAnswerKey) || {};
-    const tempAnswer: { [key: string]: string } = prevAnswer;
-    tempAnswer[tempAnswerIndex] = value;
+    const tempAnswer: { [key: string]: { [key: string]: string } } = prevAnswer;
+    let valueObj: { [key: string]: string } = {};
+    valueObj[String(questionAndSolution?.number)] = value;
+    tempAnswer[tempAnswerIndex] = {
+      ...prevAnswer[tempAnswerIndex],
+      ...valueObj,
+    };
     storage.set(tempAnswerKey, tempAnswer);
   };
 
@@ -267,6 +277,13 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const onClearAnswer = () => {
     setAnswerValue('');
     saveAnswerInStorage('');
+  };
+  const onShareAction = () => {
+    if (window && (window as any)?.Share) {
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionAndSolution?.number}`;
+      return (window as any).Share.postMessage(questionPageLink);
+    }
+    onToggleQuestionShareModal();
   };
 
   return (
@@ -298,7 +315,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
             </button>
             <button
               className="exam-container-share-button"
-              onClick={onToggleQuestionShareModal}
+              onClick={onShareAction}
             >
               공유하기
             </button>

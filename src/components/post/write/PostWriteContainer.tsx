@@ -58,6 +58,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
         const file = input.files[0];
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('path', 'post');
         if (reactQuillRef.current) {
           const range = reactQuillRef.current.getEditorSelection();
           const loadingText = '이미지 로딩중 ....';
@@ -66,7 +67,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
               .getEditor()
               .insertText(range.index, loadingText);
             const result = await axios.post(
-              'http://localhost:80/uploads',
+              `${process.env.NEXT_PUBLIC_RESTAPI_URL}uploads`,
               formData
             );
             reactQuillRef.current

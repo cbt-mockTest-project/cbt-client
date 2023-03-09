@@ -1,5 +1,4 @@
 import Layout from '@components/common/layout/Layout';
-import { useLazyReadPost, useViewPost } from '@lib/graphql/user/hook/usePost';
 import { READ_POST, READ_POSTS } from '@lib/graphql/user/query/postQuery';
 import {
   ReadPostQuery,
@@ -9,54 +8,20 @@ import {
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
-import { postViewCookie } from '@lib/constants/cookie';
-import PostDetailContainer from '@components/post/detail/PostDetailContainer';
+import React from 'react';
 import WithHead from '@components/common/head/WithHead';
+import dynamic from 'next/dynamic';
+import PostDetailViewSkeleton from '@components/post/detail/PostDetailViewSkeleton';
+const PostDetailContainer = dynamic(
+  () => import('@components/post/detail/PostDetailContainer'),
+  { loading: () => <PostDetailViewSkeleton /> }
+);
 interface PostPageProps {
-  postQuery: ReadPostQuery;
+  postQueryOnStaticProps: ReadPostQuery;
 }
 
-const PostPage: NextPage<PostPageProps> = ({ postQuery }) => {
-  const [readPost, { data: postQueryOnClientSide }] =
-    useLazyReadPost('network-only');
-  const [viewPost] = useViewPost();
-  const client = useApollo({}, '');
-  const router = useRouter();
-  const pageTitle = postQuery.readPost.post?.title;
-  useEffect(() => {
-    (async () => {
-      if (router.query.Id) {
-        const id = Number(router.query.Id);
-        const postViewCookieValue = getCookie(postViewCookie);
-        const parsedPostViewCookie: number[] = postViewCookieValue
-          ? JSON.parse(String(postViewCookieValue))
-          : [];
-        const hasPostViewCookie = parsedPostViewCookie.includes(id);
-        if (!hasPostViewCookie) {
-          // 조회수 30분에 한번씩 카운트
-          viewPost({ variables: { input: { postId: id } } });
-          setCookie(postViewCookie, [...parsedPostViewCookie, id], {
-            maxAge: 60 * 30,
-          });
-        }
-
-        const res = await readPost({
-          variables: { input: { id } },
-        });
-        if (res.data?.readPost.ok) {
-          client.writeQuery<ReadPostQuery>({
-            query: READ_POST,
-            data: {
-              readPost: res.data.readPost,
-            },
-          });
-        }
-      }
-    })();
-  }, [router.query.Id]);
+const PostPage: NextPage<PostPageProps> = ({ postQueryOnStaticProps }) => {
+  const pageTitle = postQueryOnStaticProps.readPost.post?.title;
   return (
     <>
       <WithHead
@@ -64,7 +29,7 @@ const PostPage: NextPage<PostPageProps> = ({ postQuery }) => {
         pageHeadingTitle={`${pageTitle} | 커뮤니티`}
       />
       <Layout>
-        <PostDetailContainer postQuery={postQueryOnClientSide || postQuery} />
+        <PostDetailContainer postQueryOnStaticProps={postQueryOnStaticProps} />
       </Layout>
     </>
   );
@@ -120,9 +85,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     callback: request,
   });
   const res = await tryRequest();
-  const postQuery = res?.data;
+  const postQueryOnStaticProps = res?.data;
   return addApolloState(apolloClient, {
-    props: { postQuery },
+    props: { postQueryOnStaticProps },
     revalidate: 86400,
   });
 };

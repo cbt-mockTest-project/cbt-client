@@ -95,6 +95,17 @@ export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
     }
   };
 
+interface CheckUrlArgs {
+  url: string;
+  allowUrls: string[];
+  reverse?: boolean;
+}
+
+export const checkUrl = ({ url, allowUrls, reverse }: CheckUrlArgs) =>
+  reverse
+    ? !allowUrls.some((allowUrl) => url.startsWith(allowUrl))
+    : allowUrls.some((allowUrl) => url.startsWith(allowUrl));
+
 export const ellipsisText = (string: string, count: number) =>
   string.slice(0, count) + '...';
 
