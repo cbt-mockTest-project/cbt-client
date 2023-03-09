@@ -221,8 +221,6 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
             input: readQuestionInput,
           },
         });
-      console.log('??');
-      console.log(res.data?.editMockExamQuestionBookmark.currentState);
       if (res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
         setBookmarkState(true);
         const newQuestions =

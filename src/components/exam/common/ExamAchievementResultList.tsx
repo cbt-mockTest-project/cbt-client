@@ -1,14 +1,15 @@
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { QuestionState, ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
 interface ExamAchievementResultProps {
   className?: string;
-  examId: number;
+  examId?: number;
   onListClick?: (value: number) => void;
   questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
 }
@@ -19,18 +20,27 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   examId,
   questionQueryDataProps,
 }) => {
-  console.log(questionQueryDataProps);
-
   const { data: meQuery } = useMeQuery();
-  if (!questionQueryDataProps) return null;
-  const { questions } =
-    questionQueryDataProps.readMockExamQuestionsByMockExamId;
+  const [readQuestions, { data: questionQueryData }] =
+    useLazyReadQuestionsByExamId('cache-and-network');
+
+  useEffect(() => {
+    if (examId) {
+      readQuestions({
+        variables: { input: { id: Number(examId) } },
+      });
+    }
+  }, [examId]);
+
+  if (!questionQueryDataProps && !questionQueryData) return null;
+  const questions = (questionQueryData || questionQueryDataProps)
+    ?.readMockExamQuestionsByMockExamId.questions;
   return (
     <ExamAchievementResultContainer
       className={className}
       isHoverEffect={!!onListClick}
     >
-      {questions.map((question, idx) => (
+      {questions?.map((question, idx) => (
         <li
           key={idx}
           className="not-draggable"
