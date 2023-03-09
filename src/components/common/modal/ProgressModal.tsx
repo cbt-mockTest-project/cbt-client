@@ -95,7 +95,6 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
         <ExamAchievementResultList
           className="progress-modal-achievement-result-list"
           onListClick={onMoveQuestion}
-          examId={Number(router.query.e)}
           questionQueryDataProps={questionQueryDataProps}
         />
         <p className="progress-modal-info">

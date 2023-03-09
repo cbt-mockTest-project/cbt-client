@@ -19,7 +19,6 @@ const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
       maxHeight={280}
     >
       <ExamAchievementResultList
-        examId={Number(router.query.e)}
         className="exam-result-achieve-check-box-result-list"
         questionQueryDataProps={questionsVar() || undefined}
       />
