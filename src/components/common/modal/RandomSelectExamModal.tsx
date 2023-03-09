@@ -3,7 +3,7 @@ import { convertExamTurn } from '@lib/utils/utils';
 import { Button, Tag } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Label from '../label/Label';
 import Modal, { ModalProps } from './Modal';
@@ -25,6 +25,20 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   const [category, setCategory] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
+  useEffect(() => {
+    if (open) {
+      const multipleSelector = document.querySelector(
+        '.multiple-random-exam-selector'
+      );
+      if (multipleSelector) {
+        const multipleSelectorInput: HTMLInputElement | null =
+          multipleSelector.querySelector('.ant-select-selection-search-input');
+        if (multipleSelectorInput) {
+          multipleSelectorInput.inputMode = 'none';
+        }
+      }
+    }
+  }, [open]);
   const onCategoryChange = async (value: string) => {
     setSelectedExams([]);
     setCategory(value);
@@ -68,6 +82,7 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
         <div className="random-select-exam-selector-wrapper">
           <Label content={'회차추가'} />
           <Select
+            className="multiple-random-exam-selector"
             mode="multiple"
             options={titles}
             value={selectedExams}
