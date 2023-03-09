@@ -147,6 +147,14 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   const onToggleSolutionHide = () => {
     setIsSolutionHide(!isSolutionHide);
   };
+
+  const onShareAction = () => {
+    if (window && (window as any)?.Share) {
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${question.id}`;
+      return (window as any).Share.postMessage(questionPageLink);
+    }
+    onToggleShareModal();
+  };
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
@@ -230,7 +238,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       <Button
         type="primary"
         className="solution-page-report-button"
-        onClick={onToggleShareModal}
+        onClick={onShareAction}
       >
         공유하기
       </Button>
