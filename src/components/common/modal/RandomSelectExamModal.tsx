@@ -84,7 +84,7 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
         es,
         q: '1',
         r: false,
-        t: 'hi',
+        t: '랜덤모의고사',
         c: category,
       },
     });
