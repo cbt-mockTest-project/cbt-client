@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface GoogleAdProps {
   className?: string;
-  type: 'feed' | 'display';
+  type: 'feed' | 'display' | 'content';
 }
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
@@ -40,6 +40,18 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
           data-ad-slot="9804306393"
           data-ad-format="auto"
           data-full-width-responsive="true"
+        />
+      );
+    }
+    if (type === 'content') {
+      return (
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block', textAlign: 'center' }}
+          data-ad-layout="in-article"
+          data-ad-format="fluid"
+          data-ad-client="ca-pub-9145855450425143"
+          data-ad-slot="5194197298"
         />
       );
     }
