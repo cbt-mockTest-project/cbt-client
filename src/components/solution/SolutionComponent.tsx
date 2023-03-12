@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
@@ -69,7 +70,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
       <ul>
         {questions.map((el, index) => {
-          const halfPercent = Math.random() > 0.5;
           return (
             <div key={index}>
               <ExamSolutionList
@@ -78,9 +78,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 title={convertExamTitle(title)}
                 refetch={refetchReadQuestions}
               />
-              {index % 2 === 1 &&
-                questions.length - 1 !== index &&
-                (halfPercent ? <ClickMonAd /> : <CoupangAd type="basic" />)}
+              <div className="exam-solution-page-add-wrapper">
+                {index === 0 || index === 3 ? (
+                  <GoogleAd />
+                ) : index % 4 === 0 ? (
+                  <ClickMonAd />
+                ) : (
+                  index % 5 === 0 && null
+                )}
+              </div>
             </div>
           );
         })}
@@ -97,6 +103,10 @@ const SolutionComponentContainer = styled.div`
   h1 {
     padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
+  }
+  .exam-solution-page-add-wrapper {
+    position: relative;
+    margin-top: 20px;
   }
   .exam-solution-page-solution-all-hide-button {
     margin-bottom: 10px;
