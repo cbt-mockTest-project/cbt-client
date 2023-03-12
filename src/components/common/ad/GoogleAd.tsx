@@ -12,23 +12,23 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const router = useRouter();
   useEffect(() => {
     try {
-      if (isProd && router.isReady) {
+      if (isProd && router.asPath) {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
           {}
         );
       }
     } catch (e) {}
-  }, [router]);
+  }, [router.asPath]);
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
         <ins
           className="adsbygoogle"
           style={{ display: 'block' }}
+          data-ad-format="fluid"
+          data-ad-layout-key="-fb+5w+4e-db+86"
           data-ad-client="ca-pub-9145855450425143"
           data-ad-slot="9696511094"
-          data-ad-layout-key="-fb+5w+4e-db+86"
-          data-ad-format="fluid"
         />
       );
     }
