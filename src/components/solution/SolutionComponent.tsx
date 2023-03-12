@@ -1,4 +1,3 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
@@ -15,6 +14,9 @@ const ClickMonAd = dynamic(() => import('@components/common/ad/ClickMonAd'), {
   ssr: false,
 });
 const CoupangAd = dynamic(() => import('@components/common/ad/CoupangAd'), {
+  ssr: false,
+});
+const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
 });
 
