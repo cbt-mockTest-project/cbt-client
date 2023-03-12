@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import BasicBox from '@components/common/box/BasicBox';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -39,7 +40,7 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           <ExamSolutionFeedback question={question} refetch={refetch} />
         )}
       </BasicBox>
-      {content.img && content.img.length >= 1 && (
+      {content.img && content.img.length >= 1 ? (
         <BasicBox minHeight={72} className="question-and-solution-image-box">
           <div className="question-and-solution-box-question-image-wrapper">
             <Image
@@ -48,6 +49,10 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
               alt={content.img[0].url}
             />
           </div>
+        </BasicBox>
+      ) : (
+        <BasicBox minHeight={72} className="question-and-solution-image-box">
+          <GoogleAd type="content" />
         </BasicBox>
       )}
     </QuestionAndSolutionBoxContainer>
