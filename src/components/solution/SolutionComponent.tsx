@@ -68,6 +68,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
       </Button>
       <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
+      <GoogleAd type="display" />
       <ul>
         {questions.map((el, index) => {
           return (
@@ -80,7 +81,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
               />
               <div className="exam-solution-page-add-wrapper">
                 {index === 0 || index === 3 ? (
-                  <GoogleAd />
+                  <GoogleAd type="feed" />
                 ) : index % 4 === 0 ? (
                   <ClickMonAd />
                 ) : (

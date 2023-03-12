@@ -24,16 +24,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
   const localStorage = new LocalStorage();
   const router = useRouter();
-  useEffect(() => {
-    var ads = document.getElementsByClassName('adsbygoogle').length;
-    for (var i = 0; i < ads; i++) {
-      try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-          {}
-        );
-      } catch (e) {}
-    }
-  }, [router.asPath]);
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
