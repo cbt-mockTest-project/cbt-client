@@ -10,9 +10,12 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
   useEffect(() => {
     try {
-      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-        {}
-      );
+      if (isProd) {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+          {}
+        );
+        console.log('pushed ads');
+      }
     } catch (e) {}
   }, []);
   const GoogleAdsIns: React.FC = () => {
@@ -67,6 +70,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
             fontWeight: 'bold',
             textAlign: 'center',
             padding: '16px',
+            // height: '100%',
             height: '130px',
           }}
         />
