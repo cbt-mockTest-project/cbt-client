@@ -170,7 +170,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               active={bookmarkState}
             />
             <p className="solution-page-question-bookmark-text">
-              {bookmarkState ? '저장됨' : '저장하기'}
+              {bookmarkState ? '저장됨' : '저장'}
             </p>
           </button>
           {hasNewWindowButton && (
@@ -244,14 +244,14 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         className="solution-page-report-button"
         onClick={onShareAction}
       >
-        공유하기
+        공유
       </Button>
       <Button
         type="primary"
         className="solution-page-report-button"
         onClick={openReportModal}
       >
-        답안추가
+        오류신고 및 답안추가
       </Button>
       {commentType === 'modal' ? (
         <>
@@ -281,9 +281,9 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         onClose={onToggleReportModal}
         onCancel={onToggleReportModal}
         onConfirm={tryReport}
-        confirmLabel="답안추가"
+        confirmLabel="등록하기"
         title={`${String(title)}\n${question.number}번 문제`}
-        label="답안추가"
+        label="오류신고 및 답안추가"
         placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
       <QuestionShareModal
@@ -315,6 +315,7 @@ const ExamSolutionListContainer = styled.li`
 
   .solution-page-report-button,
   .solution-page-comment-button {
+    font-size: 0.8rem;
     + button {
       margin-left: 10px;
     }

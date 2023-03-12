@@ -59,9 +59,9 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
           <p className="exam-solution-feedback-content">{feedback.content}</p>
         </li>
       ))}
-      <p className="exam-solution-feedback-info">
+      {/* <p className="exam-solution-feedback-info">
         {`※ 오류 신고의 경우, 신고 내용 반영 후 삭제됩니다.\n※ 오류가 있는 답안은 삭제됩니다.`}
-      </p>
+      </p> */}
     </ExamSolutionFeedbackContainer>
   );
 };
