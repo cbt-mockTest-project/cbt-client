@@ -1,13 +1,17 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
 import BasicBox from '@components/common/box/BasicBox';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
+import dynamic from 'next/dynamic';
 import React from 'react';
 import styled from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { ExamQuestionType } from './solution/ExamSolutionList';
+
+const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
+  ssr: false,
+});
 export interface QuestionAndSolutionContent {
   content?: string;
   img?: QuestionType['question_img'];
