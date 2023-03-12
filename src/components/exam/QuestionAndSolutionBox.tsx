@@ -51,9 +51,9 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           </div>
         </BasicBox>
       ) : (
-        <BasicBox minHeight={72} className="question-and-solution-image-box">
+        <div className="question-and-solution-image-box">
           <GoogleAd type="content" />
-        </BasicBox>
+        </div>
       )}
     </QuestionAndSolutionBoxContainer>
   );
@@ -80,9 +80,10 @@ const QuestionAndSolutionBoxContainer = styled.div`
     max-height: 220px;
   }
   .question-and-solution-box {
-    flex: 4;
+    flex: 5;
   }
   .question-and-solution-image-box {
+    height: 100%;
     flex: 6;
   }
   .question-and-solution-box-link-wrapper {
