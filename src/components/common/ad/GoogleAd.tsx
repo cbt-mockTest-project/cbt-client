@@ -18,16 +18,16 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
       } catch (e) {}
     }
   }, []);
-  const googleAdsIns = () => {
+  const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
         <ins
           className="adsbygoogle"
           style={{ display: 'block' }}
-          data-ad-format="fluid"
-          data-ad-layout-key="-fb+5w+4e-db+86"
           data-ad-client="ca-pub-9145855450425143"
           data-ad-slot="9696511094"
+          data-ad-layout-key="-fb+5w+4e-db+86"
+          data-ad-format="fluid"
         />
       );
     }
@@ -43,18 +43,12 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
         />
       );
     }
+    return null;
   };
   return (
     <GoogleAdContainer className={className}>
       {isProd ? (
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-format="fluid"
-          data-ad-layout-key="-fb+5w+4e-db+86"
-          data-ad-client="ca-pub-9145855450425143"
-          data-ad-slot="9696511094"
-        />
+        <GoogleAdsIns />
       ) : (
         <div
           style={{
