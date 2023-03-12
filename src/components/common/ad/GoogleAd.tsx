@@ -1,12 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 interface GoogleAdProps {
   className?: string;
+  type: 'feed' | 'display';
 }
 
-const GoogleAd: React.FC<GoogleAdProps> = ({ className }) => {
+const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
+  useEffect(() => {
+    var ads = document.getElementsByClassName('adsbygoogle').length;
+    for (var i = 0; i < ads; i++) {
+      try {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+          {}
+        );
+      } catch (e) {}
+    }
+  }, []);
+  const googleAdsIns = () => {
+    if (type === 'feed') {
+      return (
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-format="fluid"
+          data-ad-layout-key="-fb+5w+4e-db+86"
+          data-ad-client="ca-pub-9145855450425143"
+          data-ad-slot="9696511094"
+        />
+      );
+    }
+    if (type === 'display') {
+      return (
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client="ca-pub-9145855450425143"
+          data-ad-slot="9804306393"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      );
+    }
+  };
   return (
     <GoogleAdContainer className={className}>
       {isProd ? (
