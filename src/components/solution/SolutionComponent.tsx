@@ -82,7 +82,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
               />
               <div className="exam-solution-page-add-wrapper">
                 {index === 0 || index === 3 ? (
-                  <GoogleAd type="feed" />
+                  <GoogleAd type="content" />
                 ) : index % 4 === 0 ? (
                   <ClickMonAd />
                 ) : (
