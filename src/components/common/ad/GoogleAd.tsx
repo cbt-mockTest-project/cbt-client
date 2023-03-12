@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -8,16 +9,16 @@ interface GoogleAdProps {
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
+  const router = useRouter();
   useEffect(() => {
     try {
-      if (isProd) {
+      if (isProd && router.isReady) {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
           {}
         );
-        console.log('pushed ads');
       }
     } catch (e) {}
-  }, []);
+  }, [router]);
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
