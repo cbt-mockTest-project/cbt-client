@@ -353,7 +353,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
               className="exam-container-share-button"
               onClick={onShareAction}
             >
-              공유하기
+              공유
             </button>
           </div>
           <h2 className="exam-container-title">{pageSubTitle}</h2>
@@ -421,7 +421,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
               className="exam-question-menubar-report-button"
               onClick={onToggleFeedBackModal}
             >
-              답안추가
+              답안추가 및 오류신고
             </Button>
             <Button
               type="primary"
@@ -466,7 +466,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
         onChange={(value) => {
           reportValue.current = value;
         }}
-        confirmLabel="답안추가"
+        confirmLabel="등록하기"
         title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
         placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
@@ -603,9 +603,10 @@ const ExamContainer = styled.div<ExamContainerProps>`
     margin: 0;
   }
   .exam-question-menubar-modal-button-wrapper {
+    font-size: 0.8rem;
     button {
       + button {
-        margin-left: 15px;
+        margin-left: 5px;
       }
     }
   }

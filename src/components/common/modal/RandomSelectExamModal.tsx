@@ -73,7 +73,9 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
     let es: string;
     const isAllSelected = selectedExams.includes(0);
     if (isAllSelected) {
-      es = JSON.stringify(titles.map((title) => title.value));
+      const titleIds = titles.map((title) => title.value);
+      titleIds.shift();
+      es = JSON.stringify(titleIds);
     } else {
       es = JSON.stringify(selectedExams);
     }
