@@ -16,7 +16,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className }) => {
           data-ad-format="fluid"
           data-ad-layout-key="-fb+5w+4e-db+86"
           data-ad-client="ca-pub-9145855450425143"
-          data-ad-slot="8354887143"
+          data-ad-slot="9696511094"
         />
       ) : (
         <div
