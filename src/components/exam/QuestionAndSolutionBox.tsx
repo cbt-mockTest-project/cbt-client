@@ -5,7 +5,7 @@ import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
 import dynamic from 'next/dynamic';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { ExamQuestionType } from './solution/ExamSolutionList';
 
@@ -36,10 +36,11 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   refetch,
 }) => {
   if (!visible) return null;
+  const hasImage = content.img && content.img.length >= 1;
   return (
-    <QuestionAndSolutionBoxContainer>
+    <QuestionAndSolutionBoxContainer hasImage={hasImage ? 'true' : 'false'}>
       <BasicBox minHeight={72} className="question-and-solution-box">
-        <pre>{content.content}</pre>
+        <p>{content.content}</p>
         {feedback && question && (
           <ExamSolutionFeedback question={question} refetch={refetch} />
         )}
@@ -55,8 +56,8 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           </div>
         </BasicBox>
       ) : (
-        <div className="question-and-solution-image-box">
-          <GoogleAd type="content" />
+        <div className="question-and-solution-box-question-image-wrapper">
+          <GoogleAd type="display" />
         </div>
       )}
     </QuestionAndSolutionBoxContainer>
@@ -65,10 +66,15 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
 
 export default QuestionAndSolutionBox;
 
-const QuestionAndSolutionBoxContainer = styled.div`
+interface QuestionAndSolutionBoxContainerProps {
+  hasImage: string;
+}
+
+const QuestionAndSolutionBoxContainer = styled.div<QuestionAndSolutionBoxContainerProps>`
   display: flex;
   gap: 20px;
-  pre {
+  pre,
+  p {
     white-space: pre-wrap;
   }
   .question-and-solution-box-title {
@@ -100,6 +106,11 @@ const QuestionAndSolutionBoxContainer = styled.div`
       }
     }
   }
+  ${(props) =>
+    props.hasImage === 'false' &&
+    css`
+      flex-direction: column;
+    `}
   @media (max-width: ${responsive.medium}) {
     flex-direction: column;
     pre {
