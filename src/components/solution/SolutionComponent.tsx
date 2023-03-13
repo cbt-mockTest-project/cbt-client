@@ -81,13 +81,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 refetch={refetchReadQuestions}
               />
               <div className="exam-solution-page-add-wrapper">
-                {index === 0 || index === 3 ? (
-                  <GoogleAd type="content" />
-                ) : index % 4 === 0 ? (
-                  <ClickMonAd />
-                ) : (
-                  index % 5 === 0 && null
-                )}
+                {index === 0 || (index === 3 && <GoogleAd type="content" />)}
               </div>
             </div>
           );
