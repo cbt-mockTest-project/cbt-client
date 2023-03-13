@@ -12,13 +12,8 @@ import {
 } from '@lib/graphql/user/query/questionQuery';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import WithHead from '@components/common/head/WithHead';
-import dynamic from 'next/dynamic';
-import QuestionComponentSkeleton from '@components/question/QuestionComponentSkeleton';
-
-const QuestionComponent = dynamic(
-  () => import('@components/question/QuestionComponent'),
-  { loading: () => <QuestionComponentSkeleton /> }
-);
+import GoogleAd from '@components/common/ad/GoogleAd';
+import QuestionComponent from '@components/question/QuestionComponent';
 
 interface QuestionProps {
   questionQuery: ReadMockExamQuestionQuery;
@@ -33,9 +28,9 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
       />
-
       <Layout>
         <QuestionComponent questionQuery={questionQuery} />
+        <GoogleAd type="multiflex" />
       </Layout>
     </>
   );
