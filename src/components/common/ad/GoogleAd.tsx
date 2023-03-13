@@ -9,14 +9,29 @@ interface GoogleAdProps {
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
-  useEffect(() => {
+  // useEffect(() => {
+  //   try {
+  //     ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+  //       {}
+  //     );
+  //   } catch (e) {
+  //     console.log('googleads error', e);
+  //   }
+  // }, []);
+  const loadAds = () => {
     try {
-      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-        {}
-      );
-    } catch (e) {
-      console.log('googleads error', e);
+      if (typeof window !== 'undefined') {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+          {}
+        );
+      }
+    } catch (error: any) {
+      console.log('adsense error', error.message);
     }
+  };
+
+  useEffect(() => {
+    loadAds();
   }, []);
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
