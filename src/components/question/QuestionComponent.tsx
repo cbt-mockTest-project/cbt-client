@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestion } from '@lib/graphql/user/hook/useExamQuestion';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -8,9 +9,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
-  ssr: false,
-});
+
 interface QuestionComponentProps {
   questionQuery: ReadMockExamQuestionQuery;
 }

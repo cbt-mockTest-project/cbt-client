@@ -94,7 +94,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
 export default SolutionComponent;
 
 const SolutionComponentContainer = styled.div`
-  margin-bottom: 50px;
   padding: 20px;
   h1 {
     padding: 0px 20px 0px 0px;
