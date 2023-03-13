@@ -14,6 +14,7 @@ import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generate
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import dynamic from 'next/dynamic';
 import SolutionComponentSkeleton from '@components/solution/SolutionComponentSkeleton';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const SolutionComponent = dynamic(
   () => import('@components/solution/SolutionComponent'),
@@ -34,6 +35,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
 
       <Layout>
         <SolutionComponent questionsQuery={questionsQuery} />
+        <GoogleAd type="multiflex" />
       </Layout>
     </>
   );
