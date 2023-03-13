@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface GoogleAdProps {
@@ -9,18 +9,11 @@ interface GoogleAdProps {
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
-  // useEffect(() => {
-  //   try {
-  //     ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-  //       {}
-  //     );
-  //   } catch (e) {
-  //     console.log('googleads error', e);
-  //   }
-  // }, []);
+  const [adsState, setAdsState] = useState(false);
   const loadAds = () => {
     try {
       if (typeof window !== 'undefined') {
+        setAdsState(true);
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
           {}
         );
@@ -33,6 +26,8 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
+  if (!adsState) return null;
+
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
