@@ -4,10 +4,13 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
+const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
+  ssr: false,
+});
 interface QuestionComponentProps {
   questionQuery: ReadMockExamQuestionQuery;
 }
@@ -43,10 +46,13 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       }
     })();
   }, [router.query.Id, meQuery]);
-  const title = `${question.mockExam.title + ' ' + question.number + '문제'}`;
+  const title = `${
+    question.mockExam.title + ' ' + question.number + '번 문제'
+  }`;
   return (
     <QuestionComponentContainer>
       <h3>{title}</h3>
+      <GoogleAd type="display" />
       <ExamSolutionList
         refetch={refetchReadQuestion}
         isSolutionAllHide={false}

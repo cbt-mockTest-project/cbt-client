@@ -19,6 +19,7 @@ const QuestionComponent = dynamic(
   () => import('@components/question/QuestionComponent'),
   { loading: () => <QuestionComponentSkeleton /> }
 );
+
 interface QuestionProps {
   questionQuery: ReadMockExamQuestionQuery;
 }

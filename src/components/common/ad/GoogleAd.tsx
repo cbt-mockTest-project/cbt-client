@@ -9,16 +9,15 @@ interface GoogleAdProps {
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
-  const router = useRouter();
   useEffect(() => {
     try {
-      if (isProd && router.asPath) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-          {}
-        );
-      }
-    } catch (e) {}
-  }, [router.asPath]);
+      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
+        {}
+      );
+    } catch (e) {
+      console.log('googleads error', e);
+    }
+  }, []);
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
