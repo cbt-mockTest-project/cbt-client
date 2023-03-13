@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 interface GoogleAdProps {
   className?: string;
-  type: 'feed' | 'display' | 'content';
+  type: 'feed' | 'display' | 'content' | 'multiflex';
 }
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
@@ -67,6 +67,17 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
           data-ad-format="fluid"
           data-ad-client="ca-pub-9145855450425143"
           data-ad-slot="5194197298"
+        />
+      );
+    }
+    if (type === 'multiflex') {
+      return (
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-format="autorelaxed"
+          data-ad-client="ca-pub-9145855450425143"
+          data-ad-slot="2272853627"
         />
       );
     }
