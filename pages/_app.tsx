@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
         );
       } catch (e) {}
     }
-  }, [router.pathname]);
+  }, [router.asPath]);
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
