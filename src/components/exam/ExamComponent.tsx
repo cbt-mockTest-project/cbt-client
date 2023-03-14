@@ -523,7 +523,6 @@ interface ExamContainerProps {
 const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
-  padding-bottom: 150px;
   .exam-container-title-wrapper {
     display: flex;
     flex-direction: column;
@@ -642,7 +641,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
-    padding-bottom: 130px;
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
@@ -652,8 +650,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
     }
   }
   @media (max-width: ${responsive.small}) {
-    padding-bottom: 110px;
-
     .exam-container-title {
       font-size: 1rem;
     }

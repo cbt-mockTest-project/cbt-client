@@ -45,7 +45,7 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           <ExamSolutionFeedback question={question} refetch={refetch} />
         )}
       </BasicBox>
-      {content.img && content.img.length >= 1 ? (
+      {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">
           <div className="question-and-solution-box-question-image-wrapper">
             <Image
@@ -55,10 +55,6 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
             />
           </div>
         </BasicBox>
-      ) : (
-        <div className="question-and-solution-box-question-image-wrapper">
-          <GoogleAd type="display" />
-        </div>
       )}
     </QuestionAndSolutionBoxContainer>
   );
