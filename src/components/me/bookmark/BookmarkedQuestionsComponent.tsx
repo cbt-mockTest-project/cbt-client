@@ -10,6 +10,7 @@ import { responsive } from '@lib/utils/responsive';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import ExamSolutionListSkeleton from '@components/exam/solution/ExamSolutionListSkeleton';
 import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 interface BookmarkedQuestionsComponentProps {}
 
@@ -70,6 +71,9 @@ const BookmarkedQuestionsComponent: React.FC<
 
   return (
     <BookmarkedQuestionsComponentBlock>
+      <div className="bookmark-question-google-display-ad-wrapper">
+        <GoogleAd type="display" />
+      </div>
       <Select
         className="bookmark-question-exam-title-select"
         options={examTitleAndIdOptions}
@@ -113,6 +117,9 @@ const BookmarkedQuestionsComponentBlock = styled.div`
   .bookmark-question-solution-all-hide-button {
     margin-top: 20px;
     margin-bottom: -10px;
+  }
+  .bookmark-question-google-display-ad-wrapper {
+    margin-bottom: 20px;
   }
   margin-bottom: 20px;
   padding: 0 15px;

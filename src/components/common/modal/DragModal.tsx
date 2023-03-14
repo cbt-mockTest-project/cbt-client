@@ -178,9 +178,17 @@ const DragModalContainer = styled(motion.div)<DragModalContainerProps>`
       width: 100vw;
     `}
   @media (max-width: ${responsive.medium}) {
+    padding: 30px 20px;
+
+    .modal-close-button {
+      right: -5px;
+    }
     .comment-title {
       margin-top: 10px;
       font-size: 0.9rem;
+    }
+    .modal-new-window-button {
+      right: 30px;
     }
 
     .modal-drag-position {
