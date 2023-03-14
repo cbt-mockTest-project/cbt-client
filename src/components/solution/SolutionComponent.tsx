@@ -70,6 +70,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
       </Button>
       <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
+      <GoogleAd
+        className="exam-solution-page-google-display-ad-wrapper"
+        type="display"
+      />
       <ul>
         {questions.map((el, index) => {
           return (
@@ -80,9 +84,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 title={convertExamTitle(title)}
                 refetch={refetchReadQuestions}
               />
-              <div className="exam-solution-page-add-wrapper">
-                {(index === 0 || index === 3) && <GoogleAd type="feed" />}
-              </div>
             </div>
           );
         })}
@@ -105,6 +106,9 @@ const SolutionComponentContainer = styled.div`
   }
   .exam-solution-page-solution-all-hide-button {
     margin-bottom: 10px;
+  }
+  .exam-solution-page-google-display-ad-wrapper {
+    margin-top: 20px;
   }
   @media (max-width: ${responsive.medium}) {
     h1 {
