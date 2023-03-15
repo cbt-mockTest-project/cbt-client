@@ -175,6 +175,7 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   const onToggleSolutionWriteModal = () => {
     if (window && window.innerWidth < 500) {
       setSolutionWriteModalState(!solutionWriteModalState);
+      window.scrollTo(0, 0);
     }
     return;
   };
