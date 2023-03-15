@@ -105,6 +105,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   );
 };
 
-export default GoogleAd;
+export default React.memo(GoogleAd);
 
 const GoogleAdContainer = styled.div``;
