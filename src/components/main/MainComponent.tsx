@@ -20,6 +20,7 @@ import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MainViewCount from './MainViewCount';
 import useToggle from '@lib/hooks/useToggle';
 import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModal';
+import DataShareModal from '@components/common/modal/DataShareModal';
 
 export interface TitlesAndCategories {
   category: string;
@@ -47,6 +48,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
+  const { value: dataShareModalState, onToggle: onToggleDataShareModal } =
+    useToggle(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
 
@@ -187,6 +190,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRandomSelectExamModal} type="ghost">
             랜덤모의고사
           </Button>
+          <Button onClick={onToggleDataShareModal} type="dashed">
+            자료공유 및 문의하기
+          </Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -219,14 +225,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
           open={kakaoChatModalState}
           onClose={onToggleKakaoChatModalState}
         />
-      </Portal>
-      <Portal>
         <RandomSelectExamModal
           categories={categories}
           titles={titles}
           open={randomSelectExamModalState}
           onClose={onToggleRandomSelectExamModal}
           titlesAndCategories={titlesAndCategories}
+        />
+        <DataShareModal
+          open={dataShareModalState}
+          onClose={onToggleDataShareModal}
         />
       </Portal>
     </MainComponentContainer>
