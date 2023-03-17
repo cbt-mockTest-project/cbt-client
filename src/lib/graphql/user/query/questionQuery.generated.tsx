@@ -30,12 +30,26 @@ export type ReadAllMockExamQuestionQueryVariables = Types.Exact<{ [key: string]:
 
 export type ReadAllMockExamQuestionQuery = { __typename?: 'Query', readAllMockExamQuestion: { __typename?: 'ReadAllMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQuestions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
 
+export type CreateMockExamQuestionMutationVariables = Types.Exact<{
+  input: Types.CreateMockExamQuestionInput;
+}>;
+
+
+export type CreateMockExamQuestionMutation = { __typename?: 'Mutation', createMockExamQuestion: { __typename?: 'CreateMockExamQuestionOutput', error?: string | null, ok: boolean, questionId?: number | null } };
+
 export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByStateInput;
 }>;
 
 
 export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, question: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }, exam: { __typename?: 'MockExam', title: string } }> } };
+
+export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamQuestionNumbersInput;
+}>;
+
+
+export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, questionNumbers: Array<number> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -146,6 +160,19 @@ export const ReadAllMockExamQuestionDocument = gql`
 export function useReadAllMockExamQuestionQuery(options?: Omit<Urql.UseQueryArgs<ReadAllMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamQuestionQuery, ReadAllMockExamQuestionQueryVariables>({ query: ReadAllMockExamQuestionDocument, ...options });
 };
+export const CreateMockExamQuestionDocument = gql`
+    mutation CreateMockExamQuestion($input: CreateMockExamQuestionInput!) {
+  createMockExamQuestion(input: $input) {
+    error
+    ok
+    questionId
+  }
+}
+    `;
+
+export function useCreateMockExamQuestionMutation() {
+  return Urql.useMutation<CreateMockExamQuestionMutation, CreateMockExamQuestionMutationVariables>(CreateMockExamQuestionDocument);
+};
 export const ReadMockExamQuestionsByStateDocument = gql`
     query ReadMockExamQuestionsByState($input: ReadMockExamQuestionsByStateInput!) {
   readMockExamQuestionsByState(input: $input) {
@@ -166,4 +193,17 @@ export const ReadMockExamQuestionsByStateDocument = gql`
 
 export function useReadMockExamQuestionsByStateQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByStateQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionsByStateQuery, ReadMockExamQuestionsByStateQueryVariables>({ query: ReadMockExamQuestionsByStateDocument, ...options });
+};
+export const ReadMockExamQuestionNumbersDocument = gql`
+    query ReadMockExamQuestionNumbers($input: ReadMockExamQuestionNumbersInput!) {
+  readMockExamQuestionNumbers(input: $input) {
+    error
+    ok
+    questionNumbers
+  }
+}
+    `;
+
+export function useReadMockExamQuestionNumbersQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionNumbersQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamQuestionNumbersQuery, ReadMockExamQuestionNumbersQueryVariables>({ query: ReadMockExamQuestionNumbersDocument, ...options });
 };

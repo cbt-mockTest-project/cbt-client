@@ -1,14 +1,24 @@
-import { useLazyQuery, useQuery, WatchQueryFetchPolicy } from '@apollo/client';
-import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import {
+  useLazyQuery,
+  useMutation,
+  useQuery,
+  WatchQueryFetchPolicy,
+} from '@apollo/client';
+import {
+  CREATE_MOCK_EXAM_QUESTION,
   READ_ALL_QUESTION,
   READ_QUESTION,
   READ_QUESTIONS_BY_ID,
   READ_QUESTIONS_BY_STATE,
+  READ_QUESTION_NUMBERS,
 } from '../query/questionQuery';
 import {
+  CreateMockExamQuestionMutation,
+  CreateMockExamQuestionMutationVariables,
   ReadAllMockExamQuestionQuery,
   ReadAllMockExamQuestionQueryVariables,
+  ReadMockExamQuestionNumbersQuery,
+  ReadMockExamQuestionNumbersQueryVariables,
   ReadMockExamQuestionQuery,
   ReadMockExamQuestionQueryVariables,
   ReadMockExamQuestionsByMockExamIdQuery,
@@ -56,3 +66,15 @@ export const useLazyReadAllQuestions = () =>
     ReadAllMockExamQuestionQuery,
     ReadAllMockExamQuestionQueryVariables
   >(READ_ALL_QUESTION);
+
+export const useLazyReadQuestionNumbers = () =>
+  useLazyQuery<
+    ReadMockExamQuestionNumbersQuery,
+    ReadMockExamQuestionNumbersQueryVariables
+  >(READ_QUESTION_NUMBERS);
+
+export const useCreateQusetion = () =>
+  useMutation<
+    CreateMockExamQuestionMutation,
+    CreateMockExamQuestionMutationVariables
+  >(CREATE_MOCK_EXAM_QUESTION);

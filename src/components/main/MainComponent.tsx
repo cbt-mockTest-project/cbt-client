@@ -20,6 +20,7 @@ import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MainViewCount from './MainViewCount';
 import useToggle from '@lib/hooks/useToggle';
 import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModal';
+import MakeExamModal from '@components/common/modal/MakeExamModal';
 
 export interface TitlesAndCategories {
   category: string;
@@ -44,6 +45,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
     value: randomSelectExamModalState,
     onToggle: onToggleRandomSelectExamModal,
   } = useToggle();
+  const { value: makeExamModalState, onToggle: onToggleMakeExamModal } =
+    useToggle();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
@@ -187,6 +190,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRandomSelectExamModal} type="ghost">
             랜덤모의고사
           </Button>
+          <Button onClick={onToggleMakeExamModal} type="primary">
+            시험지만들기
+          </Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -214,12 +220,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </li>
         ))}
       </div>
-      <Portal>
-        <KakaoOpenChatModal
-          open={kakaoChatModalState}
-          onClose={onToggleKakaoChatModalState}
-        />
-      </Portal>
+
       <Portal>
         <RandomSelectExamModal
           categories={categories}
@@ -227,6 +228,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
           open={randomSelectExamModalState}
           onClose={onToggleRandomSelectExamModal}
           titlesAndCategories={titlesAndCategories}
+        />
+        <KakaoOpenChatModal
+          open={kakaoChatModalState}
+          onClose={onToggleKakaoChatModalState}
+        />
+        <MakeExamModal
+          open={makeExamModalState}
+          onClose={onToggleMakeExamModal}
         />
       </Portal>
     </MainComponentContainer>

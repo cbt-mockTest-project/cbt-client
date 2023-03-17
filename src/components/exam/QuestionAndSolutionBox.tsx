@@ -9,9 +9,6 @@ import styled, { css } from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { ExamQuestionType } from './solution/ExamSolutionList';
 
-const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
-  ssr: false,
-});
 export interface QuestionAndSolutionContent {
   content?: string;
   img?: QuestionType['question_img'];

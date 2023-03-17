@@ -56,6 +56,7 @@ export type CreateMockExamCategoryInput = {
 
 export type CreateMockExamCategoryOutput = {
   __typename?: 'CreateMockExamCategoryOutput';
+  category?: Maybe<MockExamCategory>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -68,6 +69,7 @@ export type CreateMockExamInput = {
 export type CreateMockExamOutput = {
   __typename?: 'CreateMockExamOutput';
   error?: Maybe<Scalars['String']>;
+  mockExam?: Maybe<MockExam>;
   ok: Scalars['Boolean'];
 };
 
@@ -489,16 +491,19 @@ export type MockExam = {
   mockExamQuestionState: Array<MockExamQuestion>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamCategory = {
   __typename?: 'MockExamCategory';
+  approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export enum MockExamCategoryTypes {
@@ -926,7 +931,7 @@ export type NaverViewTapCrawlerOutput = {
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   postInfo?: Maybe<PostInfo>;
-  searchCount?: Maybe<SearchCount>;
+  searchCounts?: Maybe<SearchCounts>;
 };
 
 export type Notice = {
@@ -1025,6 +1030,7 @@ export type Query = {
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
+  readMyMockExamCategories: ReadMyMockExamCategoriesOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
   readVisitCount: ReadVisitCountOutput;
@@ -1282,6 +1288,7 @@ export type ReadMockExamQuestionsByStateOutput = {
 };
 
 export type ReadMockExamTitlesByCateoryInput = {
+  all?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -1301,6 +1308,13 @@ export type ReadMyExamQuestionStateOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   state: MockExamQuestionState;
+};
+
+export type ReadMyMockExamCategoriesOutput = {
+  __typename?: 'ReadMyMockExamCategoriesOutput';
+  categories: Array<MockExamCategory>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadPostInput = {
@@ -1386,6 +1400,13 @@ export type SearchCount = {
   __typename?: 'SearchCount';
   all: Scalars['Float'];
   blog: Scalars['Float'];
+  url: Scalars['String'];
+};
+
+export type SearchCounts = {
+  __typename?: 'SearchCounts';
+  daum: SearchCount;
+  naver: SearchCount;
 };
 
 export type SearchMockExamInput = {
@@ -1461,6 +1482,8 @@ export type User = {
   email: Scalars['String'];
   feedback: Array<Feedback>;
   id: Scalars['Float'];
+  mockExam: Array<MockExam>;
+  mockExamCategory: Array<MockExamCategory>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;

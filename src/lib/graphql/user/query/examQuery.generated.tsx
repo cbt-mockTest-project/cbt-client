@@ -8,6 +8,25 @@ export type ReadAllMockExamCategoriesQueryVariables = Types.Exact<{ [key: string
 
 export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
 
+export type ReadMyMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadMyMockExamCategoriesQuery = { __typename?: 'Query', readMyMockExamCategories: { __typename?: 'ReadMyMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
+
+export type CreateMockExamMutationVariables = Types.Exact<{
+  input: Types.CreateMockExamInput;
+}>;
+
+
+export type CreateMockExamMutation = { __typename?: 'Mutation', createMockExam: { __typename?: 'CreateMockExamOutput', error?: string | null, ok: boolean, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null } };
+
+export type CreateMockExamCategoryMutationVariables = Types.Exact<{
+  input: Types.CreateMockExamCategoryInput;
+}>;
+
+
+export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } };
+
 export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
   input: Types.ReadMockExamTitlesByCateoryInput;
 }>;
@@ -45,6 +64,54 @@ export const ReadAllMockExamCategoriesDocument = gql`
 
 export function useReadAllMockExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<ReadAllMockExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamCategoriesQuery, ReadAllMockExamCategoriesQueryVariables>({ query: ReadAllMockExamCategoriesDocument, ...options });
+};
+export const ReadMyMockExamCategoriesDocument = gql`
+    query ReadMyMockExamCategories {
+  readMyMockExamCategories {
+    categories {
+      name
+      id
+    }
+    error
+    ok
+  }
+}
+    `;
+
+export function useReadMyMockExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<ReadMyMockExamCategoriesQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMyMockExamCategoriesQuery, ReadMyMockExamCategoriesQueryVariables>({ query: ReadMyMockExamCategoriesDocument, ...options });
+};
+export const CreateMockExamDocument = gql`
+    mutation CreateMockExam($input: CreateMockExamInput!) {
+  createMockExam(input: $input) {
+    error
+    mockExam {
+      id
+      title
+    }
+    ok
+  }
+}
+    `;
+
+export function useCreateMockExamMutation() {
+  return Urql.useMutation<CreateMockExamMutation, CreateMockExamMutationVariables>(CreateMockExamDocument);
+};
+export const CreateMockExamCategoryDocument = gql`
+    mutation CreateMockExamCategory($input: CreateMockExamCategoryInput!) {
+  createMockExamCategory(input: $input) {
+    category {
+      id
+      name
+    }
+    error
+    ok
+  }
+}
+    `;
+
+export function useCreateMockExamCategoryMutation() {
+  return Urql.useMutation<CreateMockExamCategoryMutation, CreateMockExamCategoryMutationVariables>(CreateMockExamCategoryDocument);
 };
 export const ReadMockExamTitlesByCateoryDocument = gql`
     query ReadMockExamTitlesByCateory($input: ReadMockExamTitlesByCateoryInput!) {

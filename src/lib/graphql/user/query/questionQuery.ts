@@ -107,6 +107,16 @@ export const READ_ALL_QUESTION = gql`
   ${FULL_QUESTION_FRAGMENT}
 `;
 
+export const CREATE_MOCK_EXAM_QUESTION = gql`
+  mutation CreateMockExamQuestion($input: CreateMockExamQuestionInput!) {
+    createMockExamQuestion(input: $input) {
+      error
+      ok
+      questionId
+    }
+  }
+`;
+
 export const READ_QUESTIONS_BY_STATE = gql`
   query ReadMockExamQuestionsByState(
     $input: ReadMockExamQuestionsByStateInput!
@@ -126,4 +136,14 @@ export const READ_QUESTIONS_BY_STATE = gql`
     }
   }
   ${FULL_QUESTION_FRAGMENT}
+`;
+
+export const READ_QUESTION_NUMBERS = gql`
+  query ReadMockExamQuestionNumbers($input: ReadMockExamQuestionNumbersInput!) {
+    readMockExamQuestionNumbers(input: $input) {
+      error
+      ok
+      questionNumbers
+    }
+  }
 `;
