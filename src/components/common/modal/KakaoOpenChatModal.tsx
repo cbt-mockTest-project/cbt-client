@@ -3,6 +3,7 @@ import Modal, { ModalProps } from './Modal';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import ComputerIcon from '@mui/icons-material/Computer';
+import ConstructionIcon from '@mui/icons-material/Construction';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 
@@ -25,6 +26,17 @@ const KakaoOpenChatModal: React.FC<KakaoOpenChatModalProps> = ({
           <div className="kakao-open-chat-modal-safe-room-link-box">
             <EngineeringIcon />
             <span>산업안전기사 실기방</span>
+          </div>
+        </a>
+        <a
+          href="https://open.kakao.com/o/gySbPhaf"
+          target="_blank"
+          rel="noreferrer"
+          className="kakao-open-chat-modal-safe-room-link"
+        >
+          <div className="kakao-open-chat-modal-safe-room-link-box">
+            <ConstructionIcon />
+            <span>건설안전기사 실기방</span>
           </div>
         </a>
         <a
