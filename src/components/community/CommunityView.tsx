@@ -104,6 +104,7 @@ const CommunityViewBlock = styled.div`
   .community-category-card-wrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: 10px;
   }
   .community-category-card {
     font-size: 0.8rem;

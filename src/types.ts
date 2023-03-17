@@ -161,6 +161,7 @@ export type CreatePostCommentOutput = {
 };
 
 export type CreatePostInput = {
+  category?: InputMaybe<PostCategory>;
   content: Scalars['String'];
   title: Scalars['String'];
 };
@@ -486,9 +487,9 @@ export type MockExam = {
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
-  mockExamQuestionState: Array<MockExamQuestion>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamCategory = {
@@ -926,7 +927,7 @@ export type NaverViewTapCrawlerOutput = {
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   postInfo?: Maybe<PostInfo>;
-  searchCount?: Maybe<SearchCount>;
+  searchCounts?: Maybe<SearchCounts>;
 };
 
 export type Notice = {
@@ -962,6 +963,7 @@ export type Post = {
 
 export enum PostCategory {
   Free = 'FREE',
+  Notice = 'NOTICE',
   Pass = 'PASS'
 }
 
@@ -1386,6 +1388,13 @@ export type SearchCount = {
   __typename?: 'SearchCount';
   all: Scalars['Float'];
   blog: Scalars['Float'];
+  url: Scalars['String'];
+};
+
+export type SearchCounts = {
+  __typename?: 'SearchCounts';
+  daum: SearchCount;
+  naver: SearchCount;
 };
 
 export type SearchMockExamInput = {
@@ -1461,6 +1470,7 @@ export type User = {
   email: Scalars['String'];
   feedback: Array<Feedback>;
   id: Scalars['Float'];
+  mockExam: Array<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
