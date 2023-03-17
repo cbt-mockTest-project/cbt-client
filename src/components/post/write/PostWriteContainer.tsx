@@ -20,7 +20,9 @@ import {
   useLazyReadPost,
 } from '@lib/graphql/user/hook/usePost';
 import { message } from 'antd';
-import { EditPostInput } from 'types';
+import { EditPostInput, PostCategory, UserRole } from 'types';
+import Select from 'antd/lib/select';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface PostWriteContainerProps {}
 
@@ -36,8 +38,12 @@ const ReactQuillWrapper = dynamic(
 
 const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
   const [createPost, { loading: createPostLoading }] = useCreatePost();
   const [editPost, { loading: editPostLoading }] = useEditPost();
+  const [selectedCategory, setSelectedCategory] = useState<PostCategory>(
+    PostCategory.Free
+  );
   const [formValidate, setFormValidate] = useState(false);
   const reactQuillRef = useRef<ReactQuill | null>(null);
   const isEditPage = router.pathname.indexOf('edit') > -1;
@@ -133,7 +139,9 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     if (!title || !removeHtmlTag(content)) return;
     const confirmed = confirm('글을 작성하시겠습니까?');
     if (!confirmed) return;
-    const res = await createPost({ variables: { input: { title, content } } });
+    const res = await createPost({
+      variables: { input: { title, content, category: selectedCategory } },
+    });
     if (res.data?.createPost.ok) {
       message.success('게시글이 작성됐습니다.');
       return router.back();
@@ -165,9 +173,19 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     convertWithErrorHandlingFunc({
       callback: () => requestEdit({ title, content, id: postId }),
     });
+  const onSelectCategory: ComponentProps<typeof Select>['onSelect'] = (
+    value
+  ) => {
+    setSelectedCategory(value as PostCategory);
+  };
   const postWriteProps: PostWriteProps = {
     formValidate,
-    categoryOptions,
+    categoryOptions:
+      meQuery?.me.user?.role === UserRole.Admin
+        ? categoryOptions
+        : categoryOptions.filter(
+            (option) => option.value !== PostCategory.Notice
+          ),
     ReactQuillWrapper,
     reactQuillRef,
     formats,
@@ -177,6 +195,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     postButtonLabel: isEditPage ? '수정하기' : '작성하기',
     readPostQuery,
     postLoading: isEditPage ? editPostLoading : createPostLoading,
+    onSelectCategory,
   };
   return <PostWriteView {...postWriteProps} />;
 };

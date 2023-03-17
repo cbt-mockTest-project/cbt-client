@@ -41,6 +41,7 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
       <Select
         options={props.categoryOptions}
         defaultValue={props.categoryOptions[0]}
+        onSelect={props.onSelectCategory}
       />
       <Input placeholder="제목" value={title} onChange={onChangeTitle} />
       {formValidate && title.length <= 1 && (
