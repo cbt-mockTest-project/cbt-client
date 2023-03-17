@@ -20,8 +20,15 @@ import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MainViewCount from './MainViewCount';
 import useToggle from '@lib/hooks/useToggle';
 import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModal';
+import DataShareModal from '@components/common/modal/DataShareModal';
+import dynamic from 'next/dynamic';
+import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
 
+const RecentNotice = dynamic(() => import('./RecentNotice'), {
+  ssr: false,
+  loading: () => <RecentNoticeSkeleton />,
+});
 export interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
@@ -41,6 +48,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const router = useRouter();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
+
   const {
     value: randomSelectExamModalState,
     onToggle: onToggleRandomSelectExamModal,
@@ -50,6 +58,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
+  const { value: dataShareModalState, onToggle: onToggleDataShareModal } =
+    useToggle(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
 
@@ -190,9 +200,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRandomSelectExamModal} type="ghost">
             랜덤모의고사
           </Button>
-          <Button onClick={onToggleMakeExamModal} type="primary">
-            시험지만들기
-          </Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -212,6 +219,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
         </div>
       </div>
+      <RecentNotice />
       <div className="home-exam-link-list">
         <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
         {examLinks.map((link) => (
@@ -220,7 +228,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </li>
         ))}
       </div>
-
+      <Portal>
+        <KakaoOpenChatModal
+          open={kakaoChatModalState}
+          onClose={onToggleKakaoChatModalState}
+        />
+      </Portal>
       <Portal>
         <RandomSelectExamModal
           categories={categories}
@@ -236,6 +249,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
         <MakeExamModal
           open={makeExamModalState}
           onClose={onToggleMakeExamModal}
+        />
+        <DataShareModal
+          open={dataShareModalState}
+          onClose={onToggleDataShareModal}
         />
       </Portal>
     </MainComponentContainer>
@@ -301,8 +318,11 @@ const MainComponentContainer = styled.div`
       height: 25px;
     }
   }
-  .home-exam-link-list {
+
+  .home-exam-link-list,
+  .home-recent-notice-list {
     width: max-content;
+    min-width: 285px;
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
@@ -313,7 +333,8 @@ const MainComponentContainer = styled.div`
     margin: 20px auto 40px auto;
     border: 1px solid ${palette.gray_200};
     position: relative;
-    .home-exam-link-title {
+    .home-exam-link-title,
+    .home-recent-notice-title {
       text-align: center;
       position: sticky;
       top: 0px;
@@ -322,7 +343,8 @@ const MainComponentContainer = styled.div`
       padding: 10px 20px;
       box-shadow: rgb(0 0 0 / 10%) 0px 1px 5px 1px;
     }
-    .home-exam-link-item {
+    .home-exam-link-item,
+    .home-recent-notice-list-item {
       list-style: none;
       text-align: center;
       a {

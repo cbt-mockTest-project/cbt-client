@@ -95,14 +95,20 @@ const BookmarkedQuestionsComponent: React.FC<
           )}
       </div>
       {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
-        (question) => (
-          <ExamSolutionList
-            refetch={refetchReadQuestions}
-            isSolutionAllHide={isSolutionAllHide}
-            key={question.id}
-            question={question}
-            title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
-          />
+        (question, index) => (
+          <div key={question.id}>
+            <ExamSolutionList
+              refetch={refetchReadQuestions}
+              isSolutionAllHide={isSolutionAllHide}
+              question={question}
+              title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
+            />
+            {(index === 0 || index === 2) && (
+              <div className="bookmark-page-google-feed-ad-wrapper">
+                <GoogleAd type="feed" />
+              </div>
+            )}
+          </div>
         )
       )}
     </BookmarkedQuestionsComponentBlock>
@@ -120,6 +126,9 @@ const BookmarkedQuestionsComponentBlock = styled.div`
   }
   .bookmark-question-google-display-ad-wrapper {
     margin-bottom: 20px;
+  }
+  .bookmark-page-google-feed-ad-wrapper {
+    margin-top: 20px;
   }
   margin-bottom: 20px;
   padding: 0 15px;

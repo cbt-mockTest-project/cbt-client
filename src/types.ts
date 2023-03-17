@@ -1,8 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -163,6 +169,7 @@ export type CreatePostCommentOutput = {
 };
 
 export type CreatePostInput = {
+  category?: InputMaybe<PostCategory>;
   content: Scalars['String'];
   title: Scalars['String'];
 };
@@ -470,7 +477,7 @@ export enum LoginType {
   Email = 'EMAIL',
   Google = 'GOOGLE',
   Kakao = 'KAKAO',
-  Naver = 'NAVER'
+  Naver = 'NAVER',
 }
 
 export type MeOutput = {
@@ -488,7 +495,6 @@ export type MockExam = {
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
-  mockExamQuestionState: Array<MockExamQuestion>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
@@ -508,7 +514,7 @@ export type MockExamCategory = {
 
 export enum MockExamCategoryTypes {
   Practical = 'practical',
-  Written = 'written'
+  Written = 'written',
 }
 
 export type MockExamImageType = {
@@ -675,236 +681,189 @@ export type Mutation = {
   viewPost: ViewPostOutput;
 };
 
-
 export type MutationChangePasswordAfterVerifyingArgs = {
   input: ChangePasswordAfterVerifyingInput;
 };
-
 
 export type MutationCheckPasswordArgs = {
   input: CheckPasswordInput;
 };
 
-
 export type MutationCreateFeedbackArgs = {
   input: CreateFeedbackInput;
 };
-
 
 export type MutationCreateMockExamArgs = {
   input: CreateMockExamInput;
 };
 
-
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
 };
-
 
 export type MutationCreateMockExamQuestionArgs = {
   input: CreateMockExamQuestionInput;
 };
 
-
 export type MutationCreateMockExamQuestionCommentArgs = {
   input: CreateMockExamQuestionCommentInput;
 };
-
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationCreateMutipleChoiceArgs = {
   input: CreateMockExamQuestionMultipleChoiceInput;
 };
-
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
 };
 
-
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
-
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
 
-
 export type MutationCreatePostCommentArgs = {
   input: CreatePostCommentInput;
 };
-
 
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
 
-
 export type MutationDeleteMockExamCategoryArgs = {
   input: DeleteMockExamCategoryInput;
 };
-
 
 export type MutationDeleteMockExamQuestionArgs = {
   input: DeleteMockExamQuestionInput;
 };
 
-
 export type MutationDeleteMockExamQuestionCommentArgs = {
   input: DeleteMockExamQuestionCommentInput;
 };
-
 
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationDeleteNoticeArgs = {
   input: DeleteNoticeInput;
 };
-
 
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
 };
 
-
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
 };
-
 
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
 
-
 export type MutationEditMockExamCategoryArgs = {
   input: EditMockExamCategoryInput;
 };
-
 
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
 };
 
-
 export type MutationEditMockExamQuestionBookmarkArgs = {
   input: EditMockExamQuestionBookmarkInput;
 };
-
 
 export type MutationEditMockExamQuestionCommentArgs = {
   input: EditMockExamQuestionCommentInput;
 };
 
-
 export type MutationEditMockExamQuestionCommentLikeArgs = {
   input: EditMockExamQuestionCommentLikeInput;
 };
-
 
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationEditNoticeArgs = {
   input: EditNoticeInput;
 };
-
 
 export type MutationEditPostArgs = {
   input: EditPostInput;
 };
 
-
 export type MutationEditPostCommentArgs = {
   input: EditPostCommentInput;
 };
-
 
 export type MutationEditPostCommentLikeArgs = {
   input: EditPostCommentLikeInput;
 };
 
-
 export type MutationEditPostLikeArgs = {
   input: EditPostLikeInput;
 };
-
 
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
 
-
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
-
 
 export type MutationKakaoLoginArgs = {
   input: KakaoLoginInput;
 };
 
-
 export type MutationLoginArgs = {
   input: LoginInput;
 };
-
 
 export type MutationNaverBlogViewMacroArgs = {
   input: NaverBlogViewMacroInput;
 };
 
-
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
-
 
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
 
-
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
 };
-
 
 export type MutationRevalidateArgs = {
   input: RevalidateInput;
 };
 
-
 export type MutationSendFindPasswordMailArgs = {
   input: SendFindPasswordMailInput;
 };
-
 
 export type MutationSendMessageToAlramChannelOfTelegramArgs = {
   input: SendMessageToAlramChannelOfTelegramInput;
 };
 
-
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
 
-
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
-
 
 export type MutationViewPostArgs = {
   input: ViewPostInput;
@@ -967,7 +926,8 @@ export type Post = {
 
 export enum PostCategory {
   Free = 'FREE',
-  Pass = 'PASS'
+  Notice = 'NOTICE',
+  Pass = 'PASS',
 }
 
 export type PostComment = {
@@ -1039,91 +999,73 @@ export type Query = {
   userProfile: UserProfileOutput;
 };
 
-
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
 };
-
 
 export type QueryNaverViewTapCrawlerTestArgs = {
   input: NaverViewTapCrawlerInput;
 };
 
-
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
-
 
 export type QueryReadAllMockExamCategoriesArgs = {
   input?: InputMaybe<ReadAllMockExamCategoriesInput>;
 };
 
-
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
-
 
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
 };
 
-
 export type QueryReadMockExamQuestionBookmarkArgs = {
   input: ReadMockExamQuestionBookmarkInput;
 };
-
 
 export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
   input: ReadMockExamQuestionCommentLikesByQuestinIdInput;
 };
 
-
 export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
   input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
-
 
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
 };
 
-
 export type QueryReadMockExamQuestionsByMockExamIdArgs = {
   input: ReadMockExamQuestionsByMockExamIdInput;
 };
-
 
 export type QueryReadMockExamQuestionsByStateArgs = {
   input: ReadMockExamQuestionsByStateInput;
 };
 
-
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
 };
-
 
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
 };
 
-
 export type QueryReadPostArgs = {
   input: ReadPostInput;
 };
-
 
 export type QueryReadPostsArgs = {
   input: ReadPostsInput;
 };
 
-
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
-
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
@@ -1133,7 +1075,7 @@ export enum QuestionState {
   Core = 'CORE',
   High = 'HIGH',
   Middle = 'MIDDLE',
-  Row = 'ROW'
+  Row = 'ROW',
 }
 
 export type ReadAllMockExamCategoriesInput = {
@@ -1482,8 +1424,8 @@ export type User = {
   email: Scalars['String'];
   feedback: Array<Feedback>;
   id: Scalars['Float'];
-  mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
+  mockExam: Array<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
@@ -1512,7 +1454,7 @@ export type UserProfileOutput = {
 
 export enum UserRole {
   Admin = 'ADMIN',
-  Client = 'CLIENT'
+  Client = 'CLIENT',
 }
 
 export type ViewPostInput = {

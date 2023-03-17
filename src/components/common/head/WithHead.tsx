@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import isFuture from 'date-fns/isFuture';
 
 interface IProps {
   title: string;
@@ -13,9 +12,9 @@ interface IProps {
 
 const WithHead: React.FC<IProps> = ({
   title,
-  description = `모두CBT는 국가고시 실기시험 준비를 도와주는 서비스 입니다.\n 산업안전기사 실기, 정보처리기사 실기, 전기기사 실기 등`,
+  description = `모두CBT는 국가고시 실기시험 준비를 도와주는 서비스 입니다.\n 산업안전기사 실기,건설안전기사 실기, 정보처리기사 실기, 전기기사 실기 등`,
   image = '/png/logo01.png',
-  keywords = '산업안전기사,산업안전기사실기,산업안전기사실기CBT,전기기사,전기기사실기,전기기사실기CBT,전기기사실기단답형,전자문제집,모두CBT,정보처리기사,정보처리기사실기,정보처리기사실기CBT',
+  keywords = '산업안전기사,산업안전기사실기,건설안전기사,건선안전기사실기,산업안전기사필답형,건설안전기사필답형,산업안전기사실기CBT,전기기사,전기기사실기,전기기사실기CBT,전기기사실기단답형,전자문제집,모두CBT,정보처리기사,정보처리기사실기,정보처리기사실기CBT',
   pageHeadingTitle,
 }) => {
   const { asPath } = useRouter();

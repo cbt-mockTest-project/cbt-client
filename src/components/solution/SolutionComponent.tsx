@@ -81,6 +81,11 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 title={convertExamTitle(title)}
                 refetch={refetchReadQuestions}
               />
+              {questionsQueryOnClientSide && (index === 1 || index === 3) && (
+                <div className="exam-solution-page-google-feed-ad-wrapper">
+                  <GoogleAd type="feed" />
+                </div>
+              )}
             </div>
           );
         })}
@@ -105,6 +110,9 @@ const SolutionComponentContainer = styled.div`
     margin-bottom: 10px;
   }
   .exam-solution-page-google-display-ad-wrapper {
+    margin-top: 20px;
+  }
+  .exam-solution-page-google-feed-ad-wrapper {
     margin-top: 20px;
   }
   @media (max-width: ${responsive.medium}) {
