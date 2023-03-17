@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import {
   useCreateExam,
   useCreateExamCategory,
+  useDeleteExam,
   useDeleteExamCategory,
   useReadExamTitles,
   useReadMyExamCategories,
@@ -36,6 +37,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     useCreateExamCategory();
   const [deleteCategory, { loading: deleteCategoryLoading }] =
     useDeleteExamCategory();
+  const [deleteExam, { loading: deleteExamLoading }] = useDeleteExam();
   const [createQuestion] = useCreateQusetion();
   const [createExam, { loading: createExamLoading }] = useCreateExam();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
@@ -52,9 +54,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     onChange: onChangeCategoryName,
   } = useInput('');
   const {
-    value: examTitleForCreate,
-    setValue: setExamTitleForCreate,
-    onChange: onChangeExamTitleForCreate,
+    value: examTitle,
+    setValue: setExamTitle,
+    onChange: onChangeExamTitle,
   } = useInput('');
   const methods = useForm<CreateMockExamQuestionInput>();
 
@@ -95,19 +97,19 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     });
   const requestCreateTitlte = async () => {
     if (!selectedCategory) return;
-    if (examTitleForCreate.length < 2) {
+    if (examTitle.length < 2) {
       return message.error('두 글자 이상 입력해주세요.');
     }
     const res = await createExam({
       variables: {
         input: {
-          title: examTitleForCreate,
+          title: examTitle,
           categoryName: selectedCategory.label as string,
         },
       },
     });
     if (res.data?.createMockExam.ok) {
-      setExamTitleForCreate('');
+      setExamTitle('');
       const { mockExam } = res.data.createMockExam;
       const convertedTitle: DefaultOptionType = {
         value: mockExam?.id,
@@ -145,6 +147,24 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   };
   const tryCreateCategory = convertWithErrorHandlingFunc({
     callback: requestCreateCategory,
+  });
+  const requestDeleteExam = async () => {
+    const examId = titles.filter((title) => title.label === examTitle)[0]
+      ?.value;
+    if (!examId) {
+      return message.error('존재하지 않는 시험입니다.');
+    }
+    const res = await deleteExam({
+      variables: { input: { id: Number(examId) } },
+    });
+    if (res.data?.deleteMockExam.ok) {
+      setTitles(() => titles.filter((title) => title.label !== examTitle));
+      return;
+    }
+    return message.error(res.data?.deleteMockExam.error);
+  };
+  const tryDeleteExam = convertWithErrorHandlingFunc({
+    callback: requestDeleteExam,
   });
   const requestDeleteCategory = async () => {
     const categoryId = categories.filter(
@@ -211,8 +231,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     },
     inputOption: {
       placeholder: '추가할 시험명',
-      value: examTitleForCreate,
-      onChange: onChangeExamTitleForCreate,
+      value: examTitle,
+      onChange: onChangeExamTitle,
     },
     createButtonOption: {
       onClick: tryCreateTitle,
@@ -220,8 +240,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       children: '등록하기',
     },
     deleteButtonOption: {
-      onClick: tryCreateTitle,
-      loading: createExamLoading,
+      onClick: tryDeleteExam,
+      loading: deleteExamLoading,
       children: '삭제하기',
     },
   };
