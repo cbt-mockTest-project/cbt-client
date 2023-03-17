@@ -543,6 +543,7 @@ export type MockExamQuestion = {
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamQuestionBookmark = {
@@ -673,6 +674,7 @@ export type Mutation = {
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+  updateQuestionUserId: CoreOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -1131,6 +1133,12 @@ export type QueryUserProfileArgs = {
   input: UserProfileInput;
 };
 
+export type QuestionNumber = {
+  __typename?: 'QuestionNumber';
+  questionId: Scalars['Float'];
+  questionNumber: Scalars['Float'];
+};
+
 export enum QuestionState {
   Core = 'CORE',
   High = 'HIGH',
@@ -1249,7 +1257,7 @@ export type ReadMockExamQuestionNumbersOutput = {
   __typename?: 'ReadMockExamQuestionNumbersOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-  questionNumbers: Array<Scalars['Float']>;
+  questionNumbers: Array<QuestionNumber>;
 };
 
 export type ReadMockExamQuestionOutput = {
@@ -1486,6 +1494,7 @@ export type User = {
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
+  mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;

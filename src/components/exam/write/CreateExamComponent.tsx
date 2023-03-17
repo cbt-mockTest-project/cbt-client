@@ -1,7 +1,7 @@
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
-import { Button, Input, message, UploadProps } from 'antd';
+import { Button, Input, message, UploadFile, UploadProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +19,10 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import useInput from '@lib/hooks/useInput';
 import SelectAdd, { SelectAddProps } from '@components/common/select/SelectAdd';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateMockExamQuestionInput } from 'types';
+import {
+  CreateMockExamQuestionInput,
+  MockExamQuestionImageInputType,
+} from 'types';
 import QuestionAndSolutionForm from './QuestionAndSolutionForm';
 import {
   useCreateQusetion,
@@ -33,6 +36,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [readTitles] = useReadExamTitles();
   const [readQuestionNumbers, { refetch: refetchReadQuestionNumbers }] =
     useLazyReadQuestionNumbers();
+  const [selectedQuestionNumber, setSelectedQuestionNumber] =
+    useState<number>(1);
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
   const [deleteCategory, { loading: deleteCategoryLoading }] =
@@ -40,6 +45,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [deleteExam, { loading: deleteExamLoading }] = useDeleteExam();
   const [createQuestion] = useCreateQusetion();
   const [createExam, { loading: createExamLoading }] = useCreateExam();
+
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [questionNumbers, setQuestionNumbers] = useState<number[]>([]);
@@ -48,6 +54,13 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [selectedTitle, setSelectedTitle] = useState<DefaultOptionType | null>(
     null
   );
+  const [questionImage, setQuestionImage] = React.useState<
+    UploadFile<any>[] | MockExamQuestionImageInputType[]
+  >([]);
+  const [solutionImage, setSolutionImage] = React.useState<
+    UploadFile<any>[] | MockExamQuestionImageInputType[]
+  >([]);
+
   const {
     value: categoryName,
     setValue: setCategoryName,
@@ -58,6 +71,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     setValue: setExamTitle,
     onChange: onChangeExamTitle,
   } = useInput('');
+
   const methods = useForm<CreateMockExamQuestionInput>();
 
   const requestTitleSelect = async (title: DefaultOptionType) => {
@@ -66,9 +80,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       variables: { input: { mockExamId: title.value as number } },
     });
     if (res.data?.readMockExamQuestionNumbers.ok) {
-      setQuestionNumbers(() =>
-        res.data ? res.data.readMockExamQuestionNumbers.questionNumbers : []
-      );
+      const { questionNumbers } = res.data.readMockExamQuestionNumbers;
+      setQuestionNumbers(() => (res.data ? questionNumbers : []));
+      setSelectedQuestionNumber(questionNumbers.length + 1);
       return;
     }
   };
@@ -207,7 +221,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       onSelect: (value, option) => tryCategorySelect(option)(),
     },
     inputOption: {
-      placeholder: '추가할 카테고리명',
+      placeholder: '카테고리명',
       value: categoryName,
       onChange: onChangeCategoryName,
     },
@@ -230,7 +244,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       onSelect: (value, option) => requestTitleSelect(option),
     },
     inputOption: {
-      placeholder: '추가할 시험명',
+      placeholder: '시험명',
       value: examTitle,
       onChange: onChangeExamTitle,
     },
@@ -249,27 +263,31 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     if (!selectedTitle) {
       return message.error('시험을 선택해주세요.');
     }
-    console.log(data);
     const res = await createQuestion({
       variables: {
         input: {
           mockExamId: selectedTitle.value as number,
           question: data.question,
           solution: data.solution,
-          number: Number(data.number),
-          question_img: [],
-          solution_img: [],
+          number: questionNumbers.length + 1,
+          question_img: questionImage as MockExamQuestionImageInputType[],
+          solution_img: solutionImage as MockExamQuestionImageInputType[],
         },
       },
     });
     if (res.data?.createMockExamQuestion.ok) {
       const numbersQuery = await refetchReadQuestionNumbers();
       if (numbersQuery.data.readMockExamQuestionNumbers.ok) {
-        setQuestionNumbers(
-          numbersQuery.data.readMockExamQuestionNumbers.questionNumbers
-        );
+        const { questionNumbers } =
+          numbersQuery.data.readMockExamQuestionNumbers;
+        setQuestionNumbers(questionNumbers);
+        setSelectedQuestionNumber(questionNumbers.length + 1);
       }
       message.success('문제가 등록되었습니다.');
+      // 초기화
+      methods.reset();
+      setQuestionImage([]);
+      setSolutionImage([]);
       return;
     }
     return message.error(res.data?.createMockExamQuestion.error);
@@ -289,7 +307,14 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
           className="create-exam-question-wrapper"
           onSubmit={methods.handleSubmit((data) => tryOnSumbit(data)())}
         >
-          <QuestionAndSolutionForm questionNumbers={questionNumbers} />
+          <QuestionAndSolutionForm
+            questionImage={questionImage}
+            setQuestionImage={setQuestionImage}
+            solutionImage={solutionImage}
+            setSolutionImage={setSolutionImage}
+            questionNumbers={questionNumbers}
+            selectedQuestionNumber={selectedQuestionNumber}
+          />
         </form>
       </FormProvider>
     </CreateExamComponentContainer>

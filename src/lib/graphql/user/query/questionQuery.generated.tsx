@@ -49,7 +49,7 @@ export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, questionNumbers: Array<number> } };
+export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, questionNumbers: Array<{ __typename?: 'QuestionNumber', questionNumber: number, questionId: number }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -199,7 +199,10 @@ export const ReadMockExamQuestionNumbersDocument = gql`
   readMockExamQuestionNumbers(input: $input) {
     error
     ok
-    questionNumbers
+    questionNumbers {
+      questionNumber
+      questionId
+    }
   }
 }
     `;

@@ -1,61 +1,41 @@
 import { InboxOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
-import { Button, Input, message, UploadProps } from 'antd';
+import { Button, Input, UploadFile, UploadProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import Dragger from 'antd/lib/upload/Dragger';
+import Link from 'next/link';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+import { QuestionNumber } from 'types';
+import ImageDragger from './ImageDragger';
 
 interface QuestionAndSolutionFormProps {
-  questionNumbers: number[];
+  questionNumbers: QuestionNumber[];
+  selectedQuestionNumber: number;
+  questionImage: UploadFile<any>[];
+  setQuestionImage: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
+  solutionImage: UploadFile<any>[];
+  setSolutionImage: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
 }
 
 const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   questionNumbers,
+  selectedQuestionNumber,
+  questionImage,
+  setQuestionImage,
+  solutionImage,
+  setSolutionImage,
 }) => {
-  const { control, setValue, formState, getValues } = useFormContext();
-  const questionImageDraagerProps: UploadProps = {
-    name: 'file',
-    multiple: false,
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
-  };
+  const { control, formState, getValues } = useFormContext();
 
   return (
     <QuestionAndSolutionFormContainer>
       <Label content={'3.본격작업 - 문제 등록하기'} />
       <div className="create-exam-question-part-wrapper">
-        <label className="create-exam-small-label">3.1 문제번호 입력하기</label>
+        <label className="create-exam-small-label">3.1 문제번호</label>
         <div className="create-exam-input-error-wrapper">
-          <Controller
-            name="number"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Input
-                type="number"
-                placeholder="문제번호를 입력해주세요.(1 ~ 20)"
-                onChange={field.onChange}
-                min={1}
-                max={20}
-              />
-            )}
-          />
+          <Input type="number" value={selectedQuestionNumber} readOnly />
           {formState.errors.number?.type === 'required' && (
             <ErrorText
               content="문제번호를 입력해주세요."
@@ -66,15 +46,23 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
       </div>
       <div className="create-exam-question-part-wrapper">
         <label className="create-exam-small-label">
-          3.2 현재 등록된 문제번호 (클릭시 해당문제 수정 페이지로 이동)
+          3.2 현재 등록된 문제번호
         </label>
-        <ul className="create-exam-question-number-wrapper">
-          {questionNumbers.map((questionNumber) => (
-            <li key={questionNumber}>
-              <Button>{questionNumber}</Button>
-            </li>
-          ))}
-        </ul>
+        {questionNumbers.length >= 1 && (
+          <ul className="create-exam-question-number-wrapper">
+            {questionNumbers.map((questionNumber) => (
+              <li key={questionNumber.questionId}>
+                <a
+                  href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionNumber.questionId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button>{questionNumber.questionNumber}</Button>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <div className="create-exam-question-part-wrapper">
         <label className="create-exam-small-label">
@@ -91,6 +79,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
                   placeholder="문제를 입력해주세요."
                   autoSize={true}
                   onChange={field.onChange}
+                  value={getValues('question')}
                 />
               )}
             />
@@ -100,15 +89,12 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
                 className="create-exam-question-error-text"
               />
             )}
-            <Dragger {...questionImageDraagerProps}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                문제와 관련된 사진을 등록해주세요.
-              </p>
-              <p className="ant-upload-hint">사진은 한개만 등록 가능합니다.</p>
-            </Dragger>
+            <ImageDragger
+              text="문제와 관련된 사진을 등록해주세요."
+              hint="사진은 한개만 등록 가능합니다."
+              images={questionImage}
+              setImages={setQuestionImage}
+            />
           </div>
           <div className="create-exam-question-area">
             <Controller
@@ -120,6 +106,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
                   placeholder="해설을 입력해주세요."
                   autoSize={true}
                   onChange={field.onChange}
+                  value={getValues('solution')}
                 />
               )}
             />
@@ -129,15 +116,12 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
                 className="create-exam-question-error-text"
               />
             )}
-            <Dragger {...questionImageDraagerProps}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                해설과 관련된 사진을 등록해주세요.
-              </p>
-              <p className="ant-upload-hint">사진은 한개만 등록 가능합니다.</p>
-            </Dragger>
+            <ImageDragger
+              images={solutionImage}
+              setImages={setSolutionImage}
+              text="해설과 관련된 사진을 등록해주세요."
+              hint="사진은 한개만 등록 가능합니다."
+            />
           </div>
         </div>
         <div className="create-exam-submit-button-wrapper">
@@ -200,6 +184,7 @@ const QuestionAndSolutionFormContainer = styled.div`
   .create-exam-submit-button-wrapper {
     display: flex;
     flex-direction: column;
+    margin-top: 30px;
     gap: 10px;
   }
   .create-exam-question-submit-button {

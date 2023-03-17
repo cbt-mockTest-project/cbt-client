@@ -143,7 +143,10 @@ export const READ_QUESTION_NUMBERS = gql`
     readMockExamQuestionNumbers(input: $input) {
       error
       ok
-      questionNumbers
+      questionNumbers {
+        questionNumber
+        questionId
+      }
     }
   }
 `;
