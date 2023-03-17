@@ -3,6 +3,7 @@ import { FindMyExamHistoryInput } from 'types';
 import {
   CREATE_MOCK_EXAM_CATEGORY,
   CREATE_MOCK_EXAM_TITLE,
+  DELETE_MOCK_EXAM_CATEGORY,
   FIND_MY_EXAM_HISTORY_QUERY,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_TITLES_QUERY,
@@ -13,6 +14,8 @@ import {
   CreateMockExamCategoryMutationVariables,
   CreateMockExamMutation,
   CreateMockExamMutationVariables,
+  DeleteMockExamCategoryMutation,
+  DeleteMockExamCategoryMutationVariables,
   FindMyExamHistoryQuery,
   FindMyExamHistoryQueryVariables,
   ReadAllMockExamCategoriesQuery,
@@ -62,3 +65,9 @@ export const useFineMyExamHistory = (input: FindMyExamHistoryInput) =>
     FIND_MY_EXAM_HISTORY_QUERY,
     { variables: { input } }
   );
+
+export const useDeleteExamCategory = () =>
+  useMutation<
+    DeleteMockExamCategoryMutation,
+    DeleteMockExamCategoryMutationVariables
+  >(DELETE_MOCK_EXAM_CATEGORY, { fetchPolicy: 'network-only' });

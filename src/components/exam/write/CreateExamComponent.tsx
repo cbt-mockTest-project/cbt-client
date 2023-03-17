@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import {
   useCreateExam,
   useCreateExamCategory,
+  useDeleteExamCategory,
   useReadExamTitles,
   useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
@@ -33,6 +34,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     useLazyReadQuestionNumbers();
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
+  const [deleteCategory, { loading: deleteCategoryLoading }] =
+    useDeleteExamCategory();
   const [createQuestion] = useCreateQusetion();
   const [createExam, { loading: createExamLoading }] = useCreateExam();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
@@ -44,9 +47,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     null
   );
   const {
-    value: categoryNameForCreate,
-    setValue: setCategoryNameForCreate,
-    onChange: onChangeCategoryNameForCreate,
+    value: categoryName,
+    setValue: setCategoryName,
+    onChange: onChangeCategoryName,
   } = useInput('');
   const {
     value: examTitleForCreate,
@@ -121,14 +124,14 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     callback: requestCreateTitlte,
   });
   const requestCreateCategory = async () => {
-    if (categoryNameForCreate.length < 2) {
+    if (categoryName.length < 2) {
       return message.error('두 글자 이상 입력해주세요.');
     }
     const res = await createCategory({
-      variables: { input: { name: categoryNameForCreate } },
+      variables: { input: { name: categoryName } },
     });
     if (res.data?.createMockExamCategory.ok) {
-      setCategoryNameForCreate('');
+      setCategoryName('');
       const { category } = res.data.createMockExamCategory;
       const convertedCategory: DefaultOptionType = {
         value: category?.id,
@@ -142,6 +145,27 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   };
   const tryCreateCategory = convertWithErrorHandlingFunc({
     callback: requestCreateCategory,
+  });
+  const requestDeleteCategory = async () => {
+    const categoryId = categories.filter(
+      (category) => category.label === categoryName
+    )[0]?.value;
+    if (!categoryId) {
+      return message.error('존재하지 않는 카테고리입니다.');
+    }
+    const res = await deleteCategory({
+      variables: { input: { id: Number(categoryId) } },
+    });
+    if (res.data?.deleteMockExamCategory.ok) {
+      setCategories(() =>
+        categories.filter((category) => category.label !== categoryName)
+      );
+      return;
+    }
+    return message.error(res.data?.deleteMockExamCategory.error);
+  };
+  const tryDeleteCategory = convertWithErrorHandlingFunc({
+    callback: requestDeleteCategory,
   });
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
@@ -164,13 +188,18 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     },
     inputOption: {
       placeholder: '추가할 카테고리명',
-      value: categoryNameForCreate,
-      onChange: onChangeCategoryNameForCreate,
+      value: categoryName,
+      onChange: onChangeCategoryName,
     },
-    buttonOption: {
+    createButtonOption: {
       onClick: tryCreateCategory,
       loading: createCategoryLoading,
       children: '등록하기',
+    },
+    deleteButtonOption: {
+      onClick: tryDeleteCategory,
+      loading: deleteCategoryLoading,
+      children: '삭제하기',
     },
   };
   const SelectTitleProps: SelectAddProps = {
@@ -185,10 +214,15 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       value: examTitleForCreate,
       onChange: onChangeExamTitleForCreate,
     },
-    buttonOption: {
+    createButtonOption: {
       onClick: tryCreateTitle,
       loading: createExamLoading,
       children: '등록하기',
+    },
+    deleteButtonOption: {
+      onClick: tryCreateTitle,
+      loading: createExamLoading,
+      children: '삭제하기',
     },
   };
   const onSubmit = async (data: CreateMockExamQuestionInput) => {

@@ -26,6 +26,15 @@ export const READ_MY_EXAM_CATEORIES_QUERY = gql`
   }
 `;
 
+export const DELETE_MOCK_EXAM_CATEGORY = gql`
+  mutation DeleteMockExamCategory($input: DeleteMockExamCategoryInput!) {
+    deleteMockExamCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
 export const CREATE_MOCK_EXAM_TITLE = gql`
   mutation CreateMockExam($input: CreateMockExamInput!) {
     createMockExam(input: $input) {

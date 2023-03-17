@@ -13,6 +13,13 @@ export type ReadMyMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]
 
 export type ReadMyMockExamCategoriesQuery = { __typename?: 'Query', readMyMockExamCategories: { __typename?: 'ReadMyMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
 
+export type DeleteMockExamCategoryMutationVariables = Types.Exact<{
+  input: Types.DeleteMockExamCategoryInput;
+}>;
+
+
+export type DeleteMockExamCategoryMutation = { __typename?: 'Mutation', deleteMockExamCategory: { __typename?: 'DeleteMockExamCategoryOutput', error?: string | null, ok: boolean } };
+
 export type CreateMockExamMutationVariables = Types.Exact<{
   input: Types.CreateMockExamInput;
 }>;
@@ -80,6 +87,18 @@ export const ReadMyMockExamCategoriesDocument = gql`
 
 export function useReadMyMockExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<ReadMyMockExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMyMockExamCategoriesQuery, ReadMyMockExamCategoriesQueryVariables>({ query: ReadMyMockExamCategoriesDocument, ...options });
+};
+export const DeleteMockExamCategoryDocument = gql`
+    mutation DeleteMockExamCategory($input: DeleteMockExamCategoryInput!) {
+  deleteMockExamCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteMockExamCategoryMutation() {
+  return Urql.useMutation<DeleteMockExamCategoryMutation, DeleteMockExamCategoryMutationVariables>(DeleteMockExamCategoryDocument);
 };
 export const CreateMockExamDocument = gql`
     mutation CreateMockExam($input: CreateMockExamInput!) {
