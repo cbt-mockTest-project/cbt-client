@@ -13,6 +13,7 @@ module.exports = {
     '/mobile/findpw',
     '/post/write',
     '/test',
+    '/exam/write',
   ],
   // ...other options
   transform: async (config, path) => {

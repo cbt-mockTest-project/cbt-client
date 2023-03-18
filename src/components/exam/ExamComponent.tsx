@@ -362,9 +362,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           )}
           <h2 className="exam-container-title">
             {pageSubTitle}
-            <p className="exam-container-author-name">
-              {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
-            </p>
+            {!isRandomExam && (
+              <p className="exam-container-author-name">
+                {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
+              </p>
+            )}
           </h2>
           {isRandomExam && (
             <h3 className="exam-container-sub-title">
