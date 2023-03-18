@@ -55,6 +55,10 @@ export const READ_QUESTION = gql`
   query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
     readMockExamQuestion(input: $input) {
       mockExamQusetion {
+        user {
+          id
+          role
+        }
         question
         solution
         mockExam {
@@ -62,9 +66,13 @@ export const READ_QUESTION = gql`
         }
         question_img {
           url
+          name
+          uid
         }
         solution_img {
           url
+          name
+          uid
         }
         id
         number
@@ -91,6 +99,15 @@ export const READ_QUESTION = gql`
     }
   }
   ${FULL_QUESTION_COMMENT_FRAGMENT}
+`;
+
+export const EDIT_QUESTION = gql`
+  mutation EditMockExamQuestion($input: EditMockExamQuestionInput!) {
+    editMockExamQuestion(input: $input) {
+      error
+      ok
+    }
+  }
 `;
 
 // 북마크용 추후 네이밍 수정예정

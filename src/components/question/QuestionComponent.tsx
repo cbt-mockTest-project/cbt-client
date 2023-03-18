@@ -5,7 +5,8 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
-import dynamic from 'next/dynamic';
+import { Button } from 'antd';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -50,6 +51,16 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   }`;
   return (
     <QuestionComponentContainer>
+      {question.user.id === meQuery?.me.user?.id && (
+        <div className="question-component-top-button-wrapper">
+          <Link
+            href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${router.query.Id}/edit`}
+          >
+            <Button>수정하기</Button>
+          </Link>
+          <Button>삭제하기</Button>
+        </div>
+      )}
       <h3>{title}</h3>
       <GoogleAd type="display" />
       <ExamSolutionList
@@ -71,4 +82,9 @@ const QuestionComponentContainer = styled.div`
     list-style: none;
   }
   padding: 20px;
+  .question-component-top-button-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 `;

@@ -6,6 +6,7 @@ import {
 } from '@apollo/client';
 import {
   CREATE_MOCK_EXAM_QUESTION,
+  EDIT_QUESTION,
   READ_ALL_QUESTION,
   READ_QUESTION,
   READ_QUESTIONS_BY_ID,
@@ -15,6 +16,8 @@ import {
 import {
   CreateMockExamQuestionMutation,
   CreateMockExamQuestionMutationVariables,
+  EditMockExamQuestionMutation,
+  EditMockExamQuestionMutationVariables,
   ReadAllMockExamQuestionQuery,
   ReadAllMockExamQuestionQueryVariables,
   ReadMockExamQuestionNumbersQuery,
@@ -40,6 +43,11 @@ export const useReadQuestionsByExamId = () =>
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
   >(READ_QUESTIONS_BY_ID);
+
+export const useReadQuestion = () =>
+  useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(
+    READ_QUESTION
+  );
 
 export const useLazyReadQuestion = (fetchPolicy: WatchQueryFetchPolicy) =>
   useLazyQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(
@@ -78,3 +86,9 @@ export const useCreateQusetion = () =>
     CreateMockExamQuestionMutation,
     CreateMockExamQuestionMutationVariables
   >(CREATE_MOCK_EXAM_QUESTION);
+
+export const useEditQuestion = () =>
+  useMutation<
+    EditMockExamQuestionMutation,
+    EditMockExamQuestionMutationVariables
+  >(EDIT_QUESTION);

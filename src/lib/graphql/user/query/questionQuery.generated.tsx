@@ -23,7 +23,14 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, mockExam: { __typename?: 'MockExam', title: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', id: number }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }> } } };
+export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, user: { __typename?: 'User', id: number, role: Types.UserRole }, mockExam: { __typename?: 'MockExam', title: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', id: number }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }> } } };
+
+export type EditMockExamQuestionMutationVariables = Types.Exact<{
+  input: Types.EditMockExamQuestionInput;
+}>;
+
+
+export type EditMockExamQuestionMutation = { __typename?: 'Mutation', editMockExamQuestion: { __typename?: 'EditMockExamQuestionOutput', error?: string | null, ok: boolean } };
 
 export type ReadAllMockExamQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -105,6 +112,10 @@ export const ReadMockExamQuestionDocument = gql`
     query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
   readMockExamQuestion(input: $input) {
     mockExamQusetion {
+      user {
+        id
+        role
+      }
       question
       solution
       mockExam {
@@ -112,9 +123,13 @@ export const ReadMockExamQuestionDocument = gql`
       }
       question_img {
         url
+        name
+        uid
       }
       solution_img {
         url
+        name
+        uid
       }
       id
       number
@@ -144,6 +159,18 @@ export const ReadMockExamQuestionDocument = gql`
 
 export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
+};
+export const EditMockExamQuestionDocument = gql`
+    mutation EditMockExamQuestion($input: EditMockExamQuestionInput!) {
+  editMockExamQuestion(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditMockExamQuestionMutation() {
+  return Urql.useMutation<EditMockExamQuestionMutation, EditMockExamQuestionMutationVariables>(EditMockExamQuestionDocument);
 };
 export const ReadAllMockExamQuestionDocument = gql`
     query ReadAllMockExamQuestion {

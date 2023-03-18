@@ -22,6 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import {
   CreateMockExamQuestionInput,
   MockExamQuestionImageInputType,
+  QuestionNumber,
 } from 'types';
 import QuestionAndSolutionForm from './QuestionAndSolutionForm';
 import {
@@ -48,7 +49,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
-  const [questionNumbers, setQuestionNumbers] = useState<number[]>([]);
+  const [questionNumbers, setQuestionNumbers] = useState<QuestionNumber[]>([]);
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<DefaultOptionType | null>(
