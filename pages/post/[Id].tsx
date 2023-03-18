@@ -88,6 +88,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const postQueryOnStaticProps = res?.data;
   return addApolloState(apolloClient, {
     props: { postQueryOnStaticProps },
-    revalidate: 86400,
+    revalidate: 43200,
   });
 };

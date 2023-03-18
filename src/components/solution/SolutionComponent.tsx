@@ -5,11 +5,13 @@ import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/
 import { responsive } from '@lib/utils/responsive';
 import { convertExamTitle } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
+import palette from '@styles/palette';
 import { Button } from 'antd';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 const ClickMonAd = dynamic(() => import('@components/common/ad/ClickMonAd'), {
   ssr: false,
 });
@@ -21,11 +23,15 @@ const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
 });
 
 interface SolutionComponentProps {
-  questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
+  questionsQuery?: ReadMockExamQuestionsByMockExamIdQuery;
+  isPreview?: boolean;
+  hasNewWindowButton?: boolean;
 }
 
 const SolutionComponent: React.FC<SolutionComponentProps> = ({
   questionsQuery,
+  isPreview = false,
+  hasNewWindowButton = true,
 }) => {
   const [
     readQuestions,
@@ -34,7 +40,9 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   const client = useApollo({}, '');
   const router = useRouter();
-  const title = questionsQuery.readMockExamQuestionsByMockExamId.title;
+  const title = questionsQuery
+    ? questionsQuery.readMockExamQuestionsByMockExamId.title
+    : questionsQueryOnClientSide?.readMockExamQuestionsByMockExamId.title;
   const examId = Number(String(router.query.Id));
   useEffect(() => {
     (async () => {
@@ -56,8 +64,12 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       }
     })();
   }, [router.query.Id]);
-  const questions = (questionsQueryOnClientSide || questionsQuery)
-    .readMockExamQuestionsByMockExamId.questions;
+  if (!questionsQuery && !questionsQueryOnClientSide)
+    return <SolutionComponentSkeleton />;
+  const currentQuestionsQuery = (questionsQueryOnClientSide ||
+    questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery;
+  const questions =
+    currentQuestionsQuery.readMockExamQuestionsByMockExamId.questions;
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
   return (
@@ -69,7 +81,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       >
         {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
       </Button>
-      <h1 className="not-draggable">{convertExamTitle(title)} 문제/해설</h1>
+      <h1 className="not-draggable">
+        {convertExamTitle(title || '')} 문제/해설
+      </h1>
+      <p className="exam-solution-page-author-name">{`제작자: ${currentQuestionsQuery.readMockExamQuestionsByMockExamId.author}`}</p>
 
       <ul>
         {questions.map((el, index) => {
@@ -78,8 +93,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
               <ExamSolutionList
                 isSolutionAllHide={isSolutionAllHide}
                 question={el}
-                title={convertExamTitle(title)}
+                title={convertExamTitle(title || '')}
                 refetch={refetchReadQuestions}
+                isPreview={isPreview}
+                hasNewWindowButton={hasNewWindowButton}
               />
               {questionsQueryOnClientSide && (index === 1 || index === 3) && (
                 <div className="exam-solution-page-google-feed-ad-wrapper">
@@ -101,6 +118,10 @@ const SolutionComponentContainer = styled.div`
   h1 {
     padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
+  }
+  .exam-solution-page-author-name {
+    font-size: 0.9rem;
+    color: ${palette.gray_700};
   }
   .exam-solution-page-add-wrapper {
     position: relative;

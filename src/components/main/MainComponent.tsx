@@ -23,6 +23,7 @@ import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModa
 import DataShareModal from '@components/common/modal/DataShareModal';
 import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
+import MakeExamModal from '@components/common/modal/MakeExamModal';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -52,6 +53,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
     value: randomSelectExamModalState,
     onToggle: onToggleRandomSelectExamModal,
   } = useToggle();
+  const { value: makeExamModalState, onToggle: onToggleMakeExamModal } =
+    useToggle();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
@@ -197,9 +200,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRandomSelectExamModal} type="ghost">
             랜덤모의고사
           </Button>
-          <Button onClick={onToggleDataShareModal} type="dashed">
-            자료공유 및 문의하기
-          </Button>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -233,12 +233,22 @@ const MainComponent: React.FC<MainComponentProps> = ({
           open={kakaoChatModalState}
           onClose={onToggleKakaoChatModalState}
         />
+      </Portal>
+      <Portal>
         <RandomSelectExamModal
           categories={categories}
           titles={titles}
           open={randomSelectExamModalState}
           onClose={onToggleRandomSelectExamModal}
           titlesAndCategories={titlesAndCategories}
+        />
+        <KakaoOpenChatModal
+          open={kakaoChatModalState}
+          onClose={onToggleKakaoChatModalState}
+        />
+        <MakeExamModal
+          open={makeExamModalState}
+          onClose={onToggleMakeExamModal}
         />
         <DataShareModal
           open={dataShareModalState}

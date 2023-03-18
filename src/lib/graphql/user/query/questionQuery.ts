@@ -14,6 +14,7 @@ export const READ_QUESTIONS_BY_ID = gql`
       error
       ok
       title
+      author
       questions {
         ...FullQuestionIncludingExamIdParts
         mockExamQuestionComment {
@@ -28,9 +29,6 @@ export const READ_QUESTIONS_BY_ID = gql`
           }
           created_at
           updated_at
-        }
-        mockExam {
-          title
         }
       }
     }
@@ -55,6 +53,10 @@ export const READ_QUESTION = gql`
   query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
     readMockExamQuestion(input: $input) {
       mockExamQusetion {
+        user {
+          id
+          role
+        }
         question
         solution
         mockExam {
@@ -62,9 +64,13 @@ export const READ_QUESTION = gql`
         }
         question_img {
           url
+          name
+          uid
         }
         solution_img {
           url
+          name
+          uid
         }
         id
         number
@@ -93,6 +99,15 @@ export const READ_QUESTION = gql`
   ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
+export const EDIT_QUESTION = gql`
+  mutation EditMockExamQuestion($input: EditMockExamQuestionInput!) {
+    editMockExamQuestion(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
 // 북마크용 추후 네이밍 수정예정
 export const READ_ALL_QUESTION = gql`
   query ReadAllMockExamQuestion {
@@ -105,6 +120,16 @@ export const READ_ALL_QUESTION = gql`
     }
   }
   ${FULL_QUESTION_FRAGMENT}
+`;
+
+export const CREATE_MOCK_EXAM_QUESTION = gql`
+  mutation CreateMockExamQuestion($input: CreateMockExamQuestionInput!) {
+    createMockExamQuestion(input: $input) {
+      error
+      ok
+      questionId
+    }
+  }
 `;
 
 export const READ_QUESTIONS_BY_STATE = gql`
@@ -126,4 +151,18 @@ export const READ_QUESTIONS_BY_STATE = gql`
     }
   }
   ${FULL_QUESTION_FRAGMENT}
+`;
+
+export const READ_QUESTION_NUMBERS = gql`
+  query ReadMockExamQuestionNumbers($input: ReadMockExamQuestionNumbersInput!) {
+    readMockExamQuestionNumbers(input: $input) {
+      error
+      ok
+      questionNumbers {
+        questionNumber
+        questionId
+      }
+      examStatus
+    }
+  }
 `;

@@ -11,7 +11,7 @@ export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, title: string, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }>, mockExam: { __typename?: 'MockExam', title: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> }> } };
+export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, title: string, author: string, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }>, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> }> } };
 
 export type ReadAllQuestionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -23,12 +23,26 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, mockExam: { __typename?: 'MockExam', title: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', id: number }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }> } } };
+export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, user: { __typename?: 'User', id: number, role: Types.UserRole }, mockExam: { __typename?: 'MockExam', title: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', id: number }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number } }> } } };
+
+export type EditMockExamQuestionMutationVariables = Types.Exact<{
+  input: Types.EditMockExamQuestionInput;
+}>;
+
+
+export type EditMockExamQuestionMutation = { __typename?: 'Mutation', editMockExamQuestion: { __typename?: 'EditMockExamQuestionOutput', error?: string | null, ok: boolean } };
 
 export type ReadAllMockExamQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type ReadAllMockExamQuestionQuery = { __typename?: 'Query', readAllMockExamQuestion: { __typename?: 'ReadAllMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQuestions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+
+export type CreateMockExamQuestionMutationVariables = Types.Exact<{
+  input: Types.CreateMockExamQuestionInput;
+}>;
+
+
+export type CreateMockExamQuestionMutation = { __typename?: 'Mutation', createMockExamQuestion: { __typename?: 'CreateMockExamQuestionOutput', error?: string | null, ok: boolean, questionId?: number | null } };
 
 export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByStateInput;
@@ -36,6 +50,13 @@ export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
 
 
 export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, question: { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }, exam: { __typename?: 'MockExam', title: string } }> } };
+
+export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamQuestionNumbersInput;
+}>;
+
+
+export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, examStatus?: Types.ExamStatus | null, questionNumbers: Array<{ __typename?: 'QuestionNumber', questionNumber: number, questionId: number }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -45,6 +66,7 @@ export const ReadMockExamQuestionsByMockExamIdDocument = gql`
     error
     ok
     title
+    author
     questions {
       ...FullQuestionIncludingExamIdParts
       mockExamQuestionComment {
@@ -59,9 +81,6 @@ export const ReadMockExamQuestionsByMockExamIdDocument = gql`
         }
         created_at
         updated_at
-      }
-      mockExam {
-        title
       }
     }
   }
@@ -91,6 +110,10 @@ export const ReadMockExamQuestionDocument = gql`
     query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
   readMockExamQuestion(input: $input) {
     mockExamQusetion {
+      user {
+        id
+        role
+      }
       question
       solution
       mockExam {
@@ -98,9 +121,13 @@ export const ReadMockExamQuestionDocument = gql`
       }
       question_img {
         url
+        name
+        uid
       }
       solution_img {
         url
+        name
+        uid
       }
       id
       number
@@ -131,6 +158,18 @@ export const ReadMockExamQuestionDocument = gql`
 export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
 };
+export const EditMockExamQuestionDocument = gql`
+    mutation EditMockExamQuestion($input: EditMockExamQuestionInput!) {
+  editMockExamQuestion(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditMockExamQuestionMutation() {
+  return Urql.useMutation<EditMockExamQuestionMutation, EditMockExamQuestionMutationVariables>(EditMockExamQuestionDocument);
+};
 export const ReadAllMockExamQuestionDocument = gql`
     query ReadAllMockExamQuestion {
   readAllMockExamQuestion {
@@ -145,6 +184,19 @@ export const ReadAllMockExamQuestionDocument = gql`
 
 export function useReadAllMockExamQuestionQuery(options?: Omit<Urql.UseQueryArgs<ReadAllMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamQuestionQuery, ReadAllMockExamQuestionQueryVariables>({ query: ReadAllMockExamQuestionDocument, ...options });
+};
+export const CreateMockExamQuestionDocument = gql`
+    mutation CreateMockExamQuestion($input: CreateMockExamQuestionInput!) {
+  createMockExamQuestion(input: $input) {
+    error
+    ok
+    questionId
+  }
+}
+    `;
+
+export function useCreateMockExamQuestionMutation() {
+  return Urql.useMutation<CreateMockExamQuestionMutation, CreateMockExamQuestionMutationVariables>(CreateMockExamQuestionDocument);
 };
 export const ReadMockExamQuestionsByStateDocument = gql`
     query ReadMockExamQuestionsByState($input: ReadMockExamQuestionsByStateInput!) {
@@ -166,4 +218,21 @@ export const ReadMockExamQuestionsByStateDocument = gql`
 
 export function useReadMockExamQuestionsByStateQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionsByStateQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionsByStateQuery, ReadMockExamQuestionsByStateQueryVariables>({ query: ReadMockExamQuestionsByStateDocument, ...options });
+};
+export const ReadMockExamQuestionNumbersDocument = gql`
+    query ReadMockExamQuestionNumbers($input: ReadMockExamQuestionNumbersInput!) {
+  readMockExamQuestionNumbers(input: $input) {
+    error
+    ok
+    questionNumbers {
+      questionNumber
+      questionId
+    }
+    examStatus
+  }
+}
+    `;
+
+export function useReadMockExamQuestionNumbersQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionNumbersQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamQuestionNumbersQuery, ReadMockExamQuestionNumbersQueryVariables>({ query: ReadMockExamQuestionNumbersDocument, ...options });
 };

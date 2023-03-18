@@ -56,6 +56,7 @@ export type CreateMockExamCategoryInput = {
 
 export type CreateMockExamCategoryOutput = {
   __typename?: 'CreateMockExamCategoryOutput';
+  category?: Maybe<MockExamCategory>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -68,6 +69,7 @@ export type CreateMockExamInput = {
 export type CreateMockExamOutput = {
   __typename?: 'CreateMockExamOutput';
   error?: Maybe<Scalars['String']>;
+  mockExam?: Maybe<MockExam>;
   ok: Scalars['Boolean'];
 };
 
@@ -416,6 +418,13 @@ export type EmailVerificationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export enum ExamStatus {
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+  Request = 'REQUEST',
+  Unset = 'UNSET'
+}
+
 export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
@@ -487,6 +496,8 @@ export type MockExam = {
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
+  mockExamQuestionState: Array<MockExamQuestion>;
+  status: ExamStatus;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
@@ -494,12 +505,14 @@ export type MockExam = {
 
 export type MockExamCategory = {
   __typename?: 'MockExamCategory';
+  approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export enum MockExamCategoryTypes {
@@ -538,6 +551,7 @@ export type MockExamQuestion = {
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
   updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type MockExamQuestionBookmark = {
@@ -1027,6 +1041,7 @@ export type Query = {
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
+  readMyMockExamCategories: ReadMyMockExamCategoriesOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
   readVisitCount: ReadVisitCountOutput;
@@ -1123,6 +1138,12 @@ export type QuerySearchMockExamArgs = {
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
+};
+
+export type QuestionNumber = {
+  __typename?: 'QuestionNumber';
+  questionId: Scalars['Float'];
+  questionNumber: Scalars['Float'];
 };
 
 export enum QuestionState {
@@ -1242,8 +1263,9 @@ export type ReadMockExamQuestionNumbersInput = {
 export type ReadMockExamQuestionNumbersOutput = {
   __typename?: 'ReadMockExamQuestionNumbersOutput';
   error?: Maybe<Scalars['String']>;
+  examStatus?: Maybe<ExamStatus>;
   ok: Scalars['Boolean'];
-  questionNumbers: Array<Scalars['Float']>;
+  questionNumbers: Array<QuestionNumber>;
 };
 
 export type ReadMockExamQuestionOutput = {
@@ -1263,6 +1285,7 @@ export type ReadMockExamQuestionsByMockExamIdInput = {
 
 export type ReadMockExamQuestionsByMockExamIdOutput = {
   __typename?: 'ReadMockExamQuestionsByMockExamIdOutput';
+  author: Scalars['String'];
   count: Scalars['Float'];
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
@@ -1284,6 +1307,7 @@ export type ReadMockExamQuestionsByStateOutput = {
 };
 
 export type ReadMockExamTitlesByCateoryInput = {
+  all?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -1303,6 +1327,13 @@ export type ReadMyExamQuestionStateOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   state: MockExamQuestionState;
+};
+
+export type ReadMyMockExamCategoriesOutput = {
+  __typename?: 'ReadMyMockExamCategoriesOutput';
+  categories: Array<MockExamCategory>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadPostInput = {
@@ -1471,6 +1502,8 @@ export type User = {
   feedback: Array<Feedback>;
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
+  mockExamCategory: Array<MockExamCategory>;
+  mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;

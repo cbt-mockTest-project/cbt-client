@@ -103,6 +103,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   });
   return addApolloState(apolloClient, {
     props: { categoriesQuery, titlesAndCategories, examLinks },
-    revalidate: 86400,
+    revalidate: 43200,
   });
 };

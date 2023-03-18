@@ -13,6 +13,63 @@ export const READ_EXAM_CATEGORIES_QUERY = gql`
   }
 `;
 
+export const READ_MY_EXAM_CATEORIES_QUERY = gql`
+  query ReadMyMockExamCategories {
+    readMyMockExamCategories {
+      categories {
+        name
+        id
+      }
+      error
+      ok
+    }
+  }
+`;
+
+export const DELETE_MOCK_EXAM = gql`
+  mutation DeleteMockExam($input: DeleteMockExamInput!) {
+    deleteMockExam(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const DELETE_MOCK_EXAM_CATEGORY = gql`
+  mutation DeleteMockExamCategory($input: DeleteMockExamCategoryInput!) {
+    deleteMockExamCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const CREATE_MOCK_EXAM_TITLE = gql`
+  mutation CreateMockExam($input: CreateMockExamInput!) {
+    createMockExam(input: $input) {
+      error
+      mockExam {
+        id
+        title
+      }
+      ok
+    }
+  }
+`;
+
+export const CREATE_MOCK_EXAM_CATEGORY = gql`
+  mutation CreateMockExamCategory($input: CreateMockExamCategoryInput!) {
+    createMockExamCategory(input: $input) {
+      category {
+        id
+        name
+      }
+      error
+      ok
+    }
+  }
+`;
+
 export const READ_EXAM_TITLES_QUERY = gql`
   query ReadMockExamTitlesByCateory($input: ReadMockExamTitlesByCateoryInput!) {
     readMockExamTitlesByCateory(input: $input) {
