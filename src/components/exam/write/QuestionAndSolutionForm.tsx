@@ -1,13 +1,14 @@
 import { InboxOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
+import palette from '@styles/palette';
 import { Button, Input, UploadFile, UploadProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Link from 'next/link';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
-import { QuestionNumber } from 'types';
+import { ExamStatus, QuestionNumber } from 'types';
 import ImageDragger from './ImageDragger';
 
 interface QuestionAndSolutionFormProps {
@@ -17,6 +18,9 @@ interface QuestionAndSolutionFormProps {
   setQuestionImage: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
   solutionImage: UploadFile<any>[];
   setSolutionImage: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
+  examStatus: ExamStatus;
+  examId: number;
+  onToggleExamPreviewModal: () => void;
 }
 
 const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
@@ -26,14 +30,36 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   setQuestionImage,
   solutionImage,
   setSolutionImage,
+  examStatus,
+  onToggleExamPreviewModal,
+  examId,
 }) => {
   const { control, formState, getValues } = useFormContext();
+  console.log(examStatus);
+  let examSubmitLabel: string = '...';
+  // examStatus === ExamStatus.Unset ? '시험지 공개하기' : '시험지 수정하기';
+  switch (examStatus) {
+    case ExamStatus.Unset:
+      examSubmitLabel = '시험지 승인요청';
+      break;
+    case ExamStatus.Request:
+      examSubmitLabel = '시험지 승인대기중';
+      break;
+    case ExamStatus.Approved:
+      examSubmitLabel = '시험지 승인됨';
+      break;
+    case ExamStatus.Rejected:
+      examSubmitLabel = '시험지 승인거절됨';
+      break;
 
+    default:
+      break;
+  }
   return (
     <QuestionAndSolutionFormContainer>
-      <Label content={'3.본격작업 - 문제 등록하기'} />
+      <Label content={'2.본격작업 - 문제 등록하기'} />
       <div className="create-exam-question-part-wrapper">
-        <label className="create-exam-small-label">3.1 문제번호</label>
+        <label className="create-exam-small-label">2.1 문제번호</label>
         <div className="create-exam-input-error-wrapper">
           <Input type="number" value={selectedQuestionNumber} readOnly />
           {formState.errors.number?.type === 'required' && (
@@ -46,14 +72,14 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
       </div>
       <div className="create-exam-question-part-wrapper">
         <label className="create-exam-small-label">
-          3.2 현재 등록된 문제번호
+          2.2 현재 등록된 문제번호
         </label>
-        {questionNumbers.length >= 1 && (
+        {questionNumbers.length >= 1 ? (
           <ul className="create-exam-question-number-wrapper">
             {questionNumbers.map((questionNumber) => (
               <li key={questionNumber.questionId}>
                 <a
-                  href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionNumber.questionId}`}
+                  href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/preview/question/${questionNumber.questionId}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -62,11 +88,15 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
               </li>
             ))}
           </ul>
+        ) : (
+          <p className="create-exam-small-description">
+            등록된 문제가 없습니다.
+          </p>
         )}
       </div>
       <div className="create-exam-question-part-wrapper">
         <label className="create-exam-small-label">
-          3.3 문제,해설 내용 입력하기
+          2.3 문제,해설 내용 입력하기
         </label>
         <div className="create-exam-question-and-solution-area-wrapper">
           <div className="create-exam-question-area">
@@ -124,6 +154,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             />
           </div>
         </div>
+
         <div className="create-exam-submit-button-wrapper">
           <Button
             type="primary"
@@ -132,13 +163,38 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
           >
             문제 등록하기
           </Button>
-          <Label content={'4.마무리작업 - 시험지 공개하기'} />
+          <div className="create-exam-preview-button-wrapper">
+            <Label content={'3.검토작업 - 시험지 미리보기'} />
+            <label className="create-exam-small-label">
+              시험지 승인요청 전, 미리보기를 통해 시험지를 확인해보세요.
+              <br />
+              미리보기에서는 북마크,성취도 등 일부 기능이 지원되지 않습니다.
+            </label>
+            <Button
+              type="dashed"
+              className="create-exam-preview-button"
+              onClick={onToggleExamPreviewModal}
+              disabled={!examId}
+            >
+              시험지 미리보기
+            </Button>
+          </div>
+          <Label content={'4.마무리작업 - 시험지 승인요청'} />
           <label className="create-exam-small-label">
-            시험지 공개 후, 시험모드/해설모드/랜덤모의고사 등의 서비스를 이용 할
+            시험지 승인은 24시간 내에 완료 할 수 있도록 하겠습니다.
+            <br />
+            시험지 승인 후, 풀이모드/해설모드/랜덤모의고사 등의 기능을 이용하실
             수 있습니다.
+            <br />
+            시험지 승인 후, 시험지는 모든 유저에게 공개됩니다.
           </label>
-          <Button type="dashed" className="create-exam-submit-button">
-            시험지 공개하기
+
+          <Button
+            type="dashed"
+            className="create-exam-submit-button"
+            disabled={examStatus !== ExamStatus.Unset}
+          >
+            {examSubmitLabel}
           </Button>
         </div>
       </div>
@@ -169,6 +225,7 @@ const QuestionAndSolutionFormContainer = styled.div`
   }
   .create-exam-question-number-wrapper {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
   }
   .create-exam-question-area {
@@ -193,6 +250,18 @@ const QuestionAndSolutionFormContainer = styled.div`
     height: 50px;
   }
   .create-exam-submit-button {
+    width: 100%;
+    height: 50px;
+  }
+  .create-exam-small-description {
+    font-size: 0.9rem;
+    color: ${palette.gray_900};
+  }
+  .create-exam-preview-button-wrapper {
+    margin-top: 20px;
+  }
+  .create-exam-preview-button {
+    margin-top: 10px;
     width: 100%;
     height: 50px;
   }

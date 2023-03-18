@@ -21,7 +21,7 @@ const ImageDragger: React.FC<ImageDraggerProps> = ({
   const questionImageDraagerProps: UploadProps = {
     name: 'file',
     multiple: false,
-    accept: 'image/*',
+    // accept: 'image/*',
     fileList:
       images.length >= 1 ? [{ ...images[0], thumbUrl: images[0].url }] : [],
     customRequest: async ({ file, onSuccess, onError }) => {

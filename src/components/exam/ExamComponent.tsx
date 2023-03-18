@@ -46,12 +46,14 @@ import { makeVar } from '@apollo/client';
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
 
-interface ExamComponentProps {}
+interface ExamComponentProps {
+  isPreview?: boolean;
+}
 
 type Question =
   ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
 
-const ExamComponent: React.FC<ExamComponentProps> = () => {
+const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const [
     readQuestions,
     { data: questionsQuery, refetch: refetchReadQuestions },
@@ -181,6 +183,9 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
   };
 
   const onFinishConfirmModal = () => {
+    if (isPreview) {
+      return message.success('미리보기 모드에서는 지원하지 않습니다.');
+    }
     questionsVar(questionsQuery);
     setFinishModalState(false);
     router.push({
@@ -327,36 +332,38 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
     <>
       <ExamContainer answerboxVisible={answerboxVisible}>
         <div className="exam-container-title-wrapper">
-          <div className="exam-container-bookmark-button-wrapper">
-            <Tooltip
-              position="bottom"
-              className="exam-container-bookmark-tooltip"
-            >
-              <p className="exam-container-bookmark-tooltip-text">
-                {`저장된 문제는 ${
-                  isMobile ? '북마크탭' : '활동내역'
-                }에서\n확인할 수 있습니다.`}
-              </p>
-            </Tooltip>
-            <button
-              className="exam-container-bookmark-button"
-              onClick={tryEditBookmark}
-            >
-              <Bookmark
-                active={bookmarkState}
-                className="exam-container-bookmark-icon"
-              />
-              <p className="exam-container-bookmark-text">
-                {bookmarkState ? '저장됨' : '저장하기'}
-              </p>
-            </button>
-            <button
-              className="exam-container-share-button"
-              onClick={onShareAction}
-            >
-              공유
-            </button>
-          </div>
+          {!isPreview && (
+            <div className="exam-container-bookmark-button-wrapper">
+              <Tooltip
+                position="bottom"
+                className="exam-container-bookmark-tooltip"
+              >
+                <p className="exam-container-bookmark-tooltip-text">
+                  {`저장된 문제는 ${
+                    isMobile ? '북마크탭' : '활동내역'
+                  }에서\n확인할 수 있습니다.`}
+                </p>
+              </Tooltip>
+              <button
+                className="exam-container-bookmark-button"
+                onClick={tryEditBookmark}
+              >
+                <Bookmark
+                  active={bookmarkState}
+                  className="exam-container-bookmark-icon"
+                />
+                <p className="exam-container-bookmark-text">
+                  {bookmarkState ? '저장됨' : '저장하기'}
+                </p>
+              </button>
+              <button
+                className="exam-container-share-button"
+                onClick={onShareAction}
+              >
+                공유
+              </button>
+            </div>
+          )}
           <h2 className="exam-container-title">{pageSubTitle}</h2>
           {isRandomExam && (
             <h3 className="exam-container-sub-title">
@@ -411,35 +418,37 @@ const ExamComponent: React.FC<ExamComponentProps> = () => {
           visible={answerboxVisible}
         />
 
-        <div className="exam-question-menubar-wrapper">
-          <AchievementCheck
-            questionIndex={questionIndex}
-            questionsQuery={questionsQuery}
-          />
-          <div className="exam-question-menubar-modal-button-wrapper">
-            <Button
-              type="primary"
-              className="exam-question-menubar-report-button"
-              onClick={onToggleFeedBackModal}
-            >
-              답안추가 및 오류신고
-            </Button>
-            <Button
-              type="primary"
-              className="exam-question-menubar-check-button"
-              onClick={onToggleProgressModal}
-            >
-              성취도
-            </Button>
-            <Button
-              type="primary"
-              className="exam-question-menubar-check-button"
-              onClick={onToggleCommentModal}
-            >
-              {`댓글 ${questionAndSolution?.mockExamQuestionComment.length}`}
-            </Button>
+        {!isPreview && (
+          <div className="exam-question-menubar-wrapper">
+            <AchievementCheck
+              questionIndex={questionIndex}
+              questionsQuery={questionsQuery}
+            />
+            <div className="exam-question-menubar-modal-button-wrapper">
+              <Button
+                type="primary"
+                className="exam-question-menubar-report-button"
+                onClick={onToggleFeedBackModal}
+              >
+                답안추가 및 오류신고
+              </Button>
+              <Button
+                type="primary"
+                className="exam-question-menubar-check-button"
+                onClick={onToggleProgressModal}
+              >
+                성취도
+              </Button>
+              <Button
+                type="primary"
+                className="exam-question-menubar-check-button"
+                onClick={onToggleCommentModal}
+              >
+                {`댓글 ${questionAndSolution?.mockExamQuestionComment.length}`}
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
         <MoveQuestion
           questionIndex={questionIndex}
           questionCount={questionsQuery.readMockExamQuestionsByMockExamId.count}

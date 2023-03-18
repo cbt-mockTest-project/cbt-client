@@ -10,13 +10,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import QuestionComponentSkeleton from './QuestionComponentSkeleton';
 
 interface QuestionComponentProps {
-  questionQuery: ReadMockExamQuestionQuery;
+  questionQuery?: ReadMockExamQuestionQuery;
+  isPreview?: boolean;
 }
 
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQuery,
+  isPreview = false,
 }) => {
   const router = useRouter();
   const client = useApollo({}, '');
@@ -25,8 +28,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     { data: questionQueryOnClientSide, refetch: refetchReadQuestion },
   ] = useLazyReadQuestion('network-only');
   const { data: meQuery } = useMeQuery();
-  const question = (questionQueryOnClientSide || questionQuery)
-    .readMockExamQuestion.mockExamQusetion;
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
@@ -46,6 +47,12 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       }
     })();
   }, [router.query.Id, meQuery]);
+  if (!questionQuery && !questionQueryOnClientSide)
+    return <QuestionComponentSkeleton />;
+  const question = (
+    (questionQueryOnClientSide || questionQuery) as ReadMockExamQuestionQuery
+  ).readMockExamQuestion.mockExamQusetion;
+
   const title = `${
     question.mockExam.title + ' ' + question.number + '번 문제'
   }`;
@@ -70,6 +77,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
         commentType="basic"
         question={question}
         hasNewWindowButton={false}
+        isPreview={isPreview}
       />
     </QuestionComponentContainer>
   );

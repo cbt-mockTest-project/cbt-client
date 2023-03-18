@@ -164,6 +164,7 @@ export const READ_QUESTION_NUMBERS = gql`
         questionNumber
         questionId
       }
+      examStatus
     }
   }
 `;

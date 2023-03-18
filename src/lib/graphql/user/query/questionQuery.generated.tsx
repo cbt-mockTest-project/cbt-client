@@ -56,7 +56,7 @@ export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, questionNumbers: Array<{ __typename?: 'QuestionNumber', questionNumber: number, questionId: number }> } };
+export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, examStatus?: Types.ExamStatus | null, questionNumbers: Array<{ __typename?: 'QuestionNumber', questionNumber: number, questionId: number }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -230,6 +230,7 @@ export const ReadMockExamQuestionNumbersDocument = gql`
       questionNumber
       questionId
     }
+    examStatus
   }
 }
     `;

@@ -1,9 +1,6 @@
-import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
-import { Button, Input, message, UploadFile, UploadProps } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import Dragger from 'antd/lib/upload/Dragger';
+import { message, UploadFile } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
@@ -21,6 +18,7 @@ import SelectAdd, { SelectAddProps } from '@components/common/select/SelectAdd';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
   CreateMockExamQuestionInput,
+  ExamStatus,
   MockExamQuestionImageInputType,
   QuestionNumber,
 } from 'types';
@@ -29,6 +27,9 @@ import {
   useCreateQusetion,
   useLazyReadQuestionNumbers,
 } from '@lib/graphql/user/hook/useExamQuestion';
+import Portal from '@components/common/portal/Portal';
+import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
+import useToggle from '@lib/hooks/useToggle';
 
 interface CreateExamComponentProps {}
 
@@ -46,10 +47,12 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [deleteExam, { loading: deleteExamLoading }] = useDeleteExam();
   const [createQuestion] = useCreateQusetion();
   const [createExam, { loading: createExamLoading }] = useCreateExam();
-
+  const [examStatus, setExamStatus] = useState(ExamStatus.Unset);
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [questionNumbers, setQuestionNumbers] = useState<QuestionNumber[]>([]);
+  const { value: examPreviewModal, onToggle: onToggleExamPreviewModal } =
+    useToggle(false);
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<DefaultOptionType | null>(
@@ -81,8 +84,10 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       variables: { input: { mockExamId: title.value as number } },
     });
     if (res.data?.readMockExamQuestionNumbers.ok) {
-      const { questionNumbers } = res.data.readMockExamQuestionNumbers;
+      const { questionNumbers, examStatus } =
+        res.data.readMockExamQuestionNumbers;
       setQuestionNumbers(() => (res.data ? questionNumbers : []));
+      setExamStatus(examStatus as ExamStatus);
       setSelectedQuestionNumber(questionNumbers.length + 1);
       return;
     }
@@ -282,6 +287,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
         const { questionNumbers } =
           numbersQuery.data.readMockExamQuestionNumbers;
         setQuestionNumbers(questionNumbers);
+
         setSelectedQuestionNumber(questionNumbers.length + 1);
       }
       message.success('문제가 등록되었습니다.');
@@ -315,9 +321,31 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             setSolutionImage={setSolutionImage}
             questionNumbers={questionNumbers}
             selectedQuestionNumber={selectedQuestionNumber}
+            examStatus={examStatus}
+            onToggleExamPreviewModal={onToggleExamPreviewModal}
+            examId={
+              typeof selectedTitle?.value === 'number' ? selectedTitle.value : 0
+            }
           />
         </form>
       </FormProvider>
+      <Portal>
+        <ExamPreviewModal
+          open={examPreviewModal}
+          onClose={onToggleExamPreviewModal}
+          examId={
+            typeof selectedTitle?.value === 'number' ? selectedTitle.value : 0
+          }
+          categoryName={
+            typeof selectedCategory?.label === 'string'
+              ? selectedCategory?.label
+              : ''
+          }
+          examTitle={
+            typeof selectedTitle?.label === 'string' ? selectedTitle?.label : ''
+          }
+        />
+      </Portal>
     </CreateExamComponentContainer>
   );
 };

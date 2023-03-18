@@ -86,7 +86,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
     });
     if (res.data?.editMockExamQuestion.ok) {
       message.success('문제가 수정됐습니다.');
-      router.push(`/question/${router.query.Id}`);
+      router.push(`/preview/question/${router.query.Id}`);
       return;
     }
     setEditButtonDisabled(false);

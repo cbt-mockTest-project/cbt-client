@@ -46,6 +46,7 @@ interface ExamSolutionListProps {
   commentType?: 'modal' | 'basic';
   refetch: ({ ...args }?: any) => any;
   hasNewWindowButton?: boolean;
+  isPreview?: boolean;
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
@@ -55,6 +56,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   commentType = 'modal',
   refetch,
   hasNewWindowButton = true,
+  isPreview = false,
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
@@ -161,18 +163,20 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
         <div className="solution-page-question-bookmark-button-wrapper">
-          <button
-            className="solution-page-question-bookmark-button"
-            onClick={tryEditBookmark}
-          >
-            <Bookmark
-              className="solution-page-question-bookmark-icon"
-              active={bookmarkState}
-            />
-            <p className="solution-page-question-bookmark-text">
-              {bookmarkState ? '저장됨' : '저장'}
-            </p>
-          </button>
+          {!isPreview && (
+            <button
+              className="solution-page-question-bookmark-button"
+              onClick={tryEditBookmark}
+            >
+              <Bookmark
+                className="solution-page-question-bookmark-icon"
+                active={bookmarkState}
+              />
+              <p className="solution-page-question-bookmark-text">
+                {bookmarkState ? '저장됨' : '저장'}
+              </p>
+            </button>
+          )}
           {hasNewWindowButton && (
             <Tooltip placement="top" title="새창으로 보기">
               <a
@@ -239,39 +243,43 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </div>
         )}
       </div>
-      <Button
-        type="primary"
-        className="solution-page-report-button"
-        onClick={onShareAction}
-      >
-        공유
-      </Button>
-      <Button
-        type="primary"
-        className="solution-page-report-button"
-        onClick={openReportModal}
-      >
-        오류신고 및 답안추가
-      </Button>
-      {commentType === 'modal' ? (
+      {!isPreview && (
         <>
           <Button
             type="primary"
-            className="solution-page-comment-button"
-            onClick={onToggleCommentModal}
+            className="solution-page-report-button"
+            onClick={onShareAction}
           >
-            {`댓글 ${question.mockExamQuestionComment.length}`}
+            공유
           </Button>
-          <CommentModal
-            className="solution-page-comment-modal"
-            open={commentModalState}
-            onClose={onToggleCommentModal}
-            title={`${title}  ${question.number}번 문제`}
-            questionId={question.id || 0}
-          />
+          <Button
+            type="primary"
+            className="solution-page-report-button"
+            onClick={openReportModal}
+          >
+            오류신고 및 답안추가
+          </Button>
+          {commentType === 'modal' ? (
+            <>
+              <Button
+                type="primary"
+                className="solution-page-comment-button"
+                onClick={onToggleCommentModal}
+              >
+                {`댓글 ${question.mockExamQuestionComment.length}`}
+              </Button>
+              <CommentModal
+                className="solution-page-comment-modal"
+                open={commentModalState}
+                onClose={onToggleCommentModal}
+                title={`${title}  ${question.number}번 문제`}
+                questionId={question.id || 0}
+              />
+            </>
+          ) : (
+            <QuestionComment questionId={question.id} />
+          )}
         </>
-      ) : (
-        <QuestionComment questionId={question.id} />
       )}
       <ReportModal
         open={reportModalState}

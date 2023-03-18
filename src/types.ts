@@ -418,6 +418,13 @@ export type EmailVerificationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export enum ExamStatus {
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+  Request = 'REQUEST',
+  Unset = 'UNSET'
+}
+
 export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
@@ -490,6 +497,7 @@ export type MockExam = {
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
+  status: ExamStatus;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
@@ -674,7 +682,6 @@ export type Mutation = {
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
-  updateQuestionUserId: CoreOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -1256,6 +1263,7 @@ export type ReadMockExamQuestionNumbersInput = {
 export type ReadMockExamQuestionNumbersOutput = {
   __typename?: 'ReadMockExamQuestionNumbersOutput';
   error?: Maybe<Scalars['String']>;
+  examStatus?: Maybe<ExamStatus>;
   ok: Scalars['Boolean'];
   questionNumbers: Array<QuestionNumber>;
 };
