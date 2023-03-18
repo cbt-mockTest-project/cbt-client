@@ -37,7 +37,7 @@ const ImageDragger: React.FC<ImageDraggerProps> = ({
           {
             url: result.data.url,
             uid: result.data.url,
-            name: (file as Blob).name,
+            name: (file as File)?.name,
           },
         ]);
         onSuccess && onSuccess('ok');
