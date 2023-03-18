@@ -17,7 +17,7 @@ const Solution: NextPage = () => {
     <>
       <WithHead
         title={`해설모드 미리보기 | 모두CBT`}
-        pageHeadingTitle={`해설 미리보기 페이지`}
+        pageHeadingTitle={`해설모드 미리보기 페이지`}
       />
 
       <Layout>

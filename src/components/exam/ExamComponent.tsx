@@ -14,11 +14,7 @@ import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
-import {
-  convertWithErrorHandlingFunc,
-  ellipsisText,
-  extractKeysOfCache,
-} from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
@@ -364,10 +360,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
               </button>
             </div>
           )}
-          <h2 className="exam-container-title">{pageSubTitle}</h2>
+          <h2 className="exam-container-title">
+            {pageSubTitle}
+            <p className="exam-container-author-name">
+              {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
+            </p>
+          </h2>
           {isRandomExam && (
             <h3 className="exam-container-sub-title">
-              {`${questionAndSolution?.mockExam.title}
+              {`${String(examTitle)}
                 ${questionAndSolution?.number}번 문제`}
             </h3>
           )}
@@ -489,7 +490,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
       <CommentModal
         open={commentModalState}
         onClose={onToggleCommentModal}
-        title={`${questionAndSolution?.mockExam.title}
+        title={`${String(examTitle)}
         ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />
@@ -538,6 +539,10 @@ const ExamContainer = styled.div<ExamContainerProps>`
     flex-direction: column;
     margin-bottom: 20px;
     gap: 5px;
+  }
+  .exam-container-author-name {
+    font-size: 0.9rem;
+    color: ${palette.gray_700};
   }
   .exam-container-title {
     font-size: 1.3rem;

@@ -14,6 +14,7 @@ export const READ_QUESTIONS_BY_ID = gql`
       error
       ok
       title
+      author
       questions {
         ...FullQuestionIncludingExamIdParts
         mockExamQuestionComment {
@@ -28,9 +29,6 @@ export const READ_QUESTIONS_BY_ID = gql`
           }
           created_at
           updated_at
-        }
-        mockExam {
-          title
         }
       }
     }

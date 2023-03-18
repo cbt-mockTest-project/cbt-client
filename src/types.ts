@@ -1285,6 +1285,7 @@ export type ReadMockExamQuestionsByMockExamIdInput = {
 
 export type ReadMockExamQuestionsByMockExamIdOutput = {
   __typename?: 'ReadMockExamQuestionsByMockExamIdOutput';
+  author: Scalars['String'];
   count: Scalars['Float'];
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];

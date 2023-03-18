@@ -5,6 +5,7 @@ import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/
 import { responsive } from '@lib/utils/responsive';
 import { convertExamTitle } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
+import palette from '@styles/palette';
 import { Button } from 'antd';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -65,10 +66,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   }, [router.query.Id]);
   if (!questionsQuery && !questionsQueryOnClientSide)
     return <SolutionComponentSkeleton />;
-  const questions = (
-    (questionsQueryOnClientSide ||
-      questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery
-  ).readMockExamQuestionsByMockExamId.questions;
+  const currentQuestionsQuery = (questionsQueryOnClientSide ||
+    questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery;
+  const questions =
+    currentQuestionsQuery.readMockExamQuestionsByMockExamId.questions;
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
   return (
@@ -83,6 +84,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
       </h1>
+      <p className="exam-solution-page-author-name">{`제작자: ${currentQuestionsQuery.readMockExamQuestionsByMockExamId.author}`}</p>
 
       <ul>
         {questions.map((el, index) => {
@@ -116,6 +118,10 @@ const SolutionComponentContainer = styled.div`
   h1 {
     padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
+  }
+  .exam-solution-page-author-name {
+    font-size: 0.9rem;
+    color: ${palette.gray_700};
   }
   .exam-solution-page-add-wrapper {
     position: relative;
