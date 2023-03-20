@@ -6,12 +6,26 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type ReadAllMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
+export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number, user: { __typename?: 'User', role: Types.UserRole } }> } };
+
+export type EditMockExamCategoryMutationVariables = Types.Exact<{
+  input: Types.EditMockExamCategoryInput;
+}>;
+
+
+export type EditMockExamCategoryMutation = { __typename?: 'Mutation', editMockExamCategory: { __typename?: 'DeleteMockExamCategoryOutput', error?: string | null, ok: boolean } };
 
 export type ReadMyMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type ReadMyMockExamCategoriesQuery = { __typename?: 'Query', readMyMockExamCategories: { __typename?: 'ReadMyMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
+
+export type EditMockExamMutationVariables = Types.Exact<{
+  input: Types.EditMockExamInput;
+}>;
+
+
+export type EditMockExamMutation = { __typename?: 'Mutation', editMockExam: { __typename?: 'EditMockExamOutput', error?: string | null, ok: boolean } };
 
 export type DeleteMockExamMutationVariables = Types.Exact<{
   input: Types.DeleteMockExamInput;
@@ -46,7 +60,7 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string }> } };
+export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus }> } };
 
 export type FindMyExamHistoryQueryVariables = Types.Exact<{
   input: Types.FindMyExamHistoryInput;
@@ -69,6 +83,9 @@ export const ReadAllMockExamCategoriesDocument = gql`
     categories {
       name
       id
+      user {
+        role
+      }
     }
     error
     ok
@@ -78,6 +95,18 @@ export const ReadAllMockExamCategoriesDocument = gql`
 
 export function useReadAllMockExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<ReadAllMockExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamCategoriesQuery, ReadAllMockExamCategoriesQueryVariables>({ query: ReadAllMockExamCategoriesDocument, ...options });
+};
+export const EditMockExamCategoryDocument = gql`
+    mutation EditMockExamCategory($input: EditMockExamCategoryInput!) {
+  editMockExamCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditMockExamCategoryMutation() {
+  return Urql.useMutation<EditMockExamCategoryMutation, EditMockExamCategoryMutationVariables>(EditMockExamCategoryDocument);
 };
 export const ReadMyMockExamCategoriesDocument = gql`
     query ReadMyMockExamCategories {
@@ -94,6 +123,18 @@ export const ReadMyMockExamCategoriesDocument = gql`
 
 export function useReadMyMockExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<ReadMyMockExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMyMockExamCategoriesQuery, ReadMyMockExamCategoriesQueryVariables>({ query: ReadMyMockExamCategoriesDocument, ...options });
+};
+export const EditMockExamDocument = gql`
+    mutation EditMockExam($input: EditMockExamInput!) {
+  editMockExam(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditMockExamMutation() {
+  return Urql.useMutation<EditMockExamMutation, EditMockExamMutationVariables>(EditMockExamDocument);
 };
 export const DeleteMockExamDocument = gql`
     mutation DeleteMockExam($input: DeleteMockExamInput!) {
@@ -157,6 +198,7 @@ export const ReadMockExamTitlesByCateoryDocument = gql`
     titles {
       id
       title
+      status
     }
     ok
     error

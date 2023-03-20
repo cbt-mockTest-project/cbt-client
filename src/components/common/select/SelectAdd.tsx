@@ -16,6 +16,7 @@ export interface SelectAddProps {
   inputOption: InputProps;
   createButtonOption: ButtonProps;
   deleteButtonOption: ButtonProps;
+  editButtonOption: ButtonProps;
 }
 
 const SelectAdd: React.FC<SelectAddProps> = ({
@@ -23,12 +24,11 @@ const SelectAdd: React.FC<SelectAddProps> = ({
   inputOption,
   createButtonOption,
   deleteButtonOption,
+  editButtonOption,
 }) => {
   return (
     <Select
       {...selectOption}
-      removeIcon={<div>hi</div>}
-      clearIcon={<div>hi</div>}
       dropdownRender={(menu) => (
         <>
           {menu}
@@ -41,6 +41,7 @@ const SelectAdd: React.FC<SelectAddProps> = ({
             <Button {...deleteButtonOption}>
               {deleteButtonOption.children}
             </Button>
+            <Button {...editButtonOption}>{editButtonOption.children}</Button>
           </Space>
         </>
       )}

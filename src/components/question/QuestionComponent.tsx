@@ -1,11 +1,15 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
-import { useLazyReadQuestion } from '@lib/graphql/user/hook/useExamQuestion';
+import {
+  useLazyReadQuestion,
+  useDeleteQuestion,
+} from '@lib/graphql/user/hook/useExamQuestion';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -28,6 +32,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     { data: questionQueryOnClientSide, refetch: refetchReadQuestion },
   ] = useLazyReadQuestion('network-only');
   const { data: meQuery } = useMeQuery();
+  const [deleteQuestion] = useDeleteQuestion();
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
@@ -49,6 +54,23 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   }, [router.query.Id, meQuery]);
   if (!questionQuery && !questionQueryOnClientSide)
     return <QuestionComponentSkeleton />;
+
+  const requestDeleteQuestion = async () => {
+    const confirmed = confirm('정말 삭제하시겠습니까?');
+    if (confirmed) {
+      const res = await deleteQuestion({
+        variables: { input: { id: Number(String(router.query.Id)) } },
+      });
+      if (res.data?.deleteMockExamQuestion.ok) {
+        message.success('삭제되었습니다.');
+        return;
+      }
+      return message.error(res.data?.deleteMockExamQuestion.error);
+    }
+  };
+  const tryDeleteQuestion = convertWithErrorHandlingFunc({
+    callback: requestDeleteQuestion,
+  });
   const question = (
     (questionQueryOnClientSide || questionQuery) as ReadMockExamQuestionQuery
   ).readMockExamQuestion.mockExamQusetion;
@@ -65,7 +87,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
           >
             <Button>수정하기</Button>
           </Link>
-          <Button>삭제하기</Button>
+          <Button onClick={tryDeleteQuestion}>삭제하기</Button>
         </div>
       )}
       <h3>{title}</h3>

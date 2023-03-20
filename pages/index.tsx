@@ -13,12 +13,13 @@ import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
-import { ExamTitleAndId } from 'types';
+import { ExamTitleAndId, UserRole } from 'types';
 import MainComponent from '@components/main/MainComponent';
 
 interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
+  authorRole: UserRole;
 }
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -81,6 +82,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
           const res = await requestReadExamTitles(category.name);
           titlesAndCategories.push({
             category: category.name,
+            authorRole: category.user.role,
             titles: res.data.readMockExamTitlesByCateory.titles,
           });
         }

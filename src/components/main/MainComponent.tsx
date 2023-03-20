@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import { ExamTitleAndId } from 'types';
+import { ExamTitleAndId, UserRole } from 'types';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import Link from 'next/link';
@@ -24,6 +24,7 @@ import DataShareModal from '@components/common/modal/DataShareModal';
 import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
+import { Option } from 'antd/lib/mentions';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -66,7 +67,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const storage = new LocalStorage();
 
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
-    (el) => ({ value: el.name, label: el.name })
+    (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
   );
 
   useEffect(() => {
@@ -103,12 +104,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
       (el) => el.category === value
     );
 
-    const titles: DefaultOptionType[] = filteredTitles[0].titles.map(
-      (title) => ({
-        value: title.id,
-        label: convertExamTurn(title.title),
-      })
-    );
+    const titles: DefaultOptionType[] =
+      filteredTitles.length >= 1
+        ? filteredTitles[0].titles.map((title) => ({
+            value: title.id,
+            label: convertExamTurn(title.title),
+          }))
+        : [];
     localStorage.setItem(selectExamCategoryHistory, value);
     setTitles(titles);
     return titles;
@@ -166,12 +168,35 @@ const MainComponent: React.FC<MainComponentProps> = ({
     <MainComponentContainer>
       <div className="home-wrapper">
         <div className="home-content-wrapper">
-          <p className="home-content-title">시험선택</p>
-          <Select
-            options={categories}
-            onChange={onCategoryChange}
-            value={category}
-          />
+          <div className="home-content-exam-category-wrapper">
+            <p className="home-content-title">시험선택</p>
+            <div className="home-content-exam-category-info">
+              <div className="home-content-category-color-box admin" />
+              <label className="home-content-exam-category-info-label">
+                개발자
+              </label>
+              <div className="home-content-category-color-box user" />
+              <label className="home-content-exam-category-info-label">
+                유저
+              </label>
+            </div>
+          </div>
+          <Select value={category} onChange={onCategoryChange}>
+            {categories.map((category) => (
+              <Option
+                key={category.value}
+                value={category.value}
+                style={{
+                  color:
+                    category.authorRole === UserRole.Admin
+                      ? 'black'
+                      : palette.blue_600,
+                }}
+              >
+                {category.label}
+              </Option>
+            ))}
+          </Select>
           <p className="home-content-title">회차선택</p>
           <Select
             options={titles}
@@ -199,6 +224,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
           <Button onClick={onToggleRandomSelectExamModal} type="ghost">
             랜덤모의고사
+          </Button>
+          <Button onClick={onToggleMakeExamModal} type="primary">
+            시험지 만들기
           </Button>
           <button
             type="button"
@@ -235,25 +263,33 @@ const MainComponent: React.FC<MainComponentProps> = ({
         />
       </Portal>
       <Portal>
-        <RandomSelectExamModal
-          categories={categories}
-          titles={titles}
-          open={randomSelectExamModalState}
-          onClose={onToggleRandomSelectExamModal}
-          titlesAndCategories={titlesAndCategories}
-        />
-        <KakaoOpenChatModal
-          open={kakaoChatModalState}
-          onClose={onToggleKakaoChatModalState}
-        />
-        <MakeExamModal
-          open={makeExamModalState}
-          onClose={onToggleMakeExamModal}
-        />
-        <DataShareModal
-          open={dataShareModalState}
-          onClose={onToggleDataShareModal}
-        />
+        {randomSelectExamModalState && (
+          <RandomSelectExamModal
+            categories={categories}
+            titles={titles}
+            open={randomSelectExamModalState}
+            onClose={onToggleRandomSelectExamModal}
+            titlesAndCategories={titlesAndCategories}
+          />
+        )}
+        {kakaoChatModalState && (
+          <KakaoOpenChatModal
+            open={kakaoChatModalState}
+            onClose={onToggleKakaoChatModalState}
+          />
+        )}
+        {makeExamModalState && (
+          <MakeExamModal
+            open={makeExamModalState}
+            onClose={onToggleMakeExamModal}
+          />
+        )}
+        {dataShareModalState && (
+          <DataShareModal
+            open={dataShareModalState}
+            onClose={onToggleDataShareModal}
+          />
+        )}
       </Portal>
     </MainComponentContainer>
   );
@@ -303,6 +339,7 @@ const MainComponentContainer = styled.div`
   .home-content-title {
     margin-right: auto;
   }
+
   .home-kakao-open-chat-button-wrapper {
     display: flex;
     justify-content: center;
@@ -317,6 +354,29 @@ const MainComponentContainer = styled.div`
     svg {
       height: 25px;
     }
+  }
+  .home-content-exam-category-wrapper {
+    width: 100%;
+    display: flex;
+  }
+  .home-content-exam-category-info {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+  .home-content-category-color-box {
+    width: 20px;
+    height: 10px;
+  }
+  .home-content-category-color-box.admin {
+    background-color: black;
+  }
+  .home-content-category-color-box.user {
+    background-color: ${palette.blue_600};
+  }
+  .home-content-exam-category-info-label {
+    font-size: 0.8rem;
+    color: ${palette.gray_700};
   }
 
   .home-exam-link-list,

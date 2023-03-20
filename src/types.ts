@@ -268,8 +268,9 @@ export type EditMockExamCategoryInput = {
 };
 
 export type EditMockExamInput = {
-  approved?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['Float'];
+  status?: InputMaybe<ExamStatus>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type EditMockExamOutput = {
@@ -428,6 +429,7 @@ export enum ExamStatus {
 export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
+  status: ExamStatus;
   title: Scalars['String'];
 };
 
