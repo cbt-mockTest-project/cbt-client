@@ -173,11 +173,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
             <div className="home-content-exam-category-info">
               <div className="home-content-category-color-box admin" />
               <label className="home-content-exam-category-info-label">
-                개발자
+                개발자 제작
               </label>
               <div className="home-content-category-color-box user" />
               <label className="home-content-exam-category-info-label">
-                유저
+                유저 제작
               </label>
             </div>
           </div>
@@ -226,7 +226,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             랜덤모의고사
           </Button>
           <Button onClick={onToggleMakeExamModal} type="primary">
-            시험지 만들기
+            시험지 만들기 - 베타
           </Button>
           <button
             type="button"

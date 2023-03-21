@@ -83,7 +83,9 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
     <QuestionAndSolutionFormContainer>
       <Label content={'2.본격작업 - 문제 등록하기'} />
       <div className="create-exam-question-part-wrapper">
-        <label className="create-exam-small-label">2.1 문제번호</label>
+        <label className="create-exam-small-label">
+          2.1 문제번호 - 앞에서부터 자동등록, 임의등록 불가
+        </label>
         <div className="create-exam-input-error-wrapper">
           <Input type="number" value={selectedQuestionNumber} readOnly />
           {formState.errors.number?.type === 'required' && (
@@ -145,7 +147,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             )}
             <ImageDragger
               text="문제와 관련된 사진을 등록해주세요."
-              hint="사진은 한개만 등록 가능합니다."
+              hint={`사진은 한개만 등록 가능합니다.\n사진이 없을 경우 빈칸으로 두세요.`}
               images={questionImage}
               setImages={setQuestionImage}
             />
@@ -174,7 +176,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
               images={solutionImage}
               setImages={setSolutionImage}
               text="해설과 관련된 사진을 등록해주세요."
-              hint="사진은 한개만 등록 가능합니다."
+              hint={`사진은 한개만 등록 가능합니다.\n사진이 없을 경우 빈칸으로 두세요.`}
             />
           </div>
         </div>
@@ -203,19 +205,23 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
               시험지 미리보기
             </Button>
           </div>
-          <Label content={'4.마무리작업 - 시험지 승인요청'} />
-          <label className="create-exam-small-label">
-            시험지 승인은 5문제 이상 등록 후 요청할 수 있습니다.
-            <br />
-            시험지 승인은 24시간 내에 완료 할 수 있도록 하겠습니다.
-            <br />
-            시험지 승인 후, 풀이모드/해설모드/랜덤모의고사 등의 기능을 이용하실
-            수 있습니다.
-            <br />
-            시험지 승인 후, 시험지는 모든 유저에게 공개됩니다.
-            <br />
-            시험지 승인 후, 시험지는 삭제할 수 없습니다.
-          </label>
+          <div>
+            <Label content={'4.마무리작업 - 시험지 승인요청'} />
+            <label className="create-exam-small-label">
+              시험지 승인은 5문제 이상 등록 후 요청할 수 있습니다.
+              <br />
+              시험지 승인은 24시간 내에 완료 할 수 있도록 하겠습니다.
+              <br />
+              시험지 승인 후, 풀이모드/해설모드/랜덤모의고사 등의 기능을
+              이용하실 수 있습니다.
+              <br />
+              승인된 시험지는 모든 유저에게 공개됩니다.
+              <br />
+              승인된 시험지는 삭제할 수 없습니다.
+              <br />
+              승인된 시험지에서 문제수정은 가능합니다.
+            </label>
+          </div>
 
           <Button
             type="dashed"
