@@ -5,6 +5,8 @@ import {
   CREATE_MOCK_EXAM_TITLE,
   DELETE_MOCK_EXAM,
   DELETE_MOCK_EXAM_CATEGORY,
+  EDIT_EXAM_CATEGORY,
+  EDIT_MOCK_EXAM,
   FIND_MY_EXAM_HISTORY_QUERY,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_TITLES_QUERY,
@@ -19,6 +21,10 @@ import {
   DeleteMockExamCategoryMutationVariables,
   DeleteMockExamMutation,
   DeleteMockExamMutationVariables,
+  EditMockExamCategoryMutation,
+  EditMockExamCategoryMutationVariables,
+  EditMockExamMutation,
+  EditMockExamMutationVariables,
   FindMyExamHistoryQuery,
   FindMyExamHistoryQueryVariables,
   ReadAllMockExamCategoriesQuery,
@@ -80,3 +86,14 @@ export const useDeleteExam = () =>
     DELETE_MOCK_EXAM,
     { fetchPolicy: 'network-only' }
   );
+
+export const useEditExam = () =>
+  useMutation<EditMockExamMutation, EditMockExamMutationVariables>(
+    EDIT_MOCK_EXAM
+  );
+
+export const useEditCategory = () =>
+  useMutation<
+    EditMockExamCategoryMutation,
+    EditMockExamCategoryMutationVariables
+  >(EDIT_EXAM_CATEGORY);

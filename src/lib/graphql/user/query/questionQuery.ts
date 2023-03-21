@@ -108,6 +108,15 @@ export const EDIT_QUESTION = gql`
   }
 `;
 
+export const DELETE_QUESTION = gql`
+  mutation DeleteMockExamQuestion($input: DeleteMockExamQuestionInput!) {
+    deleteMockExamQuestion(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
 // 북마크용 추후 네이밍 수정예정
 export const READ_ALL_QUESTION = gql`
   query ReadAllMockExamQuestion {

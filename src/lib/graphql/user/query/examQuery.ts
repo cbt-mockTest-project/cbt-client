@@ -6,7 +6,19 @@ export const READ_EXAM_CATEGORIES_QUERY = gql`
       categories {
         name
         id
+        user {
+          role
+        }
       }
+      error
+      ok
+    }
+  }
+`;
+
+export const EDIT_EXAM_CATEGORY = gql`
+  mutation EditMockExamCategory($input: EditMockExamCategoryInput!) {
+    editMockExamCategory(input: $input) {
       error
       ok
     }
@@ -20,6 +32,15 @@ export const READ_MY_EXAM_CATEORIES_QUERY = gql`
         name
         id
       }
+      error
+      ok
+    }
+  }
+`;
+
+export const EDIT_MOCK_EXAM = gql`
+  mutation EditMockExam($input: EditMockExamInput!) {
+    editMockExam(input: $input) {
       error
       ok
     }
@@ -76,6 +97,8 @@ export const READ_EXAM_TITLES_QUERY = gql`
       titles {
         id
         title
+        status
+        role
       }
       ok
       error

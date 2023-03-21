@@ -12,6 +12,7 @@ const SubNav = () => {
   };
   const subNavOptions = [
     { label: '저장된 문제', value: 'bookmark' },
+    { label: '내가 만든 시험지', value: 'myexam' },
     { label: '시험내역', value: 'examhistory' },
   ];
   return (

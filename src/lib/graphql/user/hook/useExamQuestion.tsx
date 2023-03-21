@@ -6,6 +6,7 @@ import {
 } from '@apollo/client';
 import {
   CREATE_MOCK_EXAM_QUESTION,
+  DELETE_QUESTION,
   EDIT_QUESTION,
   READ_ALL_QUESTION,
   READ_QUESTION,
@@ -16,6 +17,8 @@ import {
 import {
   CreateMockExamQuestionMutation,
   CreateMockExamQuestionMutationVariables,
+  DeleteMockExamQuestionMutation,
+  DeleteMockExamQuestionMutationVariables,
   EditMockExamQuestionMutation,
   EditMockExamQuestionMutationVariables,
   ReadAllMockExamQuestionQuery,
@@ -92,3 +95,9 @@ export const useEditQuestion = () =>
     EditMockExamQuestionMutation,
     EditMockExamQuestionMutationVariables
   >(EDIT_QUESTION);
+
+export const useDeleteQuestion = () =>
+  useMutation<
+    DeleteMockExamQuestionMutation,
+    DeleteMockExamQuestionMutationVariables
+  >(DELETE_QUESTION);
