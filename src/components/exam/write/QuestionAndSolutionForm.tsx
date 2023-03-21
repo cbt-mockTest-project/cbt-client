@@ -213,6 +213,8 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             수 있습니다.
             <br />
             시험지 승인 후, 시험지는 모든 유저에게 공개됩니다.
+            <br />
+            시험지 승인 후, 시험지는 삭제할 수 없습니다.
           </label>
 
           <Button

@@ -1,7 +1,7 @@
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
 import { message, UploadFile } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   useCreateExam,
@@ -9,6 +9,7 @@ import {
   useDeleteExam,
   useDeleteExamCategory,
   useEditCategory,
+  useEditExam,
   useReadExamTitles,
   useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
@@ -32,6 +33,7 @@ import Portal from '@components/common/portal/Portal';
 import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
 import useToggle from '@lib/hooks/useToggle';
 import { useRouter } from 'next/router';
+import EditNameModal from '@components/common/modal/EditNameModal';
 
 interface CreateExamComponentProps {}
 
@@ -67,6 +69,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const { data: categoriesQuery } = useReadMyExamCategories();
   const [readTitles] = useReadExamTitles();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
+  const [editExam, { loading: editExamLoading }] = useEditExam();
   const [readQuestionNumbers, { refetch: refetchReadQuestionNumbers }] =
     useLazyReadQuestionNumbers();
 
@@ -83,8 +86,16 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [questionNumbers, setQuestionNumbers] = useState<QuestionNumber[]>([]);
+
   const { value: examPreviewModal, onToggle: onToggleExamPreviewModal } =
     useToggle(false);
+  const {
+    value: editCategoryNameModal,
+    onToggle: onToggleEditCategoryNameModal,
+  } = useToggle(false);
+  const { value: editExamTitleModal, onToggle: onToggleEditExamTitleModal } =
+    useToggle(false);
+
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [selectedTitle, setSelectedTitle] = useState<DefaultOptionType | null>(
@@ -222,32 +233,75 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const tryDeleteExam = convertWithErrorHandlingFunc({
     callback: requestDeleteExam,
   });
-  const requestEditCategory = async () => {
+  const openEditModal = (type: 'category' | 'exam') => {
+    if (type === 'category') {
+      const categoryId = categories.filter(
+        (category) => category.label === categoryName
+      )[0]?.value;
+      if (!categoryId) {
+        return message.error('존재하지 않는 카테고리입니다.');
+      }
+      onToggleEditCategoryNameModal();
+      return;
+    }
+    if (type === 'exam') {
+      const examId = titles.filter((title) => title.label === examTitle)[0]
+        ?.value;
+      if (!examId) {
+        return message.error('존재하지 않는 시험입니다.');
+      }
+      onToggleEditExamTitleModal();
+      return;
+    }
+  };
+  const requestEditTitle = async (value: string) => {
+    const examId = titles.filter((exam) => exam.label === examTitle)[0]?.value;
+    if (!examId) {
+      return message.error('존재하지 않는 시험입니다.');
+    }
+    const confirmed = confirm('정말 수정하시겠습니까?');
+    if (!confirmed) return;
+    const res = await editExam({
+      variables: { input: { id: Number(examId), title: value } },
+    });
+    if (res.data?.editMockExam.ok) {
+      message.success('시험명이 수정되었습니다.');
+      setTitles(() =>
+        titles.map((exam) => ({ value: exam.value, label: value }))
+      );
+      return;
+    }
+    return message.error(res.data?.editMockExam.error);
+  };
+  const tryEditTitle = (value: string) =>
+    convertWithErrorHandlingFunc({
+      callback: () => requestEditTitle(value),
+    });
+  const requestEditCategory = async (value: string) => {
     const categoryId = categories.filter(
       (category) => category.label === categoryName
     )[0]?.value;
     if (!categoryId) {
       return message.error('존재하지 않는 카테고리입니다.');
     }
+    const confirmed = confirm('정말 수정하시겠습니까?');
+    if (!confirmed) return;
     const res = await editCategory({
-      variables: { input: { id: Number(categoryId), name: categoryName } },
+      variables: { input: { id: Number(categoryId), name: value } },
     });
     if (res.data?.editMockExamCategory.ok) {
       message.success('카테고리가 수정되었습니다.');
       setCategories(() =>
-        categories.map((category) =>
-          category.label === categoryName
-            ? { value: category.value, label: categoryName }
-            : category
-        )
+        categories.map((category) => ({ value: category.value, label: value }))
       );
       return;
     }
     return message.error(res.data?.editMockExamCategory.error);
   };
-  const tryEditCategory = convertWithErrorHandlingFunc({
-    callback: requestEditCategory,
-  });
+  const tryEditCategory = (value: string) =>
+    convertWithErrorHandlingFunc({
+      callback: () => requestEditCategory(value),
+    });
   const requestDeleteCategory = async () => {
     const confirmed = confirm('정말 삭제하시겠습니까?');
     if (!confirmed) return;
@@ -333,12 +387,12 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       loading: createCategoryLoading,
       children: '등록',
     },
-    deleteButtonOption: {
-      onClick: tryEditCategory,
+    editButtonOption: {
+      onClick: () => openEditModal('category'),
       loading: editCategoryLoading,
       children: '수정',
     },
-    editButtonOption: {
+    deleteButtonOption: {
       onClick: tryDeleteCategory,
       loading: deleteCategoryLoading,
       children: '삭제',
@@ -360,17 +414,17 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     createButtonOption: {
       onClick: tryCreateTitle,
       loading: createExamLoading,
-      children: '등록하기',
+      children: '등록',
+    },
+    editButtonOption: {
+      onClick: () => openEditModal('exam'),
+      loading: editExamLoading,
+      children: '수정',
     },
     deleteButtonOption: {
       onClick: tryDeleteExam,
       loading: deleteExamLoading,
-      children: '삭제하기',
-    },
-    editButtonOption: {
-      onClick: tryDeleteExam,
-      loading: deleteExamLoading,
-      children: '삭제하기',
+      children: '삭제',
     },
   };
   const onSubmit = async (data: CreateMockExamQuestionInput) => {
@@ -413,6 +467,10 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   return (
     <CreateExamComponentContainer>
       <Label content={'1.사전작업 - 카테고리,시험명 등록 및 선택하기'} />
+      <label className="create-exam-small-label">
+        시험 승인 이후에는, 카테고리명과 시험명 변경이 어려우니 신중하게
+        적어주세요.
+      </label>
       <div className="create-exam-input-button-wrapper">
         <SelectAdd {...SelectCategoryProps} />
         <SelectAdd {...SelectTitleProps} />
@@ -439,21 +497,49 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
         </form>
       </FormProvider>
       <Portal>
-        <ExamPreviewModal
-          open={examPreviewModal}
-          onClose={onToggleExamPreviewModal}
-          examId={
-            typeof selectedTitle?.value === 'number' ? selectedTitle.value : 0
-          }
-          categoryName={
-            typeof selectedCategory?.label === 'string'
-              ? selectedCategory?.label
-              : ''
-          }
-          examTitle={
-            typeof selectedTitle?.label === 'string' ? selectedTitle?.label : ''
-          }
-        />
+        {examPreviewModal && (
+          <ExamPreviewModal
+            open={examPreviewModal}
+            onClose={onToggleExamPreviewModal}
+            examId={
+              typeof selectedTitle?.value === 'number' ? selectedTitle.value : 0
+            }
+            categoryName={
+              typeof selectedCategory?.label === 'string'
+                ? selectedCategory?.label
+                : ''
+            }
+            examTitle={
+              typeof selectedTitle?.label === 'string'
+                ? selectedTitle?.label
+                : ''
+            }
+          />
+        )}
+        {editCategoryNameModal && (
+          <EditNameModal
+            open={editCategoryNameModal}
+            onClose={onToggleEditCategoryNameModal}
+            onConfirm={(value: string) => {
+              tryEditCategory(value)();
+              setCategoryName(value);
+              return;
+            }}
+            defaultValue={categoryName}
+          />
+        )}
+        {editExamTitleModal && (
+          <EditNameModal
+            open={editExamTitleModal}
+            onClose={onToggleEditExamTitleModal}
+            onConfirm={(value: string) => {
+              tryEditTitle(value)();
+              setExamTitle(value);
+              return;
+            }}
+            defaultValue={examTitle}
+          />
+        )}
       </Portal>
     </CreateExamComponentContainer>
   );
