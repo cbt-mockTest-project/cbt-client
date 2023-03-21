@@ -429,6 +429,7 @@ export enum ExamStatus {
 export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
+  role: UserRole;
   status: ExamStatus;
   title: Scalars['String'];
 };

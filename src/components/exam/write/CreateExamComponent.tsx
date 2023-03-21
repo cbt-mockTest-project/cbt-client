@@ -180,6 +180,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       };
       const newTitles = [...titles, convertedTitle];
       setTitles(newTitles);
+      message.success('시험이 생성되었습니다.');
       return;
     }
     message.error(res.data?.createMockExam.error);
@@ -204,6 +205,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       };
       const newCategories = [convertedCategory, ...categories];
       setCategories(newCategories);
+      message.success('카테고리가 생성되었습니다.');
       return;
     }
     message.error(res.data?.createMockExamCategory.error);
@@ -226,6 +228,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     });
     if (res.data?.deleteMockExam.ok) {
       setTitles(() => titles.filter((title) => title.label !== examTitle));
+      message.success('삭제되었습니다.');
       return;
     }
     return message.error(res.data?.deleteMockExam.error);
@@ -267,7 +270,11 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     if (res.data?.editMockExam.ok) {
       message.success('시험명이 수정되었습니다.');
       setTitles(() =>
-        titles.map((exam) => ({ value: exam.value, label: value }))
+        titles.map((exam) =>
+          exam.value == examId
+            ? { value: exam.value, label: value }
+            : { ...exam }
+        )
       );
       return;
     }
@@ -292,7 +299,11 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     if (res.data?.editMockExamCategory.ok) {
       message.success('카테고리가 수정되었습니다.');
       setCategories(() =>
-        categories.map((category) => ({ value: category.value, label: value }))
+        categories.map((category) =>
+          category.value === categoryId
+            ? { value: category.value, label: value }
+            : { ...category }
+        )
       );
       return;
     }
@@ -319,6 +330,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       setCategories(() =>
         categories.filter((category) => category.label !== categoryName)
       );
+      message.success('삭제되었습니다.');
       return;
     }
     return message.error(res.data?.deleteMockExamCategory.error);

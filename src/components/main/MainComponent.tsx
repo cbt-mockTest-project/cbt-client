@@ -108,7 +108,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       filteredTitles.length >= 1
         ? filteredTitles[0].titles.map((title) => ({
             value: title.id,
-            label: convertExamTurn(title.title),
+            label: title.title,
           }))
         : [];
     localStorage.setItem(selectExamCategoryHistory, value);
@@ -309,7 +309,8 @@ const MainComponentContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-width: 250px;
+    padding: 0 20px;
+    max-width: 350px;
     margin: 0 auto;
     .ant-select {
       width: 100%;

@@ -98,6 +98,7 @@ export const READ_EXAM_TITLES_QUERY = gql`
         id
         title
         status
+        role
       }
       ok
       error
