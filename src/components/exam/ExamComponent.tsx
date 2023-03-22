@@ -480,7 +480,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           reportValue.current = value;
         }}
         confirmLabel="등록하기"
-        title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
+        title={`${
+          isRandomExam ? questionAndSolution?.mockExam.title : examTitle
+        }  ${questionAndSolution?.number}번 문제`}
         placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
       <ProgressModal
@@ -492,7 +494,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
       <CommentModal
         open={commentModalState}
         onClose={onToggleCommentModal}
-        title={`${String(examTitle)}
+        title={`${
+          isRandomExam ? questionAndSolution?.mockExam.title : examTitle
+        }
         ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}
       />

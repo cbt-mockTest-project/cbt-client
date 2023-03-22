@@ -8,6 +8,7 @@ import { initializeApollo } from '@modules/apollo';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
 
 export const isServer = () => typeof window === 'undefined';
+
 export const convertStateToIcon = (
   state: QuestionState
 ): checkboxOption['label'] => {
@@ -159,4 +160,8 @@ export const loadScript = ({
       resolve();
     };
   });
+};
+
+export const shuffleArray = (array: any[]) => {
+  return array.sort(() => Math.random() - 0.5);
 };

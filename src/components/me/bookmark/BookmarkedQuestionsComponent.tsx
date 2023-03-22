@@ -11,22 +11,30 @@ import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import ExamSolutionListSkeleton from '@components/exam/solution/ExamSolutionListSkeleton';
 import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
+import { useApollo } from '@modules/apollo';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
+import { shuffle } from 'lodash';
 
 interface BookmarkedQuestionsComponentProps {}
 
 const BookmarkedQuestionsComponent: React.FC<
   BookmarkedQuestionsComponentProps
 > = () => {
+  const client = useApollo({}, '');
   const { data: examTitleAndIdQuery } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [
     readQuestions,
     { data: questionsQuery, refetch: refetchReadQuestions },
   ] = useLazyReadQuestionsByExamId('cache-and-network');
-
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
     checkboxOption[]
   >([]);
+  const [questions, setQuestions] = useState<
+    | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
+    | null
+  >(null);
 
   useEffect(() => {
     readQuestions({
@@ -38,6 +46,7 @@ const BookmarkedQuestionsComponent: React.FC<
       },
     });
   }, []);
+
   const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   useEffect(() => {
     if (examTitleAndIdQuery?.readExamTitleAndIdOfBookmarkedQuestion.ok) {
@@ -53,6 +62,12 @@ const BookmarkedQuestionsComponent: React.FC<
     }
   }, [examTitleAndIdQuery]);
 
+  useEffect(() => {
+    if (questionsQuery) {
+      setQuestions(questionsQuery.readMockExamQuestionsByMockExamId.questions);
+    }
+  }, [questionsQuery]);
+
   const requsetReadBookmarkedQuestions = async (
     examId: RoundCheckboxGroupOnChangeValueType
   ) => {
@@ -65,7 +80,11 @@ const BookmarkedQuestionsComponent: React.FC<
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
 
-  if (!questionsQuery) {
+  const onShuffleQuestion = () => {
+    setQuestions((prev) => shuffle(prev));
+  };
+
+  if (questions === null) {
     return <BookmarkedQuestionsComponentSkeleton />;
   }
 
@@ -82,9 +101,8 @@ const BookmarkedQuestionsComponent: React.FC<
       />
 
       <div>
-        {questionsQuery.readMockExamQuestionsByMockExamId.questions &&
-          questionsQuery.readMockExamQuestionsByMockExamId.questions.length >=
-            1 && (
+        {questions && questions.length >= 1 && (
+          <div className="bookmark-page-top-button-wrapper">
             <Button
               onClick={onToggleSolutionAllHide}
               className="bookmark-question-solution-all-hide-button"
@@ -92,31 +110,43 @@ const BookmarkedQuestionsComponent: React.FC<
             >
               {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
             </Button>
-          )}
-      </div>
-      {questionsQuery.readMockExamQuestionsByMockExamId.questions.map(
-        (question, index) => (
-          <div key={question.id}>
-            <ExamSolutionList
-              refetch={refetchReadQuestions}
-              isSolutionAllHide={isSolutionAllHide}
-              question={question}
-              title={questionsQuery?.readMockExamQuestionsByMockExamId.title}
-            />
-            {(index === 0 || index === 2) && (
-              <div className="bookmark-page-google-feed-ad-wrapper">
-                <GoogleAd type="feed" />
-              </div>
-            )}
+            <Button
+              onClick={onShuffleQuestion}
+              className="bookmark-question-solution-all-hide-button"
+              type="primary"
+            >
+              섞기
+            </Button>
           </div>
-        )
-      )}
+        )}
+      </div>
+      {questions.map((question, index) => (
+        <div key={question.id}>
+          <ExamSolutionList
+            refetch={refetchReadQuestions}
+            isSolutionAllHide={isSolutionAllHide}
+            question={question}
+            title={
+              questionsQuery?.readMockExamQuestionsByMockExamId.title || ''
+            }
+          />
+          {(index === 0 || index === 2) && (
+            <div className="bookmark-page-google-feed-ad-wrapper">
+              <GoogleAd type="feed" />
+            </div>
+          )}
+        </div>
+      ))}
     </BookmarkedQuestionsComponentBlock>
   );
 };
 
 export default BookmarkedQuestionsComponent;
 const BookmarkedQuestionsComponentBlock = styled.div`
+  .bookmark-page-top-button-wrapper {
+    display: flex;
+    gap: 10px;
+  }
   .bookmark-question-exam-title-select {
     width: 300px;
   }
