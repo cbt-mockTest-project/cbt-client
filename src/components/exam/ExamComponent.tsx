@@ -370,7 +370,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           </h2>
           {isRandomExam && (
             <h3 className="exam-container-sub-title">
-              {`${String(examTitle)}
+              {`${questionAndSolution?.mockExam.title}
                 ${questionAndSolution?.number}번 문제`}
             </h3>
           )}

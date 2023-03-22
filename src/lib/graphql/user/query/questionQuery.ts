@@ -20,6 +20,9 @@ export const READ_QUESTIONS_BY_ID = gql`
         mockExamQuestionComment {
           ...QusetionCommentParts
         }
+        mockExam {
+          title
+        }
         mockExamQuestionFeedback {
           id
           content
