@@ -3,6 +3,7 @@ import QuestionAndSolutionBox, {
   QuestionAndSolutionContent,
 } from '@components/exam/QuestionAndSolutionBox';
 import palette from '@styles/palette';
+import { Button } from 'antd';
 import { TextAreaProps } from 'antd/lib/input';
 import TextArea from 'antd/lib/input/TextArea';
 import React, { SetStateAction, useEffect, useRef } from 'react';
@@ -41,7 +42,7 @@ const SolutionWriteModal: React.FC<SolutionWriteModalProps> = ({
       </div>
       <div className="solution-write-modal-text-area-wrapper">
         <div className="solution-write-modal-label-wrapper">
-          <Label content="답 작성" />
+          <Label content="답 작성" className="solution-write-modal-label" />
           <button
             className="solution-write-modal-clear-button"
             onClick={onClearAnswer}
@@ -54,6 +55,13 @@ const SolutionWriteModal: React.FC<SolutionWriteModalProps> = ({
           autoFocus
           className="solution-write-modal-text-area"
         />
+        <Button
+          className="solution-write-modal-text-finish-button"
+          type="primary"
+          onClick={onClose}
+        >
+          작성완료
+        </Button>
       </div>
     </StyledModal>
   );
@@ -69,16 +77,25 @@ const StyledModal = styled(Modal)`
   padding: 20px 20px;
   max-width: unset;
   overflow-y: scroll;
+  .solution-write-modal-text-finish-button {
+    width: 100%;
+  }
   .solution-write-modal-label-wrapper {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 10px 20px 0 20px;
     display: flex;
     align-items: center;
     gap: 10px;
+    background-color: white;
+    .solution-write-modal-label {
+      margin: 0;
+    }
   }
   .solution-write-modal-clear-button {
-    top: 5px;
     height: 18px;
     width: 18px;
-    margin-top: 4px;
+    margin-top: -6px;
     svg {
       transition: all 0.3s;
       width: 18px;
@@ -105,6 +122,7 @@ const StyledModal = styled(Modal)`
   }
 
   .solution-write-modal-text-area-wrapper {
+    box-shadow: rgb(0 0 0 / 10%) 0px 4px 8px 4px;
     position: fixed;
     left: 0;
     right: 0;
