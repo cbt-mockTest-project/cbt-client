@@ -81,7 +81,9 @@ const ImageDragger: React.FC<ImageDraggerProps> = ({
           <InboxOutlined />
         </p>
         <p className="ant-upload-text">{text}</p>
-        <p className="ant-upload-hint">{hint}</p>
+        <p className="ant-upload-hint" style={{ whiteSpace: 'pre-wrap' }}>
+          {hint}
+        </p>
       </Dragger>
     </ImageDraggerContainer>
   );
