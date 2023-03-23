@@ -25,7 +25,4 @@ const PreventAdBlockModalContainer = styled(Modal)`
   .prevent-ad-block-modal-title {
     padding: 0 0 10px 0;
   }
-  .modal-close-button {
-    display: none;
-  }
 `;

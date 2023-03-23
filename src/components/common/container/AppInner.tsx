@@ -3,6 +3,7 @@ import { useCreateVisit } from '@lib/graphql/user/hook/useVisit';
 import useToggle from '@lib/hooks/useToggle';
 import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { getCookie, setCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import shortid from 'shortid';
 import { UserRole } from 'types';
@@ -13,6 +14,7 @@ interface AppInnerProps {}
 
 const AppInner: React.FC<AppInnerProps> = () => {
   const [createVisit] = useCreateVisit();
+  const router = useRouter();
   const { data: meQuery } = useMeQuery();
   const {
     value: preventAdBlockModalState,
@@ -43,11 +45,11 @@ const AppInner: React.FC<AppInnerProps> = () => {
       if (googleAdScript) head.removeChild(googleAdScript);
       if (googleAdScript2) head.removeChild(googleAdScript2);
     } else {
-      if (!googleAdScript || !googleAdScript2) {
+      if (!googleAdScript2 && router.isReady) {
         setPreventAdBlockModalState(true);
       }
     }
-  }, [meQuery]);
+  }, [meQuery, router.isReady]);
 
   return (
     <>
@@ -55,7 +57,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
         {preventAdBlockModalState && (
           <PreventAdBlockModal
             open={preventAdBlockModalState}
-            onClose={() => {}}
+            onClose={onTogglePreventAdBlockModal}
           />
         )}
       </Portal>
