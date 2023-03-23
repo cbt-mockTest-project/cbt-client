@@ -7,13 +7,10 @@ import styled from 'styled-components';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { Button, Select } from 'antd';
 import { responsive } from '@lib/utils/responsive';
-import SkeletonBox from '@components/common/skeleton/SkeletonBox';
-import ExamSolutionListSkeleton from '@components/exam/solution/ExamSolutionListSkeleton';
 import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import { useApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { shuffle } from 'lodash';
 
 interface BookmarkedQuestionsComponentProps {}
@@ -21,7 +18,6 @@ interface BookmarkedQuestionsComponentProps {}
 const BookmarkedQuestionsComponent: React.FC<
   BookmarkedQuestionsComponentProps
 > = () => {
-  const client = useApollo({}, '');
   const { data: examTitleAndIdQuery } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [
@@ -81,7 +77,7 @@ const BookmarkedQuestionsComponent: React.FC<
     setIsSolutionAllHide(!isSolutionAllHide);
 
   const onShuffleQuestion = () => {
-    setQuestions((prev) => shuffle(prev));
+    setQuestions(shuffle);
   };
 
   if (questions === null) {
