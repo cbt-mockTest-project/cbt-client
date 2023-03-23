@@ -36,11 +36,14 @@ const AppInner: React.FC<AppInnerProps> = () => {
   }, []);
   useEffect(() => {
     const googleAdScript = document.getElementById('googleAdScript');
+    const googleAdScript2 = document.getElementById('google_shimpl');
+    console.log(googleAdScript2);
     if (meQuery?.me.user?.role === UserRole.Admin) {
       const head = document.head;
       if (googleAdScript) head.removeChild(googleAdScript);
+      if (googleAdScript2) head.removeChild(googleAdScript2);
     } else {
-      if (!googleAdScript) {
+      if (!googleAdScript || !googleAdScript2) {
         setPreventAdBlockModalState(true);
       }
     }
