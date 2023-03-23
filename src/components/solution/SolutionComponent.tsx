@@ -7,17 +7,13 @@ import { convertExamTitle } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button } from 'antd';
+import { shuffle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
-const ClickMonAd = dynamic(() => import('@components/common/ad/ClickMonAd'), {
-  ssr: false,
-});
-const CoupangAd = dynamic(() => import('@components/common/ad/CoupangAd'), {
-  ssr: false,
-});
+
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
 });
@@ -33,6 +29,9 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   isPreview = false,
   hasNewWindowButton = true,
 }) => {
+  const [questions, setQuestions] = useState(
+    questionsQuery?.readMockExamQuestionsByMockExamId.questions || null
+  );
   const [
     readQuestions,
     { data: questionsQueryOnClientSide, refetch: refetchReadQuestions },
@@ -64,23 +63,42 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       }
     })();
   }, [router.query.Id]);
-  if (!questionsQuery && !questionsQueryOnClientSide)
-    return <SolutionComponentSkeleton />;
   const currentQuestionsQuery = (questionsQueryOnClientSide ||
     questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery;
-  const questions =
-    currentQuestionsQuery.readMockExamQuestionsByMockExamId.questions;
+
+  useEffect(() => {
+    setQuestions(
+      currentQuestionsQuery?.readMockExamQuestionsByMockExamId.questions
+    );
+  }, [currentQuestionsQuery]);
+
+  if (questions === null) return <SolutionComponentSkeleton />;
+
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
+
+  const onShuffleQuestion = () => {
+    setQuestions(shuffle);
+  };
+
   return (
     <SolutionComponentContainer>
-      <Button
-        onClick={onToggleSolutionAllHide}
-        className="exam-solution-page-solution-all-hide-button"
-        type="primary"
-      >
-        {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
-      </Button>
+      <div className="exam-solution-page-top-button-wrapper">
+        <Button
+          onClick={onToggleSolutionAllHide}
+          className="exam-solution-page-solution-all-hide-button"
+          type="primary"
+        >
+          {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+        </Button>
+        <Button
+          onClick={onShuffleQuestion}
+          className="exam-solution-page-solution-all-hide-button"
+          type="primary"
+        >
+          섞기
+        </Button>
+      </div>
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
       </h1>
@@ -118,6 +136,10 @@ const SolutionComponentContainer = styled.div`
   h1 {
     padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
+  }
+  .exam-solution-page-top-button-wrapper {
+    display: flex;
+    gap: 10px;
   }
   .exam-solution-page-author-name {
     font-size: 0.9rem;

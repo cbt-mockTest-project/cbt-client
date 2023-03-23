@@ -47,6 +47,7 @@ class MainDocument extends Document {
           />
           <script
             async
+            id="googleAdScript"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9145855450425143"
             crossOrigin="anonymous"
           />

@@ -1,6 +1,7 @@
-import { useRouter } from 'next/router';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { UserRole } from 'types';
 
 interface GoogleAdProps {
   className?: string;
@@ -9,16 +10,9 @@ interface GoogleAdProps {
 
 const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
-  // useEffect(() => {
-  //   try {
-  //     ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-  //       {}
-  //     );
-  //   } catch (e) {
-  //     console.log('googleads error', e);
-  //   }
-  // }, []);
+  const { data: meQuery } = useMeQuery();
   const loadAds = () => {
+    if (meQuery?.me.user?.role === UserRole.Admin) return;
     try {
       if (typeof window !== 'undefined') {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
@@ -33,6 +27,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
+  if (meQuery?.me.user?.role === UserRole.Admin) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
@@ -96,7 +91,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
             fontWeight: 'bold',
             textAlign: 'center',
             padding: '16px',
-            // height: '100%',
             height: '130px',
           }}
         />
