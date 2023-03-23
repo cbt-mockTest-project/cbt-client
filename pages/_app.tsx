@@ -72,14 +72,6 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     }
   }, [router.query.message]);
 
-  // useEffect(() => {
-  //   (window as any).ChannelIO('boot', {
-  //     pluginKey: process.env.NEXT_PUBLIC_CHANNER_TALK_KEY,
-  //     hideChannelButtonOnBoot: router.asPath === '/' ? false : true, // 메인 페이지에서만 노출
-  //     customLauncherSelector: '.channel-talk-custom, #channel-talk-custom',
-  //   });
-  // }, [router.asPath]);
-
   return (
     <>
       <Head>
