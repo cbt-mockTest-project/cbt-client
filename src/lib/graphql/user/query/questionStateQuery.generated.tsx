@@ -24,6 +24,11 @@ export type ReadMyExamQuestionStateQueryVariables = Types.Exact<{
 
 export type ReadMyExamQuestionStateQuery = { __typename?: 'Query', readMyExamQuestionState: { __typename?: 'ReadMyExamQuestionStateOutput', error?: string | null, ok: boolean, state: { __typename?: 'MockExamQuestionState', state: Types.QuestionState } } };
 
+export type ReadExamTitleAndIdByQuestionStateQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadExamTitleAndIdByQuestionStateQuery = { __typename?: 'Query', readExamTitleAndIdByQuestionState: { __typename?: 'ReadExamTitleAndIdByQuestionStateOutput', error?: string | null, ok: boolean, titleAndId?: Array<{ __typename?: 'TitleAndId', id?: number | null, title?: string | null }> | null } };
+
 
 export const CreateOrUpdateMockExamQuestionStateDocument = gql`
     mutation CreateOrUpdateMockExamQuestionState($input: CreateOrUpdateMockExamQuestionStateInput!) {
@@ -65,4 +70,20 @@ export const ReadMyExamQuestionStateDocument = gql`
 
 export function useReadMyExamQuestionStateQuery(options: Omit<Urql.UseQueryArgs<ReadMyExamQuestionStateQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMyExamQuestionStateQuery, ReadMyExamQuestionStateQueryVariables>({ query: ReadMyExamQuestionStateDocument, ...options });
+};
+export const ReadExamTitleAndIdByQuestionStateDocument = gql`
+    query ReadExamTitleAndIdByQuestionState {
+  readExamTitleAndIdByQuestionState {
+    error
+    ok
+    titleAndId {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useReadExamTitleAndIdByQuestionStateQuery(options?: Omit<Urql.UseQueryArgs<ReadExamTitleAndIdByQuestionStateQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadExamTitleAndIdByQuestionStateQuery, ReadExamTitleAndIdByQuestionStateQueryVariables>({ query: ReadExamTitleAndIdByQuestionStateDocument, ...options });
 };

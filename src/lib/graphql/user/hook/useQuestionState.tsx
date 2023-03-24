@@ -1,17 +1,17 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { ReadMyExamQuestionStateInput } from 'types';
-import {
-  ReadMockExamTitlesByCateoryQuery,
-  ReadMockExamTitlesByCateoryQueryVariables,
-} from '../query/examQuery.generated';
+
 import {
   CREATE_OR_UPDATE_QUESTION_STATE,
+  READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE,
   READ_QUESTION_STATE_QUERY,
   RESET_QUESTION_STATE_MUTATION,
 } from '../query/questionStateQuery';
 import {
   CreateOrUpdateMockExamQuestionStateMutation,
   CreateOrUpdateMockExamQuestionStateMutationVariables,
+  ReadExamTitleAndIdByQuestionStateQuery,
+  ReadExamTitleAndIdByQuestionStateQueryVariables,
   ReadMyExamQuestionStateQuery,
   ReadMyExamQuestionStateQueryVariables,
   ResetMyExamQuestionStateMutation,
@@ -37,3 +37,9 @@ export const useLazyReadQuestionState = (input: ReadMyExamQuestionStateInput) =>
   >(READ_QUESTION_STATE_QUERY, {
     variables: { input },
   });
+
+export const useReadExamTitleAndIdByState = () =>
+  useQuery<
+    ReadExamTitleAndIdByQuestionStateQuery,
+    ReadExamTitleAndIdByQuestionStateQueryVariables
+  >(READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE);

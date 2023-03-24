@@ -542,7 +542,7 @@ export type MockExamQuestion = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
-  mockExam: MockExam;
+  mockExam?: Maybe<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
@@ -1033,6 +1033,7 @@ export type Query = {
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
   readAllMockExamQuestionFeedback: ReadAllMockExamQuestionFeedbackOutput;
   readAllQuestions: ReadAllQuestionsOutput;
+  readExamTitleAndIdByQuestionState: ReadExamTitleAndIdByQuestionStateOutput;
   readExamTitleAndIdOfBookmarkedQuestion: ReadExamTitleAndIdOfBookmarkedQuestionOutput;
   readMockExam: ReadMockExamOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
@@ -1202,6 +1203,13 @@ export type ReadAllQuestionsOutput = {
   questions?: Maybe<Array<MockExamQuestion>>;
 };
 
+export type ReadExamTitleAndIdByQuestionStateOutput = {
+  __typename?: 'ReadExamTitleAndIdByQuestionStateOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  titleAndId?: Maybe<Array<TitleAndId>>;
+};
+
 export type ReadExamTitleAndIdOfBookmarkedQuestionOutput = {
   __typename?: 'ReadExamTitleAndIdOfBookmarkedQuestionOutput';
   error?: Maybe<Scalars['String']>;
@@ -1284,6 +1292,7 @@ export type ReadMockExamQuestionsByMockExamIdInput = {
   id?: InputMaybe<Scalars['Float']>;
   ids?: InputMaybe<Array<Scalars['Float']>>;
   isRandom?: InputMaybe<Scalars['Boolean']>;
+  states?: InputMaybe<Array<QuestionState>>;
 };
 
 export type ReadMockExamQuestionsByMockExamIdOutput = {

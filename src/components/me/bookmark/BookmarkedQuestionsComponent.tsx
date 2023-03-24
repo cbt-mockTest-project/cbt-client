@@ -139,12 +139,15 @@ const BookmarkedQuestionsComponent: React.FC<
 
 export default BookmarkedQuestionsComponent;
 const BookmarkedQuestionsComponentBlock = styled.div`
+  margin-bottom: 20px;
+  padding: 0 15px;
   .bookmark-page-top-button-wrapper {
     display: flex;
     gap: 10px;
   }
   .bookmark-question-exam-title-select {
-    width: 300px;
+    max-width: 500px;
+    width: 100%;
   }
   .bookmark-question-solution-all-hide-button {
     margin-top: 20px;
@@ -156,8 +159,7 @@ const BookmarkedQuestionsComponentBlock = styled.div`
   .bookmark-page-google-feed-ad-wrapper {
     margin-top: 20px;
   }
-  margin-bottom: 20px;
-  padding: 0 15px;
+
   li {
     list-style: none;
   }

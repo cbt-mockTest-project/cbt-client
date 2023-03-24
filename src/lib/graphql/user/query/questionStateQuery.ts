@@ -32,3 +32,16 @@ export const READ_QUESTION_STATE_QUERY = gql`
     }
   }
 `;
+
+export const READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE = gql`
+  query ReadExamTitleAndIdByQuestionState {
+    readExamTitleAndIdByQuestionState {
+      error
+      ok
+      titleAndId {
+        id
+        title
+      }
+    }
+  }
+`;

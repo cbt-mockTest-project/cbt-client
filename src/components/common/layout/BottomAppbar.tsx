@@ -4,6 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import StarIcon from '@mui/icons-material/Star';
 import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
+import CategoryIcon from '@mui/icons-material/Category';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -16,7 +17,7 @@ import {
   checkCommunityPage,
   checkHomePage,
   checkProfilePage,
-  communityRoutes,
+  checkReviewNotePage,
   profileRoutes,
 } from '@lib/constants/routes';
 
@@ -30,6 +31,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const router = useRouter();
   const authRoutes = bookmarkRoutes.concat(profileRoutes);
   const isBookmarkPage = checkBookmarkPage(router.asPath);
+  const isReviewNotePage = checkReviewNotePage(router.asPath);
   const isProfilePage = checkProfilePage(router.asPath);
   const isCommunityPage = checkCommunityPage(router.asPath);
   const isHome = checkHomePage(router.asPath);
@@ -63,6 +65,17 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         <HomeIcon className={`${isHome && 'active'}`} />
         <span className={`bottom-app-bar-item-text ${isHome && 'active'}`}>
           홈
+        </span>
+      </button>
+      <button
+        onClick={() => onRouteChange('/me/reviewnote')}
+        className="bottom-app-bar-item"
+      >
+        <CategoryIcon className={`${isReviewNotePage && 'active'}`} />
+        <span
+          className={`bottom-app-bar-item-text ${isReviewNotePage && 'active'}`}
+        >
+          성취도
         </span>
       </button>
       <button
