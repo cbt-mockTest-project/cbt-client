@@ -5,7 +5,10 @@ import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import {
+  ReadMockExamQuestionQuery,
+  ReadMockExamQuestionsByMockExamIdQuery,
+} from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
@@ -39,7 +42,7 @@ const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
 type ExamQuestionTypeByExamId =
   ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
 type ExamQuestionTypeByQuestionId =
-  ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
+  ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
 
 export type ExamQuestionType =
   | ExamQuestionTypeByExamId

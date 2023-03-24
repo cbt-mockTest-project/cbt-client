@@ -76,7 +76,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   ).readMockExamQuestion.mockExamQusetion;
 
   const title = `${
-    question.mockExam.title + ' ' + question.number + '번 문제'
+    question.mockExam?.title + ' ' + question.number + '번 문제'
   }`;
   return (
     <QuestionComponentContainer>
