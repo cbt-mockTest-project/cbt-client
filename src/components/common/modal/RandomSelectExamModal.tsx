@@ -1,5 +1,6 @@
 import { ClearOutlined } from '@ant-design/icons';
 import { TitlesAndCategories } from '@components/main/MainComponent';
+import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Tag } from 'antd';
@@ -23,26 +24,52 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
+  const storage = new LocalStorage();
   const [selectedExams, setSelectedExams] = useState<number[]>([]);
   const [category, setCategory] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
   useEffect(() => {
-    if (open) {
-      const multipleSelector = document.querySelector(
-        '.multiple-random-exam-selector'
-      );
-      if (multipleSelector) {
-        const multipleSelectorInput: HTMLInputElement | null =
-          multipleSelector.querySelector('.ant-select-selection-search-input');
-        if (multipleSelectorInput) {
-          multipleSelectorInput.inputMode = 'none';
+    try {
+      if (open) {
+        const multipleSelector = document.querySelector(
+          '.multiple-random-exam-selector'
+        );
+        if (multipleSelector) {
+          const multipleSelectorInput: HTMLInputElement | null =
+            multipleSelector.querySelector(
+              '.ant-select-selection-search-input'
+            );
+          if (multipleSelectorInput) {
+            multipleSelectorInput.inputMode = 'none';
+          }
         }
       }
+      const savedRandomExamInfo = storage.get('randomExamInfo');
+      if (savedRandomExamInfo) {
+        const { category, selectedExams } = savedRandomExamInfo;
+        if (category) {
+          onChangeCategory(category);
+        }
+        if (Array.isArray(selectedExams) && selectedExams.length >= 1) {
+          onChangeExam(selectedExams);
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (category) {
+      const savedRandomExamInfo = storage.get('randomExamInfo');
+      console.log(savedRandomExamInfo);
+    }
+    console.log(category);
+  }, [category]);
   const onChangeCategory = async (value: string) => {
     setSelectedExams([]);
+    storage.set('randomExamInfo', { category: value, selectedExams: [] });
     setCategory(value);
     const filteredTitles = titlesAndCategories.filter(
       (el) => el.category === value
@@ -58,10 +85,19 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   };
 
   const onChangeExam = (value: number[]) => {
+    const savedRandomExamInfo = storage.get('randomExamInfo');
     if (value.includes(0)) {
       setSelectedExams([0]);
+      storage.set('randomExamInfo', {
+        ...savedRandomExamInfo,
+        selectedExams: [0],
+      });
       return;
     }
+    storage.set('randomExamInfo', {
+      ...savedRandomExamInfo,
+      selectedExams: value,
+    });
     setSelectedExams(value);
   };
 
