@@ -370,7 +370,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           </h2>
           {isRandomExam && (
             <h3 className="exam-container-sub-title">
-              {`${questionAndSolution?.mockExam.title}
+              {`${questionAndSolution?.mockExam?.title}
                 ${questionAndSolution?.number}번 문제`}
             </h3>
           )}
@@ -481,7 +481,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         }}
         confirmLabel="등록하기"
         title={`${
-          isRandomExam ? questionAndSolution?.mockExam.title : examTitle
+          isRandomExam ? questionAndSolution?.mockExam?.title : examTitle
         }  ${questionAndSolution?.number}번 문제`}
         placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
@@ -495,7 +495,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         open={commentModalState}
         onClose={onToggleCommentModal}
         title={`${
-          isRandomExam ? questionAndSolution?.mockExam.title : examTitle
+          isRandomExam ? questionAndSolution?.mockExam?.title : examTitle
         }
         ${questionAndSolution?.number}번 문제`}
         questionId={questionAndSolution ? questionAndSolution.id : 0}

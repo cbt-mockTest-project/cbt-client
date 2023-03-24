@@ -5,10 +5,7 @@ import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import {
-  ReadMockExamQuestionQuery,
-  ReadMockExamQuestionsByMockExamIdQuery,
-} from '@lib/graphql/user/query/questionQuery.generated';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
@@ -25,7 +22,10 @@ import dynamic from 'next/dynamic';
 import QuestionComment from '@components/question/QuestionComment';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import Link from 'next/link';
+import StateSelecboxGroup from '@components/common/selectbox/StateSelecboxGroup';
+import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
+import { QuestionState } from 'types';
+import { checkboxOption } from 'customTypes';
 
 const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
   ssr: false,
@@ -36,9 +36,14 @@ const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
   loading: () => <StarBorderOutlinedIcon />,
 });
 
+type ExamQuestionTypeByExamId =
+  ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
+type ExamQuestionTypeByQuestionId =
+  ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
+
 export type ExamQuestionType =
-  | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0]
-  | ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
+  | ExamQuestionTypeByExamId
+  | ExamQuestionTypeByQuestionId;
 interface ExamSolutionListProps {
   question: ExamQuestionType;
   title: string;
@@ -46,6 +51,7 @@ interface ExamSolutionListProps {
   commentType?: 'modal' | 'basic';
   refetch: ({ ...args }?: any) => any;
   hasNewWindowButton?: boolean;
+  hasStateBox?: boolean;
   isPreview?: boolean;
 }
 
@@ -56,6 +62,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   commentType = 'modal',
   refetch,
   hasNewWindowButton = true,
+  hasStateBox = false,
   isPreview = false,
 }) => {
   const [editBookmark] = useEditQuestionBookmark();
@@ -70,6 +77,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     onToggle: onToggleReportModal,
   } = useToggle();
   const [createFeedBack] = useCreateQuestionFeedBack();
+  const [changeQuestionState] = useChangeQuestionState();
   const reportValue = useRef('');
 
   const dispatch = useAppDispatch();
@@ -104,6 +112,26 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     }
     setReportModalState(true);
   };
+
+  const requestChangeQuestionState = async (state: checkboxOption['value']) => {
+    try {
+      const res = await changeQuestionState({
+        variables: {
+          input: {
+            questionId: question.id,
+            state: state as QuestionState,
+          },
+        },
+      });
+      if (res.data?.createOrUpdateMockExamQuestionState.ok) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
+
   const requestReport = async () => {
     const content = reportValue.current;
     if (content.length <= 4) {
@@ -243,6 +271,13 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </div>
         )}
       </div>
+      {hasStateBox && (
+        <StateSelecboxGroup
+          className="solution-page-state-select-box-group"
+          onClick={requestChangeQuestionState}
+          defaultState={(question as ExamQuestionTypeByExamId).state[0].state}
+        />
+      )}
       {!isPreview && (
         <>
           <Button
@@ -312,6 +347,10 @@ const ExamSolutionListContainer = styled.li`
   .hide {
     filter: blur(10px);
   }
+  .solution-page-state-select-box-group {
+    margin-top: 10px;
+  }
+
   .solution-page-question-solution-header {
     display: flex;
     justify-content: space-between;
