@@ -101,7 +101,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       onSubmit={handleSubmit((data) => trySubmit(data)())}
     >
       <h2>
-        {`${mockExamQusetion.mockExam.title} - ${mockExamQusetion.number}번 문제`}
+        {`${mockExamQusetion.mockExam?.title} - ${mockExamQusetion.number}번 문제`}
       </h2>
       <div className="question-edit-block-wrapper">
         <div className="question-edit-block">
