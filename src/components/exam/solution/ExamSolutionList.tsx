@@ -63,7 +63,6 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   title,
   isSolutionAllHide,
   commentType = 'modal',
-  refetch,
   hasNewWindowButton = true,
   hasStateBox = false,
   isPreview = false,

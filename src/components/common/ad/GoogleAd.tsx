@@ -12,7 +12,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   const isProd = process.env.NODE_ENV === 'production';
   const { data: meQuery } = useMeQuery();
   const loadAds = () => {
-    if (meQuery?.me.user?.role === UserRole.Admin) return;
     try {
       if (typeof window !== 'undefined') {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
@@ -27,7 +26,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
-  if (meQuery?.me.user?.role === UserRole.Admin) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
