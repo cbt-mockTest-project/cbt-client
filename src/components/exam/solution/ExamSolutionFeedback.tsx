@@ -10,31 +10,43 @@ import { ExamQuestionType } from './ExamSolutionList';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
+  setQuestion?: React.Dispatch<React.SetStateAction<ExamQuestionType>>;
   refetch?: ({ ...args }?: any) => any;
 }
 
 const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   question,
   refetch,
+  setQuestion,
 }) => {
   const { data: meQuery } = useMeQuery();
   const [deleteQuestionFeedback] = useDeleteQuestionFeedback();
-  const requestFeedBackDelete = async (questionId: number) => {
+  const requestFeedBackDelete = async (feedbackId: number) => {
     const confirmed = confirm('삭제하시겠습니까?');
     if (confirmed) {
       const res = await deleteQuestionFeedback({
-        variables: { input: { id: questionId } },
+        variables: { input: { id: feedbackId } },
       });
-      if (res.data?.deleteMockExamQuestionFeedback.ok && refetch) {
-        refetch();
+      if (res.data?.deleteMockExamQuestionFeedback.ok) {
+        if (setQuestion) {
+          const newFeedback = question.mockExamQuestionFeedback.filter(
+            (feedback) => feedback.id !== feedbackId
+          );
+          const newQuestion = {
+            ...question,
+            mockExamQuestionFeedback: newFeedback,
+          };
+          setQuestion(newQuestion);
+        } else if (refetch) refetch();
+
         return message.success('삭제되었습니다.');
       }
       return message.error(res.data?.deleteMockExamQuestionFeedback.error);
     }
   };
-  const tryFeedBackDelete = (questionId: number) =>
+  const tryFeedBackDelete = (feedbackId: number) =>
     convertWithErrorHandlingFunc({
-      callback: () => requestFeedBackDelete(questionId),
+      callback: () => requestFeedBackDelete(feedbackId),
     });
   if (question.mockExamQuestionFeedback.length === 0) {
     return null;

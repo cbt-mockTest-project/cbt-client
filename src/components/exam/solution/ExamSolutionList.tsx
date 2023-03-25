@@ -68,6 +68,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   hasStateBox = false,
   isPreview = false,
 }) => {
+  const [currentQuestion, setCurrentQuestion] = useState(question);
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [bookmarkState, setBookmarkState] = useState(false);
@@ -92,12 +93,12 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   }, [isSolutionAllHide]);
 
   useEffect(() => {
-    if (question.mockExamQuestionBookmark.length >= 1) {
+    if (currentQuestion.mockExamQuestionBookmark.length >= 1) {
       setBookmarkState(true);
     } else {
       setBookmarkState(false);
     }
-  }, [question.mockExamQuestionBookmark]);
+  }, [currentQuestion.mockExamQuestionBookmark]);
 
   useEffect(() => {
     if (reportModalState || commentModalState) {
@@ -121,7 +122,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       const res = await changeQuestionState({
         variables: {
           input: {
-            questionId: question.id,
+            questionId: currentQuestion.id,
             state: state as QuestionState,
           },
         },
@@ -141,13 +142,22 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       return message.warn('5글자 이상 입력해주세요.');
     }
     if (content) {
-      const questionId = question.id;
+      const questionId = currentQuestion.id;
       const res = await createFeedBack({
         variables: { input: { content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
+        const newFeedback = res.data.createMockExamQuestionFeedback.feedback;
+        const newQuestion = {
+          ...currentQuestion,
+          mockExamQuestionFeedback: [
+            ...currentQuestion.mockExamQuestionFeedback,
+            newFeedback,
+          ],
+        };
         message.success('답안에 추가됐습니다.');
-        refetch();
+        // refetch();
+        setCurrentQuestion(newQuestion as ExamQuestionType);
         setReportModalState(false);
         return;
       }
@@ -158,7 +168,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   };
   const requestEditBookmark = async () => {
     const res = await editBookmark({
-      variables: { input: { questionId: question.id } },
+      variables: { input: { questionId: currentQuestion.id } },
     });
     if (res.data?.editMockExamQuestionBookmark.ok) {
       if (res.data?.editMockExamQuestionBookmark.currentState) {
@@ -185,11 +195,16 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
 
   const onShareAction = () => {
     if (window && (window as any)?.Share) {
-      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${question.id}`;
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${currentQuestion.id}`;
       return (window as any).Share.postMessage(questionPageLink);
     }
     onToggleShareModal();
   };
+
+  useEffect(() => {
+    setCurrentQuestion(question);
+  }, [question]);
+
   return (
     <ExamSolutionListContainer>
       <div className="solution-page-question-wrapper">
@@ -212,7 +227,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
             <Tooltip placement="top" title="새창으로 보기">
               <a
                 className="solution-page-question-detail-link"
-                href={`/question/${question.id}`}
+                href={`/question/${currentQuestion.id}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -223,18 +238,19 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         </div>
         <div className="solution-page-question-pre-wrapper">
           <pre className="solution-page-question">
-            {`Q${question.number}. ${question.question}`}
+            {`Q${currentQuestion.number}. ${currentQuestion.question}`}
           </pre>
         </div>
-        {question.question_img && question.question_img.length >= 1 && (
-          <div className="solution-page-question-image-wrapper">
-            <Image
-              src={question.question_img[0].url}
-              alt="question_image"
-              className="solution-page-question-image"
-            />
-          </div>
-        )}
+        {currentQuestion.question_img &&
+          currentQuestion.question_img.length >= 1 && (
+            <div className="solution-page-question-image-wrapper">
+              <Image
+                src={currentQuestion.question_img[0].url}
+                alt="question_image"
+                className="solution-page-question-image"
+              />
+            </div>
+          )}
       </div>
       <div className="solution-page-question-wrapper">
         <button
@@ -254,31 +270,37 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           <pre
             className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
           >
-            {`${question.solution}`}
-            <ExamSolutionFeedback question={question} refetch={refetch} />
+            {`${currentQuestion.solution}`}
+            <ExamSolutionFeedback
+              question={currentQuestion}
+              setQuestion={setCurrentQuestion}
+            />
           </pre>
         </div>
-        {question.solution_img && question.solution_img.length >= 1 && (
-          <div
-            className={`solution-page-question-image-wrapper ${
-              isSolutionHide ? 'hide' : ''
-            }`}
-          >
-            {!isSolutionHide && (
-              <Image
-                src={question.solution_img[0].url}
-                alt="question_image"
-                className={'solution-page-question-image'}
-              />
-            )}
-          </div>
-        )}
+        {currentQuestion.solution_img &&
+          currentQuestion.solution_img.length >= 1 && (
+            <div
+              className={`solution-page-question-image-wrapper ${
+                isSolutionHide ? 'hide' : ''
+              }`}
+            >
+              {!isSolutionHide && (
+                <Image
+                  src={currentQuestion.solution_img[0].url}
+                  alt="question_image"
+                  className={'solution-page-question-image'}
+                />
+              )}
+            </div>
+          )}
       </div>
       {hasStateBox && (
         <StateSelecboxGroup
           className="solution-page-state-select-box-group"
           onClick={requestChangeQuestionState}
-          defaultState={(question as ExamQuestionTypeByExamId).state[0].state}
+          defaultState={
+            (currentQuestion as ExamQuestionTypeByExamId).state[0].state
+          }
         />
       )}
       {!isPreview && (
@@ -304,18 +326,18 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
                 className="solution-page-comment-button"
                 onClick={onToggleCommentModal}
               >
-                {`댓글 ${question.mockExamQuestionComment.length}`}
+                {`댓글 ${currentQuestion.mockExamQuestionComment.length}`}
               </Button>
               <CommentModal
                 className="solution-page-comment-modal"
                 open={commentModalState}
                 onClose={onToggleCommentModal}
-                title={`${title}  ${question.number}번 문제`}
-                questionId={question.id || 0}
+                title={`${title}  ${currentQuestion.number}번 문제`}
+                questionId={currentQuestion.id || 0}
               />
             </>
           ) : (
-            <QuestionComment questionId={question.id} />
+            <QuestionComment questionId={currentQuestion.id} />
           )}
         </>
       )}
@@ -328,17 +350,17 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         onCancel={onToggleReportModal}
         onConfirm={tryReport}
         confirmLabel="등록하기"
-        title={`${String(title)}\n${question.number}번 문제`}
+        title={`${String(title)}\n${currentQuestion.number}번 문제`}
         label="오류신고 및 답안추가"
         placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
       />
       <QuestionShareModal
-        title={`${title} ${question.number}번 문제`}
-        questionId={question.id}
+        title={`${title} ${currentQuestion.number}번 문제`}
+        questionId={currentQuestion.id}
         open={shareModalState}
         onClose={onToggleShareModal}
-        shareTitle={`${title} ${question.number}번 문제`}
-        shareDescription={ellipsisText(question.question, 50)}
+        shareTitle={`${title} ${currentQuestion.number}번 문제`}
+        shareDescription={ellipsisText(currentQuestion.question, 50)}
       />
     </ExamSolutionListContainer>
   );

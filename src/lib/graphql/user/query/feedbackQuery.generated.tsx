@@ -8,7 +8,7 @@ export type CreateMockExamQuestionFeedbackMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean } };
+export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean, feedback?: { __typename?: 'MockExamQuestionFeedback', id: number, content: string, user: { __typename?: 'User', nickname: string, id: number } } | null } };
 
 export type CreateFeedbackMutationVariables = Types.Exact<{
   input: Types.CreateFeedbackInput;
@@ -23,6 +23,14 @@ export const CreateMockExamQuestionFeedbackDocument = gql`
   createMockExamQuestionFeedback(input: $input) {
     error
     ok
+    feedback {
+      id
+      content
+      user {
+        nickname
+        id
+      }
+    }
   }
 }
     `;
