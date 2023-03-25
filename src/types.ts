@@ -93,6 +93,7 @@ export type CreateMockExamQuestionFeedbackInput = {
 export type CreateMockExamQuestionFeedbackOutput = {
   __typename?: 'CreateMockExamQuestionFeedbackOutput';
   error?: Maybe<Scalars['String']>;
+  feedback?: Maybe<MockExamQuestionFeedback>;
   ok: Scalars['Boolean'];
 };
 

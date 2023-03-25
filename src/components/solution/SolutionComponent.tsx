@@ -116,11 +116,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 isPreview={isPreview}
                 hasNewWindowButton={hasNewWindowButton}
               />
-              {questionsQueryOnClientSide && (index === 1 || index === 3) && (
-                <div className="exam-solution-page-google-feed-ad-wrapper">
-                  <GoogleAd type="feed" />
-                </div>
-              )}
+              {questionsQueryOnClientSide &&
+                index % 4 === 0 &&
+                index + 1 !== questions.length && (
+                  <div className="exam-solution-page-google-feed-ad-wrapper">
+                    <GoogleAd type="feed" />
+                  </div>
+                )}
             </div>
           );
         })}

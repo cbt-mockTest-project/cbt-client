@@ -1,3 +1,4 @@
+import { Feedback } from './../../../../types';
 import { gql } from '@apollo/client';
 
 export const CREATE_QUESTION_FEEDBACK = gql`
@@ -7,6 +8,14 @@ export const CREATE_QUESTION_FEEDBACK = gql`
     createMockExamQuestionFeedback(input: $input) {
       error
       ok
+      feedback {
+        id
+        content
+        user {
+          nickname
+          id
+        }
+      }
     }
   }
 `;
