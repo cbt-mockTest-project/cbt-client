@@ -61,6 +61,16 @@ export type CreateMockExamCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateMockExamHistoryInput = {
+  examId: Scalars['Float'];
+};
+
+export type CreateMockExamHistoryOutput = {
+  __typename?: 'CreateMockExamHistoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateMockExamInput = {
   categoryName: Scalars['String'];
   title: Scalars['String'];
@@ -498,6 +508,7 @@ export type MockExam = {
   __typename?: 'MockExam';
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
+  history: Array<MockExamHistory>;
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
@@ -525,6 +536,15 @@ export enum MockExamCategoryTypes {
   Practical = 'practical',
   Written = 'written'
 }
+
+export type MockExamHistory = {
+  __typename?: 'MockExamHistory';
+  created_at: Scalars['DateTime'];
+  exam: MockExam;
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
 
 export type MockExamImageType = {
   __typename?: 'MockExamImageType';
@@ -642,6 +662,7 @@ export type Mutation = {
   createFeedback: CreateFeedbackOutput;
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
+  createMockExamHistory: CreateMockExamHistoryOutput;
   createMockExamQuestion: CreateMockExamQuestionOutput;
   createMockExamQuestionComment: CreateMockExamQuestionCommentOutput;
   createMockExamQuestionFeedback: CreateMockExamQuestionFeedbackOutput;
@@ -687,7 +708,6 @@ export type Mutation = {
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
-  syncExamSlug: CoreOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   viewPost: ViewPostOutput;
 };
@@ -715,6 +735,11 @@ export type MutationCreateMockExamArgs = {
 
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
+};
+
+
+export type MutationCreateMockExamHistoryArgs = {
+  input: CreateMockExamHistoryInput;
 };
 
 
@@ -1048,6 +1073,7 @@ export type Query = {
   readMockExamQuestionsByMockExamId: ReadMockExamQuestionsByMockExamIdOutput;
   readMockExamQuestionsByState: ReadMockExamQuestionsByStateOutput;
   readMockExamTitlesByCateory: ReadMockExamTitlesByCateoryOutput;
+  readMyExamHistory: ReadMyExamHistoryOutput;
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
   readMyMockExamCategories: ReadMyMockExamCategoriesOutput;
   readPost: ReadPostOutput;
@@ -1334,6 +1360,13 @@ export type ReadMockExamTitlesByCateoryOutput = {
   titles: Array<ExamTitleAndId>;
 };
 
+export type ReadMyExamHistoryOutput = {
+  __typename?: 'ReadMyExamHistoryOutput';
+  error?: Maybe<Scalars['String']>;
+  mockExams?: Maybe<Array<MockExam>>;
+  ok: Scalars['Boolean'];
+};
+
 export type ReadMyExamQuestionStateInput = {
   questionId: Scalars['Float'];
 };
@@ -1519,6 +1552,7 @@ export type User = {
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
+  mockExamHistory: Array<MockExamHistory>;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
