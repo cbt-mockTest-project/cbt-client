@@ -99,6 +99,7 @@ export const READ_EXAM_TITLES_QUERY = gql`
         title
         status
         role
+        slug
       }
       ok
       error

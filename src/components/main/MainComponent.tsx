@@ -108,7 +108,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       filteredTitles.length >= 1
         ? filteredTitles[0].titles.map((title) => ({
             value: title.id,
-            label: title.title,
+            label: title.slug || title.title,
           }))
         : [];
     localStorage.setItem(selectExamCategoryHistory, value);

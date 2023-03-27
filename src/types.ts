@@ -431,6 +431,7 @@ export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
   role: UserRole;
+  slug: Scalars['String'];
   status: ExamStatus;
   title: Scalars['String'];
 };
@@ -501,6 +502,7 @@ export type MockExam = {
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
+  slug?: Maybe<Scalars['String']>;
   status: ExamStatus;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
@@ -685,6 +687,7 @@ export type Mutation = {
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
+  syncExamSlug: CoreOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   viewPost: ViewPostOutput;
 };
