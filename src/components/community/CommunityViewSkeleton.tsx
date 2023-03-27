@@ -1,14 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import palette from '@styles/palette';
-import { Button } from 'antd';
-import CommunityListView from './CommunityListView';
-import { categorys } from './Community.constants';
-import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
-import { CommunityViewProps } from './Community.interface';
-import { format, parseISO } from 'date-fns';
-import CommunityPagination from './CommunityPagination';
 import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
