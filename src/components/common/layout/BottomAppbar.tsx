@@ -12,13 +12,12 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkUrl } from '@lib/utils/utils';
 import {
-  bookmarkRoutes,
-  checkBookmarkPage,
   checkCommunityPage,
   checkHomePage,
   checkProfilePage,
-  checkReviewNotePage,
+  checkRecordPage,
   profileRoutes,
+  recordRoutes,
 } from '@lib/constants/routes';
 
 interface BottomAppbarProps {
@@ -29,9 +28,8 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const { data: meQuery } = useMeQuery();
   const localStorage = new LocalStorage();
   const router = useRouter();
-  const authRoutes = bookmarkRoutes.concat(profileRoutes);
-  const isBookmarkPage = checkBookmarkPage(router.asPath);
-  const isReviewNotePage = checkReviewNotePage(router.asPath);
+  const authRoutes = recordRoutes.concat(profileRoutes);
+  const isRecordPage = checkRecordPage(router.asPath);
   const isProfilePage = checkProfilePage(router.asPath);
   const isCommunityPage = checkCommunityPage(router.asPath);
   const isHome = checkHomePage(router.asPath);
@@ -68,25 +66,14 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         </span>
       </button>
       <button
-        onClick={() => onRouteChange('/me/reviewnote')}
-        className="bottom-app-bar-item"
-      >
-        <CategoryIcon className={`${isReviewNotePage && 'active'}`} />
-        <span
-          className={`bottom-app-bar-item-text ${isReviewNotePage && 'active'}`}
-        >
-          성취도
-        </span>
-      </button>
-      <button
         onClick={() => onRouteChange('/me/bookmark')}
         className="bottom-app-bar-item"
       >
-        <StarIcon className={`${isBookmarkPage && 'active'}`} />
+        <StarIcon className={`${isRecordPage && 'active'}`} />
         <span
-          className={`bottom-app-bar-item-text ${isBookmarkPage && 'active'}`}
+          className={`bottom-app-bar-item-text ${isRecordPage && 'active'}`}
         >
-          북마크
+          기록
         </span>
       </button>
       <button

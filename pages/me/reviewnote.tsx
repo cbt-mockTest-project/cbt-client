@@ -16,10 +16,7 @@ const ReviewNotePage: React.FC<ReviewNotePageProps> = () => {
   }, [meQuery]);
   return (
     <>
-      <WithHead
-        title="오답노트페이지 | 모두CBT"
-        pageHeadingTitle="오답노트페이지"
-      />
+      <WithHead title="성취도 | 모두CBT" pageHeadingTitle="성취도페이지" />
       <Layout subNav={true}>
         <ReviewNoteComponent />
       </Layout>

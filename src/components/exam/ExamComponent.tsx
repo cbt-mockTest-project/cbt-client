@@ -38,6 +38,7 @@ import useToggle from '@lib/hooks/useToggle';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import { makeVar } from '@apollo/client';
+import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -60,6 +61,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
+  const [createExamHistory] = useCreateExamHistory();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const isRandomExam = router.query.es ? true : false;
@@ -181,6 +183,16 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const onFinishConfirmModal = () => {
     if (isPreview) {
       return message.success('미리보기 모드에서는 지원하지 않습니다.');
+    }
+    // 랜덤모의고사가 아니고, 로그인 상태일때
+    if (!isRandomExam && meQuery?.me.user) {
+      createExamHistory({
+        variables: {
+          input: {
+            examId: Number(router.query.e),
+          },
+        },
+      });
     }
     questionsVar(questionsQuery);
     setFinishModalState(false);

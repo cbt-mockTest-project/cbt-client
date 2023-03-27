@@ -1,14 +1,9 @@
-import RoundCheckboxGroup, {
-  RoundCheckboxGroupOnChangeValueType,
-} from '@components/common/checkbox/RoundCheckboxGroup';
+import GoogleAd from '@components/common/ad/GoogleAd';
 import Modal from '@components/common/modal/Modal';
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
-import {
-  useLazyFindMyExamHistory,
-  useReadExamCategories,
-} from '@lib/graphql/user/hook/useExam';
+import { useReadExamHistories } from '@lib/graphql/user/hook/useExamHistory';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { FindMyExamHistoryQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { ReadMyExamHistoryQuery } from '@lib/graphql/user/query/examHistoryQuery.generated';
 import { responsive } from '@lib/utils/responsive';
 import {
   convertWithErrorHandlingFunc,
@@ -17,38 +12,20 @@ import {
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
-import { checkboxOption } from 'customTypes';
+import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
-import RoundCheckboxGroupBlurTemplete from '../common/RoundBoxGroupBlurTemplete';
+import ExamHistorySkeleton from './ExamHistorySkeleton';
 
-interface ExamHistoryProps {
-  examHistoryQuery: FindMyExamHistoryQuery;
-}
-
-const ExamHistory: React.FC<ExamHistoryProps> = ({ examHistoryQuery }) => {
+const ExamHistory: React.FC = () => {
+  const { data: examHistoryQuery, loading: readExamHistoryLoading } =
+    useReadExamHistories();
   const [resetQuestionStateMutate] = useResetQuestionState();
-  const [findMyExamHistoryLazyQuery, { data: lazyExamHistoryQuery }] =
-    useLazyFindMyExamHistory();
-  const { data: categoriesQueryData } = useReadExamCategories();
-  const [mounted, setMounted] = useState(false);
-  const [categories, setCategories] = useState<checkboxOption[]>([]);
   const [achieveModalState, setAchieveModalState] = useState(false);
   const [examId, setExamId] = useState(0);
   const client = useApollo({}, '');
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  useEffect(() => {
-    if (categoriesQueryData) {
-      const categoires =
-        categoriesQueryData.readAllMockExamCategories.categories;
-      setCategories(categoires.map((el) => ({ value: el.id, label: el.name })));
-    }
-  }, [categoriesQueryData]);
-
   const onCheckAchievement = (examId: number) => {
     setExamId(examId);
     onToggleAchieveModalState();
@@ -93,30 +70,25 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({ examHistoryQuery }) => {
   const tryResetQuestionState = convertWithErrorHandlingFunc({
     callback: requestResetQuestionState,
   });
-  const onCategoryChange = async (
-    values: RoundCheckboxGroupOnChangeValueType
-  ) => {
-    if (mounted && Array.isArray(values)) {
-      const categoryIds = values.map((el) => Number(el));
-      await findMyExamHistoryLazyQuery({
-        variables: { input: { categoryIds } },
-      });
-    }
-  };
+  if (readExamHistoryLoading || !examHistoryQuery)
+    return <ExamHistorySkeleton />;
+
   return (
     <ExamHistoryContainer>
-      <RoundCheckboxGroupBlurTemplete
-        options={categories}
-        onChange={onCategoryChange}
-        type="checkbox"
-      />
       <div className="mypage-exam-list-wrapper">
+        <h3 className="mypage-exam-list-description">
+          풀이모드로 제출한 최근 10개의 시험기록입니다.
+        </h3>
+        <GoogleAd type="display" />
         <ul>
-          {(
-            lazyExamHistoryQuery || examHistoryQuery
-          ).findMyExamHistory.titleAndId?.map((el, idx) => (
+          {examHistoryQuery.readMyExamHistory.mockExams?.map((el, idx) => (
             <li key={el.id}>
-              <span>{el.title}</span>
+              <div className="mypage-exam-list-title-and-date">
+                <span>{el.title}</span>
+                <p className="mypage-exam-list-date">
+                  {format(parseISO(el.updated_at), 'yy.MM.dd HH:mm')}
+                </p>
+              </div>
               <div className="mypage-exam-list-button-wrapper">
                 <Button onClick={() => el.id && onCheckAchievement(el.id)}>
                   성취도 확인
@@ -164,6 +136,13 @@ const ExamHistory: React.FC<ExamHistoryProps> = ({ examHistoryQuery }) => {
 export default ExamHistory;
 
 const ExamHistoryContainer = styled.div`
+  .mypage-exam-list-title-and-date {
+    display: flex;
+    flex-direction: column;
+  }
+  .mypage-exam-list-description {
+    margin-bottom: 10px;
+  }
   .mypage-exam-check-box-group-wrapper {
     position: relative;
     white-space: nowrap;
@@ -193,11 +172,15 @@ const ExamHistoryContainer = styled.div`
       padding: 10px 0;
       border-bottom: 1px solid ${palette.gray_200};
     }
+    .mypage-exam-list-date {
+      color: ${palette.gray_700};
+    }
+
     .mypage-exam-list-button-wrapper {
-      margin-left: auto;
+      margin: auto 0 auto auto;
       button {
         + button {
-          margin-left: 20px;
+          margin-left: 10px;
         }
       }
     }

@@ -1,21 +1,26 @@
 import { checkUrl } from '@lib/utils/utils';
 
-export const bookmarkRoutes = ['/me/bookmark', '/me/examhistory'];
+export const recordRoutes = [
+  '/me/bookmark',
+  '/me/examhistory',
+  '/me/reviewnote',
+  '/me/myexam',
+];
 export const reviewnoteRoutes = ['/me/reviewnote'];
 export const communityRoutes = ['/community', '/post'];
 export const profileRoutes = ['/me/edit'];
 export const loginRoutes = ['/mobile/login'];
-
+export const checkRecordPage = (path: string) =>
+  checkUrl({
+    url: path,
+    allowUrls: recordRoutes,
+  });
 export const checkReviewNotePage = (path: string) =>
   checkUrl({
     url: path,
     allowUrls: reviewnoteRoutes,
   });
-export const checkBookmarkPage = (path: string) =>
-  checkUrl({
-    url: path,
-    allowUrls: bookmarkRoutes,
-  });
+
 export const checkCommunityPage = (path: string) =>
   checkUrl({
     url: path,
@@ -31,10 +36,9 @@ export const checkLoginPage = (path: string) =>
 
 export const checkHomePage = (path: string) => {
   return (
-    !checkBookmarkPage(path) &&
+    !checkRecordPage(path) &&
     !checkProfilePage(path) &&
     !checkCommunityPage(path) &&
-    !checkReviewNotePage(path) &&
     !checkLoginPage(path)
   );
 };
