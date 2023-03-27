@@ -8,7 +8,7 @@ module.exports = {
   exclude: [
     '/me*',
     '/register/*',
-    '/exam',
+    '/exam?*',
     '/exam/selectedresult',
     '/mobile/findpw',
     '/post/write',
