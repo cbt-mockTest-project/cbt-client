@@ -29,6 +29,34 @@ export type DeleteQuestionCardCategoryMutationVariables = Types.Exact<{
 
 export type DeleteQuestionCardCategoryMutation = { __typename?: 'Mutation', deleteQuestionCardCategory: { __typename?: 'DeleteQuestionCardCategoryOutput', error?: string | null, ok: boolean } };
 
+export type ReadMyQuestionCardsQueryVariables = Types.Exact<{
+  input: Types.ReadMyQuestionCardsInput;
+}>;
+
+
+export type ReadMyQuestionCardsQuery = { __typename?: 'Query', readMyQuestionCards: { __typename?: 'ReadMyQuestionCardsOutput', error?: string | null, ok: boolean, questionCards?: Array<{ __typename?: 'QuestionCard', created_at: any, id: number, question: string, solution: string, updated_at: any }> | null } };
+
+export type CreateQuestionCardMutationVariables = Types.Exact<{
+  input: Types.CreateQuestionCardInput;
+}>;
+
+
+export type CreateQuestionCardMutation = { __typename?: 'Mutation', createQuestionCard: { __typename?: 'CreateQuestionCardOutput', error?: string | null, ok: boolean, questionCard?: { __typename?: 'QuestionCard', id: number, question: string, solution: string, updated_at: any, created_at: any } | null } };
+
+export type UpdateQuestionCardMutationVariables = Types.Exact<{
+  input: Types.UpdateQuestionCardInput;
+}>;
+
+
+export type UpdateQuestionCardMutation = { __typename?: 'Mutation', updateQuestionCard: { __typename?: 'UpdateQuestionCardOutput', error?: string | null, ok: boolean, questionCard?: { __typename?: 'QuestionCard', created_at: any, id: number, question: string, solution: string, updated_at: any } | null } };
+
+export type DeleteQuestionCardsMutationVariables = Types.Exact<{
+  input: Types.DeleteQuestionCardsInput;
+}>;
+
+
+export type DeleteQuestionCardsMutation = { __typename?: 'Mutation', deleteQuestionCards: { __typename?: 'DeleteQuestionCardsOutput', error?: string | null, ok: boolean } };
+
 
 export const ReadMyQuestionCardCategoriesDocument = gql`
     query ReadMyQuestionCardCategories {
@@ -95,4 +123,73 @@ export const DeleteQuestionCardCategoryDocument = gql`
 
 export function useDeleteQuestionCardCategoryMutation() {
   return Urql.useMutation<DeleteQuestionCardCategoryMutation, DeleteQuestionCardCategoryMutationVariables>(DeleteQuestionCardCategoryDocument);
+};
+export const ReadMyQuestionCardsDocument = gql`
+    query ReadMyQuestionCards($input: ReadMyQuestionCardsInput!) {
+  readMyQuestionCards(input: $input) {
+    error
+    ok
+    questionCards {
+      created_at
+      id
+      question
+      solution
+      updated_at
+    }
+  }
+}
+    `;
+
+export function useReadMyQuestionCardsQuery(options: Omit<Urql.UseQueryArgs<ReadMyQuestionCardsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMyQuestionCardsQuery, ReadMyQuestionCardsQueryVariables>({ query: ReadMyQuestionCardsDocument, ...options });
+};
+export const CreateQuestionCardDocument = gql`
+    mutation CreateQuestionCard($input: CreateQuestionCardInput!) {
+  createQuestionCard(input: $input) {
+    error
+    ok
+    questionCard {
+      id
+      question
+      solution
+      updated_at
+      created_at
+    }
+  }
+}
+    `;
+
+export function useCreateQuestionCardMutation() {
+  return Urql.useMutation<CreateQuestionCardMutation, CreateQuestionCardMutationVariables>(CreateQuestionCardDocument);
+};
+export const UpdateQuestionCardDocument = gql`
+    mutation UpdateQuestionCard($input: UpdateQuestionCardInput!) {
+  updateQuestionCard(input: $input) {
+    error
+    ok
+    questionCard {
+      created_at
+      id
+      question
+      solution
+      updated_at
+    }
+  }
+}
+    `;
+
+export function useUpdateQuestionCardMutation() {
+  return Urql.useMutation<UpdateQuestionCardMutation, UpdateQuestionCardMutationVariables>(UpdateQuestionCardDocument);
+};
+export const DeleteQuestionCardsDocument = gql`
+    mutation DeleteQuestionCards($input: DeleteQuestionCardsInput!) {
+  deleteQuestionCards(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteQuestionCardsMutation() {
+  return Urql.useMutation<DeleteQuestionCardsMutation, DeleteQuestionCardsMutationVariables>(DeleteQuestionCardsDocument);
 };
