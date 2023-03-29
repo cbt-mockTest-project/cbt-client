@@ -1,22 +1,7 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
-import Modal from '@components/common/modal/Modal';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
-import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
-import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { ReadMyExamHistoryQuery } from '@lib/graphql/user/query/examHistoryQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import {
-  convertWithErrorHandlingFunc,
-  extractKeysOfCache,
-} from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
-import palette from '@styles/palette';
-import { Button, message } from 'antd';
-import { format, parseISO } from 'date-fns';
-import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { MockExamQuestionState, QuestionState } from 'types';
 
 const ExamHistorySkeleton: React.FC = () => {
   return (
