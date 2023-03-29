@@ -1,4 +1,9 @@
-import { useMutation, useQuery } from '@apollo/client';
+import {
+  useLazyQuery,
+  useMutation,
+  useQuery,
+  WatchQueryFetchPolicy,
+} from '@apollo/client';
 import {
   CREATE_QUESTION_CARD,
   CREATE_QUESTION_CARD_CATEGORY,
@@ -55,6 +60,12 @@ export const useDeleteQuestionCardCategory = () =>
 export const useReadQuestionCards = () =>
   useQuery<ReadMyQuestionCardsQuery, ReadMyQuestionCardsQueryVariables>(
     READ_QUESTION_CARDS
+  );
+
+export const useLazyReadQuestionCards = (fetchPolicy: WatchQueryFetchPolicy) =>
+  useLazyQuery<ReadMyQuestionCardsQuery, ReadMyQuestionCardsQueryVariables>(
+    READ_QUESTION_CARDS,
+    { fetchPolicy }
   );
 
 export const useCreateQuestionCard = () =>

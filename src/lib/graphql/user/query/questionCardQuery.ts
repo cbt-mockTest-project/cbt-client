@@ -98,11 +98,9 @@ export const UPDATE_QUESTION_CARD = gql`
       error
       ok
       questionCard {
-        created_at
         id
         question
         solution
-        updated_at
       }
     }
   }

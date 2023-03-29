@@ -185,6 +185,30 @@ export type CreatePostOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateQuestionCardCategoryInput = {
+  name: Scalars['String'];
+};
+
+export type CreateQuestionCardCategoryOutput = {
+  __typename?: 'CreateQuestionCardCategoryOutput';
+  category?: Maybe<QuestionCardCategory>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateQuestionCardInput = {
+  categoryId: Scalars['Float'];
+  question: Scalars['String'];
+  solution: Scalars['String'];
+};
+
+export type CreateQuestionCardOutput = {
+  __typename?: 'CreateQuestionCardOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questionCard?: Maybe<QuestionCard>;
+};
+
 export type CreateVisitHistoryOutput = {
   __typename?: 'CreateVisitHistoryOutput';
   error?: Maybe<Scalars['String']>;
@@ -269,6 +293,26 @@ export type DeletePostInput = {
 
 export type DeletePostOutput = {
   __typename?: 'DeletePostOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteQuestionCardCategoryInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteQuestionCardCategoryOutput = {
+  __typename?: 'DeleteQuestionCardCategoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteQuestionCardsInput = {
+  ids: Array<Scalars['Float']>;
+};
+
+export type DeleteQuestionCardsOutput = {
+  __typename?: 'DeleteQuestionCardsOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -671,6 +715,8 @@ export type Mutation = {
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
+  createQuestionCard: CreateQuestionCardOutput;
+  createQuestionCardCategory: CreateQuestionCardCategoryOutput;
   createVisit: CoreOutput;
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
@@ -682,6 +728,8 @@ export type Mutation = {
   deleteNotice: DeleteNoticeOutput;
   deletePost: DeletePostOutput;
   deletePostComment: DeletePostCommentOutput;
+  deleteQuestionCardCategory: DeleteQuestionCardCategoryOutput;
+  deleteQuestionCards: DeleteQuestionCardsOutput;
   deleteUser: CoreOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
@@ -709,6 +757,8 @@ export type Mutation = {
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+  updateQuestionCard: UpdateQuestionCardOutput;
+  updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -783,6 +833,16 @@ export type MutationCreatePostCommentArgs = {
 };
 
 
+export type MutationCreateQuestionCardArgs = {
+  input: CreateQuestionCardInput;
+};
+
+
+export type MutationCreateQuestionCardCategoryArgs = {
+  input: CreateQuestionCardCategoryInput;
+};
+
+
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
@@ -820,6 +880,16 @@ export type MutationDeletePostArgs = {
 
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
+};
+
+
+export type MutationDeleteQuestionCardCategoryArgs = {
+  input: DeleteQuestionCardCategoryInput;
+};
+
+
+export type MutationDeleteQuestionCardsArgs = {
+  input: DeleteQuestionCardsInput;
 };
 
 
@@ -945,6 +1015,16 @@ export type MutationSendVerificationMailArgs = {
 
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
+};
+
+
+export type MutationUpdateQuestionCardArgs = {
+  input: UpdateQuestionCardInput;
+};
+
+
+export type MutationUpdateQuestionCardCategoryArgs = {
+  input: UpdateQuestionCardCategoryInput;
 };
 
 
@@ -1076,8 +1156,11 @@ export type Query = {
   readMyExamHistory: ReadMyExamHistoryOutput;
   readMyExamQuestionState: ReadMyExamQuestionStateOutput;
   readMyMockExamCategories: ReadMyMockExamCategoriesOutput;
+  readMyQuestionCardCategories: ReadMyQuestionCardCategoriesOutput;
+  readMyQuestionCards: ReadMyQuestionCardsOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
+  readQuestionCard: ReadQuestionCardOutput;
   readVisitCount: ReadVisitCountOutput;
   readVisitHistory: ReadVisitHistoryOutput;
   searchMockExam: SearchMockExamOutput;
@@ -1155,6 +1238,11 @@ export type QueryReadMyExamQuestionStateArgs = {
 };
 
 
+export type QueryReadMyQuestionCardsArgs = {
+  input: ReadMyQuestionCardsInput;
+};
+
+
 export type QueryReadPostArgs = {
   input: ReadPostInput;
 };
@@ -1165,6 +1253,11 @@ export type QueryReadPostsArgs = {
 };
 
 
+export type QueryReadQuestionCardArgs = {
+  input: ReadQuestionCardInput;
+};
+
+
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
@@ -1172,6 +1265,27 @@ export type QuerySearchMockExamArgs = {
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
+};
+
+export type QuestionCard = {
+  __typename?: 'QuestionCard';
+  category: QuestionCardCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  question: Scalars['String'];
+  solution: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type QuestionCardCategory = {
+  __typename?: 'QuestionCardCategory';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  questionCard: QuestionCard;
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type QuestionNumber = {
@@ -1385,6 +1499,24 @@ export type ReadMyMockExamCategoriesOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ReadMyQuestionCardCategoriesOutput = {
+  __typename?: 'ReadMyQuestionCardCategoriesOutput';
+  categories?: Maybe<Array<QuestionCardCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type ReadMyQuestionCardsInput = {
+  categoryId?: InputMaybe<Scalars['Float']>;
+};
+
+export type ReadMyQuestionCardsOutput = {
+  __typename?: 'ReadMyQuestionCardsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questionCards?: Maybe<Array<QuestionCard>>;
+};
+
 export type ReadPostInput = {
   id: Scalars['Float'];
 };
@@ -1409,6 +1541,17 @@ export type ReadPostsOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   posts?: Maybe<Array<Post>>;
+};
+
+export type ReadQuestionCardInput = {
+  id: Scalars['Float'];
+};
+
+export type ReadQuestionCardOutput = {
+  __typename?: 'ReadQuestionCardOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questionCard?: Maybe<QuestionCard>;
 };
 
 export type ReadVisitCountOutput = {
@@ -1542,6 +1685,31 @@ export type UpdateApprovedStateOfMockExamQuestionOutput = {
   questionId: Scalars['Float'];
 };
 
+export type UpdateQuestionCardCategoryInput = {
+  id: Scalars['Float'];
+  name: Scalars['String'];
+};
+
+export type UpdateQuestionCardCategoryOutput = {
+  __typename?: 'UpdateQuestionCardCategoryOutput';
+  category?: Maybe<QuestionCardCategory>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type UpdateQuestionCardInput = {
+  question?: InputMaybe<Scalars['String']>;
+  questionId: Scalars['Float'];
+  solution?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateQuestionCardOutput = {
+  __typename?: 'UpdateQuestionCardOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questionCard?: Maybe<QuestionCard>;
+};
+
 export type User = {
   __typename?: 'User';
   LoginType: LoginType;
@@ -1563,6 +1731,8 @@ export type User = {
   password: Scalars['String'];
   post?: Maybe<Array<Post>>;
   postComment: Array<PostComment>;
+  questionCardCategorys: Array<QuestionCardCategory>;
+  questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
