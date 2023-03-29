@@ -40,56 +40,59 @@ declare type ConvertWithErrorHandlingFunc = <
   ReturnType<T> | undefined
 >;
 
+export const handleError = (error: any) => {
+  const apolloClient = initializeApollo({}, '');
+  const sendErrorToTelegram = (message: string) =>
+    apolloClient.mutate({
+      mutation: PUSH_TO_TELEGRAM,
+      variables: {
+        input: {
+          message,
+        },
+      },
+    });
+  if (error?.message === 'Forbidden resource') {
+    return message.error({ content: '로그인이 필요합니다' });
+  }
+  let telegramMessage: string;
+  if (error instanceof TypeError) {
+    telegramMessage = `
+          name: typeError\nmessage: ${error?.message}\npathname: ${
+      typeof window !== 'undefined' ? window.location : ''
+    }\nuserAgent: ${
+      typeof window !== 'undefined' ? window.navigator.userAgent : ''
+    }
+      `;
+  } else {
+    telegramMessage = `
+        name: ${
+          !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
+        }\nmessage: ${
+      error?.response?.data ||
+      error?.response?.message ||
+      error?.message ||
+      error
+    }\n__uri:${error?.response?.config?.url}\n__status:${
+      error?.response?.status
+    }\npathname: ${
+      typeof window !== 'undefined' ? window.location : ''
+    }\nuserAgent: ${
+      typeof window !== 'undefined' ? window.navigator.userAgent : ''
+    }
+      `;
+  }
+  if (process.env.NODE_ENV !== 'development') {
+    sendErrorToTelegram(telegramMessage);
+  }
+};
+
 export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
   ({ callback, errorCallback }) =>
   async () => {
-    const apolloClient = initializeApollo({}, '');
-    const sendErrorToTelegram = (message: string) =>
-      apolloClient.mutate({
-        mutation: PUSH_TO_TELEGRAM,
-        variables: {
-          input: {
-            message,
-          },
-        },
-      });
     try {
       return await callback();
     } catch (error: any) {
-      if (error?.message === 'Forbidden resource') {
-        return message.error({ content: '로그인이 필요합니다' });
-      }
-      let telegramMessage: string;
-      if (error instanceof TypeError) {
-        telegramMessage = `
-            name: typeError\nmessage: ${error?.message}\npathname: ${
-          typeof window !== 'undefined' ? window.location : ''
-        }\nuserAgent: ${
-          typeof window !== 'undefined' ? window.navigator.userAgent : ''
-        }
-        `;
-      } else {
-        telegramMessage = `
-          name: ${
-            !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
-          }\nmessage: ${
-          error?.response?.data ||
-          error?.response?.message ||
-          error?.message ||
-          error
-        }\n__uri:${error?.response?.config?.url}\n__status:${
-          error?.response?.status
-        }\npathname: ${
-          typeof window !== 'undefined' ? window.location : ''
-        }\nuserAgent: ${
-          typeof window !== 'undefined' ? window.navigator.userAgent : ''
-        }
-        `;
-      }
-      if (process.env.NODE_ENV !== 'development') {
-        sendErrorToTelegram(telegramMessage);
-      }
-
+      handleError(error);
       if (errorCallback) {
         return await errorCallback(error);
       }
