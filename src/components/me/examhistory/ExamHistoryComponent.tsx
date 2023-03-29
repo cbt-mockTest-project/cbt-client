@@ -166,7 +166,6 @@ const ExamHistoryContainer = styled.div`
     max-height: 350px;
   }
   .mypage-exam-list-wrapper {
-    margin-top: 50px;
     li {
       display: flex;
       padding: 10px 0;

@@ -48,6 +48,7 @@ const DropBoxContainer = styled.ul`
   width: 100px;
   right: 0;
   top: 35px;
+  z-index: 999;
   li {
     padding: 5px 10px;
     cursor: pointer;

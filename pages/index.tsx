@@ -15,6 +15,8 @@ import {
 } from '@lib/graphql/user/query/examQuery.generated';
 import { ExamTitleAndId, UserRole } from 'types';
 import MainComponent from '@components/main/MainComponent';
+import styled from 'styled-components';
+import { responsive } from '@lib/utils/responsive';
 
 interface TitlesAndCategories {
   category: string;
@@ -38,17 +40,29 @@ const Home: NextPage<HomeProps> = ({
         title="모두CBT | 국가고시 실기시험 부시기!"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      <Layout mainBanner={true}>
+      <HomeContainer
+        mainBanner={true}
+        subNav={true}
+        className="layout-component"
+      >
         <MainComponent
           categoriesQuery={categoriesQuery}
           titlesAndCategories={titlesAndCategories}
           examLinks={examLinks}
         />
-      </Layout>
+      </HomeContainer>
     </>
   );
 };
 export default Home;
+
+const HomeContainer = styled(Layout)`
+  @media (max-width: ${responsive.medium}) {
+    .sub-nav-container {
+      display: none;
+    }
+  }
+`;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const apolloClient = initializeApollo({}, '');

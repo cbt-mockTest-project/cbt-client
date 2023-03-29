@@ -21,6 +21,7 @@ interface LayoutProps {
   mainBanner?: boolean;
   sideBanner?: boolean;
   subNav?: boolean;
+  className?: string;
 }
 
 const Layout: React.FC<LayoutProps> = ({
@@ -28,9 +29,10 @@ const Layout: React.FC<LayoutProps> = ({
   mainBanner,
   sideBanner,
   subNav,
+  className,
 }) => {
   return (
-    <LayoutContainer>
+    <LayoutContainer className={className}>
       <Nav />
       {subNav && <SubNav />}
       <div className="layout-children-wrapper">
