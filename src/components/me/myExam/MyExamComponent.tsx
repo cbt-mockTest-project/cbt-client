@@ -60,6 +60,7 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
 
   return (
     <MyExamComponentContainer>
+      <h3>내가만든 시험지 목록을 보여주는 페이지입니다.</h3>
       <Select
         options={categories}
         onSelect={(value, option) => tryCategorySelect(option)()}
@@ -98,6 +99,7 @@ const MyExamComponentContainer = styled.div`
     border-bottom: 1px solid ${palette.gray_200};
   }
   .my-exam-category-selector {
+    margin-top: 20px;
     width: 300px;
   }
   .my-exam-list {

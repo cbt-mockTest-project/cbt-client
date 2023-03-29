@@ -18,7 +18,7 @@ const SubNav = () => {
     { label: '시험지', value: 'myexam' },
   ];
   return (
-    <SubNavContainer>
+    <SubNavContainer className="sub-nav-container">
       <div className="sub-nav-contents-wrapper">
         <ul className="sub-nav-link-wrapper">
           {subNavOptions.map((option, index) => {
@@ -46,6 +46,9 @@ export default SubNav;
 
 const SubNavContainer = styled.div`
   background-color: ${palette.antd_blue_01};
+  position: sticky;
+  top: 58.5px;
+  z-index: 99;
   .sub-nav-contents-wrapper {
     max-width: 1030px;
     margin: 0 auto;

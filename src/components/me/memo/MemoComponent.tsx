@@ -304,7 +304,27 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
         <ConfirmModal
           onClose={onTogglePdfDownloadConfirmModalState}
           open={pdfDownloadConfirmModalState}
-          content="다운로드 형태를 선택해주세요."
+          content={
+            <div>
+              <p>다운로드 형태를 선택해주세요.</p>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: palette.gray_700,
+                }}
+              >
+                어플에서는 작동하지 않습니다.
+              </p>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: palette.gray_700,
+                }}
+              >
+                pc환경에서 이용해주세요.
+              </p>
+            </div>
+          }
           onCancel={() => {
             onDownloadPdf({ hasSolution: false });
           }}
