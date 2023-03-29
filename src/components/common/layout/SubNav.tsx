@@ -13,8 +13,9 @@ const SubNav = () => {
   const subNavOptions = [
     { label: '북마크', value: 'bookmark' },
     { label: '성취도', value: 'reviewnote' },
-    { label: '최근시험기록', value: 'examhistory' },
-    { label: '내 시험지', value: 'myexam' },
+    { label: '메모장', value: 'memo' },
+    { label: '기록', value: 'examhistory' },
+    { label: '시험지', value: 'myexam' },
   ];
   return (
     <SubNavContainer>
