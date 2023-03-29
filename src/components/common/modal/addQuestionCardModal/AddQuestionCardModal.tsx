@@ -131,6 +131,7 @@ const AddQuestionCardModalContainer = styled(Modal)`
   position: fixed;
   top: 0;
   bottom: 0;
+  max-width: 500px;
   .add-question-card-modal-form {
     margin-top: 10px;
     display: flex;
