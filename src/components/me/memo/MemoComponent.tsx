@@ -18,6 +18,10 @@ import MemoCard, { OnUpdateQuestionCardArgs } from './MemoCard';
 import { QuestionCard } from 'types';
 import AddQuestionCardModal from '@components/common/modal/addQuestionCardModal/AddQuestionCardModal';
 import { shuffle } from 'lodash';
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import { handleError } from '@lib/utils/utils';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
 
 interface MemoComponentProps {}
 
@@ -32,10 +36,15 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
     value: addQuestionCardModalState,
     onToggle: onToggleAddQuestionCardModalState,
   } = useToggle(false);
+  const {
+    value: pdfDownloadConfirmModalState,
+    onToggle: onTogglePdfDownloadConfirmModalState,
+  } = useToggle(false);
   const { value: allSolutionVisible, onToggle: onToggleAllSolutionVisible } =
     useToggle(true);
   const [cardCategories, setCardCategories] = useState<DefaultOptionType[]>([]);
   const [questionCards, setQuestionCards] = useState<QuestionCard[]>([]);
+  const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
   const [selectedCardCategory, setSelectedCardCategory] =
     useState<DefaultOptionType>();
   const { data: categoriesData, loading: readCategoriesLoading } =
@@ -128,7 +137,6 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
         }
         return item;
       });
-      console.log(newQuestionCards);
       setQuestionCards(newQuestionCards);
       message.success('수정되었습니다.');
       return true;
@@ -138,6 +146,65 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
   };
   const onShuffleCards = () => {
     setQuestionCards(shuffle);
+  };
+
+  type OnDownloadPdfArgs = { hasSolution: boolean };
+
+  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
+    try {
+      setPdfDownloadLoading(true);
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      const title = selectedCardCategory?.label as string;
+      const contents: any[] = [];
+      questionCards.forEach((item, index) => {
+        contents.push({
+          text: `${index + 1}. ${item.question}`,
+          background: '#f0f3f3',
+          margin: [0, 20],
+        });
+        contents.push({
+          text: '정답',
+          style: 'subHeader',
+          margin: [0, 0, 0, 5],
+        });
+        const solutionText = hasSolution
+          ? item.solution
+          : item.solution.replaceAll(/[^\n]/g, '') + '\n';
+        contents.push({ text: solutionText, margin: [0, 0, 0, 20] });
+      });
+      const fonts = {
+        NotoSans: {
+          normal: 'NotoSansKR-Regular.otf',
+          bold: 'NotoSansKR-Bold.otf',
+        },
+      };
+      const docDefinition = {
+        content: [{ text: title, style: 'header' }, ...contents],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            margin: [0, 0, 0, 10],
+          },
+          subHeader: {
+            fontSize: 12,
+            bold: true,
+          },
+        },
+        defaultStyle: {
+          font: 'NotoSans',
+        },
+      };
+      const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
+      await pdfDoc.download(
+        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
+      );
+      setPdfDownloadLoading(false);
+    } catch (e) {
+      handleError(e);
+      setPdfDownloadLoading(false);
+      message.error('다운로드에 실패했습니다.');
+    }
   };
 
   return (
@@ -152,10 +219,22 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
           카테고리관리
         </Button>
         <Button
+          type="primary"
           className="memo-page-add-question-button"
           onClick={onToggleAddQuestionCardModalState}
         >
           문제추가
+        </Button>
+        <Button
+          onClick={() => {
+            if (questionCards.length === 0)
+              return message.error('문제가 없습니다. 문제를 추가해주세요.');
+            onTogglePdfDownloadConfirmModalState();
+          }}
+          loading={pdfDownloadLoading}
+          type="primary"
+        >
+          다운로드
         </Button>
       </div>
 
@@ -222,6 +301,21 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
             setQuestionCards={setQuestionCards}
           />
         )}
+        <ConfirmModal
+          onClose={onTogglePdfDownloadConfirmModalState}
+          open={pdfDownloadConfirmModalState}
+          content="다운로드 형태를 선택해주세요."
+          onCancel={() => {
+            onDownloadPdf({ hasSolution: false });
+          }}
+          onConfirm={() => {
+            onDownloadPdf({ hasSolution: true });
+          }}
+          confirmButtonLoading={pdfDownloadLoading}
+          cancelButtonLoading={pdfDownloadLoading}
+          confirmLabel="정답 포함"
+          cancelLabel="정답 미포함"
+        />
       </Portal>
     </MemoComponentContainer>
   );
