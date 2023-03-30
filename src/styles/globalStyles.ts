@@ -35,7 +35,7 @@ const Globalstyles = createGlobalStyle`
       display: none;
   }
   body {
-    overflow-x: hidden ;
+    overflow-x: hidden !important;
     overflow-y : scroll ;
   }
   menu, ol, ul {

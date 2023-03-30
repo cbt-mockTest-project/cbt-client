@@ -141,7 +141,7 @@ const MyExamComponentContainer = styled.div`
     border-left: 1px solid ${palette.gray_200};
   }
   @media (max-width: ${responsive.medium}) {
-    margin-top: 50px;
+    margin-top: 20px;
     padding: 0 20px;
   }
   @media (max-width: ${responsive.small}) {
