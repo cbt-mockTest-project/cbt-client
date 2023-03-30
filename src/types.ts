@@ -1543,9 +1543,9 @@ export type ReadMyQuestionCommentsInput = {
 
 export type ReadMyQuestionCommentsOutput = {
   __typename?: 'ReadMyQuestionCommentsOutput';
-  comments?: Maybe<Array<MockExamQuestionComment>>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  questions?: Maybe<Array<MockExamQuestion>>;
 };
 
 export type ReadPostInput = {
