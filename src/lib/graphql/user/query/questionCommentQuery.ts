@@ -1,3 +1,4 @@
+import { MockExamQuestionComment } from './../../../../types';
 import { FULL_QUESTION_COMMENT_FRAGMENT } from './questionCommentFragment';
 import { gql } from '@apollo/client';
 
@@ -55,6 +56,41 @@ export const READ_QUESTION_COMMENT = gql`
           role
         }
       }
+    }
+  }
+`;
+
+export const READ_EXAM_TITLE_AND_ID_BY_COMMENT = gql`
+  query ReadExamTitleAndIdByQuestionComment {
+    readExamTitleAndIdByQuestionComment {
+      error
+      examTitleAndId {
+        id
+        title
+      }
+      ok
+    }
+  }
+`;
+
+export const READ_MY_QUESTION_COMMENTS = gql`
+  query ReadMyQuestionComments($input: ReadMyQuestionCommentsInput!) {
+    readMyQuestionComments(input: $input) {
+      questions {
+        id
+        question
+        number
+        mockExam {
+          title
+        }
+        mockExamQuestionComment {
+          id
+          content
+          created_at
+        }
+      }
+      error
+      ok
     }
   }
 `;

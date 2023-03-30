@@ -6,6 +6,7 @@ export const recordRoutes = [
   '/me/reviewnote',
   '/me/myexam',
   '/me/memo',
+  '/me/questioncomment',
 ];
 export const reviewnoteRoutes = ['/me/reviewnote'];
 export const communityRoutes = ['/community', '/post'];

@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
 import BookmarkedQuestionsComponentSkeleton from '../bookmark/BookmarkedQuestionsComponentSkeleton';
+import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
 
 interface ReviewNoteComponentProps {}
 
@@ -88,7 +89,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
   };
-  if (questions === null || readQuestionsLoading) {
+  if (questions === null) {
     return <BookmarkedQuestionsComponentSkeleton />;
   }
 
@@ -156,24 +157,28 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
         </Button>
       </div>
 
-      {questions.map((question, index) => (
-        <div key={question.id}>
-          <ExamSolutionList
-            refetch={refetchReadQuestions}
-            isSolutionAllHide={isSolutionAllHide}
-            hasStateBox={true}
-            question={question}
-            title={
-              questionsQuery?.readMockExamQuestionsByMockExamId.title || ''
-            }
-          />
-          {(index === 0 || index === 2) && (
-            <div className="bookmark-page-google-feed-ad-wrapper">
-              <GoogleAd type="feed" />
-            </div>
-          )}
-        </div>
-      ))}
+      {readQuestionsLoading ? (
+        <ExamHistorySkeleton />
+      ) : (
+        questions.map((question, index) => (
+          <div key={question.id}>
+            <ExamSolutionList
+              refetch={refetchReadQuestions}
+              isSolutionAllHide={isSolutionAllHide}
+              hasStateBox={true}
+              question={question}
+              title={
+                questionsQuery?.readMockExamQuestionsByMockExamId.title || ''
+              }
+            />
+            {(index === 0 || index === 2) && (
+              <div className="bookmark-page-google-feed-ad-wrapper">
+                <GoogleAd type="feed" />
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </ReviewNoteComponentContainer>
   );
 };
