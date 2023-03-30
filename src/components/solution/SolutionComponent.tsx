@@ -3,16 +3,25 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import { convertExamTitle } from '@lib/utils/utils';
+import { blobToDataUrl, convertExamTitle, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { shuffle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
+import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
+import axios from 'axios';
+import { MockExamImageType } from 'types';
+import Portal from '@components/common/portal/Portal';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
+import useToggle from '@lib/hooks/useToggle';
+import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -29,6 +38,11 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   isPreview = false,
   hasNewWindowButton = true,
 }) => {
+  const {
+    value: pdfDownloadConfirmModalState,
+    onToggle: onTogglePdfDownloadConfirmModalState,
+  } = useToggle(false);
+  const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
   const [questions, setQuestions] = useState(
     questionsQuery?.readMockExamQuestionsByMockExamId.questions || null
   );
@@ -81,6 +95,113 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     setQuestions(shuffle);
   };
 
+  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
+    try {
+      setPdfDownloadLoading(true);
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      const contents: any[] = [];
+      let number = 0;
+      for await (const item of questions) {
+        number += 1;
+        const hasQuestionImage =
+          item.question_img && item.question_img.length >= 1;
+        const hasSolutionImage =
+          item.solution_img && item.solution_img.length >= 1;
+
+        contents.push({
+          text: `Q${number}. ${item.question}`,
+          margin: hasQuestionImage ? [0, 0] : [0, 20],
+        });
+        if (hasQuestionImage) {
+          const { data } = await axios.get(
+            `${
+              (item.question_img as MockExamImageType[])[0].url
+            }?not-from-cache-please`,
+            {
+              responseType: 'blob',
+            }
+          );
+          const dataUrl = await blobToDataUrl(data);
+          contents.push({
+            image: dataUrl,
+            width: 400,
+            margin: [0, 10, 0, 20],
+          });
+        }
+        contents.push({
+          text: '정답',
+          style: 'subHeader',
+          margin: [0, 0, 0, 5],
+        });
+        const solutionText = hasSolution
+          ? item.solution
+          : item.solution?.replaceAll(/[^\n]/g, '') + '\n';
+        contents.push({
+          text: solutionText,
+          margin: hasSolutionImage ? [0, 0, 0, 0] : [0, 0, 0, 40],
+        });
+        if (hasSolutionImage && hasSolution) {
+          const { data } = await axios.get(
+            `${
+              (item.solution_img as MockExamImageType[])[0].url
+            }?not-from-cache-please`,
+            {
+              responseType: 'blob',
+            }
+          );
+          const dataUrl = await blobToDataUrl(data);
+          contents.push({
+            image: dataUrl,
+            width: 400,
+            margin: [0, 10, 0, 40],
+          });
+        }
+      }
+      const fonts = {
+        NotoSans: {
+          normal: 'NotoSansKR-Regular.otf',
+          bold: 'NotoSansKR-Bold.otf',
+        },
+      };
+      const docDefinition = {
+        content: [
+          {
+            text: '실기시험 준비는 모두CBT! (https://moducbt.com)',
+            link: 'https://moducbt.com',
+            color: '#1890ff',
+            fontSize: 12,
+          },
+          { text: title, style: 'header' },
+          ...contents,
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            margin: [0, 0, 0, 10],
+          },
+          subHeader: {
+            fontSize: 12,
+            bold: true,
+          },
+        },
+        defaultStyle: {
+          font: 'NotoSans',
+        },
+      };
+      const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
+      await pdfDoc.download(
+        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
+      );
+      setPdfDownloadLoading(false);
+    } catch (e) {
+      handleError(e);
+      console.log(e);
+      setPdfDownloadLoading(false);
+      message.error('다운로드에 실패했습니다.');
+    }
+  };
+
   return (
     <SolutionComponentContainer>
       <div className="exam-solution-page-top-button-wrapper">
@@ -97,6 +218,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           type="primary"
         >
           섞기
+        </Button>
+        <Button
+          onClick={onTogglePdfDownloadConfirmModalState}
+          className="exam-solution-page-solution-all-hide-button"
+          type="primary"
+        >
+          다운로드
         </Button>
       </div>
       <h1 className="not-draggable">
@@ -127,6 +255,21 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           );
         })}
       </ul>
+
+      {pdfDownloadConfirmModalState && (
+        <PdfDownloadSelectModal
+          open={pdfDownloadConfirmModalState}
+          onClose={onTogglePdfDownloadConfirmModalState}
+          onCancel={() => {
+            onDownloadPdf({ hasSolution: false });
+          }}
+          onConfirm={() => {
+            onDownloadPdf({ hasSolution: true });
+          }}
+          confirmButtonLoading={pdfDownloadLoading}
+          cancelButtonLoading={pdfDownloadLoading}
+        />
+      )}
     </SolutionComponentContainer>
   );
 };

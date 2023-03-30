@@ -22,6 +22,9 @@ import * as pdfMake from 'pdfmake/build/pdfmake.js';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { handleError } from '@lib/utils/utils';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
+import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
+
+export type OnDownloadPdfArgs = { hasSolution: boolean };
 
 interface MemoComponentProps {}
 
@@ -147,8 +150,6 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
   const onShuffleCards = () => {
     setQuestionCards(shuffle);
   };
-
-  type OnDownloadPdfArgs = { hasSolution: boolean };
 
   const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
     try {
@@ -301,41 +302,20 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
             setQuestionCards={setQuestionCards}
           />
         )}
-        <ConfirmModal
-          onClose={onTogglePdfDownloadConfirmModalState}
-          open={pdfDownloadConfirmModalState}
-          content={
-            <div>
-              <p>다운로드 형태를 선택해주세요.</p>
-              <p
-                style={{
-                  fontSize: '12px',
-                  color: palette.gray_700,
-                }}
-              >
-                어플에서는 작동하지 않습니다.
-              </p>
-              <p
-                style={{
-                  fontSize: '12px',
-                  color: palette.gray_700,
-                }}
-              >
-                pc환경에서 이용해주세요.
-              </p>
-            </div>
-          }
-          onCancel={() => {
-            onDownloadPdf({ hasSolution: false });
-          }}
-          onConfirm={() => {
-            onDownloadPdf({ hasSolution: true });
-          }}
-          confirmButtonLoading={pdfDownloadLoading}
-          cancelButtonLoading={pdfDownloadLoading}
-          confirmLabel="정답 포함"
-          cancelLabel="정답 미포함"
-        />
+        {pdfDownloadConfirmModalState && (
+          <PdfDownloadSelectModal
+            open={pdfDownloadConfirmModalState}
+            onClose={onTogglePdfDownloadConfirmModalState}
+            onCancel={() => {
+              onDownloadPdf({ hasSolution: false });
+            }}
+            onConfirm={() => {
+              onDownloadPdf({ hasSolution: true });
+            }}
+            confirmButtonLoading={pdfDownloadLoading}
+            cancelButtonLoading={pdfDownloadLoading}
+          />
+        )}
       </Portal>
     </MemoComponentContainer>
   );
