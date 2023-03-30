@@ -32,6 +32,18 @@ export type ReadMockExamQuestionCommentsByQuestionIdQueryVariables = Types.Exact
 
 export type ReadMockExamQuestionCommentsByQuestionIdQuery = { __typename?: 'Query', readMockExamQuestionCommentsByQuestionId: { __typename?: 'ReadMockExamQuestionCommentsByQuestionIdOutput', comments?: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }> | null } };
 
+export type ReadExamTitleAndIdByQuestionCommentQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadExamTitleAndIdByQuestionCommentQuery = { __typename?: 'Query', readExamTitleAndIdByQuestionComment: { __typename?: 'ReadExamTitleAndIdByQuestionCommentOutput', error?: string | null, ok: boolean, examTitleAndId?: Array<{ __typename?: 'ExamTitleAndIdByQuestionComment', id: number, title: string }> | null } };
+
+export type ReadMyQuestionCommentsQueryVariables = Types.Exact<{
+  input: Types.ReadMyQuestionCommentsInput;
+}>;
+
+
+export type ReadMyQuestionCommentsQuery = { __typename?: 'Query', readMyQuestionComments: { __typename?: 'ReadMyQuestionCommentsOutput', error?: string | null, ok: boolean, comments?: Array<{ __typename?: 'MockExamQuestionComment', id: number, content: string, created_at: any, question: { __typename?: 'MockExamQuestion', id: number } }> | null } };
+
 
 export const CreateMockExamQuestionCommentDocument = gql`
     mutation CreateMockExamQuestionComment($input: CreateMockExamQuestionCommentInput!) {
@@ -93,4 +105,40 @@ export const ReadMockExamQuestionCommentsByQuestionIdDocument = gql`
 
 export function useReadMockExamQuestionCommentsByQuestionIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionCommentsByQuestionIdQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionCommentsByQuestionIdQuery, ReadMockExamQuestionCommentsByQuestionIdQueryVariables>({ query: ReadMockExamQuestionCommentsByQuestionIdDocument, ...options });
+};
+export const ReadExamTitleAndIdByQuestionCommentDocument = gql`
+    query ReadExamTitleAndIdByQuestionComment {
+  readExamTitleAndIdByQuestionComment {
+    error
+    examTitleAndId {
+      id
+      title
+    }
+    ok
+  }
+}
+    `;
+
+export function useReadExamTitleAndIdByQuestionCommentQuery(options?: Omit<Urql.UseQueryArgs<ReadExamTitleAndIdByQuestionCommentQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadExamTitleAndIdByQuestionCommentQuery, ReadExamTitleAndIdByQuestionCommentQueryVariables>({ query: ReadExamTitleAndIdByQuestionCommentDocument, ...options });
+};
+export const ReadMyQuestionCommentsDocument = gql`
+    query ReadMyQuestionComments($input: ReadMyQuestionCommentsInput!) {
+  readMyQuestionComments(input: $input) {
+    comments {
+      id
+      content
+      created_at
+      question {
+        id
+      }
+    }
+    error
+    ok
+  }
+}
+    `;
+
+export function useReadMyQuestionCommentsQuery(options: Omit<Urql.UseQueryArgs<ReadMyQuestionCommentsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMyQuestionCommentsQuery, ReadMyQuestionCommentsQueryVariables>({ query: ReadMyQuestionCommentsDocument, ...options });
 };

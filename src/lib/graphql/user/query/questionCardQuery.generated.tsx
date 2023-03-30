@@ -48,7 +48,7 @@ export type UpdateQuestionCardMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateQuestionCardMutation = { __typename?: 'Mutation', updateQuestionCard: { __typename?: 'UpdateQuestionCardOutput', error?: string | null, ok: boolean, questionCard?: { __typename?: 'QuestionCard', created_at: any, id: number, question: string, solution: string, updated_at: any } | null } };
+export type UpdateQuestionCardMutation = { __typename?: 'Mutation', updateQuestionCard: { __typename?: 'UpdateQuestionCardOutput', error?: string | null, ok: boolean, questionCard?: { __typename?: 'QuestionCard', id: number, question: string, solution: string } | null } };
 
 export type DeleteQuestionCardsMutationVariables = Types.Exact<{
   input: Types.DeleteQuestionCardsInput;
@@ -168,11 +168,9 @@ export const UpdateQuestionCardDocument = gql`
     error
     ok
     questionCard {
-      created_at
       id
       question
       solution
-      updated_at
     }
   }
 }

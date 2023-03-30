@@ -4,6 +4,8 @@ import {
   CREATE_QUESTION_COMMENT,
   DELETE_QUESTION_COMMENT,
   EDIT_QUESTION_COMMENT,
+  READ_EXAM_TITLE_AND_ID_BY_COMMENT,
+  READ_MY_QUESTION_COMMENTS,
   READ_QUESTION_COMMENT,
 } from '../query/questionCommentQuery';
 import {
@@ -13,8 +15,12 @@ import {
   DeleteMockExamQuestionCommentMutationVariables,
   EditMockExamQuestionCommentMutation,
   EditMockExamQuestionCommentMutationVariables,
+  ReadExamTitleAndIdByQuestionCommentQuery,
+  ReadExamTitleAndIdByQuestionCommentQueryVariables,
   ReadMockExamQuestionCommentsByQuestionIdQuery,
   ReadMockExamQuestionCommentsByQuestionIdQueryVariables,
+  ReadMyQuestionCommentsQuery,
+  ReadMyQuestionCommentsQueryVariables,
 } from '../query/questionCommentQuery.generated';
 
 export const useCreateQuestionCommnet = () =>
@@ -42,3 +48,20 @@ export const useReadQuestionComment = (questionId: number) =>
     ReadMockExamQuestionCommentsByQuestionIdQuery,
     ReadMockExamQuestionCommentsByQuestionIdQueryVariables
   >(READ_QUESTION_COMMENT, { variables: { input: { questionId } } });
+
+export const useReadExamTitleAndIdByComment = () =>
+  useQuery<
+    ReadExamTitleAndIdByQuestionCommentQuery,
+    ReadExamTitleAndIdByQuestionCommentQueryVariables
+  >(READ_EXAM_TITLE_AND_ID_BY_COMMENT);
+
+export const useLazyReadMyQuestionComments = () =>
+  useLazyQuery<
+    ReadMyQuestionCommentsQuery,
+    ReadMyQuestionCommentsQueryVariables
+  >(READ_MY_QUESTION_COMMENTS);
+
+export const useReadMyQuestionComments = () =>
+  useQuery<ReadMyQuestionCommentsQuery, ReadMyQuestionCommentsQueryVariables>(
+    READ_MY_QUESTION_COMMENTS
+  );

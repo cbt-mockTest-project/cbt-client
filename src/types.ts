@@ -490,6 +490,12 @@ export type ExamTitleAndId = {
   title: Scalars['String'];
 };
 
+export type ExamTitleAndIdByQuestionComment = {
+  __typename?: 'ExamTitleAndIdByQuestionComment';
+  id: Scalars['Float'];
+  title: Scalars['String'];
+};
+
 export type Feedback = {
   __typename?: 'Feedback';
   content: Scalars['String'];
@@ -1142,6 +1148,7 @@ export type Query = {
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
   readAllMockExamQuestionFeedback: ReadAllMockExamQuestionFeedbackOutput;
   readAllQuestions: ReadAllQuestionsOutput;
+  readExamTitleAndIdByQuestionComment: ReadExamTitleAndIdByQuestionCommentOutput;
   readExamTitleAndIdByQuestionState: ReadExamTitleAndIdByQuestionStateOutput;
   readExamTitleAndIdOfBookmarkedQuestion: ReadExamTitleAndIdOfBookmarkedQuestionOutput;
   readMockExam: ReadMockExamOutput;
@@ -1158,6 +1165,7 @@ export type Query = {
   readMyMockExamCategories: ReadMyMockExamCategoriesOutput;
   readMyQuestionCardCategories: ReadMyQuestionCardCategoriesOutput;
   readMyQuestionCards: ReadMyQuestionCardsOutput;
+  readMyQuestionComments: ReadMyQuestionCommentsOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
   readQuestionCard: ReadQuestionCardOutput;
@@ -1240,6 +1248,11 @@ export type QueryReadMyExamQuestionStateArgs = {
 
 export type QueryReadMyQuestionCardsArgs = {
   input: ReadMyQuestionCardsInput;
+};
+
+
+export type QueryReadMyQuestionCommentsArgs = {
+  input: ReadMyQuestionCommentsInput;
 };
 
 
@@ -1345,6 +1358,13 @@ export type ReadAllQuestionsOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   questions?: Maybe<Array<MockExamQuestion>>;
+};
+
+export type ReadExamTitleAndIdByQuestionCommentOutput = {
+  __typename?: 'ReadExamTitleAndIdByQuestionCommentOutput';
+  error?: Maybe<Scalars['String']>;
+  examTitleAndId?: Maybe<Array<ExamTitleAndIdByQuestionComment>>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadExamTitleAndIdByQuestionStateOutput = {
@@ -1515,6 +1535,17 @@ export type ReadMyQuestionCardsOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   questionCards?: Maybe<Array<QuestionCard>>;
+};
+
+export type ReadMyQuestionCommentsInput = {
+  examId: Scalars['Float'];
+};
+
+export type ReadMyQuestionCommentsOutput = {
+  __typename?: 'ReadMyQuestionCommentsOutput';
+  comments?: Maybe<Array<MockExamQuestionComment>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadPostInput = {

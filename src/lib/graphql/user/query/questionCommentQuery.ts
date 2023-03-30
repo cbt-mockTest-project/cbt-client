@@ -58,3 +58,34 @@ export const READ_QUESTION_COMMENT = gql`
     }
   }
 `;
+
+export const READ_EXAM_TITLE_AND_ID_BY_COMMENT = gql`
+  query ReadExamTitleAndIdByQuestionComment {
+    readExamTitleAndIdByQuestionComment {
+      error
+      examTitleAndId {
+        id
+        title
+      }
+      ok
+    }
+  }
+`;
+
+export const READ_MY_QUESTION_COMMENTS = gql`
+  query ReadMyQuestionComments($input: ReadMyQuestionCommentsInput!) {
+    readMyQuestionComments(input: $input) {
+      comments {
+        id
+        content
+        created_at
+        question {
+          id
+        }
+      }
+
+      error
+      ok
+    }
+  }
+`;
