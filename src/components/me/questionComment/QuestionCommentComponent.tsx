@@ -18,8 +18,10 @@ const QuestionCommentComponent: React.FC<
   QuestionCommentComponentProps
 > = () => {
   const { data: examTitleAndIdData } = useReadExamTitleAndIdByComment();
-  const [readQuestionComments, { data: readQuestionCommentsData }] =
-    useLazyReadMyQuestionComments();
+  const [
+    readQuestionComments,
+    { data: readQuestionCommentsData, loading: readQuestionCommentsLoading },
+  ] = useLazyReadMyQuestionComments();
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [titleAndIds, setTitleAndIds] = useState<DefaultOptionType[]>([
     { label: '전체', value: 0 },
@@ -69,45 +71,49 @@ const QuestionCommentComponent: React.FC<
         value={selectedExamId}
         onChange={(value) => setSelectedExamId(value as number)}
       />
-      <ul className="my-question-comment-list">
-        {questions?.map((question) => (
-          <li className="my-question-comment-list-item" key={question.id}>
-            <div className="my-question-comment-list-item-question-wrapper">
-              <a
-                href={
-                  process.env.NEXT_PUBLIC_CLIENT_URL +
-                  `/question/${question.id}`
-                }
-                target="_blank"
-                className="my-question-comment-list-item-label-wrapper"
-                rel="noreferrer"
-              >
-                <p className="my-question-comment-list-item-label">문제</p>
-                <OpenInNewIcon />
-              </a>
-              <p className="my-question-comment-list-item-question">
-                {question.question}
-              </p>
-            </div>
-            <div className="my-question-comment-list-item-comment-wrapper">
-              <p className="my-question-comment-list-item-label">
-                내가 쓴 댓글
-              </p>
-              <ul className="my-question-comment-list-item-comment-list">
-                {question.mockExamQuestionComment.map((comment, index) => (
-                  <li key={comment.id}>
-                    <p className="my-question-comment-list-item-comment">
-                      {question.mockExamQuestionComment.length > 1
-                        ? `${index + 1}. ${comment.content}`
-                        : comment.content}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {readQuestionCommentsLoading ? (
+        <ExamHistorySkeleton />
+      ) : (
+        <ul className="my-question-comment-list">
+          {questions?.map((question) => (
+            <li className="my-question-comment-list-item" key={question.id}>
+              <div className="my-question-comment-list-item-question-wrapper">
+                <a
+                  href={
+                    process.env.NEXT_PUBLIC_CLIENT_URL +
+                    `/question/${question.id}`
+                  }
+                  target="_blank"
+                  className="my-question-comment-list-item-label-wrapper"
+                  rel="noreferrer"
+                >
+                  <p className="my-question-comment-list-item-label">문제</p>
+                  <OpenInNewIcon />
+                </a>
+                <p className="my-question-comment-list-item-question">
+                  {question.question}
+                </p>
+              </div>
+              <div className="my-question-comment-list-item-comment-wrapper">
+                <p className="my-question-comment-list-item-label">
+                  내가 쓴 댓글
+                </p>
+                <ul className="my-question-comment-list-item-comment-list">
+                  {question.mockExamQuestionComment.map((comment, index) => (
+                    <li key={comment.id}>
+                      <p className="my-question-comment-list-item-comment">
+                        {question.mockExamQuestionComment.length > 1
+                          ? `${index + 1}. ${comment.content}`
+                          : comment.content}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </QuestionCommentComponentContainer>
   );
 };
