@@ -99,13 +99,12 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           const ids = router.query.es
             ? JSON.parse(String(router.query.es))
             : null;
-          console.log(s, s.length);
           const readQuestionInput: ReadMockExamQuestionsByMockExamIdInput = {
             id,
             ids,
             isRandom: router.query.r === 'true' ? true : false,
             limit: l,
-            states: s.length === 0 ? null : s,
+            states: s && s.length > 0 ? s : null,
           };
           setReadQuestionInput(readQuestionInput);
           await readQuestions({

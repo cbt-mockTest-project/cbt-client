@@ -1,12 +1,13 @@
 import { ClearOutlined } from '@ant-design/icons';
 import { TitlesAndCategories } from '@components/main/MainComponent';
-import { states } from '@components/me/reviewnote/ReviewNoteComponent';
+import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Checkbox, InputNumber, Tag } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
+import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -15,6 +16,12 @@ import Label from '../label/Label';
 import ErrorText from '../layout/errorText/ErrorText';
 import Modal, { ModalProps } from './Modal';
 
+const states: checkboxOption[] = [
+  { value: QuestionState.High, label: circleIcon },
+  { value: QuestionState.Middle, label: triangleIcon },
+  { value: QuestionState.Row, label: clearIcon },
+  { value: QuestionState.Core, label: '안 푼 문제' },
+];
 interface RandomSelectExamModalProps extends Omit<ModalProps, 'children'> {
   categories: DefaultOptionType[];
   titles: DefaultOptionType[];
@@ -275,9 +282,10 @@ const RandomSelectExamModalContainer = styled(Modal)`
   }
   .random-select-exam-modal-setting-checkbox-wrapper {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
   }
   .random-select-exam-modal-setting-checkbox-all {
+    min-width: 70px;
     margin-top: 3px;
   }
   .random-select-exam-modal-setting-count-wrapper {
