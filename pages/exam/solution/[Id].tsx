@@ -38,7 +38,11 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
           className="exam-solution-page-google-display-ad-wrapper"
           type="display"
         />
-        <SolutionComponent questionsQuery={questionsQuery} />
+        <SolutionComponent
+          questionsQuery={questionsQuery}
+          hasSearchInput={true}
+          coProducer={`Pooh`}
+        />
         <GoogleAd type="multiflex" />
       </Layout>
     </>
