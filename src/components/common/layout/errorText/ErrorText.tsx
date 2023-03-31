@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 interface ErrorTextProps {
   content: string;
+
   className?: string;
 }
 

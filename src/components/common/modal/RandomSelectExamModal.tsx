@@ -1,6 +1,7 @@
 import { ClearOutlined } from '@ant-design/icons';
 import { TitlesAndCategories } from '@components/main/MainComponent';
 import { states } from '@components/me/reviewnote/ReviewNoteComponent';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
@@ -11,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
 import Label from '../label/Label';
+import ErrorText from '../layout/errorText/ErrorText';
 import Modal, { ModalProps } from './Modal';
 
 interface RandomSelectExamModalProps extends Omit<ModalProps, 'children'> {
@@ -33,6 +35,8 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   const [category, setCategory] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
+  const { data: meQuery } = useMeQuery();
+  const isLoggedIn = meQuery?.me.user ? true : false;
   useEffect(() => {
     try {
       if (open) {
@@ -173,11 +177,18 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
               className="random-select-exam-modal-setting-checkbox-group"
               options={states}
               value={checkedStates}
+              disabled={!isLoggedIn}
               onChange={(values) => {
                 setCheckedStates(values as QuestionState[]);
               }}
             />
           </div>
+          {!isLoggedIn && (
+            <ErrorText
+              content="로그인 후 이용가능합니다."
+              className="random-select-exam-modal-error-text"
+            />
+          )}
           <div className="random-select-exam-modal-setting-count-wrapper">
             <Label content={'문항수'} />
             <InputNumber
@@ -277,5 +288,8 @@ const RandomSelectExamModalContainer = styled(Modal)`
   }
   .random-select-exam-modal-setting-count-input {
     top: 7px;
+  }
+  .random-select-exam-modal-error-text {
+    font-size: 0.8rem;
   }
 `;
