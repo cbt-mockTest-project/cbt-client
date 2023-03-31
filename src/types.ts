@@ -1456,6 +1456,7 @@ export type ReadMockExamQuestionsByMockExamIdInput = {
   id?: InputMaybe<Scalars['Float']>;
   ids?: InputMaybe<Array<Scalars['Float']>>;
   isRandom?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['Float']>;
   states?: InputMaybe<Array<QuestionState>>;
 };
 

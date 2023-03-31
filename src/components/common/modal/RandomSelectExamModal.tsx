@@ -1,13 +1,15 @@
 import { ClearOutlined } from '@ant-design/icons';
 import { TitlesAndCategories } from '@components/main/MainComponent';
+import { states } from '@components/me/reviewnote/ReviewNoteComponent';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Tag } from 'antd';
+import { Button, Checkbox, InputNumber, Tag } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { QuestionState } from 'types';
 import Label from '../label/Label';
 import Modal, { ModalProps } from './Modal';
 
@@ -26,6 +28,8 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   const router = useRouter();
   const storage = new LocalStorage();
   const [selectedExams, setSelectedExams] = useState<number[]>([]);
+  const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
+  const [limit, setLimit] = useState(14);
   const [category, setCategory] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
@@ -60,13 +64,6 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
     }
   }, [open]);
 
-  useEffect(() => {
-    if (category) {
-      const savedRandomExamInfo = storage.get('randomExamInfo');
-      console.log(savedRandomExamInfo);
-    }
-    console.log(category);
-  }, [category]);
   const onChangeCategory = async (value: string) => {
     setSelectedExams([]);
     storage.set('randomExamInfo', { category: value, selectedExams: [] });
@@ -120,6 +117,8 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
       pathname: '/exam',
       query: {
         es,
+        s: JSON.stringify(checkedStates),
+        l: limit,
         q: '1',
         r: false,
         t: '랜덤모의고사',
@@ -156,6 +155,37 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
             value={selectedExams}
             onChange={onChangeExam}
           />
+        </div>
+        <div className="random-select-exam-modal-setting-wrapper">
+          <Label content={'성취도별 문항보기'} />
+          <div className="random-select-exam-modal-setting-checkbox-wrapper">
+            <Checkbox
+              className="random-select-exam-modal-setting-checkbox-all"
+              onClick={() => {
+                if (checkedStates.length === 0) return;
+                setCheckedStates([]);
+              }}
+              checked={checkedStates.length === 0}
+            >
+              전체
+            </Checkbox>
+            <Checkbox.Group
+              className="random-select-exam-modal-setting-checkbox-group"
+              options={states}
+              value={checkedStates}
+              onChange={(values) => {
+                setCheckedStates(values as QuestionState[]);
+              }}
+            />
+          </div>
+          <div className="random-select-exam-modal-setting-count-wrapper">
+            <Label content={'문항수'} />
+            <InputNumber
+              value={limit}
+              onChange={(value) => setLimit(value as number)}
+              className="random-select-exam-modal-setting-count-input"
+            />
+          </div>
         </div>
         <Button
           className="random-select-exam-start-button"
@@ -207,5 +237,45 @@ const RandomSelectExamModalContainer = styled(Modal)`
       max-height: 250px;
       overflow-y: auto;
     }
+  }
+  .random-select-exam-modal-setting-wrapper {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  .random-select-exam-modal-setting-checkbox-group {
+    .circle-icon {
+      position: relative;
+      top: 1px;
+      height: 15px;
+    }
+    .triangle-icon {
+      position: relative;
+      top: 2px;
+      height: 15px;
+    }
+    .clear-icon {
+      position: relative;
+      top: 4px;
+      right: 3px;
+      height: 20px;
+      width: 20px;
+    }
+  }
+  .random-select-exam-modal-setting-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .random-select-exam-modal-setting-checkbox-all {
+    margin-top: 3px;
+  }
+  .random-select-exam-modal-setting-count-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .random-select-exam-modal-setting-count-input {
+    top: 7px;
   }
 `;

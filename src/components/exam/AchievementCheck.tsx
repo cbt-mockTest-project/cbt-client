@@ -33,7 +33,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
     readMockExamQuestionsByMockExamId: { questions },
   } = questionsQuery;
   const currentQuestion = questions[questionIndex - 1];
-  const currentQuestionId = currentQuestion.id;
+  const currentQuestionId = currentQuestion?.id;
   const requestChangeState = async (state: checkboxOption['value']) => {
     if (!meQuery?.me.user) {
       onOpenLoginModal();
