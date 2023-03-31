@@ -182,6 +182,43 @@ const PostDetailViewBlock = styled.div`
   .post-detail-center-section-contents-wrapper {
     padding: 20px 15px;
     font-size: 0.9rem;
+    word-break: break-all;
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1.5rem 0;
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1.25rem 0;
+    }
+    h3 {
+      font-size: 1.17rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    h4 {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 0.75rem 0;
+    }
+    ul {
+      list-style-type: disc;
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    ol {
+      list-style-type: decimal;
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    li {
+      margin: 0.5rem 0;
+    }
+    a {
+      color: ${palette.blue_500};
+    }
     img {
       max-width: 100%;
     }
