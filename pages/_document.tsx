@@ -8,14 +8,6 @@ import Document, {
 } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
-}
-
 class MainDocument extends Document {
   static async getInitialProps(
     ctx: DocumentContext
@@ -53,11 +45,6 @@ class MainDocument extends Document {
             async
             src="https://fundingchoicesmessages.google.com/i/pub-9145855450425143?ers=1"
             nonce="jbUWBdFKM2denqwRJFTGyw"
-          ></script>
-          <script
-            async
-            custom-element="amp-auto-ads"
-            src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
           ></script>
           <script
             nonce="jbUWBdFKM2denqwRJFTGyw"
@@ -107,10 +94,6 @@ class MainDocument extends Document {
           />
         </Head>
         <body>
-          <amp-auto-ads
-            type="adsense"
-            data-ad-client="ca-pub-9145855450425143"
-          ></amp-auto-ads>
           <Main />
           <NextScript />
         </body>
