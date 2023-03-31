@@ -17,6 +17,7 @@ import { ExamTitleAndId, UserRole } from 'types';
 import MainComponent from '@components/main/MainComponent';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
+import { cloneDeep } from 'lodash';
 
 interface TitlesAndCategories {
   category: string;
@@ -94,10 +95,20 @@ export const getStaticProps: GetStaticProps = async (context) => {
       categoriesQuery?.readAllMockExamCategories.categories.map(
         async (category) => {
           const res = await requestReadExamTitles(category.name);
+          let titles: ExamTitleAndId[] = [];
+          if (category.name === '산업안전기사실기(필답형)') {
+            titles = cloneDeep(res.data.readMockExamTitlesByCateory.titles);
+            titles.sort((a, b) => {
+              if (a.id === 167) {
+                return -1;
+              }
+              return 1;
+            });
+          }
           titlesAndCategories.push({
             category: category.name,
             authorRole: category.user.role,
-            titles: res.data.readMockExamTitlesByCateory.titles,
+            titles,
           });
         }
       )
@@ -113,7 +124,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       return -1;
     }
     if (a.title.includes('산업안전산업기사')) {
-      return -1;
+      return 1;
     }
     return 0;
   });

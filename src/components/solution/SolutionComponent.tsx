@@ -3,11 +3,16 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import { blobToDataUrl, convertExamTitle, handleError } from '@lib/utils/utils';
+import {
+  blobToDataUrl,
+  convertExamTitle,
+  handleError,
+  removeWhiteSpace,
+} from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
-import { Button, message } from 'antd';
-import { shuffle } from 'lodash';
+import { Button, Input, message } from 'antd';
+import { debounce, shuffle, throttle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -18,10 +23,9 @@ import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
 import axios from 'axios';
 import { MockExamImageType } from 'types';
-import Portal from '@components/common/portal/Portal';
-import ConfirmModal from '@components/common/modal/ConfirmModal';
 import useToggle from '@lib/hooks/useToggle';
 import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
+import { SearchOutlined } from '@ant-design/icons';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -30,19 +34,30 @@ const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
 interface SolutionComponentProps {
   questionsQuery?: ReadMockExamQuestionsByMockExamIdQuery;
   isPreview?: boolean;
+  hasSearchInput?: boolean;
   hasNewWindowButton?: boolean;
+  subDescription?: string;
+  coProducer?: string;
 }
 
 const SolutionComponent: React.FC<SolutionComponentProps> = ({
   questionsQuery,
   isPreview = false,
   hasNewWindowButton = true,
+  hasSearchInput = false,
+  subDescription,
+  coProducer,
 }) => {
   const {
     value: pdfDownloadConfirmModalState,
     onToggle: onTogglePdfDownloadConfirmModalState,
   } = useToggle(false);
   const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [filteredQuestions, setFilteredQuestions] = useState<
+    | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
+    | null
+  >(null);
   const [questions, setQuestions] = useState(
     questionsQuery?.readMockExamQuestionsByMockExamId.questions || null
   );
@@ -201,6 +216,16 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       message.error('다운로드에 실패했습니다.');
     }
   };
+  const onChangeSearchInput = (value: string) => {
+    const filteredQuestions = questions.filter((question) => {
+      return removeWhiteSpace(`Q${question.number}${question.question}`)
+        .toLocaleLowerCase()
+        .includes(removeWhiteSpace(value).toLocaleLowerCase());
+    });
+    setFilteredQuestions(filteredQuestions);
+    window.scrollTo(0, 250);
+  };
+  const debounceOnChange = debounce(onChangeSearchInput, 800);
 
   return (
     <SolutionComponentContainer>
@@ -230,10 +255,26 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
       </h1>
-      <p className="exam-solution-page-author-name">{`제작자: ${currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author}`}</p>
-
+      <p className="exam-solution-page-author-name">{`제작자: ${
+        currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
+      }${coProducer ? ', ' + coProducer : ''}`}</p>
+      {subDescription && (
+        <p className="exam-solution-page-author-name">{subDescription}</p>
+      )}
+      {hasSearchInput && (
+        <div className="exam-solution-page-search-input-wrapper">
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="문제 내용을 검색해보세요."
+            onChange={(e) => {
+              debounceOnChange(e.target.value);
+            }}
+          />
+          {searchLoading && <div>검색중입니다..</div>}
+        </div>
+      )}
       <ul>
-        {questions?.map((el, index) => {
+        {(filteredQuestions || questions)?.map((el, index) => {
           return (
             <div key={index}>
               <ExamSolutionList
@@ -302,6 +343,18 @@ const SolutionComponentContainer = styled.div`
   }
   .exam-solution-page-google-feed-ad-wrapper {
     margin-top: 20px;
+  }
+  .exam-solution-page-search-input-wrapper {
+    margin-top: 10px;
+    margin-bottom: -10px;
+    position: sticky;
+    top: 59px;
+    z-index: 999;
+    margin-left: -20px;
+    margin-right: -20px;
+    input {
+      height: 30px;
+    }
   }
   @media (max-width: ${responsive.medium}) {
     h1 {

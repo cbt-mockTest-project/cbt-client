@@ -133,7 +133,10 @@ export const convertExamTitle = (title: string) => {
   if (splited.length === 3) {
     return splited[0] + ' ' + splited[1] + ' ' + splited[2];
   }
-  return splited[0] + ' ' + splited.at(-1);
+  if (splited.length === 2) {
+    return splited[0] + ' ' + splited.at(-1);
+  }
+  return title;
 };
 
 export const removeHtmlTag = (String: string) =>
@@ -179,3 +182,5 @@ export const blobToDataUrl = (blob: Blob): Promise<string> => {
 export const shuffleArray = (array: any[]) => {
   return array.sort(() => Math.random() - 0.5);
 };
+
+export const removeWhiteSpace = (string: string) => string.replace(/\s/g, '');
