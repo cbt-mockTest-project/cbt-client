@@ -230,10 +230,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
       </h1>
-      <p className="exam-solution-page-author-name">{`제작자: ${currentQuestionsQuery.readMockExamQuestionsByMockExamId.author}`}</p>
+      <p className="exam-solution-page-author-name">{`제작자: ${currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author}`}</p>
 
       <ul>
-        {questions.map((el, index) => {
+        {questions?.map((el, index) => {
           return (
             <div key={index}>
               <ExamSolutionList
