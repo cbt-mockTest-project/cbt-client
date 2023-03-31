@@ -24,7 +24,7 @@ type Question =
   | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
   | null;
 
-const states: checkboxOption[] = [
+export const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
   { value: QuestionState.Middle, label: triangleIcon },
   { value: QuestionState.Row, label: clearIcon },

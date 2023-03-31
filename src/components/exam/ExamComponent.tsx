@@ -93,13 +93,19 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           const answerRecords = storage.get(tempAnswerKey);
           delete answerRecords['랜덤모의고사'];
           storage.set(tempAnswerKey, answerRecords);
+          const l = router.query.l ? Number(router.query.l) : null;
+          const s = router.query.s ? JSON.parse(String(router.query.s)) : null;
+
           const ids = router.query.es
             ? JSON.parse(String(router.query.es))
             : null;
+          console.log(s, s.length);
           const readQuestionInput: ReadMockExamQuestionsByMockExamIdInput = {
             id,
             ids,
             isRandom: router.query.r === 'true' ? true : false,
+            limit: l,
+            states: s.length === 0 ? null : s,
           };
           setReadQuestionInput(readQuestionInput);
           await readQuestions({
@@ -113,34 +119,45 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (questions) {
-      const savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
-      let currentAnswer = '';
-      if (savedAnswer) {
-        if (isRandomExam) {
-          currentAnswer = savedAnswer[questionIndex] || '';
-        } else {
-          currentAnswer =
-            savedAnswer[String(questions[questionIndex - 1].number)] || '';
+    try {
+      if (questions) {
+        const savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
+        let currentAnswer = '';
+        if (savedAnswer) {
+          if (isRandomExam) {
+            currentAnswer = savedAnswer[questionIndex] || '';
+          } else {
+            currentAnswer =
+              savedAnswer[String(questions[questionIndex - 1].number)] || '';
+          }
+
+          setAnswerValue(currentAnswer);
         }
 
-        setAnswerValue(currentAnswer);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        /**
+         * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+         */
+
+        setProgressModalState(false);
+        setFeedBackModalState(false);
+        setFinishModalState(false);
+        setAnswerboxVisible(false);
+        setCommentModalState(false);
+
+        setBookmarkState(
+          questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
+        );
+        setQuestionAndSolution(questions[questionIndex - 1]);
       }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      /**
-       * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
-       */
-
-      setProgressModalState(false);
-      setFeedBackModalState(false);
-      setFinishModalState(false);
-      setAnswerboxVisible(false);
-      setCommentModalState(false);
-      setBookmarkState(
-        questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
-      );
-      setQuestionAndSolution(questions[questionIndex - 1]);
+    } catch {
+      router.push({
+        pathname: '/exam',
+        query: {
+          ...router.query,
+          q: questions?.length || 1,
+        },
+      });
     }
   }, [router.query.q, questions]);
 
