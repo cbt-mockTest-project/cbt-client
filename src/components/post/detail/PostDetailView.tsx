@@ -193,7 +193,8 @@ const PostDetailViewBlock = styled.div`
       font-weight: bold;
       margin: 1.25rem 0;
     }
-    h3 {
+    h3,
+    .ql-size-large {
       font-size: 1.17rem;
       font-weight: bold;
       margin: 1rem 0;
