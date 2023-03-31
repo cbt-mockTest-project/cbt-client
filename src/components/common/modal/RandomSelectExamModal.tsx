@@ -16,12 +16,11 @@ import Label from '../label/Label';
 import ErrorText from '../layout/errorText/ErrorText';
 import Modal, { ModalProps } from './Modal';
 
-export const states: checkboxOption[] = [
+const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
   { value: QuestionState.Middle, label: triangleIcon },
   { value: QuestionState.Row, label: clearIcon },
 ];
-
 interface RandomSelectExamModalProps extends Omit<ModalProps, 'children'> {
   categories: DefaultOptionType[];
   titles: DefaultOptionType[];
@@ -282,9 +281,10 @@ const RandomSelectExamModalContainer = styled(Modal)`
   }
   .random-select-exam-modal-setting-checkbox-wrapper {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
   }
   .random-select-exam-modal-setting-checkbox-all {
+    min-width: 70px;
     margin-top: 3px;
   }
   .random-select-exam-modal-setting-count-wrapper {
