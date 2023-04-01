@@ -95,7 +95,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
       categoriesQuery?.readAllMockExamCategories.categories.map(
         async (category) => {
           const res = await requestReadExamTitles(category.name);
-          let titles: ExamTitleAndId[] = [];
+          let titles: ExamTitleAndId[] =
+            res.data.readMockExamTitlesByCateory.titles;
           if (category.name === '산업안전기사실기(필답형)') {
             titles = cloneDeep(res.data.readMockExamTitlesByCateory.titles);
             titles.sort((a, b) => {
