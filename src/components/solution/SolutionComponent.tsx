@@ -108,6 +108,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
 
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
+    setFilteredQuestions(shuffle);
   };
 
   const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
