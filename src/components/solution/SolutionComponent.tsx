@@ -205,9 +205,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         },
       };
       const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
-      await pdfDoc.download(
-        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
-      );
+      // await pdfDoc.download(
+      //   `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
+      // );
+      await pdfDoc.open();
       setPdfDownloadLoading(false);
     } catch (e) {
       handleError(e);
