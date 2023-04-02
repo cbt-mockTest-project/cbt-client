@@ -37,7 +37,7 @@ interface SolutionComponentProps {
   hasSearchInput?: boolean;
   hasNewWindowButton?: boolean;
   subDescription?: string;
-  coProducer?: string;
+  coAuthor?: string;
 }
 
 const SolutionComponent: React.FC<SolutionComponentProps> = ({
@@ -46,14 +46,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   hasNewWindowButton = true,
   hasSearchInput = false,
   subDescription,
-  coProducer,
+  coAuthor,
 }) => {
   const {
     value: pdfDownloadConfirmModalState,
     onToggle: onTogglePdfDownloadConfirmModalState,
   } = useToggle(false);
   const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
-  const [searchLoading, setSearchLoading] = useState(false);
   const [filteredQuestions, setFilteredQuestions] = useState<
     | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
     | null
@@ -261,7 +260,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       </h1>
       <p className="exam-solution-page-author-name">{`제작자: ${
         currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
-      }${coProducer ? ', ' + coProducer : ''}`}</p>
+      }${coAuthor ? ', ' + coAuthor : ''}`}</p>
       {subDescription && (
         <p className="exam-solution-page-author-name">{subDescription}</p>
       )}
@@ -274,7 +273,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
               debounceOnChange(e.target.value);
             }}
           />
-          {searchLoading && <div>검색중입니다..</div>}
         </div>
       )}
       <ul>
