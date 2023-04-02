@@ -32,7 +32,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         title={`${convertExamTitle(title)} 해설 | 모두CBT`}
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
       />
-
       <Layout>
         <GoogleAd
           className="exam-solution-page-google-display-ad-wrapper"
@@ -41,7 +40,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         <SolutionComponent
           questionsQuery={questionsQuery}
           hasSearchInput={true}
-          coProducer={`Pooh`}
+          coAuthor={title === '계산문제 제외 모음집' ? `Pooh` : undefined}
         />
         <GoogleAd type="multiflex" />
       </Layout>

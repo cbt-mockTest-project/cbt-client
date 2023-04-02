@@ -45,12 +45,16 @@ export const questionsVar =
 
 interface ExamComponentProps {
   isPreview?: boolean;
+  coAuthor?: string;
 }
 
 type Question =
   ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
 
-const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
+const ExamComponent: React.FC<ExamComponentProps> = ({
+  isPreview = false,
+  coAuthor,
+}) => {
   const [
     readQuestions,
     { data: questionsQuery, refetch: refetchReadQuestions },
@@ -392,7 +396,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             {pageSubTitle}
             {!isRandomExam && (
               <p className="exam-container-author-name">
-                {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
+                {`제작자:${
+                  questionsQuery.readMockExamQuestionsByMockExamId.author
+                }${coAuthor ? `, ${coAuthor}` : ''}`}
               </p>
             )}
           </h2>

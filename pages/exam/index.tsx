@@ -27,7 +27,11 @@ const Exam: NextPage = () => {
       <Layout>
         {
           <>
-            <ExamComponent />
+            <ExamComponent
+              coAuthor={
+                router.query.t === '계산문제 제외 모음집' ? 'Pooh' : undefined
+              }
+            />
             <GoogleAd type="display" />
           </>
         }
