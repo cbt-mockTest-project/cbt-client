@@ -80,7 +80,8 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   }`;
   return (
     <QuestionComponentContainer>
-      {question.user.id === meQuery?.me.user?.id && (
+      {(questionQueryOnClientSide?.readMockExamQuestion.isCoAuthor ||
+        question.user.id === meQuery?.me.user?.id) && (
         <div className="question-component-top-button-wrapper">
           <Link
             href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${router.query.Id}/edit`}

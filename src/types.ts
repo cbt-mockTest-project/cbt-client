@@ -474,6 +474,16 @@ export type EmailVerificationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ExamCoAuthor = {
+  __typename?: 'ExamCoAuthor';
+  created_at: Scalars['DateTime'];
+  exam: MockExam;
+  examCategory: MockExamCategory;
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
 export enum ExamStatus {
   Approved = 'APPROVED',
   Rejected = 'REJECTED',
@@ -485,7 +495,7 @@ export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
   role: UserRole;
-  slug: Scalars['String'];
+  slug?: Maybe<Scalars['String']>;
   status: ExamStatus;
   title: Scalars['String'];
 };
@@ -558,6 +568,7 @@ export type MockExam = {
   __typename?: 'MockExam';
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
+  examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
@@ -574,6 +585,7 @@ export type MockExamCategory = {
   __typename?: 'MockExamCategory';
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
+  examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
@@ -1446,6 +1458,7 @@ export type ReadMockExamQuestionNumbersOutput = {
 export type ReadMockExamQuestionOutput = {
   __typename?: 'ReadMockExamQuestionOutput';
   error?: Maybe<Scalars['String']>;
+  isCoAuthor: Scalars['Boolean'];
   mockExamQusetion: MockExamQuestion;
   ok: Scalars['Boolean'];
   state?: Maybe<QuestionState>;
@@ -1748,6 +1761,7 @@ export type User = {
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
+  examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   feedback: Array<Feedback>;
   id: Scalars['Float'];
   mockExam: Array<MockExam>;

@@ -55,6 +55,7 @@ export const READ_ALL_QUESTIONS = gql`
 export const READ_QUESTION = gql`
   query ReadMockExamQuestion($input: ReadMockExamQuestionInput!) {
     readMockExamQuestion(input: $input) {
+      isCoAuthor
       mockExamQusetion {
         user {
           id
