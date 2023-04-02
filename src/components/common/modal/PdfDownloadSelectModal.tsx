@@ -1,5 +1,6 @@
 import palette from '@styles/palette';
 import React from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 
@@ -14,6 +15,7 @@ const PdfDownloadSelectModal: React.FC<PdfDownloadSelectModalProps> = (
       {...props}
       confirmLabel="정답 포함"
       cancelLabel="정답 미포함"
+      disabled={isMobile}
       content={<PdfDownloadSelectModaContent />}
     />
   );

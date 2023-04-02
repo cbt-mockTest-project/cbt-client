@@ -14,6 +14,7 @@ export interface ConfirmModalProps
   className?: string;
   confirmButtonLoading?: boolean;
   cancelButtonLoading?: boolean;
+  disabled?: boolean;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -27,6 +28,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelLabel = '취소하기',
   cancelButtonLoading = false,
   confirmButtonLoading = false,
+  disabled = false,
 }) => {
   const Content: React.FC<{ data: ContentType }> = ({ data }) => {
     if (typeof data === 'string') {
@@ -42,12 +44,17 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             <Content data={content} />
           </div>
           <div className="confirm-modal-button-wrapper">
-            <Button onClick={onCancel} loading={cancelButtonLoading}>
+            <Button
+              onClick={onCancel}
+              disabled={disabled}
+              loading={cancelButtonLoading}
+            >
               {cancelLabel}
             </Button>
             <Button
               onClick={onConfirm}
               loading={confirmButtonLoading}
+              disabled={disabled}
               type="primary"
             >
               {confirmLabel}
