@@ -351,7 +351,7 @@ const SolutionComponentContainer = styled.div`
     margin-bottom: -10px;
     position: sticky;
     top: 59px;
-    z-index: 999;
+    z-index: 800;
     margin-left: -20px;
     margin-right: -20px;
     input {

@@ -4,20 +4,23 @@ import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React from 'react';
-import styled from 'styled-components';
-import { UserRole } from 'types';
+import styled, { css } from 'styled-components';
+import { QuestionFeedbackType, UserRole } from 'types';
 import { ExamQuestionType } from './ExamSolutionList';
+import Badge from '@components/common/badge/Badge';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
   setQuestion?: React.Dispatch<React.SetStateAction<ExamQuestionType>>;
   refetch?: ({ ...args }?: any) => any;
+  type?: 'me' | 'others';
 }
 
 const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   question,
   refetch,
   setQuestion,
+  type = 'others',
 }) => {
   const { data: meQuery } = useMeQuery();
   const [deleteQuestionFeedback] = useDeleteQuestionFeedback();
@@ -48,43 +51,81 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
     convertWithErrorHandlingFunc({
       callback: () => requestFeedBackDelete(feedbackId),
     });
+  const isAllPrivate = question.mockExamQuestionFeedback.every(
+    (feedback) => feedback.type === QuestionFeedbackType.Private
+  );
+  const isNotAllPrivate = question.mockExamQuestionFeedback.every(
+    (feedback) =>
+      feedback.type === QuestionFeedbackType.Public ||
+      feedback.type === QuestionFeedbackType.Report
+  );
+
   if (question.mockExamQuestionFeedback.length === 0) {
     return null;
   }
+  if (type === 'others' && isAllPrivate) return null;
+  if (type === 'me' && isNotAllPrivate) return null;
   return (
-    <ExamSolutionFeedbackContainer>
-      <div className="exam-solution-feedback-separation" />
-      {question.mockExamQuestionFeedback.map((feedback) => (
-        <li className="exam-solution-feedback-item" key={feedback.id}>
-          <div className="exam-solution-feedback-user-tab">
-            <p className="exam-solution-feedback-user-name">{`작성자: ${feedback.user.nickname}`}</p>
-            {(meQuery?.me.user?.id === feedback.user.id ||
-              meQuery?.me.user?.role === UserRole.Admin) && (
-              <button
-                className="exam-solution-feedback-delete-button"
-                onClick={tryFeedBackDelete(feedback.id)}
-              >
-                삭제하기
-              </button>
-            )}
-          </div>
-          <p className="exam-solution-feedback-content">{feedback.content}</p>
-        </li>
-      ))}
-      {/* <p className="exam-solution-feedback-info">
-        {`※ 오류 신고의 경우, 신고 내용 반영 후 삭제됩니다.\n※ 오류가 있는 답안은 삭제됩니다.`}
-      </p> */}
+    <ExamSolutionFeedbackContainer type={type}>
+      {type === 'others' && (
+        <div className="exam-solution-feedback-separation" />
+      )}
+      {question.mockExamQuestionFeedback.map(
+        (feedback) =>
+          ((type === 'others' &&
+            feedback.type !== QuestionFeedbackType.Private) ||
+            (type === 'me' &&
+              feedback.type === QuestionFeedbackType.Private)) && (
+            <li className="exam-solution-feedback-item" key={feedback.id}>
+              <div className="exam-solution-feedback-user-tab">
+                <p className="exam-solution-feedback-user-name">{`작성자: ${feedback.user.nickname}`}</p>
+                {feedback.type === QuestionFeedbackType.Public && (
+                  <Badge color="blue" label="추가답안" />
+                )}
+                {feedback.type === QuestionFeedbackType.Report && (
+                  <Badge color="red" label="오류신고" />
+                )}
+                {feedback.type === QuestionFeedbackType.Private && (
+                  <Badge color="blue" label="내답안" />
+                )}
+                {(meQuery?.me.user?.id === feedback.user.id ||
+                  meQuery?.me.user?.role === UserRole.Admin) && (
+                  <button
+                    className="exam-solution-feedback-delete-button"
+                    onClick={tryFeedBackDelete(feedback.id)}
+                  >
+                    삭제하기
+                  </button>
+                )}
+              </div>
+              <p className="exam-solution-feedback-content">
+                {feedback.content}
+              </p>
+            </li>
+          )
+      )}
+      {type === 'me' && <div className="exam-solution-feedback-separation" />}
     </ExamSolutionFeedbackContainer>
   );
 };
 
 export default ExamSolutionFeedback;
 
-const ExamSolutionFeedbackContainer = styled.ul`
-  margin-top: 20px;
+interface ExamSolutionFeedbackContainerProps
+  extends Pick<ExamSolutionFeedbackProps, 'type'> {}
+
+const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  ${(props) =>
+    props.type === 'others'
+      ? css`
+          margin-top: 10px;
+        `
+      : css`
+          margin-bottom: 10px;
+        `}
   .exam-solution-feedback-separation {
     width: 100%;
     border: 1px solid ${palette.gray_200};
@@ -100,7 +141,7 @@ const ExamSolutionFeedbackContainer = styled.ul`
   }
   .exam-solution-feedback-user-tab {
     display: flex;
-    gap: 20px;
+    gap: 10px;
   }
   .exam-solution-feedback-user-name {
     font-size: 0.8rem;
