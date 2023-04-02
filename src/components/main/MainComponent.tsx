@@ -24,7 +24,10 @@ import DataShareModal from '@components/common/modal/DataShareModal';
 import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
+import uesToggle from '@lib/hooks/useToggle';
 import { Option } from 'antd/lib/mentions';
+import NoticeModal from '@components/common/modal/NoticeModal';
+import { getCookie } from 'cookies-next';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -49,7 +52,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const router = useRouter();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
-
+  const { value: noticeModalState, onToggle: onToggleNoticeModal } =
+    useToggle(false);
   const {
     value: randomSelectExamModalState,
     onToggle: onToggleRandomSelectExamModal,
@@ -73,6 +77,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
+    if (!getCookie('NOTICE_MODAL')) {
+      onToggleNoticeModal();
+    }
     (async () => {
       if (savedCategory) {
         const currentTitles: DefaultOptionType[] = await onCategoryChange(
@@ -256,12 +263,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </li>
         ))}
       </div>
-      <Portal>
-        <KakaoOpenChatModal
-          open={kakaoChatModalState}
-          onClose={onToggleKakaoChatModalState}
-        />
-      </Portal>
+
       <Portal>
         {randomSelectExamModalState && (
           <RandomSelectExamModal
@@ -289,6 +291,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
             open={dataShareModalState}
             onClose={onToggleDataShareModal}
           />
+        )}
+        {noticeModalState && (
+          <NoticeModal open={noticeModalState} onClose={onToggleNoticeModal} />
         )}
       </Portal>
     </MainComponentContainer>
