@@ -108,7 +108,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
 
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
-    setFilteredQuestions(shuffle);
   };
 
   const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
@@ -218,13 +217,16 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     }
   };
   const onChangeSearchInput = (value: string) => {
+    if (value === '') {
+      setFilteredQuestions(null);
+      return;
+    }
     const filteredQuestions = questions.filter((question) => {
       return removeWhiteSpace(`Q${question.number}${question.question}`)
         .toLocaleLowerCase()
         .includes(removeWhiteSpace(value).toLocaleLowerCase());
     });
     setFilteredQuestions(filteredQuestions);
-    window.scrollTo(0, 250);
   };
   const debounceOnChange = debounce(onChangeSearchInput, 800);
 
@@ -240,6 +242,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         </Button>
         <Button
           onClick={onShuffleQuestion}
+          disabled={filteredQuestions !== null}
           className="exam-solution-page-solution-all-hide-button"
           type="primary"
         >
