@@ -26,6 +26,7 @@ export const READ_QUESTIONS_BY_ID = gql`
         mockExamQuestionFeedback {
           id
           content
+          type
           user {
             nickname
             id
@@ -88,6 +89,7 @@ export const READ_QUESTION = gql`
         mockExamQuestionFeedback {
           id
           content
+          type
           user {
             nickname
             id

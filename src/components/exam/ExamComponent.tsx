@@ -36,7 +36,10 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import ExamSkeleton from './ExamSkeleton';
 import useToggle from '@lib/hooks/useToggle';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
-import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
+import {
+  QuestionFeedbackType,
+  ReadMockExamQuestionsByMockExamIdInput,
+} from 'types';
 import { makeVar } from '@apollo/client';
 import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
 
@@ -70,7 +73,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
   const storage = new LocalStorage();
   const isRandomExam = router.query.es ? true : false;
   const questionIndex = Number(router.query.q);
-  const reportValue = useRef('');
+  const reportValue = useRef({
+    content: '',
+    type: QuestionFeedbackType.Public,
+  });
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
@@ -226,14 +232,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     });
   };
   const requestReport = async () => {
-    const content = reportValue.current;
+    const content = reportValue.current.content;
+    const type = reportValue.current.type;
     if (content.length <= 4) {
       return message.warn('5글자 이상 입력해주세요.');
     }
     if (questionAndSolution && content) {
       const questionId = questionAndSolution.id;
       const res = await createFeedBack({
-        variables: { input: { content, questionId } },
+        variables: { input: { type, content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
         refetchReadQuestions();
@@ -510,8 +517,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         onClose={onToggleFeedBackModal}
         onCancel={onToggleFeedBackModal}
         onConfirm={tryReport}
-        onChange={(value) => {
-          reportValue.current = value;
+        onChangeContent={(value) => {
+          reportValue.current.content = value;
+        }}
+        onChangeType={(value) => {
+          reportValue.current.type = value;
         }}
         confirmLabel="등록하기"
         title={`${

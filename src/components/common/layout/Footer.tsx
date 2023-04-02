@@ -52,17 +52,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       <div className="footer-wrapper">
         <div>{`© ${year} Moducbt`}</div>
         <a href="mailto:moducbt@gmail.com">Mail</a>
-        <button onClick={onToggleReportModalState}>Feedback</button>
       </div>
-      <ReportModal
-        open={reportModalState}
-        onCancel={onToggleReportModalState}
-        onClose={onToggleReportModalState}
-        onChange={(value) => (reportValue.current = value)}
-        onConfirm={tryRequestFeedback}
-        title="피드백을 남겨주세요"
-        confirmLabel="피드백 전송"
-      />
     </FooterContainer>
   );
 };

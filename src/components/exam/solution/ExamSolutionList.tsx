@@ -27,7 +27,7 @@ import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import StateSelecboxGroup from '@components/common/selectbox/StateSelecboxGroup';
 import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { QuestionState } from 'types';
+import { QuestionFeedbackType, QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 
 const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
@@ -81,7 +81,10 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   } = useToggle();
   const [createFeedBack] = useCreateQuestionFeedBack();
   const [changeQuestionState] = useChangeQuestionState();
-  const reportValue = useRef('');
+  const reportValue = useRef({
+    content: '',
+    type: QuestionFeedbackType.Public,
+  });
 
   const dispatch = useAppDispatch();
 
@@ -136,14 +139,15 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   };
 
   const requestReport = async () => {
-    const content = reportValue.current;
+    const content = reportValue.current.content;
+    const type = reportValue.current.type;
     if (content.length <= 4) {
       return message.warn('5글자 이상 입력해주세요.');
     }
     if (content) {
       const questionId = currentQuestion.id;
       const res = await createFeedBack({
-        variables: { input: { content, questionId } },
+        variables: { input: { type, content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
         const newFeedback = res.data.createMockExamQuestionFeedback.feedback;
@@ -266,6 +270,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </p>
         </button>
         <div className="solution-page-solution-pre-wrapper">
+          <ExamSolutionFeedback
+            question={currentQuestion}
+            setQuestion={setCurrentQuestion}
+            type="me"
+          />
           <pre
             className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
           >
@@ -342,8 +351,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       )}
       <ReportModal
         open={reportModalState}
-        onChange={(value) => {
-          reportValue.current = value;
+        onChangeContent={(value) => {
+          reportValue.current.content = value;
+        }}
+        onChangeType={(value) => {
+          reportValue.current.type = value;
         }}
         onClose={onToggleReportModal}
         onCancel={onToggleReportModal}

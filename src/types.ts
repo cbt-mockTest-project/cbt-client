@@ -98,6 +98,7 @@ export type CreateMockExamQuestionCommentOutput = {
 export type CreateMockExamQuestionFeedbackInput = {
   content: Scalars['String'];
   questionId: Scalars['Float'];
+  type?: InputMaybe<QuestionFeedbackType>;
 };
 
 export type CreateMockExamQuestionFeedbackOutput = {
@@ -679,6 +680,7 @@ export type MockExamQuestionFeedback = {
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExamQuestion: MockExamQuestion;
+  type: QuestionFeedbackType;
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -1312,6 +1314,12 @@ export type QuestionCardCategory = {
   updated_at: Scalars['DateTime'];
   user: User;
 };
+
+export enum QuestionFeedbackType {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC',
+  Report = 'REPORT'
+}
 
 export type QuestionNumber = {
   __typename?: 'QuestionNumber';

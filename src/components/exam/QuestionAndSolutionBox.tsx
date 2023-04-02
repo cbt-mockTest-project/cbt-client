@@ -37,6 +37,13 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   return (
     <QuestionAndSolutionBoxContainer hasImage={hasImage ? 'true' : 'false'}>
       <BasicBox minHeight={72} className="question-and-solution-box">
+        {feedback && question && (
+          <ExamSolutionFeedback
+            question={question}
+            refetch={refetch}
+            type="me"
+          />
+        )}
         <p>{content.content}</p>
         {feedback && question && (
           <ExamSolutionFeedback question={question} refetch={refetch} />

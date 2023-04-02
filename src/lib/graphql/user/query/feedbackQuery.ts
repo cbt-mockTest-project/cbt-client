@@ -11,6 +11,7 @@ export const CREATE_QUESTION_FEEDBACK = gql`
       feedback {
         id
         content
+        type
         user {
           nickname
           id

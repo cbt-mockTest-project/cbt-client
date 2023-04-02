@@ -3,12 +3,21 @@ import TextArea from 'antd/lib/input/TextArea';
 import React, { ChangeEvent, ComponentProps, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
+import { Radio } from 'antd';
+import { checkboxOption } from 'customTypes';
+import { QuestionFeedbackType } from 'types';
 
+export const feedbackOptions: checkboxOption[] = [
+  { label: '공개', value: QuestionFeedbackType.Public },
+  { label: '비공개', value: QuestionFeedbackType.Private },
+  { label: '오류신고', value: QuestionFeedbackType.Report },
+];
 interface ReportModalProps extends Omit<ConfirmModalProps, 'content'> {
   title: string | string[];
   label?: string;
   placeholder?: string;
-  onChange?: (value: string) => void;
+  onChangeContent?: (value: string) => void;
+  onChangeType?: (value: QuestionFeedbackType) => void;
 }
 
 const ReportModal: React.FC<ReportModalProps> = ({
@@ -16,7 +25,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
   onClose,
   onCancel,
   onConfirm,
-  onChange,
+  onChangeContent,
+  onChangeType,
   confirmLabel,
   title,
   label,
@@ -30,7 +40,8 @@ const ReportModal: React.FC<ReportModalProps> = ({
         content={
           <Content
             title={title}
-            onChange={onChange}
+            onChangeContent={onChangeContent}
+            onChangeType={onChangeType}
             label={label}
             placeholder={placeholder}
           />
@@ -49,34 +60,51 @@ export default ReportModal;
 interface Content
   extends Pick<
     ReportModalProps,
-    'title' | 'onChange' | 'label' | 'placeholder'
+    'title' | 'onChangeContent' | 'label' | 'placeholder' | 'onChangeType'
   > {}
 
 const Content: React.FC<Content> = ({
   title,
-  onChange,
+  onChangeContent,
+  onChangeType,
   label,
   placeholder,
 }) => {
-  const [value, setValue] = useState('');
-  const onChangeValue = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
-  };
+  const [content, setContent] = useState('');
+  const [selectedType, setSelectedType] = useState<QuestionFeedbackType>(
+    QuestionFeedbackType.Public
+  );
+
   useEffect(() => {
-    if (value && onChange) {
-      onChange(value);
+    if (content && onChangeContent) {
+      onChangeContent(content);
     }
-  }, [value]);
+  }, [content]);
+  useEffect(() => {
+    if (selectedType && onChangeType) {
+      onChangeType(selectedType);
+    }
+  });
 
   return (
     <ContentContainer>
       {label && <label className="content-label">{label}</label>}
       <pre className="content-title">{title}</pre>
+      <Radio.Group
+        className="content-feedback-type-checkbox-group"
+        defaultValue={QuestionFeedbackType.Public}
+        onChange={(e) => {
+          setSelectedType(e.target.value);
+        }}
+        options={feedbackOptions}
+      />
       <TextArea
         placeholder={placeholder}
         autoSize={{ minRows: 6, maxRows: 10 }}
-        value={value}
-        onChange={onChangeValue}
+        value={content}
+        onChange={(e) => {
+          setContent(e.target.value);
+        }}
       />
     </ContentContainer>
   );
@@ -128,5 +156,10 @@ const ContentContainer = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: break-all;
+  }
+  .content-feedback-type-checkbox-group {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
   }
 `;
