@@ -241,7 +241,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
               해설모드
             </Button>
           </div>
-          <Button onClick={onToggleRandomSelectExamModal} type="ghost">
+          <Button
+            onClick={() => {
+              if (checkAdblock()) {
+                onTogglePreventAdBlockModal();
+                return;
+              }
+              onToggleRandomSelectExamModal();
+            }}
+            type="ghost"
+          >
             랜덤모의고사
           </Button>
           <Button onClick={onToggleMakeExamModal} type="primary">
