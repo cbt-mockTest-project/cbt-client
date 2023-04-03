@@ -4,20 +4,11 @@ import Modal, { ModalProps } from './Modal';
 import KakaoOpenChatModalContent from './KakaoOpenChatModalContent';
 import { Checkbox } from 'antd';
 import { removeCookies, setCookie } from 'cookies-next';
+import { LocalStorage } from '@lib/utils/localStorage';
 
 interface NoticeModalProps extends Omit<ModalProps, 'children'> {}
 
 const NoticeModal: React.FC<NoticeModalProps> = ({ open, onClose }) => {
-  const [checked, setChecked] = React.useState(false);
-  useEffect(() => {
-    if (checked) {
-      setCookie('NOTICE_MODAL', 'true', {
-        maxAge: 60 * 60 * 24 * 7,
-      });
-    } else {
-      removeCookies('NOTICE_MODAL');
-    }
-  }, [checked]);
   return (
     <NoticeModalContainer open={open} onClose={onClose}>
       <h3 className="notice-modal-title">오픈채팅방 참여 안내</h3>
@@ -27,15 +18,6 @@ const NoticeModal: React.FC<NoticeModalProps> = ({ open, onClose }) => {
         }
       </p>
       <KakaoOpenChatModalContent />
-      <Checkbox
-        className="notice-modal-checkbox"
-        checked={checked}
-        onChange={(e) => {
-          setChecked(e.target.checked);
-        }}
-      >
-        일주일간 보지 않기
-      </Checkbox>
     </NoticeModalContainer>
   );
 };
