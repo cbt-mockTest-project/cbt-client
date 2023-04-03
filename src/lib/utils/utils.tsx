@@ -184,3 +184,12 @@ export const shuffleArray = (array: any[]) => {
 };
 
 export const removeWhiteSpace = (string: string) => string.replace(/\s/g, '');
+
+export const checkAdblock = ():boolean => {
+  const adsbygoogle = document.querySelector('ins.adsbygoogle');
+  if (!adsbygoogle) {
+
+    return true;
+  }
+  return false;
+}

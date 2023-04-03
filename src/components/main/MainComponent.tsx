@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { ExamTitleAndId, UserRole } from 'types';
-import { convertExamTurn } from '@lib/utils/utils';
+import { checkAdblock } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import Link from 'next/link';
 import Portal from '@components/common/portal/Portal';
@@ -24,10 +24,10 @@ import DataShareModal from '@components/common/modal/DataShareModal';
 import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
-import uesToggle from '@lib/hooks/useToggle';
 import { Option } from 'antd/lib/mentions';
 import NoticeModal from '@components/common/modal/NoticeModal';
 import { getCookie } from 'cookies-next';
+import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -51,6 +51,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
 }) => {
   const router = useRouter();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
+  const {
+    value: preventAdBlockModalState,
+    onToggle: onTogglePreventAdBlockModal,
+  } = useToggle(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
@@ -133,6 +137,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
+    if (checkAdblock()) {
+      onTogglePreventAdBlockModal();
+      return;
+    }
     if (!selectedExamId) return;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === category
@@ -166,6 +174,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
+    if (checkAdblock()) {
+      onTogglePreventAdBlockModal();
+      return;
+    }
     setGotoSolutionPageLoading(true);
     router.push({
       pathname: `/exam/solution/${selectedExamId}`,
@@ -229,7 +241,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
               해설모드
             </Button>
           </div>
-          <Button onClick={onToggleRandomSelectExamModal} type="ghost">
+          <Button
+            onClick={() => {
+              if (checkAdblock()) {
+                onTogglePreventAdBlockModal();
+                return;
+              }
+              onToggleRandomSelectExamModal();
+            }}
+            type="ghost"
+          >
             랜덤모의고사
           </Button>
           <Button onClick={onToggleMakeExamModal} type="primary">
@@ -265,6 +286,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
       </div>
 
       <Portal>
+        {preventAdBlockModalState && (
+          <PreventAdBlockModal
+            open={preventAdBlockModalState}
+            onClose={onTogglePreventAdBlockModal}
+          />
+        )}
         {randomSelectExamModalState && (
           <RandomSelectExamModal
             categories={categories}
