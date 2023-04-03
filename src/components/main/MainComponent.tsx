@@ -81,7 +81,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
-    if (!getCookie('NOTICE_MODAL')) {
+
+    if (!storage.get('firstNoticeModal')) {
       onToggleNoticeModal();
     }
     (async () => {
@@ -320,7 +321,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
           />
         )}
         {noticeModalState && (
-          <NoticeModal open={noticeModalState} onClose={onToggleNoticeModal} />
+          <NoticeModal
+            open={noticeModalState}
+            onClose={() => {
+              storage.set('firstNoticeModal', true);
+              onToggleNoticeModal();
+            }}
+          />
         )}
       </Portal>
     </MainComponentContainer>
