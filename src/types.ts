@@ -680,7 +680,20 @@ export type MockExamQuestionFeedback = {
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   mockExamQuestion: MockExamQuestion;
+  myRecommedationStatus: MyRecommedationStatus;
+  recommendation: Array<MockExamQuestionFeedbackRecommendation>;
+  recommendationCount: RecommendationCount;
   type: QuestionFeedbackType;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type MockExamQuestionFeedbackRecommendation = {
+  __typename?: 'MockExamQuestionFeedbackRecommendation';
+  created_at: Scalars['DateTime'];
+  feedback: MockExamQuestionFeedback;
+  id: Scalars['Float'];
+  type: QuestionFeedbackRecommendationType;
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -777,6 +790,7 @@ export type Mutation = {
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+  updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   viewPost: ViewPostOutput;
@@ -1038,6 +1052,11 @@ export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
 };
 
 
+export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
+  input: UpdateMockExamQuestionFeedbackRecommendationInput;
+};
+
+
 export type MutationUpdateQuestionCardArgs = {
   input: UpdateQuestionCardInput;
 };
@@ -1050,6 +1069,12 @@ export type MutationUpdateQuestionCardCategoryArgs = {
 
 export type MutationViewPostArgs = {
   input: ViewPostInput;
+};
+
+export type MyRecommedationStatus = {
+  __typename?: 'MyRecommedationStatus';
+  isBad: Scalars['Boolean'];
+  isGood: Scalars['Boolean'];
 };
 
 export type NaverBlogViewMacroInput = {
@@ -1314,6 +1339,11 @@ export type QuestionCardCategory = {
   updated_at: Scalars['DateTime'];
   user: User;
 };
+
+export enum QuestionFeedbackRecommendationType {
+  Bad = 'BAD',
+  Good = 'GOOD'
+}
 
 export enum QuestionFeedbackType {
   Private = 'PRIVATE',
@@ -1623,6 +1653,12 @@ export type ReadVisitHistoryOutput = {
   yesterday?: Maybe<Scalars['Float']>;
 };
 
+export type RecommendationCount = {
+  __typename?: 'RecommendationCount';
+  bad: Scalars['Float'];
+  good: Scalars['Float'];
+};
+
 export type RegisterInput = {
   code: Scalars['String'];
   nickname: Scalars['String'];
@@ -1738,6 +1774,18 @@ export type UpdateApprovedStateOfMockExamQuestionOutput = {
   questionId: Scalars['Float'];
 };
 
+export type UpdateMockExamQuestionFeedbackRecommendationInput = {
+  feedbackId: Scalars['Float'];
+  type: QuestionFeedbackRecommendationType;
+};
+
+export type UpdateMockExamQuestionFeedbackRecommendationOutput = {
+  __typename?: 'UpdateMockExamQuestionFeedbackRecommendationOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  recommendation?: Maybe<MockExamQuestionFeedbackRecommendation>;
+};
+
 export type UpdateQuestionCardCategoryInput = {
   id: Scalars['Float'];
   name: Scalars['String'];
@@ -1771,6 +1819,7 @@ export type User = {
   email: Scalars['String'];
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   feedback: Array<Feedback>;
+  feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;

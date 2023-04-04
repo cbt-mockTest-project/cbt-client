@@ -31,6 +31,14 @@ export const READ_QUESTIONS_BY_ID = gql`
             nickname
             id
           }
+          recommendationCount {
+            good
+            bad
+          }
+          myRecommedationStatus {
+            isGood
+            isBad
+          }
           created_at
           updated_at
         }
@@ -90,6 +98,14 @@ export const READ_QUESTION = gql`
           id
           content
           type
+          recommendationCount {
+            good
+            bad
+          }
+          myRecommedationStatus {
+            isGood
+            isBad
+          }
           user {
             nickname
             id
