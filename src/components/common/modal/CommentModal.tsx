@@ -23,6 +23,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { format, parseISO } from 'date-fns';
 import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import DragModal from './DragModal';
+import { UserRole } from 'types';
 
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
@@ -163,13 +164,13 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 option={{
                   likesCount: comment.likesCount,
                   likeState: comment.likeState,
-                  nickname: comment.user.nickname,
+                  nickname: comment.user?.nickname as string,
                   content: comment.content,
-                  role: comment.user.role,
+                  role: comment.user?.role as UserRole,
                   id: comment.id,
                   time: format(parseISO(comment.created_at), 'yy.MM.dd HH:mm'),
                   parrentId: questionId,
-                  userId: comment.user.id,
+                  userId: comment.user?.id as number,
                 }}
                 key={comment.id}
               />
