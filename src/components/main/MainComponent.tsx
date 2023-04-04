@@ -138,10 +138,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-      onTogglePreventAdBlockModal();
-      return;
-    }
+    // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+    //   onTogglePreventAdBlockModal();
+    //   return;
+    // }
     if (!selectedExamId) return;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === category
@@ -175,10 +175,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-      onTogglePreventAdBlockModal();
-      return;
-    }
+    // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+    //   onTogglePreventAdBlockModal();
+    //   return;
+    // }
     setGotoSolutionPageLoading(true);
     router.push({
       pathname: `/exam/solution/${selectedExamId}`,
@@ -244,10 +244,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
           <Button
             onClick={() => {
-              if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-                onTogglePreventAdBlockModal();
-                return;
-              }
+              // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+              //   onTogglePreventAdBlockModal();
+              //   return;
+              // }
               onToggleRandomSelectExamModal();
             }}
             type="ghost"
