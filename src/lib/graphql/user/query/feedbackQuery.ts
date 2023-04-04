@@ -12,6 +12,14 @@ export const CREATE_QUESTION_FEEDBACK = gql`
         id
         content
         type
+        recommendationCount {
+          bad
+          good
+        }
+        myRecommedationStatus {
+          isGood
+          isBad
+        }
         user {
           nickname
           id
@@ -26,6 +34,20 @@ export const CREATE_FEEDBACK = gql`
     createFeedback(input: $input) {
       error
       ok
+    }
+  }
+`;
+
+export const UPDATE_FEEDBACK_RECOMMENDATION = gql`
+  mutation UpdateMockExamQuestionFeedbackRecommendation(
+    $input: UpdateMockExamQuestionFeedbackRecommendationInput!
+  ) {
+    updateMockExamQuestionFeedbackRecommendation(input: $input) {
+      error
+      ok
+      recommendation {
+        type
+      }
     }
   }
 `;

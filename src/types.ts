@@ -662,7 +662,7 @@ export type MockExamQuestionComment = {
   likesCount: Scalars['Float'];
   question: MockExamQuestion;
   updated_at: Scalars['DateTime'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 export type MockExamQuestionCommentLike = {
