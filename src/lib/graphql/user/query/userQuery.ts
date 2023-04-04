@@ -56,6 +56,7 @@ export const ME_QUERY = gql`
         id
         role
         email
+        isAllowAdblock
       }
       notices {
         content

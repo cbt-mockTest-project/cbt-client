@@ -1821,6 +1821,7 @@ export type User = {
   feedback: Array<Feedback>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
   id: Scalars['Float'];
+  isAllowAdblock: Scalars['Boolean'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
   mockExamHistory: Array<MockExamHistory>;

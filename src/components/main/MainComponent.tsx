@@ -138,10 +138,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (
-      checkAdblock() &&
-      !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
-    ) {
+    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -178,10 +175,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    if (
-      checkAdblock() &&
-      !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
-    ) {
+    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -250,10 +244,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
           <Button
             onClick={() => {
-              if (
-                checkAdblock() &&
-                !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
-              ) {
+              if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
                 onTogglePreventAdBlockModal();
                 return;
               }
