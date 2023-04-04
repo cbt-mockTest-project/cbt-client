@@ -1,16 +1,22 @@
 import { useDeleteQuestionFeedback } from '@lib/graphql/user/hook/useQuestionFeedback';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { convertWithErrorHandlingFunc, handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { QuestionFeedbackType, UserRole } from 'types';
+import {
+  QuestionFeedbackRecommendationType,
+  QuestionFeedbackType,
+  UserRole,
+} from 'types';
 import { ExamQuestionType } from './ExamSolutionList';
+import { useUpdateQuestionFeedbackRecommendation } from '@lib/graphql/user/hook/useQuestionFeedback';
 import Badge from '@components/common/badge/Badge';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import { MyRecommedationStatus } from 'types';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
@@ -27,6 +33,8 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
 }) => {
   const { data: meQuery } = useMeQuery();
   const [deleteQuestionFeedback] = useDeleteQuestionFeedback();
+  const [updateFeedbackRecommendation] =
+    useUpdateQuestionFeedbackRecommendation();
   const requestFeedBackDelete = async (feedbackId: number) => {
     const confirmed = confirm('삭제하시겠습니까?');
     if (confirmed) {
@@ -68,6 +76,89 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   }
   if (type === 'others' && isAllPrivate) return null;
   if (type === 'me' && isNotAllPrivate) return null;
+
+  const onUpdateFeedbackRecommendation = async (
+    type: QuestionFeedbackRecommendationType,
+    feedbackId: number,
+    myRecommendationStatus: MyRecommedationStatus
+  ) => {
+    try {
+      const res = await updateFeedbackRecommendation({
+        variables: {
+          input: {
+            feedbackId,
+            type,
+          },
+        },
+      });
+      if (res.data?.updateMockExamQuestionFeedbackRecommendation.ok) {
+        const feedbackResponse =
+          res.data.updateMockExamQuestionFeedbackRecommendation;
+        if (setQuestion) {
+          const newQuestion: ExamQuestionType = {
+            ...question,
+            mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
+              (feedback) => {
+                if (feedback.id === feedbackId) {
+                  let newReccomendationCount = feedback.recommendationCount;
+                  if (
+                    myRecommendationStatus.isGood &&
+                    type === QuestionFeedbackRecommendationType.Good
+                  ) {
+                    newReccomendationCount.good -= 1;
+                  } else if (
+                    myRecommendationStatus.isBad &&
+                    type === QuestionFeedbackRecommendationType.Bad
+                  ) {
+                    newReccomendationCount.bad -= 1;
+                  } else if (
+                    myRecommendationStatus.isGood &&
+                    type === QuestionFeedbackRecommendationType.Bad
+                  ) {
+                    newReccomendationCount.good -= 1;
+                    newReccomendationCount.bad += 1;
+                  } else if (
+                    myRecommendationStatus.isBad &&
+                    type === QuestionFeedbackRecommendationType.Good
+                  ) {
+                    newReccomendationCount.good += 1;
+                    newReccomendationCount.bad -= 1;
+                  } else if (
+                    !myRecommendationStatus.isGood &&
+                    type === QuestionFeedbackRecommendationType.Good
+                  ) {
+                    newReccomendationCount.good += 1;
+                  } else if (
+                    !myRecommendationStatus.isBad &&
+                    type === QuestionFeedbackRecommendationType.Bad
+                  ) {
+                    newReccomendationCount.bad += 1;
+                  }
+                  return {
+                    ...feedback,
+                    myRecommedationStatus: {
+                      isGood:
+                        feedbackResponse.recommendation?.type ===
+                        QuestionFeedbackRecommendationType.Good,
+                      isBad:
+                        feedbackResponse.recommendation?.type ===
+                        QuestionFeedbackRecommendationType.Bad,
+                    },
+                    recommendationCount: newReccomendationCount,
+                  };
+                }
+                return feedback;
+              }
+            ),
+          };
+          setQuestion(newQuestion);
+        } else if (refetch) refetch();
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   return (
     <ExamSolutionFeedbackContainer type={type}>
       {type === 'others' && (
@@ -104,6 +195,40 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
               <p className="exam-solution-feedback-content">
                 {feedback.content}
               </p>
+              {type === 'others' && (
+                <div className="exam-solution-like-button-wrapper">
+                  <button
+                    onClick={() =>
+                      onUpdateFeedbackRecommendation(
+                        QuestionFeedbackRecommendationType.Good,
+                        feedback.id,
+                        feedback.myRecommedationStatus
+                      )
+                    }
+                    className={`exam-solution-feedback-upvote-button ${
+                      feedback.myRecommedationStatus.isGood ? 'active' : ''
+                    }`}
+                  >
+                    <ThumbUpAltIcon />
+                  </button>
+                  <span>{feedback.recommendationCount.good}</span>
+                  <button
+                    onClick={() =>
+                      onUpdateFeedbackRecommendation(
+                        QuestionFeedbackRecommendationType.Bad,
+                        feedback.id,
+                        feedback.myRecommedationStatus
+                      )
+                    }
+                    className={`exam-solution-feedback-downpvote-button ${
+                      feedback.myRecommedationStatus.isBad ? 'active' : ''
+                    }`}
+                  >
+                    <ThumbDownAltIcon />
+                  </button>
+                  <span>{feedback.recommendationCount.bad}</span>
+                </div>
+              )}
             </li>
           )
       )}
@@ -157,5 +282,20 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
     :hover {
       color: ${palette.antd_blue_01};
     }
+  }
+  .exam-solution-like-button-wrapper {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+  }
+  .exam-solution-feedback-upvote-button.active {
+    color: ${palette.antd_blue_01};
+  }
+  .exam-solution-feedback-downpvote-button.active {
+    color: ${palette.red_500};
+  }
+
+  .exam-solution-feedback-upvote-button,
+  .exam-solution-feedback-downpvote-button {
   }
 `;

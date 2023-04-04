@@ -8,7 +8,7 @@ export type CreateMockExamQuestionFeedbackMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean, feedback?: { __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, user: { __typename?: 'User', nickname: string, id: number } } | null } };
+export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean, feedback?: { __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean }, user: { __typename?: 'User', nickname: string, id: number } } | null } };
 
 export type CreateFeedbackMutationVariables = Types.Exact<{
   input: Types.CreateFeedbackInput;
@@ -16,6 +16,13 @@ export type CreateFeedbackMutationVariables = Types.Exact<{
 
 
 export type CreateFeedbackMutation = { __typename?: 'Mutation', createFeedback: { __typename?: 'CreateFeedbackOutput', error?: string | null, ok: boolean } };
+
+export type UpdateMockExamQuestionFeedbackRecommendationMutationVariables = Types.Exact<{
+  input: Types.UpdateMockExamQuestionFeedbackRecommendationInput;
+}>;
+
+
+export type UpdateMockExamQuestionFeedbackRecommendationMutation = { __typename?: 'Mutation', updateMockExamQuestionFeedbackRecommendation: { __typename?: 'UpdateMockExamQuestionFeedbackRecommendationOutput', error?: string | null, ok: boolean, recommendation?: { __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType } | null } };
 
 
 export const CreateMockExamQuestionFeedbackDocument = gql`
@@ -27,6 +34,14 @@ export const CreateMockExamQuestionFeedbackDocument = gql`
       id
       content
       type
+      recommendationCount {
+        bad
+        good
+      }
+      myRecommedationStatus {
+        isGood
+        isBad
+      }
       user {
         nickname
         id
@@ -50,4 +65,19 @@ export const CreateFeedbackDocument = gql`
 
 export function useCreateFeedbackMutation() {
   return Urql.useMutation<CreateFeedbackMutation, CreateFeedbackMutationVariables>(CreateFeedbackDocument);
+};
+export const UpdateMockExamQuestionFeedbackRecommendationDocument = gql`
+    mutation UpdateMockExamQuestionFeedbackRecommendation($input: UpdateMockExamQuestionFeedbackRecommendationInput!) {
+  updateMockExamQuestionFeedbackRecommendation(input: $input) {
+    error
+    ok
+    recommendation {
+      type
+    }
+  }
+}
+    `;
+
+export function useUpdateMockExamQuestionFeedbackRecommendationMutation() {
+  return Urql.useMutation<UpdateMockExamQuestionFeedbackRecommendationMutation, UpdateMockExamQuestionFeedbackRecommendationMutationVariables>(UpdateMockExamQuestionFeedbackRecommendationDocument);
 };
