@@ -8,6 +8,9 @@ import styled, { css } from 'styled-components';
 import { QuestionFeedbackType, UserRole } from 'types';
 import { ExamQuestionType } from './ExamSolutionList';
 import Badge from '@components/common/badge/Badge';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;

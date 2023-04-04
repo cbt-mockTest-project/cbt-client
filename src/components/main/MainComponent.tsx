@@ -28,6 +28,7 @@ import { Option } from 'antd/lib/mentions';
 import NoticeModal from '@components/common/modal/NoticeModal';
 import { getCookie } from 'cookies-next';
 import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -49,7 +50,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
   titlesAndCategories,
   examLinks,
 }) => {
+  const tempAdBlockAllowUser = [118, 114, 1];
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const {
     value: preventAdBlockModalState,
@@ -71,13 +74,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
     useToggle(false);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
-
   const storage = new LocalStorage();
-
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
   );
-
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
@@ -138,7 +138,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (checkAdblock()) {
+    if (
+      checkAdblock() &&
+      !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
+    ) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -175,7 +178,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    if (checkAdblock()) {
+    if (
+      checkAdblock() &&
+      !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
+    ) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -244,7 +250,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
           <Button
             onClick={() => {
-              if (checkAdblock()) {
+              if (
+                checkAdblock() &&
+                !tempAdBlockAllowUser.includes(meQuery?.me.user?.id || 0)
+              ) {
                 onTogglePreventAdBlockModal();
                 return;
               }
