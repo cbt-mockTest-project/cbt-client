@@ -20,14 +20,14 @@ import { MyRecommedationStatus } from 'types';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
-  setQuestion?: React.Dispatch<React.SetStateAction<ExamQuestionType>>;
-  refetch?: ({ ...args }?: any) => any;
+  setQuestion?:
+    | React.Dispatch<React.SetStateAction<ExamQuestionType>>
+    | React.Dispatch<React.SetStateAction<ExamQuestionType | undefined>>;
   type?: 'me' | 'others';
 }
 
 const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   question,
-  refetch,
   setQuestion,
   type = 'others',
 }) => {
@@ -51,7 +51,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
             mockExamQuestionFeedback: newFeedback,
           };
           setQuestion(newQuestion);
-        } else if (refetch) refetch();
+        }
 
         return message.success('삭제되었습니다.');
       }
@@ -152,7 +152,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
             ),
           };
           setQuestion(newQuestion);
-        } else if (refetch) refetch();
+        }
       }
     } catch (e) {
       handleError(e);

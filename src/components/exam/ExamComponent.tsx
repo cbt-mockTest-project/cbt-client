@@ -37,11 +37,13 @@ import ExamSkeleton from './ExamSkeleton';
 import useToggle from '@lib/hooks/useToggle';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import {
+  MockExamQuestionFeedback,
   QuestionFeedbackType,
   ReadMockExamQuestionsByMockExamIdInput,
 } from 'types';
 import { makeVar } from '@apollo/client';
 import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
+import { ExamQuestionType } from './solution/ExamSolutionList';
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -80,7 +82,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
-  const [questionAndSolution, setQuestionAndSolution] = useState<Question>();
+  const [questionAndSolution, setQuestionAndSolution] =
+    useState<ExamQuestionType>();
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
@@ -243,8 +246,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         variables: { input: { type, content, questionId } },
       });
       if (res.data?.createMockExamQuestionFeedback.ok) {
-        refetchReadQuestions();
-        message.success('요청이 접수되었습니다.');
+        setQuestionAndSolution({
+          ...questionAndSolution,
+          mockExamQuestionFeedback: [
+            res.data.createMockExamQuestionFeedback
+              .feedback as MockExamQuestionFeedback,
+            ...questionAndSolution.mockExamQuestionFeedback,
+          ],
+        });
+        message.success('추가되었습니다.');
         setFeedBackModalState(false);
         return;
       }
@@ -418,7 +428,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         </div>
         <div ref={scrollRef} />
         <QuestionAndSolutionBox
-          label="문제"
           content={{
             content: questionAndSolution
               ? `${questionAndSolution.question}`
@@ -456,7 +465,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
               (questionAndSolution && questionAndSolution.solution) ?? '',
             img: questionAndSolution && questionAndSolution.solution_img,
           }}
-          refetch={refetchReadQuestions}
+          setQuestion={setQuestionAndSolution}
           question={questionAndSolution}
           feedback={true}
           visible={answerboxVisible}
