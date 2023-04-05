@@ -9,7 +9,7 @@ import palette from '@styles/palette';
 import { message } from 'antd';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import ReportModal from '../modal/ReportModal';
+import Link from 'next/link';
 
 interface FooterProps {
   className: string;
@@ -52,6 +52,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       <div className="footer-wrapper">
         <div>{`© ${year} Moducbt`}</div>
         <a href="mailto:moducbt@gmail.com">Mail</a>
+        <Link href={'/copyright'}>CopyRight</Link>
       </div>
     </FooterContainer>
   );
