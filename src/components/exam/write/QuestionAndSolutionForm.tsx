@@ -232,6 +232,27 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             {examSubmitLabel}
           </Button>
         </div>
+        <div>
+          <Label content={'5.카카오톡 문의'} />
+          <label className="create-exam-small-label">
+            시험지 제작과 관련하여 문의사항이 있을 경우,
+            <br />
+            아래 링크로 문의주세요!
+            <br />
+            시험지 제작을 최대한 도와드리겠습니다.
+            <br />
+            시험지 제작 승인이 거절되었을 경우, 또는 승인이 이루어지지 않을
+            경우에도 문의주세요.
+            <br />
+            <a
+              href="https://open.kakao.com/o/sZy6kxbf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              https://open.kakao.com/o/sZy6kxbf
+            </a>
+          </label>
+        </div>
       </div>
     </QuestionAndSolutionFormContainer>
   );
