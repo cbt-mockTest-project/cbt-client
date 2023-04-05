@@ -35,10 +35,7 @@ const SolutionWriteModal: React.FC<SolutionWriteModalProps> = ({
     >
       <div className="solution-write-question-box-wrapper">
         <Label content={pageSubTitle} />
-        <QuestionAndSolutionBox
-          label="문제"
-          content={questionAndSolutionContent}
-        />
+        <QuestionAndSolutionBox content={questionAndSolutionContent} />
       </div>
       <div className="solution-write-modal-text-area-wrapper">
         <div className="solution-write-modal-label-wrapper">
