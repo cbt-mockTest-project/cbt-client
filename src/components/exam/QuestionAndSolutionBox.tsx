@@ -4,7 +4,7 @@ import palette from '@styles/palette';
 import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled, { css } from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { ExamQuestionType } from './solution/ExamSolutionList';
@@ -18,19 +18,17 @@ export interface QuestionAndSolutionContent {
 interface QuestionAndSolutionBoxProps {
   content: QuestionAndSolutionContent;
   question?: ExamQuestionType;
+  setQuestion?: Dispatch<SetStateAction<ExamQuestionType | undefined>>;
   visible?: boolean;
-  label?: string | JSX.Element;
   feedback?: boolean;
-  refetch?: ({ ...args }: any) => any;
 }
 
 const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   content,
   visible = true,
-  label,
   feedback,
   question,
-  refetch,
+  setQuestion,
 }) => {
   if (!visible) return null;
   const hasImage = content.img && content.img.length >= 1;
@@ -40,13 +38,13 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
         {feedback && question && (
           <ExamSolutionFeedback
             question={question}
-            refetch={refetch}
+            setQuestion={setQuestion}
             type="me"
           />
         )}
         <p>{content.content}</p>
         {feedback && question && (
-          <ExamSolutionFeedback question={question} refetch={refetch} />
+          <ExamSolutionFeedback question={question} setQuestion={setQuestion} />
         )}
       </BasicBox>
       {content.img && content.img.length >= 1 && (

@@ -67,7 +67,8 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   hasStateBox = false,
   isPreview = false,
 }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(question);
+  const [currentQuestion, setCurrentQuestion] =
+    useState<ExamQuestionType>(question);
   const [editBookmark] = useEditQuestionBookmark();
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [bookmarkState, setBookmarkState] = useState(false);
