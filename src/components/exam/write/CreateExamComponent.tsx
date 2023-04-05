@@ -218,8 +218,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       '정말 삭제하시겠습니까?\n삭제시 등록된 모든 문제가 삭제됩니다.'
     );
     if (!confirmed) return;
-    const examId = titles.filter((title) => title.label === examTitle)[0]
-      ?.value;
+    const examId = titles.filter(
+      (title) => title.label?.toString().trim() === examTitle.trim()
+    )[0]?.value;
     if (!examId) {
       return message.error('존재하지 않는 시험입니다.');
     }
@@ -227,7 +228,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       variables: { input: { id: Number(examId) } },
     });
     if (res.data?.deleteMockExam.ok) {
-      setTitles(() => titles.filter((title) => title.label !== examTitle));
+      setTitles(() =>
+        titles.filter((title) => title.label?.toString() !== examTitle.trim())
+      );
       message.success('삭제되었습니다.');
       return;
     }
@@ -239,7 +242,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const openEditModal = (type: 'category' | 'exam') => {
     if (type === 'category') {
       const categoryId = categories.filter(
-        (category) => category.label === categoryName
+        (category) => category.label?.toString().trim() === categoryName.trim()
       )[0]?.value;
       if (!categoryId) {
         return message.error('존재하지 않는 카테고리입니다.');
@@ -248,8 +251,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       return;
     }
     if (type === 'exam') {
-      const examId = titles.filter((title) => title.label === examTitle)[0]
-        ?.value;
+      const examId = titles.filter(
+        (title) => title.label?.toString().trim() === examTitle.trim()
+      )[0]?.value;
       if (!examId) {
         return message.error('존재하지 않는 시험입니다.');
       }
@@ -258,21 +262,23 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     }
   };
   const requestEditTitle = async (value: string) => {
-    const examId = titles.filter((exam) => exam.label === examTitle)[0]?.value;
+    const examId = titles.filter(
+      (exam) => exam.label?.toString().trim() === examTitle.trim()
+    )[0]?.value;
     if (!examId) {
       return message.error('존재하지 않는 시험입니다.');
     }
     const confirmed = confirm('정말 수정하시겠습니까?');
     if (!confirmed) return;
     const res = await editExam({
-      variables: { input: { id: Number(examId), title: value } },
+      variables: { input: { id: Number(examId), title: value.trim() } },
     });
     if (res.data?.editMockExam.ok) {
       message.success('시험명이 수정되었습니다.');
       setTitles(() =>
         titles.map((exam) =>
           exam.value == examId
-            ? { value: exam.value, label: value }
+            ? { value: exam.value, label: value.trim() }
             : { ...exam }
         )
       );
@@ -285,23 +291,24 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       callback: () => requestEditTitle(value),
     });
   const requestEditCategory = async (value: string) => {
-    const categoryId = categories.filter(
-      (category) => category.label === categoryName
-    )[0]?.value;
+    const categoryId = categories.filter((category) => {
+      console.log(category.label?.toString().trim(), categoryName.trim());
+      return category.label?.toString().trim() === categoryName.trim();
+    })[0]?.value;
     if (!categoryId) {
       return message.error('존재하지 않는 카테고리입니다.');
     }
     const confirmed = confirm('정말 수정하시겠습니까?');
     if (!confirmed) return;
     const res = await editCategory({
-      variables: { input: { id: Number(categoryId), name: value } },
+      variables: { input: { id: Number(categoryId), name: value.trim() } },
     });
     if (res.data?.editMockExamCategory.ok) {
       message.success('카테고리가 수정되었습니다.');
       setCategories(() =>
         categories.map((category) =>
           category.value === categoryId
-            ? { value: category.value, label: value }
+            ? { value: category.value, label: value.trim() }
             : { ...category }
         )
       );
@@ -317,7 +324,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     const confirmed = confirm('정말 삭제하시겠습니까?');
     if (!confirmed) return;
     const categoryId = categories.filter(
-      (category) => category.label === categoryName
+      (category) => category.label?.toString().trim() === categoryName.trim()
     )[0]?.value;
     if (!categoryId) {
       return message.error('존재하지 않는 카테고리입니다.');
@@ -328,9 +335,11 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     if (res.data?.deleteMockExamCategory.ok) {
       message.success('카테고리가 삭제되었습니다.');
       setCategories(() =>
-        categories.filter((category) => category.label !== categoryName)
+        categories.filter(
+          (category) =>
+            category.label?.toString().trim() !== categoryName.trim()
+        )
       );
-      message.success('삭제되었습니다.');
       return;
     }
     return message.error(res.data?.deleteMockExamCategory.error);
