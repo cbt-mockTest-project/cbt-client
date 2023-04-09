@@ -26,6 +26,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
+  if (meQuery?.me.user?.role === UserRole.Admin) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
