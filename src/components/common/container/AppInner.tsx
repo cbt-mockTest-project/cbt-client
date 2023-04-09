@@ -15,17 +15,25 @@ const AppInner: React.FC<AppInnerProps> = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (meData?.me.user?.role === 'ADMIN') {
-      const adsbygoogle = document.querySelectorAll('ins.adsbygoogle');
-      const adsbygoogleScript = document.querySelectorAll(
-        'script#googleAdScript'
-      );
-      adsbygoogleScript.forEach((ad) => {
-        ad.remove();
-      });
-      adsbygoogle.forEach((ad) => {
-        ad.remove();
-      });
+    if (meData?.me.user?.role === 'ADMIN' && typeof window !== 'undefined') {
+      try {
+        const adsbygoogle = document.querySelectorAll('ins.adsbygoogle');
+        const adsbygoogleScript = document.querySelectorAll(
+          'script#googleAdScript'
+        );
+        adsbygoogle.forEach((ad) => {
+          if (ad.parentNode) {
+            ad.parentNode.removeChild(ad);
+          }
+        });
+        adsbygoogleScript.forEach((ad) => {
+          if (ad.parentNode) {
+            ad.parentNode.removeChild(ad);
+          }
+        });
+      } catch (e) {
+        console.log('hi');
+      }
     }
   }, [meData, router.asPath]);
 
