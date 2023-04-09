@@ -1,34 +1,35 @@
 import { ClearOutlined } from '@ant-design/icons';
+import Label from '@components/common/label/Label';
+import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { TitlesAndCategories } from '@components/main/MainComponent';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Checkbox, InputNumber, Tag } from 'antd';
+import { Button, Checkbox, Input } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { QuestionState } from 'types';
-import Label from '../label/Label';
-import ErrorText from '../layout/errorText/ErrorText';
-import Modal, { ModalProps } from './Modal';
+import { QuestionState, UserRole } from 'types';
+import { Categories } from '../../../../pages/exam/randomselect';
+import { Option } from 'antd/lib/mentions';
+import { responsive } from '@lib/utils/responsive';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
   { value: QuestionState.Middle, label: triangleIcon },
   { value: QuestionState.Row, label: clearIcon },
 ];
-interface RandomSelectExamModalProps extends Omit<ModalProps, 'children'> {
-  categories: DefaultOptionType[];
+
+interface RandomSelectComponentProps {
+  categories: Categories[];
   titlesAndCategories: TitlesAndCategories[];
 }
 
-const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
-  onClose,
-  open,
+const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   categories,
   titlesAndCategories,
 }) => {
@@ -44,18 +45,14 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
   const isLoggedIn = meQuery?.me.user ? true : false;
   useEffect(() => {
     try {
-      if (open) {
-        const multipleSelector = document.querySelector(
-          '.multiple-random-exam-selector'
-        );
-        if (multipleSelector) {
-          const multipleSelectorInput: HTMLInputElement | null =
-            multipleSelector.querySelector(
-              '.ant-select-selection-search-input'
-            );
-          if (multipleSelectorInput) {
-            multipleSelectorInput.inputMode = 'none';
-          }
+      const multipleSelector = document.querySelector(
+        '.multiple-random-exam-selector'
+      );
+      if (multipleSelector) {
+        const multipleSelectorInput: HTMLInputElement | null =
+          multipleSelector.querySelector('.ant-select-selection-search-input');
+        if (multipleSelectorInput) {
+          multipleSelectorInput.inputMode = 'none';
         }
       }
       const savedRandomExamInfo = storage.get('randomExamInfo');
@@ -71,7 +68,7 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
     } catch (e) {
       console.log(e);
     }
-  }, [open]);
+  }, []);
 
   const onChangeCategory = async (value: string) => {
     setSelectedExams([]);
@@ -135,17 +132,39 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
       },
     });
   };
-
   return (
-    <RandomSelectExamModalContainer open={open} onClose={onClose}>
+    <RandomSelectComponentContainer>
       <div className="random-select-exam-wrapper">
         <div className="random-select-exam-selector-wrapper">
-          <Label content={'시험선택'} />
-          <Select
-            options={categories}
-            onChange={onChangeCategory}
-            value={category}
-          />
+          <div className="random-select-exam-category-wrapper">
+            <Label content={'시험선택'} />
+            <div className="random-select-exam-category-info">
+              <div className="random-select-category-color-box admin" />
+              <label className="random-select-exam-category-info-label">
+                개발자 제작
+              </label>
+              <div className="random-select-category-color-box user" />
+              <label className="random-select-exam-category-info-label">
+                유저 제작
+              </label>
+            </div>
+          </div>
+          <Select value={category} onChange={onChangeCategory}>
+            {categories.map((category) => (
+              <Option
+                key={category.value as string}
+                value={category.value as string}
+                style={{
+                  color:
+                    category.authorRole === UserRole.Admin
+                      ? 'black'
+                      : palette.blue_600,
+                }}
+              >
+                {category.label}
+              </Option>
+            ))}
+          </Select>
         </div>
         <div className="random-select-exam-selector-wrapper">
           <div className="random-select-exam-turn-label-wrapper">
@@ -196,9 +215,9 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
           )}
           <div className="random-select-exam-modal-setting-count-wrapper">
             <Label content={'문항수'} />
-            <InputNumber
+            <Input
               value={limit}
-              onChange={(value) => setLimit(value as number)}
+              onChange={(e) => setLimit(Number(e.target.value))}
               className="random-select-exam-modal-setting-count-input"
             />
           </div>
@@ -213,14 +232,18 @@ const RandomSelectExamModal: React.FC<RandomSelectExamModalProps> = ({
           랜덤모의고사 시작
         </Button>
       </div>
-    </RandomSelectExamModalContainer>
+    </RandomSelectComponentContainer>
   );
 };
 
-export default RandomSelectExamModal;
+export default RandomSelectComponent;
 
-const RandomSelectExamModalContainer = styled(Modal)`
-  max-width: 500px;
+const RandomSelectComponentContainer = styled.div`
+  width: 100%;
+  max-width: 350px;
+  margin: 0px auto;
+  padding: 0 15px 30px 15px;
+
   .random-select-exam-turn-label-wrapper {
     display: flex;
     gap: 15px;
@@ -294,8 +317,45 @@ const RandomSelectExamModalContainer = styled(Modal)`
   }
   .random-select-exam-modal-setting-count-input {
     top: 7px;
+    width: 100px;
   }
   .random-select-exam-modal-error-text {
     font-size: 0.8rem;
+  }
+  .random-select-exam-category-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .random-select-exam-category-info {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    position: relative;
+    top: 5px;
+  }
+  .random-select-category-color-box {
+    width: 20px;
+    height: 10px;
+  }
+  .random-select-category-color-box.admin {
+    background-color: black;
+  }
+  .random-select-category-color-box.user {
+    background-color: ${palette.blue_600};
+  }
+  .random-select-exam-category-info-label {
+    font-size: 0.8rem;
+    color: ${palette.gray_700};
+  }
+  @media (max-width: ${responsive.small}) {
+    position: fixed;
+    bottom: 0px;
+
+    margin-top: 60px;
+    margin-bottom: 55px;
+    height: calc(100vh - 115px);
+    overflow-y: auto;
   }
 `;

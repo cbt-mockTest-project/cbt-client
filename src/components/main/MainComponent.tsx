@@ -12,23 +12,19 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { ExamTitleAndId, UserRole } from 'types';
-import { checkAdblock } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import Link from 'next/link';
 import Portal from '@components/common/portal/Portal';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MainViewCount from './MainViewCount';
 import useToggle from '@lib/hooks/useToggle';
-import RandomSelectExamModal from '@components/common/modal/RandomSelectExamModal';
 import DataShareModal from '@components/common/modal/DataShareModal';
 import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
 import { Option } from 'antd/lib/mentions';
 import NoticeModal from '@components/common/modal/NoticeModal';
-import { getCookie } from 'cookies-next';
 import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -50,9 +46,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   titlesAndCategories,
   examLinks,
 }) => {
-  const tempAdBlockAllowUser = [118, 114, 1];
   const router = useRouter();
-  const { data: meQuery } = useMeQuery();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const {
     value: preventAdBlockModalState,
@@ -61,10 +55,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
-  const {
-    value: randomSelectExamModalState,
-    onToggle: onToggleRandomSelectExamModal,
-  } = useToggle();
+
   const { value: makeExamModalState, onToggle: onToggleMakeExamModal } =
     useToggle();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
@@ -96,16 +87,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       }
     })();
   }, []);
-  useEffect(() => {
-    if (randomSelectExamModalState) {
-      document.body.style.overflowY = 'hidden';
-    } else {
-      document.body.style.overflowY = 'scroll';
-    }
-    return () => {
-      document.body.style.overflowY = 'scroll';
-    };
-  }, [randomSelectExamModalState]);
+
   const onToggleKakaoChatModalState = () =>
     setKakaoChatModalState(!kakaoChatModalState);
   const onCategoryChange = async (value: string) => {
@@ -242,18 +224,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
               해설모드
             </Button>
           </div>
-          <Button
-            onClick={() => {
-              // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-              //   onTogglePreventAdBlockModal();
-              //   return;
-              // }
-              onToggleRandomSelectExamModal();
-            }}
-            type="ghost"
-          >
-            랜덤모의고사
-          </Button>
+          <Link href={'/exam/randomselect'} className="home-random-select-link">
+            <Button type="ghost">랜덤모의고사</Button>
+          </Link>
           <Button onClick={onToggleMakeExamModal} type="primary">
             시험지 만들기 - 베타
           </Button>
@@ -293,15 +266,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             onClose={onTogglePreventAdBlockModal}
           />
         )}
-        {randomSelectExamModalState && (
-          <RandomSelectExamModal
-            categories={categories}
-            titles={titles}
-            open={randomSelectExamModalState}
-            onClose={onToggleRandomSelectExamModal}
-            titlesAndCategories={titlesAndCategories}
-          />
-        )}
+
         {kakaoChatModalState && (
           <KakaoOpenChatModal
             open={kakaoChatModalState}
@@ -341,6 +306,9 @@ const MainComponentContainer = styled.div`
     margin: 10px auto 0 auto;
     display: flex;
     gap: 30px;
+  }
+  .home-random-select-link {
+    width: 100%;
   }
 
   .home-content-wrapper {
