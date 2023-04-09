@@ -217,6 +217,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             <Label content={'문항수'} />
             <Input
               value={limit}
+              type="number"
               onChange={(e) => setLimit(Number(e.target.value))}
               className="random-select-exam-modal-setting-count-input"
             />
@@ -351,10 +352,8 @@ const RandomSelectComponentContainer = styled.div`
   }
   @media (max-width: ${responsive.small}) {
     position: fixed;
-    bottom: 0px;
-
     margin-top: 60px;
-    margin-bottom: 55px;
+    bottom: 55px;
     height: calc(100vh - 115px);
     overflow-y: auto;
   }
