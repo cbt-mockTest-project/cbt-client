@@ -15,7 +15,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (meData?.me.user?.role === 'ADMIN' && typeof window !== 'undefined') {
+    if (meData?.me.user?.isAllowAdblock && typeof window !== 'undefined') {
       try {
         const adsbygoogle = document.querySelectorAll('ins.adsbygoogle');
         const adsbygoogleScript = document.querySelectorAll(
