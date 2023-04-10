@@ -356,5 +356,7 @@ const RandomSelectComponentContainer = styled.div`
     bottom: 55px;
     height: calc(100vh - 115px);
     overflow-y: auto;
+    left: 0;
+    right: 0;
   }
 `;
