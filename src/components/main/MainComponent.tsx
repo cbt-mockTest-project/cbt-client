@@ -25,6 +25,7 @@ import MakeExamModal from '@components/common/modal/MakeExamModal';
 import { Option } from 'antd/lib/mentions';
 import NoticeModal from '@components/common/modal/NoticeModal';
 import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
+import RemoveAdModal from '@components/common/modal/RemoveAdModal';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -54,6 +55,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   } = useToggle(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
+    useToggle(false);
+  const { value: removeAdModalState, onToggle: onToggleRemoveAdModal } =
     useToggle(false);
 
   const { value: makeExamModalState, onToggle: onToggleMakeExamModal } =
@@ -170,64 +173,70 @@ const MainComponent: React.FC<MainComponentProps> = ({
     <MainComponentContainer>
       <div className="home-wrapper">
         <div className="home-content-wrapper">
-          <div className="home-content-exam-category-wrapper">
-            <p className="home-content-title">시험선택</p>
-            <div className="home-content-exam-category-info">
-              <div className="home-content-category-color-box admin" />
-              <label className="home-content-exam-category-info-label">
-                개발자 제작
-              </label>
-              <div className="home-content-category-color-box user" />
-              <label className="home-content-exam-category-info-label">
-                유저 제작
-              </label>
+          <div className="home-content-top-wrapper">
+            <div className="home-content-exam-category-wrapper">
+              <p className="home-content-title">시험선택</p>
+              <div className="home-content-exam-category-info">
+                <div className="home-content-category-color-box admin" />
+                <label className="home-content-exam-category-info-label">
+                  개발자 제작
+                </label>
+                <div className="home-content-category-color-box user" />
+                <label className="home-content-exam-category-info-label">
+                  유저 제작
+                </label>
+              </div>
+            </div>
+            <Select value={category} onChange={onCategoryChange}>
+              {categories.map((category) => (
+                <Option
+                  key={category.value}
+                  value={category.value}
+                  style={{
+                    color:
+                      category.authorRole === UserRole.Admin
+                        ? 'black'
+                        : palette.blue_600,
+                  }}
+                >
+                  {category.label}
+                </Option>
+              ))}
+            </Select>
+            <p className="home-content-title">회차선택</p>
+            <Select
+              options={titles}
+              value={title}
+              onChange={(value) => onTitleChange(Number(value), titles)}
+            />
+            <div className="home-button-mode-wrapper">
+              <Button
+                type="primary"
+                onClick={gotoExamPage}
+                disabled={!Boolean(selectedExamId)}
+                loading={gotoExamPageLoading}
+                className="home-content-question-button"
+              >
+                풀이모드
+              </Button>
+              <Button
+                type="primary"
+                loading={gotoSolutionPageLoading}
+                onClick={gotoSolutionPage}
+                disabled={!Boolean(selectedExamId)}
+              >
+                해설모드
+              </Button>
             </div>
           </div>
-          <Select value={category} onChange={onCategoryChange}>
-            {categories.map((category) => (
-              <Option
-                key={category.value}
-                value={category.value}
-                style={{
-                  color:
-                    category.authorRole === UserRole.Admin
-                      ? 'black'
-                      : palette.blue_600,
-                }}
-              >
-                {category.label}
-              </Option>
-            ))}
-          </Select>
-          <p className="home-content-title">회차선택</p>
-          <Select
-            options={titles}
-            value={title}
-            onChange={(value) => onTitleChange(Number(value), titles)}
-          />
-          <div className="home-button-mode-wrapper">
-            <Button
-              type="primary"
-              onClick={gotoExamPage}
-              disabled={!Boolean(selectedExamId)}
-              loading={gotoExamPageLoading}
-              className="home-content-question-button"
-            >
-              풀이모드
-            </Button>
-            <Button
-              type="primary"
-              loading={gotoSolutionPageLoading}
-              onClick={gotoSolutionPage}
-              disabled={!Boolean(selectedExamId)}
-            >
-              해설모드
-            </Button>
-          </div>
+          <div className="home-content-devide-line" />
           <Link href={'/exam/randomselect'} className="home-random-select-link">
             <Button type="ghost">랜덤모의고사</Button>
           </Link>
-          <Button onClick={onToggleMakeExamModal} type="primary">
+          <Button onClick={onToggleRemoveAdModal} type="primary">
+            광고제거안내
+          </Button>
+          <Button onClick={onToggleMakeExamModal} type="ghost">
             시험지 만들기 - 베타
           </Button>
           <button
@@ -294,6 +303,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
             }}
           />
         )}
+        {removeAdModalState && (
+          <RemoveAdModal
+            open={removeAdModalState}
+            onClose={onToggleRemoveAdModal}
+          />
+        )}
       </Portal>
     </MainComponentContainer>
   );
@@ -307,10 +322,22 @@ const MainComponentContainer = styled.div`
     display: flex;
     gap: 30px;
   }
+  .home-content-top-wrapper {
+    width: 100%;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
   .home-random-select-link {
     width: 100%;
   }
-
+  .home-content-devide-line {
+    content: '';
+    width: 100%;
+    height: 2px;
+    border: 1px dashed ${palette.gray_300};
+  }
   .home-content-wrapper {
     flex: 2;
     display: flex;
