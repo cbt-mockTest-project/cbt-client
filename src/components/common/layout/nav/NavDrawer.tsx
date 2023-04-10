@@ -49,8 +49,8 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
               </Link>
             </div>
             {props.meQuery.me.user.role === UserRole.Admin && (
-              <Link href="/test">
-                <span className="mobile-nav-item-link-text">실험실</span>
+              <Link href="/admin">
+                <span className="mobile-nav-item-link-text">관리자</span>
               </Link>
             )}
             <StyledButton onClick={props.tryRequestLogout}>

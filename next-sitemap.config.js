@@ -13,6 +13,8 @@ module.exports = {
     '/post/write',
     '/test',
     '/exam/write',
+    '/admin/*',
+    '/admin'
   ],
   // ...other options
   transform: async (config, path) => {
