@@ -13,7 +13,6 @@ const Community = () => {
   return (
     <>
       <WithHead title="커뮤니티 | 모두CBT" pageHeadingTitle="커뮤니티페이지" />
-
       <Layout>
         <CommunityContainer />
       </Layout>

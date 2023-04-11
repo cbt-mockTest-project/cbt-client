@@ -789,6 +789,7 @@ export type Mutation = {
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
+  updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
@@ -1047,6 +1048,11 @@ export type MutationSendVerificationMailArgs = {
 };
 
 
+export type MutationUpdateAdBlockPermissionArgs = {
+  input: UpdateAdblockPermissionInput;
+};
+
+
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
@@ -1211,6 +1217,7 @@ export type Query = {
   readVisitCount: ReadVisitCountOutput;
   readVisitHistory: ReadVisitHistoryOutput;
   searchMockExam: SearchMockExamOutput;
+  searchUser: SearchUserOutput;
   userProfile: UserProfileOutput;
 };
 
@@ -1312,6 +1319,11 @@ export type QueryReadQuestionCardArgs = {
 
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
+};
+
+
+export type QuerySearchUserArgs = {
+  input: SearchUserInput;
 };
 
 
@@ -1721,6 +1733,17 @@ export type SearchMockExamOutput = {
   totalResults: Scalars['Float'];
 };
 
+export type SearchUserInput = {
+  name: Scalars['String'];
+};
+
+export type SearchUserOutput = {
+  __typename?: 'SearchUserOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  users?: Maybe<Array<User>>;
+};
+
 export type SendFindPasswordMailInput = {
   email: Scalars['String'];
 };
@@ -1760,6 +1783,17 @@ export type TitleAndId = {
   __typename?: 'TitleAndId';
   id?: Maybe<Scalars['Float']>;
   title?: Maybe<Scalars['String']>;
+};
+
+export type UpdateAdblockPermissionInput = {
+  userId: Scalars['Float'];
+};
+
+export type UpdateAdblockPermissionOutput = {
+  __typename?: 'UpdateAdblockPermissionOutput';
+  adblockPermission?: Maybe<Scalars['Boolean']>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type UpdateApprovedStateOfMockExamQuestionInput = {
