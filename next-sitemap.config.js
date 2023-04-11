@@ -14,7 +14,8 @@ module.exports = {
     '/test',
     '/exam/write',
     '/admin/*',
-    '/admin'
+    '/admin',
+    '/preview/*'
   ],
   // ...other options
   transform: async (config, path) => {
