@@ -81,6 +81,20 @@ export type KakaoLoginMutationVariables = Types.Exact<{
 
 export type KakaoLoginMutation = { __typename?: 'Mutation', kakaoLogin: { __typename?: 'KakaoLoginOutput', error?: string | null, ok: boolean } };
 
+export type SearchUserQueryVariables = Types.Exact<{
+  input: Types.SearchUserInput;
+}>;
+
+
+export type SearchUserQuery = { __typename?: 'Query', searchUser: { __typename?: 'SearchUserOutput', error?: string | null, ok: boolean, users?: Array<{ __typename?: 'User', id: number, email: string, nickname: string, isAllowAdblock: boolean }> | null } };
+
+export type UpdateAdBlockPermissionMutationVariables = Types.Exact<{
+  input: Types.UpdateAdblockPermissionInput;
+}>;
+
+
+export type UpdateAdBlockPermissionMutation = { __typename?: 'Mutation', updateAdBlockPermission: { __typename?: 'UpdateAdblockPermissionOutput', adblockPermission?: boolean | null, error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -241,4 +255,35 @@ export const KakaoLoginDocument = gql`
 
 export function useKakaoLoginMutation() {
   return Urql.useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KakaoLoginDocument);
+};
+export const SearchUserDocument = gql`
+    query SearchUser($input: SearchUserInput!) {
+  searchUser(input: $input) {
+    error
+    ok
+    users {
+      id
+      email
+      nickname
+      isAllowAdblock
+    }
+  }
+}
+    `;
+
+export function useSearchUserQuery(options: Omit<Urql.UseQueryArgs<SearchUserQueryVariables>, 'query'>) {
+  return Urql.useQuery<SearchUserQuery, SearchUserQueryVariables>({ query: SearchUserDocument, ...options });
+};
+export const UpdateAdBlockPermissionDocument = gql`
+    mutation UpdateAdBlockPermission($input: UpdateAdblockPermissionInput!) {
+  updateAdBlockPermission(input: $input) {
+    adblockPermission
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpdateAdBlockPermissionMutation() {
+  return Urql.useMutation<UpdateAdBlockPermissionMutation, UpdateAdBlockPermissionMutationVariables>(UpdateAdBlockPermissionDocument);
 };

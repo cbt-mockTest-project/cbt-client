@@ -10,8 +10,10 @@ import {
   LOGOUT_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
+  SEARCH_USER,
   SEND_FIND_PASSWORD_MAIL_MUTATION,
   SEND_VERIFICATION_MAIL_MUTATION,
+  UPDATE_ADBLOCK_PERMISSION,
 } from '../query/userQuery';
 import {
   ChangePasswordAfterVerifyingMutation,
@@ -34,10 +36,14 @@ import {
   MeQueryVariables,
   RegisterMutation,
   RegisterMutationVariables,
+  SearchUserQuery,
+  SearchUserQueryVariables,
   SendFindPasswordMailMutation,
   SendFindPasswordMailMutationVariables,
   SendVerificationMailMutation,
   SendVerificationMailMutationVariables,
+  UpdateAdBlockPermissionMutation,
+  UpdateAdBlockPermissionMutationVariables,
 } from '../query/userQuery.generated';
 
 export const useRegisterMutation = () =>
@@ -96,3 +102,14 @@ export const useSendFindPasswordMail = () =>
 
 export const useKakaoLogin = () =>
   useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KAKAO_LOGIN);
+
+export const useLazySearchUser = () =>
+  useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SEARCH_USER, {
+    fetchPolicy: 'network-only',
+  });
+
+export const useUpdateAdblockPermission = () =>
+  useMutation<
+    UpdateAdBlockPermissionMutation,
+    UpdateAdBlockPermissionMutationVariables
+  >(UPDATE_ADBLOCK_PERMISSION);

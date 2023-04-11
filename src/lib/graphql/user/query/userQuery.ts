@@ -125,3 +125,27 @@ export const KAKAO_LOGIN = gql`
     }
   }
 `;
+
+export const SEARCH_USER = gql`
+  query SearchUser($input: SearchUserInput!) {
+    searchUser(input: $input) {
+      error
+      ok
+      users {
+        id
+        email
+        nickname
+        isAllowAdblock
+      }
+    }
+  }
+`
+export const UPDATE_ADBLOCK_PERMISSION = gql`
+  mutation UpdateAdBlockPermission($input: UpdateAdblockPermissionInput!) {
+    updateAdBlockPermission(input: $input) {
+      adblockPermission
+      error
+      ok
+    }
+  }
+`
