@@ -79,7 +79,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
 
-    if (!storage.get('firstNoticeModal')) {
+    if (storage.get('firstNoticeModal') !== 2) {
       onToggleNoticeModal();
     }
     (async () => {
@@ -178,6 +178,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
       return;
     }
     router.push('/exam/randomselect');
+  };
+  const onCloseNoticeModal = () => {
+    const value = storage.get('firstNoticeModal');
+    value
+      ? storage.set('firstNoticeModal', 2)
+      : storage.set('firstNoticeModal', 1);
+    onToggleNoticeModal();
   };
   return (
     <MainComponentContainer>
@@ -305,13 +312,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           />
         )}
         {noticeModalState && (
-          <NoticeModal
-            open={noticeModalState}
-            onClose={() => {
-              storage.set('firstNoticeModal', true);
-              onToggleNoticeModal();
-            }}
-          />
+          <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
         )}
         {removeAdModalState && (
           <RemoveAdModal
