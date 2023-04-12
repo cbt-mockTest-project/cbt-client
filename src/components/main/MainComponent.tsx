@@ -1,33 +1,33 @@
+import KakaoIconSVG from '@assets/svg/kakao.svg';
+import DataShareModal from '@components/common/modal/DataShareModal';
+import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
+import MakeExamModal from '@components/common/modal/MakeExamModal';
+import NoticeModal from '@components/common/modal/NoticeModal';
+import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
+import RemoveAdModal from '@components/common/modal/RemoveAdModal';
+import Portal from '@components/common/portal/Portal';
 import {
   selectExamCategoryHistory,
   selectExamHistory,
   tempAnswerKey,
 } from '@lib/constants';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
+import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
+import { checkAdblock } from '@lib/utils/utils';
+import palette from '@styles/palette';
 import { Button } from 'antd';
+import { Option } from 'antd/lib/mentions';
 import Select, { DefaultOptionType } from 'antd/lib/select';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import KakaoIconSVG from '@assets/svg/kakao.svg';
 import { ExamTitleAndId, UserRole } from 'types';
-import palette from '@styles/palette';
-import Link from 'next/link';
-import Portal from '@components/common/portal/Portal';
-import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MainViewCount from './MainViewCount';
-import useToggle from '@lib/hooks/useToggle';
-import DataShareModal from '@components/common/modal/DataShareModal';
-import dynamic from 'next/dynamic';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
-import MakeExamModal from '@components/common/modal/MakeExamModal';
-import { Option } from 'antd/lib/mentions';
-import NoticeModal from '@components/common/modal/NoticeModal';
-import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
-import RemoveAdModal from '@components/common/modal/RemoveAdModal';
-import { checkAdblock } from '@lib/utils/utils';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -253,7 +253,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
           </Button>
-          <Button onClick={onToggleMakeExamModal} type="ghost">
+
+          <Link
+            href="https://www.buymeacoffee.com/moducbts"
+            className="home-random-select-link"
+          >
+            <Button className="">{`>> 후원하기 <<`}</Button>{' '}
+          </Link>
+          <Button onClick={onToggleMakeExamModal} type="primary">
             시험지 만들기 - 베타
           </Button>
           <button
@@ -265,12 +272,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
             카카오톡 오픈채팅
           </button>
           <div className="home-bottom-wrapper">
-            <a href="https://www.buymeacoffee.com/moducbts">
-              <img
-                src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=moducbts&button_colour=FFDD00&font_colour=000000&font_family=Comic&outline_colour=000000&coffee_colour=ffffff"
-                alt="buy me a coffee"
-              />
-            </a>
             <MainViewCount />
           </div>
         </div>
