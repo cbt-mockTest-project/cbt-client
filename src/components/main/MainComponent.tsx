@@ -11,9 +11,11 @@ import {
   selectExamHistory,
   tempAnswerKey,
 } from '@lib/constants';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
+import { checkAdblock } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import { Option } from 'antd/lib/mentions';
@@ -48,6 +50,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   examLinks,
 }) => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const {
     value: preventAdBlockModalState,
@@ -76,7 +79,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
 
-    if (!storage.get('firstNoticeModal')) {
+    if (storage.get('firstNoticeModal') !== 2) {
       onToggleNoticeModal();
     }
     (async () => {
@@ -123,10 +126,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-    //   onTogglePreventAdBlockModal();
-    //   return;
-    // }
+    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+      onTogglePreventAdBlockModal();
+      return;
+    }
     if (!selectedExamId) return;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === category
@@ -160,14 +163,28 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    // if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
-    //   onTogglePreventAdBlockModal();
-    //   return;
-    // }
+    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+      onTogglePreventAdBlockModal();
+      return;
+    }
     setGotoSolutionPageLoading(true);
     router.push({
       pathname: `/exam/solution/${selectedExamId}`,
     });
+  };
+  const gotoRandomSelectPage = () => {
+    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+      onTogglePreventAdBlockModal();
+      return;
+    }
+    router.push('/exam/randomselect');
+  };
+  const onCloseNoticeModal = () => {
+    const value = storage.get('firstNoticeModal');
+    value
+      ? storage.set('firstNoticeModal', 2)
+      : storage.set('firstNoticeModal', 1);
+    onToggleNoticeModal();
   };
   return (
     <MainComponentContainer>
@@ -230,10 +247,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
             </div>
           </div>
           <div className="home-content-devide-line" />
-          <Link href={'/exam/randomselect'} className="home-random-select-link">
-            <Button type="ghost">랜덤모의고사</Button>
-          </Link>
-
+          <Button onClick={gotoRandomSelectPage} type="ghost">
+            랜덤모의고사
+          </Button>
           <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
           </Button>
@@ -297,13 +313,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           />
         )}
         {noticeModalState && (
-          <NoticeModal
-            open={noticeModalState}
-            onClose={() => {
-              storage.set('firstNoticeModal', true);
-              onToggleNoticeModal();
-            }}
-          />
+          <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
         )}
         {removeAdModalState && (
           <RemoveAdModal

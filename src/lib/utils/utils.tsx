@@ -64,6 +64,12 @@ export const handleError = (error: any) => {
     }
       `;
   } else {
+    if (
+      typeof window !== 'undefined' &&
+      window.navigator.userAgent.includes('Googlebot')
+    ) {
+      return;
+    }
     telegramMessage = `
         name: ${
           !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
@@ -71,9 +77,10 @@ export const handleError = (error: any) => {
       error?.response?.data ||
       error?.response?.message ||
       error?.message ||
-      error
-    }\n__uri:${error?.response?.config?.url}\n__status:${
-      error?.response?.status
+      error ||
+      ''
+    }\n__uri:${error?.response?.config?.url || ''}\n__status:${
+      error?.response?.status || ''
     }\npathname: ${
       typeof window !== 'undefined' ? window.location : ''
     }\nuserAgent: ${
@@ -185,11 +192,10 @@ export const shuffleArray = (array: any[]) => {
 
 export const removeWhiteSpace = (string: string) => string.replace(/\s/g, '');
 
-export const checkAdblock = ():boolean => {
+export const checkAdblock = (): boolean => {
   const adsbygoogle = document.querySelector('ins.adsbygoogle');
   if (!adsbygoogle) {
-
     return true;
   }
   return false;
-}
+};
