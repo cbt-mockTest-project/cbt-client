@@ -283,7 +283,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                 isSolutionAllHide={isSolutionAllHide}
                 question={el}
                 title={convertExamTitle(title || '')}
-                refetch={refetchReadQuestions}
                 isPreview={isPreview}
                 hasNewWindowButton={hasNewWindowButton}
               />
