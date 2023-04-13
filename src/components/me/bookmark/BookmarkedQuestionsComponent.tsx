@@ -9,9 +9,9 @@ import { Button, Select } from 'antd';
 import { responsive } from '@lib/utils/responsive';
 import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
-import { useApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { shuffle } from 'lodash';
+import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
 
 interface BookmarkedQuestionsComponentProps {}
 
@@ -22,7 +22,7 @@ const BookmarkedQuestionsComponent: React.FC<
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [
     readQuestions,
-    { data: questionsQuery, refetch: refetchReadQuestions },
+    { data: questionsQuery, loading: loadingReadQuestions },
   ] = useLazyReadQuestionsByExamId('cache-and-network');
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
     checkboxOption[]
@@ -31,17 +31,6 @@ const BookmarkedQuestionsComponent: React.FC<
     | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
     | null
   >(null);
-
-  useEffect(() => {
-    readQuestions({
-      variables: {
-        input: {
-          id: 0,
-          bookmarked: true,
-        },
-      },
-    });
-  }, []);
 
   const [isSolutionAllHide, setIsSolutionAllHide] = useState(false);
   useEffect(() => {
@@ -80,10 +69,6 @@ const BookmarkedQuestionsComponent: React.FC<
     setQuestions(shuffle);
   };
 
-  if (questions === null) {
-    return <BookmarkedQuestionsComponentSkeleton />;
-  }
-
   return (
     <BookmarkedQuestionsComponentBlock>
       <div className="bookmark-question-google-display-ad-wrapper">
@@ -92,10 +77,9 @@ const BookmarkedQuestionsComponent: React.FC<
       <Select
         className="bookmark-question-exam-title-select"
         options={examTitleAndIdOptions}
-        defaultValue={examTitleAndIdOptions[0].value}
+        placeholder="시험을 선택해주세요"
         onChange={requsetReadBookmarkedQuestions}
       />
-
       <div>
         {questions && questions.length >= 1 && (
           <div className="bookmark-page-top-button-wrapper">
@@ -116,23 +100,26 @@ const BookmarkedQuestionsComponent: React.FC<
           </div>
         )}
       </div>
-      {questions.map((question, index) => (
-        <div key={question.id}>
-          <ExamSolutionList
-            refetch={refetchReadQuestions}
-            isSolutionAllHide={isSolutionAllHide}
-            question={question}
-            title={
-              questionsQuery?.readMockExamQuestionsByMockExamId.title || ''
-            }
-          />
-          {(index === 0 || index === 2) && (
-            <div className="bookmark-page-google-feed-ad-wrapper">
-              <GoogleAd type="feed" />
-            </div>
-          )}
-        </div>
-      ))}
+      {loadingReadQuestions ? (
+        <ExamHistorySkeleton />
+      ) : (
+        questions?.map((question, index) => (
+          <div key={question.id}>
+            <ExamSolutionList
+              isSolutionAllHide={isSolutionAllHide}
+              question={question}
+              title={
+                questionsQuery?.readMockExamQuestionsByMockExamId.title || ''
+              }
+            />
+            {(index === 0 || index === 2) && (
+              <div className="bookmark-page-google-feed-ad-wrapper">
+                <GoogleAd type="feed" />
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </BookmarkedQuestionsComponentBlock>
   );
 };

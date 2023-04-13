@@ -18,13 +18,13 @@ declare global {
 interface CoreContainerProps {}
 
 const CoreContainer: React.FC<CoreContainerProps> = () => {
-  const { data } = usePostCommentNotice();
-  const [requestMeQuery] = useLazyMeQuery();
-  useEffect(() => {
-    if (data?.postCommentUpdates.ok) {
-      requestMeQuery();
-    }
-  }, [data]);
+  // const { data } = usePostCommentNotice();
+  // const [requestMeQuery] = useLazyMeQuery();
+  // useEffect(() => {
+  //   if (data?.postCommentUpdates.ok) {
+  //     requestMeQuery();
+  //   }
+  // }, [data]);
   const dispatch = useAppDispatch();
   const { modalName } = useAppSelector((state) => state.core);
   const onCloseModal = () => {
