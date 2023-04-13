@@ -94,7 +94,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <h3>{title}</h3>
       <GoogleAd type="display" />
       <ExamSolutionList
-        refetch={refetchReadQuestion}
         isSolutionAllHide={false}
         title={question.question}
         commentType="basic"
