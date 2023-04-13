@@ -52,7 +52,6 @@ interface ExamSolutionListProps {
   title: string;
   isSolutionAllHide: boolean;
   commentType?: 'modal' | 'basic';
-  refetch: ({ ...args }?: any) => any;
   hasNewWindowButton?: boolean;
   hasStateBox?: boolean;
   isPreview?: boolean;

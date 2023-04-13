@@ -35,28 +35,16 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
   const [
     readQuestions,
-    {
-      data: questionsQuery,
-      refetch: refetchReadQuestions,
-      loading: readQuestionsLoading,
-    },
+    { data: questionsQuery, loading: readQuestionsLoading },
   ] = useLazyReadQuestionsByExamId('cache-and-network');
   const [examTitleAndIdOptions, setExamTitleAndIdOptions] = useState<
     DefaultOptionType[]
   >([]);
   const [questions, setQuestions] = useState<Question>(null);
-  const [currentExamId, setCurrentExamId] = useState<number>(0);
+  const [currentExamId, setCurrentExamId] = useState<number>();
   const { value: isSolutionAllHide, onToggle: onToggleSolutionAllHide } =
     useToggle(false);
-  useEffect(() => {
-    readQuestions({
-      variables: {
-        input: {
-          states: [],
-        },
-      },
-    });
-  }, []);
+
   useEffect(() => {
     if (examTitleAndIdQuery?.readExamTitleAndIdByQuestionState.ok) {
       const titleAndId =
@@ -89,9 +77,6 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
   };
-  if (questions === null) {
-    return <BookmarkedQuestionsComponentSkeleton />;
-  }
 
   const onChangeExamTitle = (value: number) => {
     setCheckedStates([]);
@@ -120,50 +105,54 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
       <Select
         className="review-note-exam-title-select"
         options={examTitleAndIdOptions}
-        defaultValue={examTitleAndIdOptions[0].value as number}
         onChange={onChangeExamTitle}
+        value={currentExamId}
+        placeholder="시험을 선택해주세요"
       />
-      <div>
-        <Checkbox
-          onClick={onClickAllCheckbox}
-          checked={checkedStates.length === 0}
-        >
-          전체
-        </Checkbox>
-        <Checkbox.Group
-          className="review-note-checkbox-group"
-          options={states}
-          value={checkedStates}
-          onChange={(values) => {
-            setCheckedStates(values as QuestionState[]);
-            const input =
-              currentExamId === 0
-                ? { states: values as QuestionState[] }
-                : { id: currentExamId, states: values as QuestionState[] };
-            readQuestions({
-              variables: {
-                input,
-              },
-            });
-          }}
-        />
-      </div>
-      <div className="review-note-top-button-wrapper">
-        <Button onClick={onToggleSolutionAllHide} type="primary">
-          {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
-        </Button>
-        <Button onClick={onShuffleQuestion} type="primary">
-          섞기
-        </Button>
-      </div>
+      {currentExamId !== undefined && (
+        <>
+          <div>
+            <Checkbox
+              onClick={onClickAllCheckbox}
+              checked={checkedStates.length === 0}
+            >
+              전체
+            </Checkbox>
+            <Checkbox.Group
+              className="review-note-checkbox-group"
+              options={states}
+              value={checkedStates}
+              onChange={(values) => {
+                setCheckedStates(values as QuestionState[]);
+                const input =
+                  currentExamId === 0
+                    ? { states: values as QuestionState[] }
+                    : { id: currentExamId, states: values as QuestionState[] };
+                readQuestions({
+                  variables: {
+                    input,
+                  },
+                });
+              }}
+            />
+          </div>
+          <div className="review-note-top-button-wrapper">
+            <Button onClick={onToggleSolutionAllHide} type="primary">
+              {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+            </Button>
+            <Button onClick={onShuffleQuestion} type="primary">
+              섞기
+            </Button>
+          </div>
+        </>
+      )}
 
       {readQuestionsLoading ? (
         <ExamHistorySkeleton />
       ) : (
-        questions.map((question, index) => (
+        questions?.map((question, index) => (
           <div key={question.id}>
             <ExamSolutionList
-              refetch={refetchReadQuestions}
               isSolutionAllHide={isSolutionAllHide}
               hasStateBox={true}
               question={question}

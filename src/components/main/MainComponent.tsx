@@ -204,7 +204,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 </label>
               </div>
             </div>
-            <Select value={category} onChange={onCategoryChange}>
+            <Select
+              value={category}
+              onChange={onCategoryChange}
+              data-cy="category-selector"
+            >
               {categories.map((category) => (
                 <Option
                   key={category.value}
@@ -215,6 +219,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
                         ? 'black'
                         : palette.blue_600,
                   }}
+                  data-cy="category-selector-option"
                 >
                   {category.label}
                 </Option>
@@ -225,6 +230,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
               options={titles}
               value={title}
               onChange={(value) => onTitleChange(Number(value), titles)}
+              data-cy="exam-selector"
             />
             <div className="home-button-mode-wrapper">
               <Button

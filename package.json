@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "ts:codegen": "graphql-codegen",
-    "cypress:open": "cypress open"
+    "cy": "cypress open"
   },
   "dependencies": {
     "@ant-design/colors": "^6.0.0",

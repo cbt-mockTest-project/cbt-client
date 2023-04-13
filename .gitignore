@@ -4,7 +4,7 @@
 **/sitemap*.xml
 
 # environment variable
-.env.*
+*.env.*
 # dependencies
 /node_modules
 /.pnp
