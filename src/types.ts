@@ -1141,7 +1141,8 @@ export type Post = {
 export enum PostCategory {
   Free = 'FREE',
   Notice = 'NOTICE',
-  Pass = 'PASS'
+  Pass = 'PASS',
+  Review = 'REVIEW'
 }
 
 export type PostComment = {
@@ -1772,11 +1773,6 @@ export type SendVerificationMailOutput = {
   __typename?: 'SendVerificationMailOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-};
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  postCommentUpdates: CoreOutput;
 };
 
 export type TitleAndId = {
