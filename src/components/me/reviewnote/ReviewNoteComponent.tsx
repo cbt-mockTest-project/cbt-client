@@ -1,5 +1,4 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
-import SquareCheckboxGroup from '@components/common/checkbox/SquareCheckboxGroup';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
@@ -15,7 +14,6 @@ import { shuffle } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
-import BookmarkedQuestionsComponentSkeleton from '../bookmark/BookmarkedQuestionsComponentSkeleton';
 import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
 
 interface ReviewNoteComponentProps {}
@@ -31,7 +29,8 @@ export const states: checkboxOption[] = [
 ];
 
 const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
-  const { data: examTitleAndIdQuery } = useReadExamTitleAndIdByState();
+  const { data: examTitleAndIdQuery, loading: loadingExamTitleAndId } =
+    useReadExamTitleAndIdByState();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
   const [
     readQuestions,
@@ -107,6 +106,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
         options={examTitleAndIdOptions}
         onChange={onChangeExamTitle}
         value={currentExamId}
+        loading={loadingExamTitleAndId}
         placeholder="시험을 선택해주세요"
       />
       {currentExamId !== undefined && (

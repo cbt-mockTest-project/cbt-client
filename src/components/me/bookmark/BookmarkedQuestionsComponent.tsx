@@ -1,16 +1,15 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import { RoundCheckboxGroupOnChangeValueType } from '@components/common/checkbox/RoundCheckboxGroup';
-import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/user/hook/useQuestionBookmark';
+import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/user/hook/useQuestionBookmark';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { responsive } from '@lib/utils/responsive';
+import { Button, Select } from 'antd';
 import { checkboxOption } from 'customTypes';
+import { shuffle } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
-import { Button, Select } from 'antd';
-import { responsive } from '@lib/utils/responsive';
-import BookmarkedQuestionsComponentSkeleton from './BookmarkedQuestionsComponentSkeleton';
-import GoogleAd from '@components/common/ad/GoogleAd';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import { shuffle } from 'lodash';
 import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
 
 interface BookmarkedQuestionsComponentProps {}
@@ -18,7 +17,7 @@ interface BookmarkedQuestionsComponentProps {}
 const BookmarkedQuestionsComponent: React.FC<
   BookmarkedQuestionsComponentProps
 > = () => {
-  const { data: examTitleAndIdQuery } =
+  const { data: examTitleAndIdQuery, loading: loadingReadTitleAndId } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [
     readQuestions,
@@ -79,6 +78,7 @@ const BookmarkedQuestionsComponent: React.FC<
         options={examTitleAndIdOptions}
         placeholder="시험을 선택해주세요"
         onChange={requsetReadBookmarkedQuestions}
+        loading={loadingReadTitleAndId}
       />
       <div>
         {questions && questions.length >= 1 && (
