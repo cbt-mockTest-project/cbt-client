@@ -5,12 +5,12 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { DropBoxOption } from '../../dropbox/DropBox';
 import { loginModal } from '@lib/constants';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { NoticeDropBoxOption } from '../../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
-import { addHours, format, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import NavView from './NavView';
 import { NavViewProps } from './Nav.interface';
+import { handleError } from '@lib/utils/utils';
 
 const NavContainer = () => {
   const router = useRouter();
@@ -32,12 +32,14 @@ const NavContainer = () => {
   const dispatch = useAppDispatch();
   const isRegister = pathname.includes('/register');
   const requestLogout = async () => {
-    await logoutMutation();
-    location.reload();
+    try {
+      await logoutMutation();
+      location.reload();
+    } catch (e) {
+      handleError(e);
+    }
   };
-  const tryRequestLogout = convertWithErrorHandlingFunc({
-    callback: requestLogout,
-  });
+
   const notices = meQuery?.me.notices;
   const noticeBoxOptions: NoticeDropBoxOption[] =
     notices?.map((notice) => ({
@@ -59,7 +61,7 @@ const NavContainer = () => {
     },
     {
       label: '로그아웃',
-      onClick: tryRequestLogout,
+      onClick: requestLogout,
     },
   ];
   const onScroll = () => {
@@ -98,7 +100,7 @@ const NavContainer = () => {
     noticeBoxOptions,
     dropBoxOptions,
     openLoginModal,
-    tryRequestLogout,
+    requestLogout,
     onOuterClickForNoticeDropBox,
     onOuterClickForProfileDropBox,
     isSelectedNavItem,

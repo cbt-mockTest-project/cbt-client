@@ -6,7 +6,6 @@ import { useReadExamTitleAndIdByState } from '@lib/graphql/user/hook/useQuestion
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { Button, Checkbox } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
@@ -15,6 +14,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
 import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
+import { handleError } from '@lib/utils/utils';
 
 interface ReviewNoteComponentProps {}
 
@@ -63,16 +63,17 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
     }
   }, [questionsQuery]);
 
-  const requsetReadQuestions = async (examId: number) => {
-    const input = examId === 0 ? { states: [] } : { id: examId, states: [] };
-    await readQuestions({
-      variables: { input },
-    });
+  const requestReadQuestions = async (examId: number) => {
+    try {
+      const input = examId === 0 ? { states: [] } : { id: examId, states: [] };
+      await readQuestions({
+        variables: { input },
+      });
+    } catch (e) {
+      handleError(e);
+    }
   };
-  const tryReadQuestions = (examId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requsetReadQuestions(examId),
-    });
+
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
   };
@@ -80,7 +81,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const onChangeExamTitle = (value: number) => {
     setCheckedStates([]);
     setCurrentExamId(value);
-    tryReadQuestions(value)();
+    requestReadQuestions(value);
   };
 
   const onClickAllCheckbox = () => {

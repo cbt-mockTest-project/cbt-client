@@ -12,11 +12,6 @@ import {
   EditNoticeMutation,
   EditNoticeMutationVariables,
 } from '../query/noticeQuery.generated';
-import { POST_COMMENT_NOTICE } from '../query/subscription';
-import {
-  PostCommentUpdatesSubscription,
-  PostCommentUpdatesSubscriptionVariables,
-} from '../query/subscription.generated';
 
 export const useEditNotice = () =>
   useMutation<EditNoticeMutation, EditNoticeMutationVariables>(EDIT_NOTICE);
@@ -32,8 +27,8 @@ export const useDeleteAllNotices = () =>
     DeleteAllNoticesOfMeMutationVariables
   >(DELETE_ALL_NOTICE);
 
-export const usePostCommentNotice = () =>
-  useSubscription<
-    PostCommentUpdatesSubscription,
-    PostCommentUpdatesSubscriptionVariables
-  >(POST_COMMENT_NOTICE);
+// export const usePostCommentNotice = () =>
+//   useSubscription<
+//     PostCommentUpdatesSubscription,
+//     PostCommentUpdatesSubscriptionVariables
+//   >(POST_COMMENT_NOTICE);

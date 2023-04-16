@@ -7,15 +7,14 @@ import {
   useLogoutMutation,
   useMeQuery,
 } from '@lib/graphql/user/hook/useUser';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditComponentSkeleton from './EditComponentSkeleton';
+import { handleError } from '@lib/utils/utils';
 
 interface EditComponentProps {}
 
@@ -37,76 +36,87 @@ const EditComponent: React.FC<EditComponentProps> = () => {
   const { value: newPassword, onChange: onChangeNewPasswordValue } =
     useInput('');
   const requestChangeNickname = async () => {
-    if (nickname.length <= 1) {
-      return message.error('2글자 이상 입력해주세요.');
-    }
-    const res = await editProfileMutation({
-      variables: { input: { nickname } },
-    });
-    if (res.data?.editProfile.ok) {
-      client.cache.modify({
-        id: 'ROOT_QUERY',
-        fields: {
-          me(me) {
-            return { ...me, user: { ...me.user, nickname } };
-          },
-        },
+    try {
+      if (nickname.length <= 1) {
+        return message.error('2글자 이상 입력해주세요.');
+      }
+      const res = await editProfileMutation({
+        variables: { input: { nickname } },
       });
-      return message.success({ content: '닉네임이 변경되었습니다.' });
+      if (res.data?.editProfile.ok) {
+        client.cache.modify({
+          id: 'ROOT_QUERY',
+          fields: {
+            me(me) {
+              return { ...me, user: { ...me.user, nickname } };
+            },
+          },
+        });
+        return message.success({ content: '닉네임이 변경되었습니다.' });
+      }
+      return message.error({ content: res.data?.editProfile.error });
+    } catch (e) {
+      handleError(e);
     }
-    return message.error({ content: res.data?.editProfile.error });
   };
 
-  const tryRequestChangeNickname = convertWithErrorHandlingFunc({
-    callback: requestChangeNickname,
-  });
   const requestLogout = async () => {
-    await logoutMutation();
-    location.reload();
-  };
-  const requestChangePassword = async () => {
-    if (newPassword.length < 4) {
-      return message.error('비밀번호를 4글자 이상 입력해주세요.');
-    }
-    const res = await editProfileMutation({
-      variables: { input: { password: newPassword } },
-    });
-    if (res.data?.editProfile.ok) {
-      message.success({ content: '비밀번호가 변경되었습니다.' });
-      requestLogout();
-      return;
-    }
-    return message.error({ content: res.data?.editProfile.error });
-  };
-  const tryRequestChangePassword = convertWithErrorHandlingFunc({
-    callback: requestChangePassword,
-  });
-  const requestCheckPassword = async () => {
-    const res = await checkPasswordMutation({
-      variables: { input: { password: prevPassword } },
-    });
-    if (res.data?.checkPassword.ok) {
-      setPasswordChecked(true);
-      return message.success({ content: '확인 되었습니다.' });
-    }
-    return message.error({ content: res.data?.checkPassword.error });
-  };
-  const tryRequestCheckPassword = convertWithErrorHandlingFunc({
-    callback: requestCheckPassword,
-  });
-  const requestWithdrawal = async () => {
-    const res = await deleteUserMutation();
-    if (res.data?.deleteUser.ok) {
-      message.success({ content: '회원탈퇴 되었습니다.' });
+    try {
       await logoutMutation();
       location.reload();
-      return;
+    } catch (e) {
+      handleError(e);
     }
-    return message.error({ content: res.data?.deleteUser.error });
   };
-  const tryRequestWithdrawal = convertWithErrorHandlingFunc({
-    callback: requestWithdrawal,
-  });
+  const requestChangePassword = async () => {
+    try {
+      if (newPassword.length < 4) {
+        return message.error('비밀번호를 4글자 이상 입력해주세요.');
+      }
+      const res = await editProfileMutation({
+        variables: { input: { password: newPassword } },
+      });
+      if (res.data?.editProfile.ok) {
+        message.success({ content: '비밀번호가 변경되었습니다.' });
+        requestLogout();
+        return;
+      }
+      return message.error({ content: res.data?.editProfile.error });
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const requestCheckPassword = async () => {
+    try {
+      const res = await checkPasswordMutation({
+        variables: { input: { password: prevPassword } },
+      });
+      if (res.data?.checkPassword.ok) {
+        setPasswordChecked(true);
+        return message.success({ content: '확인 되었습니다.' });
+      }
+      return message.error({ content: res.data?.checkPassword.error });
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const requestWithdrawal = async () => {
+    try {
+      const res = await deleteUserMutation();
+      if (res.data?.deleteUser.ok) {
+        message.success({ content: '회원탈퇴 되었습니다.' });
+        await logoutMutation();
+        location.reload();
+        return;
+      }
+      return message.error({ content: res.data?.deleteUser.error });
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const onToggleWithdrawalModal = () =>
     setWithdrawalModalState(!withdrawalModalState);
 
@@ -124,7 +134,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
         <Label content={'닉네임'} />
         <div className="edit-input-and-button-wrapper">
           <Input value={nickname} onChange={onChangeNicknameValue} />
-          <Button onClick={tryRequestChangeNickname}>변경하기</Button>
+          <Button onClick={requestChangeNickname}>변경하기</Button>
         </div>
       </div>
       <div className="edit-block">
@@ -137,7 +147,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
             disabled={passwordChecked}
             type="password"
           />
-          <Button onClick={tryRequestCheckPassword} disabled={passwordChecked}>
+          <Button onClick={requestCheckPassword} disabled={passwordChecked}>
             확인하기
           </Button>
         </div>
@@ -149,10 +159,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
             disabled={!passwordChecked}
             type="password"
           />
-          <Button
-            onClick={tryRequestChangePassword}
-            disabled={!passwordChecked}
-          >
+          <Button onClick={requestChangePassword} disabled={!passwordChecked}>
             변경하기
           </Button>
         </div>
@@ -176,7 +183,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
         content={
           <pre>{`탈퇴 후 재가입이 불가능합니다.\n탈퇴 하시겠습니까?`}</pre>
         }
-        onConfirm={tryRequestWithdrawal}
+        onConfirm={requestWithdrawal}
         onClose={onToggleWithdrawalModal}
         onCancel={onToggleWithdrawalModal}
       />

@@ -1,18 +1,5 @@
-import Label from '@components/common/label/Label';
-import ConfirmModal from '@components/common/modal/ConfirmModal';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
-import {
-  useCheckPasswordMutation,
-  useDeleteUser,
-  useEditProfileMutation,
-  useLogoutMutation,
-} from '@lib/graphql/user/hook/useUser';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
-import useInput from '@lib/hooks/useInput';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
-import { message } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const EditComponentSkeleton: React.FC = () => {

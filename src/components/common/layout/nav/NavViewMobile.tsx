@@ -57,7 +57,7 @@ const NavViewMobile: React.FC<NavViewMobileProps> = (props) => {
         menuState={props.menuState}
         onToggleMenu={props.onToggleMenu}
         meQuery={props.meQuery}
-        tryRequestLogout={props.tryRequestLogout}
+        requestLogout={props.requestLogout}
       />
     </NavViewMobileContainer>
   );

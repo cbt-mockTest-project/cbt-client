@@ -25,22 +25,6 @@ export const convertStateToIcon = (
   }
 };
 
-interface ConvertWithErrorHandlingFuncParams<
-  T extends (...args: any[]) => ReturnType<T>
-> {
-  callback: T | ((...args: any[]) => ReturnType<T>);
-  errorCallback?: (...args: any[]) => ReturnType<T>;
-}
-
-declare type ConvertWithErrorHandlingFunc = <
-  T extends (...args: any[]) => ReturnType<T>
->({
-  callback,
-  errorCallback,
-}: ConvertWithErrorHandlingFuncParams<T>) => () => Promise<
-  ReturnType<T> | undefined
->;
-
 export const handleError = async (error: any) => {
   const apolloClient = initializeApollo({}, '');
   const sendErrorToTelegram = (message: string) =>
@@ -80,19 +64,6 @@ export const handleError = async (error: any) => {
       `;
   sendErrorToTelegram(telegramMessage);
 };
-
-export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
-  ({ callback, errorCallback }) =>
-  async () => {
-    try {
-      return await callback();
-    } catch (error: any) {
-      handleError(error);
-      if (errorCallback) {
-        return await errorCallback(error);
-      }
-    }
-  };
 
 interface CheckUrlArgs {
   url: string;

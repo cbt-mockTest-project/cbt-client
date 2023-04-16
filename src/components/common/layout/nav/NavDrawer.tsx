@@ -11,7 +11,7 @@ import { UserRole } from 'types';
 interface NavDrawerProps
   extends Pick<
     NavViewProps,
-    'menuState' | 'onToggleMenu' | 'meQuery' | 'tryRequestLogout'
+    'menuState' | 'onToggleMenu' | 'meQuery' | 'requestLogout'
   > {}
 
 const NavDrawer: React.FC<NavDrawerProps> = (props) => {
@@ -53,9 +53,7 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
                 <span className="mobile-nav-item-link-text">관리자</span>
               </Link>
             )}
-            <StyledButton onClick={props.tryRequestLogout}>
-              로그아웃
-            </StyledButton>
+            <StyledButton onClick={props.requestLogout}>로그아웃</StyledButton>
           </>
         ) : (
           <>

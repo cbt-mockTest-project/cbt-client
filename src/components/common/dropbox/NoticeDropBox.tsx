@@ -9,11 +9,11 @@ import {
   useEditNotice,
 } from '@lib/graphql/user/hook/useNotice';
 import { useApollo } from '@modules/apollo';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
+import { handleError } from '@lib/utils/utils';
 
 export interface NoticeDropBoxOption extends DropBoxOption {
   confirmed: boolean;
@@ -31,83 +31,86 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
   const [deleteAllNotices] = useDeleteAllNotices();
   const client = useApollo({}, '');
   const requestNoticeClick = async (noticeId: number) => {
-    const res = await editNotice({
-      variables: { input: { noticeId, confirm: true } },
-    });
-    if (res.data?.editNotice.ok) {
-      client.cache.modify({
-        id: `Notice:${noticeId}`,
-        fields: {
-          confirm() {
-            return true;
-          },
-        },
+    try {
+      const res = await editNotice({
+        variables: { input: { noticeId, confirm: true } },
       });
-    }
-  };
-  const tryNoticeClick = (noticeId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestNoticeClick(noticeId),
-    });
-  const requestDeleteNotice = async (noticeId: number) => {
-    const res = await deleteNotice({ variables: { input: { noticeId } } });
-    if (res.data?.deleteNotice.ok) {
-      const queryResult = client.readQuery<MeQuery>({
-        query: ME_QUERY,
-      });
-
-      if (queryResult) {
-        const prevNotices = queryResult.me.notices;
-        const newNotices = prevNotices?.filter(
-          (notice) => notice.id !== noticeId
-        );
-        client.writeQuery({
-          query: ME_QUERY,
-          data: {
-            ...queryResult,
-            me: {
-              ...queryResult.me,
-              notices: newNotices,
+      if (res.data?.editNotice.ok) {
+        client.cache.modify({
+          id: `Notice:${noticeId}`,
+          fields: {
+            confirm() {
+              return true;
             },
           },
         });
       }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const requestDeleteNotice = async (noticeId: number) => {
+    try {
+      const res = await deleteNotice({ variables: { input: { noticeId } } });
+      if (res.data?.deleteNotice.ok) {
+        const queryResult = client.readQuery<MeQuery>({
+          query: ME_QUERY,
+        });
+
+        if (queryResult) {
+          const prevNotices = queryResult.me.notices;
+          const newNotices = prevNotices?.filter(
+            (notice) => notice.id !== noticeId
+          );
+          client.writeQuery({
+            query: ME_QUERY,
+            data: {
+              ...queryResult,
+              me: {
+                ...queryResult.me,
+                notices: newNotices,
+              },
+            },
+          });
+        }
+      }
+    } catch (e) {
+      handleError(e);
     }
   };
   const requestDeleteAllNotices = async () => {
-    const res = await deleteAllNotices();
-    if (res.data?.deleteAllNoticesOfMe.ok) {
-      const queryResult = client.readQuery<MeQuery>({
-        query: ME_QUERY,
-      });
-      if (queryResult) {
-        client.writeQuery({
+    try {
+      const res = await deleteAllNotices();
+      if (res.data?.deleteAllNoticesOfMe.ok) {
+        const queryResult = client.readQuery<MeQuery>({
           query: ME_QUERY,
-          data: {
-            ...queryResult,
-            me: {
-              ...queryResult.me,
-              notices: null,
-            },
-          },
         });
+        if (queryResult) {
+          client.writeQuery({
+            query: ME_QUERY,
+            data: {
+              ...queryResult,
+              me: {
+                ...queryResult.me,
+                notices: null,
+              },
+            },
+          });
+        }
       }
+    } catch (e) {
+      handleError(e);
     }
   };
-  const tryDeleteNotice = (noticeId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestDeleteNotice(noticeId),
-    });
-  const tryDeleteAllNotices = convertWithErrorHandlingFunc({
-    callback: requestDeleteAllNotices,
-  });
+
   const hasNotices = options.length >= 1;
   return (
     <NoticeDropBoxContainer>
       <DropBox isOpen={isOpen} className="notice-drop-box">
         <div className="notice-top-content">
           <h3>알림</h3>
-          <button onClick={tryDeleteAllNotices}>모든알림 지우기</button>
+          <button onClick={requestDeleteAllNotices}>모든알림 지우기</button>
         </div>
         <ul className="notice-content-list">
           {hasNotices &&
@@ -120,14 +123,14 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
                     }`}
                   />
                   <button
-                    onClick={tryNoticeClick(Number(option.value))}
+                    onClick={() => requestNoticeClick(Number(option.value))}
                     className="notice-content-click-button"
                   >
                     <pre>{option.label}</pre>
                     <div className="notice-content-time">{option.time}</div>
                   </button>
                   <button
-                    onClick={tryDeleteNotice(Number(option.value))}
+                    onClick={() => requestDeleteNotice(Number(option.value))}
                     className="notice-content-clear-button"
                   >
                     <ClearIcon />
@@ -141,7 +144,7 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
                     }`}
                   />
                   <button
-                    onClick={tryNoticeClick(Number(option.value))}
+                    onClick={() => requestNoticeClick(Number(option.value))}
                     className="notice-content-click-button"
                   >
                     <Link href={option.link}>
@@ -150,7 +153,7 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
                     <div className="notice-content-time">{option.time}</div>
                   </button>
                   <button
-                    onClick={tryDeleteNotice(Number(option.value))}
+                    onClick={() => requestDeleteNotice(Number(option.value))}
                     className="notice-content-clear-button"
                   >
                     <ClearIcon />

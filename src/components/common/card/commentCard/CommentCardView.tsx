@@ -31,7 +31,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
               <button onClick={props.toggleEdit}>
                 <EditIcon />
               </button>
-              <button onClick={props.tryDelete}>
+              <button onClick={props.requestDelete}>
                 <DeleteIcon />
               </button>
             </>
@@ -50,7 +50,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
               className="comment-card-edit-button"
               type="primary"
               loading={props.editLoading}
-              onClick={props.tryEdit}
+              onClick={props.requestEdit}
             >
               댓글수정
             </Button>
@@ -64,7 +64,7 @@ const CommentCardView: React.FC<CommentCardProps> = (props) => {
         <div className="comment-card-time mobile-only">{props.option.time}</div>
       </div>
       <div className="comment-card-right-section">
-        <button disabled={props.likeLoading} onClick={props.tryLike}>
+        <button disabled={props.likeLoading} onClick={props.requestLike}>
           <BasicBox
             className={`comment-card-like-box ${
               props.option.likeState && 'active'

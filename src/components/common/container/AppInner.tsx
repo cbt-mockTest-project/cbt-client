@@ -1,7 +1,6 @@
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useCreateVisit } from '@lib/graphql/user/hook/useVisit';
-import useToggle from '@lib/hooks/useToggle';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -46,11 +45,12 @@ const AppInner: React.FC<AppInnerProps> = () => {
       });
     }
   };
-  const tryCreateVisit = convertWithErrorHandlingFunc({
-    callback: requestCreateVisit,
-  });
   useEffect(() => {
-    tryCreateVisit();
+    try {
+      requestCreateVisit();
+    } catch (e) {
+      handleError(e);
+    }
   }, []);
 
   return null;

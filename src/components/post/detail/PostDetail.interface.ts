@@ -6,9 +6,9 @@ export interface PostDetailContainerProps {
 
 export interface PostDetailViewProps
   extends Omit<PostDetailContainerProps, 'postQueryOnStaticProps'> {
-  tryEditPostLike: React.MouseEventHandler<HTMLElement>;
-  tryCreatePostComment: React.MouseEventHandler<HTMLElement>;
-  tryDeletePost: React.MouseEventHandler<HTMLElement>;
+  requestEditPostLike: React.MouseEventHandler<HTMLElement>;
+  requestCreatePostComment: React.MouseEventHandler<HTMLElement>;
+  requestDeletePost: React.MouseEventHandler<HTMLElement>;
   commentValue: string;
   onChangeCommentValue: React.ChangeEventHandler<HTMLTextAreaElement>;
   createPostCommentLoading: boolean;

@@ -7,7 +7,6 @@ import {
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { Button, message } from 'antd';
 import Link from 'next/link';
@@ -15,6 +14,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import QuestionComponentSkeleton from './QuestionComponentSkeleton';
+import { handleError } from '@lib/utils/utils';
 
 interface QuestionComponentProps {
   questionQuery?: ReadMockExamQuestionQuery;
@@ -56,21 +56,23 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     return <QuestionComponentSkeleton />;
 
   const requestDeleteQuestion = async () => {
-    const confirmed = confirm('정말 삭제하시겠습니까?');
-    if (confirmed) {
-      const res = await deleteQuestion({
-        variables: { input: { id: Number(String(router.query.Id)) } },
-      });
-      if (res.data?.deleteMockExamQuestion.ok) {
-        message.success('삭제되었습니다.');
-        return;
+    try {
+      const confirmed = confirm('정말 삭제하시겠습니까?');
+      if (confirmed) {
+        const res = await deleteQuestion({
+          variables: { input: { id: Number(String(router.query.Id)) } },
+        });
+        if (res.data?.deleteMockExamQuestion.ok) {
+          message.success('삭제되었습니다.');
+          return;
+        }
+        return message.error(res.data?.deleteMockExamQuestion.error);
       }
-      return message.error(res.data?.deleteMockExamQuestion.error);
+    } catch (e) {
+      handleError(e);
     }
   };
-  const tryDeleteQuestion = convertWithErrorHandlingFunc({
-    callback: requestDeleteQuestion,
-  });
+
   const question = (
     (questionQueryOnClientSide || questionQuery) as ReadMockExamQuestionQuery
   ).readMockExamQuestion.mockExamQusetion;
@@ -88,7 +90,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
           >
             <Button>수정하기</Button>
           </Link>
-          <Button onClick={tryDeleteQuestion}>삭제하기</Button>
+          <Button onClick={requestDeleteQuestion}>삭제하기</Button>
         </div>
       )}
       <h3>{title}</h3>

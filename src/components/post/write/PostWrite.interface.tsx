@@ -7,6 +7,7 @@ import { EditPostInput } from 'types';
 export interface CreatePostInput {
   title: string;
   content: string;
+  id?: number;
 }
 
 export interface PostWriteProps {
@@ -21,8 +22,5 @@ export interface PostWriteProps {
   readPostQuery?: ReadPostQuery | undefined;
   postButtonLabel: string;
   postLoading: boolean;
-  onPost: ({
-    title,
-    content,
-  }: CreatePostInput) => () => Promise<Promise<any> | undefined>;
+  onPost: ({ title, content }: CreatePostInput) => Promise<any>;
 }

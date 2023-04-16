@@ -28,7 +28,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
         },
       },
     });
-  const { userAgent, ip } = operation.getContext().headers;
+  const { userAgent, ip, currentPagePath } = operation.getContext().headers;
   if (graphQLErrors)
     graphQLErrors.forEach((data) => {
       console.log(`[GraphQL error]`);
@@ -36,7 +36,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
         data.message
       }\nLocation: ${JSON.stringify(data.locations, null, 2)}\nPath: ${
         data.path
-      }\nUserAgent: ${userAgent}\nIP: ${ip}`;
+      }\nUserAgent: ${userAgent}\nIP: ${ip}\nCurrentPagePath: ${currentPagePath}`;
       sendErrorToTelegram(message);
     });
 
