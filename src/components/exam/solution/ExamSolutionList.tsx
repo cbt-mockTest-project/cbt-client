@@ -11,7 +11,7 @@ import {
 } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import { ellipsisText, handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
@@ -87,7 +87,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   });
 
   const dispatch = useAppDispatch();
-
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const { data: meQuery } = useMeQuery();
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   }, [reportModalState, commentModalState]);
   const openReportModal = () => {
     if (!meQuery?.me.ok) {
-      return dispatch(coreActions.openModal(loginModal));
+      return openLoginModal();
     }
     setReportModalState(true);
   };
@@ -170,28 +170,30 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     }
   };
   const requestEditBookmark = async () => {
-    const res = await editBookmark({
-      variables: { input: { questionId: currentQuestion.id } },
-    });
-    if (res.data?.editMockExamQuestionBookmark.ok) {
-      if (res.data?.editMockExamQuestionBookmark.currentState) {
-        setBookmarkState(true);
-        message.success('문제가 저장됐습니다.');
+    try {
+      if (!meQuery?.me.ok) {
+        return openLoginModal();
       }
-      if (!res.data?.editMockExamQuestionBookmark.currentState) {
-        setBookmarkState(false);
-        message.success('문제 저장이 해제됐습니다.');
+      const res = await editBookmark({
+        variables: { input: { questionId: currentQuestion.id } },
+      });
+      if (res.data?.editMockExamQuestionBookmark.ok) {
+        if (res.data?.editMockExamQuestionBookmark.currentState) {
+          setBookmarkState(true);
+          message.success('문제가 저장됐습니다.');
+        }
+        if (!res.data?.editMockExamQuestionBookmark.currentState) {
+          setBookmarkState(false);
+          message.success('문제 저장이 해제됐습니다.');
+        }
+        return;
       }
-      return;
+      return message.error(res.data?.editMockExamQuestionBookmark.error);
+    } catch (e) {
+      handleError(e);
     }
-    return message.error(res.data?.editMockExamQuestionBookmark.error);
   };
-  const tryEditBookmark = convertWithErrorHandlingFunc({
-    callback: requestEditBookmark,
-  });
-  const tryReport = convertWithErrorHandlingFunc({
-    callback: requestReport,
-  });
+
   const onToggleSolutionHide = () => {
     setIsSolutionHide(!isSolutionHide);
   };
@@ -215,7 +217,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           {!isPreview && (
             <button
               className="solution-page-question-bookmark-button"
-              onClick={tryEditBookmark}
+              onClick={requestEditBookmark}
             >
               <Bookmark
                 className="solution-page-question-bookmark-icon"
@@ -359,7 +361,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         }}
         onClose={onToggleReportModal}
         onCancel={onToggleReportModal}
-        onConfirm={tryReport}
+        onConfirm={requestReport}
         confirmLabel="등록하기"
         title={`${String(title)}\n${currentQuestion.number}번 문제`}
         label="오류신고 및 답안추가"
