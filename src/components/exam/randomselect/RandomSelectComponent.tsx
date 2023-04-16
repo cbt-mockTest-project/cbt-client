@@ -7,7 +7,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Checkbox, Input } from 'antd';
+import { Button, Checkbox, Input, message } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
@@ -109,6 +109,9 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   };
 
   const onStartRandomExam = () => {
+    if (limit > 100) {
+      return message.error('100문제 이상은 불가능합니다.');
+    }
     let es: string;
     const isAllSelected = selectedExams.includes(0);
     if (isAllSelected) {
@@ -214,10 +217,12 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             />
           )}
           <div className="random-select-exam-modal-setting-count-wrapper">
-            <Label content={'문항수'} />
+            <Label content={'문항수(최대100문제)'} />
             <Input
               value={limit}
               type="number"
+              max={100}
+              min={1}
               onChange={(e) => setLimit(Number(e.target.value))}
               className="random-select-exam-modal-setting-count-input"
             />
