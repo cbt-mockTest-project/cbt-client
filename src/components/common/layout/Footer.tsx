@@ -2,7 +2,6 @@ import { loginModal } from '@lib/constants';
 import { useCreateFeedback } from '@lib/graphql/user/hook/useFeedBack';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
@@ -17,36 +16,6 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ className }) => {
   const year = new Date().getFullYear();
-  const [createFeedback] = useCreateFeedback();
-  const { data: meQuery } = useMeQuery();
-  const dispatch = useAppDispatch();
-  const [reportModalState, setReportModalState] = useState(false);
-  const reportValue = useRef('');
-  const requestFeedback = async () => {
-    const res = await createFeedback({
-      variables: {
-        input: {
-          content: reportValue.current,
-        },
-      },
-    });
-    if (res.data?.createFeedback.ok) {
-      message.success({ content: '피드백 남겨주셔서 감사합니다' });
-      setReportModalState(false);
-      return;
-    }
-    message.error({ content: res.data?.createFeedback.error });
-  };
-  const tryRequestFeedback = convertWithErrorHandlingFunc({
-    callback: requestFeedback,
-  });
-
-  const onToggleReportModalState = () => {
-    if (!meQuery?.me.ok) {
-      return dispatch(coreActions.openModal(loginModal));
-    }
-    setReportModalState(!reportModalState);
-  };
   return (
     <FooterContainer className={className}>
       <div className="footer-wrapper">

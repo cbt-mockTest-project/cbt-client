@@ -3,12 +3,8 @@ import Modal from '@components/common/modal/Modal';
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import { useReadExamHistories } from '@lib/graphql/user/hook/useExamHistory';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { ReadMyExamHistoryQuery } from '@lib/graphql/user/query/examHistoryQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import {
-  convertWithErrorHandlingFunc,
-  extractKeysOfCache,
-} from '@lib/utils/utils';
+import { extractKeysOfCache, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
@@ -34,42 +30,46 @@ const ExamHistory: React.FC = () => {
     setAchieveModalState(!achieveModalState);
   };
   const requestResetQuestionState = async () => {
-    const res = await resetQuestionStateMutate({
-      variables: {
-        input: {
-          examId,
-        },
-      },
-    });
-    if (res.data?.resetMyExamQuestionState.ok) {
-      const questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
-      questionKeys.forEach((el) => {
-        client.cache.modify({
-          id: el,
-          fields: {
-            state(state) {
-              if (
-                state.length === 1 &&
-                state[0].exam.__ref === `MockExam:${examId}`
-              ) {
-                return state.map((state: MockExamQuestionState) => ({
-                  ...state,
-                  state: QuestionState.Core,
-                }));
-              }
-              return state;
-            },
+    try {
+      const res = await resetQuestionStateMutate({
+        variables: {
+          input: {
+            examId,
           },
-        });
+        },
       });
-      message.success({ content: '성취도가 초기화 되었습니다.' });
-      return;
+      if (res.data?.resetMyExamQuestionState.ok) {
+        const questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
+        questionKeys.forEach((el) => {
+          client.cache.modify({
+            id: el,
+            fields: {
+              state(state) {
+                if (
+                  state.length === 1 &&
+                  state[0].exam.__ref === `MockExam:${examId}`
+                ) {
+                  return state.map((state: MockExamQuestionState) => ({
+                    ...state,
+                    state: QuestionState.Core,
+                  }));
+                }
+                return state;
+              },
+            },
+          });
+        });
+        message.success({ content: '성취도가 초기화 되었습니다.' });
+        return;
+      }
+      return message.error({
+        content: res.data?.resetMyExamQuestionState.error,
+      });
+    } catch (e) {
+      handleError(e);
     }
-    return message.error({ content: res.data?.resetMyExamQuestionState.error });
   };
-  const tryResetQuestionState = convertWithErrorHandlingFunc({
-    callback: requestResetQuestionState,
-  });
+
   if (readExamHistoryLoading || !examHistoryQuery)
     return <ExamHistorySkeleton />;
 
@@ -125,7 +125,7 @@ const ExamHistory: React.FC = () => {
           examId={examId}
           className="achievement-modal-result-list"
         />
-        <Button type="primary" onClick={tryResetQuestionState}>
+        <Button type="primary" onClick={requestResetQuestionState}>
           성취도 초기화
         </Button>
       </Modal>

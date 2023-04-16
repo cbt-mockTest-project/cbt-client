@@ -1,7 +1,7 @@
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
 import { message, UploadFile } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   useCreateExam,
@@ -14,7 +14,6 @@ import {
   useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { DefaultOptionType } from 'antd/lib/select';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import useInput from '@lib/hooks/useInput';
 import SelectAdd, { SelectAddProps } from '@components/common/select/SelectAdd';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -34,6 +33,7 @@ import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
 import useToggle from '@lib/hooks/useToggle';
 import { useRouter } from 'next/router';
 import EditNameModal from '@components/common/modal/EditNameModal';
+import { handleError } from '@lib/utils/utils';
 
 interface CreateExamComponentProps {}
 
@@ -122,123 +122,133 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const methods = useForm<CreateMockExamQuestionInput>();
 
   const requestTitleSelect = async (title: DefaultOptionType) => {
-    setSelectedTitle(title);
-    const res = await readQuestionNumbers({
-      variables: { input: { mockExamId: title.value as number } },
-    });
-    if (res.data?.readMockExamQuestionNumbers.ok) {
-      const { questionNumbers, examStatus } =
-        res.data.readMockExamQuestionNumbers;
-      setQuestionNumbers(() => (res.data ? questionNumbers : []));
-      setExamStatus(examStatus as ExamStatus);
+    try {
+      setSelectedTitle(title);
+      const res = await readQuestionNumbers({
+        variables: { input: { mockExamId: title.value as number } },
+      });
+      if (res.data?.readMockExamQuestionNumbers.ok) {
+        const { questionNumbers, examStatus } =
+          res.data.readMockExamQuestionNumbers;
+        setQuestionNumbers(() => (res.data ? questionNumbers : []));
+        setExamStatus(examStatus as ExamStatus);
 
-      setSelectedQuestionNumber(findBlankQuestionNumber(questionNumbers));
-      return;
+        setSelectedQuestionNumber(findBlankQuestionNumber(questionNumbers));
+        return;
+      }
+    } catch (e) {
+      handleError(e);
     }
   };
 
   const requestCategorySelect = async (category: DefaultOptionType) => {
-    setSelectedCategory(category);
-    const res = await readTitles({
-      variables: { input: { name: category.label as string, all: true } },
-    });
-    if (res.data?.readMockExamTitlesByCateory.ok) {
-      const titles = res.data
-        ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
-            value: title.id,
-            label: title.title,
-          }))
-        : [];
-      setTitles(titles);
-      return;
+    try {
+      setSelectedCategory(category);
+      const res = await readTitles({
+        variables: { input: { name: category.label as string, all: true } },
+      });
+      if (res.data?.readMockExamTitlesByCateory.ok) {
+        const titles = res.data
+          ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
+              value: title.id,
+              label: title.title,
+            }))
+          : [];
+        setTitles(titles);
+        return;
+      }
+      message.error(res.data?.readMockExamTitlesByCateory.error);
+    } catch (e) {
+      handleError(e);
     }
-    message.error(res.data?.readMockExamTitlesByCateory.error);
-  };
-  const tryCategorySelect = (category: DefaultOptionType) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestCategorySelect(category),
-    });
-  const requestCreateTitlte = async () => {
-    if (!selectedCategory) return;
-    if (examTitle.length < 2) {
-      return message.error('두 글자 이상 입력해주세요.');
-    }
-    const res = await createExam({
-      variables: {
-        input: {
-          title: examTitle,
-          categoryName: selectedCategory.label as string,
-        },
-      },
-    });
-    if (res.data?.createMockExam.ok) {
-      setExamTitle('');
-      const { mockExam } = res.data.createMockExam;
-      const convertedTitle: DefaultOptionType = {
-        value: mockExam?.id,
-        label: mockExam?.title,
-      };
-      const newTitles = [...titles, convertedTitle];
-      setTitles(newTitles);
-      message.success('시험이 생성되었습니다.');
-      return;
-    }
-    message.error(res.data?.createMockExam.error);
   };
 
-  const tryCreateTitle = convertWithErrorHandlingFunc({
-    callback: requestCreateTitlte,
-  });
+  const requestCreateTitlte = async () => {
+    try {
+      if (!selectedCategory) return;
+      if (examTitle.length < 2) {
+        return message.error('두 글자 이상 입력해주세요.');
+      }
+      const res = await createExam({
+        variables: {
+          input: {
+            title: examTitle,
+            categoryName: selectedCategory.label as string,
+          },
+        },
+      });
+      if (res.data?.createMockExam.ok) {
+        setExamTitle('');
+        const { mockExam } = res.data.createMockExam;
+        const convertedTitle: DefaultOptionType = {
+          value: mockExam?.id,
+          label: mockExam?.title,
+        };
+        const newTitles = [...titles, convertedTitle];
+        setTitles(newTitles);
+        message.success('시험이 생성되었습니다.');
+        return;
+      }
+      message.error(res.data?.createMockExam.error);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const requestCreateCategory = async () => {
-    if (categoryName.length < 2) {
-      return message.error('두 글자 이상 입력해주세요.');
+    try {
+      if (categoryName.length < 2) {
+        return message.error('두 글자 이상 입력해주세요.');
+      }
+      const res = await createCategory({
+        variables: { input: { name: categoryName } },
+      });
+      if (res.data?.createMockExamCategory.ok) {
+        setCategoryName('');
+        const { category } = res.data.createMockExamCategory;
+        const convertedCategory: DefaultOptionType = {
+          value: category?.id,
+          label: category?.name,
+        };
+        const newCategories = [convertedCategory, ...categories];
+        setCategories(newCategories);
+        message.success('카테고리가 생성되었습니다.');
+        return;
+      }
+      message.error(res.data?.createMockExamCategory.error);
+    } catch (e) {
+      handleError(e);
     }
-    const res = await createCategory({
-      variables: { input: { name: categoryName } },
-    });
-    if (res.data?.createMockExamCategory.ok) {
-      setCategoryName('');
-      const { category } = res.data.createMockExamCategory;
-      const convertedCategory: DefaultOptionType = {
-        value: category?.id,
-        label: category?.name,
-      };
-      const newCategories = [convertedCategory, ...categories];
-      setCategories(newCategories);
-      message.success('카테고리가 생성되었습니다.');
-      return;
-    }
-    message.error(res.data?.createMockExamCategory.error);
   };
-  const tryCreateCategory = convertWithErrorHandlingFunc({
-    callback: requestCreateCategory,
-  });
+
   const requestDeleteExam = async () => {
-    const confirmed = confirm(
-      '정말 삭제하시겠습니까?\n삭제시 등록된 모든 문제가 삭제됩니다.'
-    );
-    if (!confirmed) return;
-    const examId = titles.filter(
-      (title) => title.label?.toString().trim() === examTitle.trim()
-    )[0]?.value;
-    if (!examId) {
-      return message.error('존재하지 않는 시험입니다.');
-    }
-    const res = await deleteExam({
-      variables: { input: { id: Number(examId) } },
-    });
-    if (res.data?.deleteMockExam.ok) {
-      setTitles(() =>
-        titles.filter((title) => title.label?.toString() !== examTitle.trim())
+    try {
+      const confirmed = confirm(
+        '정말 삭제하시겠습니까?\n삭제시 등록된 모든 문제가 삭제됩니다.'
       );
-      message.success('삭제되었습니다.');
-      return;
+      if (!confirmed) return;
+      const examId = titles.filter(
+        (title) => title.label?.toString().trim() === examTitle.trim()
+      )[0]?.value;
+      if (!examId) {
+        return message.error('존재하지 않는 시험입니다.');
+      }
+      const res = await deleteExam({
+        variables: { input: { id: Number(examId) } },
+      });
+      if (res.data?.deleteMockExam.ok) {
+        setTitles(() =>
+          titles.filter((title) => title.label?.toString() !== examTitle.trim())
+        );
+        message.success('삭제되었습니다.');
+        return;
+      }
+      return message.error(res.data?.deleteMockExam.error);
+    } catch (e) {
+      handleError(e);
     }
-    return message.error(res.data?.deleteMockExam.error);
   };
-  const tryDeleteExam = convertWithErrorHandlingFunc({
-    callback: requestDeleteExam,
-  });
+
   const openEditModal = (type: 'category' | 'exam') => {
     if (type === 'category') {
       const categoryId = categories.filter(
@@ -262,91 +272,94 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     }
   };
   const requestEditTitle = async (value: string) => {
-    const examId = titles.filter(
-      (exam) => exam.label?.toString().trim() === examTitle.trim()
-    )[0]?.value;
-    if (!examId) {
-      return message.error('존재하지 않는 시험입니다.');
+    try {
+      const examId = titles.filter(
+        (exam) => exam.label?.toString().trim() === examTitle.trim()
+      )[0]?.value;
+      if (!examId) {
+        return message.error('존재하지 않는 시험입니다.');
+      }
+      const confirmed = confirm('정말 수정하시겠습니까?');
+      if (!confirmed) return;
+      const res = await editExam({
+        variables: { input: { id: Number(examId), title: value.trim() } },
+      });
+      if (res.data?.editMockExam.ok) {
+        message.success('시험명이 수정되었습니다.');
+        setTitles(() =>
+          titles.map((exam) =>
+            exam.value == examId
+              ? { value: exam.value, label: value.trim() }
+              : { ...exam }
+          )
+        );
+        return;
+      }
+      return message.error(res.data?.editMockExam.error);
+    } catch (e) {
+      handleError(e);
     }
-    const confirmed = confirm('정말 수정하시겠습니까?');
-    if (!confirmed) return;
-    const res = await editExam({
-      variables: { input: { id: Number(examId), title: value.trim() } },
-    });
-    if (res.data?.editMockExam.ok) {
-      message.success('시험명이 수정되었습니다.');
-      setTitles(() =>
-        titles.map((exam) =>
-          exam.value == examId
-            ? { value: exam.value, label: value.trim() }
-            : { ...exam }
-        )
-      );
-      return;
-    }
-    return message.error(res.data?.editMockExam.error);
   };
-  const tryEditTitle = (value: string) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestEditTitle(value),
-    });
+
   const requestEditCategory = async (value: string) => {
-    const categoryId = categories.filter((category) => {
-      console.log(category.label?.toString().trim(), categoryName.trim());
-      return category.label?.toString().trim() === categoryName.trim();
-    })[0]?.value;
-    if (!categoryId) {
-      return message.error('존재하지 않는 카테고리입니다.');
+    try {
+      const categoryId = categories.filter((category) => {
+        console.log(category.label?.toString().trim(), categoryName.trim());
+        return category.label?.toString().trim() === categoryName.trim();
+      })[0]?.value;
+      if (!categoryId) {
+        return message.error('존재하지 않는 카테고리입니다.');
+      }
+      const confirmed = confirm('정말 수정하시겠습니까?');
+      if (!confirmed) return;
+      const res = await editCategory({
+        variables: { input: { id: Number(categoryId), name: value.trim() } },
+      });
+      if (res.data?.editMockExamCategory.ok) {
+        message.success('카테고리가 수정되었습니다.');
+        setCategories(() =>
+          categories.map((category) =>
+            category.value === categoryId
+              ? { value: category.value, label: value.trim() }
+              : { ...category }
+          )
+        );
+        return;
+      }
+      return message.error(res.data?.editMockExamCategory.error);
+    } catch (e) {
+      handleError(e);
     }
-    const confirmed = confirm('정말 수정하시겠습니까?');
-    if (!confirmed) return;
-    const res = await editCategory({
-      variables: { input: { id: Number(categoryId), name: value.trim() } },
-    });
-    if (res.data?.editMockExamCategory.ok) {
-      message.success('카테고리가 수정되었습니다.');
-      setCategories(() =>
-        categories.map((category) =>
-          category.value === categoryId
-            ? { value: category.value, label: value.trim() }
-            : { ...category }
-        )
-      );
-      return;
-    }
-    return message.error(res.data?.editMockExamCategory.error);
   };
-  const tryEditCategory = (value: string) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestEditCategory(value),
-    });
+
   const requestDeleteCategory = async () => {
-    const confirmed = confirm('정말 삭제하시겠습니까?');
-    if (!confirmed) return;
-    const categoryId = categories.filter(
-      (category) => category.label?.toString().trim() === categoryName.trim()
-    )[0]?.value;
-    if (!categoryId) {
-      return message.error('존재하지 않는 카테고리입니다.');
+    try {
+      const confirmed = confirm('정말 삭제하시겠습니까?');
+      if (!confirmed) return;
+      const categoryId = categories.filter(
+        (category) => category.label?.toString().trim() === categoryName.trim()
+      )[0]?.value;
+      if (!categoryId) {
+        return message.error('존재하지 않는 카테고리입니다.');
+      }
+      const res = await deleteCategory({
+        variables: { input: { id: Number(categoryId) } },
+      });
+      if (res.data?.deleteMockExamCategory.ok) {
+        message.success('카테고리가 삭제되었습니다.');
+        setCategories(() =>
+          categories.filter(
+            (category) =>
+              category.label?.toString().trim() !== categoryName.trim()
+          )
+        );
+        return;
+      }
+      return message.error(res.data?.deleteMockExamCategory.error);
+    } catch (e) {
+      handleError(e);
     }
-    const res = await deleteCategory({
-      variables: { input: { id: Number(categoryId) } },
-    });
-    if (res.data?.deleteMockExamCategory.ok) {
-      message.success('카테고리가 삭제되었습니다.');
-      setCategories(() =>
-        categories.filter(
-          (category) =>
-            category.label?.toString().trim() !== categoryName.trim()
-        )
-      );
-      return;
-    }
-    return message.error(res.data?.deleteMockExamCategory.error);
   };
-  const tryDeleteCategory = convertWithErrorHandlingFunc({
-    callback: requestDeleteCategory,
-  });
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
       setCategories(() =>
@@ -368,10 +381,10 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       router.query.el &&
       router.query.ev
     ) {
-      tryCategorySelect({
+      requestCategorySelect({
         label: router.query.cl as string,
         value: Number(router.query.cv) as number,
-      })();
+      });
       setSelectedTitle({
         label: router.query.el as string,
         value: Number(router.query.ev) as number,
@@ -395,7 +408,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
     selectOption: {
       placeholder: '카테고리명 (시험 선택에 표시되는 이름)',
       options: categories,
-      onSelect: (value, option) => tryCategorySelect(option)(),
+      onSelect: (value, option) => requestCategorySelect(option),
       value: selectedCategory?.value || null,
     },
     inputOption: {
@@ -404,7 +417,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       onChange: onChangeCategoryName,
     },
     createButtonOption: {
-      onClick: tryCreateCategory,
+      onClick: requestCreateCategory,
       loading: createCategoryLoading,
       children: '등록',
     },
@@ -414,7 +427,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       children: '수정',
     },
     deleteButtonOption: {
-      onClick: tryDeleteCategory,
+      onClick: requestDeleteCategory,
       loading: deleteCategoryLoading,
       children: '삭제',
     },
@@ -433,7 +446,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       onChange: onChangeExamTitle,
     },
     createButtonOption: {
-      onClick: tryCreateTitle,
+      onClick: requestCreateTitlte,
       loading: createExamLoading,
       children: '등록',
     },
@@ -443,47 +456,49 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       children: '수정',
     },
     deleteButtonOption: {
-      onClick: tryDeleteExam,
+      onClick: requestDeleteExam,
       loading: deleteExamLoading,
       children: '삭제',
     },
   };
   const onSubmit = async (data: CreateMockExamQuestionInput) => {
-    if (!selectedTitle) {
-      return message.error('시험을 선택해주세요.');
-    }
-    const res = await createQuestion({
-      variables: {
-        input: {
-          mockExamId: selectedTitle.value as number,
-          question: data.question,
-          solution: data.solution,
-          number: selectedQuestionNumber,
-          question_img: questionImage as MockExamQuestionImageInputType[],
-          solution_img: solutionImage as MockExamQuestionImageInputType[],
-        },
-      },
-    });
-    if (res.data?.createMockExamQuestion.ok) {
-      const numbersQuery = await refetchReadQuestionNumbers();
-      if (numbersQuery.data.readMockExamQuestionNumbers.ok) {
-        const { questionNumbers } =
-          numbersQuery.data.readMockExamQuestionNumbers;
-        setQuestionNumbers(questionNumbers);
-
-        setSelectedQuestionNumber(findBlankQuestionNumber(questionNumbers));
+    try {
+      if (!selectedTitle) {
+        return message.error('시험을 선택해주세요.');
       }
-      message.success('문제가 등록되었습니다.');
-      // 초기화
-      methods.reset();
-      setQuestionImage([]);
-      setSolutionImage([]);
-      return;
+      const res = await createQuestion({
+        variables: {
+          input: {
+            mockExamId: selectedTitle.value as number,
+            question: data.question,
+            solution: data.solution,
+            number: selectedQuestionNumber,
+            question_img: questionImage as MockExamQuestionImageInputType[],
+            solution_img: solutionImage as MockExamQuestionImageInputType[],
+          },
+        },
+      });
+      if (res.data?.createMockExamQuestion.ok) {
+        const numbersQuery = await refetchReadQuestionNumbers();
+        if (numbersQuery.data.readMockExamQuestionNumbers.ok) {
+          const { questionNumbers } =
+            numbersQuery.data.readMockExamQuestionNumbers;
+          setQuestionNumbers(questionNumbers);
+
+          setSelectedQuestionNumber(findBlankQuestionNumber(questionNumbers));
+        }
+        message.success('문제가 등록되었습니다.');
+        // 초기화
+        methods.reset();
+        setQuestionImage([]);
+        setSolutionImage([]);
+        return;
+      }
+      return message.error(res.data?.createMockExamQuestion.error);
+    } catch (e) {
+      handleError(e);
     }
-    return message.error(res.data?.createMockExamQuestion.error);
   };
-  const tryOnSumbit = (data: CreateMockExamQuestionInput) =>
-    convertWithErrorHandlingFunc({ callback: () => onSubmit(data) });
 
   return (
     <CreateExamComponentContainer>
@@ -499,7 +514,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       <FormProvider {...methods}>
         <form
           className="create-exam-question-wrapper"
-          onSubmit={methods.handleSubmit((data) => tryOnSumbit(data)())}
+          onSubmit={methods.handleSubmit(onSubmit)}
         >
           <QuestionAndSolutionForm
             questionImage={questionImage}
@@ -542,7 +557,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             open={editCategoryNameModal}
             onClose={onToggleEditCategoryNameModal}
             onConfirm={(value: string) => {
-              tryEditCategory(value)();
+              requestEditCategory(value);
               setCategoryName(value);
               return;
             }}
@@ -554,7 +569,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             open={editExamTitleModal}
             onClose={onToggleEditExamTitleModal}
             onConfirm={(value: string) => {
-              tryEditTitle(value)();
+              requestEditTitle(value);
               setExamTitle(value);
               return;
             }}

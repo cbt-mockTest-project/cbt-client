@@ -1,10 +1,7 @@
-import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
 import { ModalProps } from './Modal';
 import TextArea from 'antd/lib/input/TextArea';
-import { responsive } from '@lib/utils/responsive';
 import useInput from '@lib/hooks/useInput';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -12,7 +9,6 @@ import {
   useCreateQuestionCommnet,
   useLazyReadQuestionComment,
 } from '@lib/graphql/user/hook/useQusetionComment';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
@@ -21,9 +17,9 @@ import { useRouter } from 'next/router';
 import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { format, parseISO } from 'date-fns';
-import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import DragModal from './DragModal';
 import { UserRole } from 'types';
+import { handleError } from '@lib/utils/utils';
 
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
@@ -66,44 +62,44 @@ const CommentModal: React.FC<CommentModalProps> = ({
     }
   }, [router.isReady, questionId, open]);
   const requestCreateComment = async (questionId: number) => {
-    const res = await createCommentMutation({
-      variables: {
-        input: { questionId, content },
-      },
-    });
-    if (res.data?.createMockExamQuestionComment.ok) {
-      setContent('');
-      const newComment = res.data.createMockExamQuestionComment.comment;
-      const queryResult =
-        client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
-          query: READ_QUESTION_COMMENT,
-          variables: {
-            input: { questionId },
-          },
-        });
-      const prevComments =
-        queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
-      if (queryResult && prevComments) {
-        client.writeQuery({
-          query: READ_QUESTION_COMMENT,
-          data: {
-            readMockExamQuestionCommentsByQuestionId: {
-              ...queryResult.readMockExamQuestionCommentsByQuestionId,
-              comments: [...prevComments, newComment],
+    try {
+      const res = await createCommentMutation({
+        variables: {
+          input: { questionId, content },
+        },
+      });
+      if (res.data?.createMockExamQuestionComment.ok) {
+        setContent('');
+        const newComment = res.data.createMockExamQuestionComment.comment;
+        const queryResult =
+          client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
+            query: READ_QUESTION_COMMENT,
+            variables: {
+              input: { questionId },
             },
-          },
-          variables: { input: { questionId } },
-        });
+          });
+        const prevComments =
+          queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
+        if (queryResult && prevComments) {
+          client.writeQuery({
+            query: READ_QUESTION_COMMENT,
+            data: {
+              readMockExamQuestionCommentsByQuestionId: {
+                ...queryResult.readMockExamQuestionCommentsByQuestionId,
+                comments: [...prevComments, newComment],
+              },
+            },
+            variables: { input: { questionId } },
+          });
+        }
+        return message.success('댓글이 등록되었습니다.');
       }
-      return message.success('댓글이 등록되었습니다.');
+      message.error(res.data?.createMockExamQuestionComment.error);
+    } catch (e) {
+      handleError(e);
     }
-    message.error(res.data?.createMockExamQuestionComment.error);
   };
 
-  const tryCreateComment = (questionId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestCreateComment(questionId),
-    });
   const isLogedIn = Boolean(meQuery?.me.user);
   const onNewWindow = () => {
     onClose();
@@ -150,7 +146,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
           />
           <Button
             type="primary"
-            onClick={tryCreateComment(questionId)}
+            onClick={() => requestCreateComment(questionId)}
             loading={loading}
             disabled={!submitButtonState}
           >

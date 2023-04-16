@@ -3,11 +3,11 @@ import {
   useEditQuestion,
   useLazyReadQuestion,
 } from '@lib/graphql/user/hook/useExamQuestion';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import { Button, message, UploadFile } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useRouter } from 'next/router';
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import {
@@ -53,53 +53,54 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
     })();
   }, [router.query.Id]);
   const requestSumbit = async (data: CreateMockExamQuestionInput) => {
-    setEditButtonDisabled(true);
-    const solution_img: MockExamQuestionImageInputType[] =
-      solutionImage.length >= 1
-        ? [
-            {
-              url: solutionImage[0].url as string,
-              uid: solutionImage[0].url as string,
-              name: solutionImage[0].name as string,
-            },
-          ]
-        : [];
-    const question_img: MockExamQuestionImageInputType[] =
-      questionImage.length >= 1
-        ? [
-            {
-              url: questionImage[0].url as string,
-              uid: questionImage[0].url as string,
-              name: questionImage[0].name as string,
-            },
-          ]
-        : [];
-    const res = await editQuestion({
-      variables: {
-        input: {
-          id: Number(String(router.query.Id)),
-          ...data,
-          solution_img,
-          question_img,
+    try {
+      setEditButtonDisabled(true);
+      const solution_img: MockExamQuestionImageInputType[] =
+        solutionImage.length >= 1
+          ? [
+              {
+                url: solutionImage[0].url as string,
+                uid: solutionImage[0].url as string,
+                name: solutionImage[0].name as string,
+              },
+            ]
+          : [];
+      const question_img: MockExamQuestionImageInputType[] =
+        questionImage.length >= 1
+          ? [
+              {
+                url: questionImage[0].url as string,
+                uid: questionImage[0].url as string,
+                name: questionImage[0].name as string,
+              },
+            ]
+          : [];
+      const res = await editQuestion({
+        variables: {
+          input: {
+            id: Number(String(router.query.Id)),
+            ...data,
+            solution_img,
+            question_img,
+          },
         },
-      },
-    });
-    if (res.data?.editMockExamQuestion.ok) {
-      message.success('문제가 수정됐습니다.');
-      router.push(`/preview/question/${router.query.Id}`);
-      return;
+      });
+      if (res.data?.editMockExamQuestion.ok) {
+        message.success('문제가 수정됐습니다.');
+        router.push(`/preview/question/${router.query.Id}`);
+        return;
+      }
+      setEditButtonDisabled(false);
+      return message.error(res.data?.editMockExamQuestion.error);
+    } catch (e) {
+      handleError(e);
     }
-    setEditButtonDisabled(false);
-    return message.error(res.data?.editMockExamQuestion.error);
   };
-  const trySubmit = (data: CreateMockExamQuestionInput) =>
-    convertWithErrorHandlingFunc({ callback: () => requestSumbit(data) });
+
   if (!readQuestionQuery) return null;
   const { mockExamQusetion } = readQuestionQuery.readMockExamQuestion;
   return (
-    <QuestionEditComponentContainer
-      onSubmit={handleSubmit((data) => trySubmit(data)())}
-    >
+    <QuestionEditComponentContainer onSubmit={handleSubmit(requestSumbit)}>
       <h2>
         {`${mockExamQusetion.mockExam?.title} - ${mockExamQusetion.number}번 문제`}
       </h2>

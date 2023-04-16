@@ -2,6 +2,7 @@ import { isServer } from '@lib/utils/utils';
 import {
   ApolloClient,
   createHttpLink,
+  from,
   InMemoryCache,
   NormalizedCacheObject,
   split,
@@ -10,8 +11,37 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { setContext } from '@apollo/client/link/context';
 import React from 'react';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { onError } from '@apollo/client/link/error';
+import { fetchClientIp } from '@lib/apis/fetch-client-ip';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
+const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+  const apolloClient = initializeApollo({}, '');
+  const sendErrorToTelegram = (message: string) =>
+    apolloClient.mutate({
+      mutation: PUSH_TO_TELEGRAM,
+      variables: {
+        input: {
+          message,
+        },
+      },
+    });
+  const { userAgent, ip, currentPagePath } = operation.getContext().headers;
+  if (graphQLErrors)
+    graphQLErrors.forEach((data) => {
+      console.log(`[GraphQL error]`);
+      const message = `[GraphQL error]\nMessage: ${
+        data.message
+      }\nLocation: ${JSON.stringify(data.locations, null, 2)}\nPath: ${
+        data.path
+      }\nUserAgent: ${userAgent}\nIP: ${ip}\nCurrentPagePath: ${currentPagePath}`;
+      sendErrorToTelegram(message);
+    });
+
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 const wsLink = !isServer()
   ? new WebSocketLink({
@@ -30,10 +60,21 @@ const httpLink = createHttpLink({
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
-export const createApolloClient = (Cookie: string) => {
-  const authLink = setContext(() => ({
-    headers: { Cookie },
-  }));
+const createApolloClient = (Cookie: string) => {
+  const authLink = setContext(async (_, { headers }) => {
+    const clientIp = !isServer() ? await fetchClientIp() : 'server';
+    const currentPagePath = !isServer() ? window.location : 'server';
+    return {
+      ...headers,
+      headers: {
+        Cookie,
+        userAgent:
+          typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
+        ip: clientIp,
+        currentPagePath,
+      },
+    };
+  });
   const splitLink =
     !isServer() && wsLink
       ? split(
@@ -45,9 +86,9 @@ export const createApolloClient = (Cookie: string) => {
             );
           },
           wsLink,
-          authLink.concat(httpLink)
+          from([errorLink, authLink, httpLink]) // 에러 핸들링 로직 추가
         )
-      : authLink.concat(httpLink);
+      : from([errorLink, authLink, httpLink]); // 에러 핸들링 로직 추가
   return new ApolloClient({
     ssrMode: isServer(),
     link: splitLink,

@@ -1,5 +1,4 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
-import SquareCheckboxGroup from '@components/common/checkbox/SquareCheckboxGroup';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
@@ -7,7 +6,6 @@ import { useReadExamTitleAndIdByState } from '@lib/graphql/user/hook/useQuestion
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { Button, Checkbox } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
@@ -15,8 +13,8 @@ import { shuffle } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
-import BookmarkedQuestionsComponentSkeleton from '../bookmark/BookmarkedQuestionsComponentSkeleton';
 import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
+import { handleError } from '@lib/utils/utils';
 
 interface ReviewNoteComponentProps {}
 
@@ -31,7 +29,8 @@ export const states: checkboxOption[] = [
 ];
 
 const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
-  const { data: examTitleAndIdQuery } = useReadExamTitleAndIdByState();
+  const { data: examTitleAndIdQuery, loading: loadingExamTitleAndId } =
+    useReadExamTitleAndIdByState();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
   const [
     readQuestions,
@@ -64,16 +63,17 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
     }
   }, [questionsQuery]);
 
-  const requsetReadQuestions = async (examId: number) => {
-    const input = examId === 0 ? { states: [] } : { id: examId, states: [] };
-    await readQuestions({
-      variables: { input },
-    });
+  const requestReadQuestions = async (examId: number) => {
+    try {
+      const input = examId === 0 ? { states: [] } : { id: examId, states: [] };
+      await readQuestions({
+        variables: { input },
+      });
+    } catch (e) {
+      handleError(e);
+    }
   };
-  const tryReadQuestions = (examId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requsetReadQuestions(examId),
-    });
+
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
   };
@@ -81,7 +81,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const onChangeExamTitle = (value: number) => {
     setCheckedStates([]);
     setCurrentExamId(value);
-    tryReadQuestions(value)();
+    requestReadQuestions(value);
   };
 
   const onClickAllCheckbox = () => {
@@ -107,6 +107,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
         options={examTitleAndIdOptions}
         onChange={onChangeExamTitle}
         value={currentExamId}
+        loading={loadingExamTitleAndId}
         placeholder="시험을 선택해주세요"
       />
       {currentExamId !== undefined && (

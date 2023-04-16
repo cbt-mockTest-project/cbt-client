@@ -1,6 +1,6 @@
 import { useDeleteQuestionFeedback } from '@lib/graphql/user/hook/useQuestionFeedback';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { convertWithErrorHandlingFunc, handleError } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React from 'react';
@@ -36,32 +36,32 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   const [updateFeedbackRecommendation] =
     useUpdateQuestionFeedbackRecommendation();
   const requestFeedBackDelete = async (feedbackId: number) => {
-    const confirmed = confirm('삭제하시겠습니까?');
-    if (confirmed) {
-      const res = await deleteQuestionFeedback({
-        variables: { input: { id: feedbackId } },
-      });
-      if (res.data?.deleteMockExamQuestionFeedback.ok) {
-        if (setQuestion) {
-          const newFeedback = question.mockExamQuestionFeedback.filter(
-            (feedback) => feedback.id !== feedbackId
-          );
-          const newQuestion = {
-            ...question,
-            mockExamQuestionFeedback: newFeedback,
-          };
-          setQuestion(newQuestion);
-        }
+    try {
+      const confirmed = confirm('삭제하시겠습니까?');
+      if (confirmed) {
+        const res = await deleteQuestionFeedback({
+          variables: { input: { id: feedbackId } },
+        });
+        if (res.data?.deleteMockExamQuestionFeedback.ok) {
+          if (setQuestion) {
+            const newFeedback = question.mockExamQuestionFeedback.filter(
+              (feedback) => feedback.id !== feedbackId
+            );
+            const newQuestion = {
+              ...question,
+              mockExamQuestionFeedback: newFeedback,
+            };
+            setQuestion(newQuestion);
+          }
 
-        return message.success('삭제되었습니다.');
+          return message.success('삭제되었습니다.');
+        }
+        return message.error(res.data?.deleteMockExamQuestionFeedback.error);
       }
-      return message.error(res.data?.deleteMockExamQuestionFeedback.error);
+    } catch (e) {
+      handleError(e);
     }
   };
-  const tryFeedBackDelete = (feedbackId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestFeedBackDelete(feedbackId),
-    });
   const isAllPrivate = question.mockExamQuestionFeedback.every(
     (feedback) => feedback.type === QuestionFeedbackType.Private
   );
@@ -186,7 +186,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
                   meQuery?.me.user?.role === UserRole.Admin) && (
                   <button
                     className="exam-solution-feedback-delete-button"
-                    onClick={tryFeedBackDelete(feedback.id)}
+                    onClick={() => requestFeedBackDelete(feedback.id)}
                   >
                     삭제하기
                   </button>

@@ -2,10 +2,7 @@ import ExamAchievementResultList from '@components/exam/common/ExamAchievementRe
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import {
-  convertWithErrorHandlingFunc,
-  extractKeysOfCache,
-} from '@lib/utils/utils';
+import { extractKeysOfCache, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
@@ -41,53 +38,57 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
     });
   };
   const requestResetQuestionState = async () => {
-    let questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
-    const questionsQuery =
-      client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-        query: READ_QUESTIONS_BY_ID,
-        variables: {
-          input: readQuestionInput,
-        },
-      });
-    const questionIds =
-      questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
-        (question) => question.id
-      );
-    questionKeys = questionKeys.filter((key) =>
-      questionIds?.includes(Number(key.split(':')[1]))
-    );
-    const res = await resetQuestionStateMutate({
-      variables: {
-        input: {
-          questionIds,
-        },
-      },
-    });
-    if (res.data?.resetMyExamQuestionState.ok) {
-      questionKeys.forEach((el) => {
-        client.cache.modify({
-          id: el,
-          fields: {
-            state(state) {
-              if (state.length === 1) {
-                return state.map((state: MockExamQuestionState) => ({
-                  ...state,
-                  state: QuestionState.Core,
-                }));
-              }
-              return state;
-            },
+    try {
+      let questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
+      const questionsQuery =
+        client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+          query: READ_QUESTIONS_BY_ID,
+          variables: {
+            input: readQuestionInput,
           },
         });
+      const questionIds =
+        questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
+          (question) => question.id
+        );
+      questionKeys = questionKeys.filter((key) =>
+        questionIds?.includes(Number(key.split(':')[1]))
+      );
+      const res = await resetQuestionStateMutate({
+        variables: {
+          input: {
+            questionIds,
+          },
+        },
       });
-      message.success({ content: '성취도가 초기화 되었습니다.' });
-      return;
+      if (res.data?.resetMyExamQuestionState.ok) {
+        questionKeys.forEach((el) => {
+          client.cache.modify({
+            id: el,
+            fields: {
+              state(state) {
+                if (state.length === 1) {
+                  return state.map((state: MockExamQuestionState) => ({
+                    ...state,
+                    state: QuestionState.Core,
+                  }));
+                }
+                return state;
+              },
+            },
+          });
+        });
+        message.success({ content: '성취도가 초기화 되었습니다.' });
+        return;
+      }
+      return message.error({
+        content: res.data?.resetMyExamQuestionState.error,
+      });
+    } catch (e) {
+      handleError(e);
     }
-    return message.error({ content: res.data?.resetMyExamQuestionState.error });
   };
-  const tryResetQuestionState = convertWithErrorHandlingFunc({
-    callback: requestResetQuestionState,
-  });
+
   return (
     <ProgressModalContainer>
       <Modal open={open} onClose={onClose} className="progress-modal-container">
@@ -103,7 +104,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
         <Button
           className="progress-modal-achievement-reset-button"
           type="primary"
-          onClick={tryResetQuestionState}
+          onClick={requestResetQuestionState}
         >
           성취도 초기화
         </Button>

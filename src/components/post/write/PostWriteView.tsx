@@ -64,7 +64,7 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
           type="primary"
           htmlType="button"
           loading={postLoading}
-          onClick={() => onPost({ title, content })()}
+          onClick={() => onPost({ title, content })}
         >
           {postButtonLabel}
         </Button>

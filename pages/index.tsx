@@ -6,8 +6,6 @@ import {
 } from '@lib/graphql/user/query/examQuery';
 import Layout from '@components/common/layout/Layout';
 import { GetStaticProps, NextPage } from 'next';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
-
 import WithHead from '@components/common/head/WithHead';
 import {
   ReadAllMockExamCategoriesQuery,
@@ -67,34 +65,28 @@ const HomeContainer = styled(Layout)`
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const apolloClient = initializeApollo({}, '');
-  const requestReadCategories = async () =>
+
+  const titlesAndCategories: TitlesAndCategories[] = [];
+
+  const categoriesRes =
     await apolloClient.query<ReadAllMockExamCategoriesQuery>({
       query: READ_EXAM_CATEGORIES_QUERY,
     });
-
-  const requestReadExamTitles = async (category: string) =>
-    await apolloClient.query<ReadMockExamTitlesByCateoryQuery>({
-      query: READ_EXAM_TITLES_QUERY,
-      variables: {
-        input: {
-          name: category,
-        },
-      },
-    });
-  const titlesAndCategories: TitlesAndCategories[] = [];
-
-  const tryReadCategories = convertWithErrorHandlingFunc({
-    callback: requestReadCategories,
-  });
-
-  const categoriesRes = await tryReadCategories();
 
   const categoriesQuery = categoriesRes?.data;
   if (categoriesQuery)
     await Promise.all(
       categoriesQuery?.readAllMockExamCategories.categories.map(
         async (category) => {
-          const res = await requestReadExamTitles(category.name);
+          const res =
+            await apolloClient.query<ReadMockExamTitlesByCateoryQuery>({
+              query: READ_EXAM_TITLES_QUERY,
+              variables: {
+                input: {
+                  name: category.name,
+                },
+              },
+            });
           let titles: ExamTitleAndId[] =
             res.data.readMockExamTitlesByCateory.titles;
           if (category.name === '산업안전기사실기(필답형)') {

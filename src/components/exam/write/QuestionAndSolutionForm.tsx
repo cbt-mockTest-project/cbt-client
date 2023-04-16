@@ -1,17 +1,15 @@
-import { InboxOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { useEditExam } from '@lib/graphql/user/hook/useExam';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Input, message, UploadFile, UploadProps } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import Link from 'next/link';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import { ExamStatus, QuestionNumber } from 'types';
 import ImageDragger from './ImageDragger';
+import { handleError } from '@lib/utils/utils';
 
 interface QuestionAndSolutionFormProps {
   questionNumbers: QuestionNumber[];
@@ -64,21 +62,23 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
     !examId ||
     questionNumbers.length < 5;
   const onRequestApprove = async () => {
-    const confirmed = confirm('승인요청 하시겠습니까?');
-    if (confirmed) {
-      const res = await editExam({
-        variables: { input: { id: examId, status: ExamStatus.Request } },
-      });
-      if (res.data?.editMockExam.ok) {
-        setExamStatus(ExamStatus.Request);
-        return message.success('승인요청이 완료되었습니다.');
+    try {
+      const confirmed = confirm('승인요청 하시겠습니까?');
+      if (confirmed) {
+        const res = await editExam({
+          variables: { input: { id: examId, status: ExamStatus.Request } },
+        });
+        if (res.data?.editMockExam.ok) {
+          setExamStatus(ExamStatus.Request);
+          return message.success('승인요청이 완료되었습니다.');
+        }
+        return message.error(res.data?.editMockExam.error);
       }
-      return message.error(res.data?.editMockExam.error);
+    } catch (e) {
+      handleError(e);
     }
   };
-  const onTryApprove = convertWithErrorHandlingFunc({
-    callback: onRequestApprove,
-  });
+
   return (
     <QuestionAndSolutionFormContainer>
       <Label content={'2.본격작업 - 문제 등록하기'} />
@@ -226,7 +226,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
           <Button
             type="dashed"
             className="create-exam-submit-button"
-            onClick={onTryApprove}
+            onClick={onRequestApprove}
             disabled={examSubminButtonDisabled}
           >
             {examSubmitLabel}

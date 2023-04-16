@@ -10,19 +10,19 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Button } from 'antd';
 import parse from 'html-react-parser';
 import PostCommentContainer from '@components/common/card/commentCard/PostCommentContainer';
-import { addHours, format, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { PostDetailViewProps } from './PostDetail.interface';
 import Link from 'next/link';
 
 const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
   const {
     postQuery,
-    tryEditPostLike,
+    requestEditPostLike,
     commentValue,
     onChangeCommentValue,
-    tryCreatePostComment,
+    requestCreatePostComment,
     createPostCommentLoading,
-    tryDeletePost,
+    requestDeletePost,
     meQuery,
   } = props;
   if (!postQuery.readPost.ok || !postQuery.readPost.post) return null;
@@ -51,7 +51,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
             {meQuery?.me.user?.id === post.user.id && (
               <div className="post-detail-top-button-wrapper">
                 <Link href={`/post/edit/${post.id}`}>수정</Link>
-                <button onClick={tryDeletePost}>삭제</button>
+                <button onClick={requestDeletePost}>삭제</button>
               </div>
             )}
           </div>
@@ -62,7 +62,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
           </div>
 
           <div className="post-detail-center-section-like-wrapper">
-            <button onClick={tryEditPostLike}>
+            <button onClick={requestEditPostLike}>
               {post.likeState ? (
                 <FavoriteOutlinedIcon />
               ) : (
@@ -87,7 +87,7 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
           />
           <Button
             className="post-detail-bottom-section-comments-submit-button"
-            onClick={tryCreatePostComment}
+            onClick={requestCreatePostComment}
             disabled={createPostCommentLoading || !commentValue}
             type="primary"
           >

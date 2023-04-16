@@ -4,10 +4,7 @@ import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
-import {
-  convertExamTitle,
-  convertWithErrorHandlingFunc,
-} from '@lib/utils/utils';
+import { convertExamTitle } from '@lib/utils/utils';
 import WithHead from '@components/common/head/WithHead';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
@@ -90,18 +87,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
     id: Number(String(examId)),
     isRandom: false,
   };
-  const request = async () => {
-    return await apolloClient.query<ReadMockExamQuestionsByMockExamIdQuery>({
-      query: READ_QUESTIONS_BY_ID,
-      variables: {
-        input: questionsQueryInput,
-      },
-    });
-  };
-  const tryRequest = convertWithErrorHandlingFunc({
-    callback: request,
+
+  const res = await apolloClient.query<ReadMockExamQuestionsByMockExamIdQuery>({
+    query: READ_QUESTIONS_BY_ID,
+    variables: {
+      input: questionsQueryInput,
+    },
   });
-  const res = await tryRequest();
   const questionsQuery = res?.data;
   return addApolloState(apolloClient, {
     props: { questionsQuery, questionsQueryInput },

@@ -1,17 +1,15 @@
-import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
-import Portal from '@components/common/portal/Portal';
 import {
   useReadExamTitles,
   useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, message, Select } from 'antd';
+import { message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/cascader';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MyExamListItem from './MyExamListItem';
+import { handleError } from '@lib/utils/utils';
 
 interface MyExamComponentProps {}
 
@@ -36,34 +34,34 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   }, [categoriesQuery]);
 
   const requestCategorySelect = async (category: DefaultOptionType) => {
-    setSelectedCategory(category);
-    const res = await readTitles({
-      variables: { input: { name: category.label as string, all: true } },
-    });
-    if (res.data?.readMockExamTitlesByCateory.ok) {
-      setTitles(() =>
-        res.data
-          ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
-              value: title.id,
-              label: title.title,
-            }))
-          : []
-      );
-      return;
+    try {
+      setSelectedCategory(category);
+      const res = await readTitles({
+        variables: { input: { name: category.label as string, all: true } },
+      });
+      if (res.data?.readMockExamTitlesByCateory.ok) {
+        setTitles(() =>
+          res.data
+            ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
+                value: title.id,
+                label: title.title,
+              }))
+            : []
+        );
+        return;
+      }
+      message.error(res.data?.readMockExamTitlesByCateory.error);
+    } catch (e) {
+      handleError(e);
     }
-    message.error(res.data?.readMockExamTitlesByCateory.error);
   };
-  const tryCategorySelect = (category: DefaultOptionType) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestCategorySelect(category),
-    });
 
   return (
     <MyExamComponentContainer>
       <h3>내가만든 시험지 목록을 보여주는 페이지입니다.</h3>
       <Select
         options={categories}
-        onSelect={(value, option) => tryCategorySelect(option)()}
+        onSelect={(value, option) => requestCategorySelect(option)}
         placeholder="카테고리명을 선택해주세요"
         className="my-exam-category-selector"
       />

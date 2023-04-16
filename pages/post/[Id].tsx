@@ -5,7 +5,6 @@ import {
   ReadPostQueryVariables,
   ReadPostsQuery,
 } from '@lib/graphql/user/query/postQuery.generated';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
@@ -50,6 +49,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
         },
       },
     });
+    console.log(res.data);
     if (res.data.readPosts.posts) {
       paths = res.data.readPosts.posts.map((el) => ({
         params: { Id: String(el.id) },
@@ -75,16 +75,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const readPostQueryVariables: ReadPostQueryVariables = {
     input: { id: Number(String(postId)) },
   };
-  const request = async () => {
-    return await apolloClient.query<ReadPostQuery>({
-      query: READ_POST,
-      variables: readPostQueryVariables,
-    });
-  };
-  const tryRequest = convertWithErrorHandlingFunc({
-    callback: request,
+  const res = await apolloClient.query<ReadPostQuery>({
+    query: READ_POST,
+    variables: readPostQueryVariables,
   });
-  const res = await tryRequest();
   const postQueryOnStaticProps = res?.data;
   return addApolloState(apolloClient, {
     props: { postQueryOnStaticProps },

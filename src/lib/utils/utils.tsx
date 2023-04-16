@@ -6,6 +6,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { message } from 'antd';
 import { initializeApollo } from '@modules/apollo';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
+import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -24,23 +25,7 @@ export const convertStateToIcon = (
   }
 };
 
-interface ConvertWithErrorHandlingFuncParams<
-  T extends (...args: any[]) => ReturnType<T>
-> {
-  callback: T | ((...args: any[]) => ReturnType<T>);
-  errorCallback?: (...args: any[]) => ReturnType<T>;
-}
-
-declare type ConvertWithErrorHandlingFunc = <
-  T extends (...args: any[]) => ReturnType<T>
->({
-  callback,
-  errorCallback,
-}: ConvertWithErrorHandlingFuncParams<T>) => () => Promise<
-  ReturnType<T> | undefined
->;
-
-export const handleError = (error: any) => {
+export const handleError = async (error: any) => {
   const apolloClient = initializeApollo({}, '');
   const sendErrorToTelegram = (message: string) =>
     apolloClient.mutate({
@@ -54,57 +39,31 @@ export const handleError = (error: any) => {
   if (error?.message === 'Forbidden resource') {
     return message.error({ content: '로그인이 필요합니다' });
   }
-  let telegramMessage: string;
-  if (error instanceof TypeError) {
-    telegramMessage = `
-          name: typeError\nmessage: ${error?.message}\npathname: ${
-      typeof window !== 'undefined' ? window.location : ''
-    }\nuserAgent: ${
-      typeof window !== 'undefined' ? window.navigator.userAgent : ''
-    }
-      `;
-  } else {
-    if (
-      typeof window !== 'undefined' &&
-      window.navigator.userAgent.includes('Googlebot')
-    ) {
-      return;
-    }
-    telegramMessage = `
-        name: ${
-          !!error?.response?.status ? 'API Call Error' : 'Unknwon Error'
-        }\nmessage: ${
-      error?.response?.data ||
-      error?.response?.message ||
-      error?.message ||
-      error ||
-      ''
-    }\n__uri:${error?.response?.config?.url || ''}\n__status:${
-      error?.response?.status || ''
-    }\npathname: ${
-      typeof window !== 'undefined' ? window.location : ''
-    }\nuserAgent: ${
-      typeof window !== 'undefined' ? window.navigator.userAgent : ''
-    }
-      `;
-  }
-  if (process.env.NODE_ENV !== 'development') {
-    sendErrorToTelegram(telegramMessage);
-  }
-};
 
-export const convertWithErrorHandlingFunc: ConvertWithErrorHandlingFunc =
-  ({ callback, errorCallback }) =>
-  async () => {
-    try {
-      return await callback();
-    } catch (error: any) {
-      handleError(error);
-      if (errorCallback) {
-        return await errorCallback(error);
-      }
-    }
-  };
+  if (
+    typeof window !== 'undefined' &&
+    window.navigator.userAgent.includes('Googlebot')
+  ) {
+    return;
+  }
+  const clientIp = !isServer() ? await fetchClientIp() : 'server';
+  const telegramMessage = `
+      message: ${
+        error?.response?.data ||
+        error?.response?.message ||
+        error?.message ||
+        error ||
+        ''
+      }\n__uri:${error?.response?.config?.url || ''}\n__status:${
+    error?.response?.status || ''
+  }\npathname: ${
+    typeof window !== 'undefined' ? window.location : ''
+  }\nuserAgent: ${
+    typeof window !== 'undefined' ? window.navigator.userAgent : ''
+  }\nip:${clientIp}
+      `;
+  sendErrorToTelegram(telegramMessage);
+};
 
 interface CheckUrlArgs {
   url: string;

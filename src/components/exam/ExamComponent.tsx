@@ -14,7 +14,7 @@ import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
-import { convertWithErrorHandlingFunc, ellipsisText } from '@lib/utils/utils';
+import { ellipsisText, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
@@ -71,7 +71,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
   const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
   const [createExamHistory] = useCreateExamHistory();
-  const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
+  const openLonginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const isRandomExam = router.query.es ? true : false;
   const questionIndex = Number(router.query.q);
@@ -186,14 +186,14 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
   };
   const onToggleProgressModal = () => {
     if (!meQuery?.me.user) {
-      onOpenLoginModal();
+      openLonginModal();
       return;
     }
     setProgressModalState(!progressModalState);
   };
   const onToggleFeedBackModal = () => {
     if (!meQuery?.me.user) {
-      onOpenLoginModal();
+      openLonginModal();
       return;
     }
     setFeedBackModalState(!feedBackModalState);
@@ -235,108 +235,120 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     });
   };
   const requestReport = async () => {
-    const content = reportValue.current.content;
-    const type = reportValue.current.type;
-    if (content.length <= 4) {
-      return message.warn('5글자 이상 입력해주세요.');
-    }
-    if (questionAndSolution && content) {
-      const questionId = questionAndSolution.id;
-      const res = await createFeedBack({
-        variables: { input: { type, content, questionId } },
-      });
-      if (res.data?.createMockExamQuestionFeedback.ok) {
-        setQuestionAndSolution({
-          ...questionAndSolution,
-          mockExamQuestionFeedback: [
-            res.data.createMockExamQuestionFeedback
-              .feedback as MockExamQuestionFeedback,
-            ...questionAndSolution.mockExamQuestionFeedback,
-          ],
-        });
-        message.success('추가되었습니다.');
-        setFeedBackModalState(false);
-        return;
+    try {
+      const content = reportValue.current.content;
+      const type = reportValue.current.type;
+      if (content.length <= 4) {
+        return message.warn('5글자 이상 입력해주세요.');
       }
+      if (questionAndSolution && content) {
+        const questionId = questionAndSolution.id;
+        const res = await createFeedBack({
+          variables: { input: { type, content, questionId } },
+        });
+        if (res.data?.createMockExamQuestionFeedback.ok) {
+          setQuestionAndSolution({
+            ...questionAndSolution,
+            mockExamQuestionFeedback: [
+              res.data.createMockExamQuestionFeedback
+                .feedback as MockExamQuestionFeedback,
+              ...questionAndSolution.mockExamQuestionFeedback,
+            ],
+          });
+          message.success('추가되었습니다.');
+          setFeedBackModalState(false);
+          return;
+        }
+      }
+    } catch (e) {
+      handleError(e);
     }
   };
   const requestEditBookmark = async () => {
-    const res = await editBookmark({
-      variables: { input: { questionId: Number(questionAndSolution?.id) } },
-    });
-    if (res.data?.editMockExamQuestionBookmark.ok) {
-      const queryResult =
-        client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-          query: READ_QUESTIONS_BY_ID,
-          variables: {
-            input: readQuestionInput,
-          },
-        });
-      if (res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
-        setBookmarkState(true);
-        const newQuestions =
-          queryResult.readMockExamQuestionsByMockExamId.questions.map(
-            (prevQuestion) => {
-              if (prevQuestion.id === questionAndSolution?.id) {
-                return {
-                  ...prevQuestion,
-                  mockExamQuestionBookmark: [
-                    {
-                      ...prevQuestion.mockExamQuestionBookmark[0],
-                      user: _.omit(meQuery?.me.user, 'nickname'),
-                    },
-                  ],
-                };
-              }
-              return prevQuestion;
-            }
-          );
-        client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-          query: READ_QUESTIONS_BY_ID,
-          data: {
-            readMockExamQuestionsByMockExamId: {
-              ...queryResult.readMockExamQuestionsByMockExamId,
-              questions: newQuestions,
-            },
-          },
-        });
-
-        message.success('문제가 저장됐습니다.');
+    try {
+      if (!meQuery?.me.user) {
+        openLonginModal();
+        return;
       }
-      if (!res.data?.editMockExamQuestionBookmark.currentState && queryResult) {
-        setBookmarkState(false);
-        const newQuestions =
-          queryResult.readMockExamQuestionsByMockExamId.questions.map(
-            (prevQuestion) => {
-              if (prevQuestion.id === questionAndSolution?.id) {
-                return { ...prevQuestion, mockExamQuestionBookmark: [] };
-              }
-              return prevQuestion;
-            }
-          );
-
-        client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-          query: READ_QUESTIONS_BY_ID,
-          data: {
-            readMockExamQuestionsByMockExamId: {
-              ...queryResult.readMockExamQuestionsByMockExamId,
-              questions: newQuestions,
+      const res = await editBookmark({
+        variables: { input: { questionId: Number(questionAndSolution?.id) } },
+      });
+      if (res.data?.editMockExamQuestionBookmark.ok) {
+        const queryResult =
+          client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+            query: READ_QUESTIONS_BY_ID,
+            variables: {
+              input: readQuestionInput,
             },
-          },
-        });
+          });
+        if (
+          res.data?.editMockExamQuestionBookmark.currentState &&
+          queryResult
+        ) {
+          setBookmarkState(true);
+          const newQuestions =
+            queryResult.readMockExamQuestionsByMockExamId.questions.map(
+              (prevQuestion) => {
+                if (prevQuestion.id === questionAndSolution?.id) {
+                  return {
+                    ...prevQuestion,
+                    mockExamQuestionBookmark: [
+                      {
+                        ...prevQuestion.mockExamQuestionBookmark[0],
+                        user: _.omit(meQuery?.me.user, 'nickname'),
+                      },
+                    ],
+                  };
+                }
+                return prevQuestion;
+              }
+            );
+          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+            query: READ_QUESTIONS_BY_ID,
+            data: {
+              readMockExamQuestionsByMockExamId: {
+                ...queryResult.readMockExamQuestionsByMockExamId,
+                questions: newQuestions,
+              },
+            },
+          });
 
-        message.success('문제 저장이 해제됐습니다.');
+          message.success('문제가 저장됐습니다.');
+        }
+        if (
+          !res.data?.editMockExamQuestionBookmark.currentState &&
+          queryResult
+        ) {
+          setBookmarkState(false);
+          const newQuestions =
+            queryResult.readMockExamQuestionsByMockExamId.questions.map(
+              (prevQuestion) => {
+                if (prevQuestion.id === questionAndSolution?.id) {
+                  return { ...prevQuestion, mockExamQuestionBookmark: [] };
+                }
+                return prevQuestion;
+              }
+            );
+
+          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+            query: READ_QUESTIONS_BY_ID,
+            data: {
+              readMockExamQuestionsByMockExamId: {
+                ...queryResult.readMockExamQuestionsByMockExamId,
+                questions: newQuestions,
+              },
+            },
+          });
+
+          message.success('문제 저장이 해제됐습니다.');
+        }
+        return;
       }
-      return;
+      return message.error(res.data?.editMockExamQuestionBookmark.error);
+    } catch (e) {
+      handleError(e);
     }
-    return message.error(res.data?.editMockExamQuestionBookmark.error);
   };
-
-  const tryEditBookmark = convertWithErrorHandlingFunc({
-    callback: requestEditBookmark,
-  });
-
-  const tryReport = convertWithErrorHandlingFunc({ callback: requestReport });
 
   const saveAnswerInStorage = (value: string) => {
     const prevAnswer = storage.get(tempAnswerKey) || {};
@@ -391,14 +403,14 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
               </Tooltip>
               <button
                 className="exam-container-bookmark-button"
-                onClick={tryEditBookmark}
+                onClick={requestEditBookmark}
               >
                 <Bookmark
                   active={bookmarkState}
                   className="exam-container-bookmark-icon"
                 />
                 <p className="exam-container-bookmark-text">
-                  {bookmarkState ? '저장됨' : '저장하기'}
+                  {bookmarkState ? '저장됨' : '저장'}
                 </p>
               </button>
               <button
@@ -525,7 +537,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         open={feedBackModalState}
         onClose={onToggleFeedBackModal}
         onCancel={onToggleFeedBackModal}
-        onConfirm={tryReport}
+        onConfirm={requestReport}
         onChangeContent={(value) => {
           reportValue.current.content = value;
         }}

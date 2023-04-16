@@ -1,6 +1,4 @@
-import { loginModal, widhDrawalModal } from '@lib/constants';
-import { usePostCommentNotice } from '@lib/graphql/user/hook/useNotice';
-import { useLazyMeQuery } from '@lib/graphql/user/hook/useUser';
+import { loginModal } from '@lib/constants';
 import { coreActions } from '@modules/redux/slices/core';
 import {
   useAppDispatch,
@@ -18,13 +16,6 @@ declare global {
 interface CoreContainerProps {}
 
 const CoreContainer: React.FC<CoreContainerProps> = () => {
-  // const { data } = usePostCommentNotice();
-  // const [requestMeQuery] = useLazyMeQuery();
-  // useEffect(() => {
-  //   if (data?.postCommentUpdates.ok) {
-  //     requestMeQuery();
-  //   }
-  // }, [data]);
   const dispatch = useAppDispatch();
   const { modalName } = useAppSelector((state) => state.core);
   const onCloseModal = () => {

@@ -16,7 +16,7 @@ export interface NavViewProps {
   noticeBoxOptions: NoticeDropBoxOption[];
   dropBoxOptions: DropBoxOption[];
   openLoginModal: React.MouseEventHandler<Element>;
-  tryRequestLogout: React.MouseEventHandler<Element>;
+  requestLogout: React.MouseEventHandler<Element>;
   onOuterClickForNoticeDropBox: React.MouseEventHandler<Element>;
   onOuterClickForProfileDropBox: React.MouseEventHandler<Element>;
   isSelectedNavItem: (key: string[]) => boolean;

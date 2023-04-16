@@ -4,7 +4,6 @@ import ErrorText from '@components/common/layout/errorText/ErrorText';
 import Layout from '@components/common/layout/Layout';
 import { useChangePasswordAfterVerifyingMutation } from '@lib/graphql/user/hook/useUser';
 import useInput from '@lib/hooks/useInput';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import { NextPage } from 'next';

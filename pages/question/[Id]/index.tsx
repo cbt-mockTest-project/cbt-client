@@ -10,7 +10,6 @@ import {
   READ_QUESTION,
   READ_ALL_QUESTIONS,
 } from '@lib/graphql/user/query/questionQuery';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
 import WithHead from '@components/common/head/WithHead';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import QuestionComponent from '@components/question/QuestionComponent';
@@ -66,22 +65,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
     };
   }
   const apolloClient = initializeApollo({}, '');
-
-  const request = async () => {
-    return await apolloClient.query<ReadMockExamQuestionQuery>({
-      query: READ_QUESTION,
-      variables: {
-        input: {
-          questionId: Number(context.params?.Id),
-        },
+  const res = await apolloClient.query<ReadMockExamQuestionQuery>({
+    query: READ_QUESTION,
+    variables: {
+      input: {
+        questionId: Number(context.params?.Id),
       },
-    });
-  };
-
-  const tryRequest = convertWithErrorHandlingFunc({
-    callback: request,
+    },
   });
-  const res = await tryRequest();
   const questionQuery = res ? res.data : null;
   return addApolloState(apolloClient, {
     props: { questionQuery },

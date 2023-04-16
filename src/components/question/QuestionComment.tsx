@@ -7,7 +7,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { convertWithErrorHandlingFunc } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -46,44 +46,44 @@ const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
     }
   }, [router.isReady, questionId]);
   const requestCreateComment = async (questionId: number) => {
-    const res = await createCommentMutation({
-      variables: {
-        input: { questionId, content },
-      },
-    });
-    if (res.data?.createMockExamQuestionComment.ok) {
-      setContent('');
-      const newComment = res.data.createMockExamQuestionComment.comment;
-      const queryResult =
-        client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
-          query: READ_QUESTION_COMMENT,
-          variables: {
-            input: { questionId },
-          },
-        });
-      const prevComments =
-        queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
-      if (queryResult && prevComments) {
-        client.writeQuery({
-          query: READ_QUESTION_COMMENT,
-          data: {
-            readMockExamQuestionCommentsByQuestionId: {
-              ...queryResult.readMockExamQuestionCommentsByQuestionId,
-              comments: [...prevComments, newComment],
+    try {
+      const res = await createCommentMutation({
+        variables: {
+          input: { questionId, content },
+        },
+      });
+      if (res.data?.createMockExamQuestionComment.ok) {
+        setContent('');
+        const newComment = res.data.createMockExamQuestionComment.comment;
+        const queryResult =
+          client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
+            query: READ_QUESTION_COMMENT,
+            variables: {
+              input: { questionId },
             },
-          },
-          variables: { input: { questionId } },
-        });
+          });
+        const prevComments =
+          queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
+        if (queryResult && prevComments) {
+          client.writeQuery({
+            query: READ_QUESTION_COMMENT,
+            data: {
+              readMockExamQuestionCommentsByQuestionId: {
+                ...queryResult.readMockExamQuestionCommentsByQuestionId,
+                comments: [...prevComments, newComment],
+              },
+            },
+            variables: { input: { questionId } },
+          });
+        }
+        return message.success('댓글이 등록되었습니다.');
       }
-      return message.success('댓글이 등록되었습니다.');
+      message.error(res.data?.createMockExamQuestionComment.error);
+    } catch (e) {
+      handleError(e);
     }
-    message.error(res.data?.createMockExamQuestionComment.error);
   };
 
-  const tryCreateComment = (questionId: number) =>
-    convertWithErrorHandlingFunc({
-      callback: () => requestCreateComment(questionId),
-    });
   const isLogedIn = Boolean(meQuery?.me.user);
 
   return (
@@ -99,7 +99,7 @@ const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
         />
         <Button
           type="primary"
-          onClick={tryCreateComment(questionId)}
+          onClick={() => requestCreateComment(questionId)}
           loading={loading}
           disabled={!submitButtonState}
         >
