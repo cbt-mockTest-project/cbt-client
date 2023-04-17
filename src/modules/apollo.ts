@@ -1,19 +1,19 @@
-import { isServer } from '@lib/utils/utils';
 import {
   ApolloClient,
-  createHttpLink,
-  from,
   InMemoryCache,
   NormalizedCacheObject,
+  createHttpLink,
+  from,
   split,
 } from '@apollo/client';
-import { WebSocketLink } from '@apollo/client/link/ws';
 import { setContext } from '@apollo/client/link/context';
-import React from 'react';
-import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
+import { isServer, pushErrorLogToSentry } from '@lib/utils/utils';
+import React from 'react';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -31,16 +31,20 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   const { userAgent, ip, currentPagePath } = operation.getContext().headers;
   if (graphQLErrors)
     graphQLErrors.forEach((data) => {
-      console.log(`[GraphQL error]`);
-      const message = `[GraphQL error]\nMessage: ${
+      const message = `[GraphQL Error]\nMessage: ${
         data.message
       }\nLocation: ${JSON.stringify(data.locations, null, 2)}\nPath: ${
         data.path
       }\nUserAgent: ${userAgent}\nIP: ${ip}\nCurrentPagePath: ${currentPagePath}`;
       sendErrorToTelegram(message);
+      pushErrorLogToSentry({ message, level: 'error' });
     });
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+  if (networkError) {
+    const message = `[Network Error]: ${networkError}`;
+    sendErrorToTelegram(message);
+    pushErrorLogToSentry({ message, level: 'error' });
+  }
 });
 
 const wsLink = !isServer()
