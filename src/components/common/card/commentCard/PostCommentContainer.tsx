@@ -8,12 +8,12 @@ import { FULL_POST_COMMENT_FRAGMENT } from '@lib/graphql/user/query/postCommentF
 import { READ_POST } from '@lib/graphql/user/query/postQuery';
 import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
+import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
 import React, { useState } from 'react';
 import { CommentCardOption, CommentCardProps } from './CommentCard.interface';
 import CommentCardView from './CommentCardView';
-import { handleError } from '@lib/utils/utils';
 
 interface PostCommentContainerProps {
   option: CommentCardOption;

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { message } from 'antd';
 import {
   useDeleteQuestionCommnet,
   useEditQuestionCommnet,
 } from '@lib/graphql/user/hook/useQusetionComment';
-import { useApollo } from '@modules/apollo';
+import { useEditQuestionCommentLike } from '@lib/graphql/user/hook/useQusetionCommentLike';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { FULL_QUESTION_COMMENT_FRAGMENT } from '@lib/graphql/user/query/questionCommentFragment';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { FULL_QUESTION_COMMENT_FRAGMENT } from '@lib/graphql/user/query/questionCommentFragment';
-import { useEditQuestionCommentLike } from '@lib/graphql/user/hook/useQusetionCommentLike';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import CommentCardView from './CommentCardView';
+import { handleError } from '@lib/utils/utils';
+import { useApollo } from '@modules/apollo';
+import { message } from 'antd';
+import React, { useState } from 'react';
 import {
   CommentCardProps,
   QuestionCommentContainerProps,
 } from './CommentCard.interface';
-import { handleError } from '@lib/utils/utils';
+import CommentCardView from './CommentCardView';
 
 const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
   option,
@@ -84,10 +84,15 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
           variables: { input: { content, id: option.id } },
         });
         if (res.data?.editMockExamQuestionComment.ok) {
+          const currentComment = client.readFragment({
+            id: `MockExamQuestionComment:${option.id}`,
+            fragment: FULL_QUESTION_COMMENT_FRAGMENT,
+          });
           client.writeFragment({
             id: `MockExamQuestionComment:${option.id}`,
             fragment: FULL_QUESTION_COMMENT_FRAGMENT,
             data: {
+              ...currentComment,
               content,
             },
           });
@@ -102,14 +107,22 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
   };
   const requestLike = async () => {
     try {
+      if (!meQuery?.me.user) {
+        return message.error('로그인이 필요합니다.');
+      }
       const res = await editCommentLike({
         variables: { input: { commentId: option.id } },
       });
       if (res.data?.editMockExamQuestionCommentLike.ok) {
+        const currentComment = client.readFragment({
+          id: `MockExamQuestionComment:${option.id}`,
+          fragment: FULL_QUESTION_COMMENT_FRAGMENT,
+        });
         client.writeFragment({
           id: `MockExamQuestionComment:${option.id}`,
           fragment: FULL_QUESTION_COMMENT_FRAGMENT,
           data: {
+            ...currentComment,
             likeState: res.data.editMockExamQuestionCommentLike.currentState,
             likesCount: res.data.editMockExamQuestionCommentLike.currentState
               ? option.likesCount + 1

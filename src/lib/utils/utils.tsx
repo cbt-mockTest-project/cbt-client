@@ -35,7 +35,11 @@ export const pushErrorLogToSentry = ({
   message,
   level,
 }: PushErrorLogToSentryArgs) => {
-  Sentry.captureMessage(message, level);
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.captureMessage(message, level);
+  } else {
+    console.log(message);
+  }
 };
 
 export const handleError = async (error: any) => {

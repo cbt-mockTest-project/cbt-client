@@ -1,17 +1,24 @@
 import { CaretDownOutlined, ClearOutlined } from '@ant-design/icons';
-import * as _ from 'lodash';
+import { makeVar } from '@apollo/client';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import Label from '@components/common/label/Label';
 import CommentModal from '@components/common/modal/CommentModal';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
 import ProgressModal from '@components/common/modal/ProgressModal';
+import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import ReportModal from '@components/common/modal/ReportModal';
+import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
+import Tooltip from '@components/common/tooltip/Tooltip';
 import { loginModal, tempAnswerKey } from '@lib/constants';
+import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import useIsMobile from '@lib/hooks/useIsMobile';
+import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import { ellipsisText, handleError } from '@lib/utils/utils';
@@ -21,28 +28,20 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import * as _ from 'lodash';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useRef } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import AchievementCheck from './AchievementCheck';
-import MoveQuestion from './MoveQuestion';
-import QuestionAndSolutionBox from './QuestionAndSolutionBox';
-import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
-import MovePannel from './MovePannel';
-import Tooltip from '@components/common/tooltip/Tooltip';
-import useIsMobile from '@lib/hooks/useIsMobile';
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import ExamSkeleton from './ExamSkeleton';
-import useToggle from '@lib/hooks/useToggle';
-import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import {
   MockExamQuestionFeedback,
   QuestionFeedbackType,
   ReadMockExamQuestionsByMockExamIdInput,
 } from 'types';
-import { makeVar } from '@apollo/client';
-import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
+import AchievementCheck from './AchievementCheck';
+import ExamSkeleton from './ExamSkeleton';
+import MovePannel from './MovePannel';
+import MoveQuestion from './MoveQuestion';
+import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { ExamQuestionType } from './solution/ExamSolutionList';
 
 export const questionsVar =
@@ -52,9 +51,6 @@ interface ExamComponentProps {
   isPreview?: boolean;
   coAuthor?: string;
 }
-
-type Question =
-  ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
 
 const ExamComponent: React.FC<ExamComponentProps> = ({
   isPreview = false,
@@ -120,11 +116,16 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
             states: s && s.length > 0 ? s : null,
           };
           setReadQuestionInput(readQuestionInput);
-          await readQuestions({
+          const res = await readQuestions({
             variables: {
               input: readQuestionInput,
             },
           });
+          if (!res.data?.readMockExamQuestionsByMockExamId.ok) {
+            return message.error(
+              res.data?.readMockExamQuestionsByMockExamId.error
+            );
+          }
         }
       }
     })();
