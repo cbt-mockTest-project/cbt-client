@@ -1,12 +1,13 @@
-import { clearIcon, triangleIcon } from '../constants/index';
-import { QuestionState } from '../../types';
-import { circleIcon } from '@lib/constants';
-import { checkboxOption } from 'customTypes';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { message } from 'antd';
-import { initializeApollo } from '@modules/apollo';
-import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
+import { circleIcon } from '@lib/constants';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
+import { initializeApollo } from '@modules/apollo';
+import * as Sentry from '@sentry/nextjs';
+import { message } from 'antd';
+import { checkboxOption } from 'customTypes';
+import { QuestionState } from '../../types';
+import { clearIcon, triangleIcon } from '../constants/index';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -22,6 +23,22 @@ export const convertStateToIcon = (
       return clearIcon;
     default:
       return '';
+  }
+};
+
+interface PushErrorLogToSentryArgs {
+  level: Sentry.SeverityLevel;
+  message: string;
+}
+
+export const pushErrorLogToSentry = ({
+  message,
+  level,
+}: PushErrorLogToSentryArgs) => {
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.captureMessage(message, level);
+  } else {
+    console.log(message);
   }
 };
 
@@ -47,22 +64,20 @@ export const handleError = async (error: any) => {
     return;
   }
   const clientIp = !isServer() ? await fetchClientIp() : 'server';
-  const telegramMessage = `
-      message: ${
-        error?.response?.data ||
-        error?.response?.message ||
-        error?.message ||
-        error ||
-        ''
-      }\n__uri:${error?.response?.config?.url || ''}\n__status:${
-    error?.response?.status || ''
-  }\npathname: ${
+  const telegramMessage = `[Client Error]\nMessage: ${
+    error?.response?.data ||
+    error?.response?.message ||
+    error?.message ||
+    error ||
+    ''
+  }\nCurrentPagePath: ${
     typeof window !== 'undefined' ? window.location : ''
-  }\nuserAgent: ${
+  }\nUserAgent: ${
     typeof window !== 'undefined' ? window.navigator.userAgent : ''
-  }\nip:${clientIp}
+  }\nIP:${clientIp}
       `;
   sendErrorToTelegram(telegramMessage);
+  pushErrorLogToSentry({ message: telegramMessage, level: 'error' });
 };
 
 interface CheckUrlArgs {

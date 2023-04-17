@@ -1,22 +1,26 @@
-import { useDeleteQuestionFeedback } from '@lib/graphql/user/hook/useQuestionFeedback';
+import Badge from '@components/common/badge/Badge';
+import { loginModal } from '@lib/constants';
+import {
+  useDeleteQuestionFeedback,
+  useUpdateQuestionFeedbackRecommendation,
+} from '@lib/graphql/user/hook/useQuestionFeedback';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { handleError } from '@lib/utils/utils';
+import { coreActions } from '@modules/redux/slices/core';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled, { css } from 'styled-components';
 import {
+  MyRecommedationStatus,
   QuestionFeedbackRecommendationType,
   QuestionFeedbackType,
   UserRole,
 } from 'types';
 import { ExamQuestionType } from './ExamSolutionList';
-import { useUpdateQuestionFeedbackRecommendation } from '@lib/graphql/user/hook/useQuestionFeedback';
-import Badge from '@components/common/badge/Badge';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
-import { MyRecommedationStatus } from 'types';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
@@ -32,6 +36,8 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   type = 'others',
 }) => {
   const { data: meQuery } = useMeQuery();
+  const dispatch = useDispatch();
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [deleteQuestionFeedback] = useDeleteQuestionFeedback();
   const [updateFeedbackRecommendation] =
     useUpdateQuestionFeedbackRecommendation();
@@ -83,6 +89,9 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
     myRecommendationStatus: MyRecommedationStatus
   ) => {
     try {
+      if (!meQuery?.me.user) {
+        return openLoginModal();
+      }
       const res = await updateFeedbackRecommendation({
         variables: {
           input: {

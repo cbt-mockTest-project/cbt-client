@@ -23,6 +23,7 @@
     "@mui/material": "^5.10.15",
     "@next/font": "^13.1.6",
     "@reduxjs/toolkit": "^1.6.0",
+    "@sentry/nextjs": "^7.48.0",
     "antd": "^4.23.6",
     "apollo": "^2.34.0",
     "axios": "^1.1.3",
