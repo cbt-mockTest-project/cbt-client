@@ -5,9 +5,11 @@ import { TitlesAndCategories } from '@components/main/MainComponent';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
+import { responsive } from '@lib/utils/responsive';
 import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Checkbox, Input, message } from 'antd';
+import { Button, Checkbox, Input } from 'antd';
+import { Option } from 'antd/lib/mentions';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
@@ -15,8 +17,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, UserRole } from 'types';
 import { Categories } from '../../../../pages/exam/randomselect';
-import { Option } from 'antd/lib/mentions';
-import { responsive } from '@lib/utils/responsive';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -109,9 +109,6 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   };
 
   const onStartRandomExam = () => {
-    if (limit > 100) {
-      return message.error('100문제 이상은 불가능합니다.');
-    }
     let es: string;
     const isAllSelected = selectedExams.includes(0);
     if (isAllSelected) {
@@ -217,7 +214,6 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             />
           )}
           <div className="random-select-exam-modal-setting-count-wrapper">
-            <Label content={'문항수(최대100문제)'} />
             <Input
               value={limit}
               type="number"
