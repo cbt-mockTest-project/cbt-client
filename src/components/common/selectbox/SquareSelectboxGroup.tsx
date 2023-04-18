@@ -1,5 +1,7 @@
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTION_STATE_QUERY } from '@lib/graphql/user/query/questionStateQuery';
 import { ReadMyExamQuestionStateQuery } from '@lib/graphql/user/query/questionStateQuery.generated';
+import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
@@ -7,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
 import SquareSelectbox from './SquareSelectbox';
-import { handleError } from '@lib/utils/utils';
 
 interface SquareSelectboxGroupProps {
   options: checkboxOption[];
@@ -27,12 +28,16 @@ const SquareSelectboxGroup: React.FC<SquareSelectboxGroupProps> = ({
 }) => {
   const router = useRouter();
   const client = useApollo({}, '');
+  const { data: meQuery } = useMeQuery();
   const [selectedState, setSelectedState] = useState<string>(
     QuestionState.Core
   );
 
   const requestReadQuestions = async () => {
     try {
+      if (!currentQuestionId || !meQuery?.me.user) {
+        return;
+      }
       const stateQuery = await client.query<ReadMyExamQuestionStateQuery>({
         query: READ_QUESTION_STATE_QUERY,
         variables: {

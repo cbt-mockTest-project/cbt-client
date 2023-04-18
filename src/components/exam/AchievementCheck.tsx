@@ -1,19 +1,19 @@
+import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
+import Tooltip from '@components/common/tooltip/Tooltip';
+import { loginModal } from '@lib/constants';
 import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import useIsMobile from '@lib/hooks/useIsMobile';
+import { responsive } from '@lib/utils/responsive';
 import { useApollo } from '@modules/apollo';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
+import { checkboxOption } from 'customTypes';
 import React from 'react';
 import styled from 'styled-components';
 import { MockExamQuestionState, QuestionState } from 'types';
-import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
-import { checkboxOption } from 'customTypes';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { coreActions } from '@modules/redux/slices/core';
-import { loginModal } from '@lib/constants';
-import { responsive } from '@lib/utils/responsive';
-import Tooltip from '@components/common/tooltip/Tooltip';
-import useIsMobile from '@lib/hooks/useIsMobile';
 interface AchievementCheckProps {
   questionIndex: number;
   questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
@@ -37,6 +37,10 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
   const requestChangeState = async (state: checkboxOption['value']) => {
     if (!meQuery?.me.user) {
       onOpenLoginModal();
+      return;
+    }
+    if (!currentQuestionId) {
+      message.error({ content: '문제가 존재하지 않습니다.' });
       return;
     }
     const changeQuestionStateQuery = await changeQuestionState({
