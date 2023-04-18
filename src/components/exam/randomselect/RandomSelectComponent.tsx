@@ -22,6 +22,7 @@ const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
   { value: QuestionState.Middle, label: triangleIcon },
   { value: QuestionState.Row, label: clearIcon },
+  { value: QuestionState.Core, label: '안푼거' },
 ];
 
 interface RandomSelectComponentProps {
