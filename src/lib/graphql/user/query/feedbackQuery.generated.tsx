@@ -24,6 +24,13 @@ export type UpdateMockExamQuestionFeedbackRecommendationMutationVariables = Type
 
 export type UpdateMockExamQuestionFeedbackRecommendationMutation = { __typename?: 'Mutation', updateMockExamQuestionFeedbackRecommendation: { __typename?: 'UpdateMockExamQuestionFeedbackRecommendationOutput', error?: string | null, ok: boolean, recommendation?: { __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType } | null } };
 
+export type GetFeedbacksByRecommendationCountQueryVariables = Types.Exact<{
+  input: Types.GetFeedbacksByRecommendationCountInput;
+}>;
+
+
+export type GetFeedbacksByRecommendationCountQuery = { __typename?: 'Query', getFeedbacksByRecommendationCount: { __typename?: 'GetFeedbacksByRecommendationCountOutput', error?: string | null, feedbacks?: Array<{ __typename?: 'MockExamQuestionFeedback', content: string, id: number, recommendation: Array<{ __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType, id: number }>, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number, question: string, solution?: string | null } }> | null } };
+
 
 export const CreateMockExamQuestionFeedbackDocument = gql`
     mutation CreateMockExamQuestionFeedback($input: CreateMockExamQuestionFeedbackInput!) {
@@ -80,4 +87,28 @@ export const UpdateMockExamQuestionFeedbackRecommendationDocument = gql`
 
 export function useUpdateMockExamQuestionFeedbackRecommendationMutation() {
   return Urql.useMutation<UpdateMockExamQuestionFeedbackRecommendationMutation, UpdateMockExamQuestionFeedbackRecommendationMutationVariables>(UpdateMockExamQuestionFeedbackRecommendationDocument);
+};
+export const GetFeedbacksByRecommendationCountDocument = gql`
+    query GetFeedbacksByRecommendationCount($input: GetFeedbacksByRecommendationCountInput!) {
+  getFeedbacksByRecommendationCount(input: $input) {
+    error
+    feedbacks {
+      content
+      id
+      recommendation {
+        type
+        id
+      }
+      mockExamQuestion {
+        id
+        question
+        solution
+      }
+    }
+  }
+}
+    `;
+
+export function useGetFeedbacksByRecommendationCountQuery(options: Omit<Urql.UseQueryArgs<GetFeedbacksByRecommendationCountQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetFeedbacksByRecommendationCountQuery, GetFeedbacksByRecommendationCountQueryVariables>({ query: GetFeedbacksByRecommendationCountDocument, ...options });
 };

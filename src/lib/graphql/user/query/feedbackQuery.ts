@@ -51,3 +51,26 @@ export const UPDATE_FEEDBACK_RECOMMENDATION = gql`
     }
   }
 `;
+
+export const READ_FEEDBACK_BY_RECOMMENDATION_COUNT = gql`
+  query GetFeedbacksByRecommendationCount(
+    $input: GetFeedbacksByRecommendationCountInput!
+  ) {
+    getFeedbacksByRecommendationCount(input: $input) {
+      error
+      feedbacks {
+        content
+        id
+        recommendation {
+          type
+          id
+        }
+        mockExamQuestion {
+          id
+          question
+          solution
+        }
+      }
+    }
+  }
+`;
