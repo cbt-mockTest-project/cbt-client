@@ -4,33 +4,45 @@ import { responsive } from '@lib/utils/responsive';
 import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
-const CommunityViewSkeleton: React.FC = () => {
+interface CommunityViewSkeletonProps {
+  type?: 'list' | 'view';
+}
+
+const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({
+  type = 'view',
+}) => {
   return (
     <CommunityViewSkeletonBlock>
-      <section className="community-header">
-        <SkeletonBox
-          className="community-header-title"
-          height="30px"
-          width="100px"
-        />
-        <SkeletonBox
-          className="community-header-write-button"
-          height="30px"
-          width="100px"
-        />
-      </section>
-      <section className="community-category">
-        <SkeletonBox
-          className="community-category-title"
-          height="24px"
-          width="100px"
-        />
-        <div className="community-category-card-wrapper">
-          <SkeletonBox className="community-category-card" height="41px" />
-        </div>
-      </section>
+      {type === 'view' && (
+        <>
+          <section className="community-header">
+            <SkeletonBox
+              className="community-header-title"
+              height="30px"
+              width="100px"
+            />
+            <SkeletonBox
+              className="community-header-write-button"
+              height="30px"
+              width="100px"
+            />
+          </section>
+          <section className="community-category">
+            <SkeletonBox
+              className="community-category-title"
+              height="24px"
+              width="100px"
+            />
+            <div className="community-category-card-wrapper">
+              <SkeletonBox className="community-category-card" height="41px" />
+            </div>
+          </section>
+        </>
+      )}
       <section className="community-board">
-        <SkeletonBox className="community-board-title" height="32px" />
+        {type === 'view' && (
+          <SkeletonBox className="community-board-title" height="32px" />
+        )}
         <ul className="community-board-list-wrapper">
           {[1, 2, 3].map((el, index) => (
             <CommunityListViewSkeleton key={index} />

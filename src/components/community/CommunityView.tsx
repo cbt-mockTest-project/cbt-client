@@ -14,9 +14,8 @@ import { useRouter } from 'next/router';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
   const router = useRouter();
-  if (!props.postsQuery?.readPosts.posts) {
-    return <CommunityViewSkeleton />;
-  }
+  const posts = props.postsQuery?.readPosts.posts;
+
   return (
     <CommunityViewBlock>
       <section className="community-header">
@@ -56,19 +55,23 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-board">
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
-          {props.postsQuery?.readPosts.posts?.map((post) => (
-            <CommunityListView
-              key={post.id}
-              id={post.id}
-              category={'자유게시판'}
-              commentCount={post.commentsCount}
-              date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
-              likeCount={post.likesCount}
-              title={post.title}
-              userName={post.user.nickname}
-              viewCount={post.view}
-            />
-          ))}
+          {posts ? (
+            posts.map((post) => (
+              <CommunityListView
+                key={post.id}
+                id={post.id}
+                category={'자유게시판'}
+                commentCount={post.commentsCount}
+                date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
+                likeCount={post.likesCount}
+                title={post.title}
+                userName={post.user.nickname}
+                viewCount={post.view}
+              />
+            ))
+          ) : (
+            <CommunityViewSkeleton type="list" />
+          )}
         </ul>
       </section>
       {props.postsQuery && (
