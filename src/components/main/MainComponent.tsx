@@ -28,6 +28,7 @@ import styled from 'styled-components';
 import { ExamTitleAndId, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -253,6 +254,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             </div>
           </div>
           <div className="home-content-devide-line" />
+          <GoogleAd type="display" />
           <Button onClick={gotoRandomSelectPage} type="ghost">
             랜덤모의고사
           </Button>
