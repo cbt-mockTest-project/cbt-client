@@ -246,7 +246,6 @@ const RandomSelectComponentContainer = styled.div`
   max-width: 350px;
   margin: 0px auto;
   padding: 0 15px 30px 15px;
-
   .random-select-exam-turn-label-wrapper {
     display: flex;
     gap: 15px;
@@ -355,6 +354,7 @@ const RandomSelectComponentContainer = styled.div`
   @media (max-width: ${responsive.small}) {
     position: fixed;
     margin-top: 60px;
+    padding-top: 40px;
     bottom: 55px;
     height: calc(100vh - 115px);
     overflow-y: auto;

@@ -15,7 +15,7 @@ const Question: NextPage = () => {
       />
       <Layout>
         <QuestionComponent isPreview={true} />
-        <GoogleAd type="multiflex" />
+        <GoogleAd type="display" />
       </Layout>
     </>
   );
