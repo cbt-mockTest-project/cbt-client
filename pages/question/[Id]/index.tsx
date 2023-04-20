@@ -29,7 +29,7 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
       />
       <Layout>
         <QuestionComponent questionQuery={questionQuery} />
-        <GoogleAd type="multiflex" />
+        <GoogleAd type="display" />
       </Layout>
     </>
   );

@@ -39,7 +39,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
           hasSearchInput={true}
           coAuthor={title === '계산문제 제외 모음집' ? `Pooh` : undefined}
         />
-        <GoogleAd type="multiflex" />
+        <GoogleAd type="display" />
       </Layout>
     </>
   );
