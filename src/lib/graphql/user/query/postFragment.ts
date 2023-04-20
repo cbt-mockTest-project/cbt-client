@@ -18,5 +18,6 @@ export const FULL_POST_FRAGMENT = gql`
     likesCount
     likeState
     view
+    category
   }
 `;

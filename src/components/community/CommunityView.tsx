@@ -10,8 +10,10 @@ import { CommunityViewProps } from './Community.interface';
 import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
 import CommunityViewSkeleton from './CommunityViewSkeleton';
+import { useRouter } from 'next/router';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
+  const router = useRouter();
   if (!props.postsQuery?.readPosts.posts) {
     return <CommunityViewSkeleton />;
   }
@@ -20,7 +22,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
         {props.meQuery?.me.ok ? (
-          <Link href="/post/write" className="ml-auto">
+          <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
             <Button className="community-header-write-button">글쓰기</Button>
           </Link>
         ) : (

@@ -2,7 +2,7 @@ import ReactQuill from 'react-quill';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { SetStateAction, ComponentProps, Dispatch } from 'react';
 import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
-import { EditPostInput } from 'types';
+import { EditPostInput, PostCategory } from 'types';
 
 export interface CreatePostInput {
   title: string;
@@ -19,6 +19,7 @@ export interface PostWriteProps {
   modules: ComponentProps<typeof ReactQuill>['modules'];
   onCancle: React.MouseEventHandler<HTMLElement>;
   onSelectCategory: ComponentProps<typeof Select>['onSelect'];
+  selectedCategory: PostCategory;
   readPostQuery?: ReadPostQuery | undefined;
   postButtonLabel: string;
   postLoading: boolean;

@@ -49,6 +49,13 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const isEditPage = router.pathname.indexOf('edit') > -1;
   const [readPost, { data: readPostQuery }] = useLazyReadPost('network-only');
   const postId = Number(router.query.Id);
+  console.log('h2');
+  useEffect(() => {
+    if (router.query.c) {
+      console.log(router.query.c);
+      setSelectedCategory(router.query.c as PostCategory);
+    }
+  }, [router.query.c]);
   useEffect(() => {
     if (postId) {
       readPost({ variables: { input: { id: postId } } });
@@ -184,6 +191,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
     setSelectedCategory(value as PostCategory);
   };
   const postWriteProps: PostWriteProps = {
+    selectedCategory,
     formValidate,
     categoryOptions:
       meQuery?.me.user?.role === UserRole.Admin
