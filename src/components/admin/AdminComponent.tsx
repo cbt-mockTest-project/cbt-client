@@ -5,6 +5,7 @@ import {
 import { handleError } from '@lib/utils/utils';
 import { Button, message } from 'antd';
 import Search from 'antd/lib/input/Search';
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -39,6 +40,7 @@ const AdminComponent: React.FC<AdminComponentProps> = () => {
   };
   return (
     <AdminComponentContainer>
+      <Link href="/admin/feedback">피드백페이지로</Link>
       <Search
         onSearch={(value) => {
           searchUser({ variables: { input: { name: value } } });

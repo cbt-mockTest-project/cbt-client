@@ -527,6 +527,17 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetFeedbacksByRecommendationCountInput = {
+  count: Scalars['Float'];
+};
+
+export type GetFeedbacksByRecommendationCountOutput = {
+  __typename?: 'GetFeedbacksByRecommendationCountOutput';
+  error?: Maybe<Scalars['String']>;
+  feedbacks?: Maybe<Array<MockExamQuestionFeedback>>;
+  ok: Scalars['Boolean'];
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -794,6 +805,7 @@ export type Mutation = {
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
+  updateQuestionStatesToCore: CoreOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -1141,7 +1153,6 @@ export type Post = {
 export enum PostCategory {
   Free = 'FREE',
   Notice = 'NOTICE',
-  Pass = 'PASS',
   Review = 'REVIEW'
 }
 
@@ -1187,6 +1198,7 @@ export type PostLike = {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
@@ -1225,6 +1237,11 @@ export type Query = {
 
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
+};
+
+
+export type QueryGetFeedbacksByRecommendationCountArgs = {
+  input: GetFeedbacksByRecommendationCountInput;
 };
 
 
