@@ -254,6 +254,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             </div>
           </div>
           <div className="home-content-devide-line" />
+          <GoogleAd type="display" />
           <Button onClick={gotoRandomSelectPage} type="ghost">
             랜덤모의고사
           </Button>

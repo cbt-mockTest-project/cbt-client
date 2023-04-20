@@ -30,9 +30,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
             ad.parentNode.removeChild(ad);
           }
         });
-      } catch (e) {
-        console.log('hi');
-      }
+      } catch (e) {}
     }
   }, [meData, router.asPath]);
 

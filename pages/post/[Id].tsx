@@ -49,7 +49,6 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
         },
       },
     });
-    console.log(res.data);
     if (res.data.readPosts.posts) {
       paths = res.data.readPosts.posts.map((el) => ({
         params: { Id: String(el.id) },
