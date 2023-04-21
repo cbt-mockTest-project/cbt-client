@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { skeletonStyle } from '@styles/utils';
-import { responsive } from '@lib/utils/responsive';
 
 const CommunityListViewSkeleton: React.FC = () => {
   return (

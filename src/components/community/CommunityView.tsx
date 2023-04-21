@@ -11,6 +11,7 @@ import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
 import CommunityViewSkeleton from './CommunityViewSkeleton';
 import { useRouter } from 'next/router';
+import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
   const router = useRouter();
@@ -71,7 +72,11 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
               />
             ))
           ) : (
-            <CommunityViewSkeleton type="list" />
+            <ul className="community-board-list-wrapper">
+              {[1, 2, 3].map((el, index) => (
+                <CommunityListViewSkeleton key={index} />
+              ))}
+            </ul>
           )}
         </ul>
       </section>
