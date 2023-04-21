@@ -4,7 +4,7 @@ import { Button, Drawer } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { UserOutlined } from '@ant-design/icons';
+import { CrownTwoTone, UserOutlined } from '@ant-design/icons';
 import { NavViewProps } from './Nav.interface';
 import { UserRole } from 'types';
 
@@ -35,7 +35,15 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
           <>
             <div className="mobile-nav-user-content">
               <span className="mobile-nav-user-content-profile-image">
-                <UserOutlined />
+                {props.meQuery.me.user.isAllowAdblock && (
+                  <CrownTwoTone
+                    className="nav-user-content-profile-crown"
+                    width={15}
+                    height={15}
+                    twoToneColor={palette.yellow_500}
+                  />
+                )}
+                <UserOutlined className="nav-user-content-profile-user-outlined" />
               </span>
               <span>{props.meQuery?.me.user.nickname}</span>
             </div>
@@ -115,6 +123,25 @@ const StyledDrawer = styled(Drawer)`
       gap: 10px;
       padding-bottom: 15px;
       border-bottom: 1px solid ${palette.gray_200};
+    }
+    .mobile-nav-user-content-profile-image {
+      top: 1px;
+      position: relative;
+    }
+    .nav-user-content-profile-user-outlined {
+      svg {
+        width: 21px;
+        height: 21px;
+      }
+    }
+    .nav-user-content-profile-crown {
+      position: absolute;
+      top: -11px;
+      left: 1px;
+      svg {
+        width: 19px;
+        height: 19px;
+      }
     }
   }
 `;
