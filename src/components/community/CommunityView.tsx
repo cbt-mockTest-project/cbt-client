@@ -65,6 +65,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
                 date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
                 likeCount={post.likesCount}
                 title={post.title}
+                priority={post.priority}
                 userName={post.user.nickname}
                 viewCount={post.view}
               />

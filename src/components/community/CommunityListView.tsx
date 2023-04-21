@@ -11,7 +11,7 @@ import { responsive } from '@lib/utils/responsive';
 const CommunityListView: React.FC<CommunityListProps> = (props) => {
   return (
     <Link href={`/post/${props.id}`}>
-      <CommunityListBlock>
+      <CommunityListBlock isNotice={!!props.priority}>
         <div className="community-board-list-left-contents">
           <div className="community-board-list-left-contents-top">
             {props.title}
@@ -50,14 +50,19 @@ const CommunityListView: React.FC<CommunityListProps> = (props) => {
   );
 };
 
+interface CommunityListBlockProps {
+  isNotice: boolean;
+}
+
 export default CommunityListView;
-const CommunityListBlock = styled.li`
+const CommunityListBlock = styled.li<CommunityListBlockProps>`
   display: flex;
   justify-content: space-between;
   padding: 15px 5px;
   align-items: center;
   border-bottom: 1px solid ${palette.gray_100};
   cursor: pointer;
+
   .mobile-only {
     display: none;
   }
@@ -80,6 +85,11 @@ const CommunityListBlock = styled.li`
   }
   .community-board-list-left-contents-top {
     font-size: 0.9rem;
+    ${(props) =>
+      props.isNotice &&
+      `
+      color: ${palette.antd_blue_01};
+    `}
   }
   .community-board-list-left-contents-bottom-uesrname {
     color: ${palette.gray_700};

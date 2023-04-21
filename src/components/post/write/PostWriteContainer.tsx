@@ -52,7 +52,6 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   console.log('h2');
   useEffect(() => {
     if (router.query.c) {
-      console.log(router.query.c);
       setSelectedCategory(router.query.c as PostCategory);
     }
   }, [router.query.c]);

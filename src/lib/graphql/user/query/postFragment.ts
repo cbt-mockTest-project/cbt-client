@@ -19,5 +19,6 @@ export const FULL_POST_FRAGMENT = gql`
     likeState
     view
     category
+    priority
   }
 `;

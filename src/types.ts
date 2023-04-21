@@ -1144,6 +1144,7 @@ export type Post = {
   like: Array<PostLike>;
   likeState: Scalars['Boolean'];
   likesCount: Scalars['Float'];
+  priority: Scalars['Float'];
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
@@ -1153,6 +1154,7 @@ export type Post = {
 export enum PostCategory {
   Free = 'FREE',
   Notice = 'NOTICE',
+  Recovery = 'RECOVERY',
   Review = 'REVIEW'
 }
 
