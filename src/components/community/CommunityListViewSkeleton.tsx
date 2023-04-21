@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { skeletonStyle } from '@styles/utils';
+import { responsive } from '@lib/utils/responsive';
 
 const CommunityListViewSkeleton: React.FC = () => {
   return (
@@ -11,7 +12,6 @@ const CommunityListViewSkeleton: React.FC = () => {
           <div className="community-board-list-left-contents-bottom-uesrname" />
         </div>
       </div>
-      <div className="community-board-list-right-contents" />
     </CommunityListBlock>
   );
 };
@@ -47,10 +47,6 @@ const CommunityListBlock = styled.li`
     height: 23px;
   }
   .community-board-list-left-contents-bottom-uesrname {
-    width: 150px;
-    height: 18px;
-  }
-  .community-board-list-right-contents {
     width: 130px;
     height: 18px;
   }

@@ -99,7 +99,4 @@ const CommunityViewSkeletonBlock = styled.div`
   .community-board-title {
     width: 100px;
   }
-  @media (max-width: ${responsive.medium}) {
-    padding: 20px;
-  }
 `;
