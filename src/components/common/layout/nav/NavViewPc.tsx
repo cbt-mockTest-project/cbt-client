@@ -6,11 +6,12 @@ import styled from 'styled-components';
 import { navItems } from './Nav.constants';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import NoticeDropBox from '@components/common/dropbox/NoticeDropBox';
-import { UserOutlined } from '@ant-design/icons';
+import { CrownTwoTone, UserOutlined } from '@ant-design/icons';
 import DropBox from '@components/common/dropbox/DropBox';
 import { Button } from 'antd';
 import { NavViewProps } from './Nav.interface';
 import { responsive } from '@lib/utils/responsive';
+import palette from '@styles/palette';
 
 interface NavViewPcProps extends NavViewProps {}
 
@@ -56,9 +57,19 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
               onClick={props.onToggleProfileDropBox}
             >
               <span className="nav-user-content-profile-image">
+                {props.meQuery.me.user.isAllowAdblock && (
+                  <CrownTwoTone
+                    className="nav-user-content-profile-crown"
+                    width={15}
+                    height={15}
+                    twoToneColor={palette.yellow_500}
+                  />
+                )}
                 <UserOutlined />
               </span>
-              <span>{props.meQuery?.me.user.nickname}</span>
+              <span className="nav-user-content-profile-nickname">
+                {props.meQuery?.me.user.nickname}
+              </span>
             </button>
             <DropBox
               isOpen={props.profileDropBoxState}
@@ -97,6 +108,18 @@ const NavViewPcContainer = styled.div`
   align-items: center;
   .nav-home-logo-wrapper {
     position: relative;
+  }
+  .nav-user-content-profile-image {
+    position: relative;
+  }
+  .nav-user-content-profile-crown {
+    position: absolute;
+    top: -11px;
+    left: 1px;
+    svg {
+      width: 19px;
+      height: 19px;
+    }
   }
 
   @media (max-width: ${responsive.medium}) {
