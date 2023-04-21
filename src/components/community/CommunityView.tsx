@@ -10,17 +10,18 @@ import { CommunityViewProps } from './Community.interface';
 import { format, parseISO } from 'date-fns';
 import CommunityPagination from './CommunityPagination';
 import CommunityViewSkeleton from './CommunityViewSkeleton';
+import { useRouter } from 'next/router';
 
 const CommunityView: React.FC<CommunityViewProps> = (props) => {
-  if (!props.postsQuery?.readPosts.posts) {
-    return <CommunityViewSkeleton />;
-  }
+  const router = useRouter();
+  const posts = props.postsQuery?.readPosts.posts;
+
   return (
     <CommunityViewBlock>
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
         {props.meQuery?.me.ok ? (
-          <Link href="/post/write" className="ml-auto">
+          <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
             <Button className="community-header-write-button">글쓰기</Button>
           </Link>
         ) : (
@@ -54,19 +55,24 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
       <section className="community-board">
         <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
-          {props.postsQuery?.readPosts.posts?.map((post) => (
-            <CommunityListView
-              key={post.id}
-              id={post.id}
-              category={'자유게시판'}
-              commentCount={post.commentsCount}
-              date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
-              likeCount={post.likesCount}
-              title={post.title}
-              userName={post.user.nickname}
-              viewCount={post.view}
-            />
-          ))}
+          {posts ? (
+            posts.map((post) => (
+              <CommunityListView
+                key={post.id}
+                id={post.id}
+                category={'자유게시판'}
+                commentCount={post.commentsCount}
+                date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
+                likeCount={post.likesCount}
+                title={post.title}
+                priority={post.priority}
+                userName={post.user.nickname}
+                viewCount={post.view}
+              />
+            ))
+          ) : (
+            <CommunityViewSkeleton type="list" />
+          )}
         </ul>
       </section>
       {props.postsQuery && (

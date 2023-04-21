@@ -40,7 +40,7 @@ const PostWriteView: React.FC<PostWriteProps> = (props) => {
     <PostWriteViewBlock>
       <Select
         options={props.categoryOptions}
-        defaultValue={props.categoryOptions[0]}
+        value={props.selectedCategory}
         onSelect={props.onSelectCategory}
       />
       <Input placeholder="제목" value={title} onChange={onChangeTitle} />

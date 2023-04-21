@@ -50,7 +50,9 @@ const PostDetailView: React.FC<PostDetailViewProps> = (props) => {
             </div>
             {meQuery?.me.user?.id === post.user.id && (
               <div className="post-detail-top-button-wrapper">
-                <Link href={`/post/edit/${post.id}`}>수정</Link>
+                <Link href={`/post/edit/${post.id}?c=${post.category}`}>
+                  수정
+                </Link>
                 <button onClick={requestDeletePost}>삭제</button>
               </div>
             )}

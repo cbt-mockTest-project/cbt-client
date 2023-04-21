@@ -9,6 +9,7 @@ export interface CommunityListProps {
   likeCount: number;
   commentCount: number;
   id: number;
+  priority: number;
 }
 
 export interface CommunityViewProps {
