@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { cloneDeep } from 'lodash';
 import RandomSelectComponent from '@components/exam/randomselect/RandomSelectComponent';
 import { DefaultOptionType } from 'antd/lib/select';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 interface TitlesAndCategories {
   category: string;
@@ -43,6 +44,7 @@ const RandomSelectPage: React.FC<RandomSelectPageProps> = ({
         pageHeadingTitle="모두CBT 랜덤모의고사 선택 페이지"
       />
       <RandomSelectPageContainer>
+        <GoogleAd type="display" />
         <RandomSelectComponent
           categories={categories}
           titlesAndCategories={titlesAndCategories}
