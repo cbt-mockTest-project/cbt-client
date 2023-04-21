@@ -19,19 +19,22 @@ import CoreContainer from '@components/common/core/CoreContainer';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
+import { someIncludes } from '@lib/utils/utils';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
   const localStorage = new LocalStorage();
   const router = useRouter();
   useEffect(() => {
-    var ads = document.getElementsByClassName('adsbygoogle').length;
-    for (var i = 0; i < ads; i++) {
-      try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push(
-          {}
-        );
-      } catch (e) {}
+    const excludePath = ['/exam/randomselect', '/exam/solution'];
+    if (!someIncludes(excludePath, router.asPath)) {
+      var ads = document.getElementsByClassName('adsbygoogle').length;
+      for (var i = 0; i < ads; i++) {
+        try {
+          ((window as any).adsbygoogle =
+            (window as any).adsbygoogle || []).push({});
+        } catch (e) {}
+      }
     }
   }, [router.asPath]);
 
