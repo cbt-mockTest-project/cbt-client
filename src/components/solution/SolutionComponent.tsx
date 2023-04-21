@@ -22,10 +22,13 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
 import axios from 'axios';
-import { MockExamImageType } from 'types';
+import { MockExamImageType, MockExamQuestionFeedback } from 'types';
 import useToggle from '@lib/hooks/useToggle';
-import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
+import PdfDownloadSelectModal, {
+  PdfDownloadSelectModalFooter,
+} from '@components/common/modal/PdfDownloadSelectModal';
 import { SearchOutlined } from '@ant-design/icons';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -48,11 +51,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   subDescription,
   coAuthor,
 }) => {
+  const { data: meQuery } = useMeQuery();
   const {
     value: pdfDownloadConfirmModalState,
     onToggle: onTogglePdfDownloadConfirmModalState,
   } = useToggle(false);
   const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
+  const [hasAdditionalAnswer, setHasAdditionalAnswer] = useState(true);
   const [filteredQuestions, setFilteredQuestions] = useState<
     | ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions']
     | null
@@ -152,7 +157,9 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           : item.solution?.replaceAll(/[^\n]/g, '') + '\n';
         contents.push({
           text: solutionText,
-          margin: hasSolutionImage ? [0, 0, 0, 0] : [0, 0, 0, 40],
+          margin: hasSolutionImage
+            ? [0, 0, 0, 0]
+            : [0, 0, 0, hasAdditionalAnswer ? 10 : 40],
         });
         if (hasSolutionImage && hasSolution) {
           const { data } = await axios.get(
@@ -167,8 +174,44 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           contents.push({
             image: dataUrl,
             width: 400,
-            margin: [0, 10, 0, 40],
+            margin: [0, 10, 0, hasAdditionalAnswer ? 10 : 40],
           });
+        }
+        if (hasAdditionalAnswer) {
+          const myFeedback: MockExamQuestionFeedback[] = [];
+          const userFeedback: MockExamQuestionFeedback[] = [];
+          let feedbackTotalCount = 0;
+          item.mockExamQuestionFeedback.forEach((feedback) => {
+            if (feedback.user.id === meQuery?.me.user?.id) {
+              myFeedback.push(feedback as MockExamQuestionFeedback);
+            } else {
+              userFeedback.push(feedback as MockExamQuestionFeedback);
+            }
+          });
+          if (meQuery?.me.user) {
+            feedbackTotalCount = myFeedback.length + userFeedback.length;
+          } else {
+            feedbackTotalCount = userFeedback.length;
+          }
+          if (feedbackTotalCount > 0) {
+            contents.push({
+              text: '추가답안',
+              style: 'subHeader',
+              margin: [0, 0, 0, 5],
+            });
+            myFeedback.forEach((feedback) => {
+              contents.push({
+                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
+                margin: [0, 0, 0, 10],
+              });
+            });
+            userFeedback.forEach((feedback) => {
+              contents.push({
+                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
+                margin: [0, 0, 0, 10],
+              });
+            });
+          }
         }
       }
       const fonts = {
@@ -210,7 +253,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       setPdfDownloadLoading(false);
     } catch (e) {
       handleError(e);
-      console.log(e);
       setPdfDownloadLoading(false);
       message.error('다운로드에 실패했습니다.');
     }
@@ -228,7 +270,12 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     setFilteredQuestions(filteredQuestions);
   };
   const debounceOnChange = debounce(onChangeSearchInput, 800);
-
+  const pdfDownloadSelectModalFooterOptions: PdfDownloadSelectModalFooter = {
+    onCheckboxChange: (e) => {
+      setHasAdditionalAnswer(e.target.checked);
+    },
+    hasAdditionalAnswer,
+  };
   return (
     <SolutionComponentContainer>
       <div className="exam-solution-page-top-button-wrapper">
@@ -310,6 +357,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           }}
           confirmButtonLoading={pdfDownloadLoading}
           cancelButtonLoading={pdfDownloadLoading}
+          footerOptions={pdfDownloadSelectModalFooterOptions}
         />
       )}
     </SolutionComponentContainer>

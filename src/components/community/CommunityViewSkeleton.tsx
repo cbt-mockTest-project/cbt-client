@@ -4,45 +4,35 @@ import { responsive } from '@lib/utils/responsive';
 import CommunityListViewSkeleton from './CommunityListViewSkeleton';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
-interface CommunityViewSkeletonProps {
-  type?: 'list' | 'view';
-}
+interface CommunityViewSkeletonProps {}
 
-const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({
-  type = 'view',
-}) => {
+const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({}) => {
   return (
     <CommunityViewSkeletonBlock>
-      {type === 'view' && (
-        <>
-          <section className="community-header">
-            <SkeletonBox
-              className="community-header-title"
-              height="30px"
-              width="100px"
-            />
-            <SkeletonBox
-              className="community-header-write-button"
-              height="30px"
-              width="100px"
-            />
-          </section>
-          <section className="community-category">
-            <SkeletonBox
-              className="community-category-title"
-              height="24px"
-              width="100px"
-            />
-            <div className="community-category-card-wrapper">
-              <SkeletonBox className="community-category-card" height="41px" />
-            </div>
-          </section>
-        </>
-      )}
+      <section className="community-header">
+        <SkeletonBox
+          className="community-header-title"
+          height="30px"
+          width="100px"
+        />
+        <SkeletonBox
+          className="community-header-write-button"
+          height="30px"
+          width="100px"
+        />
+      </section>
+      <section className="community-category">
+        <SkeletonBox
+          className="community-category-title"
+          height="24px"
+          width="100px"
+        />
+        <div className="community-category-card-wrapper">
+          <SkeletonBox className="community-category-card" height="41px" />
+        </div>
+      </section>
       <section className="community-board">
-        {type === 'view' && (
-          <SkeletonBox className="community-board-title" height="32px" />
-        )}
+        <SkeletonBox className="community-board-title" height="32px" />
         <ul className="community-board-list-wrapper">
           {[1, 2, 3].map((el, index) => (
             <CommunityListViewSkeleton key={index} />
@@ -54,7 +44,12 @@ const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({
 };
 
 export default CommunityViewSkeleton;
-const CommunityViewSkeletonBlock = styled.div`
+
+interface CommunityViewSkeletonProps {
+  type?: 'list' | 'view';
+}
+
+const CommunityViewSkeletonBlock = styled.div<CommunityViewSkeletonProps>`
   width: 100%;
   max-width: 800px;
   min-height: calc(100vh- 105px);
