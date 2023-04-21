@@ -15,6 +15,7 @@ export interface ConfirmModalProps
   confirmButtonLoading?: boolean;
   cancelButtonLoading?: boolean;
   disabled?: boolean;
+  footer?: React.ReactNode;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -29,6 +30,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelButtonLoading = false,
   confirmButtonLoading = false,
   disabled = false,
+  footer,
 }) => {
   const Content: React.FC<{ data: ContentType }> = ({ data }) => {
     if (typeof data === 'string') {
@@ -60,6 +62,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
               {confirmLabel}
             </Button>
           </div>
+          {footer && <div className="confirm-modal-footer">{footer}</div>}
         </div>
       </Modal>
     </ConfirmModalContainer>
