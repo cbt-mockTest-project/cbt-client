@@ -1,11 +1,18 @@
 import palette from '@styles/palette';
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
+import { Checkbox, CheckboxProps } from 'antd';
 
+export interface PdfDownloadSelectModalFooter {
+  hasAdditionalAnswer?: boolean;
+  onCheckboxChange?: CheckboxProps['onChange'];
+}
 interface PdfDownloadSelectModalProps
-  extends Omit<ConfirmModalProps, 'content'> {}
+  extends Omit<ConfirmModalProps, 'content'> {
+  footerOptions?: PdfDownloadSelectModalFooter;
+}
 
 const PdfDownloadSelectModal: React.FC<PdfDownloadSelectModalProps> = (
   props
@@ -16,7 +23,15 @@ const PdfDownloadSelectModal: React.FC<PdfDownloadSelectModalProps> = (
       confirmLabel="정답 포함"
       cancelLabel="정답 미포함"
       disabled={isMobile}
-      content={<PdfDownloadSelectModaContent />}
+      content={<PdfDownloadSelectModalContent />}
+      footer={
+        props.footerOptions ? (
+          <PdfDownloadSelectModalFooter
+            onChange={props.footerOptions.onCheckboxChange}
+            hasAdditionalAnswer={props.footerOptions.hasAdditionalAnswer}
+          />
+        ) : null
+      }
     />
   );
 };
@@ -25,8 +40,25 @@ export default PdfDownloadSelectModal;
 
 const PdfDownloadSelectModalContainer = styled(ConfirmModal)``;
 
-const PdfDownloadSelectModaContent: React.FC = () => (
-  <PdfDownloadSelectModaContentContainer>
+interface PdfDownloadSelectModalFooterProps {
+  hasAdditionalAnswer?: boolean;
+  onChange: CheckboxProps['onChange'];
+}
+
+const PdfDownloadSelectModalFooter: React.FC<
+  PdfDownloadSelectModalFooterProps
+> = ({ hasAdditionalAnswer, onChange }) => {
+  return (
+    <div>
+      <Checkbox checked={hasAdditionalAnswer} onChange={onChange}>
+        추가답안 포함
+      </Checkbox>
+    </div>
+  );
+};
+
+const PdfDownloadSelectModalContent: React.FC = () => (
+  <PdfDownloadSelectModalContentContainer>
     <p>다운로드 형태를 선택해주세요.</p>
     <p className="pdf-download-select-modal-description">
       어플에서는 작동하지 않습니다.
@@ -34,10 +66,10 @@ const PdfDownloadSelectModaContent: React.FC = () => (
     <p className="pdf-download-select-modal-description">
       pc환경에서 이용해주세요.
     </p>
-  </PdfDownloadSelectModaContentContainer>
+  </PdfDownloadSelectModalContentContainer>
 );
 
-const PdfDownloadSelectModaContentContainer = styled.div`
+const PdfDownloadSelectModalContentContainer = styled.div`
   .pdf-download-select-modal-description {
     font-size: 12px;
     color: ${palette.gray_700};
