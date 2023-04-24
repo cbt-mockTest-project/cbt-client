@@ -6,7 +6,6 @@ import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
-import { convertExamTurn } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Checkbox, Input } from 'antd';
 import { Option } from 'antd/lib/mentions';
@@ -81,7 +80,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
     const titles: DefaultOptionType[] = filteredTitles[0].titles.map(
       (title) => ({
         value: title.id,
-        label: convertExamTurn(title.title),
+        label: title.slug || title.title,
       })
     );
     titles.unshift({ value: 0, label: '전체' });
