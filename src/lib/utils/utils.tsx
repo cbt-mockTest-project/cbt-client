@@ -86,6 +86,9 @@ interface CheckUrlArgs {
   reverse?: boolean;
 }
 
+export const someIncludes = (arr: string[], target: string) =>
+  arr.some((el) => target.startsWith(el));
+
 export const checkUrl = ({ url, allowUrls, reverse }: CheckUrlArgs) =>
   reverse
     ? !allowUrls.some((allowUrl) => url.startsWith(allowUrl))
