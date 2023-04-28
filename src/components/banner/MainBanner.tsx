@@ -104,6 +104,7 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
       top: 0;
       text-align: left;
       margin-left: 15px;
+      height: 20px;
     }
   }
   .home-main-banner-box {
