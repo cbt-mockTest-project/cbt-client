@@ -8,8 +8,12 @@ import MouseIcon from '@mui/icons-material/Mouse';
 import Portal from '@components/common/portal/Portal';
 import IosAppGuideModal from '@components/common/modal/IosAppGuideModal';
 import useToggle from '@lib/hooks/useToggle';
+import palette from '@styles/palette';
+import AdBannerInfoModal from '@components/common/modal/AdBannerInfoModal';
 
 const MainBanner = () => {
+  const { value: adBannerInfoModalState, onToggle: onToggleAdBannerInfoModal } =
+    useToggle();
   const isIosAndMobile = isIOS && window.innerWidth < 720;
   const { value: appGuideModalState, onToggle: onToggleAppGuideModal } =
     useToggle();
@@ -19,9 +23,11 @@ const MainBanner = () => {
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 3500,
+          delay: 2500,
           disableOnInteraction: false,
         }}
+        speed={500}
+        loop={true}
         pagination={{
           clickable: true,
         }}
@@ -60,7 +66,27 @@ const MainBanner = () => {
             </a>
           )}
         </SwiperSlide>
+        <SwiperSlide>
+          <button
+            className="main-banner-text-banner"
+            onClick={onToggleAdBannerInfoModal}
+          >
+            <p>해당 위치 광고 문의 or 제휴 문의</p>
+            <p className="main-banner-text-banner-icon-wrapper">
+              <span>클릭</span>
+              <span className="main-banner-text-banner-icon">
+                <MouseIcon />
+              </span>
+            </p>
+          </button>
+        </SwiperSlide>
       </Swiper>
+      <Portal>
+        <AdBannerInfoModal
+          open={adBannerInfoModalState}
+          onClose={onToggleAdBannerInfoModal}
+        />
+      </Portal>
     </MainBannerContainer>
   );
 };
@@ -74,6 +100,11 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
   .home-main-banner-swiper {
     width: 100%;
     height: 180px;
+    .swiper-pagination {
+      top: 0;
+      text-align: left;
+      margin-left: 15px;
+    }
   }
   .home-main-banner-box {
     width: 100%;
@@ -90,6 +121,24 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
         : css`
             background-image: url('/png/banner/main-banner-pc02.png');
           `}
+  }
+  .main-banner-text-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: ${palette.gray_100};
+  }
+  .main-banner-text-banner-icon-wrapper {
+    display: flex;
+    align-items: center;
+    .main-banner-text-banner-icon {
+      position: relative;
+      left: 5px;
+      top: 4px;
+    }
   }
 
   @media (max-width: ${responsive.small}) {
