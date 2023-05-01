@@ -1,14 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import CommunityListViewSkeleton from './CommunityListViewSkeleton';
+import CommunityListViewSkeleton from './CommunityListSkeleton';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
-interface CommunityViewSkeletonProps {}
+interface CommunityComponentSkeletonProps {}
 
-const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({}) => {
+const CommunityComponentSkeleton: React.FC<
+  CommunityComponentSkeletonProps
+> = ({}) => {
   return (
-    <CommunityViewSkeletonBlock>
+    <CommunityComponentSkeletonBlock>
       <section className="community-header">
         <SkeletonBox
           className="community-header-title"
@@ -39,17 +41,17 @@ const CommunityViewSkeleton: React.FC<CommunityViewSkeletonProps> = ({}) => {
           ))}
         </ul>
       </section>
-    </CommunityViewSkeletonBlock>
+    </CommunityComponentSkeletonBlock>
   );
 };
 
-export default CommunityViewSkeleton;
+export default CommunityComponentSkeleton;
 
-interface CommunityViewSkeletonProps {
+interface CommunityComponentSkeletonProps {
   type?: 'list' | 'view';
 }
 
-const CommunityViewSkeletonBlock = styled.div<CommunityViewSkeletonProps>`
+const CommunityComponentSkeletonBlock = styled.div<CommunityComponentSkeletonProps>`
   width: 100%;
   max-width: 800px;
   min-height: calc(100vh- 105px);

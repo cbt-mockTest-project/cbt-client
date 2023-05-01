@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { skeletonStyle } from '@styles/utils';
 
-const CommunityListViewSkeleton: React.FC = () => {
+const CommunityListSkeleton: React.FC = () => {
   return (
     <CommunityListBlock>
       <div className="community-board-list-left-contents">
@@ -15,7 +15,7 @@ const CommunityListViewSkeleton: React.FC = () => {
   );
 };
 
-export default CommunityListViewSkeleton;
+export default CommunityListSkeleton;
 const CommunityListBlock = styled.li`
   display: flex;
   justify-content: space-between;

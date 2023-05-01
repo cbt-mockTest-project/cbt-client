@@ -10,10 +10,10 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import dynamic from 'next/dynamic';
-import PostDetailViewSkeleton from '@components/post/detail/PostDetailViewSkeleton';
-const PostDetailContainer = dynamic(
-  () => import('@components/post/detail/PostDetailContainer'),
-  { loading: () => <PostDetailViewSkeleton /> }
+import PostDetailSkeleton from '@components/post/detail/PostDetailSkeleton';
+const PostDetailComponent = dynamic(
+  () => import('@components/post/detail/PostDetailComponent'),
+  { loading: () => <PostDetailSkeleton /> }
 );
 interface PostPageProps {
   postQueryOnStaticProps: ReadPostQuery;
@@ -28,7 +28,7 @@ const PostPage: NextPage<PostPageProps> = ({ postQueryOnStaticProps }) => {
         pageHeadingTitle={`${pageTitle} | 커뮤니티`}
       />
       <Layout>
-        <PostDetailContainer postQueryOnStaticProps={postQueryOnStaticProps} />
+        <PostDetailComponent postQueryOnStaticProps={postQueryOnStaticProps} />
       </Layout>
     </>
   );

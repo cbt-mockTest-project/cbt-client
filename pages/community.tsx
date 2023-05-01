@@ -2,11 +2,11 @@ import Layout from '@components/common/layout/Layout';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import dynamic from 'next/dynamic';
-import CommunityViewSkeleton from '@components/community/CommunityViewSkeleton';
+import CommunityComponentSkeleton from '@components/community/CommunityComponentSkeleton';
 
-const CommunityContainer = dynamic(
-  () => import('@components/community/CommunityContainer'),
-  { ssr: false, loading: () => <CommunityViewSkeleton /> }
+const CommunityComponent = dynamic(
+  () => import('@components/community/CommunityComponent'),
+  { ssr: false, loading: () => <CommunityComponentSkeleton /> }
 );
 
 const Community = () => {
@@ -14,7 +14,7 @@ const Community = () => {
     <>
       <WithHead title="커뮤니티 | 모두CBT" pageHeadingTitle="커뮤니티페이지" />
       <Layout>
-        <CommunityContainer />
+        <CommunityComponent />
       </Layout>
     </>
   );
