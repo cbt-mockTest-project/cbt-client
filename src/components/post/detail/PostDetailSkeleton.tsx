@@ -4,9 +4,9 @@ import React from 'react';
 import styled from 'styled-components';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
-const PostDetailViewSkeleton: React.FC = () => {
+const PostDetailSkeleton: React.FC = () => {
   return (
-    <PostDetailViewSkeletonBlock>
+    <PostDetailSkeletonBlock>
       <div className="post-detail-wrapper">
         <section className="post-detail-top-section">
           <div className="post-detail-top-section-title-and-button-wrapper">
@@ -29,12 +29,12 @@ const PostDetailViewSkeleton: React.FC = () => {
           </div>
         </section>
       </div>
-    </PostDetailViewSkeletonBlock>
+    </PostDetailSkeletonBlock>
   );
 };
 
-export default PostDetailViewSkeleton;
-const PostDetailViewSkeletonBlock = styled.div`
+export default PostDetailSkeleton;
+const PostDetailSkeletonBlock = styled.div`
   width: 100%;
   max-width: 800px;
   margin-left: auto;
