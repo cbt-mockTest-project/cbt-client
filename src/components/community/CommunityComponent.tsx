@@ -1,33 +1,72 @@
-import React from 'react';
-import styled from 'styled-components';
-import palette from '@styles/palette';
+import { loginModal } from '@lib/constants';
+import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
-import CommunityListView from './CommunityListView';
-import { categorys } from './Community.constants';
 import Link from 'next/link';
-import { responsive } from '@lib/utils/responsive';
-import { CommunityViewProps } from './Community.interface';
-import { format, parseISO } from 'date-fns';
-import CommunityPagination from './CommunityPagination';
-import CommunityViewSkeleton from './CommunityViewSkeleton';
 import { useRouter } from 'next/router';
-import CommunityListViewSkeleton from './CommunityListViewSkeleton';
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { PostCategory } from 'types';
+import CommunityList from './CommunityList';
+import { format, parseISO } from 'date-fns';
+import CommunityListSkeleton from './CommunityListSkeleton';
+import CommunityPagination from './CommunityPagination';
+import palette from '@styles/palette';
+import { responsive } from '@lib/utils/responsive';
 
-const CommunityView: React.FC<CommunityViewProps> = (props) => {
+export const categorys = [
+  {
+    label: '건의하기',
+    path: '/community',
+    query: { c: PostCategory.Suggenstion },
+  },
+  { label: '공지사항', path: '/community', query: { c: PostCategory.Notice } },
+  // { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
+  // { label: '시험후기', path: '/community', query: { c: PostCategory.Review } },
+  // {
+  //   label: '기출복원',
+  //   path: '/community',
+  //   query: { c: PostCategory.Recovery },
+  // },
+];
+
+interface CommunityComponentProps {}
+
+const CommunityComponent: React.FC<CommunityComponentProps> = () => {
   const router = useRouter();
-  const posts = props.postsQuery?.readPosts.posts;
-
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
+  const [readPosts, { data: postsQuery, loading: readPostsLoading }] =
+    useLazyReadPosts('network-only');
+  useEffect(() => {
+    if (router.query.c) {
+      readPosts({
+        variables: {
+          input: {
+            limit: 8,
+            page: Number(router.query.p) || 1,
+            category: router.query.c as PostCategory,
+          },
+        },
+      });
+    }
+  }, [router.query.c, router.query.p]);
+  const checkCategoryMatching = (query: string) => query === router.query.c;
+  const posts = postsQuery?.readPosts.posts;
   return (
-    <CommunityViewBlock>
+    <CommunityComponentBlock>
       <section className="community-header">
         <b className="community-header-title">커뮤니티</b>
-        {props.meQuery?.me.ok ? (
+        {meQuery?.me.ok ? (
           <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
             <Button className="community-header-write-button">글쓰기</Button>
           </Link>
         ) : (
           <Button
-            onClick={props.openLoginModal}
+            onClick={openLoginModal}
             className="community-header-write-button"
           >
             글쓰기
@@ -44,7 +83,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
             >
               <span
                 className={`community-category-card ${
-                  props.checkCategoryMatching(category.query.c) && 'active'
+                  checkCategoryMatching(category.query.c) && 'active'
                 }`}
               >
                 {category.label}
@@ -58,7 +97,7 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
         <ul className="community-board-list-wrapper">
           {posts ? (
             posts.map((post) => (
-              <CommunityListView
+              <CommunityList
                 key={post.id}
                 id={post.id}
                 category={'자유게시판'}
@@ -74,21 +113,20 @@ const CommunityView: React.FC<CommunityViewProps> = (props) => {
           ) : (
             <ul className="community-board-list-wrapper">
               {[1, 2, 3].map((el, index) => (
-                <CommunityListViewSkeleton key={index} />
+                <CommunityListSkeleton key={index} />
               ))}
             </ul>
           )}
         </ul>
       </section>
-      {props.postsQuery && (
-        <CommunityPagination total={props.postsQuery.readPosts.count} />
-      )}
-    </CommunityViewBlock>
+      {postsQuery && <CommunityPagination total={postsQuery.readPosts.count} />}
+    </CommunityComponentBlock>
   );
 };
 
-export default CommunityView;
-const CommunityViewBlock = styled.div`
+export default CommunityComponent;
+
+const CommunityComponentBlock = styled.div`
   width: 100%;
   max-width: 800px;
   min-height: calc(100vh- 105px);

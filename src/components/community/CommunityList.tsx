@@ -5,10 +5,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import palette from '@styles/palette';
 import Link from 'next/link';
-import { CommunityListProps } from './Community.interface';
 import { responsive } from '@lib/utils/responsive';
 
-const CommunityListView: React.FC<CommunityListProps> = (props) => {
+export interface CommunityListProps {
+  title: string;
+  category: string;
+  userName: string;
+  date: string;
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  id: number;
+  priority: number;
+}
+
+const CommunityLis: React.FC<CommunityListProps> = (props) => {
   return (
     <Link href={`/post/${props.id}`}>
       <CommunityListBlock isNotice={!!props.priority}>
@@ -54,7 +65,7 @@ interface CommunityListBlockProps {
   isNotice: boolean;
 }
 
-export default CommunityListView;
+export default CommunityLis;
 const CommunityListBlock = styled.li<CommunityListBlockProps>`
   display: flex;
   justify-content: space-between;
