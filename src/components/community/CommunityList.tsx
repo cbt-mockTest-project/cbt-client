@@ -9,6 +9,7 @@ import { responsive } from '@lib/utils/responsive';
 import { PostCategory } from 'types';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { secretBoards } from '@lib/constants';
 
 export interface CommunityListProps {
   title: string;
@@ -38,7 +39,6 @@ const CommunityList: React.FC<CommunityListProps> = ({
   const router = useRouter();
 
   const { data: meQuery } = useMeQuery();
-  const secretBoards = [PostCategory.Suggenstion];
   const isSecret = secretBoards.includes(router.query.c as PostCategory);
   const allowView =
     meQuery?.me.user?.id === userId || meQuery?.me.user?.role === 'ADMIN';

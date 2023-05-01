@@ -1,6 +1,7 @@
 import CircleIcon from '@mui/icons-material/Circle';
 import TriangleIcon from '@assets/svg/triangle_fill.svg';
 import ClearIcon from '@mui/icons-material/Clear';
+import { PostCategory } from 'types';
 
 export const circleIcon = (
   <CircleIcon className="circle-icon" style={{ width: '110%' }} />
@@ -11,6 +12,9 @@ export const triangleIcon = (
 export const clearIcon = (
   <ClearIcon className="clear-icon" style={{ width: '180%' }} />
 );
+
+// 비밀게시판리스트
+export const secretBoards = [PostCategory.Suggenstion];
 
 /**
  * 로컬스토리지 답안 임시저장 key

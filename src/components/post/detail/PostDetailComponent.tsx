@@ -31,6 +31,8 @@ import { Button } from 'antd';
 import parse from 'html-react-parser';
 import PostCommentContainer from '@components/common/card/commentCard/PostCommentContainer';
 import Link from 'next/link';
+import { secretBoards } from '@lib/constants';
+import { PostCategory } from 'types';
 
 interface PostDetailComponentProps {
   postQueryOnStaticProps: ReadPostQuery;
@@ -55,6 +57,13 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
   const { data: meQuery } = useMeQuery();
   const [editPostLike] = useEditPostLike();
   const [deletePost] = useDeletePost();
+
+  const isSecret = secretBoards.includes(
+    postQuery.readPost.post?.category as PostCategory
+  );
+  const allowView =
+    meQuery?.me.user?.id === postQuery.readPost.post?.user.id ||
+    meQuery?.me.user?.role === 'ADMIN';
 
   useEffect(() => {
     (async () => {
@@ -179,6 +188,11 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
     return <PostDetailSkeleton />;
   }
   if (!postQuery.readPost.ok || !postQuery.readPost.post) return null;
+
+  if (isSecret && !allowView) {
+    return <PostDetailSkeleton />;
+  }
+
   const { post } = postQuery.readPost;
   return (
     <PostDetailComponentBlock>
