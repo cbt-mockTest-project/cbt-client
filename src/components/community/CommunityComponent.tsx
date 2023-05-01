@@ -108,6 +108,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
                 title={post.title}
                 priority={post.priority}
                 userName={post.user.nickname}
+                userId={post.user.id}
                 viewCount={post.view}
               />
             ))
