@@ -15,6 +15,7 @@ import CommunityListSkeleton from './CommunityListSkeleton';
 import CommunityPagination from './CommunityPagination';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
+import { POST_CATEGORY_MAP } from './Community.constants';
 
 export const categorys = [
   {
@@ -100,7 +101,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
               <CommunityList
                 key={post.id}
                 id={post.id}
-                category={'자유게시판'}
+                category={POST_CATEGORY_MAP[post.category]}
                 commentCount={post.commentsCount}
                 date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
                 likeCount={post.likesCount}
