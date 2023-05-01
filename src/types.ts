@@ -1152,10 +1152,12 @@ export type Post = {
 };
 
 export enum PostCategory {
+  Checkin = 'CHECKIN',
   Free = 'FREE',
   Notice = 'NOTICE',
   Recovery = 'RECOVERY',
-  Review = 'REVIEW'
+  Review = 'REVIEW',
+  Suggenstion = 'SUGGENSTION'
 }
 
 export type PostComment = {
