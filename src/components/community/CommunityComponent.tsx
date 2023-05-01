@@ -60,7 +60,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
   return (
     <CommunityComponentBlock>
       <section className="community-header">
-        <b className="community-header-title">커뮤니티</b>
+        <b className="community-header-title">게시판</b>
         {meQuery?.me.ok ? (
           <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
             <Button className="community-header-write-button">글쓰기</Button>
