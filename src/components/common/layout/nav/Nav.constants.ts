@@ -1,6 +1,6 @@
 export const navItems = [
   {
-    label: '커뮤니티',
+    label: '게시판',
     path: '/community?c=SUGGENSTION',
     key: ['post', 'community'],
   },

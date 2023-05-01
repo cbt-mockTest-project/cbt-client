@@ -18,7 +18,7 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
   const CommonNavItemComponent = () => (
     <div className="mobile-nav-common-wrapper">
       <Link href="/community?c=SUGGENSTION">
-        <span className="mobile-nav-item-link-text">커뮤니티</span>
+        <span className="mobile-nav-item-link-text">게시판</span>
       </Link>
     </div>
   );

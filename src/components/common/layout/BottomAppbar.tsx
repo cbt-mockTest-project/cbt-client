@@ -84,7 +84,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         <span
           className={`bottom-app-bar-item-text ${isCommunityPage && 'active'}`}
         >
-          커뮤니티
+          게시판
         </span>
       </button>
       <button
