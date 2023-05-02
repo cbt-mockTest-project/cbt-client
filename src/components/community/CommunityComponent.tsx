@@ -1,4 +1,4 @@
-import { loginModal } from '@lib/constants';
+import { adminBoards, loginModal } from '@lib/constants';
 import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { PostCategory } from 'types';
+import { PostCategory, UserRole } from 'types';
 import CommunityList from './CommunityList';
 import { format, parseISO } from 'date-fns';
 import CommunityListSkeleton from './CommunityListSkeleton';
@@ -42,6 +42,11 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [readPosts, { data: postsQuery, loading: readPostsLoading }] =
     useLazyReadPosts('network-only');
+  const isAdminOnlyCategory = adminBoards.includes(
+    router.query.c as PostCategory
+  );
+  const isAdmin = meQuery?.me.ok && meQuery.me.user?.role === UserRole.Admin;
+  const allowWriteAdminOnlyCategory = !isAdminOnlyCategory || isAdmin;
   useEffect(() => {
     if (router.query.c) {
       readPosts({
@@ -61,18 +66,19 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
     <CommunityComponentBlock>
       <section className="community-header">
         <b className="community-header-title">게시판</b>
-        {meQuery?.me.ok ? (
-          <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
-            <Button className="community-header-write-button">글쓰기</Button>
-          </Link>
-        ) : (
-          <Button
-            onClick={openLoginModal}
-            className="community-header-write-button"
-          >
-            글쓰기
-          </Button>
-        )}
+        {allowWriteAdminOnlyCategory &&
+          (meQuery?.me.ok ? (
+            <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
+              <Button className="community-header-write-button">글쓰기</Button>
+            </Link>
+          ) : (
+            <Button
+              onClick={openLoginModal}
+              className="community-header-write-button"
+            >
+              글쓰기
+            </Button>
+          ))}
       </section>
       <section className="community-category">
         <b className="community-category-title">카테고리</b>

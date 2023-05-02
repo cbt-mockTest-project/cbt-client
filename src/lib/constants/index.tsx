@@ -16,6 +16,9 @@ export const clearIcon = (
 // 비밀게시판리스트
 export const secretBoards = [PostCategory.Suggenstion];
 
+// 관리자게시판
+export const adminBoards = [PostCategory.Notice];
+
 /**
  * 로컬스토리지 답안 임시저장 key
  */
