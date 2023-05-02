@@ -77,7 +77,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         </span>
       </button>
       <button
-        onClick={() => onRouteChange('/community?c=FREE')}
+        onClick={() => onRouteChange('/community?c=SUGGENSTION')}
         className="bottom-app-bar-item"
       >
         <ForumIcon className={`${isCommunityPage && 'active'}`} />
