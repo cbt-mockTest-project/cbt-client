@@ -10,6 +10,11 @@ import BottomAppbar from './BottomAppbar';
 import Footer from './Footer';
 import Nav from './nav/NavContainer';
 import SubNav from './SubNav';
+import {
+  MAIN_SUB_NAV_OPTIONS,
+  MANAGE_SUB_NAV_OPTIONS,
+} from './nav/Nav.constants';
+import { SubNavOption } from './nav/Nav.interface';
 
 const MainBanner = dynamic(() => import('@components/banner/MainBanner'), {
   ssr: false,
@@ -20,18 +25,9 @@ interface LayoutProps {
   children: React.ReactNode;
   mainBanner?: boolean;
   sideBanner?: boolean;
-  subNav?: boolean;
+  subNav?: 'main' | 'manage';
   className?: string;
 }
-
-const subNavOptions = [
-  { label: '북마크', value: 'bookmark' },
-  { label: '성취도', value: 'reviewnote' },
-  { label: '메모장', value: 'memo' },
-  { label: '기록', value: 'examhistory' },
-  { label: '문제댓글', value: 'questioncomment' },
-  { label: '시험지', value: 'myexam' },
-];
 
 const Layout: React.FC<LayoutProps> = ({
   children,
@@ -40,10 +36,23 @@ const Layout: React.FC<LayoutProps> = ({
   subNav,
   className,
 }) => {
+  let SUB_NAV_OPTIONS: SubNavOption[] = [];
+  switch (subNav) {
+    case 'main':
+      SUB_NAV_OPTIONS = MAIN_SUB_NAV_OPTIONS;
+      break;
+    case 'manage':
+      SUB_NAV_OPTIONS = MANAGE_SUB_NAV_OPTIONS;
+      break;
+    default:
+      SUB_NAV_OPTIONS = MAIN_SUB_NAV_OPTIONS;
+      break;
+  }
+
   return (
     <LayoutContainer className={className}>
       <Nav />
-      {subNav && <SubNav options={subNavOptions} />}
+      {subNav && <SubNav options={SUB_NAV_OPTIONS} />}
       <div className="layout-children-wrapper">
         <>
           {mainBanner && <MainBanner />}

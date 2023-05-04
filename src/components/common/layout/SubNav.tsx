@@ -4,16 +4,24 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { responsive } from '@lib/utils/responsive';
+import { SubNavOption } from './nav/Nav.interface';
 
 interface SubNavProps {
-  options: { label: string; value: string }[];
+  options: SubNavOption[];
 }
 
 const SubNav: React.FC<SubNavProps> = ({ options }) => {
   const router = useRouter();
-  const onCategoryChange = async (path: string) => {
-    if (router.pathname.indexOf(path) > -1) return;
-    await router.push({ pathname: `/me/${path}` });
+
+  const onCategoryChange = async ({
+    value,
+    pathname,
+  }: {
+    value: string;
+    pathname: string;
+  }) => {
+    if (router.pathname.indexOf(value) > -1) return;
+    await router.push({ pathname });
     const subNav = document.querySelector('.sub-nav-link-list.active');
     subNav?.scrollIntoView({ block: 'center' });
   };
@@ -34,7 +42,12 @@ const SubNav: React.FC<SubNavProps> = ({ options }) => {
               >
                 <button
                   className="sub-nav-link-list-button"
-                  onClick={() => onCategoryChange(option.value)}
+                  onClick={() =>
+                    onCategoryChange({
+                      value: option.value,
+                      pathname: option.path,
+                    })
+                  }
                 >
                   {option.label}
                   {isActiveNavItem(option.value) && <ArrowDropUpIcon />}

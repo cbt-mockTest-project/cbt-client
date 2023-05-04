@@ -17,7 +17,7 @@ const Mypage: NextPage = () => {
   return (
     <>
       <WithHead title="북마크 | 모두CBT" pageHeadingTitle="북마크페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <BookmarkedQuestionsComponent />
       </Layout>
     </>

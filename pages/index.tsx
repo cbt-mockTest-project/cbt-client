@@ -41,7 +41,7 @@ const Home: NextPage<HomeProps> = ({
       />
       <HomeContainer
         mainBanner={true}
-        subNav={true}
+        subNav="main"
         className="layout-component"
       >
         <MainComponent

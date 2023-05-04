@@ -15,7 +15,7 @@ const Mypage: NextPage = () => {
   return (
     <>
       <WithHead title="시험기록 | 모두CBT" pageHeadingTitle="시험기록페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <ExamHistoryComponent />
       </Layout>
     </>

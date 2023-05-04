@@ -10,7 +10,7 @@ const MyExamPage: React.FC<MyExamPageProps> = () => {
   return (
     <>
       <WithHead title="내시험지 | 모두CBT" pageHeadingTitle="내시험지페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <MyExamComponent />
       </Layout>
     </>
