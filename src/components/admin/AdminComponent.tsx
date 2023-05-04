@@ -41,6 +41,7 @@ const AdminComponent: React.FC<AdminComponentProps> = () => {
   return (
     <AdminComponentContainer>
       <Link href="/admin/feedback">피드백페이지로</Link>
+      <Link href="/admin/payment">결제페이지로</Link>
       <Search
         onSearch={(value) => {
           searchUser({ variables: { input: { name: value } } });

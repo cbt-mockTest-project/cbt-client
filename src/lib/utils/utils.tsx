@@ -121,32 +121,6 @@ export const convertExamTitle = (title: string) => {
 export const removeHtmlTag = (String: string) =>
   String.replace(/<[^>]*>?/g, '');
 
-export const loadScript = ({
-  src,
-  type,
-  async,
-}: {
-  src: string;
-  type?: string;
-  async?: boolean;
-}) => {
-  return new Promise<void>((resolve) => {
-    const scriptEl = document.createElement('script');
-    if (async && type) {
-      scriptEl.async = async;
-      scriptEl.type = type;
-    }
-
-    scriptEl.src = src;
-    const { length } = document.getElementsByTagName('script');
-    const x = document.getElementsByTagName('script')[length - 1];
-    x.parentNode!.appendChild(scriptEl);
-    scriptEl.onload = () => {
-      resolve();
-    };
-  });
-};
-
 export const blobToDataUrl = (blob: Blob): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -170,4 +144,36 @@ export const checkAdblock = (): boolean => {
     return true;
   }
   return false;
+};
+
+export const isScriptLoaded = (url: string): boolean => {
+  const scripts = document.getElementsByTagName('script');
+  for (const script of scripts) {
+    if (script.src === url) {
+      return true;
+    }
+  }
+  return false;
+};
+
+interface LoadScriptArgs {
+  url: string;
+  type: string;
+}
+
+export const loadScript = ({ url, type }: LoadScriptArgs): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (isScriptLoaded(url)) {
+      console.warn(`Script "${url}" is already loaded.`);
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = url;
+    script.type = type;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = (error) => reject(error);
+    document.head.appendChild(script);
+  });
 };
