@@ -5,7 +5,11 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { responsive } from '@lib/utils/responsive';
 
-const SubNav = () => {
+interface SubNavProps {
+  options: { label: string; value: string }[];
+}
+
+const SubNav: React.FC<SubNavProps> = ({ options }) => {
   const router = useRouter();
   const onCategoryChange = async (path: string) => {
     if (router.pathname.indexOf(path) > -1) return;
@@ -13,21 +17,14 @@ const SubNav = () => {
     const subNav = document.querySelector('.sub-nav-link-list.active');
     subNav?.scrollIntoView({ block: 'center' });
   };
-  const subNavOptions = [
-    { label: '북마크', value: 'bookmark' },
-    { label: '성취도', value: 'reviewnote' },
-    { label: '메모장', value: 'memo' },
-    { label: '기록', value: 'examhistory' },
-    { label: '문제댓글', value: 'questioncomment' },
-    { label: '시험지', value: 'myexam' },
-  ];
+
   const isActiveNavItem = (value: string) =>
     router.pathname.indexOf(value) > -1;
   return (
     <SubNavContainer className="sub-nav-container">
       <div className="sub-nav-contents-wrapper">
         <ul className="sub-nav-link-wrapper">
-          {subNavOptions.map((option, index) => {
+          {options.map((option, index) => {
             return (
               <li
                 className={`sub-nav-link-list ${

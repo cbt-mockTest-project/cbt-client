@@ -24,6 +24,15 @@ interface LayoutProps {
   className?: string;
 }
 
+const subNavOptions = [
+  { label: '북마크', value: 'bookmark' },
+  { label: '성취도', value: 'reviewnote' },
+  { label: '메모장', value: 'memo' },
+  { label: '기록', value: 'examhistory' },
+  { label: '문제댓글', value: 'questioncomment' },
+  { label: '시험지', value: 'myexam' },
+];
+
 const Layout: React.FC<LayoutProps> = ({
   children,
   mainBanner,
@@ -34,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <LayoutContainer className={className}>
       <Nav />
-      {subNav && <SubNav />}
+      {subNav && <SubNav options={subNavOptions} />}
       <div className="layout-children-wrapper">
         <>
           {mainBanner && <MainBanner />}
