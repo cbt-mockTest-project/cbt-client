@@ -1,6 +1,7 @@
 import { DropBoxOption } from '@components/common/dropbox/DropBox';
 import { NoticeDropBoxOption } from '@components/common/dropbox/NoticeDropBox';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import { UserRole } from 'types';
 
 export interface NavViewProps {
   sticky: boolean;
@@ -20,4 +21,17 @@ export interface NavViewProps {
   onOuterClickForNoticeDropBox: React.MouseEventHandler<Element>;
   onOuterClickForProfileDropBox: React.MouseEventHandler<Element>;
   isSelectedNavItem: (key: string[]) => boolean;
+}
+
+export interface NavItem {
+  label: string;
+  path: string;
+  key: string[];
+  permission?: UserRole[];
+}
+
+export interface SubNavOption {
+  label: string;
+  value: string;
+  path: string;
 }

@@ -4,30 +4,35 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { responsive } from '@lib/utils/responsive';
+import { SubNavOption } from './nav/Nav.interface';
 
-const SubNav = () => {
+interface SubNavProps {
+  options: SubNavOption[];
+}
+
+const SubNav: React.FC<SubNavProps> = ({ options }) => {
   const router = useRouter();
-  const onCategoryChange = async (path: string) => {
-    if (router.pathname.indexOf(path) > -1) return;
-    await router.push({ pathname: `/me/${path}` });
+
+  const onCategoryChange = async ({
+    value,
+    pathname,
+  }: {
+    value: string;
+    pathname: string;
+  }) => {
+    if (router.pathname.indexOf(value) > -1) return;
+    await router.push({ pathname });
     const subNav = document.querySelector('.sub-nav-link-list.active');
     subNav?.scrollIntoView({ block: 'center' });
   };
-  const subNavOptions = [
-    { label: '북마크', value: 'bookmark' },
-    { label: '성취도', value: 'reviewnote' },
-    { label: '메모장', value: 'memo' },
-    { label: '기록', value: 'examhistory' },
-    { label: '문제댓글', value: 'questioncomment' },
-    { label: '시험지', value: 'myexam' },
-  ];
+
   const isActiveNavItem = (value: string) =>
     router.pathname.indexOf(value) > -1;
   return (
     <SubNavContainer className="sub-nav-container">
       <div className="sub-nav-contents-wrapper">
         <ul className="sub-nav-link-wrapper">
-          {subNavOptions.map((option, index) => {
+          {options.map((option, index) => {
             return (
               <li
                 className={`sub-nav-link-list ${
@@ -37,7 +42,12 @@ const SubNav = () => {
               >
                 <button
                   className="sub-nav-link-list-button"
-                  onClick={() => onCategoryChange(option.value)}
+                  onClick={() =>
+                    onCategoryChange({
+                      value: option.value,
+                      pathname: option.path,
+                    })
+                  }
                 >
                   {option.label}
                   {isActiveNavItem(option.value) && <ArrowDropUpIcon />}

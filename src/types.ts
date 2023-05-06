@@ -1907,7 +1907,8 @@ export type UserProfileOutput = {
 
 export enum UserRole {
   Admin = 'ADMIN',
-  Client = 'CLIENT'
+  Client = 'CLIENT',
+  Partner = 'PARTNER'
 }
 
 export type ViewPostInput = {

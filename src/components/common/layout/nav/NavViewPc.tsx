@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { navItems } from './Nav.constants';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import NoticeDropBox from '@components/common/dropbox/NoticeDropBox';
 import { CrownTwoTone, UserOutlined } from '@ant-design/icons';
@@ -12,6 +11,8 @@ import { Button } from 'antd';
 import { NavViewProps } from './Nav.interface';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import { UserRole } from 'types';
+import { NAV_ITEMS } from './Nav.constants';
 
 interface NavViewPcProps extends NavViewProps {}
 
@@ -23,17 +24,24 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
           <Image src={'/png/logo01.png'} alt="logo-img" fill />
         </div>
       </Link>
-      {navItems.map((item) => (
-        <Link href={item.path} key={item.path}>
-          <span
-            className={`nav-item ${
-              props.isSelectedNavItem(item.key) && 'active'
-            }`}
-          >
-            {item.label}
-          </span>
-        </Link>
-      ))}
+      {NAV_ITEMS.map((item) => {
+        if (
+          item.permission &&
+          !item.permission.includes(props.meQuery?.me.user?.role as UserRole)
+        )
+          return null;
+        return (
+          <Link href={item.path} key={item.path}>
+            <span
+              className={`nav-item ${
+                props.isSelectedNavItem(item.key) && 'active'
+              }`}
+            >
+              {item.label}
+            </span>
+          </Link>
+        );
+      })}
       {props.meQuery?.me.user ? (
         <div className="nav-user-content-wrapper ml-auto">
           <OuterClick callback={props.onOuterClickForNoticeDropBox}>

@@ -15,7 +15,7 @@ const MemoPage: React.FC<MemoPageProps> = () => {
   return (
     <>
       <WithHead title="메모 | 모두CBT" pageHeadingTitle="메모페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <MemoComponent />
       </Layout>
     </>

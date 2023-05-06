@@ -17,7 +17,7 @@ const ReviewNotePage: React.FC<ReviewNotePageProps> = () => {
   return (
     <>
       <WithHead title="성취도 | 모두CBT" pageHeadingTitle="성취도페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <ReviewNoteComponent />
       </Layout>
     </>

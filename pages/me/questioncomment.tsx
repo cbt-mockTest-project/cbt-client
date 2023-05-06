@@ -15,7 +15,7 @@ const QuestionComment: React.FC<QuestionCommentProps> = () => {
   return (
     <>
       <WithHead title="문제댓글 | 모두CBT" pageHeadingTitle="문제댓글페이지" />
-      <Layout subNav={true}>
+      <Layout subNav="main">
         <QuestionCommentComponent />
       </Layout>
     </>

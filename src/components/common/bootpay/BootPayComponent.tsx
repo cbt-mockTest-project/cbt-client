@@ -57,18 +57,14 @@ const BootPayComponent: React.FC<BootPayComponentProps> = () => {
       order_id: shortid.generate(), //고유 주문번호로, 생성하신 값을 보내주셔야 합니다.
     })
       .error(function (data: any) {
-        //결제 진행시 에러가 발생하면 수행됩니다.
         message.error('결제에 실패하였습니다.');
       })
       .cancel(function (data: any) {
-        //결제가 취소되면 수행됩니다.
         message.error('결제가 취소되었습니다.');
-        console.log(data);
       })
       .confirm(function (data: any) {
         //결제가 실행되기 전에 수행되며, 주로 재고를 확인하는 로직이 들어갑니다.
         //주의 - 카드 수기결제일 경우 이 부분이 실행되지 않습니다.
-        console.log(data);
         let enable = true; // 재고 수량 관리 로직 혹은 다른 처리
         enable = false;
 
