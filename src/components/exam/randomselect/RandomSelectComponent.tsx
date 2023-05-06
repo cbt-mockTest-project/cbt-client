@@ -2,7 +2,12 @@ import { ClearOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { TitlesAndCategories } from '@components/main/MainComponent';
-import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
+import {
+  circleIcon,
+  clearIcon,
+  loginModal,
+  triangleIcon,
+} from '@lib/constants';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
@@ -16,6 +21,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, UserRole } from 'types';
 import { Categories } from '../../../../pages/exam/randomselect';
+import { useDispatch } from 'react-redux';
+import { coreActions } from '@modules/redux/slices/core';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -34,6 +41,8 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const [selectedExams, setSelectedExams] = useState<number[]>([]);
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
@@ -109,6 +118,10 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   };
 
   const onStartRandomExam = () => {
+    if (!meQuery?.me.user) {
+      openLoginModal();
+      return;
+    }
     let es: string;
     const isAllSelected = selectedExams.includes(0);
     if (isAllSelected) {
