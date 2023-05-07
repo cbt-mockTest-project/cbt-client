@@ -10,6 +10,11 @@ export type DeleteMockExamQuestionFeedbackMutationVariables = Types.Exact<{
 
 export type DeleteMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', deleteMockExamQuestionFeedback: { __typename?: 'DeleteMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean } };
 
+export type GetExamTitleWithFeedbackQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetExamTitleWithFeedbackQuery = { __typename?: 'Query', getExamTitleWithFeedback: { __typename?: 'GetExamTitleWithFeedbackOutput', error?: string | null, ok: boolean, titles: Array<{ __typename?: 'GetExamTitleWithFeedbackTitle', id: number, title: string }> } };
+
 
 export const DeleteMockExamQuestionFeedbackDocument = gql`
     mutation DeleteMockExamQuestionFeedback($input: DeleteMockExamQuestionFeedbackInput!) {
@@ -22,4 +27,20 @@ export const DeleteMockExamQuestionFeedbackDocument = gql`
 
 export function useDeleteMockExamQuestionFeedbackMutation() {
   return Urql.useMutation<DeleteMockExamQuestionFeedbackMutation, DeleteMockExamQuestionFeedbackMutationVariables>(DeleteMockExamQuestionFeedbackDocument);
+};
+export const GetExamTitleWithFeedbackDocument = gql`
+    query GetExamTitleWithFeedback {
+  getExamTitleWithFeedback {
+    error
+    ok
+    titles {
+      id
+      title
+    }
+  }
+}
+    `;
+
+export function useGetExamTitleWithFeedbackQuery(options?: Omit<Urql.UseQueryArgs<GetExamTitleWithFeedbackQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamTitleWithFeedbackQuery, GetExamTitleWithFeedbackQueryVariables>({ query: GetExamTitleWithFeedbackDocument, ...options });
 };

@@ -10,3 +10,16 @@ export const DELETE_QUESTION_FEEDBACK = gql`
     }
   }
 `;
+
+export const GET_EXAM_TITLE_WITH_FEEDBACK = gql`
+  query GetExamTitleWithFeedback {
+    getExamTitleWithFeedback {
+      error
+      ok
+      titles {
+        id
+        title
+      }
+    }
+  }
+`;
