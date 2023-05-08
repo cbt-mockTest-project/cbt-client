@@ -259,6 +259,34 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
           </Button>
+          {!meQuery?.me.user?.isAllowAdblock && (
+            <div className="home-coupang-ad-section">
+              <div className="home-coupang-ad-wrapper">
+                <a
+                  href="https://link.coupang.com/a/XBNyk"
+                  target="_blank"
+                  rel="noreferrer"
+                ></a>
+                <iframe
+                  src="https://coupa.ng/cdOt5V"
+                  width="120"
+                  height="240"
+                ></iframe>
+              </div>
+              <div className="home-coupang-ad-wrapper">
+                <a
+                  href="https://link.coupang.com/a/XBMMA"
+                  target="_blank"
+                  rel="noreferrer"
+                ></a>
+                <iframe
+                  src="https://coupa.ng/cdOt6m"
+                  width="120"
+                  height="240"
+                ></iframe>
+              </div>
+            </div>
+          )}
 
           <Link
             href="https://www.buymeacoffee.com/moducbts"
@@ -430,6 +458,27 @@ const MainComponentContainer = styled.div`
   .home-content-exam-category-info-label {
     font-size: 0.8rem;
     color: ${palette.gray_700};
+  }
+  .home-coupang-ad-section {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .home-coupang-ad-wrapper {
+    position: relative;
+  }
+  .home-coupang-ad-wrapper a {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 240px;
+    z-index: 3;
+  }
+  .home-coupang-ad-wrapper iframe {
+    position: relative;
+    z-index: 2;
   }
 
   .home-exam-link-list,
