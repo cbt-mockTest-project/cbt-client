@@ -114,7 +114,7 @@ const BottomAppbarContainer = styled.div`
       width: 0%;
     }
   }
-
+  z-index: 100;
   position: fixed;
   bottom: 0;
   width: 100%;
