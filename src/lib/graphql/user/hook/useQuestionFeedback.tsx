@@ -2,12 +2,15 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   DELETE_QUESTION_FEEDBACK,
   GET_EXAM_TITLE_WITH_FEEDBACK,
+  GET_FEEDBACKS_WITH_FILTER,
 } from '../query/questionFeedbackQuery';
 import {
   DeleteMockExamQuestionFeedbackMutation,
   DeleteMockExamQuestionFeedbackMutationVariables,
   GetExamTitleWithFeedbackQuery,
   GetExamTitleWithFeedbackQueryVariables,
+  GetFeedbacksWithFilterQuery,
+  GetFeedbacksWithFilterQueryVariables,
 } from '../query/questionFeedbackQuery.generated';
 import {
   GetFeedbacksByRecommendationCountQuery,
@@ -47,3 +50,9 @@ export const useGetExamTitleWithFeedback = () =>
     GetExamTitleWithFeedbackQuery,
     GetExamTitleWithFeedbackQueryVariables
   >(GET_EXAM_TITLE_WITH_FEEDBACK);
+
+export const useLazyGetFeedbacksWithFilter = () =>
+  useLazyQuery<
+    GetFeedbacksWithFilterQuery,
+    GetFeedbacksWithFilterQueryVariables
+  >(GET_FEEDBACKS_WITH_FILTER);

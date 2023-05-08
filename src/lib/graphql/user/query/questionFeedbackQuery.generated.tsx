@@ -15,6 +15,13 @@ export type GetExamTitleWithFeedbackQueryVariables = Types.Exact<{ [key: string]
 
 export type GetExamTitleWithFeedbackQuery = { __typename?: 'Query', getExamTitleWithFeedback: { __typename?: 'GetExamTitleWithFeedbackOutput', error?: string | null, ok: boolean, titles: Array<{ __typename?: 'GetExamTitleWithFeedbackTitle', id: number, title: string }> } };
 
+export type GetFeedbacksWithFilterQueryVariables = Types.Exact<{
+  input: Types.GetFeedbacksWithFilterInput;
+}>;
+
+
+export type GetFeedbacksWithFilterQuery = { __typename?: 'Query', getFeedbacksWithFilter: { __typename?: 'GetFeedbacksWithFilterOutput', error?: string | null, ok: boolean, feedbacks: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, created_at: any, content: string, type: Types.QuestionFeedbackType, user: { __typename?: 'User', id: number, nickname: string }, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number }, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number } }> } };
+
 
 export const DeleteMockExamQuestionFeedbackDocument = gql`
     mutation DeleteMockExamQuestionFeedback($input: DeleteMockExamQuestionFeedbackInput!) {
@@ -43,4 +50,33 @@ export const GetExamTitleWithFeedbackDocument = gql`
 
 export function useGetExamTitleWithFeedbackQuery(options?: Omit<Urql.UseQueryArgs<GetExamTitleWithFeedbackQueryVariables>, 'query'>) {
   return Urql.useQuery<GetExamTitleWithFeedbackQuery, GetExamTitleWithFeedbackQueryVariables>({ query: GetExamTitleWithFeedbackDocument, ...options });
+};
+export const GetFeedbacksWithFilterDocument = gql`
+    query GetFeedbacksWithFilter($input: GetFeedbacksWithFilterInput!) {
+  getFeedbacksWithFilter(input: $input) {
+    error
+    ok
+    feedbacks {
+      id
+      created_at
+      content
+      type
+      user {
+        id
+        nickname
+      }
+      mockExamQuestion {
+        id
+      }
+      recommendationCount {
+        bad
+        good
+      }
+    }
+  }
+}
+    `;
+
+export function useGetFeedbacksWithFilterQuery(options: Omit<Urql.UseQueryArgs<GetFeedbacksWithFilterQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetFeedbacksWithFilterQuery, GetFeedbacksWithFilterQueryVariables>({ query: GetFeedbacksWithFilterDocument, ...options });
 };
