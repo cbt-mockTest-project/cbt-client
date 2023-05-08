@@ -551,6 +551,20 @@ export type GetFeedbacksByRecommendationCountOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetFeedbacksWithFilterInput = {
+  badCount: Scalars['Float'];
+  examId: Scalars['Float'];
+  goodCount: Scalars['Float'];
+  types: Array<QuestionFeedbackType>;
+};
+
+export type GetFeedbacksWithFilterOutput = {
+  __typename?: 'GetFeedbacksWithFilterOutput';
+  error?: Maybe<Scalars['String']>;
+  feedbacks: Array<MockExamQuestionFeedback>;
+  ok: Scalars['Boolean'];
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -1217,6 +1231,7 @@ export type Query = {
   findMyExamHistory: FindMyExamHistoryOutput;
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
+  getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
@@ -1260,6 +1275,11 @@ export type QueryFindMyExamHistoryArgs = {
 
 export type QueryGetFeedbacksByRecommendationCountArgs = {
   input: GetFeedbacksByRecommendationCountInput;
+};
+
+
+export type QueryGetFeedbacksWithFilterArgs = {
+  input: GetFeedbacksWithFilterInput;
 };
 
 
