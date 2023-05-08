@@ -527,6 +527,19 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetExamTitleWithFeedbackOutput = {
+  __typename?: 'GetExamTitleWithFeedbackOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  titles: Array<GetExamTitleWithFeedbackTitle>;
+};
+
+export type GetExamTitleWithFeedbackTitle = {
+  __typename?: 'GetExamTitleWithFeedbackTitle';
+  id: Scalars['Float'];
+  title: Scalars['String'];
+};
+
 export type GetFeedbacksByRecommendationCountInput = {
   count: Scalars['Float'];
 };
@@ -1202,6 +1215,7 @@ export type PostLike = {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
