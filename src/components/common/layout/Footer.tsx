@@ -1,12 +1,6 @@
-import { loginModal } from '@lib/constants';
-import { useCreateFeedback } from '@lib/graphql/user/hook/useFeedBack';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
-import { coreActions } from '@modules/redux/slices/core';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import { message } from 'antd';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 
