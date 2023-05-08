@@ -14,8 +14,8 @@ const ManageFeedbackComponent: React.FC<ManageFeedbackComponentProps> = () => {
   const { data: examTitlesQuery } = useGetExamTitleWithFeedback();
   const [examTitles, setExamTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamTitle, setSelectedExamTitle] = useState<number>(0);
-  const { value: likeCount, onChange: onChangeLikeCount } = useInput(0);
-  const { value: dislikeCount, onChange: onChangeDislikeCount } = useInput(0);
+  const { value: likeCount, onChange: onChangeLikeCount } = useInput('0');
+  const { value: dislikeCount, onChange: onChangeDislikeCount } = useInput('0');
   const onSearchFeedback = () => {
     console.log(selectedExamTitle, likeCount, dislikeCount);
   };
