@@ -28,6 +28,7 @@ import styled from 'styled-components';
 import { ExamTitleAndId, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
+import { getCookie, setCookie } from 'cookies-next';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -79,7 +80,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
 
-    if (storage.get('firstNoticeModal') !== 2) {
+    if (getCookie('noticeModal') !== '2') {
       onToggleNoticeModal();
     }
     (async () => {
@@ -180,10 +181,15 @@ const MainComponent: React.FC<MainComponentProps> = ({
     router.push('/exam/randomselect');
   };
   const onCloseNoticeModal = () => {
-    const value = storage.get('firstNoticeModal');
+    // const value = storage.get('firstNoticeModal');
+    const value = getCookie('noticeModal');
     value
-      ? storage.set('firstNoticeModal', 2)
-      : storage.set('firstNoticeModal', 1);
+      ? setCookie('noticeModal', '2', {
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
+        })
+      : setCookie('noticeModal', '1', {
+          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
+        });
     onToggleNoticeModal();
   };
   return (
