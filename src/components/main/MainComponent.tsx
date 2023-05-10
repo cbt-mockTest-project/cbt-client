@@ -265,7 +265,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
           </Button>
-          {!meQuery?.me.user?.isAllowAdblock && (
+          {/* {!meQuery?.me.user?.isAllowAdblock && (
             <div className="home-coupang-ad-section">
               <div className="home-coupang-ad-wrapper">
                 <a
@@ -292,7 +292,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 ></iframe>
               </div>
             </div>
-          )}
+          )} */}
 
           <Link
             href="https://www.buymeacoffee.com/moducbts"
