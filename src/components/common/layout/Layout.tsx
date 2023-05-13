@@ -59,33 +59,29 @@ const Layout: React.FC<LayoutProps> = ({
           {sideBanner ? (
             <div className="layout-wrapper">
               <div className="layout-sub-banner-wrapper">
-                <div className="layout-sub-banner">
+                <div className="layout-coupang-ad-wrapper">
                   <a
-                    href="https://link.coupang.com/a/IHTQj"
+                    href="https://link.coupang.com/a/XBNyk"
                     target="_blank"
                     rel="noreferrer"
-                  >
-                    <Image
-                      src="/png/ad/ad01.png"
-                      alt="coupang-ad"
-                      width={200}
-                      height={200}
-                    />
-                  </a>
+                  ></a>
+                  <iframe
+                    src="https://coupa.ng/cdOt5V"
+                    width="120"
+                    height="240"
+                  ></iframe>
                 </div>
-                <div className="layout-sub-banner">
+                <div className="layout-coupang-ad-wrapper">
                   <a
-                    href="https://link.coupang.com/a/IHT2e"
+                    href="https://link.coupang.com/a/XBMMA"
                     target="_blank"
                     rel="noreferrer"
-                  >
-                    <Image
-                      src="/png/ad/ad02.png"
-                      alt="coupang-ad"
-                      width={250}
-                      height={250}
-                    />
-                  </a>
+                  ></a>
+                  <iframe
+                    src="https://coupa.ng/cdOt6m"
+                    width="120"
+                    height="240"
+                  ></iframe>
                 </div>
               </div>
               <div className="layout-sub-banner-children">{children}</div>
@@ -109,7 +105,6 @@ const LayoutContainer = styled.div`
   position: relative;
   .layout-sub-banner-wrapper {
     display: flex;
-    flex-direction: column;
     gap: 30px;
     width: 250px;
     flex: 1;
@@ -166,5 +161,26 @@ const LayoutContainer = styled.div`
       padding-bottom: 70px;
       min-height: calc(100vh - 125px);
     }
+  }
+  .layout-coupang-ad-section {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .layout-coupang-ad-wrapper {
+    position: relative;
+  }
+  .layout-coupang-ad-wrapper a {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 240px;
+    z-index: 3;
+  }
+  .layout-coupang-ad-wrapper iframe {
+    position: relative;
+    z-index: 2;
   }
 `;
