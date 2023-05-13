@@ -428,27 +428,6 @@ const MainComponentContainer = styled.div`
     font-size: 0.8rem;
     color: ${palette.gray_700};
   }
-  .home-coupang-ad-section {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-  }
-  .home-coupang-ad-wrapper {
-    position: relative;
-  }
-  .home-coupang-ad-wrapper a {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 120px;
-    height: 240px;
-    z-index: 3;
-  }
-  .home-coupang-ad-wrapper iframe {
-    position: relative;
-    z-index: 2;
-  }
 
   .home-exam-link-list,
   .home-recent-notice-list {
