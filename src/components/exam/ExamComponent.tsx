@@ -465,13 +465,14 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
           onMouseEnter={onToggleSolutionWriteModal}
           placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         />
-        <button
+        <Button
           className="exam-solution-check-wrapper"
+          type="primary"
           onClick={onToggleAnswerboxVisible}
         >
           <Label content="답 확인" className="exam-solution-check-label" />
           <CaretDownOutlined className="exam-answer-visible-button" />
-        </button>
+        </Button>
         <QuestionAndSolutionBox
           content={{
             content:
@@ -683,7 +684,9 @@ const ExamContainer = styled.div<ExamContainerProps>`
   .exam-solution-check-wrapper {
     display: flex;
     align-items: center;
+    gap: 5px;
     margin: 15px 0 2px 0;
+    width: max-content;
   }
   .exam-solution-check-label {
     margin: 0;
