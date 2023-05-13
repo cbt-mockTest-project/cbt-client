@@ -258,50 +258,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
               </Button>
             </div>
           </div>
-          <div className="home-content-devide-line" />
+
           <Button onClick={gotoRandomSelectPage} type="ghost">
             랜덤모의고사
           </Button>
+          <div className="home-content-devide-line" />
           <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
-          </Button>
-          {/* {!meQuery?.me.user?.isAllowAdblock && (
-            <div className="home-coupang-ad-section">
-              <div className="home-coupang-ad-wrapper">
-                <a
-                  href="https://link.coupang.com/a/XBNyk"
-                  target="_blank"
-                  rel="noreferrer"
-                ></a>
-                <iframe
-                  src="https://coupa.ng/cdOt5V"
-                  width="120"
-                  height="240"
-                ></iframe>
-              </div>
-              <div className="home-coupang-ad-wrapper">
-                <a
-                  href="https://link.coupang.com/a/XBMMA"
-                  target="_blank"
-                  rel="noreferrer"
-                ></a>
-                <iframe
-                  src="https://coupa.ng/cdOt6m"
-                  width="120"
-                  height="240"
-                ></iframe>
-              </div>
-            </div>
-          )} */}
-
-          <Link
-            href="https://www.buymeacoffee.com/moducbts"
-            className="home-random-select-link"
-          >
-            <Button className="">{`>> 후원하기 <<`}</Button>{' '}
-          </Link>
-          <Button onClick={onToggleMakeExamModal} type="primary">
-            시험지 만들기 - 베타
           </Button>
           <button
             type="button"
@@ -316,7 +279,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
         </div>
       </div>
-      <RecentNotice />
+      {/* <RecentNotice /> */}
       <div className="home-exam-link-list">
         <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
         {examLinks.map((link) => (
