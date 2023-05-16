@@ -1,9 +1,12 @@
 import { responsive } from '@lib/utils/responsive';
 import React from 'react';
 import styled from 'styled-components';
-import PricingCard from './PricingCard';
+import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper';
+import useBootpay from '@lib/hooks/useBootpay';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { message } from 'antd';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -57,12 +60,40 @@ const PricingComponentBlock = styled.div`
 interface PricingComponentProps {}
 
 const PricingComponent: React.FC<PricingComponentProps> = () => {
-  const pricingCardData = [
+  const { handleBootPay } = useBootpay();
+  const { data: meQuery } = useMeQuery();
+
+  const handleBasicPlanPayment = () => {
+    if (!meQuery?.me.user) {
+      message.error('로그인 후 이용해주세요.');
+      return;
+    }
+    const user = meQuery?.me.user;
+    handleBootPay({
+      order_name: '모두CBT 베이직 플랜',
+      user: {
+        id: String(user.id),
+        username: user.nickname,
+        email: user.email,
+      },
+      price: 1000,
+      items: [
+        {
+          id: 'basic_plan',
+          name: '모두CBT 베이직 플랜',
+          qty: 1,
+          price: 1000,
+        },
+      ],
+    });
+  };
+  const pricingCardData: PricingCardProps[] = [
     {
       title: '베이직 플랜',
       intro: '커피 한 잔 값으로, 학습효율을 높여보세요!',
       price: 5000,
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+      handlePayment: handleBasicPlanPayment,
     },
     {
       title: '산안기 프리패스',
@@ -75,6 +106,7 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         '필답형 최다빈출 전자책 제공',
         '필답형 최다빈출 학습서비스 제공',
       ],
+      handlePayment: () => {},
     },
   ];
   return (

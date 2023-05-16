@@ -73,11 +73,12 @@ const PricingCardBlock = styled.div`
   }
 `;
 
-interface PricingCardProps {
+export interface PricingCardProps {
   title: string;
   intro: string;
   price: number;
   benefits: string[];
+  handlePayment: React.MouseEventHandler<HTMLElement>;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -85,6 +86,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   intro,
   price,
   benefits,
+  handlePayment,
 }) => {
   return (
     <PricingCardBlock>
@@ -99,7 +101,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
         </span>
         <span className="pricing-card-price-label">원</span>
       </p>
-      <Button className="pricing-button" type="primary">
+      <Button className="pricing-button" type="primary" onClick={handlePayment}>
         결제하기
       </Button>
       <div className="pricing-card-benefit">
