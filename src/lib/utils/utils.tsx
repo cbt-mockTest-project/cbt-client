@@ -177,3 +177,6 @@ export const loadScript = ({ url, type }: LoadScriptArgs): Promise<void> => {
     document.head.appendChild(script);
   });
 };
+
+export const makeMoneyString = (money: number) =>
+  String(money).replace(/\B(?=(\d{3})+(?!\d))/g, ',');

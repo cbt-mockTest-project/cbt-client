@@ -15,8 +15,6 @@ const BootPayComponent: React.FC<BootPayComponentProps> = () => {
       loadScript({
         url: 'https://js.bootpay.co.kr/bootpay-4.2.9.min.js',
         type: 'application/javascript',
-      }).then(() => {
-        alert('loaded');
       });
     }
   }, []);
