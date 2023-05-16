@@ -55,6 +55,16 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
               <Link href="/me/edit">
                 <span className="mobile-nav-item-link-text">프로필수정</span>
               </Link>
+              {props.meQuery.me.user &&
+                [UserRole.Admin, UserRole.Partner].includes(
+                  props.meQuery.me.user.role
+                ) && (
+                  <Link href="/manage/permission">
+                    <span className="mobile-nav-item-link-text">
+                      관리자페이지
+                    </span>
+                  </Link>
+                )}
             </div>
             {props.meQuery.me.user.role === UserRole.Admin && (
               <Link href="/admin">

@@ -27,4 +27,5 @@ export const MAIN_SUB_NAV_OPTIONS: SubNavOption[] = [
 export const MANAGE_SUB_NAV_OPTIONS: SubNavOption[] = [
   { label: '시험지', value: 'exam', path: '/manage/exam' },
   { label: '문제피드백', value: 'feedback', path: '/manage/feedback' },
+  { label: '유저권한', value: 'permission', path: '/manage/permission' },
 ];

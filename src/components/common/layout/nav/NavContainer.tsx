@@ -11,6 +11,7 @@ import { format, parseISO } from 'date-fns';
 import NavView from './NavView';
 import { NavViewProps } from './Nav.interface';
 import { handleError } from '@lib/utils/utils';
+import { UserRole } from 'types';
 
 const NavContainer = () => {
   const router = useRouter();
@@ -64,6 +65,15 @@ const NavContainer = () => {
       onClick: requestLogout,
     },
   ];
+  if (
+    meQuery?.me.user &&
+    [UserRole.Admin, UserRole.Partner].includes(meQuery.me.user.role)
+  ) {
+    dropBoxOptions.push({
+      label: '관리자페이지',
+      onClick: () => router.push('/manage/permission'),
+    });
+  }
   const onScroll = () => {
     if (window.scrollY > 60 && !sticky) {
       return setSticky(true);
