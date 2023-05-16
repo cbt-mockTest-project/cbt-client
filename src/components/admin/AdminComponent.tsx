@@ -6,7 +6,7 @@ import { handleError } from '@lib/utils/utils';
 import { Button, message } from 'antd';
 import Search from 'antd/lib/input/Search';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface AdminComponentProps {}
@@ -26,9 +26,9 @@ const AdminComponent: React.FC<AdminComponentProps> = () => {
       });
       if (res.data?.updateAdBlockPermission.ok) {
         if (res.data?.updateAdBlockPermission.adblockPermission) {
-          message.success('광고차단 권한이 부여되었습니다.');
+          message.success('광고가 차단되었습니다');
         } else {
-          message.success('광고차단 권한이 해제되었습니다.');
+          message.warn('광고차단이 해제되었습니다.');
         }
         await refetchSearchUser();
         return;
