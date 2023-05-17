@@ -18,6 +18,7 @@ module.exports = {
     '/preview/*',
     '/manage/*',
     '/manage',
+    '/pricing',
   ],
   // ...other options
   transform: async (config, path) => {
