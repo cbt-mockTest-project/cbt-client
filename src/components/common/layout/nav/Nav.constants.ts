@@ -10,7 +10,8 @@ export const NAV_ITEMS: NavItem[] = [
   {
     label: '스토어',
     path: '/pricing',
-    key: [UserRole.Admin, UserRole.PaymentTest],
+    key: ['store', 'pricing'],
+    permission: [UserRole.Admin, UserRole.PaymentTest],
   },
   {
     label: '관리',
