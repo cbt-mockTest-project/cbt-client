@@ -31,7 +31,7 @@ const useBootpay = () => {
   useEffect(() => {
     if (!isServer()) {
       loadScript({
-        url: 'https://js.bootpay.co.kr/bootpay-4.2.9.min.js',
+        url: 'https://js.bootpay.co.kr/bootpay-4.3.1.min.js',
         type: 'application/javascript',
       });
     }
