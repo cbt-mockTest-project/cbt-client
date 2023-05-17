@@ -178,7 +178,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
       onTogglePreventAdBlockModal();
       return;
     }
-    router.push('/exam/randomselect');
+    router.push(`${router.pathname}/exam/randomselect`);
   };
   const onCloseNoticeModal = () => {
     // const value = storage.get('firstNoticeModal');
