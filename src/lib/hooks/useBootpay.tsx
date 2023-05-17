@@ -10,6 +10,8 @@ declare global {
 }
 
 export interface BootpayProps {
+  isPaymentAvailable: () => Promise<boolean>;
+  executeAfterPayment: () => Promise<boolean>;
   order_name: string;
   user: {
     id: string;
@@ -40,6 +42,8 @@ const useBootpay = () => {
     user,
     items,
     price,
+    isPaymentAvailable,
+    executeAfterPayment,
   }: BootpayProps) => {
     try {
       const Bootpay = window.Bootpay;
@@ -66,19 +70,24 @@ const useBootpay = () => {
           console.log('가상계좌 입금 완료');
           break;
         case 'confirm':
-          let checked = true;
-          if (checked) {
-            await Bootpay.confirm();
+          const confirmed = await isPaymentAvailable();
+          if (confirmed) {
+            const done = await executeAfterPayment();
+            if (done) {
+              await Bootpay.confirm();
+              message.success('결제가 완료되었습니다.');
+            } else {
+              Bootpay.destroy();
+              message.error('결제가 취소되었습니다.');
+            }
           } else {
             Bootpay.destroy();
-            message.error(
-              '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
-            );
+            message.error('결제가 취소되었습니다.');
           }
           break;
         // 결제 완료
         case 'done':
-          window.close();
+          message.success('결제가 완료되었습니다.');
           // 결제 완료
           break;
       }

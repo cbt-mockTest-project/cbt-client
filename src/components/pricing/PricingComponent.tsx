@@ -3,10 +3,15 @@ import React from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper';
+import { Pagination } from 'swiper';
 import useBootpay from '@lib/hooks/useBootpay';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import {
+  useChangeClientRole,
+  useCheckUserRole,
+  useMeQuery,
+} from '@lib/graphql/user/hook/useUser';
 import { message } from 'antd';
+import { UserRole } from 'types';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -62,14 +67,58 @@ interface PricingComponentProps {}
 const PricingComponent: React.FC<PricingComponentProps> = () => {
   const { handleBootPay } = useBootpay();
   const { data: meQuery } = useMeQuery();
-
+  const [checkUserRole] = useCheckUserRole();
+  const [changeClientRole] = useChangeClientRole();
   const handleBasicPlanPayment = () => {
+    const existingRolesWithAuthority = [
+      UserRole.Admin,
+      UserRole.ClientBasic,
+      UserRole.ClientSafePremium,
+      UserRole.Partner,
+    ];
     if (!meQuery?.me.user) {
       message.error('로그인 후 이용해주세요.');
       return;
     }
+    if (existingRolesWithAuthority.includes(meQuery?.me.user.role)) {
+      message.error('이미 해당 서비스를 이용중입니다.');
+      return;
+    }
     const user = meQuery?.me.user;
     handleBootPay({
+      executeAfterPayment: async () => {
+        const res = await changeClientRole({
+          variables: {
+            input: {
+              role: UserRole.ClientBasic,
+            },
+          },
+        });
+        if (res.data?.changeClientRole.ok) {
+          return true;
+        }
+        return false;
+      },
+      isPaymentAvailable: async () => {
+        const res = await checkUserRole({
+          variables: {
+            input: {
+              role: existingRolesWithAuthority,
+            },
+          },
+        });
+        if (res.data?.checkUserRole.confirmed === true) {
+          message.error(
+            '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
+          );
+          return false;
+        }
+        if (res.data?.checkUserRole.confirmed === false) {
+          return true;
+        }
+        message.error(res.data?.checkUserRole.error);
+        return false;
+      },
       order_name: '모두CBT 베이직 플랜',
       user: {
         id: String(user.id),
@@ -81,6 +130,73 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         {
           id: 'basic_plan',
           name: '모두CBT 베이직 플랜',
+          qty: 1,
+          price: 1000,
+        },
+      ],
+    });
+  };
+
+  const handleSafePremiumPlanPayment = () => {
+    const existingRolesWithAuthority = [
+      UserRole.Admin,
+      UserRole.ClientSafePremium,
+      UserRole.Partner,
+    ];
+    if (!meQuery?.me.user) {
+      message.error('로그인 후 이용해주세요.');
+      return;
+    }
+    if (existingRolesWithAuthority.includes(meQuery?.me.user.role)) {
+      message.error('이미 해당 서비스를 이용중입니다.');
+      return;
+    }
+    const user = meQuery?.me.user;
+    handleBootPay({
+      executeAfterPayment: async () => {
+        const res = await changeClientRole({
+          variables: {
+            input: {
+              role: UserRole.ClientSafePremium,
+            },
+          },
+        });
+        if (res.data?.changeClientRole.ok) {
+          return true;
+        }
+        return false;
+      },
+      isPaymentAvailable: async () => {
+        const res = await checkUserRole({
+          variables: {
+            input: {
+              role: existingRolesWithAuthority,
+            },
+          },
+        });
+        if (res.data?.checkUserRole.confirmed === true) {
+          message.error(
+            '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
+          );
+          return false;
+        }
+        if (res.data?.checkUserRole.confirmed === false) {
+          return true;
+        }
+        message.error(res.data?.checkUserRole.error);
+        return false;
+      },
+      order_name: '모두CBT 산안기 프리패스',
+      user: {
+        id: String(user.id),
+        username: user.nickname,
+        email: user.email,
+      },
+      price: 1000,
+      items: [
+        {
+          id: 'safe_premium_plan',
+          name: '모두CBT 산안기 프리패스',
           qty: 1,
           price: 1000,
         },
@@ -106,7 +222,7 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         '필답형 최다빈출 전자책 제공',
         '필답형 최다빈출 학습서비스 제공',
       ],
-      handlePayment: () => {},
+      handlePayment: handleSafePremiumPlanPayment,
     },
   ];
   return (

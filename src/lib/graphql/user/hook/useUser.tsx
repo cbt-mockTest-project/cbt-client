@@ -1,7 +1,9 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
+  CHANGE_CLIENT_ROLE,
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
   CHECK_PASSWORD_MUTATION,
+  CHECK_USER_ROLE,
   DELETE_USER_MUTATION,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
@@ -16,10 +18,14 @@ import {
   UPDATE_ADBLOCK_PERMISSION,
 } from '../query/userQuery';
 import {
+  ChangeClientRoleMutation,
+  ChangeClientRoleMutationVariables,
   ChangePasswordAfterVerifyingMutation,
   ChangePasswordAfterVerifyingMutationVariables,
   CheckPasswordMutation,
   CheckPasswordMutationVariables,
+  CheckUserRoleMutation,
+  CheckUserRoleMutationVariables,
   DeleteUserMutation,
   DeleteUserMutationVariables,
   EditProfileMutation,
@@ -113,3 +119,13 @@ export const useUpdateAdblockPermission = () =>
     UpdateAdBlockPermissionMutation,
     UpdateAdBlockPermissionMutationVariables
   >(UPDATE_ADBLOCK_PERMISSION);
+
+export const useCheckUserRole = () =>
+  useMutation<CheckUserRoleMutation, CheckUserRoleMutationVariables>(
+    CHECK_USER_ROLE
+  );
+
+export const useChangeClientRole = () =>
+  useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(
+    CHANGE_CLIENT_ROLE
+  );

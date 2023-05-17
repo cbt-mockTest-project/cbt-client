@@ -95,6 +95,20 @@ export type UpdateAdBlockPermissionMutationVariables = Types.Exact<{
 
 export type UpdateAdBlockPermissionMutation = { __typename?: 'Mutation', updateAdBlockPermission: { __typename?: 'UpdateAdblockPermissionOutput', adblockPermission?: boolean | null, error?: string | null, ok: boolean } };
 
+export type CheckUserRoleMutationVariables = Types.Exact<{
+  input: Types.CheckUserRoleInput;
+}>;
+
+
+export type CheckUserRoleMutation = { __typename?: 'Mutation', checkUserRole: { __typename?: 'CheckUserRoleOutput', confirmed: boolean, error?: string | null, ok: boolean } };
+
+export type ChangeClientRoleMutationVariables = Types.Exact<{
+  input: Types.ChangeClientRoleInput;
+}>;
+
+
+export type ChangeClientRoleMutation = { __typename?: 'Mutation', changeClientRole: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -286,4 +300,29 @@ export const UpdateAdBlockPermissionDocument = gql`
 
 export function useUpdateAdBlockPermissionMutation() {
   return Urql.useMutation<UpdateAdBlockPermissionMutation, UpdateAdBlockPermissionMutationVariables>(UpdateAdBlockPermissionDocument);
+};
+export const CheckUserRoleDocument = gql`
+    mutation CheckUserRole($input: CheckUserRoleInput!) {
+  checkUserRole(input: $input) {
+    confirmed
+    error
+    ok
+  }
+}
+    `;
+
+export function useCheckUserRoleMutation() {
+  return Urql.useMutation<CheckUserRoleMutation, CheckUserRoleMutationVariables>(CheckUserRoleDocument);
+};
+export const ChangeClientRoleDocument = gql`
+    mutation ChangeClientRole($input: ChangeClientRoleInput!) {
+  changeClientRole(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useChangeClientRoleMutation() {
+  return Urql.useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(ChangeClientRoleDocument);
 };

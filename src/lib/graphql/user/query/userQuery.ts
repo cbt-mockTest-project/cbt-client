@@ -139,7 +139,7 @@ export const SEARCH_USER = gql`
       }
     }
   }
-`
+`;
 export const UPDATE_ADBLOCK_PERMISSION = gql`
   mutation UpdateAdBlockPermission($input: UpdateAdblockPermissionInput!) {
     updateAdBlockPermission(input: $input) {
@@ -148,4 +148,23 @@ export const UPDATE_ADBLOCK_PERMISSION = gql`
       ok
     }
   }
-`
+`;
+
+export const CHECK_USER_ROLE = gql`
+  mutation CheckUserRole($input: CheckUserRoleInput!) {
+    checkUserRole(input: $input) {
+      confirmed
+      error
+      ok
+    }
+  }
+`;
+
+export const CHANGE_CLIENT_ROLE = gql`
+  mutation ChangeClientRole($input: ChangeClientRoleInput!) {
+    changeClientRole(input: $input) {
+      error
+      ok
+    }
+  }
+`;

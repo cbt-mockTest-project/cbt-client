@@ -8,6 +8,11 @@ export const NAV_ITEMS: NavItem[] = [
     key: ['post', 'community'],
   },
   {
+    label: '스토어',
+    path: '/pricing',
+    key: [UserRole.Admin, UserRole.PaymentTest],
+  },
+  {
     label: '관리',
     path: '/manage/exam',
     key: ['manage'],
