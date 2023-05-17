@@ -70,20 +70,25 @@ const useBootpay = () => {
           console.log('가상계좌 입금 완료');
           break;
         case 'confirm':
-          const confirmed = await isPaymentAvailable();
-          if (confirmed) {
-            const done = await executeAfterPayment();
-            if (done) {
+          try {
+            const confirmed = await isPaymentAvailable();
+            if (confirmed) {
+              // const done = await executeAfterPayment();
+              // if (done) {
               await Bootpay.confirm();
               message.success('결제가 완료되었습니다.');
+              // } else {
+              //   Bootpay.destroy();
+              //   message.error('결제가 취소되었습니다.');
+              // }
             } else {
               Bootpay.destroy();
               message.error('결제가 취소되었습니다.');
             }
-          } else {
-            Bootpay.destroy();
-            message.error('결제가 취소되었습니다.');
+          } catch (e) {
+            console.log(e);
           }
+
           break;
         // 결제 완료
         case 'done':

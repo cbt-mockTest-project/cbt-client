@@ -167,24 +167,25 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         return false;
       },
       isPaymentAvailable: async () => {
-        const res = await checkUserRole({
-          variables: {
-            input: {
-              role: existingRolesWithAuthority,
-            },
-          },
-        });
-        if (res.data?.checkUserRole.confirmed === true) {
-          message.error(
-            '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
-          );
-          return false;
-        }
-        if (res.data?.checkUserRole.confirmed === false) {
-          return true;
-        }
-        message.error(res.data?.checkUserRole.error);
-        return false;
+        // const res = await checkUserRole({
+        //   variables: {
+        //     input: {
+        //       role: existingRolesWithAuthority,
+        //     },
+        //   },
+        // });
+        // if (res.data?.checkUserRole.confirmed === true) {
+        //   message.error(
+        //     '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
+        //   );
+        //   return false;
+        // }
+        // if (res.data?.checkUserRole.confirmed === false) {
+        //   return true;
+        // }
+        // message.error(res.data?.checkUserRole.error);
+        // return false;
+        return true;
       },
       order_name: '모두CBT 산안기 프리패스',
       user: {
