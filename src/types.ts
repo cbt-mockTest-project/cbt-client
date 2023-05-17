@@ -1,8 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -489,7 +495,7 @@ export enum ExamStatus {
   Approved = 'APPROVED',
   Rejected = 'REJECTED',
   Request = 'REQUEST',
-  Unset = 'UNSET'
+  Unset = 'UNSET',
 }
 
 export type ExamTitleAndId = {
@@ -592,7 +598,7 @@ export enum LoginType {
   Email = 'EMAIL',
   Google = 'GOOGLE',
   Kakao = 'KAKAO',
-  Naver = 'NAVER'
+  Naver = 'NAVER',
 }
 
 export type MeOutput = {
@@ -635,7 +641,7 @@ export type MockExamCategory = {
 
 export enum MockExamCategoryTypes {
   Practical = 'practical',
-  Written = 'written'
+  Written = 'written',
 }
 
 export type MockExamHistory = {
@@ -833,284 +839,229 @@ export type Mutation = {
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
+  updateUserRole: CoreOutput;
   viewPost: ViewPostOutput;
 };
-
 
 export type MutationChangePasswordAfterVerifyingArgs = {
   input: ChangePasswordAfterVerifyingInput;
 };
 
-
 export type MutationCheckPasswordArgs = {
   input: CheckPasswordInput;
 };
-
 
 export type MutationCreateFeedbackArgs = {
   input: CreateFeedbackInput;
 };
 
-
 export type MutationCreateMockExamArgs = {
   input: CreateMockExamInput;
 };
-
 
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
 };
 
-
 export type MutationCreateMockExamHistoryArgs = {
   input: CreateMockExamHistoryInput;
 };
-
 
 export type MutationCreateMockExamQuestionArgs = {
   input: CreateMockExamQuestionInput;
 };
 
-
 export type MutationCreateMockExamQuestionCommentArgs = {
   input: CreateMockExamQuestionCommentInput;
 };
-
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationCreateMutipleChoiceArgs = {
   input: CreateMockExamQuestionMultipleChoiceInput;
 };
-
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
 };
 
-
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
-
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
 
-
 export type MutationCreatePostCommentArgs = {
   input: CreatePostCommentInput;
 };
-
 
 export type MutationCreateQuestionCardArgs = {
   input: CreateQuestionCardInput;
 };
 
-
 export type MutationCreateQuestionCardCategoryArgs = {
   input: CreateQuestionCardCategoryInput;
 };
-
 
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
 
-
 export type MutationDeleteMockExamCategoryArgs = {
   input: DeleteMockExamCategoryInput;
 };
-
 
 export type MutationDeleteMockExamQuestionArgs = {
   input: DeleteMockExamQuestionInput;
 };
 
-
 export type MutationDeleteMockExamQuestionCommentArgs = {
   input: DeleteMockExamQuestionCommentInput;
 };
-
 
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationDeleteNoticeArgs = {
   input: DeleteNoticeInput;
 };
-
 
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
 };
 
-
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
 };
-
 
 export type MutationDeleteQuestionCardCategoryArgs = {
   input: DeleteQuestionCardCategoryInput;
 };
 
-
 export type MutationDeleteQuestionCardsArgs = {
   input: DeleteQuestionCardsInput;
 };
-
 
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
 
-
 export type MutationEditMockExamCategoryArgs = {
   input: EditMockExamCategoryInput;
 };
-
 
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
 };
 
-
 export type MutationEditMockExamQuestionBookmarkArgs = {
   input: EditMockExamQuestionBookmarkInput;
 };
-
 
 export type MutationEditMockExamQuestionCommentArgs = {
   input: EditMockExamQuestionCommentInput;
 };
 
-
 export type MutationEditMockExamQuestionCommentLikeArgs = {
   input: EditMockExamQuestionCommentLikeInput;
 };
-
 
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationEditNoticeArgs = {
   input: EditNoticeInput;
 };
-
 
 export type MutationEditPostArgs = {
   input: EditPostInput;
 };
 
-
 export type MutationEditPostCommentArgs = {
   input: EditPostCommentInput;
 };
-
 
 export type MutationEditPostCommentLikeArgs = {
   input: EditPostCommentLikeInput;
 };
 
-
 export type MutationEditPostLikeArgs = {
   input: EditPostLikeInput;
 };
-
 
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
 
-
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
-
 
 export type MutationKakaoLoginArgs = {
   input: KakaoLoginInput;
 };
 
-
 export type MutationLoginArgs = {
   input: LoginInput;
 };
-
 
 export type MutationNaverBlogViewMacroArgs = {
   input: NaverBlogViewMacroInput;
 };
 
-
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
-
 
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
 
-
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
 };
-
 
 export type MutationRevalidateArgs = {
   input: RevalidateInput;
 };
 
-
 export type MutationSendFindPasswordMailArgs = {
   input: SendFindPasswordMailInput;
 };
-
 
 export type MutationSendMessageToAlramChannelOfTelegramArgs = {
   input: SendMessageToAlramChannelOfTelegramInput;
 };
 
-
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
-
 
 export type MutationUpdateAdBlockPermissionArgs = {
   input: UpdateAdblockPermissionInput;
 };
 
-
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
-
 
 export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
   input: UpdateMockExamQuestionFeedbackRecommendationInput;
 };
 
-
 export type MutationUpdateQuestionCardArgs = {
   input: UpdateQuestionCardInput;
 };
 
-
 export type MutationUpdateQuestionCardCategoryArgs = {
   input: UpdateQuestionCardCategoryInput;
 };
-
 
 export type MutationViewPostArgs = {
   input: ViewPostInput;
@@ -1184,7 +1135,7 @@ export enum PostCategory {
   Notice = 'NOTICE',
   Recovery = 'RECOVERY',
   Review = 'REVIEW',
-  Suggenstion = 'SUGGENSTION'
+  Suggenstion = 'SUGGENSTION',
 }
 
 export type PostComment = {
@@ -1267,121 +1218,97 @@ export type Query = {
   userProfile: UserProfileOutput;
 };
 
-
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
 };
-
 
 export type QueryGetFeedbacksByRecommendationCountArgs = {
   input: GetFeedbacksByRecommendationCountInput;
 };
 
-
 export type QueryGetFeedbacksWithFilterArgs = {
   input: GetFeedbacksWithFilterInput;
 };
-
 
 export type QueryNaverViewTapCrawlerTestArgs = {
   input: NaverViewTapCrawlerInput;
 };
 
-
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
-
 
 export type QueryReadAllMockExamCategoriesArgs = {
   input?: InputMaybe<ReadAllMockExamCategoriesInput>;
 };
 
-
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
-
 
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
 };
 
-
 export type QueryReadMockExamQuestionBookmarkArgs = {
   input: ReadMockExamQuestionBookmarkInput;
 };
-
 
 export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
   input: ReadMockExamQuestionCommentLikesByQuestinIdInput;
 };
 
-
 export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
   input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
-
 
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
 };
 
-
 export type QueryReadMockExamQuestionsByMockExamIdArgs = {
   input: ReadMockExamQuestionsByMockExamIdInput;
 };
-
 
 export type QueryReadMockExamQuestionsByStateArgs = {
   input: ReadMockExamQuestionsByStateInput;
 };
 
-
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
 };
-
 
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
 };
 
-
 export type QueryReadMyQuestionCardsArgs = {
   input: ReadMyQuestionCardsInput;
 };
-
 
 export type QueryReadMyQuestionCommentsArgs = {
   input: ReadMyQuestionCommentsInput;
 };
 
-
 export type QueryReadPostArgs = {
   input: ReadPostInput;
 };
-
 
 export type QueryReadPostsArgs = {
   input: ReadPostsInput;
 };
 
-
 export type QueryReadQuestionCardArgs = {
   input: ReadQuestionCardInput;
 };
-
 
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
 
-
 export type QuerySearchUserArgs = {
   input: SearchUserInput;
 };
-
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
@@ -1410,13 +1337,13 @@ export type QuestionCardCategory = {
 
 export enum QuestionFeedbackRecommendationType {
   Bad = 'BAD',
-  Good = 'GOOD'
+  Good = 'GOOD',
 }
 
 export enum QuestionFeedbackType {
   Private = 'PRIVATE',
   Public = 'PUBLIC',
-  Report = 'REPORT'
+  Report = 'REPORT',
 }
 
 export type QuestionNumber = {
@@ -1429,7 +1356,7 @@ export enum QuestionState {
   Core = 'CORE',
   High = 'HIGH',
   Middle = 'MIDDLE',
-  Row = 'ROW'
+  Row = 'ROW',
 }
 
 export type ReadAllMockExamCategoriesInput = {
@@ -1942,7 +1869,9 @@ export type UserProfileOutput = {
 export enum UserRole {
   Admin = 'ADMIN',
   Client = 'CLIENT',
-  Partner = 'PARTNER'
+  ClientBasic = 'CLIENT_BASIC',
+  ClientSafePremium = 'CLIENT_SAFE_PREMIUM',
+  Partner = 'PARTNER',
 }
 
 export type ViewPostInput = {
@@ -1961,4 +1890,24 @@ export type Visit = {
   id: Scalars['Float'];
   updated_at: Scalars['DateTime'];
   user: User;
+};
+
+export type ZepStudyTime = {
+  __typename?: 'ZepStudyTime';
+  created_at: Scalars['DateTime'];
+  grass_count: Scalars['Float'];
+  id: Scalars['Float'];
+  study_time: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  zepUser: ZepUser;
+};
+
+export type ZepUser = {
+  __typename?: 'ZepUser';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  nickname: Scalars['String'];
+  studyTimes: Array<ZepStudyTime>;
+  updated_at: Scalars['DateTime'];
+  zep_id: Scalars['String'];
 };
