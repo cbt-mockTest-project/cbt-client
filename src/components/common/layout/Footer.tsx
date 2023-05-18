@@ -26,6 +26,9 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <div className="footer-section-two-description">
             사업장소재지: 서울특별시 구로구 가마산로77
           </div>
+          <div className="footer-section-two-description">
+            통신판매업신고번호: 2023-서울구로-1204
+          </div>
         </section>
       </div>
     </FooterContainer>
