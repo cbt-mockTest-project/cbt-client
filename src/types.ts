@@ -13,6 +13,18 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type ChangeClientRoleAndCreatePaymentInput = {
+  changeClientRoleInput: ChangeClientRoleInput;
+  createPaymentInput: CreatePaymentInput;
+};
+
+export type ChangeClientRoleAndCreatePaymentOutput = {
+  __typename?: 'ChangeClientRoleAndCreatePaymentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  paymentId?: Maybe<Scalars['Float']>;
+};
+
 export type ChangeClientRoleInput = {
   role: UserRole;
 };
@@ -175,6 +187,13 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
   error?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreatePaymentInput = {
+  orderId: Scalars['String'];
+  price: Scalars['Float'];
+  productName: Scalars['String'];
+  receiptId: Scalars['String'];
 };
 
 export type CreatePostCommentInput = {
@@ -788,6 +807,7 @@ export type MockExamQuestionState = {
 export type Mutation = {
   __typename?: 'Mutation';
   changeClientRole: CoreOutput;
+  changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
   checkPassword: CheckPasswordOutput;
   checkUserRole: CheckUserRoleOutput;
@@ -847,6 +867,7 @@ export type Mutation = {
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
+  updatePayment: UpdatePaymentOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
@@ -856,6 +877,11 @@ export type Mutation = {
 
 export type MutationChangeClientRoleArgs = {
   input: ChangeClientRoleInput;
+};
+
+
+export type MutationChangeClientRoleAndCreatePaymentArgs = {
+  input: ChangeClientRoleAndCreatePaymentInput;
 };
 
 
@@ -1129,6 +1155,11 @@ export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
 };
 
 
+export type MutationUpdatePaymentArgs = {
+  input: UpdatePaymentInput;
+};
+
+
 export type MutationUpdateQuestionCardArgs = {
   input: UpdateQuestionCardInput;
 };
@@ -1181,6 +1212,19 @@ export type Notice = {
   id: Scalars['Float'];
   link?: Maybe<Scalars['String']>;
   reservationTime?: Maybe<Scalars['DateTime']>;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type Payment = {
+  __typename?: 'Payment';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  orderId: Scalars['String'];
+  price: Scalars['Float'];
+  productName: Scalars['String'];
+  receiptId: Scalars['String'];
+  receiptUrl: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -1898,6 +1942,17 @@ export type UpdateMockExamQuestionFeedbackRecommendationOutput = {
   recommendation?: Maybe<MockExamQuestionFeedbackRecommendation>;
 };
 
+export type UpdatePaymentInput = {
+  paymentId: Scalars['Float'];
+  receiptId: Scalars['String'];
+};
+
+export type UpdatePaymentOutput = {
+  __typename?: 'UpdatePaymentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateQuestionCardCategoryInput = {
   id: Scalars['Float'];
   name: Scalars['String'];
@@ -1945,6 +2000,7 @@ export type User = {
   nickname: Scalars['String'];
   notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
+  payments: Array<Payment>;
   post?: Maybe<Array<Post>>;
   postComment: Array<PostComment>;
   questionCardCategorys: Array<QuestionCardCategory>;
