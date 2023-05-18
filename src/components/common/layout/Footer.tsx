@@ -19,6 +19,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <Link href={'/copyright'}>CopyRight</Link>
         </section>
         <section className="footer-section-two">
+          <div className="footer-section-two-description">상호명: 모두</div>
           <div className="footer-section-two-description">
             사업자등록번호: 784-19-02020 ⁞ 대표: 심은광 ⁞ 이메일:
             moducbt@gmail.com ⁞ 문의: 010-8426-2693
