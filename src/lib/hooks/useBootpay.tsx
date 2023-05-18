@@ -50,7 +50,7 @@ const useBootpay = () => {
       const response = await Bootpay.requestPayment({
         application_id: process.env.NEXT_PUBLIC_BOOTPAY_APPLICATION_ID,
         order_name,
-        order_id: shortid.generate(),
+        order_id: `${user.id}_${shortid.generate()}`,
         pg: '토스',
         method: '카드',
         tax_free: 0,
