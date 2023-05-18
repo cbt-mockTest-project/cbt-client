@@ -25,7 +25,8 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
             moducbt@gmail.com ⁞ 문의: 010-8426-2693
           </div>
           <div className="footer-section-two-description">
-            사업장소재지: 서울특별시 구로구 가마산로77
+            사업장소재지: 서울특별시 구로구 가마산로77, 12층 1212호(구로동,
+            한솔로이젠트)
           </div>
           <div className="footer-section-two-description">
             통신판매업신고번호: 2023-서울구로-1204
