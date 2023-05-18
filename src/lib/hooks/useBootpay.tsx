@@ -73,14 +73,13 @@ const useBootpay = () => {
           try {
             const confirmed = await isPaymentAvailable();
             if (confirmed) {
-              // const done = await executeAfterPayment();
-              // if (done) {
-              await Bootpay.confirm();
-              message.success('결제가 완료되었습니다.');
-              // } else {
-              //   Bootpay.destroy();
-              //   message.error('결제가 취소되었습니다.');
-              // }
+              const done = await executeAfterPayment();
+              if (done) {
+                await Bootpay.confirm();
+                message.success('결제가 완료되었습니다.');
+              } else {
+                Bootpay.destroy();
+              }
             } else {
               Bootpay.destroy();
               message.error('결제가 취소되었습니다.');

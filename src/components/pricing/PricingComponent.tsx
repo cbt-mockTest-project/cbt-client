@@ -66,7 +66,7 @@ interface PricingComponentProps {}
 
 const PricingComponent: React.FC<PricingComponentProps> = () => {
   const { handleBootPay } = useBootpay();
-  const { data: meQuery } = useMeQuery();
+  const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
   const [checkUserRole] = useCheckUserRole();
   const [changeClientRole] = useChangeClientRole();
   const handleBasicPlanPayment = () => {
@@ -95,6 +95,7 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
           },
         });
         if (res.data?.changeClientRole.ok) {
+          await refetchMeQuery();
           return true;
         }
         return false;
@@ -125,13 +126,13 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         username: user.nickname,
         email: user.email,
       },
-      price: 1000,
+      price: 5000,
       items: [
         {
           id: 'basic_plan',
           name: '모두CBT 베이직 플랜',
           qty: 1,
-          price: 1000,
+          price: 5000,
         },
       ],
     });
@@ -162,30 +163,30 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
           },
         });
         if (res.data?.changeClientRole.ok) {
+          await refetchMeQuery();
           return true;
         }
         return false;
       },
       isPaymentAvailable: async () => {
-        // const res = await checkUserRole({
-        //   variables: {
-        //     input: {
-        //       role: existingRolesWithAuthority,
-        //     },
-        //   },
-        // });
-        // if (res.data?.checkUserRole.confirmed === true) {
-        //   message.error(
-        //     '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
-        //   );
-        //   return false;
-        // }
-        // if (res.data?.checkUserRole.confirmed === false) {
-        //   return true;
-        // }
-        // message.error(res.data?.checkUserRole.error);
-        // return false;
-        return true;
+        const res = await checkUserRole({
+          variables: {
+            input: {
+              role: existingRolesWithAuthority,
+            },
+          },
+        });
+        if (res.data?.checkUserRole.confirmed === true) {
+          message.error(
+            '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
+          );
+          return false;
+        }
+        if (res.data?.checkUserRole.confirmed === false) {
+          return true;
+        }
+        message.error(res.data?.checkUserRole.error);
+        return false;
       },
       order_name: '모두CBT 산안기 프리패스',
       user: {
@@ -193,13 +194,13 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         username: user.nickname,
         email: user.email,
       },
-      price: 1000,
+      price: 30000,
       items: [
         {
           id: 'safe_premium_plan',
           name: '모두CBT 산안기 프리패스',
           qty: 1,
-          price: 1000,
+          price: 30000,
         },
       ],
     });
