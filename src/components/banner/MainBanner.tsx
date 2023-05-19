@@ -35,6 +35,11 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
+          <a href="https://zep.us/play/D6XVOK" target="_blank" rel="noreferrer">
+            <div className="home-main-banner-box zep" />
+          </a>
+        </SwiperSlide>
+        <SwiperSlide>
           {isIosAndMobile ? (
             <div
               className="home-main-banner-box"
@@ -62,23 +67,9 @@ const MainBanner = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <div className="home-main-banner-box" />
+              <div className="home-main-banner-box playstore" />
             </a>
           )}
-        </SwiperSlide>
-        <SwiperSlide>
-          <button
-            className="main-banner-text-banner"
-            onClick={onToggleAdBannerInfoModal}
-          >
-            <p>해당 위치 광고 문의 or 제휴 문의</p>
-            <p className="main-banner-text-banner-icon-wrapper">
-              <span>클릭</span>
-              <span className="main-banner-text-banner-icon">
-                <MouseIcon />
-              </span>
-            </p>
-          </button>
         </SwiperSlide>
       </Swiper>
       <Portal>
@@ -122,6 +113,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
         : css`
             background-image: url('/png/banner/main-banner-pc02.png');
           `}
+  }
+  .home-main-banner-box.zep {
+    background-image: url('/png/banner/main-banner-zep-pc01.png');
   }
   .main-banner-text-banner {
     display: flex;
@@ -175,6 +169,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
           : css`
               background-image: url('/png/banner/main-banner-mobile02.png') !important;
             `}
+    }
+    .home-main-banner-box.zep {
+      background-image: url('/png/banner/main-banner-zep-mobile01.png') !important;
     }
   }
 `;
