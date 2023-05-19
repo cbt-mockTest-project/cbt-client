@@ -17,8 +17,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import * as pdfMake from 'pdfmake/build/pdfmake.js';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
+// import * as pdfMake from 'pdfmake/build/pdfmake.js';
+// import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
 import axios from 'axios';
@@ -114,149 +114,149 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     setQuestions(shuffle);
   };
 
-  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
-    try {
-      setPdfDownloadLoading(true);
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
-      const contents: any[] = [];
-      let number = 0;
-      for await (const item of questions) {
-        number += 1;
-        const hasQuestionImage =
-          item.question_img && item.question_img.length >= 1;
-        const hasSolutionImage =
-          item.solution_img && item.solution_img.length >= 1;
+  // const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
+  //   try {
+  //     setPdfDownloadLoading(true);
+  //     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  //     const contents: any[] = [];
+  //     let number = 0;
+  //     for await (const item of questions) {
+  //       number += 1;
+  //       const hasQuestionImage =
+  //         item.question_img && item.question_img.length >= 1;
+  //       const hasSolutionImage =
+  //         item.solution_img && item.solution_img.length >= 1;
 
-        contents.push({
-          text: `Q${number}. ${item.question}`,
-          margin: hasQuestionImage ? [0, 0] : [0, 20],
-        });
-        if (hasQuestionImage) {
-          const { data } = await axios.get(
-            `${
-              (item.question_img as MockExamImageType[])[0].url
-            }?not-from-cache-please`,
-            {
-              responseType: 'blob',
-            }
-          );
-          const dataUrl = await blobToDataUrl(data);
-          contents.push({
-            image: dataUrl,
-            width: 400,
-            margin: [0, 10, 0, 20],
-          });
-        }
-        contents.push({
-          text: '정답',
-          style: 'subHeader',
-          margin: [0, 0, 0, 5],
-        });
-        const solutionText = hasSolution
-          ? item.solution
-          : item.solution?.replaceAll(/[^\n]/g, '') + '\n';
-        contents.push({
-          text: solutionText,
-          margin: hasSolutionImage
-            ? [0, 0, 0, 0]
-            : [0, 0, 0, hasAdditionalAnswer ? 10 : 40],
-        });
-        if (hasSolutionImage && hasSolution) {
-          const { data } = await axios.get(
-            `${
-              (item.solution_img as MockExamImageType[])[0].url
-            }?not-from-cache-please`,
-            {
-              responseType: 'blob',
-            }
-          );
-          const dataUrl = await blobToDataUrl(data);
-          contents.push({
-            image: dataUrl,
-            width: 400,
-            margin: [0, 10, 0, hasAdditionalAnswer ? 10 : 40],
-          });
-        }
-        if (hasAdditionalAnswer) {
-          const myFeedback: MockExamQuestionFeedback[] = [];
-          const userFeedback: MockExamQuestionFeedback[] = [];
-          let feedbackTotalCount = 0;
-          item.mockExamQuestionFeedback.forEach((feedback) => {
-            if (feedback.user.id === meQuery?.me.user?.id) {
-              myFeedback.push(feedback as MockExamQuestionFeedback);
-            } else {
-              userFeedback.push(feedback as MockExamQuestionFeedback);
-            }
-          });
-          if (meQuery?.me.user) {
-            feedbackTotalCount = myFeedback.length + userFeedback.length;
-          } else {
-            feedbackTotalCount = userFeedback.length;
-          }
-          if (feedbackTotalCount > 0) {
-            contents.push({
-              text: '추가답안',
-              style: 'subHeader',
-              margin: [0, 0, 0, 5],
-            });
-            myFeedback.forEach((feedback) => {
-              contents.push({
-                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
-                margin: [0, 0, 0, 10],
-              });
-            });
-            userFeedback.forEach((feedback) => {
-              contents.push({
-                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
-                margin: [0, 0, 0, 10],
-              });
-            });
-          }
-        }
-      }
-      const fonts = {
-        NotoSans: {
-          normal: 'NotoSansKR-Regular.otf',
-          bold: 'NotoSansKR-Bold.otf',
-        },
-      };
-      const docDefinition = {
-        content: [
-          {
-            text: '실기시험 준비는 모두CBT! (https://moducbt.com)',
-            link: 'https://moducbt.com',
-            color: '#1890ff',
-            fontSize: 12,
-          },
-          { text: title, style: 'header' },
-          ...contents,
-        ],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 0, 0, 10],
-          },
-          subHeader: {
-            fontSize: 12,
-            bold: true,
-          },
-        },
-        defaultStyle: {
-          font: 'NotoSans',
-        },
-      };
-      const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
-      await pdfDoc.download(
-        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
-      );
-      setPdfDownloadLoading(false);
-    } catch (e) {
-      handleError(e);
-      setPdfDownloadLoading(false);
-      message.error('다운로드에 실패했습니다.');
-    }
-  };
+  //       contents.push({
+  //         text: `Q${number}. ${item.question}`,
+  //         margin: hasQuestionImage ? [0, 0] : [0, 20],
+  //       });
+  //       if (hasQuestionImage) {
+  //         const { data } = await axios.get(
+  //           `${
+  //             (item.question_img as MockExamImageType[])[0].url
+  //           }?not-from-cache-please`,
+  //           {
+  //             responseType: 'blob',
+  //           }
+  //         );
+  //         const dataUrl = await blobToDataUrl(data);
+  //         contents.push({
+  //           image: dataUrl,
+  //           width: 400,
+  //           margin: [0, 10, 0, 20],
+  //         });
+  //       }
+  //       contents.push({
+  //         text: '정답',
+  //         style: 'subHeader',
+  //         margin: [0, 0, 0, 5],
+  //       });
+  //       const solutionText = hasSolution
+  //         ? item.solution
+  //         : item.solution?.replaceAll(/[^\n]/g, '') + '\n';
+  //       contents.push({
+  //         text: solutionText,
+  //         margin: hasSolutionImage
+  //           ? [0, 0, 0, 0]
+  //           : [0, 0, 0, hasAdditionalAnswer ? 10 : 40],
+  //       });
+  //       if (hasSolutionImage && hasSolution) {
+  //         const { data } = await axios.get(
+  //           `${
+  //             (item.solution_img as MockExamImageType[])[0].url
+  //           }?not-from-cache-please`,
+  //           {
+  //             responseType: 'blob',
+  //           }
+  //         );
+  //         const dataUrl = await blobToDataUrl(data);
+  //         contents.push({
+  //           image: dataUrl,
+  //           width: 400,
+  //           margin: [0, 10, 0, hasAdditionalAnswer ? 10 : 40],
+  //         });
+  //       }
+  //       if (hasAdditionalAnswer) {
+  //         const myFeedback: MockExamQuestionFeedback[] = [];
+  //         const userFeedback: MockExamQuestionFeedback[] = [];
+  //         let feedbackTotalCount = 0;
+  //         item.mockExamQuestionFeedback.forEach((feedback) => {
+  //           if (feedback.user.id === meQuery?.me.user?.id) {
+  //             myFeedback.push(feedback as MockExamQuestionFeedback);
+  //           } else {
+  //             userFeedback.push(feedback as MockExamQuestionFeedback);
+  //           }
+  //         });
+  //         if (meQuery?.me.user) {
+  //           feedbackTotalCount = myFeedback.length + userFeedback.length;
+  //         } else {
+  //           feedbackTotalCount = userFeedback.length;
+  //         }
+  //         if (feedbackTotalCount > 0) {
+  //           contents.push({
+  //             text: '추가답안',
+  //             style: 'subHeader',
+  //             margin: [0, 0, 0, 5],
+  //           });
+  //           myFeedback.forEach((feedback) => {
+  //             contents.push({
+  //               text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
+  //               margin: [0, 0, 0, 10],
+  //             });
+  //           });
+  //           userFeedback.forEach((feedback) => {
+  //             contents.push({
+  //               text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
+  //               margin: [0, 0, 0, 10],
+  //             });
+  //           });
+  //         }
+  //       }
+  //     }
+  //     const fonts = {
+  //       NotoSans: {
+  //         normal: 'NotoSansKR-Regular.otf',
+  //         bold: 'NotoSansKR-Bold.otf',
+  //       },
+  //     };
+  //     const docDefinition = {
+  //       content: [
+  //         {
+  //           text: '실기시험 준비는 모두CBT! (https://moducbt.com)',
+  //           link: 'https://moducbt.com',
+  //           color: '#1890ff',
+  //           fontSize: 12,
+  //         },
+  //         { text: title, style: 'header' },
+  //         ...contents,
+  //       ],
+  //       styles: {
+  //         header: {
+  //           fontSize: 18,
+  //           bold: true,
+  //           margin: [0, 0, 0, 10],
+  //         },
+  //         subHeader: {
+  //           fontSize: 12,
+  //           bold: true,
+  //         },
+  //       },
+  //       defaultStyle: {
+  //         font: 'NotoSans',
+  //       },
+  //     };
+  //     const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
+  //     await pdfDoc.download(
+  //       `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
+  //     );
+  //     setPdfDownloadLoading(false);
+  //   } catch (e) {
+  //     handleError(e);
+  //     setPdfDownloadLoading(false);
+  //     message.error('다운로드에 실패했습니다.');
+  //   }
+  // };
   const onChangeSearchInput = (value: string) => {
     if (value === '') {
       setFilteredQuestions(null);
@@ -345,7 +345,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         })}
       </ul>
 
-      {pdfDownloadConfirmModalState && (
+      {/* {pdfDownloadConfirmModalState && (
         <PdfDownloadSelectModal
           open={pdfDownloadConfirmModalState}
           onClose={onTogglePdfDownloadConfirmModalState}
@@ -359,7 +359,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           cancelButtonLoading={pdfDownloadLoading}
           footerOptions={pdfDownloadSelectModalFooterOptions}
         />
-      )}
+      )} */}
     </SolutionComponentContainer>
   );
 };
