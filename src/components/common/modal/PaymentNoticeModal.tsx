@@ -54,13 +54,13 @@ const PaymentNoticeModal: React.FC<PaymentNoticeModalProps> = ({
           <li>
             어플 이용시, <b>최신버전</b>으로 업데이트 후 이용해주세요.
           </li>
-          <a
+          {/* <a
             href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
             target="_blank"
             rel="noreferrer"
           >
             업데이트 하러가기
-          </a>
+          </a> */}
         </ul>
         <div className="payment-notice-modal-warn">
           ※ 위 사항을 준수하지 않을경우, 결제가 실패합니다.
