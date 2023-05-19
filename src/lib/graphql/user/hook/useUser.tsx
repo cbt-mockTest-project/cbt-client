@@ -4,7 +4,9 @@ import {
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
   CHECK_PASSWORD_MUTATION,
   CHECK_USER_ROLE,
+  CREATE_USER_ROLE,
   DELETE_USER_MUTATION,
+  DELETE_USER_ROLE,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
   KAKAO_LOGIN,
@@ -26,8 +28,12 @@ import {
   CheckPasswordMutationVariables,
   CheckUserRoleMutation,
   CheckUserRoleMutationVariables,
+  CreateUserRoleMutation,
+  CreateUserRoleMutationVariables,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  DeleteUserRoleMutation,
+  DeleteUserRoleMutationVariables,
   EditProfileMutation,
   EditProfileMutationVariables,
   EmailVerificationMutation,
@@ -128,4 +134,14 @@ export const useCheckUserRole = () =>
 export const useChangeClientRole = () =>
   useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(
     CHANGE_CLIENT_ROLE
+  );
+
+export const useCreateUserRole = () =>
+  useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(
+    CREATE_USER_ROLE
+  );
+
+export const useDeleteUserRole = () =>
+  useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(
+    DELETE_USER_ROLE
   );

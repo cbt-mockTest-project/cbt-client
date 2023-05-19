@@ -6,6 +6,7 @@ import { Checkbox, Col, List, Row } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PermissionManageUserListItem from './PermissionManageUserListItem';
+import { User } from 'types';
 
 interface PermissionManageComponentProps {}
 
@@ -42,7 +43,7 @@ const PermissionManageComponent: React.FC<
             </div>
           </div>
           {searchedUsers.searchUser.users.map((user) => (
-            <PermissionManageUserListItem key={user.id} user={user} />
+            <PermissionManageUserListItem key={user.id} user={user as User} />
           ))}
         </ul>
       )}

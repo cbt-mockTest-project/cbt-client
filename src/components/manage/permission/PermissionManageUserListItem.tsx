@@ -1,9 +1,15 @@
-import { useUpdateAdblockPermission } from '@lib/graphql/user/hook/useUser';
+import {
+  useCreateUserRole,
+  useDeleteUserRole,
+  useUpdateAdblockPermission,
+} from '@lib/graphql/user/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
-import { handleError } from '@lib/utils/utils';
+import { checkUserRole, handleError } from '@lib/utils/utils';
 import { Checkbox, message } from 'antd';
+import { create } from 'lodash';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { User } from 'types';
 
 const PermissionManageUserListItemBlock = styled.li`
   display: flex;
@@ -50,39 +56,36 @@ const PermissionManageUserListItemBlock = styled.li`
 `;
 
 interface PermissionManageUserListItemProps {
-  user: {
-    id: number;
-    email: string;
-    nickname: string;
-    isAllowAdblock: boolean;
-  };
+  user: User;
 }
 
 const PermissionManageUserListItem: React.FC<
   PermissionManageUserListItemProps
 > = ({ user }) => {
-  const [isAllowAdblock, setIsAllowAdblock] = useState(user.isAllowAdblock);
-  const [updateAllowAdblock] = useUpdateAdblockPermission();
+  const [createUserRole] = useCreateUserRole();
+  const [isAllowAdblock, setIsAllowAdblock] = useState(
+    checkUserRole({ roleIds: [1, 2], user })
+  );
   const handleAllowAdblock = async () => {
     try {
-      const res = await updateAllowAdblock({
-        variables: {
-          input: {
-            userId: user.id,
+      if (isAllowAdblock) {
+        message.error('광고차단 권한을 해제할 수 없습니다.');
+      } else {
+        const res = await createUserRole({
+          variables: {
+            input: {
+              userId: user.id,
+              roleId: 1,
+            },
           },
-        },
-      });
-      if (res.data?.updateAdBlockPermission.ok) {
-        if (res.data?.updateAdBlockPermission.adblockPermission) {
+        });
+        if (res.data?.createUserRole.ok) {
           message.success('광고차단 권한이 부여되었습니다.');
           setIsAllowAdblock(true);
-        } else {
-          message.success('광고차단 권한이 해제되었습니다.');
-          setIsAllowAdblock(false);
+          return;
         }
-        return;
+        message.error(res.data?.createUserRole.error);
       }
-      message.error(res.data?.updateAdBlockPermission.error);
     } catch (e) {
       handleError(e);
     }

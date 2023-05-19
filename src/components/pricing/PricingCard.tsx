@@ -5,6 +5,9 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Button } from 'antd';
 import palette from '@styles/palette';
 import { makeMoneyString } from '@lib/utils/utils';
+import Portal from '@components/common/portal/Portal';
+import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
+import useToggle from '@lib/hooks/useToggle';
 
 const PricingCardBlock = styled.div`
   .pricing-card-title {
@@ -71,6 +74,11 @@ const PricingCardBlock = styled.div`
     position: relative;
     top: 2px;
   }
+  .pricing-card-temp-text {
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+  }
 `;
 
 export interface PricingCardProps {
@@ -79,6 +87,9 @@ export interface PricingCardProps {
   price: number;
   benefits: string[];
   handlePayment: React.MouseEventHandler<HTMLElement>;
+  hasBeforePaymentModal?: boolean;
+  isTempText?: string;
+  isAlreadyPaid?: boolean;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -86,39 +97,69 @@ const PricingCard: React.FC<PricingCardProps> = ({
   intro,
   price,
   benefits,
+  isTempText,
   handlePayment,
+  hasBeforePaymentModal,
+  isAlreadyPaid,
 }) => {
+  const {
+    value: paymentNoticeModalState,
+    onToggle: onTogglePaymentNoticeModal,
+  } = useToggle(false);
+
   return (
     <PricingCardBlock>
       <h3 className="pricing-card-title">{title}</h3>
       <p className="pricing-card-intro">{intro}</p>
-      <p className="pricing-card-price-wrapper">
-        <span className="pricing-card-price-icon">
-          <AttachMoneyIcon />
-        </span>
-        <span className="pricing-card-price-value">
-          {makeMoneyString(price)}
-        </span>
-        <span className="pricing-card-price-label">원</span>
-      </p>
-      <Button className="pricing-button" type="primary" onClick={handlePayment}>
-        결제하기
-      </Button>
-      <div className="pricing-card-benefit">
-        <p className="pricing-card-benefit-title">혜택</p>
-        <ul className="pricing-card-benefit-list">
-          {benefits.map((benefit) => (
-            <li key={benefit} className="pricing-card-benefit-list-item">
-              <span className="pricing-card-benefit-list-item-icon">
-                <DoneAllIcon />
-              </span>
-              <span className="pricing-card-benefit-list-item-content">
-                {benefit}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {isTempText ? (
+        <div className="pricing-card-temp-text">{isTempText}</div>
+      ) : (
+        <>
+          <p className="pricing-card-price-wrapper">
+            <span className="pricing-card-price-icon">
+              <AttachMoneyIcon />
+            </span>
+            <span className="pricing-card-price-value">
+              {makeMoneyString(price)}
+            </span>
+            <span className="pricing-card-price-label">원</span>
+          </p>
+          <Button
+            className="pricing-button"
+            type="primary"
+            disabled={isAlreadyPaid}
+            onClick={
+              hasBeforePaymentModal ? onTogglePaymentNoticeModal : handlePayment
+            }
+          >
+            {isAlreadyPaid ? '이용중' : '결제하기'}
+          </Button>
+          <div className="pricing-card-benefit">
+            <p className="pricing-card-benefit-title">혜택</p>
+            <ul className="pricing-card-benefit-list">
+              {benefits.map((benefit) => (
+                <li key={benefit} className="pricing-card-benefit-list-item">
+                  <span className="pricing-card-benefit-list-item-icon">
+                    <DoneAllIcon />
+                  </span>
+                  <span className="pricing-card-benefit-list-item-content">
+                    {benefit}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+      <Portal>
+        {hasBeforePaymentModal && paymentNoticeModalState && (
+          <PaymentNoticeModal
+            handlePayment={handlePayment}
+            open={paymentNoticeModalState}
+            onClose={onTogglePaymentNoticeModal}
+          />
+        )}
+      </Portal>
     </PricingCardBlock>
   );
 };
