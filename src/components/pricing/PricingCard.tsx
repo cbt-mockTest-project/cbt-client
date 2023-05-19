@@ -86,7 +86,7 @@ export interface PricingCardProps {
   intro: string;
   price: number;
   benefits: string[];
-  handlePayment: React.MouseEventHandler<HTMLElement>;
+  handlePayment: () => void;
   hasBeforePaymentModal?: boolean;
   isTempText?: string;
   isAlreadyPaid?: boolean;
