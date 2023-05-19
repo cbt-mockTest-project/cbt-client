@@ -2,6 +2,7 @@ import { useGetMyPayments } from '@lib/graphql/user/hook/usePayment';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Spin } from 'antd';
+import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -66,7 +67,10 @@ const PaymentHistoryComponent: React.FC<PaymentHistoryComponentProps> = () => {
                       {payment.price}
                     </td>
                     <td className="payment-history-table-data">
-                      {payment.updated_at}
+                      {format(
+                        parseISO(payment.updated_at),
+                        'yyyy년 MM월 dd일 HH시 mm분'
+                      )}
                     </td>
                     <td className="payment-history-table-data">
                       <a
