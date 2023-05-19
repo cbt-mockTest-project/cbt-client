@@ -1,20 +1,25 @@
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useCreateVisit } from '@lib/graphql/user/hook/useVisit';
-import { handleError } from '@lib/utils/utils';
+import { checkUserRole, handleError } from '@lib/utils/utils';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import shortid from 'shortid';
+import { User } from 'types';
 
 interface AppInnerProps {}
 
 const AppInner: React.FC<AppInnerProps> = () => {
   const [createVisit] = useCreateVisit();
-  const { data: meData } = useMeQuery();
+  const { data: meQuery } = useMeQuery();
   const router = useRouter();
 
   useEffect(() => {
-    if (meData?.me.user?.isAllowAdblock && typeof window !== 'undefined') {
+    if (
+      meQuery?.me.user &&
+      checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User }) &&
+      typeof window !== 'undefined'
+    ) {
       try {
         const adsbygoogle = document.querySelectorAll('ins.adsbygoogle');
         const adsbygoogleScript = document.querySelectorAll(
@@ -32,7 +37,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
         });
       } catch (e) {}
     }
-  }, [meData, router.asPath]);
+  }, [meQuery, router.asPath]);
 
   const requestCreateVisit = async () => {
     const mtvCookie = getCookie('MTV');

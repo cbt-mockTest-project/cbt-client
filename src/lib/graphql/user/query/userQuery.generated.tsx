@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole, email: string, isAllowAdblock: boolean } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole, email: string, isAllowAdblock: boolean, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -86,7 +86,7 @@ export type SearchUserQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchUserQuery = { __typename?: 'Query', searchUser: { __typename?: 'SearchUserOutput', error?: string | null, ok: boolean, users?: Array<{ __typename?: 'User', id: number, email: string, nickname: string, isAllowAdblock: boolean }> | null } };
+export type SearchUserQuery = { __typename?: 'Query', searchUser: { __typename?: 'SearchUserOutput', error?: string | null, ok: boolean, users?: Array<{ __typename?: 'User', id: number, email: string, nickname: string, isAllowAdblock: boolean, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', id: number, name: string } }> }> | null } };
 
 export type UpdateAdBlockPermissionMutationVariables = Types.Exact<{
   input: Types.UpdateAdblockPermissionInput;
@@ -108,6 +108,20 @@ export type ChangeClientRoleMutationVariables = Types.Exact<{
 
 
 export type ChangeClientRoleMutation = { __typename?: 'Mutation', changeClientRole: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
+export type CreateUserRoleMutationVariables = Types.Exact<{
+  input: Types.CreateUserRoleInput;
+}>;
+
+
+export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole: { __typename?: 'CreateUserRoleOutput', error?: string | null, ok: boolean, roleId?: number | null } };
+
+export type DeleteUserRoleMutationVariables = Types.Exact<{
+  input: Types.DeleteUserRoleInput;
+}>;
+
+
+export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'DeleteUserRoleOutput', error?: string | null, ok: boolean } };
 
 
 export const RegisterDocument = gql`
@@ -182,6 +196,12 @@ export const MeDocument = gql`
       role
       email
       isAllowAdblock
+      userRoles {
+        role {
+          name
+          id
+        }
+      }
     }
     notices {
       content
@@ -280,6 +300,12 @@ export const SearchUserDocument = gql`
       email
       nickname
       isAllowAdblock
+      userRoles {
+        role {
+          id
+          name
+        }
+      }
     }
   }
 }
@@ -325,4 +351,29 @@ export const ChangeClientRoleDocument = gql`
 
 export function useChangeClientRoleMutation() {
   return Urql.useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(ChangeClientRoleDocument);
+};
+export const CreateUserRoleDocument = gql`
+    mutation CreateUserRole($input: CreateUserRoleInput!) {
+  createUserRole(input: $input) {
+    error
+    ok
+    roleId
+  }
+}
+    `;
+
+export function useCreateUserRoleMutation() {
+  return Urql.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument);
+};
+export const DeleteUserRoleDocument = gql`
+    mutation DeleteUserRole($input: DeleteUserRoleInput!) {
+  deleteUserRole(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteUserRoleMutation() {
+  return Urql.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument);
 };

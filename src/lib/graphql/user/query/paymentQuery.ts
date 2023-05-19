@@ -20,3 +20,29 @@ export const UPDATE_PAYMENT = gql`
     }
   }
 `;
+
+export const CREATE_PAYMENT = gql`
+  mutation CreatePayment($input: CreatePaymentInput!) {
+    createPayment(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const GET_MY_PAYMENTS = gql`
+  query GetMyPayments {
+    getMyPayments {
+      error
+      ok
+      payments {
+        id
+        price
+        updated_at
+        created_at
+        productName
+        receiptUrl
+      }
+    }
+  }
+`;

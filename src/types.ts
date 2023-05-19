@@ -196,6 +196,13 @@ export type CreatePaymentInput = {
   receiptId: Scalars['String'];
 };
 
+export type CreatePaymentOutput = {
+  __typename?: 'CreatePaymentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  payment?: Maybe<Payment>;
+};
+
 export type CreatePostCommentInput = {
   content: Scalars['String'];
   postId: Scalars['Float'];
@@ -242,6 +249,18 @@ export type CreateQuestionCardOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   questionCard?: Maybe<QuestionCard>;
+};
+
+export type CreateUserRoleInput = {
+  roleId: Scalars['Float'];
+  userId: Scalars['Float'];
+};
+
+export type CreateUserRoleOutput = {
+  __typename?: 'CreateUserRoleOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  roleId?: Maybe<Scalars['Float']>;
 };
 
 export type CreateVisitHistoryOutput = {
@@ -312,6 +331,16 @@ export type DeleteNoticeOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type DeletePaymentInput = {
+  paymentId: Scalars['Float'];
+};
+
+export type DeletePaymentOutput = {
+  __typename?: 'DeletePaymentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeletePostCommentInput = {
   id: Scalars['Float'];
 };
@@ -348,6 +377,16 @@ export type DeleteQuestionCardsInput = {
 
 export type DeleteQuestionCardsOutput = {
   __typename?: 'DeleteQuestionCardsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteUserRoleInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteUserRoleOutput = {
+  __typename?: 'DeleteUserRoleOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -599,6 +638,13 @@ export type GetFeedbacksWithFilterOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetMyPaymentsOutput = {
+  __typename?: 'GetMyPaymentsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  payments?: Maybe<Array<Payment>>;
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -821,10 +867,12 @@ export type Mutation = {
   createMutipleChoice: CreateMockExamQuestionMultipleChoiceOutput;
   createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
+  createPayment: CreatePaymentOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
+  createUserRole: CreateUserRoleOutput;
   createVisit: CoreOutput;
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
@@ -834,11 +882,13 @@ export type Mutation = {
   deleteMockExamQuestionComment: DeleteMockExamQuestionCommentOutput;
   deleteMockExamQuestionFeedback: DeleteMockExamQuestionFeedbackOutput;
   deleteNotice: DeleteNoticeOutput;
+  deletePayment: DeletePaymentOutput;
   deletePost: DeletePostOutput;
   deletePostComment: DeletePostCommentOutput;
   deleteQuestionCardCategory: DeleteQuestionCardCategoryOutput;
   deleteQuestionCards: DeleteQuestionCardsOutput;
   deleteUser: CoreOutput;
+  deleteUserRole: DeleteUserRoleOutput;
   editMockExam: EditMockExamOutput;
   editMockExamCategory: DeleteMockExamCategoryOutput;
   editMockExamQuestion: EditMockExamQuestionOutput;
@@ -950,6 +1000,11 @@ export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
 };
 
 
+export type MutationCreatePaymentArgs = {
+  input: CreatePaymentInput;
+};
+
+
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
@@ -967,6 +1022,11 @@ export type MutationCreateQuestionCardArgs = {
 
 export type MutationCreateQuestionCardCategoryArgs = {
   input: CreateQuestionCardCategoryInput;
+};
+
+
+export type MutationCreateUserRoleArgs = {
+  input: CreateUserRoleInput;
 };
 
 
@@ -1000,6 +1060,11 @@ export type MutationDeleteNoticeArgs = {
 };
 
 
+export type MutationDeletePaymentArgs = {
+  input: DeletePaymentInput;
+};
+
+
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
 };
@@ -1017,6 +1082,11 @@ export type MutationDeleteQuestionCardCategoryArgs = {
 
 export type MutationDeleteQuestionCardsArgs = {
   input: DeleteQuestionCardsInput;
+};
+
+
+export type MutationDeleteUserRoleArgs = {
+  input: DeleteUserRoleInput;
 };
 
 
@@ -1224,7 +1294,7 @@ export type Payment = {
   price: Scalars['Float'];
   productName: Scalars['String'];
   receiptId: Scalars['String'];
-  receiptUrl: Scalars['String'];
+  receiptUrl?: Maybe<Scalars['String']>;
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -1303,6 +1373,7 @@ export type Query = {
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
+  getMyPayments: GetMyPaymentsOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
@@ -1835,6 +1906,15 @@ export type RevalidateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type Role = {
+  __typename?: 'Role';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  userRoles: Array<UserAndRole>;
+};
+
 export type SearchCount = {
   __typename?: 'SearchCount';
   all: Scalars['Float'];
@@ -2008,7 +2088,17 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
+  userRoles: Array<UserAndRole>;
   visit: Visit;
+};
+
+export type UserAndRole = {
+  __typename?: 'UserAndRole';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  role: Role;
+  updated_at: Scalars['DateTime'];
+  user: User;
 };
 
 export type UserProfileInput = {

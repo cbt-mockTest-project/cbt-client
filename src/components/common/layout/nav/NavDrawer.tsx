@@ -6,7 +6,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { CrownTwoTone, UserOutlined } from '@ant-design/icons';
 import { NavViewProps } from './Nav.interface';
-import { UserRole } from 'types';
+import { User, UserRole } from 'types';
+import { checkUserRole } from '@lib/utils/utils';
 
 interface NavDrawerProps
   extends Pick<
@@ -35,7 +36,10 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
           <>
             <div className="mobile-nav-user-content">
               <span className="mobile-nav-user-content-profile-image">
-                {props.meQuery.me.user.isAllowAdblock && (
+                {checkUserRole({
+                  roleIds: [1, 2],
+                  user: props.meQuery.me.user as User,
+                }) && (
                   <CrownTwoTone
                     className="nav-user-content-profile-crown"
                     width={15}

@@ -4,6 +4,7 @@ import {
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
   CHECK_PASSWORD_MUTATION,
   CHECK_USER_ROLE,
+  CREATE_USER_ROLE,
   DELETE_USER_MUTATION,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
@@ -26,6 +27,8 @@ import {
   CheckPasswordMutationVariables,
   CheckUserRoleMutation,
   CheckUserRoleMutationVariables,
+  CreateUserRoleMutation,
+  CreateUserRoleMutationVariables,
   DeleteUserMutation,
   DeleteUserMutationVariables,
   EditProfileMutation,
@@ -128,4 +131,14 @@ export const useCheckUserRole = () =>
 export const useChangeClientRole = () =>
   useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(
     CHANGE_CLIENT_ROLE
+  );
+
+export const useCreateUserRole = () =>
+  useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(
+    CREATE_USER_ROLE
+  );
+
+export const useDeleteUserRole = () =>
+  useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
+    DELETE_USER_MUTATION
   );

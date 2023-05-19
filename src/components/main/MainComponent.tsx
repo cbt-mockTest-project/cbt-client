@@ -15,7 +15,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
-import { checkAdblock } from '@lib/utils/utils';
+import { checkAdblock, checkUserRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import { Option } from 'antd/lib/mentions';
@@ -23,9 +23,9 @@ import Select, { DefaultOptionType } from 'antd/lib/select';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ExamTitleAndId, UserRole } from 'types';
+import { ExamTitleAndId, User, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import { getCookie, setCookie } from 'cookies-next';
@@ -52,6 +52,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
 }) => {
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
+  const isNotAllowAdBlock = useMemo(
+    () =>
+      checkAdblock() &&
+      meQuery?.me.user &&
+      !checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User }),
+    [meQuery]
+  );
+
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const {
     value: preventAdBlockModalState,
@@ -127,7 +135,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+    if (checkAdblock() && isNotAllowAdBlock) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -164,7 +172,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+    if (checkAdblock() && isNotAllowAdBlock) {
       onTogglePreventAdBlockModal();
       return;
     }
@@ -174,7 +182,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoRandomSelectPage = () => {
-    if (checkAdblock() && !meQuery?.me.user?.isAllowAdblock) {
+    if (checkAdblock() && isNotAllowAdBlock) {
       onTogglePreventAdBlockModal();
       return;
     }

@@ -57,6 +57,12 @@ export const ME_QUERY = gql`
         role
         email
         isAllowAdblock
+        userRoles {
+          role {
+            name
+            id
+          }
+        }
       }
       notices {
         content
@@ -136,6 +142,12 @@ export const SEARCH_USER = gql`
         email
         nickname
         isAllowAdblock
+        userRoles {
+          role {
+            id
+            name
+          }
+        }
       }
     }
   }
@@ -163,6 +175,25 @@ export const CHECK_USER_ROLE = gql`
 export const CHANGE_CLIENT_ROLE = gql`
   mutation ChangeClientRole($input: ChangeClientRoleInput!) {
     changeClientRole(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const CREATE_USER_ROLE = gql`
+  mutation CreateUserRole($input: CreateUserRoleInput!) {
+    createUserRole(input: $input) {
+      error
+      ok
+      roleId
+    }
+  }
+`;
+
+export const DELETE_USER_ROLE = gql`
+  mutation DeleteUserRole($input: DeleteUserRoleInput!) {
+    deleteUserRole(input: $input) {
       error
       ok
     }

@@ -12,7 +12,7 @@ import {
 } from '@lib/graphql/user/hook/useUser';
 import { message } from 'antd';
 import { UserRole } from 'types';
-import { useChangeClientRoleAndCreatePayment } from '@lib/graphql/user/hook/usePayment';
+import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
 import shortid from 'shortid';
 
 const PricingComponentBlock = styled.div`
@@ -64,14 +64,17 @@ const PricingComponentBlock = styled.div`
   }
 `;
 
-interface PricingComponentProps {}
+interface PricingComponentProps {
+  hasPremium?: boolean;
+}
 
-const PricingComponent: React.FC<PricingComponentProps> = () => {
+const PricingComponent: React.FC<PricingComponentProps> = ({
+  hasPremium = true,
+}) => {
   const { handleBootPay } = useBootpay();
   const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
   const [checkUserRole] = useCheckUserRole();
-  const [changeClientRoleAndCreatePayment] =
-    useChangeClientRoleAndCreatePayment();
+  const [createPayment] = useCreatePayment();
   const [changeClientRole] = useChangeClientRole();
 
   const existingRolesWithBasicAuthority = [
@@ -119,35 +122,7 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
           },
         });
       },
-      executeAfterPayment: async ({ receiptId }) => {
-        const res = await changeClientRoleAndCreatePayment({
-          variables: {
-            input: {
-              changeClientRoleInput: {
-                role: UserRole.ClientBasic,
-              },
-              createPaymentInput: {
-                orderId,
-                productName: orderName,
-                price,
-                receiptId,
-              },
-            },
-          },
-        });
-        if (res.data?.changeClientRoleAndCreatePayment.ok) {
-          return {
-            ok: true,
-            paymentId: Number(
-              res.data?.changeClientRoleAndCreatePayment.paymentId
-            ),
-          };
-        }
-        return {
-          ok: false,
-        };
-      },
-      isPaymentAvailable: async () => {
+      executeBeforPayment: async () => {
         const res = await checkUserRole({
           variables: {
             input: {
@@ -155,16 +130,44 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
             },
           },
         });
+        // 1. 해당서비스를 이용중이 아니다.
+        if (res.data?.checkUserRole.confirmed === false) {
+          // 2. 유저의 role을 변경한다.
+          const res = await changeClientRole({
+            variables: {
+              input: {
+                role: UserRole.ClientBasic,
+              },
+            },
+          });
+          if (res.data?.changeClientRole.ok) {
+            return true;
+          }
+          return false;
+        }
         if (res.data?.checkUserRole.confirmed === true) {
           message.error(
             '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
           );
           return false;
         }
-        if (res.data?.checkUserRole.confirmed === false) {
+        message.error(res.data?.checkUserRole.error);
+        return false;
+      },
+      executeAfterPayment: async ({ receiptId }) => {
+        const res = await createPayment({
+          variables: {
+            input: {
+              orderId,
+              productName: orderName,
+              price,
+              receiptId,
+            },
+          },
+        });
+        if (res.data?.createPayment.ok) {
           return true;
         }
-        message.error(res.data?.checkUserRole.error);
         return false;
       },
       order_id: orderId,
@@ -208,7 +211,9 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       handlePayment: handleBasicPlanPayment,
     },
-    {
+  ];
+  if (hasPremium) {
+    pricingCardData.push({
       title: '산안기 프리패스',
       intro: '실기시험 1달전 강력추천 !!',
       price: 30000,
@@ -220,8 +225,23 @@ const PricingComponent: React.FC<PricingComponentProps> = () => {
         '필답형 최다빈출 학습서비스 제공',
       ],
       handlePayment: handleSafePremiumPlanPayment,
-    },
-  ];
+    });
+  } else {
+    pricingCardData.push({
+      title: '산안기 프리패스',
+      intro: '실기시험 1달전 강력추천 !!',
+      price: 30000,
+      benefits: [
+        '광고제거',
+        '랜덤모의고사 무제한 제공',
+        '신무당쌤의 쪽집게 인강제공',
+        '필답형 최다빈출 전자책 제공',
+        '필답형 최다빈출 학습서비스 제공',
+      ],
+      handlePayment: handleSafePremiumPlanPayment,
+      isTempText: 'Coming Soon...',
+    });
+  }
   return (
     <PricingComponentBlock>
       <h3 className="pricing-title">모두CBT 프리미엄 스토어</h3>

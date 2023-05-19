@@ -28,6 +28,7 @@ export const MAIN_SUB_NAV_OPTIONS: SubNavOption[] = [
   { label: '기록', value: 'examhistory', path: '/me/examhistory' },
   { label: '문제댓글', value: 'questioncomment', path: '/me/questioncomment' },
   { label: '시험지', value: 'myexam', path: '/me/myexam' },
+  { label: '결제내역', value: 'payment', path: '/me/payment' },
 ];
 
 export const MANAGE_SUB_NAV_OPTIONS: SubNavOption[] = [

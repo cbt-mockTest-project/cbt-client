@@ -6,7 +6,7 @@ import { initializeApollo } from '@modules/apollo';
 import * as Sentry from '@sentry/nextjs';
 import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
-import { QuestionState } from '../../types';
+import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
 
 export const isServer = () => typeof window === 'undefined';
@@ -139,6 +139,9 @@ export const shuffleArray = (array: any[]) => {
 export const removeWhiteSpace = (string: string) => string.replace(/\s/g, '');
 
 export const checkAdblock = (): boolean => {
+  if (isServer()) {
+    return false;
+  }
   const adsbygoogle = document.querySelector('ins.adsbygoogle');
   if (!adsbygoogle) {
     return true;
@@ -180,3 +183,16 @@ export const loadScript = ({ url, type }: LoadScriptArgs): Promise<void> => {
 
 export const makeMoneyString = (money: number) =>
   String(money).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+interface CheckUserRoleParams {
+  roleIds: number[];
+  user: User;
+}
+
+/**
+ * roleId List
+ * 1 : Basic - 광고제거, 무제한 랜덤모의고사
+ * 2 : SafePremium - 산업안전기사 프리미엄
+ */
+export const checkUserRole = ({ roleIds, user }: CheckUserRoleParams) =>
+  user.userRoles.some((userRole) => roleIds.includes(userRole.role.id));

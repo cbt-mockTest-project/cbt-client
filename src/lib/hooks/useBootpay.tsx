@@ -13,16 +13,12 @@ declare global {
 export interface ExecuteAfterPaymentParams {
   receiptId: string;
 }
-export interface ExecuteAfterPaymentResponse {
-  ok: boolean;
-  paymentId?: number;
-}
 
 export interface BootpayProps {
-  isPaymentAvailable: () => Promise<boolean>;
+  executeBeforPayment: () => Promise<boolean>;
   executeAfterPayment: ({
     receiptId,
-  }: ExecuteAfterPaymentParams) => Promise<ExecuteAfterPaymentResponse>;
+  }: ExecuteAfterPaymentParams) => Promise<boolean>;
   executeRollback: () => Promise<void>;
   doneAction?: () => void;
   order_name: string;
@@ -58,8 +54,8 @@ const useBootpay = () => {
     user,
     items,
     price,
-    isPaymentAvailable,
     executeAfterPayment,
+    executeBeforPayment,
     executeRollback,
     doneAction,
   }: BootpayProps) => {
@@ -85,36 +81,18 @@ const useBootpay = () => {
       });
       switch (response.event) {
         case 'confirm':
-          const confirmed = await isPaymentAvailable();
+          const confirmed = await executeBeforPayment();
           if (confirmed) {
-            const executeAfterPaymentResponse = await executeAfterPayment({
-              receiptId: response.receipt_id,
-            });
-            paymentId = executeAfterPaymentResponse.paymentId || 0;
-            if (executeAfterPaymentResponse.ok) {
-              await Bootpay.confirm();
-              await updatePayment({
-                variables: {
-                  input: {
-                    receiptId: response.receipt_id,
-                    paymentId,
-                  },
-                },
-              });
-              message.success('결제가 완료되었습니다.');
-            } else {
-              Bootpay.destroy();
-            }
+            await Bootpay.confirm();
+            await executeAfterPayment({ receiptId: response.receipt_id });
+            message.success('결제가 완료되었습니다.');
           } else {
             Bootpay.destroy();
-            message.error('결제가 취소되었습니다.');
+            message.error('결제에 실패했습니다.');
           }
-
           break;
-        // 결제 완료
         case 'done':
           message.success('결제가 완료되었습니다.');
-          // 결제 완료
           break;
       }
       doneAction && doneAction();
@@ -125,7 +103,13 @@ const useBootpay = () => {
           break;
         case 'error':
           executeRollback();
-          message.error('결제중 에러가 발생했습니다.');
+          if (e.payload.code === 'INVALID_UNREGISTERED_SUBMALL') {
+            message.error(
+              '결제에 실패했습니다.\n현재는 카카오페이와, 토스페이만 이용가능합니다.'
+            );
+            break;
+          }
+          message.error(e.message);
           break;
       }
     }

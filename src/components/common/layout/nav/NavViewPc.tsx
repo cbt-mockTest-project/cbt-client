@@ -11,8 +11,9 @@ import { Button } from 'antd';
 import { NavViewProps } from './Nav.interface';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { UserRole } from 'types';
+import { User, UserRole } from 'types';
 import { NAV_ITEMS } from './Nav.constants';
+import { checkUserRole } from '@lib/utils/utils';
 
 interface NavViewPcProps extends NavViewProps {}
 
@@ -65,7 +66,10 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
               onClick={props.onToggleProfileDropBox}
             >
               <span className="nav-user-content-profile-image">
-                {props.meQuery.me.user.isAllowAdblock && (
+                {checkUserRole({
+                  roleIds: [1, 2],
+                  user: props.meQuery.me.user as User,
+                }) && (
                   <CrownTwoTone
                     className="nav-user-content-profile-crown"
                     width={15}
