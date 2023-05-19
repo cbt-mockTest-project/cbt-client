@@ -51,7 +51,7 @@ export type CheckPasswordOutput = {
 };
 
 export type CheckUserRoleInput = {
-  role: Array<UserRole>;
+  roleIds: Array<Scalars['Float']>;
 };
 
 export type CheckUserRoleOutput = {

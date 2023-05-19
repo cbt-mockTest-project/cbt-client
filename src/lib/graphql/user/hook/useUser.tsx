@@ -6,6 +6,7 @@ import {
   CHECK_USER_ROLE,
   CREATE_USER_ROLE,
   DELETE_USER_MUTATION,
+  DELETE_USER_ROLE,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
   KAKAO_LOGIN,
@@ -31,6 +32,8 @@ import {
   CreateUserRoleMutationVariables,
   DeleteUserMutation,
   DeleteUserMutationVariables,
+  DeleteUserRoleMutation,
+  DeleteUserRoleMutationVariables,
   EditProfileMutation,
   EditProfileMutationVariables,
   EmailVerificationMutation,
@@ -139,6 +142,6 @@ export const useCreateUserRole = () =>
   );
 
 export const useDeleteUserRole = () =>
-  useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
-    DELETE_USER_MUTATION
+  useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(
+    DELETE_USER_ROLE
   );

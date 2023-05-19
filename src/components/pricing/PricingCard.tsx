@@ -5,6 +5,9 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Button } from 'antd';
 import palette from '@styles/palette';
 import { makeMoneyString } from '@lib/utils/utils';
+import Portal from '@components/common/portal/Portal';
+import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
+import useToggle from '@lib/hooks/useToggle';
 
 const PricingCardBlock = styled.div`
   .pricing-card-title {
@@ -84,7 +87,9 @@ export interface PricingCardProps {
   price: number;
   benefits: string[];
   handlePayment: React.MouseEventHandler<HTMLElement>;
+  hasBeforePaymentModal?: boolean;
   isTempText?: string;
+  isAlreadyPaid?: boolean;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -94,7 +99,14 @@ const PricingCard: React.FC<PricingCardProps> = ({
   benefits,
   isTempText,
   handlePayment,
+  hasBeforePaymentModal,
+  isAlreadyPaid,
 }) => {
+  const {
+    value: paymentNoticeModalState,
+    onToggle: onTogglePaymentNoticeModal,
+  } = useToggle(false);
+
   return (
     <PricingCardBlock>
       <h3 className="pricing-card-title">{title}</h3>
@@ -115,9 +127,12 @@ const PricingCard: React.FC<PricingCardProps> = ({
           <Button
             className="pricing-button"
             type="primary"
-            onClick={handlePayment}
+            disabled={isAlreadyPaid}
+            onClick={
+              hasBeforePaymentModal ? onTogglePaymentNoticeModal : handlePayment
+            }
           >
-            결제하기
+            {isAlreadyPaid ? '이용중' : '결제하기'}
           </Button>
           <div className="pricing-card-benefit">
             <p className="pricing-card-benefit-title">혜택</p>
@@ -136,6 +151,15 @@ const PricingCard: React.FC<PricingCardProps> = ({
           </div>
         </>
       )}
+      <Portal>
+        {hasBeforePaymentModal && paymentNoticeModalState && (
+          <PaymentNoticeModal
+            handlePayment={handlePayment}
+            open={paymentNoticeModalState}
+            onClose={onTogglePaymentNoticeModal}
+          />
+        )}
+      </Portal>
     </PricingCardBlock>
   );
 };

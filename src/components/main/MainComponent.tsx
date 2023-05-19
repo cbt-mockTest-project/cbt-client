@@ -271,9 +271,18 @@ const MainComponent: React.FC<MainComponentProps> = ({
             랜덤모의고사
           </Button>
           <div className="home-content-devide-line" />
-          <Button onClick={onToggleRemoveAdModal} type="primary">
+          {/* <Button onClick={onToggleRemoveAdModal} type="primary">
             광고제거안내
-          </Button>
+          </Button> */}
+          <Link href="/pricing/basic" style={{ width: '100%' }}>
+            <Button type="primary">광고 제거안내</Button>
+          </Link>
+          <Link
+            href="https://www.buymeacoffee.com/moducbts"
+            className="home-random-select-link"
+          >
+            <Button className="">{`>> 후원하기 <<`}</Button>{' '}
+          </Link>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
