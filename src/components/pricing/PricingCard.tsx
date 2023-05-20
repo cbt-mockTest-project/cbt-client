@@ -79,12 +79,29 @@ const PricingCardBlock = styled.div`
     font-size: 24px;
     font-weight: bold;
   }
+  .pricing-card-before-discount-price-value {
+    font-size: 1.2rem;
+    color: ${palette.gray_700};
+    font-weight: bold;
+    text-decoration: line-through;
+  }
+  .pricing-card-before-discount-wrapper {
+    display: flex;
+    align-items: flex-end;
+  }
+  .pricing-card-before-discount-price-notice {
+    margin-left: 10px;
+    font-size: 14px;
+    color: ${palette.red_500};
+    font-weight: bold;
+  }
 `;
 
 export interface PricingCardProps {
   title: string;
   intro: string;
   price: number;
+  beforeDiscountPrice?: number;
   benefits: string[];
   handlePayment: () => void;
   hasBeforePaymentModal?: boolean;
@@ -101,6 +118,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   handlePayment,
   hasBeforePaymentModal,
   isAlreadyPaid,
+  beforeDiscountPrice,
 }) => {
   const {
     value: paymentNoticeModalState,
@@ -115,10 +133,21 @@ const PricingCard: React.FC<PricingCardProps> = ({
         <div className="pricing-card-temp-text">{isTempText}</div>
       ) : (
         <>
+          {beforeDiscountPrice && (
+            <div className="pricing-card-before-discount-wrapper">
+              <div className="pricing-card-before-discount-price-value">
+                {makeMoneyString(beforeDiscountPrice)}
+              </div>
+              <div className="pricing-card-before-discount-price-notice">
+                ~ 05.31까지
+              </div>
+            </div>
+          )}
           <p className="pricing-card-price-wrapper">
             <span className="pricing-card-price-icon">
               <AttachMoneyIcon />
             </span>
+
             <span className="pricing-card-price-value">
               {makeMoneyString(price)}
             </span>
