@@ -103,10 +103,13 @@ export interface PricingCardProps {
   price: number;
   beforeDiscountPrice?: number;
   benefits: string[];
-  handlePayment: () => void;
+  onConfirm: () => void;
+  confirmLabel?: string;
+  disabledLabel?: string;
   hasBeforePaymentModal?: boolean;
   isTempText?: string;
-  isAlreadyPaid?: boolean;
+  confirmDisabled?: boolean;
+  isFreeTrial?: boolean;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -115,10 +118,12 @@ const PricingCard: React.FC<PricingCardProps> = ({
   price,
   benefits,
   isTempText,
-  handlePayment,
+  onConfirm,
   hasBeforePaymentModal,
-  isAlreadyPaid,
+  confirmDisabled,
   beforeDiscountPrice,
+  confirmLabel = '결제하기',
+  disabledLabel = '이용중',
 }) => {
   const {
     value: paymentNoticeModalState,
@@ -133,7 +138,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
         <div className="pricing-card-temp-text">{isTempText}</div>
       ) : (
         <>
-          {beforeDiscountPrice && (
+          {beforeDiscountPrice ? (
             <div className="pricing-card-before-discount-wrapper">
               <div className="pricing-card-before-discount-price-value">
                 {makeMoneyString(beforeDiscountPrice)}
@@ -142,6 +147,8 @@ const PricingCard: React.FC<PricingCardProps> = ({
                 ~ 05.31까지
               </div>
             </div>
+          ) : (
+            <div style={{ height: '30.17px' }} />
           )}
           <p className="pricing-card-price-wrapper">
             <span className="pricing-card-price-icon">
@@ -156,12 +163,12 @@ const PricingCard: React.FC<PricingCardProps> = ({
           <Button
             className="pricing-button"
             type="primary"
-            disabled={isAlreadyPaid}
+            disabled={confirmDisabled}
             onClick={
-              hasBeforePaymentModal ? onTogglePaymentNoticeModal : handlePayment
+              hasBeforePaymentModal ? onTogglePaymentNoticeModal : onConfirm
             }
           >
-            {isAlreadyPaid ? '이용중' : '결제하기'}
+            {confirmDisabled ? disabledLabel : confirmLabel}
           </Button>
           <div className="pricing-card-benefit">
             <p className="pricing-card-benefit-title">혜택</p>
@@ -183,7 +190,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
       <Portal>
         {hasBeforePaymentModal && paymentNoticeModalState && (
           <PaymentNoticeModal
-            handlePayment={handlePayment}
+            handlePayment={onConfirm}
             open={paymentNoticeModalState}
             onClose={onTogglePaymentNoticeModal}
           />

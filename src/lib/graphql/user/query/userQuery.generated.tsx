@@ -7,373 +7,586 @@ export type RegisterMutationVariables = Types.Exact<{
   input: Types.RegisterInput;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'RegisterOutput', error?: string | null, ok: boolean } };
+export type RegisterMutation = {
+  __typename?: 'Mutation';
+  register: {
+    __typename?: 'RegisterOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type SendVerificationMailMutationVariables = Types.Exact<{
   input: Types.SendVerificationMailInput;
 }>;
 
-
-export type SendVerificationMailMutation = { __typename?: 'Mutation', sendVerificationMail: { __typename?: 'SendVerificationMailOutput', ok: boolean, error?: string | null } };
+export type SendVerificationMailMutation = {
+  __typename?: 'Mutation';
+  sendVerificationMail: {
+    __typename?: 'SendVerificationMailOutput';
+    ok: boolean;
+    error?: string | null;
+  };
+};
 
 export type EmailVerificationMutationVariables = Types.Exact<{
   input: Types.EmailVerificationInput;
 }>;
 
-
-export type EmailVerificationMutation = { __typename?: 'Mutation', emailVerification: { __typename?: 'EmailVerificationOutput', email: string, error?: string | null, ok: boolean } };
+export type EmailVerificationMutation = {
+  __typename?: 'Mutation';
+  emailVerification: {
+    __typename?: 'EmailVerificationOutput';
+    email: string;
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type LoginMutationVariables = Types.Exact<{
   input: Types.LoginInput;
 }>;
 
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'LoginOutput';
+    error?: string | null;
+    ok: boolean;
+    token?: string | null;
+  };
+};
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginOutput', error?: string | null, ok: boolean, token?: string | null } };
+export type LogoutMutationVariables = Types.Exact<{ [key: string]: never }>;
 
-export type LogoutMutationVariables = Types.Exact<{ [key: string]: never; }>;
+export type LogoutMutation = {
+  __typename?: 'Mutation';
+  logout: { __typename?: 'CoreOutput'; error?: string | null; ok: boolean };
+};
 
+export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
-
-export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole, email: string, isAllowAdblock: boolean, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = {
+  __typename?: 'Query';
+  me: {
+    __typename?: 'MeOutput';
+    ok: boolean;
+    error?: string | null;
+    user?: {
+      __typename?: 'User';
+      usedFreeTrial: boolean;
+      nickname: string;
+      id: number;
+      role: Types.UserRole;
+      email: string;
+      userRoles: Array<{
+        __typename?: 'UserAndRole';
+        role: { __typename?: 'Role'; name: string; id: number };
+      }>;
+    } | null;
+    notices?: Array<{
+      __typename?: 'Notice';
+      content: string;
+      id: number;
+      created_at: any;
+      confirm: boolean;
+      link?: string | null;
+    }> | null;
+  };
+};
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
 }>;
 
-
-export type EditProfileMutation = { __typename?: 'Mutation', editProfile: { __typename?: 'EditProfileOutput', error?: string | null, ok: boolean } };
+export type EditProfileMutation = {
+  __typename?: 'Mutation';
+  editProfile: {
+    __typename?: 'EditProfileOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type CheckPasswordMutationVariables = Types.Exact<{
   input: Types.CheckPasswordInput;
 }>;
 
+export type CheckPasswordMutation = {
+  __typename?: 'Mutation';
+  checkPassword: {
+    __typename?: 'CheckPasswordOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
-export type CheckPasswordMutation = { __typename?: 'Mutation', checkPassword: { __typename?: 'CheckPasswordOutput', error?: string | null, ok: boolean } };
+export type DeleteUserMutationVariables = Types.Exact<{ [key: string]: never }>;
 
-export type DeleteUserMutationVariables = Types.Exact<{ [key: string]: never; }>;
-
-
-export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+export type DeleteUserMutation = {
+  __typename?: 'Mutation';
+  deleteUser: { __typename?: 'CoreOutput'; error?: string | null; ok: boolean };
+};
 
 export type ChangePasswordAfterVerifyingMutationVariables = Types.Exact<{
   input: Types.ChangePasswordAfterVerifyingInput;
 }>;
 
-
-export type ChangePasswordAfterVerifyingMutation = { __typename?: 'Mutation', changePasswordAfterVerifying: { __typename?: 'ChangePasswordAfterVerifyingOutput', error?: string | null, ok: boolean } };
+export type ChangePasswordAfterVerifyingMutation = {
+  __typename?: 'Mutation';
+  changePasswordAfterVerifying: {
+    __typename?: 'ChangePasswordAfterVerifyingOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type SendFindPasswordMailMutationVariables = Types.Exact<{
   input: Types.SendFindPasswordMailInput;
 }>;
 
-
-export type SendFindPasswordMailMutation = { __typename?: 'Mutation', sendFindPasswordMail: { __typename?: 'SendFindPasswordMailOutput', error?: string | null, ok: boolean } };
+export type SendFindPasswordMailMutation = {
+  __typename?: 'Mutation';
+  sendFindPasswordMail: {
+    __typename?: 'SendFindPasswordMailOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type KakaoLoginMutationVariables = Types.Exact<{
   input: Types.KakaoLoginInput;
 }>;
 
-
-export type KakaoLoginMutation = { __typename?: 'Mutation', kakaoLogin: { __typename?: 'KakaoLoginOutput', error?: string | null, ok: boolean } };
+export type KakaoLoginMutation = {
+  __typename?: 'Mutation';
+  kakaoLogin: {
+    __typename?: 'KakaoLoginOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type SearchUserQueryVariables = Types.Exact<{
   input: Types.SearchUserInput;
 }>;
 
-
-export type SearchUserQuery = { __typename?: 'Query', searchUser: { __typename?: 'SearchUserOutput', error?: string | null, ok: boolean, users?: Array<{ __typename?: 'User', id: number, email: string, nickname: string, isAllowAdblock: boolean, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', id: number, name: string } }> }> | null } };
+export type SearchUserQuery = {
+  __typename?: 'Query';
+  searchUser: {
+    __typename?: 'SearchUserOutput';
+    error?: string | null;
+    ok: boolean;
+    users?: Array<{
+      __typename?: 'User';
+      id: number;
+      email: string;
+      nickname: string;
+      userRoles: Array<{
+        __typename?: 'UserAndRole';
+        role: { __typename?: 'Role'; id: number; name: string };
+      }>;
+    }> | null;
+  };
+};
 
 export type UpdateAdBlockPermissionMutationVariables = Types.Exact<{
   input: Types.UpdateAdblockPermissionInput;
 }>;
 
-
-export type UpdateAdBlockPermissionMutation = { __typename?: 'Mutation', updateAdBlockPermission: { __typename?: 'UpdateAdblockPermissionOutput', adblockPermission?: boolean | null, error?: string | null, ok: boolean } };
+export type UpdateAdBlockPermissionMutation = {
+  __typename?: 'Mutation';
+  updateAdBlockPermission: {
+    __typename?: 'UpdateAdblockPermissionOutput';
+    adblockPermission?: boolean | null;
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type CheckUserRoleMutationVariables = Types.Exact<{
   input: Types.CheckUserRoleInput;
 }>;
 
-
-export type CheckUserRoleMutation = { __typename?: 'Mutation', checkUserRole: { __typename?: 'CheckUserRoleOutput', confirmed: boolean, error?: string | null, ok: boolean } };
+export type CheckUserRoleMutation = {
+  __typename?: 'Mutation';
+  checkUserRole: {
+    __typename?: 'CheckUserRoleOutput';
+    confirmed: boolean;
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type ChangeClientRoleMutationVariables = Types.Exact<{
   input: Types.ChangeClientRoleInput;
 }>;
 
-
-export type ChangeClientRoleMutation = { __typename?: 'Mutation', changeClientRole: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+export type ChangeClientRoleMutation = {
+  __typename?: 'Mutation';
+  changeClientRole: {
+    __typename?: 'CoreOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type CreateUserRoleMutationVariables = Types.Exact<{
   input: Types.CreateUserRoleInput;
 }>;
 
-
-export type CreateUserRoleMutation = { __typename?: 'Mutation', createUserRole: { __typename?: 'CreateUserRoleOutput', error?: string | null, ok: boolean, roleId?: number | null } };
+export type CreateUserRoleMutation = {
+  __typename?: 'Mutation';
+  createUserRole: {
+    __typename?: 'CreateUserRoleOutput';
+    error?: string | null;
+    ok: boolean;
+    roleId?: number | null;
+  };
+};
 
 export type DeleteUserRoleMutationVariables = Types.Exact<{
   input: Types.DeleteUserRoleInput;
 }>;
 
+export type DeleteUserRoleMutation = {
+  __typename?: 'Mutation';
+  deleteUserRole: {
+    __typename?: 'DeleteUserRoleOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
-export type DeleteUserRoleMutation = { __typename?: 'Mutation', deleteUserRole: { __typename?: 'DeleteUserRoleOutput', error?: string | null, ok: boolean } };
+export type CreateFreeTrialRoleMutationVariables = Types.Exact<{
+  [key: string]: never;
+}>;
 
+export type CreateFreeTrialRoleMutation = {
+  __typename?: 'Mutation';
+  createFreeTrialRole: {
+    __typename?: 'CreateFreeTrialRoleOutput';
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export const RegisterDocument = gql`
-    mutation register($input: RegisterInput!) {
-  register(input: $input) {
-    error
-    ok
+  mutation register($input: RegisterInput!) {
+    register(input: $input) {
+      error
+      ok
+    }
   }
-}
-    `;
+`;
 
 export function useRegisterMutation() {
-  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
-};
-export const SendVerificationMailDocument = gql`
-    mutation sendVerificationMail($input: SendVerificationMailInput!) {
-  sendVerificationMail(input: $input) {
-    ok
-    error
-  }
+  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument
+  );
 }
-    `;
+export const SendVerificationMailDocument = gql`
+  mutation sendVerificationMail($input: SendVerificationMailInput!) {
+    sendVerificationMail(input: $input) {
+      ok
+      error
+    }
+  }
+`;
 
 export function useSendVerificationMailMutation() {
-  return Urql.useMutation<SendVerificationMailMutation, SendVerificationMailMutationVariables>(SendVerificationMailDocument);
-};
-export const EmailVerificationDocument = gql`
-    mutation EmailVerification($input: EmailVerificationInput!) {
-  emailVerification(input: $input) {
-    email
-    error
-    ok
-  }
+  return Urql.useMutation<
+    SendVerificationMailMutation,
+    SendVerificationMailMutationVariables
+  >(SendVerificationMailDocument);
 }
-    `;
+export const EmailVerificationDocument = gql`
+  mutation EmailVerification($input: EmailVerificationInput!) {
+    emailVerification(input: $input) {
+      email
+      error
+      ok
+    }
+  }
+`;
 
 export function useEmailVerificationMutation() {
-  return Urql.useMutation<EmailVerificationMutation, EmailVerificationMutationVariables>(EmailVerificationDocument);
-};
-export const LoginDocument = gql`
-    mutation Login($input: LoginInput!) {
-  login(input: $input) {
-    error
-    ok
-    token
-  }
+  return Urql.useMutation<
+    EmailVerificationMutation,
+    EmailVerificationMutationVariables
+  >(EmailVerificationDocument);
 }
-    `;
+export const LoginDocument = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      error
+      ok
+      token
+    }
+  }
+`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
-};
-export const LogoutDocument = gql`
-    mutation Logout {
-  logout {
-    error
-    ok
-  }
 }
-    `;
+export const LogoutDocument = gql`
+  mutation Logout {
+    logout {
+      error
+      ok
+    }
+  }
+`;
 
 export function useLogoutMutation() {
-  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
-};
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(
+    LogoutDocument
+  );
+}
 export const MeDocument = gql`
-    query Me {
-  me {
-    ok
-    user {
-      nickname
-      id
-      role
-      email
-      isAllowAdblock
-      userRoles {
-        role {
-          name
-          id
+  query Me {
+    me {
+      ok
+      user {
+        usedFreeTrial
+        nickname
+        id
+        role
+        email
+        userRoles {
+          role {
+            name
+            id
+          }
         }
       }
+      notices {
+        content
+        id
+        created_at
+        confirm
+        link
+      }
+      error
     }
-    notices {
-      content
-      id
-      created_at
-      confirm
-      link
-    }
-    error
   }
-}
-    `;
+`;
 
-export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
-  return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });
-};
-export const EditProfileDocument = gql`
-    mutation EditProfile($input: EditProfileInput!) {
-  editProfile(input: $input) {
-    error
-    ok
-  }
+export function useMeQuery(
+  options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>
+) {
+  return Urql.useQuery<MeQuery, MeQueryVariables>({
+    query: MeDocument,
+    ...options,
+  });
 }
-    `;
+export const EditProfileDocument = gql`
+  mutation EditProfile($input: EditProfileInput!) {
+    editProfile(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useEditProfileMutation() {
-  return Urql.useMutation<EditProfileMutation, EditProfileMutationVariables>(EditProfileDocument);
-};
-export const CheckPasswordDocument = gql`
-    mutation CheckPassword($input: CheckPasswordInput!) {
-  checkPassword(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<EditProfileMutation, EditProfileMutationVariables>(
+    EditProfileDocument
+  );
 }
-    `;
+export const CheckPasswordDocument = gql`
+  mutation CheckPassword($input: CheckPasswordInput!) {
+    checkPassword(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useCheckPasswordMutation() {
-  return Urql.useMutation<CheckPasswordMutation, CheckPasswordMutationVariables>(CheckPasswordDocument);
-};
-export const DeleteUserDocument = gql`
-    mutation DeleteUser {
-  deleteUser {
-    error
-    ok
-  }
+  return Urql.useMutation<
+    CheckPasswordMutation,
+    CheckPasswordMutationVariables
+  >(CheckPasswordDocument);
 }
-    `;
+export const DeleteUserDocument = gql`
+  mutation DeleteUser {
+    deleteUser {
+      error
+      ok
+    }
+  }
+`;
 
 export function useDeleteUserMutation() {
-  return Urql.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument);
-};
-export const ChangePasswordAfterVerifyingDocument = gql`
-    mutation ChangePasswordAfterVerifying($input: ChangePasswordAfterVerifyingInput!) {
-  changePasswordAfterVerifying(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
+    DeleteUserDocument
+  );
 }
-    `;
+export const ChangePasswordAfterVerifyingDocument = gql`
+  mutation ChangePasswordAfterVerifying(
+    $input: ChangePasswordAfterVerifyingInput!
+  ) {
+    changePasswordAfterVerifying(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useChangePasswordAfterVerifyingMutation() {
-  return Urql.useMutation<ChangePasswordAfterVerifyingMutation, ChangePasswordAfterVerifyingMutationVariables>(ChangePasswordAfterVerifyingDocument);
-};
-export const SendFindPasswordMailDocument = gql`
-    mutation SendFindPasswordMail($input: SendFindPasswordMailInput!) {
-  sendFindPasswordMail(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<
+    ChangePasswordAfterVerifyingMutation,
+    ChangePasswordAfterVerifyingMutationVariables
+  >(ChangePasswordAfterVerifyingDocument);
 }
-    `;
+export const SendFindPasswordMailDocument = gql`
+  mutation SendFindPasswordMail($input: SendFindPasswordMailInput!) {
+    sendFindPasswordMail(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useSendFindPasswordMailMutation() {
-  return Urql.useMutation<SendFindPasswordMailMutation, SendFindPasswordMailMutationVariables>(SendFindPasswordMailDocument);
-};
-export const KakaoLoginDocument = gql`
-    mutation KakaoLogin($input: KakaoLoginInput!) {
-  kakaoLogin(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<
+    SendFindPasswordMailMutation,
+    SendFindPasswordMailMutationVariables
+  >(SendFindPasswordMailDocument);
 }
-    `;
+export const KakaoLoginDocument = gql`
+  mutation KakaoLogin($input: KakaoLoginInput!) {
+    kakaoLogin(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useKakaoLoginMutation() {
-  return Urql.useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KakaoLoginDocument);
-};
+  return Urql.useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(
+    KakaoLoginDocument
+  );
+}
 export const SearchUserDocument = gql`
-    query SearchUser($input: SearchUserInput!) {
-  searchUser(input: $input) {
-    error
-    ok
-    users {
-      id
-      email
-      nickname
-      isAllowAdblock
-      userRoles {
-        role {
-          id
-          name
+  query SearchUser($input: SearchUserInput!) {
+    searchUser(input: $input) {
+      error
+      ok
+      users {
+        id
+        email
+        nickname
+        userRoles {
+          role {
+            id
+            name
+          }
         }
       }
     }
   }
-}
-    `;
+`;
 
-export function useSearchUserQuery(options: Omit<Urql.UseQueryArgs<SearchUserQueryVariables>, 'query'>) {
-  return Urql.useQuery<SearchUserQuery, SearchUserQueryVariables>({ query: SearchUserDocument, ...options });
-};
-export const UpdateAdBlockPermissionDocument = gql`
-    mutation UpdateAdBlockPermission($input: UpdateAdblockPermissionInput!) {
-  updateAdBlockPermission(input: $input) {
-    adblockPermission
-    error
-    ok
-  }
+export function useSearchUserQuery(
+  options: Omit<Urql.UseQueryArgs<SearchUserQueryVariables>, 'query'>
+) {
+  return Urql.useQuery<SearchUserQuery, SearchUserQueryVariables>({
+    query: SearchUserDocument,
+    ...options,
+  });
 }
-    `;
+export const UpdateAdBlockPermissionDocument = gql`
+  mutation UpdateAdBlockPermission($input: UpdateAdblockPermissionInput!) {
+    updateAdBlockPermission(input: $input) {
+      adblockPermission
+      error
+      ok
+    }
+  }
+`;
 
 export function useUpdateAdBlockPermissionMutation() {
-  return Urql.useMutation<UpdateAdBlockPermissionMutation, UpdateAdBlockPermissionMutationVariables>(UpdateAdBlockPermissionDocument);
-};
-export const CheckUserRoleDocument = gql`
-    mutation CheckUserRole($input: CheckUserRoleInput!) {
-  checkUserRole(input: $input) {
-    confirmed
-    error
-    ok
-  }
+  return Urql.useMutation<
+    UpdateAdBlockPermissionMutation,
+    UpdateAdBlockPermissionMutationVariables
+  >(UpdateAdBlockPermissionDocument);
 }
-    `;
+export const CheckUserRoleDocument = gql`
+  mutation CheckUserRole($input: CheckUserRoleInput!) {
+    checkUserRole(input: $input) {
+      confirmed
+      error
+      ok
+    }
+  }
+`;
 
 export function useCheckUserRoleMutation() {
-  return Urql.useMutation<CheckUserRoleMutation, CheckUserRoleMutationVariables>(CheckUserRoleDocument);
-};
-export const ChangeClientRoleDocument = gql`
-    mutation ChangeClientRole($input: ChangeClientRoleInput!) {
-  changeClientRole(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<
+    CheckUserRoleMutation,
+    CheckUserRoleMutationVariables
+  >(CheckUserRoleDocument);
 }
-    `;
+export const ChangeClientRoleDocument = gql`
+  mutation ChangeClientRole($input: ChangeClientRoleInput!) {
+    changeClientRole(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useChangeClientRoleMutation() {
-  return Urql.useMutation<ChangeClientRoleMutation, ChangeClientRoleMutationVariables>(ChangeClientRoleDocument);
-};
-export const CreateUserRoleDocument = gql`
-    mutation CreateUserRole($input: CreateUserRoleInput!) {
-  createUserRole(input: $input) {
-    error
-    ok
-    roleId
-  }
+  return Urql.useMutation<
+    ChangeClientRoleMutation,
+    ChangeClientRoleMutationVariables
+  >(ChangeClientRoleDocument);
 }
-    `;
+export const CreateUserRoleDocument = gql`
+  mutation CreateUserRole($input: CreateUserRoleInput!) {
+    createUserRole(input: $input) {
+      error
+      ok
+      roleId
+    }
+  }
+`;
 
 export function useCreateUserRoleMutation() {
-  return Urql.useMutation<CreateUserRoleMutation, CreateUserRoleMutationVariables>(CreateUserRoleDocument);
-};
-export const DeleteUserRoleDocument = gql`
-    mutation DeleteUserRole($input: DeleteUserRoleInput!) {
-  deleteUserRole(input: $input) {
-    error
-    ok
-  }
+  return Urql.useMutation<
+    CreateUserRoleMutation,
+    CreateUserRoleMutationVariables
+  >(CreateUserRoleDocument);
 }
-    `;
+export const DeleteUserRoleDocument = gql`
+  mutation DeleteUserRole($input: DeleteUserRoleInput!) {
+    deleteUserRole(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 
 export function useDeleteUserRoleMutation() {
-  return Urql.useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(DeleteUserRoleDocument);
-};
+  return Urql.useMutation<
+    DeleteUserRoleMutation,
+    DeleteUserRoleMutationVariables
+  >(DeleteUserRoleDocument);
+}
+export const CreateFreeTrialRoleDocument = gql`
+  mutation CreateFreeTrialRole {
+    createFreeTrialRole {
+      error
+      ok
+    }
+  }
+`;
+
+export function useCreateFreeTrialRoleMutation() {
+  return Urql.useMutation<
+    CreateFreeTrialRoleMutation,
+    CreateFreeTrialRoleMutationVariables
+  >(CreateFreeTrialRoleDocument);
+}

@@ -67,7 +67,7 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
             >
               <span className="nav-user-content-profile-image">
                 {checkUserRole({
-                  roleIds: [1, 2],
+                  roleIds: [1, 2, 3],
                   user: props.meQuery.me.user as User,
                 }) && (
                   <CrownTwoTone

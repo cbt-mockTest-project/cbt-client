@@ -52,11 +52,11 @@ export const ME_QUERY = gql`
     me {
       ok
       user {
+        usedFreeTrial
         nickname
         id
         role
         email
-        isAllowAdblock
         userRoles {
           role {
             name
@@ -141,7 +141,6 @@ export const SEARCH_USER = gql`
         id
         email
         nickname
-        isAllowAdblock
         userRoles {
           role {
             id
@@ -194,6 +193,15 @@ export const CREATE_USER_ROLE = gql`
 export const DELETE_USER_ROLE = gql`
   mutation DeleteUserRole($input: DeleteUserRoleInput!) {
     deleteUserRole(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const CREATE_FREE_TRIAL = gql`
+  mutation CreateFreeTrialRole {
+    createFreeTrialRole {
       error
       ok
     }

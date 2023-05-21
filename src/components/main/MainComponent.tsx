@@ -56,7 +56,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     () =>
       checkAdblock() &&
       meQuery?.me.user &&
-      !checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User }),
+      !checkUserRole({ roleIds: [1, 2, 3], user: meQuery.me.user as User }),
     [meQuery]
   );
 
@@ -275,7 +275,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             광고제거안내
           </Button> */}
           <Link href="/pricing/basic" style={{ width: '100%' }}>
-            <Button type="primary">광고 제거안내</Button>
+            <Button type="primary">프리미엄 스토어</Button>
           </Link>
           <Link
             href="https://www.buymeacoffee.com/moducbts"

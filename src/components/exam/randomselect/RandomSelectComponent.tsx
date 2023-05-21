@@ -19,10 +19,11 @@ import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { QuestionState, UserRole } from 'types';
+import { QuestionState, User, UserRole } from 'types';
 import { Categories } from '../../../../pages/exam/randomselect';
 import { useDispatch } from 'react-redux';
 import { coreActions } from '@modules/redux/slices/core';
+import { checkUserRole } from '@lib/utils/utils';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -120,6 +121,13 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const onStartRandomExam = () => {
     if (!meQuery?.me.user) {
       openLoginModal();
+      return;
+    }
+    if (
+      meQuery?.me.user &&
+      !checkUserRole({ roleIds: [1, 2, 3], user: meQuery.me.user as User })
+    ) {
+      router.push('/pricing/basic');
       return;
     }
     let es: string;

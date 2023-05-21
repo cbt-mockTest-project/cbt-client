@@ -10,8 +10,14 @@ export const recordRoutes = [
 ];
 export const reviewnoteRoutes = ['/me/reviewnote'];
 export const communityRoutes = ['/community', '/post'];
+export const storeRoutes = ['/pricing/basic'];
 export const profileRoutes = ['/me/edit'];
 export const loginRoutes = ['/mobile/login'];
+export const checkStorePage = (path: string) =>
+  checkUrl({
+    url: path,
+    allowUrls: storeRoutes,
+  });
 export const checkRecordPage = (path: string) =>
   checkUrl({
     url: path,
@@ -41,6 +47,7 @@ export const checkHomePage = (path: string) => {
     !checkRecordPage(path) &&
     !checkProfilePage(path) &&
     !checkCommunityPage(path) &&
-    !checkLoginPage(path)
+    !checkLoginPage(path) &&
+    !checkStorePage(path)
   );
 };

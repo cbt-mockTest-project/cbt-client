@@ -4,6 +4,7 @@ import {
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
   CHECK_PASSWORD_MUTATION,
   CHECK_USER_ROLE,
+  CREATE_FREE_TRIAL,
   CREATE_USER_ROLE,
   DELETE_USER_MUTATION,
   DELETE_USER_ROLE,
@@ -28,6 +29,8 @@ import {
   CheckPasswordMutationVariables,
   CheckUserRoleMutation,
   CheckUserRoleMutationVariables,
+  CreateFreeTrialRoleMutation,
+  CreateFreeTrialRoleMutationVariables,
   CreateUserRoleMutation,
   CreateUserRoleMutationVariables,
   DeleteUserMutation,
@@ -145,3 +148,9 @@ export const useDeleteUserRole = () =>
   useMutation<DeleteUserRoleMutation, DeleteUserRoleMutationVariables>(
     DELETE_USER_ROLE
   );
+
+export const useCreateFreeTrial = () =>
+  useMutation<
+    CreateFreeTrialRoleMutation,
+    CreateFreeTrialRoleMutationVariables
+  >(CREATE_FREE_TRIAL);

@@ -16,6 +16,7 @@ import {
   checkHomePage,
   checkProfilePage,
   checkRecordPage,
+  checkStorePage,
   profileRoutes,
   recordRoutes,
 } from '@lib/constants/routes';
@@ -30,6 +31,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const router = useRouter();
   const authRoutes = recordRoutes.concat(profileRoutes);
   const isRecordPage = checkRecordPage(router.asPath);
+  const isStorePage = checkStorePage(router.asPath);
   const isProfilePage = checkProfilePage(router.asPath);
   const isCommunityPage = checkCommunityPage(router.asPath);
   const isHome = checkHomePage(router.asPath);
@@ -74,6 +76,15 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
           className={`bottom-app-bar-item-text ${isRecordPage && 'active'}`}
         >
           기록
+        </span>
+      </button>
+      <button
+        onClick={() => onRouteChange('/pricing/basic')}
+        className="bottom-app-bar-item"
+      >
+        <CategoryIcon className={`${isStorePage && 'active'}`} />
+        <span className={`bottom-app-bar-item-text ${isStorePage && 'active'}`}>
+          스토어
         </span>
       </button>
       <button
