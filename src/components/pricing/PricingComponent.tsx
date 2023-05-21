@@ -7,6 +7,7 @@ import { Pagination } from 'swiper';
 import useBootpay from '@lib/hooks/useBootpay';
 import {
   useCheckUserRole,
+  useCreateFreeTrial,
   useCreateUserRole,
   useDeleteUserRole,
   useMeQuery,
@@ -17,6 +18,9 @@ import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
 import { checkUserRole } from '@lib/utils/utils';
 import shortid from 'shortid';
 import palette from '@styles/palette';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -82,6 +86,9 @@ interface PricingComponentProps {
 const PricingComponent: React.FC<PricingComponentProps> = ({
   hasPremium = true,
 }) => {
+  const dispatch = useAppDispatch();
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
+  const [createFreeTrial] = useCreateFreeTrial();
   const createdRoleId = useRef(0);
   const { handleBootPay } = useBootpay();
   const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
@@ -94,15 +101,23 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
     price: number;
     orderName: string;
     roleId: number;
+    checkRoleIds: number[];
   }
 
-  const handlePayment = ({ orderName, price, roleId }: handlePaymentParams) => {
+  const handlePayment = ({
+    orderName,
+    price,
+    roleId,
+    checkRoleIds,
+  }: handlePaymentParams) => {
     const orderId = `${meQuery?.me.user?.id}_${shortid.generate()}`;
     if (!meQuery?.me.user) {
-      message.error('로그인 후 이용해주세요.');
+      openLoginModal();
       return;
     }
-    if (checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User })) {
+    if (
+      checkUserRole({ roleIds: checkRoleIds, user: meQuery.me.user as User })
+    ) {
       message.error('이미 해당 서비스를 이용중입니다.');
       return;
     }
@@ -113,7 +128,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         const res = await checkUserRoleRequest({
           variables: {
             input: {
-              roleIds: [1, 2],
+              roleIds: checkRoleIds,
             },
           },
         });
@@ -189,11 +204,26 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
     });
   };
 
+  const handleFreeTrial = async () => {
+    if (!meQuery?.me.user) {
+      openLoginModal();
+      return;
+    }
+    const res = await createFreeTrial();
+    if (res.data?.createFreeTrialRole.ok) {
+      message.success('무료체험이 시작되었습니다.');
+      refetchMeQuery();
+      return;
+    }
+    message.error(res.data?.createFreeTrialRole.error);
+  };
+
   const handleBasicPlanPayment = () =>
     handlePayment({
       orderName: '모두CBT 베이직 플랜',
       price: 5000,
       roleId: 1,
+      checkRoleIds: [1, 2],
     });
 
   const handleSafePremiumPlanPayment = () =>
@@ -201,19 +231,37 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       orderName: '모두CBT 산안기 프리패스',
       price: 30000,
       roleId: 2,
+      checkRoleIds: [2],
     });
 
   const pricingCardData: PricingCardProps[] = [
+    {
+      title: '무료 체험 - 1일',
+      intro: '모두CBT 베이직 플랜을 체험해보세요!',
+      price: 0,
+      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+      onConfirm: handleFreeTrial,
+      confirmLabel: '무료체험 시작하기',
+      disabledLabel: '무료체험 이용완료',
+      confirmDisabled: meQuery?.me.user
+        ? meQuery.me.user.usedFreeTrial ||
+          checkUserRole({
+            roleIds: [1, 2, 3],
+            user: meQuery.me.user as User,
+          })
+        : false,
+    },
     {
       title: '베이직 플랜',
       intro: '커피 한 잔 값으로, 학습효율을 높여보세요!',
       price: 5000,
       beforeDiscountPrice: 9900,
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-      isAlreadyPaid: meQuery?.me.user
+      hasBeforePaymentModal: !hasPremium,
+      confirmDisabled: meQuery?.me.user
         ? checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User })
         : false,
-      handlePayment: handleBasicPlanPayment,
+      onConfirm: handleBasicPlanPayment,
     },
   ];
   if (hasPremium) {
@@ -228,7 +276,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         '필답형 최다빈출 전자책 제공',
         '필답형 최다빈출 학습서비스 제공',
       ],
-      handlePayment: handleSafePremiumPlanPayment,
+      onConfirm: handleSafePremiumPlanPayment,
     });
   } else {
     pricingCardData.push({
@@ -242,7 +290,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         '필답형 최다빈출 전자책 제공',
         '필답형 최다빈출 학습서비스 제공',
       ],
-      handlePayment: handleSafePremiumPlanPayment,
+      onConfirm: handleSafePremiumPlanPayment,
       isTempText: 'Coming Soon...',
     });
   }
@@ -270,7 +318,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         >
           {pricingCardData.map((data) => (
             <SwiperSlide className="pricing-card-swiper-slide" key={data.title}>
-              <PricingCard {...data} hasBeforePaymentModal={!hasPremium} />
+              <PricingCard {...data} />
             </SwiperSlide>
           ))}
         </Swiper>

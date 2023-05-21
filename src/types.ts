@@ -13,6 +13,15 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Attendance = {
+  __typename?: 'Attendance';
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
 export type ChangeClientRoleAndCreatePaymentInput = {
   changeClientRoleInput: ChangeClientRoleInput;
   createPaymentInput: CreatePaymentInput;
@@ -67,12 +76,29 @@ export type CoreOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateAttendanceInput = {
+  content: Scalars['String'];
+};
+
+export type CreateAttendanceOutput = {
+  __typename?: 'CreateAttendanceOutput';
+  attendance?: Maybe<Attendance>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateFeedbackInput = {
   content: Scalars['String'];
 };
 
 export type CreateFeedbackOutput = {
   __typename?: 'CreateFeedbackOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateFreeTrialRoleOutput = {
+  __typename?: 'CreateFreeTrialRoleOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -269,6 +295,16 @@ export type CreateVisitHistoryOutput = {
   ok: Scalars['Boolean'];
   todayViewCount?: Maybe<Scalars['Float']>;
   totalViewCount?: Maybe<Scalars['Float']>;
+};
+
+export type DeleteAttendanceInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteAttendanceOutput = {
+  __typename?: 'DeleteAttendanceOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type DeleteMockExamCategoryInput = {
@@ -645,6 +681,13 @@ export type GetMyPaymentsOutput = {
   payments?: Maybe<Array<Payment>>;
 };
 
+export type GetTodayAttendanceOutput = {
+  __typename?: 'GetTodayAttendanceOutput';
+  attendances?: Maybe<Array<Attendance>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -857,7 +900,9 @@ export type Mutation = {
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
   checkPassword: CheckPasswordOutput;
   checkUserRole: CheckUserRoleOutput;
+  createAttendance: CreateAttendanceOutput;
   createFeedback: CreateFeedbackOutput;
+  createFreeTrialRole: CreateFreeTrialRoleOutput;
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
   createMockExamHistory: CreateMockExamHistoryOutput;
@@ -876,6 +921,7 @@ export type Mutation = {
   createVisit: CoreOutput;
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
+  deleteAttendance: DeleteAttendanceOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
@@ -947,6 +993,11 @@ export type MutationCheckPasswordArgs = {
 
 export type MutationCheckUserRoleArgs = {
   input: CheckUserRoleInput;
+};
+
+
+export type MutationCreateAttendanceArgs = {
+  input: CreateAttendanceInput;
 };
 
 
@@ -1027,6 +1078,11 @@ export type MutationCreateQuestionCardCategoryArgs = {
 
 export type MutationCreateUserRoleArgs = {
   input: CreateUserRoleInput;
+};
+
+
+export type MutationDeleteAttendanceArgs = {
+  input: DeleteAttendanceInput;
 };
 
 
@@ -1374,6 +1430,7 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getMyPayments: GetMyPaymentsOutput;
+  getTodayAttendance: GetTodayAttendanceOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
@@ -2061,6 +2118,7 @@ export type UpdateQuestionCardOutput = {
 export type User = {
   __typename?: 'User';
   LoginType: LoginType;
+  attendances?: Maybe<Array<Attendance>>;
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
@@ -2088,6 +2146,7 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   updated_at: Scalars['DateTime'];
+  usedFreeTrial: Scalars['Boolean'];
   userRoles: Array<UserAndRole>;
   visit: Visit;
 };
@@ -2137,6 +2196,15 @@ export type Visit = {
   id: Scalars['Float'];
   updated_at: Scalars['DateTime'];
   user: User;
+};
+
+export type ZepMapUserCount = {
+  __typename?: 'ZepMapUserCount';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  mapId: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  userCount: Scalars['Float'];
 };
 
 export type ZepStudyTime = {

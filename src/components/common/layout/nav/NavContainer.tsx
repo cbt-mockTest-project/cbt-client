@@ -57,7 +57,7 @@ const NavContainer = () => {
       onClick: () => router.push('/me/bookmark'),
     },
     {
-      label: '프로필수정',
+      label: '프로필',
       onClick: () => router.push('/me/edit'),
     },
     {

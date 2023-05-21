@@ -131,6 +131,18 @@ const EditComponent: React.FC<EditComponentProps> = () => {
           onChange={onChangeNicknameValue}
           disabled={true}
         />
+        <Label content={'이용중인 플랜'} />
+        <Input
+          value={
+            user?.userRoles.some((role) => role.role.id === 1)
+              ? '베이직 플랜'
+              : user?.userRoles.some((role) => role.role.id === 3)
+              ? '무료 체험'
+              : '없음'
+          }
+          onChange={onChangeNicknameValue}
+          disabled={true}
+        />
         <Label content={'닉네임'} />
         <div className="edit-input-and-button-wrapper">
           <Input value={nickname} onChange={onChangeNicknameValue} />
