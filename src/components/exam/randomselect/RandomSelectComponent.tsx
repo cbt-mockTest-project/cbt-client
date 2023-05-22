@@ -100,10 +100,13 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const onChangeExam = (value: number[]) => {
     const savedRandomExamInfo = storage.get('randomExamInfo');
     if (value.includes(0)) {
-      setSelectedExams([0]);
+      const allTitleIds = titles
+        .map((title) => Number(title.value))
+        .filter((el) => el !== 0);
+      setSelectedExams(allTitleIds);
       storage.set('randomExamInfo', {
         ...savedRandomExamInfo,
-        selectedExams: [0],
+        selectedExams: allTitleIds,
       });
       return;
     }
