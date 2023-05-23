@@ -250,6 +250,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
             user: meQuery.me.user as User,
           })
         : false,
+      roleId: 3,
     },
     {
       title: '베이직 플랜',
@@ -262,6 +263,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         ? checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User })
         : false,
       onConfirm: handleBasicPlanPayment,
+      roleId: 1,
     },
   ];
   if (hasPremium) {
