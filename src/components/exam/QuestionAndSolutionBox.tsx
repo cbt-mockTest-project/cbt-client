@@ -21,6 +21,7 @@ interface QuestionAndSolutionBoxProps {
   setQuestion?: Dispatch<SetStateAction<ExamQuestionType | undefined>>;
   visible?: boolean;
   feedback?: boolean;
+  className?: string;
 }
 
 const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
@@ -29,11 +30,15 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   feedback,
   question,
   setQuestion,
+  className = '',
 }) => {
   if (!visible) return null;
   const hasImage = content.img && content.img.length >= 1;
   return (
-    <QuestionAndSolutionBoxContainer hasImage={hasImage ? 'true' : 'false'}>
+    <QuestionAndSolutionBoxContainer
+      className={className}
+      hasImage={hasImage ? 'true' : 'false'}
+    >
       <BasicBox minHeight={72} className="question-and-solution-box">
         {feedback && question && (
           <ExamSolutionFeedback

@@ -75,6 +75,10 @@ export const READ_QUESTION = gql`
         mockExam {
           title
         }
+        question_video {
+          url
+          size
+        }
         question_img {
           url
           name

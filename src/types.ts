@@ -289,6 +289,17 @@ export type CreateUserRoleOutput = {
   roleId?: Maybe<Scalars['Float']>;
 };
 
+export type CreateVideoInput = {
+  size: Scalars['Float'];
+  url: Scalars['String'];
+};
+
+export type CreateVideoOutput = {
+  __typename?: 'CreateVideoOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateVisitHistoryOutput = {
   __typename?: 'CreateVisitHistoryOutput';
   error?: Maybe<Scalars['String']>;
@@ -797,6 +808,7 @@ export type MockExamQuestion = {
   number: Scalars['Float'];
   question: Scalars['String'];
   question_img?: Maybe<Array<MockExamImageType>>;
+  question_video?: Maybe<Array<MockExamVideoType>>;
   solution?: Maybe<Scalars['String']>;
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
@@ -893,6 +905,12 @@ export type MockExamQuestionState = {
   user: User;
 };
 
+export type MockExamVideoType = {
+  __typename?: 'MockExamVideoType';
+  size: Scalars['Float'];
+  url: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   changeClientRole: CoreOutput;
@@ -918,6 +936,7 @@ export type Mutation = {
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
   createUserRole: CreateUserRoleOutput;
+  createVideo: CreateVideoOutput;
   createVisit: CoreOutput;
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
@@ -960,6 +979,7 @@ export type Mutation = {
   sendFindPasswordMail: SendFindPasswordMailOutput;
   sendMessageToAlramChannelOfTelegram: SendMessageToAlramChannelOfTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
+  syncRole: CoreOutput;
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
@@ -1078,6 +1098,11 @@ export type MutationCreateQuestionCardCategoryArgs = {
 
 export type MutationCreateUserRoleArgs = {
   input: CreateUserRoleInput;
+};
+
+
+export type MutationCreateVideoArgs = {
+  input: CreateVideoInput;
 };
 
 
