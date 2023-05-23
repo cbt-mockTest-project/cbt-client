@@ -692,6 +692,17 @@ export type GetMyPaymentsOutput = {
   payments?: Maybe<Array<Payment>>;
 };
 
+export type GetRoleCountInput = {
+  roleId: Scalars['Float'];
+};
+
+export type GetRoleCountOutput = {
+  __typename?: 'GetRoleCountOutput';
+  count?: Maybe<Scalars['Float']>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetTodayAttendanceOutput = {
   __typename?: 'GetTodayAttendanceOutput';
   attendances?: Maybe<Array<Attendance>>;
@@ -1455,6 +1466,7 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getMyPayments: GetMyPaymentsOutput;
+  getRoleCount: GetRoleCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
@@ -1504,6 +1516,11 @@ export type QueryGetFeedbacksByRecommendationCountArgs = {
 
 export type QueryGetFeedbacksWithFilterArgs = {
   input: GetFeedbacksWithFilterInput;
+};
+
+
+export type QueryGetRoleCountArgs = {
+  input: GetRoleCountInput;
 };
 
 

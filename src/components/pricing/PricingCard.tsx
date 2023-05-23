@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -8,6 +8,8 @@ import { makeMoneyString } from '@lib/utils/utils';
 import Portal from '@components/common/portal/Portal';
 import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
 import useToggle from '@lib/hooks/useToggle';
+import { useLazyGetRoleCount } from '@lib/graphql/user/hook/useUser';
+import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
 const PricingCardBlock = styled.div`
   .pricing-card-title {
@@ -95,6 +97,12 @@ const PricingCardBlock = styled.div`
     color: ${palette.red_500};
     font-weight: bold;
   }
+  .pricing-card-price-user-count {
+    color: ${palette.blue_500};
+    font-size: 14px;
+    vertical-align: text-bottom;
+    position: relative;
+  }
 `;
 
 export interface PricingCardProps {
@@ -110,6 +118,7 @@ export interface PricingCardProps {
   isTempText?: string;
   confirmDisabled?: boolean;
   isFreeTrial?: boolean;
+  roleId?: number;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -122,13 +131,20 @@ const PricingCard: React.FC<PricingCardProps> = ({
   hasBeforePaymentModal,
   confirmDisabled,
   beforeDiscountPrice,
+  roleId,
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
 }) => {
+  const [getRoleCount, { data: roleCountQuery }] = useLazyGetRoleCount();
   const {
     value: paymentNoticeModalState,
     onToggle: onTogglePaymentNoticeModal,
   } = useToggle(false);
+  useEffect(() => {
+    if (roleId) {
+      getRoleCount({ variables: { input: { roleId } } });
+    }
+  }, []);
 
   return (
     <PricingCardBlock>
@@ -160,6 +176,15 @@ const PricingCard: React.FC<PricingCardProps> = ({
             </span>
             <span className="pricing-card-price-label">원</span>
           </p>
+          {roleCountQuery?.getRoleCount.count ? (
+            <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRoleCount.count}명 이용중!! `}</div>
+          ) : (
+            <SkeletonBox
+              className="pricing-card-price-user-count"
+              width="110px"
+              height="20px"
+            />
+          )}
           <Button
             className="pricing-button"
             type="primary"

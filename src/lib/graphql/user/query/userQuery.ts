@@ -207,3 +207,13 @@ export const CREATE_FREE_TRIAL = gql`
     }
   }
 `;
+
+export const GET_ROLE_COUNT = gql`
+  query GetRoleCount($input: GetRoleCountInput!) {
+    getRoleCount(input: $input) {
+      count
+      error
+      ok
+    }
+  }
+`;

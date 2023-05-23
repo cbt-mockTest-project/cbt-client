@@ -128,6 +128,13 @@ export type CreateFreeTrialRoleMutationVariables = Types.Exact<{ [key: string]: 
 
 export type CreateFreeTrialRoleMutation = { __typename?: 'Mutation', createFreeTrialRole: { __typename?: 'CreateFreeTrialRoleOutput', error?: string | null, ok: boolean } };
 
+export type GetRoleCountQueryVariables = Types.Exact<{
+  input: Types.GetRoleCountInput;
+}>;
+
+
+export type GetRoleCountQuery = { __typename?: 'Query', getRoleCount: { __typename?: 'GetRoleCountOutput', count?: number | null, error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -392,4 +399,17 @@ export const CreateFreeTrialRoleDocument = gql`
 
 export function useCreateFreeTrialRoleMutation() {
   return Urql.useMutation<CreateFreeTrialRoleMutation, CreateFreeTrialRoleMutationVariables>(CreateFreeTrialRoleDocument);
+};
+export const GetRoleCountDocument = gql`
+    query GetRoleCount($input: GetRoleCountInput!) {
+  getRoleCount(input: $input) {
+    count
+    error
+    ok
+  }
+}
+    `;
+
+export function useGetRoleCountQuery(options: Omit<Urql.UseQueryArgs<GetRoleCountQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetRoleCountQuery, GetRoleCountQueryVariables>({ query: GetRoleCountDocument, ...options });
 };

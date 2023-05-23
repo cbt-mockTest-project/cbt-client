@@ -10,6 +10,7 @@ import {
   DELETE_USER_ROLE,
   EDIT_PROFILE_MUTATION,
   EMAIL_VERIFICATION_MUTATION,
+  GET_ROLE_COUNT,
   KAKAO_LOGIN,
   LOGIN_MUTATION,
   LOGOUT_MUTATION,
@@ -41,6 +42,8 @@ import {
   EditProfileMutationVariables,
   EmailVerificationMutation,
   EmailVerificationMutationVariables,
+  GetRoleCountQuery,
+  GetRoleCountQueryVariables,
   KakaoLoginMutation,
   KakaoLoginMutationVariables,
   LoginMutation,
@@ -154,3 +157,6 @@ export const useCreateFreeTrial = () =>
     CreateFreeTrialRoleMutation,
     CreateFreeTrialRoleMutationVariables
   >(CREATE_FREE_TRIAL);
+
+export const useLazyGetRoleCount = () =>
+  useLazyQuery<GetRoleCountQuery, GetRoleCountQueryVariables>(GET_ROLE_COUNT);
