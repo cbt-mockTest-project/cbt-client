@@ -1,3 +1,4 @@
+import { isServer } from '@lib/utils/utils';
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 import React, { useEffect, useRef } from 'react';
@@ -45,23 +46,24 @@ const PlyrPlayer: React.FC<PlyrPlayerProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || isServer()) return;
+    const isMobile = window.innerWidth <= 1024;
+    const commonControls = [
+      'play-large',
+      'play',
+      'progress',
+      'current-time',
+      'mute',
+      'captions',
+      'settings',
+      'pip',
+      'airplay',
+      'fullscreen',
+      'restart',
+      'quality',
+    ];
     const player = new Plyr(videoRef.current, {
-      controls: [
-        'play-large',
-        'play',
-        'progress',
-        'current-time',
-        'mute',
-        'volume',
-        'captions',
-        'settings',
-        'pip',
-        'airplay',
-        'fullscreen',
-        'restart',
-        'quality',
-      ],
+      controls: isMobile ? commonControls : [...commonControls, 'volume'],
     });
     player.source = {
       type: 'video',
