@@ -46,6 +46,10 @@ export const FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT = gql`
     solution_img {
       url
     }
+    question_video {
+      url
+      size
+    }
     state {
       state
       exam {

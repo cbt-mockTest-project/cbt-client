@@ -43,6 +43,11 @@ import MovePannel from './MovePannel';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { ExamQuestionType } from './solution/ExamSolutionList';
+import dynamic from 'next/dynamic';
+
+const PlyrPlayer = dynamic(() => import('@components/player/PlyrPlayer'), {
+  ssr: false,
+});
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -440,15 +445,32 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
           )}
         </div>
         <div ref={scrollRef} />
-        <QuestionAndSolutionBox
-          content={{
-            content: questionAndSolution
-              ? `${questionAndSolution.question}`
-              : '',
-            img: questionAndSolution?.question_img,
-            title: String(examTitle || ''),
-          }}
-        />
+        <div className="exam-question-and-video-wrapper">
+          <QuestionAndSolutionBox
+            className="exam-question-and-video-content"
+            content={{
+              content: questionAndSolution
+                ? `${questionAndSolution.question}`
+                : '',
+              img: questionAndSolution?.question_img,
+              title: String(examTitle || ''),
+            }}
+          />
+          {questionAndSolution?.question_video &&
+            questionAndSolution?.question_video?.length >= 1 && (
+              <div className="exam-question-and-video-content">
+                <PlyrPlayer
+                  sources={questionAndSolution.question_video.map((video) => ({
+                    src: video.url,
+                    size: video.size,
+                  }))}
+                  prevPlayTime={0}
+                  defaultQulity={720}
+                />
+              </div>
+            )}
+        </div>
+
         <div className="exam-solution-write-label-wrapper">
           <Label content="답 작성" />
           <button
@@ -725,12 +747,25 @@ const ExamContainer = styled.div<ExamContainerProps>`
       }
     }
   }
+  .exam-question-and-video-wrapper {
+    display: flex;
+    gap: 30px;
+  }
+  .exam-question-and-video-content {
+    width: 100%;
+    .question-and-solution-box {
+      max-height: none;
+    }
+  }
 
   pre {
     white-space: pre-wrap;
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
+    .exam-question-and-video-wrapper {
+      flex-direction: column;
+    }
     .exam-question-menubar-wrapper {
       margin-top: 20px;
       display: flex;
