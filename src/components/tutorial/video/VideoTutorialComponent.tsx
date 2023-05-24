@@ -36,71 +36,78 @@ const VideoTutorialComponent: React.FC<VideoTutorialComponentProps> = () => {
   const remainingSeconds = seconds % 60;
   return (
     <VideoTutorialComponentBlock>
-      <div className="video-tutorial-top">
-        <div className="video-tutorial-logo">모두CBT</div>
-        <div className="video-tutorial-info">
-          <div className="video-tutorial-info-category">
-            종목 : 산업안전기사
+      <div className="video-tutorial-pc">
+        <div className="video-tutorial-top">
+          <div className="video-tutorial-logo">모두CBT</div>
+          <div className="video-tutorial-info">
+            <div className="video-tutorial-info-category">
+              종목 : 산업안전기사
+            </div>
+            <div className="video-tutorial-info-right">
+              <div className="video-tutorial-info-date">
+                시험일 : 2023-06-23
+              </div>
+              <div className="video-tutorial-info-code">비번호 : A001</div>
+              <div className="video-tutorial-info-code">PC번호 : 1</div>
+            </div>
           </div>
-          <div className="video-tutorial-info-right">
-            <div className="video-tutorial-info-date">시험일 : 2023-06-23</div>
-            <div className="video-tutorial-info-code">비번호 : A001</div>
-            <div className="video-tutorial-info-code">PC번호 : 1</div>
+          <div className="video-tutorial-time">{`남은시간 : ${minutes
+            .toString()
+            .padStart(2, '0')}분 ${remainingSeconds
+            .toString()
+            .padStart(2, '0')}초`}</div>
+        </div>
+        <div className="video-tutorial-body">
+          <div className="video-tutorial-body-left">
+            <div className="video-tutorial-body-left-top">
+              <pre className="video-tutorial-body-left-top-question-number">
+                {`문제\n1번`}
+              </pre>
+              <pre className="video-tutorial-body-left-top-question-score">
+                {`배점\n30점`}
+              </pre>
+            </div>
+            <div className="video-tutorial-body-left-content">
+              다음 영상을 보고 건설용 리프트 방호장치 3가지를 쓰시오.
+            </div>
+          </div>
+          <div className="video-tutorial-body-right">
+            <div className="video-tutorial-body-right-top">
+              <PlyrPlayer sources={videoSource} />
+            </div>
+            <div className="video-tutorial-body-right-bottom">
+              <div className="video-tutorial-body-right-bottom-question-number-list">
+                <div className="video-tutorial-body-right-bottom-question-number active">
+                  1번
+                </div>
+                <div className="video-tutorial-body-right-bottom-question-number">
+                  2번
+                </div>
+              </div>
+              <div className="video-tutorial-body-right-bottom-move-button-wrapper">
+                <button className="video-tutorial-body-right-bottom-move-button prev disabled">
+                  <span className="video-tutorial-body-right-bottom-move-button-icon prev disabled">
+                    ◀
+                  </span>
+                  {'  '}
+                  이전
+                </button>
+                <button className="video-tutorial-body-right-bottom-move-button next">
+                  다음{'  '}
+                  <span className="video-tutorial-body-right-bottom-move-button-icon next">
+                    ▶
+                  </span>
+                </button>
+              </div>
+              <div className="video-tutorial-body-right-bottom-finish-button-wrapper">
+                <button>모의테스트 종료</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="video-tutorial-time">{`남은시간 : ${minutes
-          .toString()
-          .padStart(2, '0')}분 ${remainingSeconds
-          .toString()
-          .padStart(2, '0')}초`}</div>
       </div>
-      <div className="video-tutorial-body">
-        <div className="video-tutorial-body-left">
-          <div className="video-tutorial-body-left-top">
-            <pre className="video-tutorial-body-left-top-question-number">
-              {`문제\n1번`}
-            </pre>
-            <pre className="video-tutorial-body-left-top-question-score">
-              {`배점\n30점`}
-            </pre>
-          </div>
-          <div className="video-tutorial-body-left-content">
-            다음 영상을 보고 건설용 리프트 방호장치 3가지를 쓰시오.
-          </div>
-        </div>
-        <div className="video-tutorial-body-right">
-          <div className="video-tutorial-body-right-top">
-            <PlyrPlayer sources={videoSource} />
-          </div>
-          <div className="video-tutorial-body-right-bottom">
-            <div className="video-tutorial-body-right-bottom-question-number-list">
-              <div className="video-tutorial-body-right-bottom-question-number active">
-                1번
-              </div>
-              <div className="video-tutorial-body-right-bottom-question-number">
-                2번
-              </div>
-            </div>
-            <div className="video-tutorial-body-right-bottom-move-button-wrapper">
-              <button className="video-tutorial-body-right-bottom-move-button prev disabled">
-                <span className="video-tutorial-body-right-bottom-move-button-icon prev disabled">
-                  ◀
-                </span>
-                {'  '}
-                이전
-              </button>
-              <button className="video-tutorial-body-right-bottom-move-button next">
-                다음{'  '}
-                <span className="video-tutorial-body-right-bottom-move-button-icon next">
-                  ▶
-                </span>
-              </button>
-            </div>
-            <div className="video-tutorial-body-right-bottom-finish-button-wrapper">
-              <button>모의테스트 종료</button>
-            </div>
-          </div>
-        </div>
+      <div className="video-tutorial-mobile">
+        <pre className="video-tutorial-mobile-desc">{`실제 시험과 동일한 환경을 위해\n창크기를 1024px 이상으로\n유지해주세요.`}</pre>
       </div>
     </VideoTutorialComponentBlock>
   );
@@ -250,5 +257,25 @@ const VideoTutorialComponentBlock = styled.div`
   }
   .video-tutorial-body-right-bottom-move-button-icon.next {
     left: 10px;
+  }
+  .video-tutorial-mobile {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    .video-tutorial-pc {
+      display: none;
+    }
+    .video-tutorial-mobile {
+      display: flex;
+      height: calc(100vh - 300px);
+      justify-content: center;
+      align-items: center;
+    }
+    .video-tutorial-mobile-desc {
+      font-size: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
   }
 `;
