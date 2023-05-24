@@ -19,7 +19,7 @@ import CoreContainer from '@components/common/core/CoreContainer';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
-import { someIncludes } from '@lib/utils/utils';
+import { isServer, someIncludes } from '@lib/utils/utils';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -35,6 +35,16 @@ export default function App({ Component, pageProps }: AppProps<any>) {
             (window as any).adsbygoogle || []).push({});
         } catch (e) {}
       }
+    }
+    if (
+      !isServer() &&
+      window.innerWidth < 720 &&
+      !router.asPath.startsWith('/pricing')
+    ) {
+      const links = document.querySelectorAll('a[target="_blank"]');
+      links.forEach((link) => {
+        link.removeAttribute('target');
+      });
     }
   }, [router.asPath]);
 
