@@ -36,18 +36,39 @@ export default function App({ Component, pageProps }: AppProps<any>) {
         } catch (e) {}
       }
     }
-    // if (
-    //   !isServer() &&
-    //   window.innerWidth < 720 &&
-    //   !router.asPath.startsWith('/pricing')
-    // ) {
-
-    //   const links = document.querySelectorAll('a[target="_blank"]');
-    //   links.forEach((link) => {
-    //     link.removeAttribute('target');
-    //   });
-    // }
   }, [router.asPath]);
+
+  // 모바일 앱에서, target="_blank"인 링크를 클릭하면 웹뷰에서 열리도록 합니다.
+  useEffect(() => {
+    const excludePath = ['/pricing'];
+    if (
+      isServer() ||
+      window.innerWidth > 720 ||
+      excludePath.some((path) => router.asPath.startsWith(path))
+    ) {
+      return;
+    }
+    console.log('진입');
+    const handleClick = (event: any) => {
+      let el = event.target;
+      // 이벤트가 발생한 요소가 <a>가 아닌 경우 가장 가까운 <a>를 찾습니다.
+      while (el && el.tagName !== 'A') {
+        el = el.parentElement;
+      }
+      // <a> 요소를 찾지 못한 경우는 무시합니다.
+      if (!el) return;
+      if (el.tagName === 'A' && el.getAttribute('target') === '_blank') {
+        event.preventDefault();
+        router.push(el.getAttribute('href'));
+      }
+    };
+    window.addEventListener('click', handleClick);
+
+    // Clean up
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, [router]);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
