@@ -10,11 +10,13 @@ import IosAppGuideModal from '@components/common/modal/IosAppGuideModal';
 import useToggle from '@lib/hooks/useToggle';
 import palette from '@styles/palette';
 import AdBannerInfoModal from '@components/common/modal/AdBannerInfoModal';
+import Link from 'next/link';
 
 const MainBanner = () => {
   const { value: adBannerInfoModalState, onToggle: onToggleAdBannerInfoModal } =
     useToggle();
   const isIosAndMobile = isIOS && window.innerWidth < 720;
+  const isMobile = window.innerWidth < 720;
   const { value: appGuideModalState, onToggle: onToggleAppGuideModal } =
     useToggle();
   return (
@@ -35,9 +37,19 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
-          <a href="https://zep.us/play/D6XVOK" target="_blank" rel="noreferrer">
-            <div className="home-main-banner-box zep" />
-          </a>
+          {isMobile ? (
+            <Link href="https://zep.us/play/D6XVOK">
+              <div className="home-main-banner-box zep" />
+            </Link>
+          ) : (
+            <a
+              href="https://zep.us/play/D6XVOK"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div className="home-main-banner-box zep" />
+            </a>
+          )}
         </SwiperSlide>
         <SwiperSlide>
           {isIosAndMobile ? (
@@ -62,13 +74,21 @@ const MainBanner = () => {
               </Portal>
             </div>
           ) : (
-            <a
-              href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="home-main-banner-box playstore" />
-            </a>
+            <>
+              {isMobile ? (
+                <Link href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1">
+                  <div className="home-main-banner-box playstore" />
+                </Link>
+              ) : (
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <div className="home-main-banner-box playstore" />
+                </a>
+              )}
+            </>
           )}
         </SwiperSlide>
       </Swiper>
