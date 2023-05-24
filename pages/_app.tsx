@@ -36,16 +36,17 @@ export default function App({ Component, pageProps }: AppProps<any>) {
         } catch (e) {}
       }
     }
-    if (
-      !isServer() &&
-      window.innerWidth < 720 &&
-      !router.asPath.startsWith('/pricing')
-    ) {
-      const links = document.querySelectorAll('a[target="_blank"]');
-      links.forEach((link) => {
-        link.removeAttribute('target');
-      });
-    }
+    // if (
+    //   !isServer() &&
+    //   window.innerWidth < 720 &&
+    //   !router.asPath.startsWith('/pricing')
+    // ) {
+
+    //   const links = document.querySelectorAll('a[target="_blank"]');
+    //   links.forEach((link) => {
+    //     link.removeAttribute('target');
+    //   });
+    // }
   }, [router.asPath]);
 
   useEffect(() => {
