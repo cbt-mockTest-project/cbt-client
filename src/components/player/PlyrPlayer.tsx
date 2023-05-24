@@ -1,13 +1,16 @@
 import { isServer } from '@lib/utils/utils';
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
-import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
 
-interface PlyrPlayerBlockProps extends Pick<PlyrPlayerProps, 'width'> {}
+interface PlyrPlayerBlockProps extends Pick<PlyrPlayerProps, 'width'> {
+  customButtonVisible: boolean;
+}
 
 const PlyrPlayerBlock = styled.div<PlyrPlayerBlockProps>`
   width: ${({ width }) => (typeof width === 'number' ? `${width}px` : width)};
+  position: relative;
   video {
     width: 100%;
     aspect-ratio: 3 / 2;
@@ -23,6 +26,29 @@ const PlyrPlayerBlock = styled.div<PlyrPlayerBlockProps>`
       fill: white;
     }
   }
+  .plyr__control.custom-button {
+    position: absolute;
+    right: 11px; /* 원하는 위치로 조정 */
+    bottom: 10px;
+    width: 32px;
+    height: 32px;
+    z-index: 999;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+    ${(props) =>
+      !props.customButtonVisible &&
+      css`
+        opacity: 0;
+      `}
+  }
+  .plyr__controls__item.plyr__control:last-child {
+    visibility: hidden;
+  }
+`;
+const CustomButton = styled.button`
+  position: absolute;
+  right: 50px; /* 원하는 위치로 조정 */
+  top: 50px; /* 원하는 위치로 조정 */
 `;
 
 export interface VideoSource {
@@ -44,10 +70,10 @@ const PlyrPlayer: React.FC<PlyrPlayerProps> = ({
   sources,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-
+  const [customButtonVisible, setCustomeButtonVisible] = useState(false);
+  const savedTime = useRef<number>(0);
   useEffect(() => {
     if (!videoRef.current || isServer()) return;
-    const isMobile = window.innerWidth <= 1024;
     const commonControls = [
       'play-large',
       'play',
@@ -56,19 +82,19 @@ const PlyrPlayer: React.FC<PlyrPlayerProps> = ({
       'mute',
       'captions',
       'settings',
-      'pip',
       'airplay',
       'fullscreen',
-      'restart',
       'quality',
+      'custom-button',
     ];
     const player = new Plyr(videoRef.current, {
-      controls: isMobile ? commonControls : [...commonControls, 'volume'],
+      controls: commonControls,
     });
     player.source = {
       type: 'video',
       sources,
     };
+    player.volume = 0;
 
     const handleKeydown = (e: KeyboardEvent) => {
       switch (e.key) {
@@ -87,21 +113,58 @@ const PlyrPlayer: React.FC<PlyrPlayerProps> = ({
       }
     };
     window.addEventListener('keydown', handleKeydown);
-    let savedTime = 0;
     player.on('ready', () => {
       player.quality = defaultQulity;
     });
     player.on('loadeddata', () => {
-      player.currentTime = savedTime || prevPlayTime;
+      player.currentTime = savedTime.current || prevPlayTime;
     });
     player.on('timeupdate', () => {
-      savedTime = player.currentTime;
+      savedTime.current = player.currentTime;
     });
+    player.on('controlsshown', () => {
+      setCustomeButtonVisible(true);
+    });
+    player.on('controlshidden', () => {
+      setCustomeButtonVisible(false);
+    });
+
+    const handleCustomButtonClick = (e: Event) => {
+      player.pause();
+      window.open(
+        `/tutorial/video/popup?time=${savedTime.current}`,
+        '_blank',
+        'toolbar=no,status=no,menubar=no,resizable=yes, location=no, top=100,left=100,width=480,height=270,scrollbars=true'
+      );
+    };
+    // 커스텀 버튼 클릭 이벤트 리스너 추가
+    const customButton = document.querySelector('.custom-button');
+    customButton?.addEventListener('click', handleCustomButtonClick);
+    return () => {
+      // 커스텀 버튼 클릭 이벤트 리스너 제거
+      customButton?.removeEventListener('click', handleCustomButtonClick);
+    };
   }, [sources]);
 
+  useEffect(() => {
+    console.log(savedTime.current);
+  }, [savedTime]);
+
   return (
-    <PlyrPlayerBlock width={width}>
+    <PlyrPlayerBlock width={width} customButtonVisible={customButtonVisible}>
       <video ref={videoRef} autoPlay playsInline controls />
+      <div className="plyr__controls">
+        {/* 커스텀 버튼 */}
+        <button type="button" className="plyr__control custom-button">
+          <svg
+            className="icon--not-pressed"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <use href="#plyr-enter-fullscreen"></use>
+          </svg>
+        </button>
+      </div>
     </PlyrPlayerBlock>
   );
 };
