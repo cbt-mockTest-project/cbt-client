@@ -137,7 +137,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
             user?.userRoles.some((role) => role.role.id === 2)
               ? '산안기 프리패스'
               : user?.userRoles.some((role) => role.role.id === 1)
-              ? '무료 체험베이직 플랜'
+              ? '베이직 플랜'
               : user?.userRoles.some((role) => role.role.id === 3)
               ? '무료 체험'
               : '없음'
