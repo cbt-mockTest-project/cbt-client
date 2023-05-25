@@ -105,7 +105,7 @@ const useBootpay = () => {
           executeRollback();
           if (e.payload.code === 'INVALID_UNREGISTERED_SUBMALL') {
             message.error(
-              '결제에 실패했습니다.\n현재는 카카오페이와, 토스페이, 신한, 국민 이용가능합니다.'
+              '결제에 실패했습니다.\n현재는 카카오페이, 토스페이, 신한, 국민 이용가능합니다.'
             );
             break;
           }
