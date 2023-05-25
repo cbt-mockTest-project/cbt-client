@@ -1,6 +1,6 @@
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useCreateVisit } from '@lib/graphql/user/hook/useVisit';
-import { checkUserRole, handleError } from '@lib/utils/utils';
+import { checkRole, handleError } from '@lib/utils/utils';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
@@ -16,8 +16,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
 
   useEffect(() => {
     if (
-      meQuery?.me.user &&
-      checkUserRole({ roleIds: [1, 2, 3], user: meQuery.me.user as User }) &&
+      checkRole({ roleIds: [1, 2, 3], meQuery }) &&
       typeof window !== 'undefined'
     ) {
       try {

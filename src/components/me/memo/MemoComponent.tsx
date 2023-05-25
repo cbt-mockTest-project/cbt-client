@@ -24,7 +24,11 @@ import { handleError } from '@lib/utils/utils';
 import ConfirmModal from '@components/common/modal/ConfirmModal';
 import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
 
-export type OnDownloadPdfArgs = { hasSolution: boolean };
+export type OnDownloadPdfArgs = {
+  hasSolution: boolean;
+  pdfMake: any;
+  pdfFonts: any;
+};
 
 interface MemoComponentProps {}
 
@@ -151,7 +155,11 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
     setQuestionCards(shuffle);
   };
 
-  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
+  const onDownloadPdf = async ({
+    hasSolution,
+    pdfFonts,
+    pdfMake,
+  }: OnDownloadPdfArgs) => {
     try {
       setPdfDownloadLoading(true);
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -306,11 +314,11 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
           <PdfDownloadSelectModal
             open={pdfDownloadConfirmModalState}
             onClose={onTogglePdfDownloadConfirmModalState}
-            onCancel={() => {
-              onDownloadPdf({ hasSolution: false });
+            onCancel={({ pdfMake, pdfFonts }) => {
+              onDownloadPdf({ hasSolution: false, pdfMake, pdfFonts });
             }}
-            onConfirm={() => {
-              onDownloadPdf({ hasSolution: true });
+            onConfirm={({ pdfMake, pdfFonts }) => {
+              onDownloadPdf({ hasSolution: true, pdfMake, pdfFonts });
             }}
             confirmButtonLoading={pdfDownloadLoading}
             cancelButtonLoading={pdfDownloadLoading}

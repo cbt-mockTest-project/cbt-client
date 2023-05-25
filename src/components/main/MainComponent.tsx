@@ -15,7 +15,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
-import { checkAdblock, checkUserRole } from '@lib/utils/utils';
+import { checkAdblock, checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import { Option } from 'antd/lib/mentions';
@@ -53,10 +53,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
   const isNotAllowAdBlock = useMemo(
-    () =>
-      checkAdblock() &&
-      meQuery?.me.user &&
-      !checkUserRole({ roleIds: [1, 2, 3], user: meQuery.me.user as User }),
+    () => checkAdblock() && !checkRole({ roleIds: [1, 2, 3], meQuery }),
     [meQuery]
   );
 

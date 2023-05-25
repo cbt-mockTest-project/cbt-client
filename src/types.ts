@@ -773,6 +773,7 @@ export type MockExamCategory = {
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
+  roles: Array<Role>;
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
   user: User;
@@ -1674,7 +1675,7 @@ export enum QuestionState {
 }
 
 export type ReadAllMockExamCategoriesInput = {
-  all?: InputMaybe<Scalars['Boolean']>;
+  roleIds?: InputMaybe<Array<Scalars['Float']>>;
   type?: InputMaybe<MockExamCategoryTypes>;
 };
 
@@ -2009,6 +2010,7 @@ export type Role = {
   __typename?: 'Role';
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  mockExamCategories: Array<MockExamCategory>;
   name: Scalars['String'];
   updated_at: Scalars['DateTime'];
   userRoles: Array<UserAndRole>;
