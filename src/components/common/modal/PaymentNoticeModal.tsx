@@ -49,7 +49,10 @@ const PaymentNoticeModal: React.FC<PaymentNoticeModalProps> = ({
         <h3>결제 주의사항</h3>
         <ul>
           <li>
-            현재 <b>카카오페이</b>, <b>토스페이</b>만 이용가능합니다!
+            카드사 승인대기중에 있어, 현재는 아래 카드사만 이용가능합니다.
+          </li>
+          <li>
+            <b>카카오페이</b>, <b>토스페이</b>, <b>국민</b>, <b>신한</b>
           </li>
           <li>
             어플 이용시, <b>최신버전</b>으로 업데이트 후 이용해주세요.
