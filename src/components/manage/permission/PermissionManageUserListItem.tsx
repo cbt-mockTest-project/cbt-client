@@ -4,7 +4,7 @@ import {
   useUpdateAdblockPermission,
 } from '@lib/graphql/user/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
-import { checkUserRole, handleError } from '@lib/utils/utils';
+import { checkRole, handleError } from '@lib/utils/utils';
 import { Checkbox, message } from 'antd';
 import { create } from 'lodash';
 import React, { useState } from 'react';
@@ -64,7 +64,7 @@ const PermissionManageUserListItem: React.FC<
 > = ({ user }) => {
   const [createUserRole] = useCreateUserRole();
   const [isAllowAdblock, setIsAllowAdblock] = useState(
-    checkUserRole({ roleIds: [1, 2, 3], user })
+    checkRole({ roleIds: [1, 2, 3], user })
   );
   const handleAllowAdblock = async () => {
     try {

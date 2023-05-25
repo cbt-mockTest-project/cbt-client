@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { CrownTwoTone, UserOutlined } from '@ant-design/icons';
 import { NavViewProps } from './Nav.interface';
 import { User, UserRole } from 'types';
-import { checkUserRole } from '@lib/utils/utils';
+import { checkRole } from '@lib/utils/utils';
 
 interface NavDrawerProps
   extends Pick<
@@ -36,9 +36,9 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
           <>
             <div className="mobile-nav-user-content">
               <span className="mobile-nav-user-content-profile-image">
-                {checkUserRole({
+                {checkRole({
                   roleIds: [1, 2, 3],
-                  user: props.meQuery.me.user as User,
+                  meQuery: props.meQuery,
                 }) && (
                   <CrownTwoTone
                     className="nav-user-content-profile-crown"

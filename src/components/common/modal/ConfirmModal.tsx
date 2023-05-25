@@ -7,8 +7,8 @@ type ContentType = string | JSX.Element;
 export interface ConfirmModalProps
   extends Pick<ModalProps, 'open' | 'onClose'> {
   content: ContentType;
-  onConfirm: () => void;
-  onCancel: () => void;
+  onConfirm: ({ ...args }?: any) => void;
+  onCancel: ({ ...args }?: any) => void;
   confirmLabel?: string;
   cancelLabel?: string;
   className?: string;

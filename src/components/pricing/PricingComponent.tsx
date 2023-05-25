@@ -15,7 +15,7 @@ import {
 import { message } from 'antd';
 import { User, UserRole } from 'types';
 import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
-import { checkUserRole } from '@lib/utils/utils';
+import { checkRole } from '@lib/utils/utils';
 import shortid from 'shortid';
 import palette from '@styles/palette';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
@@ -115,9 +115,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       openLoginModal();
       return;
     }
-    if (
-      checkUserRole({ roleIds: checkRoleIds, user: meQuery.me.user as User })
-    ) {
+    if (checkRole({ roleIds: checkRoleIds, meQuery })) {
       message.error('이미 해당 서비스를 이용중입니다.');
       return;
     }
@@ -245,9 +243,9 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       disabledLabel: '무료체험 이용완료',
       confirmDisabled: meQuery?.me.user
         ? meQuery.me.user.usedFreeTrial ||
-          checkUserRole({
+          checkRole({
             roleIds: [1, 2, 3],
-            user: meQuery.me.user as User,
+            meQuery,
           })
         : false,
       roleId: 3,
@@ -257,10 +255,14 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       intro: '커피 한 잔 값으로, 학습효율을 높여보세요!',
       price: 5000,
       beforeDiscountPrice: 9900,
-      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+      benefits: [
+        '광고제거',
+        '랜덤모의고사 무제한 제공',
+        '해설모드 출력 기능 제공',
+      ],
       hasBeforePaymentModal: !hasPremium,
       confirmDisabled: meQuery?.me.user
-        ? checkUserRole({ roleIds: [1, 2], user: meQuery.me.user as User })
+        ? checkRole({ roleIds: [1, 2], meQuery })
         : false,
       onConfirm: handleBasicPlanPayment,
       roleId: 1,

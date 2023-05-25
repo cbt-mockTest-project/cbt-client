@@ -23,7 +23,7 @@ import { QuestionState, User, UserRole } from 'types';
 import { Categories } from '../../../../pages/exam/randomselect';
 import { useDispatch } from 'react-redux';
 import { coreActions } from '@modules/redux/slices/core';
-import { checkUserRole } from '@lib/utils/utils';
+import { checkRole } from '@lib/utils/utils';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -126,10 +126,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       openLoginModal();
       return;
     }
-    if (
-      meQuery?.me.user &&
-      !checkUserRole({ roleIds: [1, 2, 3], user: meQuery.me.user as User })
-    ) {
+    if (!checkRole({ roleIds: [1, 2, 3], meQuery })) {
       router.push('/pricing/basic');
       return;
     }

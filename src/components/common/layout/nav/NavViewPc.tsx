@@ -13,7 +13,7 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { User, UserRole } from 'types';
 import { NAV_ITEMS } from './Nav.constants';
-import { checkUserRole } from '@lib/utils/utils';
+import { checkRole } from '@lib/utils/utils';
 
 interface NavViewPcProps extends NavViewProps {}
 
@@ -66,9 +66,9 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
               onClick={props.onToggleProfileDropBox}
             >
               <span className="nav-user-content-profile-image">
-                {checkUserRole({
+                {checkRole({
                   roleIds: [1, 2, 3],
-                  user: props.meQuery.me.user as User,
+                  meQuery: props.meQuery,
                 }) && (
                   <CrownTwoTone
                     className="nav-user-content-profile-crown"

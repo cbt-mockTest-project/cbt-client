@@ -48,7 +48,6 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     ) {
       return;
     }
-    console.log('진입');
     const handleClick = (event: any) => {
       let el = event.target;
       // 이벤트가 발생한 요소가 <a>가 아닌 경우 가장 가까운 <a>를 찾습니다.

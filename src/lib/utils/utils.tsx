@@ -8,6 +8,7 @@ import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
+import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -184,15 +185,24 @@ export const loadScript = ({ url, type }: LoadScriptArgs): Promise<void> => {
 export const makeMoneyString = (money: number) =>
   String(money).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-interface CheckUserRoleParams {
+interface CheckRoleParams {
   roleIds: number[];
-  user: User;
+  meQuery?: MeQuery;
+  user?: User;
 }
-
 /**
  * roleId List
  * 1 : Basic - 광고제거, 무제한 랜덤모의고사
  * 2 : SafePremium - 산업안전기사 프리미엄
+ * 3 : FreeTrial - 무료체험
  */
-export const checkUserRole = ({ roleIds, user }: CheckUserRoleParams) =>
-  user.userRoles.some((userRole) => roleIds.includes(userRole.role.id));
+
+export const checkRole = ({ roleIds, meQuery, user }: CheckRoleParams) => {
+  if (!meQuery && !user) {
+    return false;
+  }
+  const currentUser = meQuery?.me.user || user;
+  return currentUser?.userRoles.some((userRole) =>
+    roleIds.includes(userRole.role.id)
+  );
+};

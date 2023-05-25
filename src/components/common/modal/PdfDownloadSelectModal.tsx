@@ -4,6 +4,8 @@ import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 import { Checkbox, CheckboxProps } from 'antd';
+import * as pdfMake from 'pdfmake/build/pdfmake.js';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 
 export interface PdfDownloadSelectModalFooter {
   hasAdditionalAnswer?: boolean;
@@ -20,6 +22,8 @@ const PdfDownloadSelectModal: React.FC<PdfDownloadSelectModalProps> = (
   return (
     <PdfDownloadSelectModalContainer
       {...props}
+      onConfirm={() => props.onConfirm({ pdfMake, pdfFonts })}
+      onCancel={() => props.onCancel({ pdfMake, pdfFonts })}
       confirmLabel="정답 포함"
       cancelLabel="정답 미포함"
       disabled={isMobile}
