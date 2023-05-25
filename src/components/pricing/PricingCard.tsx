@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { Button } from 'antd';
 import palette from '@styles/palette';
@@ -28,8 +28,12 @@ const PricingCardBlock = styled.div`
   }
   .pricing-card-price-icon {
     position: relative;
-    top: 3px;
+    margin-right: 20px;
+    top: 4px;
+    left: 4px;
     svg {
+      width: 24px;
+      height: 24px;
       font-size: 2rem;
     }
   }
