@@ -3,10 +3,12 @@ import * as Types from '../../../../types';
 import gql from 'graphql-tag';
 import * as Urql from 'urql';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-export type ReadAllMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type ReadAllMockExamCategoriesQueryVariables = Types.Exact<{
+  input?: Types.InputMaybe<Types.ReadAllMockExamCategoriesInput>;
+}>;
 
 
-export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number, user: { __typename?: 'User', role: Types.UserRole } }> } };
+export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number, user: { __typename?: 'User', role: Types.UserRole }, partner?: { __typename?: 'Partner', id: number } | null }> } };
 
 export type EditMockExamCategoryMutationVariables = Types.Exact<{
   input: Types.EditMockExamCategoryInput;
@@ -78,13 +80,16 @@ export type ReadAllMockExamQuery = { __typename?: 'Query', readAllMockExam: { __
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
-    query ReadAllMockExamCategories {
-  readAllMockExamCategories {
+    query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
+  readAllMockExamCategories(input: $input) {
     categories {
       name
       id
       user {
         role
+      }
+      partner {
+        id
       }
     }
     error
