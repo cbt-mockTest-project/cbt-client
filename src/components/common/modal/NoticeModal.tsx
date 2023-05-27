@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from './Modal';
 import KakaoOpenChatModalContent from './KakaoOpenChatModalContent';
-import { Checkbox } from 'antd';
-import { removeCookies, setCookie } from 'cookies-next';
-import { LocalStorage } from '@lib/utils/localStorage';
 
 interface NoticeModalProps extends Omit<ModalProps, 'children'> {}
 
@@ -17,7 +14,7 @@ const NoticeModal: React.FC<NoticeModalProps> = ({ open, onClose }) => {
           '모두CBT 오픈채팅방에 참여해보세요!\n실시간으로 모두CBT 서비스에 대한\n문의사항을 질문하고, 다른 사용자들과\n의견을 나눌 수 있습니다.'
         }
       </p>
-      <KakaoOpenChatModalContent />
+      <KakaoOpenChatModalContent onClose={onClose} />
     </NoticeModalContainer>
   );
 };
