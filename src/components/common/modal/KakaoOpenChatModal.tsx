@@ -11,7 +11,7 @@ const KakaoOpenChatModal: React.FC<KakaoOpenChatModalProps> = ({
 }) => {
   return (
     <Modal open={open} onClose={onClose} className={className}>
-      <KakaoOpenChatModalContent />
+      <KakaoOpenChatModalContent onClose={onClose} />
     </Modal>
   );
 };
