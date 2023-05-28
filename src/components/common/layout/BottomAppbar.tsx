@@ -67,7 +67,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
           홈
         </span>
       </button>
-      {/* <button
+      <button
         onClick={() => onRouteChange('/me/bookmark')}
         className="bottom-app-bar-item"
       >
@@ -77,7 +77,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         >
           기록
         </span>
-      </button> */}
+      </button>
       <button
         onClick={() => onRouteChange('/pricing/basic')}
         className="bottom-app-bar-item"
