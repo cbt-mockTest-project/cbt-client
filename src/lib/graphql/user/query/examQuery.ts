@@ -1,13 +1,16 @@
 import { gql } from '@apollo/client';
 
 export const READ_EXAM_CATEGORIES_QUERY = gql`
-  query ReadAllMockExamCategories {
-    readAllMockExamCategories {
+  query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
+    readAllMockExamCategories(input: $input) {
       categories {
         name
         id
         user {
           role
+        }
+        partner {
+          id
         }
       }
       error

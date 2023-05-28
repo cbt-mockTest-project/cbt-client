@@ -57,9 +57,6 @@ export default Home;
 
 const HomeContainer = styled(Layout)`
   @media (max-width: ${responsive.medium}) {
-    .sub-nav-container {
-      display: none;
-    }
   }
 `;
 

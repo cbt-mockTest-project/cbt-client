@@ -28,6 +28,7 @@ export interface NavItem {
   path: string;
   key: string[];
   permission?: UserRole[];
+  isNewTab?: boolean;
 }
 
 export interface SubNavOption {

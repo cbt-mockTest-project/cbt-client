@@ -206,3 +206,16 @@ export const checkRole = ({ roleIds, meQuery, user }: CheckRoleParams) => {
     roleIds.includes(userRole.role.id)
   );
 };
+
+export const deduplication = (array: any[]) => {
+  const stack = [];
+  for (const el of array) {
+    const a = stack.findIndex(
+      (stack_el) => JSON.stringify(stack_el) === JSON.stringify(el)
+    );
+    if (a === -1) {
+      stack.push(el);
+    }
+  }
+  return stack;
+};

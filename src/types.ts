@@ -758,6 +758,7 @@ export type MockExam = {
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
+  order: Scalars['Float'];
   slug?: Maybe<Scalars['String']>;
   status: ExamStatus;
   title: Scalars['String'];
@@ -773,6 +774,8 @@ export type MockExamCategory = {
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
+  order: Scalars['Float'];
+  partner?: Maybe<Partner>;
   roles: Array<Role>;
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
@@ -1379,6 +1382,15 @@ export type Notice = {
   user: User;
 };
 
+export type Partner = {
+  __typename?: 'Partner';
+  created_at: Scalars['DateTime'];
+  examCategory: Array<MockExamCategory>;
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+};
+
 export type Payment = {
   __typename?: 'Payment';
   created_at: Scalars['DateTime'];
@@ -1675,7 +1687,7 @@ export enum QuestionState {
 }
 
 export type ReadAllMockExamCategoriesInput = {
-  roleIds?: InputMaybe<Array<Scalars['Float']>>;
+  partnerId?: InputMaybe<Scalars['Float']>;
   type?: InputMaybe<MockExamCategoryTypes>;
 };
 

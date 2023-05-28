@@ -10,7 +10,7 @@ const result = () => {
         title={`문제 풀이 결과 | 모두CBT`}
         pageHeadingTitle={`문제 풀이 결과 페이지`}
       />
-      <Layout mainBanner={true} sideBanner={true}>
+      <Layout mainBanner={true} sideBanner={true} subNav="main">
         <ExamResultComponent />
       </Layout>
     </>
