@@ -31,7 +31,17 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
           !item.permission.includes(props.meQuery?.me.user?.role as UserRole)
         )
           return null;
-        return (
+        return item.isNewTab ? (
+          <a href={item.path} target="_blank" rel="noreferrer">
+            <span
+              className={`nav-item ${
+                props.isSelectedNavItem(item.key) && 'active'
+              }`}
+            >
+              {item.label}
+            </span>
+          </a>
+        ) : (
           <Link href={item.path} key={item.path}>
             <span
               className={`nav-item ${

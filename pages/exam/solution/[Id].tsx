@@ -29,7 +29,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         title={`${convertExamTitle(title)} 해설 | 모두CBT`}
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
       />
-      <Layout>
+      <Layout subNav="main">
         <GoogleAd
           className="exam-solution-page-google-display-ad-wrapper"
           type="display"
