@@ -1938,6 +1938,7 @@ export type ReadPostsInput = {
   category?: InputMaybe<PostCategory>;
   limit?: InputMaybe<Scalars['Float']>;
   page: Scalars['Float'];
+  search?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadPostsOutput = {
