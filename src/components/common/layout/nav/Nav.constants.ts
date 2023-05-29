@@ -4,7 +4,7 @@ import { NavItem, SubNavOption } from './Nav.interface';
 export const NAV_ITEMS: NavItem[] = [
   {
     label: '게시판',
-    path: '/community?c=SUGGENSTION',
+    path: '/community?c=FREE',
     key: ['post', 'community'],
   },
   {

@@ -42,7 +42,7 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const [createPost, { loading: createPostLoading }] = useCreatePost();
   const [editPost, { loading: editPostLoading }] = useEditPost();
   const [selectedCategory, setSelectedCategory] = useState<PostCategory>(
-    PostCategory.Suggenstion
+    PostCategory.Free
   );
   const [formValidate, setFormValidate] = useState(false);
   const reactQuillRef = useRef<ReactQuill | null>(null);
