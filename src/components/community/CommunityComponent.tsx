@@ -6,7 +6,7 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PostCategory, UserRole } from 'types';
 import CommunityList from './CommunityList';
@@ -16,21 +16,23 @@ import CommunityPagination from './CommunityPagination';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { POST_CATEGORY_MAP } from './Community.constants';
+import SearchInput from '@components/common/input/SearchInput';
 
 export const categorys = [
+  { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
+
+  { label: '시험후기', path: '/community', query: { c: PostCategory.Review } },
   {
-    label: '건의하기',
+    label: '비밀게시판',
     path: '/community',
     query: { c: PostCategory.Suggenstion },
   },
+  {
+    label: '기출복원',
+    path: '/community',
+    query: { c: PostCategory.Recovery },
+  },
   { label: '공지사항', path: '/community', query: { c: PostCategory.Notice } },
-  // { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
-  // { label: '시험후기', path: '/community', query: { c: PostCategory.Review } },
-  // {
-  //   label: '기출복원',
-  //   path: '/community',
-  //   query: { c: PostCategory.Recovery },
-  // },
 ];
 
 interface CommunityComponentProps {}
@@ -45,6 +47,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
   const isAdminOnlyCategory = adminBoards.includes(
     router.query.c as PostCategory
   );
+  const [search, setSearch] = useState((router.query.s as string) || '');
   const isAdmin = meQuery?.me.ok && meQuery.me.user?.role === UserRole.Admin;
   const allowWriteAdminOnlyCategory = !isAdminOnlyCategory || isAdmin;
   useEffect(() => {
@@ -55,11 +58,12 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
             limit: 8,
             page: Number(router.query.p) || 1,
             category: router.query.c as PostCategory,
+            search,
           },
         },
       });
     }
-  }, [router.query.c, router.query.p]);
+  }, [router.query.c, router.query.p, router.query.s]);
   const checkCategoryMatching = (query: string) => query === router.query.c;
   const posts = postsQuery?.readPosts.posts;
   return (
@@ -88,19 +92,30 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
               key={category.label}
               href={{ pathname: category.path, query: category.query }}
             >
-              <span
+              <div
                 className={`community-category-card ${
                   checkCategoryMatching(category.query.c) && 'active'
                 }`}
               >
                 {category.label}
-              </span>
+              </div>
             </Link>
           ))}
         </div>
       </section>
+      <SearchInput
+        className="community-search-input"
+        placeholder="게시글 제목을 검색해 보세요."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        onSearch={() => {
+          router.push({
+            pathname: '/community',
+            query: { c: router.query.c, s: search },
+          });
+        }}
+      />
       <section className="community-board">
-        <b className="community-board-title">전체 글</b>
         <ul className="community-board-list-wrapper">
           {posts ? (
             posts.map((post) => (
@@ -162,13 +177,17 @@ const CommunityComponentBlock = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    a {
+      height: 41px;
+    }
   }
   .community-category-card {
     font-size: 0.8rem;
     padding: 10px 10px;
+
     border: 1px solid ${palette.gray_200};
     border-radius: 5px;
-    width: 150px;
+    width: max-content;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease-in;
