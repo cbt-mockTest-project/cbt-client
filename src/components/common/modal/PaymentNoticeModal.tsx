@@ -49,21 +49,15 @@ const PaymentNoticeModal: React.FC<PaymentNoticeModalProps> = ({
         <h3>결제 주의사항</h3>
         <ul>
           <li>
-            카드사 승인대기중에 있어, 현재는 아래 카드사만 이용가능합니다.
-          </li>
-          <li>
-            <b>카카오페이</b>, <b>토스페이</b>, <b>국민</b>, <b>신한</b>
-          </li>
-          <li>
             어플 이용시, <b>최신버전</b>으로 업데이트 후 이용해주세요.
           </li>
-          {/* <a
+          <a
             href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
             target="_blank"
             rel="noreferrer"
           >
             업데이트 하러가기
-          </a> */}
+          </a>
         </ul>
         <div className="payment-notice-modal-warn">
           ※ 위 사항을 준수하지 않을경우, 결제가 실패합니다.
