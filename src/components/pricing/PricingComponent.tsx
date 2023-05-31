@@ -256,7 +256,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       price: 5000,
       beforeDiscountPrice: 9900,
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-      hasBeforePaymentModal: !hasPremium,
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
         : false,
