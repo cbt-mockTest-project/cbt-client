@@ -254,7 +254,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       title: '베이직 플랜',
       intro: '커피 한 잔 값으로, 학습효율을 높여보세요!',
       price: 5000,
-      beforeDiscountPrice: 9900,
+      // beforeDiscountPrice: 7900,
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       hasBeforePaymentModal: !hasPremium,
       confirmDisabled: meQuery?.me.user

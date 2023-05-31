@@ -164,7 +164,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
                 {makeMoneyString(beforeDiscountPrice)}
               </div>
               <div className="pricing-card-before-discount-price-notice">
-                ~ 05.31까지
+                ~ 06.31까지
               </div>
             </div>
           ) : (
