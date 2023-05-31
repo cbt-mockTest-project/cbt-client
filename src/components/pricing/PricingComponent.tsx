@@ -260,7 +260,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
         '랜덤모의고사 무제한 제공',
         '해설모드 출력 기능 제공',
       ],
-      hasBeforePaymentModal: !hasPremium,
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
         : false,
