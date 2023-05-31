@@ -7,6 +7,7 @@ import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
 import RemoveAdModal from '@components/common/modal/RemoveAdModal';
 import Portal from '@components/common/portal/Portal';
 import {
+  OPEN_CHAT_MODAL_STATE,
   selectExamCategoryHistory,
   selectExamHistory,
   tempAnswerKey,
@@ -28,7 +29,6 @@ import styled from 'styled-components';
 import { ExamTitleAndId, User, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
-import { getCookie, setCookie } from 'cookies-next';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -84,8 +84,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   useEffect(() => {
     const savedCategory = localStorage.getItem(selectExamCategoryHistory);
     const savedTitle = localStorage.getItem(selectExamHistory);
-
-    if (getCookie('noticeModal') !== '2') {
+    if (!storage.get(OPEN_CHAT_MODAL_STATE)) {
       onToggleNoticeModal();
     }
     (async () => {
@@ -186,15 +185,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
     router.push(`${router.pathname}/exam/randomselect`);
   };
   const onCloseNoticeModal = () => {
-    // const value = storage.get('firstNoticeModal');
-    const value = getCookie('noticeModal');
-    value
-      ? setCookie('noticeModal', '2', {
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        })
-      : setCookie('noticeModal', '1', {
-          expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        });
     onToggleNoticeModal();
   };
   return (
@@ -268,18 +258,25 @@ const MainComponent: React.FC<MainComponentProps> = ({
             랜덤모의고사
           </Button>
           <div className="home-content-devide-line" />
-          {/* <Button onClick={onToggleRemoveAdModal} type="primary">
-            광고제거안내
-          </Button> */}
+
           <Link href="/pricing/basic" style={{ width: '100%' }}>
             <Button type="primary">프리미엄 스토어</Button>
           </Link>
+
           <Link
             href="https://www.buymeacoffee.com/moducbts"
             className="home-random-select-link"
           >
             <Button className="">{`>> 후원하기 <<`}</Button>{' '}
           </Link>
+          <a
+            href="https://pinto-buffalo-54c.notion.site/CBT-760c3f095a8e4e29b17807835a8455bc"
+            target="_blank"
+            rel="noreferrer"
+            style={{ width: '100%' }}
+          >
+            <Button type="primary">모두CBT 활용팁!</Button>
+          </a>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
@@ -293,7 +290,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
         </div>
       </div>
-      {/* <RecentNotice /> */}
       <div className="home-exam-link-list">
         <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
         {examLinks.map((link) => (

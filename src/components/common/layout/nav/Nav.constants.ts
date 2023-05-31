@@ -4,8 +4,19 @@ import { NavItem, SubNavOption } from './Nav.interface';
 export const NAV_ITEMS: NavItem[] = [
   {
     label: '게시판',
-    path: '/community?c=SUGGENSTION',
+    path: '/community?c=FREE',
     key: ['post', 'community'],
+  },
+  {
+    label: '스토어',
+    path: '/pricing/basic',
+    key: ['store', 'pricing', 'basic'],
+  },
+  {
+    label: '가이드',
+    path: 'https://pinto-buffalo-54c.notion.site/CBT-760c3f095a8e4e29b17807835a8455bc',
+    isNewTab: true,
+    key: [],
   },
   {
     label: '스토어',

@@ -122,15 +122,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     pdfMake,
   }: OnDownloadPdfArgs) => {
     try {
-      if (!checkRole({ meQuery, roleIds: [1, 2] })) {
-        const confirmed = confirm(
-          '베이직플랜 가입 후 이용할 수 있습니다.\n가입하러 가시겠습니까?'
-        );
-        if (confirmed) {
-          router.push('/pricing/basic');
-        }
-        return;
-      }
+      // if (!checkRole({ meQuery, roleIds: [1, 2] })) {
+      //   const confirmed = confirm(
+      //     '베이직플랜 가입 후 이용할 수 있습니다.\n가입하러 가시겠습니까?'
+      //   );
+      //   if (confirmed) {
+      //     router.push('/pricing/basic');
+      //   }
+      //   return;
+      // }
       setPdfDownloadLoading(true);
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const contents: any[] = [];

@@ -18,7 +18,7 @@ interface NavDrawerProps
 const NavDrawer: React.FC<NavDrawerProps> = (props) => {
   const CommonNavItemComponent = () => (
     <div className="mobile-nav-common-wrapper">
-      <Link href="/community?c=SUGGENSTION">
+      <Link href="/community?c=FREE">
         <span className="mobile-nav-item-link-text">게시판</span>
       </Link>
     </div>

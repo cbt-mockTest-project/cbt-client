@@ -1,17 +1,26 @@
 import React from 'react';
-import Modal, { ModalProps } from './Modal';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import ComputerIcon from '@mui/icons-material/Computer';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import styled from 'styled-components';
 import palette from '@styles/palette';
+import { Button } from 'antd';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { OPEN_CHAT_MODAL_STATE } from '@lib/constants';
 
-interface KakaoOpenChatModalContentProps {}
+interface KakaoOpenChatModalContentProps {
+  onClose: () => void;
+}
 
-const KakaoOpenChatModalContent: React.FC<
-  KakaoOpenChatModalContentProps
-> = () => {
+const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
+  onClose,
+}) => {
+  const storage = new LocalStorage();
+  const handleStopWatching = () => {
+    storage.set(OPEN_CHAT_MODAL_STATE, true);
+    onClose();
+  };
   return (
     <KakaoOpenChatModalContentContainer>
       <a
@@ -58,6 +67,9 @@ const KakaoOpenChatModalContent: React.FC<
           <span>정보처리기사 실기방</span>
         </div>
       </a>
+      <Button onClick={handleStopWatching} type="primary">
+        이미 참여했어요!
+      </Button>
     </KakaoOpenChatModalContentContainer>
   );
 };

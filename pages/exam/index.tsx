@@ -24,7 +24,7 @@ const Exam: NextPage = () => {
         title={`${title}모두CBT`}
         pageHeadingTitle={`${title} 문제풀이 페이지`}
       />
-      <Layout>
+      <Layout subNav="main">
         {
           <>
             <ExamComponent

@@ -5,7 +5,7 @@ import {
   READ_EXAM_TITLES_QUERY,
 } from '@lib/graphql/user/query/examQuery';
 import Layout from '@components/common/layout/Layout';
-import { GetStaticProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import WithHead from '@components/common/head/WithHead';
 import {
   ReadAllMockExamCategoriesQuery,
@@ -16,6 +16,7 @@ import MainComponent from '@components/main/MainComponent';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
 import { cloneDeep } from 'lodash';
+import { deduplication } from '@lib/utils/utils';
 
 interface TitlesAndCategories {
   category: string;
@@ -63,14 +64,48 @@ const HomeContainer = styled(Layout)`
   }
 `;
 
+export const getStaticPaths: GetStaticPaths = async (context) => {
+  const apolloClient = initializeApollo({}, '');
+  let paths: { params: { Id: string } }[] = [];
+  try {
+    const res = await apolloClient.query<ReadAllMockExamCategoriesQuery>({
+      query: READ_EXAM_CATEGORIES_QUERY,
+      variables: {
+        input: {
+          partnerId: 1,
+        },
+      },
+    });
+    if (res.data.readAllMockExamCategories.categories) {
+      paths = res.data.readAllMockExamCategories.categories
+        .map((el) => ({
+          params: { Id: el.partner ? String(el.partner.id) : '' },
+        }))
+        .filter((el) => el.params.Id);
+      paths = deduplication(paths);
+    }
+    return { paths, fallback: 'blocking' };
+  } catch (err) {
+    return {
+      paths,
+      fallback: 'blocking',
+    };
+  }
+};
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const apolloClient = initializeApollo({}, '');
-
+  const partnerId = Number(context.params?.Id);
   const titlesAndCategories: TitlesAndCategories[] = [];
 
   const categoriesRes =
     await apolloClient.query<ReadAllMockExamCategoriesQuery>({
       query: READ_EXAM_CATEGORIES_QUERY,
+      variables: {
+        input: {
+          partnerId,
+        },
+      },
     });
 
   const categoriesQuery = categoriesRes?.data;
