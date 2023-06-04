@@ -25,3 +25,16 @@ export type checkboxOption = {
 export type SquareCheckboxDefaultValue<T = string> = T | T[];
 
 export type SelectboxArg = { value: string; selected: boolean };
+
+export interface MessageType {
+  created_at: string;
+  message: string;
+  room: string;
+  username: string;
+  clientId: string;
+}
+
+export interface ChatUserInfo {
+  username: string;
+  clientId: string;
+}
