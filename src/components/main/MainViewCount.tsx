@@ -14,9 +14,9 @@ const MainViewCount: React.FC<MainViewCountProps> = () => {
   }
   return (
     <MainViewCountContainer>
-      <div className="home-visit-count-box">{`오늘 ${readVisitHistoryQuery?.readVisitHistory.today}`}</div>
-      <div className="home-visit-count-box">{`어제 ${readVisitHistoryQuery?.readVisitHistory.yesterday}`}</div>
-      <div className="home-visit-count-box">{`전체 ${readVisitHistoryQuery?.readVisitHistory.total}`}</div>
+      <div className="home-visit-count-box">{`오늘 방문자 수: ${readVisitHistoryQuery?.readVisitHistory.today}명`}</div>
+      {/* <div className="home-visit-count-box">{`어제 ${readVisitHistoryQuery?.readVisitHistory.yesterday}`}</div>
+      <div className="home-visit-count-box">{`전체 ${readVisitHistoryQuery?.readVisitHistory.total}`}</div> */}
     </MainViewCountContainer>
   );
 };
