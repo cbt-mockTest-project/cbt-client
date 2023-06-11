@@ -43,7 +43,7 @@ const MainBanner = () => {
             </Link>
           ) : (
             <a
-              href="https://zep.us/play/D6XVOK"
+              href="https://zep.us/play/8MOQrp"
               target="_blank"
               rel="noreferrer"
             >
