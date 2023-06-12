@@ -45,7 +45,7 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
           <span>건설안전기사 실기방</span>
         </div>
       </a>
-      <a
+      {/* <a
         href="https://open.kakao.com/o/gjk524Xe"
         target="_blank"
         rel="noreferrer"
@@ -66,7 +66,7 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
           <ComputerIcon />
           <span>정보처리기사 실기방</span>
         </div>
-      </a>
+      </a> */}
       <Button onClick={handleStopWatching} type="primary">
         이미 참여했어요!
       </Button>

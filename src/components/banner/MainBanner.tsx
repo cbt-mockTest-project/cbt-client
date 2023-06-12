@@ -38,12 +38,12 @@ const MainBanner = () => {
       >
         <SwiperSlide>
           {isMobile ? (
-            <Link href="https://zep.us/play/D6XVOK">
+            <Link href="https://zep.us/play/8MOQrp">
               <div className="home-main-banner-box zep" />
             </Link>
           ) : (
             <a
-              href="https://zep.us/play/D6XVOK"
+              href="https://zep.us/play/8MOQrp"
               target="_blank"
               rel="noreferrer"
             >
