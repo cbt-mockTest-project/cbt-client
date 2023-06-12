@@ -53,7 +53,11 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
   ];
   useEffect(() => {
     const ENDPOINT = 'http://localhost:8080';
-    setSocket(socketIOClient(ENDPOINT));
+    setSocket(
+      socketIOClient(ENDPOINT, {
+        transports: ['websocket'],
+      })
+    );
   }, []);
   useEffect(() => {
     console.log('socket', socket);
