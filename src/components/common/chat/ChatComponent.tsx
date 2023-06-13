@@ -14,14 +14,16 @@ import { ChatUserInfo, MessageType } from 'customTypes';
 import Message from './Message';
 import MessageInput from '../input/MessageInput';
 import useInput from '@lib/hooks/useInput';
-import { set } from 'cypress/types/lodash';
 import { LocalStorage } from '@lib/utils/localStorage';
+
+type ChatTab = 'chat' | 'user' | 'setting';
 
 interface ChatComponentProps {}
 const ChatComponent: React.FC<ChatComponentProps> = () => {
   const storage = new LocalStorage();
   const messageBoxRef = useRef<HTMLDivElement>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const {
     value: message,
     onChange: onChangeMessage,
@@ -31,24 +33,25 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
   const [chatUser, setChatUser] = useState<ChatUserInfo | null>(null);
   const [roomUserList, setRoomUserList] = useState<string[]>([]);
   const [prevMessages, setPrevMessages] = useState<MessageType[]>([]);
-  const [currentTab, setCurrentTab] = useState<'chat' | 'user' | 'setting'>(
-    'chat'
-  );
-  const tabOptions = [
+  const [currentTab, setCurrentTab] = useState<ChatTab>('chat');
+
+  interface TabOption {
+    icon: React.ReactNode;
+    value: ChatTab;
+  }
+
+  const tabOptions: TabOption[] = [
     {
       icon: <MessageOutlined />,
       value: 'chat',
-      onClick: () => currentTab !== 'chat' && setCurrentTab('chat'),
     },
     {
       icon: <TeamOutlined />,
       value: 'user',
-      onClick: () => currentTab !== 'user' && setCurrentTab('user'),
     },
     {
       icon: <SettingOutlined />,
       value: 'setting',
-      onClick: () => currentTab !== 'setting' && setCurrentTab('setting'),
     },
   ];
   useEffect(() => {
@@ -60,7 +63,6 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
     );
   }, []);
   useEffect(() => {
-    console.log('socket', socket);
     if (socket) {
       const savedUserName = storage.get('chatHelper')?.username;
       if (savedUserName) {
@@ -73,6 +75,7 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
       });
       socket?.on('connected', (data: ChatUserInfo) => {
         setChatUser(data);
+        setIsConnected(true);
         if (!savedUserName) {
           storage.set('chatHelper', data);
         }
@@ -126,7 +129,11 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
   return (
     <ChatComponentBlock>
       <div className="chat-component-header">
-        <div>{`모두CBT 잡담-${roomUserList.length}명 접속중`}</div>
+        <div>
+          {isConnected
+            ? `모두CBT 잡담-${roomUserList.length}명 접속중`
+            : '서버 접속중..'}
+        </div>
         <button>
           <Close />
         </button>
@@ -138,58 +145,64 @@ const ChatComponent: React.FC<ChatComponentProps> = () => {
             className={`chat-menu-bar-button ${
               currentTab === tab.value ? 'active' : ''
             }`}
-            onClick={tab.onClick}
+            onClick={() => {
+              if (currentTab !== tab.value) {
+                setCurrentTab(tab.value);
+              }
+            }}
           >
             {tab.icon}
           </button>
         ))}
       </div>
 
-      <div className={`chat-tab ${currentTab !== 'chat' ? 'hidden' : ''}`}>
-        <div className="chat-message-box" ref={messageBoxRef}>
-          <ul>
-            {prevMessages.map((message, index) => (
-              <Message
-                key={message.created_at}
-                {...message}
-                isMe={message.clientId === chatUser?.clientId}
-              />
-            ))}
-            <li className="chat-message-box-prev-message-line-wrapper">
-              <div className="chat-message-box-prev-message-line" />
-              <div className="chat-message-box-prev-message-line-label">
-                여기까지 이전 대화입니다.
-              </div>
-            </li>
-          </ul>
-          <ul>
-            {messages.map((message, index) => (
-              <Message
-                key={message.created_at}
-                {...message}
-                isMe={message.clientId === chatUser?.clientId}
-              />
+      {currentTab === 'chat' && (
+        <div className={`chat-tab`}>
+          <div className="chat-message-box" ref={messageBoxRef}>
+            <ul>
+              {prevMessages.map((message, index) => (
+                <Message
+                  key={message.created_at}
+                  {...message}
+                  isMe={message.clientId === chatUser?.clientId}
+                />
+              ))}
+              <li className="chat-message-box-prev-message-line-wrapper">
+                <div className="chat-message-box-prev-message-line" />
+                <div className="chat-message-box-prev-message-line-label">
+                  여기까지 이전 대화입니다.
+                </div>
+              </li>
+            </ul>
+            <ul>
+              {messages.map((message, index) => (
+                <Message
+                  key={message.created_at}
+                  {...message}
+                  isMe={message.clientId === chatUser?.clientId}
+                />
+              ))}
+            </ul>
+          </div>
+          <div>
+            <MessageInput
+              value={message}
+              onChange={onChangeMessage}
+              onSubmit={sendMessage}
+            />
+          </div>
+        </div>
+      )}
+      {currentTab === 'user' && (
+        <div className={`chat-tab`}>
+          <ul className="chat-user-list-box">
+            {roomUserList.map((user, index) => (
+              <li key={index}>{user}</li>
             ))}
           </ul>
         </div>
-        <div>
-          <MessageInput
-            value={message}
-            onChange={onChangeMessage}
-            onSubmit={sendMessage}
-          />
-        </div>
-      </div>
-      <div className={`chat-tab  ${currentTab !== 'user' ? 'hidden' : ''}`}>
-        <ul className="chat-user-list-box">
-          {roomUserList.map((user, index) => (
-            <li key={index}>{user}</li>
-          ))}
-        </ul>
-      </div>
-      <div
-        className={`chat-tab ${currentTab !== 'setting' ? 'hidden' : ''}`}
-      ></div>
+      )}
+      {currentTab === 'setting' && <div className={`chat-tab`}></div>}
     </ChatComponentBlock>
   );
 };
@@ -226,6 +239,7 @@ const ChatComponentBlock = styled.div`
     flex: 1;
     background-color: ${palette.gray_100};
     height: 35px;
+    cursor: pointer;
   }
   .chat-menu-bar-button:not(:last-child) {
     border-right: 1px solid ${palette.gray_200};
@@ -238,10 +252,7 @@ const ChatComponentBlock = styled.div`
     width: 100%;
     top: 74px;
   }
-  .chat-tab.hidden {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
+
   .chat-message-box,
   .chat-user-list-box,
   .chat-setting-box {
