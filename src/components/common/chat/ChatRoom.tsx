@@ -3,19 +3,15 @@ import styled, { css } from 'styled-components';
 import socketIOClient, { Socket } from 'socket.io-client';
 import { Close } from '@mui/icons-material';
 import palette from '@styles/palette';
-import {
-  MessageOutlined,
-  SettingOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
 import { ChatUserInfo, MessageType } from 'customTypes';
-import Message from './Message';
 import MessageInput from '../input/MessageInput';
 import useInput from '@lib/hooks/useInput';
-import { LocalStorage } from '@lib/utils/localStorage';
 import { motion } from 'framer-motion';
-
-type ChatTab = 'chat' | 'user' | 'setting';
+import ChangeNameModal from './ChangeNameModal';
+import { ChatTab, tabOptions } from './Chat.util';
+import ChatList from './ChatList';
+import ChatSetting from './ChatSetting';
+import { responsive } from '@lib/utils/responsive';
 
 interface ChatRoomProps {
   onClose: () => void;
@@ -23,7 +19,6 @@ interface ChatRoomProps {
 }
 
 const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
-  const storage = new LocalStorage();
   const messageBoxRef = useRef<HTMLDivElement>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -38,6 +33,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   const [prevMessages, setPrevMessages] = useState<MessageType[]>([]);
   const [currentTab, setCurrentTab] = useState<ChatTab>('chat');
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [isChangeNameModalOpen, setIsChangeNameModalOpen] = useState(false);
+  const [myChatName, setMyChatName] = useState<string>('');
 
   const chatRoomToggleVariant = {
     open: (height = 1000) => ({
@@ -62,77 +59,61 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
     },
   };
 
-  interface TabOption {
-    icon: React.ReactNode;
-    value: ChatTab;
-  }
-
-  const tabOptions: TabOption[] = [
-    {
-      icon: <MessageOutlined />,
-      value: 'chat',
-    },
-    {
-      icon: <TeamOutlined />,
-      value: 'user',
-    },
-    {
-      icon: <SettingOutlined />,
-      value: 'setting',
-    },
-  ];
-
   useEffect(() => {
     setIsVisible(isOpen);
   }, [isOpen]);
 
   useEffect(() => {
     const ENDPOINT = 'http://localhost:8080';
-    setSocket(
-      socketIOClient(ENDPOINT, {
+
+    if (!socket) {
+      // 이미 소켓이 생성되어 있다면 새로 생성하지 않음
+      const newSocket = socketIOClient(ENDPOINT, {
         transports: ['websocket'],
-      })
-    );
+        autoConnect: false, // 자동으로 연결하지 않도록 설정
+      });
+      setSocket(newSocket);
+    }
   }, []);
+
   useEffect(() => {
     if (socket) {
-      const savedUserName = storage.get('chatHelper')?.username;
-      if (savedUserName) {
-        console.log('savedUserName', savedUserName);
-        socket?.emit('setUsername', savedUserName);
-      }
-
-      socket?.on('joinedRoom', () => {
+      socket.connect();
+      socket.on('joinedRoom', () => {
         console.log('Successfully joined room');
       });
-      socket?.on('connected', (data: ChatUserInfo) => {
+      socket.on('connected', (data: ChatUserInfo) => {
         setChatUser(data);
         setIsConnected(true);
-        if (!savedUserName) {
-          storage.set('chatHelper', data);
-        }
       });
-      socket?.on('roomUserList', (data: string[]) => {
+      socket.on('disconnect', () => {
+        console.log('Socket disconnected. Reconnecting...');
+        socket.connect();
+      });
+      socket.on('roomUserList', (data: string[]) => {
         setRoomUserList(data);
       });
-      socket?.on('roomUserCount', (msg) => {
+      socket.on('roomUserCount', (msg) => {
         console.log('roomUserCount', msg);
       });
-      socket?.on('leftRoom', () => {
+      socket.on('leftRoom', () => {
         console.log('Successfully left room');
       });
-      socket?.on('chatHistory', (data: MessageType[]) => {
+      socket.on('chatHistory', (data: MessageType[]) => {
         if (prevMessages.length === 0) {
           setPrevMessages(data);
         }
       });
-      socket?.on('chat', (msg) => {
+      socket.on('chat', (msg) => {
         setMessages((prev) => [...prev, msg]);
       });
       socket?.emit('joinRoom', { room: '1' });
     }
     return () => {
-      socket?.off();
+      if (socket) {
+        socket.off();
+        socket.disconnect();
+      }
     };
   }, [socket]);
 
@@ -151,11 +132,14 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   };
 
   const sendMessage = () => {
-    console.log('sendMessage', message);
     if (message !== '') {
       socket?.emit('chat', { room: '1', message });
       setMessage('');
     }
+  };
+
+  const setUserName = (name: string) => {
+    socket?.emit('setUsername', name);
   };
 
   return (
@@ -163,7 +147,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
       <div className="chat-room-header">
         <div>
           {isConnected
-            ? `모두CBT 잡담-${roomUserList.length}명 접속중`
+            ? `수다방(BETA) - ${roomUserList.length}명 접속중`
             : '서버 접속중..'}
         </div>
         <button className="chat-room-close-button" onClick={onClose}>
@@ -190,55 +174,44 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
 
       {currentTab === 'chat' && (
         <div className="chat-tab">
-          <div className="chat-message-box" ref={messageBoxRef}>
-            <ul>
-              {prevMessages.map((message, index) => (
-                <Message
-                  key={message.created_at}
-                  {...message}
-                  isMe={message.clientId === chatUser?.clientId}
-                />
-              ))}
-              <li className="chat-message-box-prev-message-line-wrapper">
-                <div className="chat-message-box-prev-message-line" />
-                <div className="chat-message-box-prev-message-line-label">
-                  여기까지 이전 대화입니다.
-                </div>
-              </li>
-            </ul>
-            <ul>
-              {messages.map((message, index) => (
-                <Message
-                  key={message.created_at}
-                  {...message}
-                  isMe={message.clientId === chatUser?.clientId}
-                />
-              ))}
-            </ul>
+          <div className="chat-room" ref={messageBoxRef}>
+            <ChatList
+              prevMessages={prevMessages}
+              chatUser={chatUser}
+              currentMessages={messages}
+            />
           </div>
-          <div>
+          <div className="chat-room-message-input-wrapper">
             <MessageInput
               value={message}
               onChange={onChangeMessage}
               onSubmit={sendMessage}
             />
+            {!myChatName && (
+              <button
+                className="chat-room-chat-start-button"
+                onClick={() => setIsChangeNameModalOpen(true)}
+              >
+                대화를 시작해보세요.
+              </button>
+            )}
           </div>
-        </div>
-      )}
-      {currentTab === 'user' && (
-        <div className="chat-tab">
-          <ul className="chat-user-list-box">
-            {roomUserList.map((user, index) => (
-              <li key={index}>{user}</li>
-            ))}
-          </ul>
         </div>
       )}
       {currentTab === 'setting' && (
         <div className="chat-tab">
+          <ChatSetting />
           <div className="chat-setting-box">s</div>
         </div>
       )}
+      <ChangeNameModal
+        isOpen={isChangeNameModalOpen}
+        onConfirm={(value) => {
+          setUserName(value);
+          setMyChatName(value);
+          setIsChangeNameModalOpen(false);
+        }}
+      />
     </ChatRoomBlock>
   );
 };
@@ -256,7 +229,9 @@ const ChatRoomBlock = styled(motion.div)<{ isVisible: boolean }>`
   max-height: 410px;
   width: 400px;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   .chat-room-header {
     display: flex;
     background-color: white;
@@ -292,32 +267,28 @@ const ChatRoomBlock = styled(motion.div)<{ isVisible: boolean }>`
   .chat-tab {
     background-color: white;
   }
-
-  .chat-message-box,
-  .chat-user-list-box,
-  .chat-setting-box {
+  .chat-room {
     padding: 5px 10px;
     overflow-y: auto;
     height: 300px;
   }
-  .chat-user-list-box,
-  .chat-setting-box {
-    height: 335px;
+
+  .chat-room-message-input-wrapper {
+    position: relative;
+  }
+  .chat-room-chat-start-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: ${palette.gray_700};
+    font-size: 14px;
+    background-color: ${palette.gray_100};
+    opacity: 0.7;
   }
 
-  .chat-message-box-prev-message-line-wrapper {
-    position: relative;
-    margin: 20px 0;
-    border-bottom: 1px solid ${palette.gray_200};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .chat-message-box-prev-message-line-label {
-    position: absolute;
-    background-color: white;
-    padding: 0 10px;
-    color: ${palette.gray_500};
-    font-size: 12px;
+  @media (max-width: ${responsive.lsmall}) {
+    width: 100vw;
   }
 `;

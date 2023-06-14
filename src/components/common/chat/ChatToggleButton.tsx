@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import palette from '@styles/palette';
 import { motion } from 'framer-motion';
+import { responsive } from '@lib/utils/responsive';
 
 const ChatToggleButtonBlock = styled(motion.button)`
   position: fixed;
@@ -27,6 +28,12 @@ const ChatToggleButtonBlock = styled(motion.button)`
   align-items: center;
   svg {
     color: white;
+  }
+
+  @media (max-width: ${responsive.medium}) {
+    bottom: 65px;
+    width: 45px;
+    height: 45px;
   }
 `;
 

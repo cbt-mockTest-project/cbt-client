@@ -4,6 +4,7 @@ import ChatToggleButton from './ChatToggleButton';
 import ChatRoom from './ChatRoom';
 import { motion, sync, useCycle } from 'framer-motion';
 import { useDimensions } from '@lib/hooks/useDimensions';
+import { responsive } from '@lib/utils/responsive';
 
 interface ChatComponentProps {}
 const ChatComponent: React.FC<ChatComponentProps> = () => {
@@ -28,6 +29,14 @@ export default ChatComponent;
 
 const ChatComponentBlock = styled(motion.div)`
   position: fixed;
+  z-index: 1000;
   left: 30px;
   bottom: 30px;
+  @media (max-width: ${responsive.medium}) {
+    bottom: 75px;
+  }
+  @media (max-width: ${responsive.lsmall}) {
+    left: 0;
+    bottom: 0;
+  }
 `;
