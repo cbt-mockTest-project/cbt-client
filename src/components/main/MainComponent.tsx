@@ -293,7 +293,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
         </div>
         <div className="home-content-right-wrapper">
-          <ChatComponent />
+          {/* <ChatComponent /> */}
         </div>
       </div>
       <div className="home-exam-link-list">
