@@ -151,7 +151,7 @@ export type CreateMockExamQuestionCommentOutput = {
 export type CreateMockExamQuestionFeedbackInput = {
   content: Scalars['String'];
   questionId: Scalars['Float'];
-  type?: InputMaybe<QuestionFeedbackType>;
+  type?: QuestionFeedbackType;
 };
 
 export type CreateMockExamQuestionFeedbackOutput = {
@@ -1414,6 +1414,7 @@ export type Post = {
   content: Scalars['String'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  isHidden: Scalars['Boolean'];
   like: Array<PostLike>;
   likeState: Scalars['Boolean'];
   likesCount: Scalars['Float'];
@@ -1713,9 +1714,9 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
-  all?: InputMaybe<Scalars['Boolean']>;
-  category?: InputMaybe<Scalars['String']>;
-  query?: InputMaybe<Scalars['String']>;
+  all?: Scalars['Boolean'];
+  category?: Scalars['String'];
+  query?: Scalars['String'];
 };
 
 export type ReadAllMockExamsOutput = {
@@ -1934,7 +1935,7 @@ export type ReadPostOutput = {
 };
 
 export type ReadPostsInput = {
-  all?: InputMaybe<Scalars['Boolean']>;
+  all?: Scalars['Boolean'];
   category?: InputMaybe<PostCategory>;
   limit?: InputMaybe<Scalars['Float']>;
   page: Scalars['Float'];
@@ -2255,6 +2256,16 @@ export type Visit = {
   user: User;
 };
 
+export type ZepComment = {
+  __typename?: 'ZepComment';
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  zepPost: ZepPost;
+  zepUser: ZepUser;
+};
+
 export type ZepMapUserCount = {
   __typename?: 'ZepMapUserCount';
   created_at: Scalars['DateTime'];
@@ -2263,6 +2274,24 @@ export type ZepMapUserCount = {
   updated_at: Scalars['DateTime'];
   userCount: Scalars['Float'];
 };
+
+export type ZepPost = {
+  __typename?: 'ZepPost';
+  category: ZepPostCategory;
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  title: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  zepComment: Array<ZepComment>;
+  zepUser: ZepUser;
+};
+
+export enum ZepPostCategory {
+  Free = 'FREE',
+  Notice = 'NOTICE',
+  Study = 'STUDY'
+}
 
 export type ZepStudyTime = {
   __typename?: 'ZepStudyTime';
@@ -2281,5 +2310,7 @@ export type ZepUser = {
   nickname: Scalars['String'];
   studyTimes: Array<ZepStudyTime>;
   updated_at: Scalars['DateTime'];
+  zepComment: Array<ZepComment>;
+  zepPost: Array<ZepPost>;
   zep_id: Scalars['String'];
 };

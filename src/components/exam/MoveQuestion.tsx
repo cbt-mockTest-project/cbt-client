@@ -101,7 +101,7 @@ const MoveQuestionContainer = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     position: fixed;
-    bottom: 80px;
-    right: 30px;
+    bottom: 65px;
+    right: 20px;
   }
 `;

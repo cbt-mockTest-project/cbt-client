@@ -29,6 +29,8 @@ import styled from 'styled-components';
 import { ExamTitleAndId, User, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
+import { responsive } from '@lib/utils/responsive';
+import ChatComponent from '@components/common/chat/ChatComponent';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -190,7 +192,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   return (
     <MainComponentContainer>
       <div className="home-wrapper">
-        <div className="home-content-wrapper">
+        <div className="home-content-left-wrapper"></div>
+        <div className="home-content-center-wrapper">
           <div className="home-content-top-wrapper">
             <div className="home-content-exam-category-wrapper">
               <p className="home-content-title">시험선택</p>
@@ -289,6 +292,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
             <MainViewCount />
           </div>
         </div>
+        <div className="home-content-right-wrapper">
+          {/* <ChatComponent /> */}
+        </div>
       </div>
       <div className="home-exam-link-list">
         <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
@@ -363,8 +369,8 @@ const MainComponentContainer = styled.div`
     height: 2px;
     border: 1px dashed ${palette.gray_300};
   }
-  .home-content-wrapper {
-    flex: 2;
+  .home-content-center-wrapper {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -378,6 +384,13 @@ const MainComponentContainer = styled.div`
       width: 100%;
       height: 45px;
     }
+  }
+  .home-content-left-wrapper {
+    flex: 1;
+  }
+  .home-content-right-wrapper {
+    /* width: 33.3%; */
+    flex: 1;
   }
   .home-checkbox-wrapper {
     display: flex;
@@ -474,6 +487,14 @@ const MainComponentContainer = styled.div`
       :hover {
         background-color: ${palette.gray_100};
       }
+    }
+  }
+  @media (max-width: ${responsive.medium}) {
+    .home-content-left-wrapper {
+      display: none;
+    }
+    .home-content-right-wrapper {
+      display: none;
     }
   }
 `;
