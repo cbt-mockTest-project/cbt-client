@@ -12,6 +12,7 @@ import { ChatTab, tabOptions } from './Chat.util';
 import ChatList from './ChatList';
 import ChatSetting from './ChatSetting';
 import { responsive } from '@lib/utils/responsive';
+import { message as antdMeesage } from 'antd';
 
 interface ChatRoomProps {
   onClose: () => void;
@@ -34,7 +35,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   const [currentTab, setCurrentTab] = useState<ChatTab>('chat');
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [isChangeNameModalOpen, setIsChangeNameModalOpen] = useState(false);
-  const [myChatName, setMyChatName] = useState<string>('');
 
   const chatRoomToggleVariant = {
     open: (height = 1000) => ({
@@ -121,15 +121,15 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
     if (messageBoxRef.current) {
       messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
     }
-  }, [messageBoxRef, messages, prevMessages]);
+  }, [messageBoxRef, messages, prevMessages, isVisible, currentTab]);
 
-  const joinRoom = () => {
-    socket?.emit('joinRoom', { room: '1' });
-  };
+  // const joinRoom = () => {
+  //   socket?.emit('joinRoom', { room: '1' });
+  // };
 
-  const leaveRoom = () => {
-    socket?.emit('leaveRoom', { room: '1' });
-  };
+  // const leaveRoom = () => {
+  //   socket?.emit('leaveRoom', { room: '1' });
+  // };
 
   const sendMessage = () => {
     if (message !== '') {
@@ -138,8 +138,8 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
     }
   };
 
-  const setUserName = (name: string) => {
-    socket?.emit('setUsername', name);
+  const updateMyChatName = (name: string) => {
+    socket?.emit('updateMyChatName', name);
   };
 
   return (
@@ -187,7 +187,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
               onChange={onChangeMessage}
               onSubmit={sendMessage}
             />
-            {!myChatName && (
+            {!chatUser?.username && (
               <button
                 className="chat-room-chat-start-button"
                 onClick={() => setIsChangeNameModalOpen(true)}
@@ -200,15 +200,32 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
       )}
       {currentTab === 'setting' && (
         <div className="chat-tab">
-          <ChatSetting />
+          <ChatSetting
+            nickName={chatUser?.username || ''}
+            onEditNickName={(value) => {
+              if (value.length > 10 || value.length < 2) {
+                antdMeesage.error({
+                  content: '닉네임은 2글자 이상 10글자 이하로 설정해주세요.',
+                });
+                return;
+              }
+              updateMyChatName(value);
+              antdMeesage.success({ content: '닉네임이 변경되었습니다.' });
+            }}
+          />
           <div className="chat-setting-box">s</div>
         </div>
       )}
       <ChangeNameModal
         isOpen={isChangeNameModalOpen}
         onConfirm={(value) => {
-          setUserName(value);
-          setMyChatName(value);
+          if (value.length > 10 || value.length < 2) {
+            antdMeesage.error({
+              content: '닉네임은 2글자 이상 10글자 이하로 설정해주세요.',
+            });
+            return;
+          }
+          updateMyChatName(value);
           setIsChangeNameModalOpen(false);
         }}
       />
