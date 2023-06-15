@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import PlyrPlayer, { VideoSource } from '@components/player/PlyrPlayer';
+import ChatComponent from '@components/common/chat/ChatComponent';
 // const PlyrPlayer = dynamic(() => import('@components/player/PlyrPlayer'), {
 //   ssr: false,
 // });
@@ -18,12 +19,7 @@ const Test: NextPage = () => {
       size: 720,
     },
   ];
-  return (
-    <PlyrPlayer
-      sources={videoSources}
-      // defaultQulity={720}
-    />
-  );
+  return <ChatComponent />;
 };
 
 export default Test;

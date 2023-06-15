@@ -170,7 +170,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           <CoreContainer />
           <AppInner />
           <Component {...pageProps} />
-          <ChatComponent />
+          {/* <ChatComponent /> */}
         </Provider>
       </ApolloProvider>
     </>

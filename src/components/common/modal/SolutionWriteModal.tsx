@@ -74,6 +74,7 @@ const StyledModal = styled(Modal)`
   padding: 20px 20px;
   max-width: unset;
   overflow-y: scroll;
+  z-index: 99999;
   .solution-write-modal-text-finish-button {
     width: 100%;
   }
