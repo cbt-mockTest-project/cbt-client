@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import socketIOClient, { Socket } from 'socket.io-client';
 import { Close } from '@mui/icons-material';
 import palette from '@styles/palette';
@@ -64,7 +64,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    const ENDPOINT = 'http://localhost:8080';
+    const ENDPOINT = String(process.env.NEXT_PUBLIC_SOCKET_END_POINT);
 
     if (!socket) {
       // 이미 소켓이 생성되어 있다면 새로 생성하지 않음
@@ -79,30 +79,24 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   useEffect(() => {
     if (socket) {
       socket.connect();
-      socket.on('joinedRoom', () => {
-        console.log('Successfully joined room');
-      });
+      socket.on('joinedRoom', () => {});
       socket.on('connected', (data: ChatUserInfo) => {
         setChatUser(data);
         setIsConnected(true);
       });
       socket.on('disconnect', () => {
-        console.log('Socket disconnected. Reconnecting...');
         socket.connect();
       });
       socket.on('roomUserList', (data: string[]) => {
         setRoomUserList(data);
       });
-      socket.on('roomUserCount', (msg) => {
-        console.log('roomUserCount', msg);
-      });
-      socket.on('leftRoom', () => {
-        console.log('Successfully left room');
-      });
       socket.on('chatHistory', (data: MessageType[]) => {
         if (prevMessages.length === 0) {
           setPrevMessages(data);
         }
+      });
+      socket.on('setUsername', (data: ChatUserInfo) => {
+        setChatUser(data);
       });
       socket.on('chat', (msg) => {
         setMessages((prev) => [...prev, msg]);
@@ -123,14 +117,6 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
     }
   }, [messageBoxRef, messages, prevMessages, isVisible, currentTab]);
 
-  // const joinRoom = () => {
-  //   socket?.emit('joinRoom', { room: '1' });
-  // };
-
-  // const leaveRoom = () => {
-  //   socket?.emit('leaveRoom', { room: '1' });
-  // };
-
   const sendMessage = () => {
     if (message !== '') {
       socket?.emit('chat', { room: '1', message });
@@ -139,7 +125,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({ onClose, isOpen }) => {
   };
 
   const updateMyChatName = (name: string) => {
-    socket?.emit('updateMyChatName', name);
+    socket?.emit('setUsername', name);
   };
 
   return (

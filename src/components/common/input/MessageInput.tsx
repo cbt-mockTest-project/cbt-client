@@ -3,7 +3,7 @@ import React, { InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 import PublishIcon from '@mui/icons-material/Publish';
 
-const MessageInputBlock = styled.div`
+const MessageInputBlock = styled.form`
   display: flex;
   align-items: center;
   height: 35px;
@@ -47,9 +47,15 @@ const MessageInput: React.FC<MessageInputProps> = ({ ...props }) => {
     }
   };
   return (
-    <MessageInputBlock className={className}>
+    <MessageInputBlock
+      className={className}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
       <input {...props} className="message-input" onKeyPress={handleKeyPress} />
-      <button className="message-input-button" onClick={onSubmit}>
+      <button className="message-input-button" type="submit">
         <PublishIcon />
       </button>
     </MessageInputBlock>
