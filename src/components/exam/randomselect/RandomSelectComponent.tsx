@@ -127,7 +127,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       return;
     }
     if (!checkRole({ roleIds: [1, 2, 3], meQuery })) {
-      router.push('/pricing/basic');
+      router.push('/pricing');
       return;
     }
     let es: string;

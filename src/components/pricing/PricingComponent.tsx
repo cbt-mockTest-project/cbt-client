@@ -79,13 +79,9 @@ const PricingComponentBlock = styled.div`
   }
 `;
 
-interface PricingComponentProps {
-  hasPremium?: boolean;
-}
+interface PricingComponentProps {}
 
-const PricingComponent: React.FC<PricingComponentProps> = ({
-  hasPremium = true,
-}) => {
+const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [createFreeTrial] = useCreateFreeTrial();
@@ -263,36 +259,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({
       roleId: 1,
     },
   ];
-  if (hasPremium) {
-    pricingCardData.push({
-      title: '산안기 프리패스',
-      intro: '실기시험 1달전 강력추천 !!',
-      price: 30000,
-      benefits: [
-        '광고제거',
-        '랜덤모의고사 무제한 제공',
-        '신무당쌤의 쪽집게 인강제공',
-        '필답형 최다빈출 전자책 제공',
-        '필답형 최다빈출 학습서비스 제공',
-      ],
-      onConfirm: handleSafePremiumPlanPayment,
-    });
-  } else {
-    // pricingCardData.push({
-    //   title: '산안기 프리패스',
-    //   intro: '실기시험 1달전 강력추천 !!',
-    //   price: 30000,
-    //   benefits: [
-    //     '광고제거',
-    //     '랜덤모의고사 무제한 제공',
-    //     '신무당쌤의 쪽집게 인강제공',
-    //     '필답형 최다빈출 전자책 제공',
-    //     '필답형 최다빈출 학습서비스 제공',
-    //   ],
-    //   onConfirm: handleSafePremiumPlanPayment,
-    //   isTempText: 'Coming Soon...',
-    // });
-  }
+
   return (
     <PricingComponentBlock>
       <h3 className="pricing-title">모두CBT 프리미엄 스토어</h3>

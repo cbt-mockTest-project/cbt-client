@@ -9,7 +9,7 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: '스토어',
-    path: '/pricing/basic',
+    path: '/pricing',
     key: ['store', 'pricing', 'basic'],
   },
   {

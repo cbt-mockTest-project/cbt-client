@@ -90,7 +90,7 @@ const PaymentHistoryComponent: React.FC<PaymentHistoryComponentProps> = () => {
               <div className="payment-history-table-empty-data">
                 결제 내역이 없습니다.
               </div>
-              <Link href="/pricing/basic">
+              <Link href="/pricing">
                 <Button
                   type="primary"
                   className="payment-history-table-empty-button"

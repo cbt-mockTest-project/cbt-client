@@ -79,7 +79,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         </span>
       </button>
       <button
-        onClick={() => onRouteChange('/pricing/basic')}
+        onClick={() => onRouteChange('/pricing')}
         className="bottom-app-bar-item"
       >
         <CategoryIcon className={`${isStorePage && 'active'}`} />

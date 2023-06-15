@@ -259,7 +259,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </Button>
           <div className="home-content-devide-line" />
 
-          <Link href="/pricing/basic" style={{ width: '100%' }}>
+          <Link href="/pricing" style={{ width: '100%' }}>
             <Button type="primary">프리미엄 스토어</Button>
           </Link>
 

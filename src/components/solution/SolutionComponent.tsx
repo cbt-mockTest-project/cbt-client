@@ -127,7 +127,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       //     '베이직플랜 가입 후 이용할 수 있습니다.\n가입하러 가시겠습니까?'
       //   );
       //   if (confirmed) {
-      //     router.push('/pricing/basic');
+      //     router.push('/pricing');
       //   }
       //   return;
       // }
