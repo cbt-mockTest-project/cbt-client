@@ -7,22 +7,27 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
 import { swapArray } from '@lib/utils/utils';
+import TodoWriteToggleButton from './TodoWriteToggleButton';
+import TodoWrite from './TodoWrite';
 
 const TodoListBlock = styled(motion.div)`
-  width: 500px;
-  height: 500px;
-  background-color: white;
   position: fixed;
   z-index: 9999;
   left: 40px;
   bottom: 40px;
-  padding: 20px 10px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  .todo-list-block-inner {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding: 20px 10px 10px 10px;
+    width: 500px;
+    height: 500px;
+    background-color: white;
+  }
   .todo-list-close-button {
     position: absolute;
     top: 10px;
@@ -40,14 +45,22 @@ const TodoListBlock = styled(motion.div)`
   .todo-list-wrapper {
     margin-top: 20px;
     height: calc(100vh - 52px);
+    padding-bottom: 60px;
     overflow-y: auto;
+  }
+  .todo-list-write-toggle-button-wrapper {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
   }
 
   @media (max-width: ${responsive.medium}) {
-    width: 100vw;
-    height: 100vh;
     bottom: 0;
     left: 0;
+    .todo-list-block-inner {
+      width: 100vw;
+      height: 100vh;
+    }
   }
 `;
 
@@ -87,6 +100,7 @@ const mockup = [
 const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedDateString, setSelectedDateString] = useState('');
+  const [isWriteMode, setIsWriteMode] = useState(false);
   const [todoList, setTodoList] = useState(mockup);
   const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
     if (date) {
@@ -100,6 +114,9 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
     setTodoList(reOrderedList);
   };
 
+  const toggleWriteMode = () => {
+    setIsWriteMode((prev) => !prev);
+  };
   return (
     <TodoListBlock
       initial={{ scale: 0, originX: 0, originY: 1 }}
@@ -111,25 +128,42 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
         repeatDelay: 1,
       }}
     >
-      <button className="todo-list-close-button" onClick={onClose}>
-        <Close />
-      </button>
-      <div className="todo-list-header">
-        <div className="todo-list-title">할 일 목록</div>
-        <DatePicker value={selectedDate} onChange={onChangeDate} />
+      <div className="todo-list-block-inner">
+        <button className="todo-list-close-button" onClick={onClose}>
+          <Close />
+        </button>
+        <div className="todo-list-header">
+          <div className="todo-list-title">할 일 목록</div>
+          <DatePicker value={selectedDate} onChange={onChangeDate} />
+        </div>
+        <ul className="todo-list-wrapper">
+          {todoList.map((todo, index) => (
+            <TodoItem
+              index={index}
+              arrayLength={mockup.length}
+              key={todo.id}
+              content={todo.content}
+              defaultChecked={todo.isChecked}
+              handleUpAndDown={handleUpAndDown}
+            />
+          ))}
+        </ul>
+        {!isWriteMode && (
+          <div className="todo-list-write-toggle-button-wrapper">
+            <TodoWriteToggleButton onClick={toggleWriteMode} />
+          </div>
+        )}
       </div>
-      <ul className="todo-list-wrapper">
-        {todoList.map((todo, index) => (
-          <TodoItem
-            index={index}
-            arrayLength={mockup.length}
-            key={todo.id}
-            content={todo.content}
-            defaultChecked={todo.isChecked}
-            handleUpAndDown={handleUpAndDown}
-          />
-        ))}
-      </ul>
+      {isWriteMode && (
+        <TodoWrite
+          onClose={() => {
+            setIsWriteMode(false);
+          }}
+          onPost={(value) => {
+            console.log(value);
+          }}
+        />
+      )}
     </TodoListBlock>
   );
 };
