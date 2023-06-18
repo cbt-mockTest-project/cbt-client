@@ -163,7 +163,6 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   };
   const requestEdit = async ({ title, content, id }: CreatePostInput) => {
     try {
-      console.log('aa');
       if (!id) return;
       if (!formValidate) {
         setFormValidate(true);

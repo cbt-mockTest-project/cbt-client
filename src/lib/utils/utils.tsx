@@ -9,6 +9,7 @@ import { checkboxOption } from 'customTypes';
 import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import { cloneDeep } from 'lodash';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -218,4 +219,23 @@ export const deduplication = (array: any[]) => {
     }
   }
   return stack;
+};
+
+export const swapArray = <T,>(
+  array: T[],
+  currentIndex: number,
+  afterIndex: number
+) => {
+  const newArray = cloneDeep(array);
+  const temp = newArray[currentIndex];
+  newArray[currentIndex] = newArray[afterIndex];
+  newArray[afterIndex] = temp;
+  return newArray;
+};
+
+export const removeTypeNameFromObjectArray = <T,>(array: Array<T>) => {
+  return array.map((el) => {
+    const { __typename, ...rest } = el as any;
+    return rest;
+  });
 };

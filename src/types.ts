@@ -151,7 +151,7 @@ export type CreateMockExamQuestionCommentOutput = {
 export type CreateMockExamQuestionFeedbackInput = {
   content: Scalars['String'];
   questionId: Scalars['Float'];
-  type?: QuestionFeedbackType;
+  type?: InputMaybe<QuestionFeedbackType>;
 };
 
 export type CreateMockExamQuestionFeedbackOutput = {
@@ -213,6 +213,18 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
   error?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateOrUpdateTodoInput = {
+  dateString: Scalars['String'];
+  todoList?: InputMaybe<Array<TodoListInputType>>;
+};
+
+export type CreateOrUpdateTodoOutput = {
+  __typename?: 'CreateOrUpdateTodoOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  todo?: Maybe<Todo>;
 };
 
 export type CreatePaymentInput = {
@@ -710,6 +722,17 @@ export type GetTodayAttendanceOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetTodoInput = {
+  dateString: Scalars['String'];
+};
+
+export type GetTodoOutput = {
+  __typename?: 'GetTodoOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  todo?: Maybe<Todo>;
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -945,6 +968,7 @@ export type Mutation = {
   createMutipleChoice: CreateMockExamQuestionMultipleChoiceOutput;
   createNotice: CreateNoticeOutput;
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
+  createOrUpdateTodo: CreateOrUpdateTodoOutput;
   createPayment: CreatePaymentOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
@@ -1083,6 +1107,11 @@ export type MutationCreateNoticeArgs = {
 
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
+};
+
+
+export type MutationCreateOrUpdateTodoArgs = {
+  input: CreateOrUpdateTodoInput;
 };
 
 
@@ -1482,6 +1511,7 @@ export type Query = {
   getMyPayments: GetMyPaymentsOutput;
   getRoleCount: GetRoleCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
+  getTodo: GetTodoOutput;
   me: MeOutput;
   naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
@@ -1535,6 +1565,11 @@ export type QueryGetFeedbacksWithFilterArgs = {
 
 export type QueryGetRoleCountArgs = {
   input: GetRoleCountInput;
+};
+
+
+export type QueryGetTodoArgs = {
+  input: GetTodoInput;
 };
 
 
@@ -1714,9 +1749,9 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
-  all?: Scalars['Boolean'];
-  category?: Scalars['String'];
-  query?: Scalars['String'];
+  all?: InputMaybe<Scalars['Boolean']>;
+  category?: InputMaybe<Scalars['String']>;
+  query?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadAllMockExamsOutput = {
@@ -1935,7 +1970,7 @@ export type ReadPostOutput = {
 };
 
 export type ReadPostsInput = {
-  all?: Scalars['Boolean'];
+  all?: InputMaybe<Scalars['Boolean']>;
   category?: InputMaybe<PostCategory>;
   limit?: InputMaybe<Scalars['Float']>;
   page: Scalars['Float'];
@@ -2102,6 +2137,27 @@ export type TitleAndId = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type Todo = {
+  __typename?: 'Todo';
+  created_at: Scalars['DateTime'];
+  dateString: Scalars['String'];
+  id: Scalars['Float'];
+  todoList: Array<TodoList>;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type TodoList = {
+  __typename?: 'TodoList';
+  isDone: Scalars['Boolean'];
+  todo: Scalars['String'];
+};
+
+export type TodoListInputType = {
+  isDone: Scalars['Boolean'];
+  todo: Scalars['String'];
+};
+
 export type UpdateAdblockPermissionInput = {
   userId: Scalars['Float'];
 };
@@ -2203,6 +2259,7 @@ export type User = {
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
+  todos: Array<Todo>;
   updated_at: Scalars['DateTime'];
   usedFreeTrial: Scalars['Boolean'];
   userRoles: Array<UserAndRole>;
@@ -2288,8 +2345,11 @@ export type ZepPost = {
 };
 
 export enum ZepPostCategory {
+  Algorism = 'ALGORISM',
+  Feedback = 'FEEDBACK',
   Free = 'FREE',
   Notice = 'NOTICE',
+  Project = 'PROJECT',
   Study = 'STUDY'
 }
 

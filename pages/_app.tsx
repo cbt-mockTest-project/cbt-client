@@ -20,7 +20,7 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
 import { isServer, someIncludes } from '@lib/utils/utils';
-import ChatComponent from '@components/common/chat/ChatComponent';
+import TodoListComponent from '@components/todoList/TodoListComponent';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -170,7 +170,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           <CoreContainer />
           <AppInner />
           <Component {...pageProps} />
-          {/* <ChatComponent /> */}
+          <TodoListComponent />
         </Provider>
       </ApolloProvider>
     </>

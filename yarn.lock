@@ -3075,6 +3075,13 @@
   resolved "https://registry.npmjs.org/@types/random-useragent/-/random-useragent-0.3.1.tgz"
   integrity sha512-yVz7897JjjwS6V+lmxlu8pktzNnNWgtF9MGxfaRfI8o+hQageO9K+0hfwr8PspdFJIIRE9KkLqp4o5tlQqv/0w==
 
+"@types/react-beautiful-dnd@^13.1.4":
+  version "13.1.4"
+  resolved "https://registry.yarnpkg.com/@types/react-beautiful-dnd/-/react-beautiful-dnd-13.1.4.tgz#bcec72da719c18c0d8b4a7cb00e7fb443211d6d7"
+  integrity sha512-4bIBdzOr0aavN+88q3C7Pgz+xkb7tz3whORYrmSj77wfVEMfiWiooIwVWFR7KM2e+uGTe5BVrXqSfb0aHeflJA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@18.0.10":
   version "18.0.10"
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.0.10.tgz"
@@ -7971,7 +7978,7 @@ moment@2.29.3:
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.3.tgz"
   integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
 
-moment@^2.24.0, moment@^2.29.2:
+moment@^2.24.0, moment@^2.29.2, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
