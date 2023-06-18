@@ -9,10 +9,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TextArea from 'antd/lib/input/TextArea';
 import { TodoList } from 'types';
-import { useApollo } from '@modules/apollo';
-import { useCreateOrUpdateTodo } from '@lib/graphql/user/hook/useTodo';
-import { removeTypeNameFromObjectArray } from '@lib/utils/utils';
-import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
+import useTodoItem from './hook/useTodoItem';
 
 const TodoItemBlock = styled.li`
   display: flex;
@@ -42,6 +39,7 @@ const TodoItemBlock = styled.li`
   .todo-item-content {
     position: relative;
     word-break: break-all;
+    white-space: pre-wrap;
   }
 
   .todo-item-content.checked {
@@ -70,7 +68,7 @@ const TodoItemBlock = styled.li`
   }
 `;
 
-interface TodoItemProps {
+export interface TodoItemProps {
   handleUpAndDown: (currentIndex: number, afterIndex: number) => void;
   todoIndex: number;
   todoId: number;
@@ -87,110 +85,20 @@ const TodoItem: React.FC<TodoItemProps> = ({
   selectedDateString,
   isDone,
 }) => {
-  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
+  const { handleCheckedState, handleEdit, handleDelete } = useTodoItem({
+    todoIndex,
+    todoId,
+    todoList,
+    selectedDateString,
+    isDone,
+  });
+
   const [editMode, setEditMode] = useState(false);
   const [editContent, setEditContent] = useState(todoList[todoIndex].todo);
-  const client = useApollo({}, '');
-  const handleCheckedState = async () => {
-    const newTodoList = todoList.map((item, index) => {
-      if (index === todoIndex) {
-        return {
-          ...item,
-          isDone: !isDone,
-        };
-      }
-      return item;
-    });
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: removeTypeNameFromObjectArray(newTodoList),
-          dateString: selectedDateString,
-        },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok) {
-      const currentTodo = client.readFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-      });
-      client.writeFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-        data: {
-          ...currentTodo,
-          todoList: newTodoList,
-        },
-      });
-      return;
-    }
-  };
-  const handleEdit = async () => {
-    const newTodoList = todoList.map((item, index) => {
-      if (index === todoIndex) {
-        return {
-          ...item,
-          todo: editContent,
-        };
-      }
-      return item;
-    });
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: removeTypeNameFromObjectArray(newTodoList),
-          dateString: selectedDateString,
-        },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok) {
-      const currentTodo = client.readFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-      });
-      client.writeFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-        data: {
-          ...currentTodo,
-          todoList: newTodoList,
-        },
-      });
-      toggleEditMode();
-      return;
-    }
-  };
-  const handleDelete = async () => {
-    const confirmed = confirm('정말 삭제하시겠습니까?');
-    if (confirmed) {
-      const newTodoList = todoList.filter((item, index) => index !== todoIndex);
-      const res = await createOrUpdateTodo({
-        variables: {
-          input: {
-            todoList: removeTypeNameFromObjectArray(newTodoList),
-            dateString: selectedDateString,
-          },
-        },
-      });
-      if (res.data?.createOrUpdateTodo.ok) {
-        const currentTodo = client.readFragment({
-          id: `Todo:${todoId}`,
-          fragment: FULL_TODO_FRAGMENT,
-        });
-        client.writeFragment({
-          id: `Todo:${todoId}`,
-          fragment: FULL_TODO_FRAGMENT,
-          data: {
-            ...currentTodo,
-            todoList: newTodoList,
-          },
-        });
-      }
-    }
-  };
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
+
   return (
     <TodoItemBlock>
       <div className="todo-item-wrapper">
@@ -252,7 +160,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
             <>
               <button
                 className="todo-item-tool-box-button"
-                onClick={handleEdit}
+                onClick={() => handleEdit(editContent, toggleEditMode)}
               >
                 수정하기
               </button>

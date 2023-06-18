@@ -6,9 +6,15 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
 import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
 import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
-import { removeTypeNameFromObjectArray, swapArray } from '@lib/utils/utils';
+import {
+  handleError,
+  removeTypeNameFromObjectArray,
+  swapArray,
+} from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { useCallback, useEffect, useState } from 'react';
+import useTodoFragments from './useTodoFragments';
+import { message } from 'antd';
 
 interface TodoListHookProps {
   selectedDateString: string;
@@ -23,76 +29,81 @@ const useTodoList = ({ selectedDateString }: TodoListHookProps) => {
   const todoList = getTodoData?.getTodo.todo?.todoList || [];
   const todoId = getTodoData?.getTodo.todo?.id || 0;
 
+  const { handleTodoFragments } = useTodoFragments({
+    todoList,
+    todoId,
+    client,
+    selectedDateString,
+  });
+
   const handleMoveTodoList = async (
     currentIndex: number,
     afterIndex: number
   ) => {
-    const reOrderedList = swapArray(todoList, currentIndex, afterIndex);
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: removeTypeNameFromObjectArray(reOrderedList),
-          dateString: selectedDateString,
-        },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok) {
-      const currentTodo = client.readFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-      });
-      client.writeFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-        data: {
-          ...currentTodo,
-          todoList: reOrderedList,
-        },
-      });
-      return;
+    try {
+      const newTodoList = swapArray(todoList, currentIndex, afterIndex);
+      handleTodoFragments(newTodoList);
+    } catch (e) {
+      handleError(e);
     }
   };
 
   const handlePostTodo = async (value: string) => {
-    const newTodoList = [
-      ...removeTypeNameFromObjectArray(todoList),
-      { todo: value, isDone: false },
-    ];
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: newTodoList,
-          dateString: selectedDateString,
+    try {
+      const newTodoList = [
+        ...removeTypeNameFromObjectArray(todoList),
+        { todo: value, isDone: false },
+      ];
+      const res = await createOrUpdateTodo({
+        variables: {
+          input: {
+            todoList: newTodoList,
+            dateString: selectedDateString,
+          },
         },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok && res.data?.createOrUpdateTodo.todo) {
-      client.writeQuery<GetTodoQuery>({
-        query: GET_TODO,
+      });
+      if (
+        res.data?.createOrUpdateTodo.ok &&
+        res.data?.createOrUpdateTodo.todo
+      ) {
+        client.writeQuery<GetTodoQuery>({
+          query: GET_TODO,
+          variables: {
+            input: {
+              dateString: selectedDateString,
+            },
+          },
+          data: {
+            getTodo: {
+              ok: true,
+              error: null,
+              todo: res.data.createOrUpdateTodo.todo,
+            },
+          },
+        });
+        return;
+      }
+      return message.error(res.data?.createOrUpdateTodo.error);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const handleGetTodo = useCallback(async () => {
+    try {
+      const res = await getTodo({
         variables: {
           input: {
             dateString: selectedDateString,
           },
         },
-        data: {
-          getTodo: {
-            ok: true,
-            error: null,
-            todo: res.data.createOrUpdateTodo.todo,
-          },
-        },
       });
+      if (res.data?.getTodo.error) {
+        return message.error(res.data?.getTodo.error);
+      }
+    } catch (e) {
+      handleError(e);
     }
-  };
-
-  const handleGetTodo = useCallback(async () => {
-    await getTodo({
-      variables: {
-        input: {
-          dateString: selectedDateString,
-        },
-      },
-    });
   }, [getTodo, selectedDateString]);
 
   useEffect(() => {
