@@ -11,9 +11,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { TodoList } from 'types';
 import { useApollo } from '@modules/apollo';
 import { useCreateOrUpdateTodo } from '@lib/graphql/user/hook/useTodo';
-import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
 import { removeTypeNameFromObjectArray } from '@lib/utils/utils';
-import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
 import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
 
 const TodoItemBlock = styled.li`

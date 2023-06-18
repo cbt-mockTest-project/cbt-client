@@ -19,6 +19,7 @@ import { useApollo } from '@modules/apollo';
 import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
 import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
 import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
+import useTodoList from './hook/useTodoList';
 
 const TodoListBlock = styled(motion.div)`
   position: fixed;
@@ -79,20 +80,15 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
-  const [getTodo, { data: getTodoData, refetch: refetchGetTodo }] =
-    useGetTodo();
-  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
-  const { data: meQuery } = useMeQuery();
-  const client = useApollo({}, '');
-
-  const todoList = getTodoData?.getTodo.todo?.todoList || [];
-  const todoId = getTodoData?.getTodo.todo?.id || 0;
-
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedDateString, setSelectedDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
   const [isWriteMode, setIsWriteMode] = useState(false);
+
+  const { handleMoveTodoList, handlePostTodo, todoList, todoId } = useTodoList({
+    selectedDateString,
+  });
 
   const todoListRef = useRef<HTMLUListElement>(null);
 
@@ -100,65 +96,6 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
     if (date) {
       setSelectedDate(date);
       setSelectedDateString(dateString);
-    }
-  };
-
-  const handleUpAndDown = async (currentIndex: number, afterIndex: number) => {
-    const reOrderedList = swapArray(todoList, currentIndex, afterIndex);
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: removeTypeNameFromObjectArray(reOrderedList),
-          dateString: selectedDateString,
-        },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok) {
-      const currentTodo = client.readFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-      });
-      client.writeFragment({
-        id: `Todo:${todoId}`,
-        fragment: FULL_TODO_FRAGMENT,
-        data: {
-          ...currentTodo,
-          todoList: reOrderedList,
-        },
-      });
-      return;
-    }
-  };
-
-  const handlePostTodo = async (value: string) => {
-    const newTodoList = [
-      ...removeTypeNameFromObjectArray(todoList),
-      { todo: value, isDone: false },
-    ];
-    const res = await createOrUpdateTodo({
-      variables: {
-        input: {
-          todoList: newTodoList,
-          dateString: selectedDateString,
-        },
-      },
-    });
-    if (res.data?.createOrUpdateTodo.ok && res.data?.createOrUpdateTodo.todo) {
-      client.writeQuery<GetTodoQuery>({
-        query: GET_TODO,
-        variables: {
-          input: {
-            dateString: selectedDateString,
-          },
-        },
-        data: {
-          getTodo: {
-            ok: true,
-            error: null,
-            todo: res.data.createOrUpdateTodo.todo,
-          },
-        },
-      });
     }
   };
 
@@ -174,21 +111,6 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
       });
     }
   }, [isWriteMode]);
-
-  const handleGetToto = useCallback(async () => {
-    await getTodo({
-      variables: {
-        input: {
-          dateString: selectedDateString,
-        },
-      },
-    });
-  }, [selectedDate]);
-
-  useEffect(() => {
-    if (!meQuery?.me.user) return;
-    handleGetToto();
-  }, [selectedDate]);
 
   return (
     <TodoListBlock
@@ -217,7 +139,7 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
               todoId={todoId}
               key={shortid.generate()}
               isDone={todo.isDone}
-              handleUpAndDown={handleUpAndDown}
+              handleUpAndDown={handleMoveTodoList}
               selectedDateString={selectedDateString}
             />
           ))}
