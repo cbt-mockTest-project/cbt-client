@@ -1,10 +1,7 @@
 import { TodoList, TodoListInputType } from 'types';
 import { TodoItemProps } from '../TodoItem';
-import { useCreateOrUpdateTodo } from '@lib/graphql/user/hook/useTodo';
-import { handleError, removeTypeNameFromObjectArray } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
-import { useState } from 'react';
 import useTodoFragments from './useTodoFragments';
 
 interface TodoItemHookProps extends Omit<TodoItemProps, 'handleUpAndDown'> {}
@@ -17,7 +14,7 @@ const useTodoItem = ({
   selectedDateString,
 }: TodoItemHookProps) => {
   const client = useApollo({}, '');
-  const { handleTodoFragments } = useTodoFragments({
+  const { handleTodoFragments, createOrUpdateTodoLoading } = useTodoFragments({
     todoList,
     todoId,
     client,
@@ -75,6 +72,7 @@ const useTodoItem = ({
     handleCheckedState,
     handleEdit,
     handleDelete,
+    createOrUpdateTodoLoading,
   };
 };
 

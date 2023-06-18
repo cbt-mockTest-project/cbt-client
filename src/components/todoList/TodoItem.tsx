@@ -85,7 +85,12 @@ const TodoItem: React.FC<TodoItemProps> = ({
   selectedDateString,
   isDone,
 }) => {
-  const { handleCheckedState, handleEdit, handleDelete } = useTodoItem({
+  const {
+    handleCheckedState,
+    handleEdit,
+    handleDelete,
+    createOrUpdateTodoLoading,
+  } = useTodoItem({
     todoIndex,
     todoId,
     todoList,
@@ -160,9 +165,10 @@ const TodoItem: React.FC<TodoItemProps> = ({
             <>
               <button
                 className="todo-item-tool-box-button"
+                disabled={createOrUpdateTodoLoading}
                 onClick={() => handleEdit(editContent, toggleEditMode)}
               >
-                수정하기
+                {createOrUpdateTodoLoading ? '수정중입니다...' : '수정하기'}
               </button>
               <button
                 className="todo-item-tool-box-button"

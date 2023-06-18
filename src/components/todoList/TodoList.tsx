@@ -95,6 +95,7 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
     todoList,
     todoId,
     getTodoLoading,
+    createOrUpdateTodoLoading,
   } = useTodoList({
     selectedDateString,
   });
@@ -171,6 +172,7 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
             onClose={() => {
               setIsWriteMode(false);
             }}
+            isPostLoading={createOrUpdateTodoLoading}
             onPost={handlePostTodo}
           />
         )}
