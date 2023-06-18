@@ -1,24 +1,15 @@
 import { responsive } from '@lib/utils/responsive';
 import { Close } from '@mui/icons-material';
-import { DatePicker, DatePickerProps } from 'antd';
+import { DatePicker, DatePickerProps, Spin, message } from 'antd';
 import { motion } from 'framer-motion';
 import moment from 'moment';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
-import { removeTypeNameFromObjectArray, swapArray } from '@lib/utils/utils';
 import TodoWriteToggleButton from './TodoWriteToggleButton';
 import TodoWrite from './TodoWrite';
-import {
-  useCreateOrUpdateTodo,
-  useGetTodo,
-} from '@lib/graphql/user/hook/useTodo';
 import shortid from 'shortid';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useApollo } from '@modules/apollo';
-import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
-import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
-import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
 import useTodoList from './hook/useTodoList';
 
 const TodoListBlock = styled(motion.div)`
@@ -64,6 +55,17 @@ const TodoListBlock = styled(motion.div)`
     bottom: 10px;
     right: 10px;
   }
+  .todo-list-loading-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    svg {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+    }
+  }
 
   @media (max-width: ${responsive.medium}) {
     bottom: 0;
@@ -80,13 +82,20 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
+  const { data: meQuery } = useMeQuery();
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedDateString, setSelectedDateString] = useState(
     moment().format('YYYY-MM-DD')
   );
   const [isWriteMode, setIsWriteMode] = useState(false);
 
-  const { handleMoveTodoList, handlePostTodo, todoList, todoId } = useTodoList({
+  const {
+    handleMoveTodoList,
+    handlePostTodo,
+    todoList,
+    todoId,
+    getTodoLoading,
+  } = useTodoList({
     selectedDateString,
   });
 
@@ -100,6 +109,9 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
   };
 
   const toggleWriteMode = () => {
+    if (!isWriteMode && !meQuery?.me.user) {
+      return message.error('로그인 후 이용해주세요.');
+    }
     setIsWriteMode((prev) => !prev);
   };
 
@@ -132,6 +144,11 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
           <DatePicker value={selectedDate} onChange={onChangeDate} />
         </div>
         <ul className="todo-list-wrapper" ref={todoListRef}>
+          {getTodoLoading && (
+            <div className="todo-list-loading-wrapper">
+              <Spin />
+            </div>
+          )}
           {todoList.map((todo, index) => (
             <TodoItem
               todoIndex={index}

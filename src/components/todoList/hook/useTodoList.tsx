@@ -3,7 +3,6 @@ import {
   useGetTodo,
 } from '@lib/graphql/user/hook/useTodo';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
 import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
 import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
 import {
@@ -21,7 +20,8 @@ interface TodoListHookProps {
 }
 
 const useTodoList = ({ selectedDateString }: TodoListHookProps) => {
-  const [getTodo, { data: getTodoData }] = useGetTodo();
+  const [getTodo, { data: getTodoData, loading: getTodoLoading }] =
+    useGetTodo();
   const [createOrUpdateTodo] = useCreateOrUpdateTodo();
   const { data: meQuery } = useMeQuery();
   const client = useApollo({}, '');
@@ -116,6 +116,7 @@ const useTodoList = ({ selectedDateString }: TodoListHookProps) => {
     handlePostTodo,
     todoList,
     todoId,
+    getTodoLoading,
   };
 };
 
