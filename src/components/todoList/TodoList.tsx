@@ -3,16 +3,26 @@ import { Close } from '@mui/icons-material';
 import { DatePicker, DatePickerProps } from 'antd';
 import { motion } from 'framer-motion';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import TodoItem from './TodoItem';
-import { swapArray } from '@lib/utils/utils';
+import { removeTypeNameFromObjectArray, swapArray } from '@lib/utils/utils';
 import TodoWriteToggleButton from './TodoWriteToggleButton';
 import TodoWrite from './TodoWrite';
+import {
+  useCreateOrUpdateTodo,
+  useGetTodo,
+} from '@lib/graphql/user/hook/useTodo';
+import shortid from 'shortid';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useApollo } from '@modules/apollo';
+import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
+import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
+import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
 
 const TodoListBlock = styled(motion.div)`
   position: fixed;
-  z-index: 9999;
+  z-index: 999;
   left: 40px;
   bottom: 40px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
@@ -68,40 +78,24 @@ interface TodoListProps {
   onClose: () => void;
 }
 
-const mockup = [
-  {
-    id: 1,
-    content:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit velit illo voluptatem maiores nihil unde soluta dicta commodi, corrupti quas cupiditate ea perspiciatis reprehenderit quo facere aspernatur? Dignissimos, voluptatum illo.',
-    isChecked: false,
-  },
-  {
-    id: 2,
-    content: '테스트1',
-    isChecked: false,
-  },
-  {
-    id: 3,
-    content: '테스트2',
-    isChecked: false,
-  },
-  {
-    id: 4,
-    content: '테스트3',
-    isChecked: false,
-  },
-  {
-    id: 5,
-    content: '테스트4',
-    isChecked: false,
-  },
-];
-
 const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
+  const [getTodo, { data: getTodoData, refetch: refetchGetTodo }] =
+    useGetTodo();
+  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
+  const { data: meQuery } = useMeQuery();
+  const client = useApollo({}, '');
+
+  const todoList = getTodoData?.getTodo.todo?.todoList || [];
+  const todoId = getTodoData?.getTodo.todo?.id || 0;
+
   const [selectedDate, setSelectedDate] = useState(moment());
-  const [selectedDateString, setSelectedDateString] = useState('');
+  const [selectedDateString, setSelectedDateString] = useState(
+    moment().format('YYYY-MM-DD')
+  );
   const [isWriteMode, setIsWriteMode] = useState(false);
-  const [todoList, setTodoList] = useState(mockup);
+
+  const todoListRef = useRef<HTMLUListElement>(null);
+
   const onChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
     if (date) {
       setSelectedDate(date);
@@ -109,14 +103,93 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
     }
   };
 
-  const handleUpAndDown = (currentIndex: number, afterIndex: number) => {
+  const handleUpAndDown = async (currentIndex: number, afterIndex: number) => {
     const reOrderedList = swapArray(todoList, currentIndex, afterIndex);
-    setTodoList(reOrderedList);
+    const res = await createOrUpdateTodo({
+      variables: {
+        input: {
+          todoList: removeTypeNameFromObjectArray(reOrderedList),
+          dateString: selectedDateString,
+        },
+      },
+    });
+    if (res.data?.createOrUpdateTodo.ok) {
+      const currentTodo = client.readFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+      });
+      client.writeFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+        data: {
+          ...currentTodo,
+          todoList: reOrderedList,
+        },
+      });
+      return;
+    }
+  };
+
+  const handlePostTodo = async (value: string) => {
+    const newTodoList = [
+      ...removeTypeNameFromObjectArray(todoList),
+      { todo: value, isDone: false },
+    ];
+    const res = await createOrUpdateTodo({
+      variables: {
+        input: {
+          todoList: newTodoList,
+          dateString: selectedDateString,
+        },
+      },
+    });
+    if (res.data?.createOrUpdateTodo.ok && res.data?.createOrUpdateTodo.todo) {
+      client.writeQuery<GetTodoQuery>({
+        query: GET_TODO,
+        variables: {
+          input: {
+            dateString: selectedDateString,
+          },
+        },
+        data: {
+          getTodo: {
+            ok: true,
+            error: null,
+            todo: res.data.createOrUpdateTodo.todo,
+          },
+        },
+      });
+    }
   };
 
   const toggleWriteMode = () => {
     setIsWriteMode((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (isWriteMode) {
+      todoListRef.current?.scrollTo({
+        top: todoListRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [isWriteMode]);
+
+  const handleGetToto = useCallback(async () => {
+    await getTodo({
+      variables: {
+        input: {
+          dateString: selectedDateString,
+        },
+      },
+    });
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (!meQuery?.me.user) return;
+    handleGetToto();
+  }, [selectedDate]);
+
   return (
     <TodoListBlock
       initial={{ scale: 0, originX: 0, originY: 1 }}
@@ -136,15 +209,16 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
           <div className="todo-list-title">할 일 목록</div>
           <DatePicker value={selectedDate} onChange={onChangeDate} />
         </div>
-        <ul className="todo-list-wrapper">
+        <ul className="todo-list-wrapper" ref={todoListRef}>
           {todoList.map((todo, index) => (
             <TodoItem
-              index={index}
-              arrayLength={mockup.length}
-              key={todo.id}
-              content={todo.content}
-              defaultChecked={todo.isChecked}
+              todoIndex={index}
+              todoList={todoList}
+              todoId={todoId}
+              key={shortid.generate()}
+              isDone={todo.isDone}
               handleUpAndDown={handleUpAndDown}
+              selectedDateString={selectedDateString}
             />
           ))}
         </ul>
@@ -153,17 +227,15 @@ const TodoList: React.FC<TodoListProps> = ({ onClose }) => {
             <TodoWriteToggleButton onClick={toggleWriteMode} />
           </div>
         )}
+        {isWriteMode && (
+          <TodoWrite
+            onClose={() => {
+              setIsWriteMode(false);
+            }}
+            onPost={handlePostTodo}
+          />
+        )}
       </div>
-      {isWriteMode && (
-        <TodoWrite
-          onClose={() => {
-            setIsWriteMode(false);
-          }}
-          onPost={(value) => {
-            console.log(value);
-          }}
-        />
-      )}
     </TodoListBlock>
   );
 };
