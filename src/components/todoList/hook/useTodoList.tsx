@@ -22,7 +22,8 @@ interface TodoListHookProps {
 const useTodoList = ({ selectedDateString }: TodoListHookProps) => {
   const [getTodo, { data: getTodoData, loading: getTodoLoading }] =
     useGetTodo();
-  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
+  const [createOrUpdateTodo, { loading: createOrUpdateTodoLoading }] =
+    useCreateOrUpdateTodo();
   const { data: meQuery } = useMeQuery();
   const client = useApollo({}, '');
 
@@ -117,6 +118,7 @@ const useTodoList = ({ selectedDateString }: TodoListHookProps) => {
     todoList,
     todoId,
     getTodoLoading,
+    createOrUpdateTodoLoading,
   };
 };
 

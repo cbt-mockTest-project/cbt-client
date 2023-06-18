@@ -18,7 +18,8 @@ const useTodoFragments = ({
   client,
   selectedDateString,
 }: TodoFragmentsHookProps) => {
-  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
+  const [createOrUpdateTodo, { loading: createOrUpdateTodoLoading }] =
+    useCreateOrUpdateTodo();
   const handleTodoFragments = async (
     newTodoList: TodoListInputType[],
     callback?: () => void
@@ -51,6 +52,7 @@ const useTodoFragments = ({
   };
   return {
     handleTodoFragments,
+    createOrUpdateTodoLoading,
   };
 };
 

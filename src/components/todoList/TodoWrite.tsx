@@ -29,9 +29,14 @@ const TodoWriteBlock = styled.form`
 interface TodoWriteProps {
   onClose: () => void;
   onPost: (value: string) => void;
+  isPostLoading: boolean;
 }
 
-const TodoWrite: React.FC<TodoWriteProps> = ({ onClose, onPost }) => {
+const TodoWrite: React.FC<TodoWriteProps> = ({
+  onClose,
+  onPost,
+  isPostLoading,
+}) => {
   const [value, setValue] = useState('');
   return (
     <TodoWriteBlock
@@ -43,8 +48,8 @@ const TodoWrite: React.FC<TodoWriteProps> = ({ onClose, onPost }) => {
       <div className="todo-write-inner">
         <div className="todo-write-title">오늘 할일</div>
         <TextArea value={value} onChange={(e) => setValue(e.target.value)} />
-        <Button type="primary" htmlType="submit">
-          작성하기
+        <Button type="primary" htmlType="submit" loading={isPostLoading}>
+          {isPostLoading ? '작성중입니다..' : '작성하기'}
         </Button>
         <button className="todo-write-close-button" onClick={onClose}>
           <CloseOutlined />
