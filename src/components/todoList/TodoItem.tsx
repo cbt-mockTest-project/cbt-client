@@ -8,6 +8,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TextArea from 'antd/lib/input/TextArea';
+import { TodoList } from 'types';
+import { useApollo } from '@modules/apollo';
+import { useCreateOrUpdateTodo } from '@lib/graphql/user/hook/useTodo';
+import { GET_TODO } from '@lib/graphql/user/query/todoQuery';
+import { removeTypeNameFromObjectArray } from '@lib/utils/utils';
+import { GetTodoQuery } from '@lib/graphql/user/query/todoQuery.generated';
+import { FULL_TODO_FRAGMENT } from '@lib/graphql/user/query/todoFragment';
 
 const TodoItemBlock = styled.li`
   display: flex;
@@ -36,17 +43,9 @@ const TodoItemBlock = styled.li`
   }
   .todo-item-content {
     position: relative;
+    word-break: break-all;
   }
 
-  .todo-item-content::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    height: 1px;
-    background: ${palette.antd_blue_01};
-    transition: width 0.3s;
-  }
   .todo-item-content.checked {
     color: ${palette.gray_500};
     text-decoration: line-through;
@@ -74,34 +73,121 @@ const TodoItemBlock = styled.li`
 `;
 
 interface TodoItemProps {
-  defaultChecked: boolean;
-  content: string;
   handleUpAndDown: (currentIndex: number, afterIndex: number) => void;
-  index: number;
-  arrayLength: number;
+  todoIndex: number;
+  todoId: number;
+  todoList: TodoList[];
+  isDone: boolean;
+  selectedDateString: string;
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({
-  defaultChecked,
-  content,
   handleUpAndDown,
-  index,
-  arrayLength,
+  todoIndex,
+  todoId,
+  todoList,
+  selectedDateString,
+  isDone,
 }) => {
-  const [checked, setChecked] = useState(defaultChecked);
+  const [createOrUpdateTodo] = useCreateOrUpdateTodo();
   const [editMode, setEditMode] = useState(false);
-  const [editContent, setEditContent] = useState(content);
-  const handleCheckedState = () => {
-    setChecked(!checked);
+  const [editContent, setEditContent] = useState(todoList[todoIndex].todo);
+  const client = useApollo({}, '');
+  const handleCheckedState = async () => {
+    const newTodoList = todoList.map((item, index) => {
+      if (index === todoIndex) {
+        return {
+          ...item,
+          isDone: !isDone,
+        };
+      }
+      return item;
+    });
+    const res = await createOrUpdateTodo({
+      variables: {
+        input: {
+          todoList: removeTypeNameFromObjectArray(newTodoList),
+          dateString: selectedDateString,
+        },
+      },
+    });
+    if (res.data?.createOrUpdateTodo.ok) {
+      const currentTodo = client.readFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+      });
+      client.writeFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+        data: {
+          ...currentTodo,
+          todoList: newTodoList,
+        },
+      });
+      return;
+    }
   };
-  const handleEdit = () => {
-    // 수정
-    toggleEditMode();
+  const handleEdit = async () => {
+    const newTodoList = todoList.map((item, index) => {
+      if (index === todoIndex) {
+        return {
+          ...item,
+          todo: editContent,
+        };
+      }
+      return item;
+    });
+    const res = await createOrUpdateTodo({
+      variables: {
+        input: {
+          todoList: removeTypeNameFromObjectArray(newTodoList),
+          dateString: selectedDateString,
+        },
+      },
+    });
+    if (res.data?.createOrUpdateTodo.ok) {
+      const currentTodo = client.readFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+      });
+      client.writeFragment({
+        id: `Todo:${todoId}`,
+        fragment: FULL_TODO_FRAGMENT,
+        data: {
+          ...currentTodo,
+          todoList: newTodoList,
+        },
+      });
+      toggleEditMode();
+      return;
+    }
   };
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const confirmed = confirm('정말 삭제하시겠습니까?');
     if (confirmed) {
-      // 삭제
+      const newTodoList = todoList.filter((item, index) => index !== todoIndex);
+      const res = await createOrUpdateTodo({
+        variables: {
+          input: {
+            todoList: removeTypeNameFromObjectArray(newTodoList),
+            dateString: selectedDateString,
+          },
+        },
+      });
+      if (res.data?.createOrUpdateTodo.ok) {
+        const currentTodo = client.readFragment({
+          id: `Todo:${todoId}`,
+          fragment: FULL_TODO_FRAGMENT,
+        });
+        client.writeFragment({
+          id: `Todo:${todoId}`,
+          fragment: FULL_TODO_FRAGMENT,
+          data: {
+            ...currentTodo,
+            todoList: newTodoList,
+          },
+        });
+      }
     }
   };
   const toggleEditMode = () => {
@@ -115,11 +201,11 @@ const TodoItem: React.FC<TodoItemProps> = ({
             className="todo-item-checkbox-button"
             onClick={handleCheckedState}
           >
-            {checked ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+            {isDone ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
           </button>
           {!editMode && (
-            <div className={`todo-item-content ${checked ? 'checked' : ''}`}>
-              {content}
+            <div className={`todo-item-content ${isDone ? 'checked' : ''}`}>
+              {todoList[todoIndex].todo}
             </div>
           )}
           {editMode && (
@@ -147,8 +233,8 @@ const TodoItem: React.FC<TodoItemProps> = ({
               <button
                 className="todo-item-tool-box-button"
                 onClick={() => {
-                  if (index === 0) return;
-                  handleUpAndDown(index, index - 1);
+                  if (todoIndex === 0) return;
+                  handleUpAndDown(todoIndex, todoIndex - 1);
                 }}
               >
                 <KeyboardArrowUpIcon />
@@ -156,8 +242,8 @@ const TodoItem: React.FC<TodoItemProps> = ({
               <button
                 className="todo-item-tool-box-button"
                 onClick={() => {
-                  if (index === arrayLength - 1) return;
-                  handleUpAndDown(index, index + 1);
+                  if (todoIndex === todoList.length - 1) return;
+                  handleUpAndDown(todoIndex, todoIndex + 1);
                 }}
               >
                 <KeyboardArrowDownIcon />

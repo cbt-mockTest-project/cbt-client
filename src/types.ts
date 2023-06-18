@@ -217,7 +217,7 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
 
 export type CreateOrUpdateTodoInput = {
   dateString: Scalars['String'];
-  todoList: Array<TodoListInputType>;
+  todoList?: InputMaybe<Array<TodoListInputType>>;
 };
 
 export type CreateOrUpdateTodoOutput = {
@@ -2149,10 +2149,12 @@ export type Todo = {
 
 export type TodoList = {
   __typename?: 'TodoList';
+  isDone: Scalars['Boolean'];
   todo: Scalars['String'];
 };
 
 export type TodoListInputType = {
+  isDone: Scalars['Boolean'];
   todo: Scalars['String'];
 };
 
