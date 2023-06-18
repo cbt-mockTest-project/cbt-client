@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { FULL_TODO_FRAGMENT } from './todoFragment';
 
 export const GET_TODO = gql`
   query GetTodo($input: GetTodoInput!) {
@@ -6,14 +7,11 @@ export const GET_TODO = gql`
       error
       ok
       todo {
-        dateString
-        id
-        todoList {
-          todo
-        }
+        ...TodoParts
       }
     }
   }
+  ${FULL_TODO_FRAGMENT}
 `;
 
 export const CREATE_OR_UPDATE_TODO = gql`
@@ -21,6 +19,11 @@ export const CREATE_OR_UPDATE_TODO = gql`
     createOrUpdateTodo(input: $input) {
       ok
       error
+      __typename
+      todo {
+        ...TodoParts
+      }
     }
   }
+  ${FULL_TODO_FRAGMENT}
 `;

@@ -5,8 +5,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const TodoWriteBlock = styled.form`
-  position: absolute;
-  bottom: 0;
   width: 100%;
   .todo-write-title {
     font-weight: bold;

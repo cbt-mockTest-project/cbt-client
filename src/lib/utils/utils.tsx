@@ -232,3 +232,10 @@ export const swapArray = <T,>(
   newArray[afterIndex] = temp;
   return newArray;
 };
+
+export const removeTypeNameFromObjectArray = <T,>(array: Array<T>) => {
+  return array.map((el) => {
+    const { __typename, ...rest } = el as any;
+    return rest;
+  });
+};
