@@ -283,11 +283,17 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
   .exam-solution-feedback-user-name {
     font-size: 0.8rem;
     font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
   }
   .exam-solution-feedback-delete-button {
     font-size: 0.8rem;
     color: ${palette.gray_500};
     transition: color 0.3s;
+    white-space: nowrap;
+    width: max-content;
     :hover {
       color: ${palette.antd_blue_01};
     }

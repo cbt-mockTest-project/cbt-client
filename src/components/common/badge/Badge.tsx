@@ -24,6 +24,8 @@ const BadgeContainer = styled.label<BadgeContainerProps>`
   padding: 0 5px;
   font-size: 0.5rem;
   border-radius: 20px;
+  white-space: nowrap;
+  width: max-content;
   border-color: ${(props) =>
     props.color === 'blue' ? palette.antd_blue_01 : palette.red_500};
 `;
