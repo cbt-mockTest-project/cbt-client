@@ -161,7 +161,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         setFeedBackModalState(false);
         setFinishModalState(false);
         setAnswerboxVisible(false);
-        setCommentModalState(false);
 
         setBookmarkState(
           questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
