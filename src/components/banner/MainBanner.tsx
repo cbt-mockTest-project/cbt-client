@@ -37,6 +37,20 @@ const MainBanner = () => {
         className="home-main-banner-swiper"
       >
         <SwiperSlide>
+          <button
+            className="main-banner-text-banner"
+            onClick={onToggleAdBannerInfoModal}
+          >
+            <p>해당 위치 광고 문의 or 협업 문의</p>
+            <p className="main-banner-text-banner-icon-wrapper">
+              <span>클릭</span>
+              <span className="main-banner-text-banner-icon">
+                <MouseIcon />
+              </span>
+            </p>
+          </button>
+        </SwiperSlide>
+        <SwiperSlide>
           {isMobile ? (
             <Link href="https://zep.us/play/8MOQrp">
               <div className="home-main-banner-box zep" />

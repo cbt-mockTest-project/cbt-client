@@ -32,7 +32,7 @@ const AdBannerInfoModal: React.FC<AdBannerInfoModalProps> = ({
   return (
     <AdBannerInfoModalBlock open={open} onClose={onClose}>
       <div className="ad-banner-info-modal-inner">
-        <div className="ad-banner-info-modal-inner-title">광고 문의</div>
+        <div className="ad-banner-info-modal-inner-title">문의</div>
         <div className="ad-banner-info-modal-inner-label">이메일</div>
         <a href="mailto:moducbt@gmail.com">moducbt@gmail.com</a>
         <div className="ad-banner-info-modal-inner-label">카카오톡</div>
