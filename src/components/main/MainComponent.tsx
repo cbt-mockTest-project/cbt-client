@@ -3,7 +3,6 @@ import DataShareModal from '@components/common/modal/DataShareModal';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 import MakeExamModal from '@components/common/modal/MakeExamModal';
 import NoticeModal from '@components/common/modal/NoticeModal';
-import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
 import RemoveAdModal from '@components/common/modal/RemoveAdModal';
 import Portal from '@components/common/portal/Portal';
 import {
@@ -30,7 +29,6 @@ import { ExamTitleAndId, User, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
 import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 import { responsive } from '@lib/utils/responsive';
-import ChatComponent from '@components/common/chat/ChatComponent';
 
 const RecentNotice = dynamic(() => import('./RecentNotice'), {
   ssr: false,
@@ -60,10 +58,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
   );
 
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
-  const {
-    value: preventAdBlockModalState,
-    onToggle: onTogglePreventAdBlockModal,
-  } = useToggle(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
@@ -133,10 +127,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (checkAdblock() && isNotAllowAdBlock) {
-      onTogglePreventAdBlockModal();
-      return;
-    }
     if (!selectedExamId) return;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === category
@@ -170,20 +160,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
     });
   };
   const gotoSolutionPage = () => {
-    if (checkAdblock() && isNotAllowAdBlock) {
-      onTogglePreventAdBlockModal();
-      return;
-    }
     setGotoSolutionPageLoading(true);
     router.push({
       pathname: `/exam/solution/${selectedExamId}`,
     });
   };
   const gotoRandomSelectPage = () => {
-    if (checkAdblock() && isNotAllowAdBlock) {
-      onTogglePreventAdBlockModal();
-      return;
-    }
     router.push(`${router.pathname}/exam/randomselect`);
   };
   const onCloseNoticeModal = () => {
@@ -306,13 +288,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
       </div>
 
       <Portal>
-        {preventAdBlockModalState && (
-          <PreventAdBlockModal
-            open={preventAdBlockModalState}
-            onClose={onTogglePreventAdBlockModal}
-          />
-        )}
-
         {kakaoChatModalState && (
           <KakaoOpenChatModal
             open={kakaoChatModalState}
