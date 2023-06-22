@@ -121,7 +121,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
     setSelectedExams([]);
   };
 
-  const onStartRandomExam = () => {
+  const handleStart = (type: 'exam' | 'solution') => {
     if (!meQuery?.me.user) {
       openLoginModal();
       return;
@@ -141,7 +141,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
     }
     setRouteLoading(true);
     router.push({
-      pathname: '/exam',
+      pathname: type === 'exam' ? '/exam' : '/exam/solution',
       query: {
         es,
         s: JSON.stringify(checkedStates),
@@ -245,15 +245,26 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             />
           </div>
         </div>
-        <Button
-          className="random-select-exam-start-button"
-          onClick={onStartRandomExam}
-          type="primary"
-          loading={routeLoading}
-          disabled={selectedExams.length < 1}
-        >
-          랜덤모의고사 시작
-        </Button>
+        <div className="random-select-exam-start-button-wrapper">
+          <Button
+            className="random-select-exam-start-button"
+            onClick={() => handleStart('exam')}
+            type="primary"
+            loading={routeLoading}
+            disabled={selectedExams.length < 1}
+          >
+            풀이모드
+          </Button>
+          <Button
+            className="random-select-exam-start-button"
+            onClick={() => handleStart('solution')}
+            type="primary"
+            loading={routeLoading}
+            disabled={selectedExams.length < 1}
+          >
+            해설모드
+          </Button>
+        </div>
       </div>
     </RandomSelectComponentContainer>
   );
@@ -290,8 +301,16 @@ const RandomSelectComponentContainer = styled.div`
     flex-direction: column;
     gap: 5px;
   }
+  .random-select-exam-start-button-wrapper {
+    display: flex;
+    margin-top: 15px;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
   .random-select-exam-start-button {
-    margin-top: 20px;
+    height: 40px;
   }
   .multiple-random-exam-selector {
     .ant-select-selector {

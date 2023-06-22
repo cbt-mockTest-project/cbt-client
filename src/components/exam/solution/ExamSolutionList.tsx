@@ -55,6 +55,8 @@ interface ExamSolutionListProps {
   hasNewWindowButton?: boolean;
   hasStateBox?: boolean;
   isPreview?: boolean;
+  questionSubDescription?: string;
+  index?: number;
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
@@ -65,6 +67,8 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   hasNewWindowButton = true,
   hasStateBox = false,
   isPreview = false,
+  questionSubDescription,
+  index,
 }) => {
   const [currentQuestion, setCurrentQuestion] =
     useState<ExamQuestionType>(question);
@@ -228,6 +232,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               </p>
             </button>
           )}
+
           {hasNewWindowButton && (
             <Tooltip placement="top" title="새창으로 보기">
               <a
@@ -242,8 +247,13 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           )}
         </div>
         <div className="solution-page-question-pre-wrapper">
+          {questionSubDescription && (
+            <div className="solution-page-question-sub-description">
+              {questionSubDescription}
+            </div>
+          )}
           <pre className="solution-page-question">
-            {`Q${currentQuestion.number}. ${currentQuestion.question}`}
+            {`Q${index || currentQuestion.number}. ${currentQuestion.question}`}
           </pre>
         </div>
         {currentQuestion.question_img &&
@@ -509,6 +519,11 @@ const ExamSolutionListContainer = styled.li`
   .solution-page-solution-hide-text {
     flex: 2;
     text-align: left;
+  }
+  .solution-page-question-sub-description {
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: ${palette.gray_500};
   }
 
   @media (max-width: ${responsive.medium}) {
