@@ -21,7 +21,11 @@ import styled from 'styled-components';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
 import axios from 'axios';
-import { MockExamImageType, MockExamQuestionFeedback, User } from 'types';
+import {
+  MockExamImageType,
+  MockExamQuestionFeedback,
+  ReadMockExamQuestionsByMockExamIdInput,
+} from 'types';
 import useToggle from '@lib/hooks/useToggle';
 import { PdfDownloadSelectModalFooter } from '@components/common/modal/PdfDownloadSelectModal';
 import { SearchOutlined } from '@ant-design/icons';
@@ -40,6 +44,7 @@ interface SolutionComponentProps {
   questionsQuery?: ReadMockExamQuestionsByMockExamIdQuery;
   isPreview?: boolean;
   hasSearchInput?: boolean;
+  isRandomMode?: boolean;
   hasNewWindowButton?: boolean;
   subDescription?: string;
   coAuthor?: string;
@@ -50,6 +55,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   isPreview = false,
   hasNewWindowButton = true,
   hasSearchInput = false,
+  isRandomMode = false,
   subDescription,
   coAuthor,
 }) => {
@@ -95,9 +101,35 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
             },
           });
         }
+      } else if (router.query.es) {
+        const ids = router.query.es
+          ? JSON.parse(String(router.query.es))
+          : null;
+        const l = router.query.l ? Number(router.query.l) : null;
+        const s = router.query.s ? JSON.parse(String(router.query.s)) : null;
+        const readQuestionInput: ReadMockExamQuestionsByMockExamIdInput = {
+          ids,
+          isRandom: router.query.r === 'true' ? true : false,
+          limit: l,
+          states: s && s.length > 0 ? s : null,
+        };
+        const res = await readQuestions({
+          variables: {
+            input: readQuestionInput,
+          },
+        });
+        if (res.data?.readMockExamQuestionsByMockExamId.ok) {
+          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
+            query: READ_QUESTIONS_BY_ID,
+            data: {
+              readMockExamQuestionsByMockExamId:
+                res.data.readMockExamQuestionsByMockExamId,
+            },
+          });
+        }
       }
     })();
-  }, [router.query.Id]);
+  }, [router.query]);
   const currentQuestionsQuery = (questionsQueryOnClientSide ||
     questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery;
 
@@ -323,9 +355,11 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
       </h1>
-      <p className="exam-solution-page-author-name">{`제작자: ${
-        currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
-      }${coAuthor ? ', ' + coAuthor : ''}`}</p>
+      {!isRandomMode && (
+        <p className="exam-solution-page-author-name">{`제작자: ${
+          currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
+        }${coAuthor ? ', ' + coAuthor : ''}`}</p>
+      )}
       {subDescription && (
         <p className="exam-solution-page-author-name">{subDescription}</p>
       )}
@@ -345,6 +379,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           return (
             <div key={index}>
               <ExamSolutionList
+                questionSubDescription={
+                  isRandomMode
+                    ? `${el?.mockExam?.title}
+              ${el?.number}번`
+                    : ''
+                }
+                index={isRandomMode ? index + 1 : 0}
                 isSolutionAllHide={isSolutionAllHide}
                 question={el}
                 title={convertExamTitle(title || '')}
