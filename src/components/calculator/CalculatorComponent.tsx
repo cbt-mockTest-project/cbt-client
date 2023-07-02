@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import CalculatorToggleButton from './CalculatorToggleButton';
-import Calculator from './Calculator';
+import dynamic from 'next/dynamic';
 
 const CalculatorComponentBlock = styled.div``;
+const Calculator = dynamic(() => import('./Calculator'), { ssr: false });
 
 interface CalculatorComponentProps {}
 
