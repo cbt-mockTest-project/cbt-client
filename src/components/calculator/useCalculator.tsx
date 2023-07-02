@@ -3,6 +3,7 @@ import * as math from 'mathjs';
 import { LocalStorage } from '@lib/utils/localStorage';
 import shortid from 'shortid';
 import { CALCULATOR_HISTORY } from './calculator.constants';
+import { isMobile } from 'react-device-detect';
 
 interface CalculatorHistory {
   expression: string;
@@ -168,6 +169,12 @@ const useCalculator = ({ inputRef, calculatorRef }: CalculatorHookProps) => {
       return;
     setCalculatorHistories(savedHistories);
   }, [storage.get(CALCULATOR_HISTORY)]);
+
+  useEffect(() => {
+    if (inputRef.current && isMobile) {
+      inputRef.current.blur();
+    }
+  }, [inputRef.current?.focus]);
 
   return {
     input,
