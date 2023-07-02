@@ -14,7 +14,7 @@ const CalculatorComponent: React.FC<CalculatorComponentProps> = () => {
   };
   return (
     <CalculatorComponentBlock>
-      {isCalculatorOpen && <Calculator onClose={toggleCalculator} />}
+      <Calculator onClose={toggleCalculator} isVisible={isCalculatorOpen} />
       {!isCalculatorOpen && (
         <CalculatorToggleButton onClick={toggleCalculator} />
       )}

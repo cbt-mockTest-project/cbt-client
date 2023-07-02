@@ -1,12 +1,16 @@
 import React, { useRef } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Button } from 'antd';
 import useCalculator from './useCalculator';
 import { Clear } from '@mui/icons-material';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 
-const CalculatorBlock = styled.div`
+interface CalculatorBlockProps {
+  isVisible: boolean;
+}
+
+const CalculatorBlock = styled.div<CalculatorBlockProps>`
   position: fixed;
   z-index: 999;
   left: 40px;
@@ -86,13 +90,19 @@ const CalculatorBlock = styled.div`
       height: 100vh;
     }
   }
+
+  ${({ isVisible }) => css`
+    transform: ${isVisible ? 'translateY(0)' : 'translateY(100%)'};
+    transition: transform 0.3s ease;
+  `}
 `;
 
 interface CalculatorProps {
   onClose: () => void;
+  isVisible: boolean;
 }
 
-const Calculator: React.FC<CalculatorProps> = ({ onClose }) => {
+const Calculator: React.FC<CalculatorProps> = ({ onClose, isVisible }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const calculatorRef = useRef<HTMLDivElement | null>(null);
   const {
@@ -107,7 +117,7 @@ const Calculator: React.FC<CalculatorProps> = ({ onClose }) => {
   } = useCalculator({ inputRef, calculatorRef });
 
   return (
-    <CalculatorBlock ref={calculatorRef}>
+    <CalculatorBlock ref={calculatorRef} isVisible={isVisible}>
       <input
         className="calculator-input"
         type="text"
