@@ -170,12 +170,6 @@ const useCalculator = ({ inputRef, calculatorRef }: CalculatorHookProps) => {
     setCalculatorHistories(savedHistories);
   }, [storage.get(CALCULATOR_HISTORY)]);
 
-  useEffect(() => {
-    if (inputRef.current && isMobile) {
-      inputRef.current.blur();
-    }
-  }, [inputRef.current?.focus]);
-
   return {
     input,
     buttons,

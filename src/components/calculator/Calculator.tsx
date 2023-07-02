@@ -5,6 +5,7 @@ import useCalculator from './useCalculator';
 import { Clear } from '@mui/icons-material';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
+import { isMobile } from 'react-device-detect';
 
 interface CalculatorBlockProps {
   isVisible: boolean;
@@ -127,6 +128,7 @@ const Calculator: React.FC<CalculatorProps> = ({ onClose, isVisible }) => {
         onChange={handleInput}
         onMouseUp={handleMouseUp}
         onKeyDown={handleKeyDown}
+        readOnly={isMobile}
       />
       <div className="calculator-button-grid">
         {buttons.map((button, index) => (
