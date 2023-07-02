@@ -15,7 +15,7 @@ const CalculatorBlock = styled.div<CalculatorBlockProps>`
   z-index: 999;
   left: 40px;
   bottom: 40px;
-  max-width: 300px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,6 +35,7 @@ const CalculatorBlock = styled.div<CalculatorBlockProps>`
   }
   .calculator-button-grid {
     display: grid;
+    width: 100%;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
