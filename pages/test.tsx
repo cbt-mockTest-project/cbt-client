@@ -1,10 +1,10 @@
 import React from 'react';
 import { NextPage } from 'next';
 import TodoListComponent from '@components/todoList/TodoListComponent';
-import Calculator from '@components/calculator/Calculator';
+import CalculatorComponent from '@components/calculator/CalculatorComponent';
 
 const Test: NextPage = () => {
-  return <Calculator />;
+  return <CalculatorComponent />;
 };
 
 export default Test;

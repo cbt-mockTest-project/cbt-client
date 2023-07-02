@@ -20,6 +20,7 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
 import { isServer, someIncludes } from '@lib/utils/utils';
+import CalculatorComponent from '@components/calculator/CalculatorComponent';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -169,6 +170,7 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           <CoreContainer />
           <AppInner />
           <Component {...pageProps} />
+          <CalculatorComponent />
           {/* <TodoListComponent /> */}
         </Provider>
       </ApolloProvider>
