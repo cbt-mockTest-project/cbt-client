@@ -344,13 +344,13 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         >
           섞기
         </Button>
-        {/* <Button
+        <Button
           onClick={onClickDownloadButton}
           className="exam-solution-page-solution-all-hide-button"
           type="primary"
         >
           다운로드
-        </Button> */}
+        </Button>
       </div>
       <h1 className="not-draggable">
         {convertExamTitle(title || '')} 문제/해설
