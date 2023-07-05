@@ -95,7 +95,8 @@ const CalculatorBlock = styled.div<CalculatorBlockProps>`
 
   ${({ isVisible }) => css`
     transform: ${isVisible ? 'translateY(0)' : 'translateY(120%)'};
-    transition: transform 0.3s ease;
+    opacity: ${isVisible ? 1 : 0};
+    transition: all 0.3s ease;
   `}
 `;
 
