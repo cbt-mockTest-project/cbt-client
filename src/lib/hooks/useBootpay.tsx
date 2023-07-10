@@ -2,13 +2,6 @@ import { useUpdatePayment } from '@lib/graphql/user/hook/usePayment';
 import { isServer, loadScript } from '@lib/utils/utils';
 import { message } from 'antd';
 import { useEffect } from 'react';
-import shortid from 'shortid';
-
-declare global {
-  interface Window {
-    Bootpay: any;
-  }
-}
 
 export interface ExecuteAfterPaymentParams {
   receiptId: string;

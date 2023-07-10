@@ -7,11 +7,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LoginModal from '../modal/LoginModal';
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
 
 interface CoreContainerProps {}
 

@@ -49,7 +49,6 @@ const Home: NextPage<HomeProps> = ({
           categoriesQuery={categoriesQuery}
           titlesAndCategories={titlesAndCategories}
           examLinks={examLinks}
-          isPremium={true}
         />
       </HomeContainer>
     </>
