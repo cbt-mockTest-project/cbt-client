@@ -5,10 +5,12 @@ declare module '*.d.ts' {
   global {
     interface Window {
       gtag: any;
-      FlutterVersion: any;
       Share: any;
       Kakao: any;
       Bootpay: any;
+      PackageInfo: any;
+      appInfo: Object<any>;
+      appInfoChanged: any;
     }
   }
 }
