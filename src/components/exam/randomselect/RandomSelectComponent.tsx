@@ -51,7 +51,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const [category, setCategory] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
-  const { data: meQuery } = useMeQuery();
+  const { data: meQuery, loading: meQueryLoading } = useMeQuery();
   const isLoggedIn = meQuery?.me.user ? true : false;
   useEffect(() => {
     try {
@@ -228,7 +228,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
               }}
             />
           </div>
-          {!isLoggedIn && (
+          {!meQueryLoading && !isLoggedIn && (
             <ErrorText
               content="로그인 후 이용가능합니다."
               className="random-select-exam-modal-error-text"
