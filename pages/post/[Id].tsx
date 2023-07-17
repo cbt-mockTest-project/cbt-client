@@ -9,12 +9,7 @@ import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
-import dynamic from 'next/dynamic';
-import PostDetailSkeleton from '@components/post/detail/PostDetailSkeleton';
-const PostDetailComponent = dynamic(
-  () => import('@components/post/detail/PostDetailComponent'),
-  { loading: () => <PostDetailSkeleton /> }
-);
+import PostDetailComponent from '@components/post/detail/PostDetailComponent';
 interface PostPageProps {
   postQueryOnStaticProps: ReadPostQuery;
 }

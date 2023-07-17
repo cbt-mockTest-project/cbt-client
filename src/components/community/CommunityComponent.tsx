@@ -1,77 +1,43 @@
-import { adminBoards, loginModal } from '@lib/constants';
-import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { loginModal } from '@lib/constants';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { PostCategory, UserRole } from 'types';
 import CommunityList from './CommunityList';
 import CommunityListSkeleton from './CommunityListSkeleton';
 import CommunityPagination from './CommunityPagination';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
-import { POST_CATEGORY_MAP } from './Community.constants';
+import { POST_CATEGORY_MAP, postCategories } from './Community.constants';
 import SearchInput from '@components/common/input/SearchInput';
 import { convertToKST } from '@lib/utils/utils';
-
-export const categorys = [
-  { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
-
-  { label: '시험후기', path: '/community', query: { c: PostCategory.Review } },
-  {
-    label: '비밀게시판',
-    path: '/community',
-    query: { c: PostCategory.Suggenstion },
-  },
-  {
-    label: '기출복원',
-    path: '/community',
-    query: { c: PostCategory.Recovery },
-  },
-  { label: '공지사항', path: '/community', query: { c: PostCategory.Notice } },
-];
+import useCommunityList from './hooks/useCommunityList';
 
 interface CommunityComponentProps {}
 
 const CommunityComponent: React.FC<CommunityComponentProps> = () => {
+  const {
+    isLogged,
+    allowWriteAdminOnlyCategory,
+    posts,
+    search,
+    setSearch,
+    postCount,
+  } = useCommunityList();
   const router = useRouter();
-  const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
-  const [readPosts, { data: postsQuery, loading: readPostsLoading }] =
-    useLazyReadPosts('network-only');
-  const isAdminOnlyCategory = adminBoards.includes(
-    router.query.c as PostCategory
-  );
-  const [search, setSearch] = useState((router.query.s as string) || '');
-  const isAdmin = meQuery?.me.ok && meQuery.me.user?.role === UserRole.Admin;
-  const allowWriteAdminOnlyCategory = !isAdminOnlyCategory || isAdmin;
-  useEffect(() => {
-    if (router.query.c) {
-      readPosts({
-        variables: {
-          input: {
-            limit: 8,
-            page: Number(router.query.p) || 1,
-            category: router.query.c as PostCategory,
-            search,
-          },
-        },
-      });
-    }
-  }, [router.query.c, router.query.p, router.query.s]);
   const checkCategoryMatching = (query: string) => query === router.query.c;
-  const posts = postsQuery?.readPosts.posts;
+
   return (
     <CommunityComponentBlock>
       <section className="community-header">
         <b className="community-header-title">게시판</b>
         {allowWriteAdminOnlyCategory &&
-          (meQuery?.me.ok ? (
+          (isLogged ? (
             <Link href={`/post/write?c=${router.query.c}`} className="ml-auto">
               <Button className="community-header-write-button">글쓰기</Button>
             </Link>
@@ -87,14 +53,14 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
       <section className="community-category">
         <b className="community-category-title">카테고리</b>
         <div className="community-category-card-wrapper">
-          {categorys.map((category) => (
+          {postCategories.map((category) => (
             <Link
               key={category.label}
               href={{ pathname: category.path, query: category.query }}
             >
               <div
                 className={`community-category-card ${
-                  checkCategoryMatching(category.query.c) && 'active'
+                  checkCategoryMatching(category.query.c) ? 'active' : ''
                 }`}
               >
                 {category.label}
@@ -142,7 +108,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
           )}
         </ul>
       </section>
-      {postsQuery && <CommunityPagination total={postsQuery.readPosts.count} />}
+      {postCount && <CommunityPagination total={postCount} />}
     </CommunityComponentBlock>
   );
 };

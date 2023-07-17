@@ -49,7 +49,6 @@ const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const isEditPage = router.pathname.indexOf('edit') > -1;
   const [readPost, { data: readPostQuery }] = useLazyReadPost('network-only');
   const postId = Number(router.query.Id);
-  console.log('h2');
   useEffect(() => {
     if (router.query.c) {
       setSelectedCategory(router.query.c as PostCategory);
