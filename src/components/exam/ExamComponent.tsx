@@ -246,7 +246,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
       const content = reportValue.current.content;
       const type = reportValue.current.type;
       if (content.length <= 4) {
-        return message.warn('5글자 이상 입력해주세요.');
+        return message.warning('5글자 이상 입력해주세요.');
       }
       if (questionAndSolution && content) {
         const questionId = questionAndSolution.id;

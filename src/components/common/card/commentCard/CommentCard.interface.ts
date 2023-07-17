@@ -22,10 +22,10 @@ export interface CommentCardProps {
   option: CommentCardOption;
   meQuery: MeQuery | undefined;
   toggleEdit: () => void;
-  requestDelete: React.MouseEventHandler<HTMLButtonElement>;
-  requestEdit: React.MouseEventHandler<HTMLButtonElement>;
-  requestLike: React.MouseEventHandler<HTMLButtonElement>;
-  onChangeContent: React.ChangeEventHandler<HTMLElement>;
+  requestDelete: React.MouseEventHandler;
+  requestEdit: React.MouseEventHandler;
+  requestLike: React.MouseEventHandler;
+  onChangeContent: React.ChangeEventHandler;
   content: string;
   editState: boolean;
   editLoading: boolean;

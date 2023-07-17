@@ -99,7 +99,7 @@ const useCalculator = ({ inputRef, calculatorRef }: CalculatorHookProps) => {
     setCalculatorHistories(histories);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = (e: React.MouseEvent) => {
     const value = e.currentTarget.getAttribute('value');
     if (value === null) return;
     if (value === '=') {

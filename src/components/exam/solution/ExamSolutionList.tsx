@@ -146,7 +146,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     const content = reportValue.current.content;
     const type = reportValue.current.type;
     if (content.length <= 4) {
-      return message.warn('5글자 이상 입력해주세요.');
+      return message.warning('5글자 이상 입력해주세요.');
     }
     if (content) {
       const questionId = currentQuestion.id;
