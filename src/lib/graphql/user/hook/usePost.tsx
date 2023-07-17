@@ -30,7 +30,9 @@ import {
 export const useReadPost = () =>
   useQuery<ReadPostQuery, ReadPostQueryVariables>(READ_POST);
 
-export const useLazyReadPost = (fetchPolicy: WatchQueryFetchPolicy) =>
+export const useLazyReadPost = (
+  fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
+) =>
   useLazyQuery<ReadPostQuery, ReadPostQueryVariables>(READ_POST, {
     fetchPolicy,
   });
