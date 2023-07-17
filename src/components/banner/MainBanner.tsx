@@ -36,7 +36,7 @@ const MainBanner = () => {
         modules={[Autoplay, Pagination]}
         className="home-main-banner-swiper"
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <button
             className="main-banner-text-banner"
             onClick={onToggleAdBannerInfoModal}
@@ -48,6 +48,14 @@ const MainBanner = () => {
                 <MouseIcon />
               </span>
             </p>
+          </button>
+        </SwiperSlide> */}
+        <SwiperSlide>
+          <button
+            className="main-banner-text-banner"
+            onClick={onToggleAdBannerInfoModal}
+          >
+            <div className="home-main-banner-box advertise" />
           </button>
         </SwiperSlide>
         <SwiperSlide>
@@ -65,6 +73,7 @@ const MainBanner = () => {
             </a>
           )}
         </SwiperSlide>
+
         <SwiperSlide>
           {isIosAndMobile ? (
             <div
@@ -151,6 +160,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
   .home-main-banner-box.zep {
     background-image: url('/png/banner/main-banner-zep-pc01.png');
   }
+  .home-main-banner-box.advertise {
+    background-image: url('/png/banner/main-banner-pc03.png') !important;
+  }
   .main-banner-text-banner {
     display: flex;
     flex-direction: column;
@@ -206,6 +218,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
     }
     .home-main-banner-box.zep {
       background-image: url('/png/banner/main-banner-zep-mobile01.png') !important;
+    }
+    .home-main-banner-box.advertise {
+      background-image: url('/png/banner/main-banner-mobile03.png') !important;
     }
   }
 `;

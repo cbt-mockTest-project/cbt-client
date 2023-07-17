@@ -27,9 +27,8 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
   const urlInputRef = useRef<InputRef>(null);
   const isMobile = useIsMobile();
   const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionId}`;
-  const onCopyLink = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onCopyLink = (e: React.MouseEvent) => {
     urlInputRef.current?.select();
-    e.currentTarget.focus();
     document.execCommand('copy');
     message.success('링크가 복사되었습니다.');
   };
