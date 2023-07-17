@@ -344,7 +344,11 @@ const RandomSelectComponentContainer = styled.div`
   }
   .random-select-exam-modal-setting-checkbox-wrapper {
     display: flex;
-    /* align-items: center; */
+    .ant-checkbox-group {
+      .ant-checkbox-group-item:not(:last-child) {
+        max-width: 50px;
+      }
+    }
   }
   .random-select-exam-modal-setting-checkbox-all {
     min-width: 70px;
