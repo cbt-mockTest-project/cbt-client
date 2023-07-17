@@ -43,11 +43,6 @@ import MovePannel from './MovePannel';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { ExamQuestionType } from './solution/ExamSolutionList';
-import dynamic from 'next/dynamic';
-
-const PlyrPlayer = dynamic(() => import('@components/player/PlyrPlayer'), {
-  ssr: false,
-});
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -57,29 +52,24 @@ interface ExamComponentProps {
   coAuthor?: string;
 }
 
-const ExamComponent: React.FC<ExamComponentProps> = ({
-  isPreview = false,
-  coAuthor,
-}) => {
-  const [
-    readQuestions,
-    { data: questionsQuery, refetch: refetchReadQuestions },
-  ] = useLazyReadQuestionsByExamId('cache-and-network');
-  const questions = questionsQuery?.readMockExamQuestionsByMockExamId.questions;
+const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
+  const [readQuestions, { data: questionsQuery }] =
+    useLazyReadQuestionsByExamId('cache-and-network');
+
   const client = useApollo({}, '');
   const router = useRouter();
   const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
-  const { data: meQuery } = useMeQuery();
-  const [createExamHistory] = useCreateExamHistory();
-  const openLonginModal = () => dispatch(coreActions.openModal(loginModal));
+
+  const questions = questionsQuery?.readMockExamQuestionsByMockExamId.questions;
+
   const storage = new LocalStorage();
   const isRandomExam = router.query.es ? true : false;
   const questionIndex = Number(router.query.q);
-  const reportValue = useRef({
-    content: '',
-    type: QuestionFeedbackType.Public,
-  });
+  const examTitle = questionsQuery?.readMockExamQuestionsByMockExamId.title;
+  const tempAnswerIndex = String(examTitle);
+  const pageSubTitle = `${examTitle}-${questionIndex}번 문제`;
+
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
@@ -89,16 +79,26 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
+  const [solutionWriteModalState, setSolutionWriteModalState] = useState(false);
+  const [readQuestionInput, setReadQuestionInput] =
+    useState<ReadMockExamQuestionsByMockExamIdInput>();
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const reportValue = useRef({
+    content: '',
+    type: QuestionFeedbackType.Public,
+  });
+
+  const [editBookmark] = useEditQuestionBookmark();
+  const [createFeedBack] = useCreateQuestionFeedBack();
+  const { data: meQuery } = useMeQuery();
+  const [createExamHistory] = useCreateExamHistory();
+
   const {
     value: questionShareModalState,
     onToggle: onToggleQuestionShareModal,
   } = useToggle();
-  const [solutionWriteModalState, setSolutionWriteModalState] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [editBookmark] = useEditQuestionBookmark();
-  const [createFeedBack] = useCreateQuestionFeedBack();
-  const [readQuestionInput, setReadQuestionInput] =
-    useState<ReadMockExamQuestionsByMockExamIdInput>();
+
   useEffect(() => {
     (async () => {
       if (router.isReady) {
@@ -109,7 +109,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
           storage.set(tempAnswerKey, answerRecords);
           const l = router.query.l ? Number(router.query.l) : null;
           const s = router.query.s ? JSON.parse(String(router.query.s)) : null;
-
           const ids = router.query.es
             ? JSON.parse(String(router.query.es))
             : null;
@@ -153,14 +152,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        /**
-         * 문제번호가 바뀔 때 마다 데이터를 초기화해준다.
-         */
-
-        setProgressModalState(false);
-        setFeedBackModalState(false);
-        setFinishModalState(false);
-        setAnswerboxVisible(false);
 
         setBookmarkState(
           questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
@@ -178,17 +169,24 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     }
   }, [router.query.q, questions]);
 
+  useEffect(() => {
+    //  문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+    setProgressModalState(false);
+    setFeedBackModalState(false);
+    setFinishModalState(false);
+    setAnswerboxVisible(false);
+  }, [router.query.q]);
+
   if (!questionsQuery) {
     return <ExamSkeleton />;
   }
 
-  const examTitle = questionsQuery.readMockExamQuestionsByMockExamId.title;
-  const tempAnswerIndex = String(examTitle);
-  const pageSubTitle = `${examTitle}-${questionIndex}번 문제`;
+  const openLonginModal = () => dispatch(coreActions.openModal(loginModal));
+
   const onToggleAnswerboxVisible = () => setAnswerboxVisible(!answerboxVisible);
-  const onToggleFinishModal = () => {
-    setFinishModalState(!finishModalState);
-  };
+
+  const onToggleFinishModal = () => setFinishModalState(!finishModalState);
+
   const onToggleProgressModal = () => {
     if (!meQuery?.me.user) {
       openLonginModal();
@@ -196,6 +194,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     }
     setProgressModalState(!progressModalState);
   };
+
   const onToggleFeedBackModal = () => {
     if (!meQuery?.me.user) {
       openLonginModal();
@@ -203,9 +202,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     }
     setFeedBackModalState(!feedBackModalState);
   };
+
   const onToggleCommentModal = () => {
     setCommentModalState(!commentModalState);
   };
+
   const onToggleSolutionWriteModal = () => {
     if (window && window.innerWidth < 500) {
       setSolutionWriteModalState(!solutionWriteModalState);
@@ -239,6 +240,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
       },
     });
   };
+
   const requestReport = async () => {
     try {
       const content = reportValue.current.content;
@@ -269,6 +271,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
       handleError(e);
     }
   };
+
   const requestEditBookmark = async () => {
     try {
       if (!meQuery?.me.user) {
@@ -382,6 +385,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
     setAnswerValue('');
     saveAnswerInStorage('');
   };
+
   const onShareAction = () => {
     if (window && (window as any)?.Share) {
       const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionAndSolution?.number}`;
@@ -430,9 +434,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
             {pageSubTitle}
             {!isRandomExam && (
               <p className="exam-container-author-name">
-                {`제작자:${
-                  questionsQuery.readMockExamQuestionsByMockExamId.author
-                }${coAuthor ? `, ${coAuthor}` : ''}`}
+                {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
               </p>
             )}
           </h2>
@@ -444,31 +446,16 @@ const ExamComponent: React.FC<ExamComponentProps> = ({
           )}
         </div>
         <div ref={scrollRef} />
-        <div className="exam-question-and-video-wrapper">
-          <QuestionAndSolutionBox
-            className="exam-question-and-video-content"
-            content={{
-              content: questionAndSolution
-                ? `${questionAndSolution.question}`
-                : '',
-              img: questionAndSolution?.question_img,
-              title: String(examTitle || ''),
-            }}
-          />
-          {questionAndSolution?.question_video &&
-            questionAndSolution?.question_video?.length >= 1 && (
-              <div className="exam-question-and-video-content">
-                <PlyrPlayer
-                  sources={questionAndSolution.question_video.map((video) => ({
-                    src: video.url,
-                    size: video.size,
-                  }))}
-                  prevPlayTime={0}
-                  defaultQulity={720}
-                />
-              </div>
-            )}
-        </div>
+        <QuestionAndSolutionBox
+          className="exam-question-and-video-content"
+          content={{
+            content: questionAndSolution
+              ? `${questionAndSolution.question}`
+              : '',
+            img: questionAndSolution?.question_img,
+            title: String(examTitle || ''),
+          }}
+        />
 
         <div className="exam-solution-write-label-wrapper">
           <Label content="답 작성" />
@@ -745,10 +732,6 @@ const ExamContainer = styled.div<ExamContainerProps>`
         color: ${palette.antd_blue_01};
       }
     }
-  }
-  .exam-question-and-video-wrapper {
-    display: flex;
-    gap: 30px;
   }
   .exam-question-and-video-content {
     width: 100%;

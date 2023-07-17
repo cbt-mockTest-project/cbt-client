@@ -10,13 +10,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PostCategory, UserRole } from 'types';
 import CommunityList from './CommunityList';
-import { format, parseISO } from 'date-fns';
 import CommunityListSkeleton from './CommunityListSkeleton';
 import CommunityPagination from './CommunityPagination';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { POST_CATEGORY_MAP } from './Community.constants';
 import SearchInput from '@components/common/input/SearchInput';
+import { convertToKST } from '@lib/utils/utils';
 
 export const categorys = [
   { label: '자유게시판', path: '/community', query: { c: PostCategory.Free } },
@@ -124,7 +124,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
                 id={post.id}
                 category={POST_CATEGORY_MAP[post.category]}
                 commentCount={post.commentsCount}
-                date={format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
+                date={convertToKST(post.created_at, 'yy.MM.dd HH:mm')}
                 likeCount={post.likesCount}
                 title={post.title}
                 priority={post.priority}

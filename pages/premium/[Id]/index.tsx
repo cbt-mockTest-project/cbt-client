@@ -15,8 +15,8 @@ import { ExamTitleAndId, UserRole } from 'types';
 import MainComponent from '@components/main/MainComponent';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { cloneDeep } from 'lodash';
-import { deduplication } from '@lib/utils/utils';
+import { GET_PARTNERS } from '@lib/graphql/user/query/partnerQuery';
+import { GetPartnersQuery } from '@lib/graphql/user/query/partnerQuery.generated';
 
 interface TitlesAndCategories {
   category: string;
@@ -68,21 +68,14 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');
   let paths: { params: { Id: string } }[] = [];
   try {
-    const res = await apolloClient.query<ReadAllMockExamCategoriesQuery>({
-      query: READ_EXAM_CATEGORIES_QUERY,
-      variables: {
-        input: {
-          partnerId: 1,
-        },
-      },
+    const res = await apolloClient.query<GetPartnersQuery>({
+      query: GET_PARTNERS,
     });
-    if (res.data.readAllMockExamCategories.categories) {
-      paths = res.data.readAllMockExamCategories.categories
-        .map((el) => ({
-          params: { Id: el.partner ? String(el.partner.id) : '' },
-        }))
-        .filter((el) => el.params.Id);
-      paths = deduplication(paths);
+    if (res.data.getPartners.ok) {
+      paths =
+        res.data.getPartners.partners?.map((partner) => ({
+          params: { Id: partner.id.toString() },
+        })) || [];
     }
     return { paths, fallback: 'blocking' };
   } catch (err) {
@@ -97,7 +90,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const apolloClient = initializeApollo({}, '');
   const partnerId = Number(context.params?.Id);
   const titlesAndCategories: TitlesAndCategories[] = [];
-
   const categoriesRes =
     await apolloClient.query<ReadAllMockExamCategoriesQuery>({
       query: READ_EXAM_CATEGORIES_QUERY,
@@ -124,15 +116,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
             });
           let titles: ExamTitleAndId[] =
             res.data.readMockExamTitlesByCateory.titles;
-          if (category.name === '산업안전기사실기(필답형)') {
-            titles = cloneDeep(res.data.readMockExamTitlesByCateory.titles);
-            titles.sort((a, b) => {
-              if (a.id === 167) {
-                return -1;
-              }
-              return 1;
-            });
-          }
           titlesAndCategories.push({
             category: category.name,
             authorRole: category.user.role,
@@ -146,15 +129,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     el.titles.forEach((title) => {
       examLinks.unshift(title);
     });
-  });
-  examLinks.sort((a, b) => {
-    if (a.title.includes('산업안전기사실기(필답형)')) {
-      return -1;
-    }
-    if (a.title.includes('산업안전산업기사')) {
-      return 1;
-    }
-    return 0;
   });
   return addApolloState(apolloClient, {
     props: { categoriesQuery, titlesAndCategories, examLinks },

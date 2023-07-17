@@ -15,12 +15,12 @@ import { useRouter } from 'next/router';
 import { message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
-import CoreContainer from '@components/common/core/CoreContainer';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
 import { isServer, someIncludes } from '@lib/utils/utils';
 import CalculatorComponent from '@components/calculator/CalculatorComponent';
+import CoreContainer from '@components/common/core/CoreContainer';
 
 export default function App({ Component, pageProps }: AppProps<any>) {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -106,7 +106,6 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       message.error(router.query.message);
     }
   }, [router.query.message]);
-
   return (
     <>
       <Head>
@@ -171,7 +170,6 @@ export default function App({ Component, pageProps }: AppProps<any>) {
           <AppInner />
           <Component {...pageProps} />
           <CalculatorComponent />
-          {/* <TodoListComponent /> */}
         </Provider>
       </ApolloProvider>
     </>

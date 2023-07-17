@@ -7,10 +7,9 @@ import { DropBoxOption } from '../../dropbox/DropBox';
 import { loginModal } from '@lib/constants';
 import { NoticeDropBoxOption } from '../../dropbox/NoticeDropBox';
 import useToggle from '@lib/hooks/useToggle';
-import { format, parseISO } from 'date-fns';
 import NavView from './NavView';
 import { NavViewProps } from './Nav.interface';
-import { handleError } from '@lib/utils/utils';
+import { convertToKST, handleError } from '@lib/utils/utils';
 import { UserRole } from 'types';
 
 const NavContainer = () => {
@@ -48,7 +47,7 @@ const NavContainer = () => {
       label: notice.content,
       confirmed: notice.confirm,
       link: notice.link,
-      time: format(parseISO(notice.created_at), 'yy.MM.dd HH:mm'),
+      time: convertToKST(notice.created_at, 'yy.MM.dd HH:mm'),
     })) || [];
   const hasNotices = notices && notices.length >= 1;
   const dropBoxOptions: DropBoxOption[] = [

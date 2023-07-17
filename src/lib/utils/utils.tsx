@@ -10,6 +10,7 @@ import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
 import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
 import { cloneDeep } from 'lodash';
+import { addHours, format } from 'date-fns';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -238,4 +239,14 @@ export const removeTypeNameFromObjectArray = <T,>(array: Array<T>) => {
     const { __typename, ...rest } = el as any;
     return rest;
   });
+};
+
+export const convertToKST = (
+  dateString: string,
+  formatString: string = 'yy.MM.dd HH:mm'
+) => {
+  let date = new Date(dateString);
+  let koreaTime = addHours(date, 9); // 한국은 UTC+9
+
+  return format(koreaTime, formatString);
 };
