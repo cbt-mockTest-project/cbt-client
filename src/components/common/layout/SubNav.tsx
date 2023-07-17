@@ -118,6 +118,7 @@ const SubNavContainer = styled.div`
     }
   }
   .sub-nav-link-list-button {
+    color: white;
     padding: 10px 10px;
     width: max-content;
     transition: all 0.2s ease-out;
