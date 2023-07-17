@@ -438,10 +438,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
               </p>
             )}
           </h2>
-          {isRandomExam && (
+          {isRandomExam && questionAndSolution?.mockExam && (
             <h3 className="exam-container-sub-title">
-              {`${questionAndSolution?.mockExam?.title}
-                ${questionAndSolution?.number}번 문제`}
+              {`${questionAndSolution.mockExam.title}
+                ${questionAndSolution.number}번 문제`}
             </h3>
           )}
         </div>
@@ -519,7 +519,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
                 className="exam-question-menubar-check-button"
                 onClick={onToggleCommentModal}
               >
-                {`댓글 ${questionAndSolution?.mockExamQuestionComment.length}`}
+                {`댓글 ${
+                  questionAndSolution?.mockExamQuestionComment.length || 0
+                }`}
               </Button>
             </div>
           </div>

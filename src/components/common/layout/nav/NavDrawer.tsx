@@ -119,6 +119,7 @@ const StyledDrawer = styled(Drawer)`
       cursor: pointer;
       padding: 5px 0;
       transition: color 0.2s ease-in;
+      color: black;
       :hover {
         color: ${palette.antd_blue_01};
       }
