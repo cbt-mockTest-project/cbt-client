@@ -35,7 +35,9 @@ export const useLazyReadPost = (fetchPolicy: WatchQueryFetchPolicy) =>
     fetchPolicy,
   });
 
-export const useLazyReadPosts = (fetchPolicy: WatchQueryFetchPolicy) =>
+export const useLazyReadPosts = (
+  fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
+) =>
   useLazyQuery<ReadPostsQuery, ReadPostsQueryVariables>(READ_POSTS, {
     fetchPolicy,
   });
