@@ -4,11 +4,14 @@ import ExamAchievementResultList from '@components/exam/common/ExamAchievementRe
 import { useReadExamHistories } from '@lib/graphql/user/hook/useExamHistory';
 import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { responsive } from '@lib/utils/responsive';
-import { extractKeysOfCache, handleError } from '@lib/utils/utils';
+import {
+  convertToKST,
+  extractKeysOfCache,
+  handleError,
+} from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, message } from 'antd';
-import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -86,7 +89,7 @@ const ExamHistory: React.FC = () => {
               <div className="mypage-exam-list-title-and-date">
                 <span>{el.title}</span>
                 <p className="mypage-exam-list-date">
-                  {format(parseISO(el.updated_at), 'yy.MM.dd HH:mm')}
+                  {convertToKST(el.updated_at)}
                 </p>
               </div>
               <div className="mypage-exam-list-button-wrapper">

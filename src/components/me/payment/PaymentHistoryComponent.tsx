@@ -1,5 +1,6 @@
 import { useGetMyPayments } from '@lib/graphql/user/hook/usePayment';
 import { responsive } from '@lib/utils/responsive';
+import { convertToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Spin } from 'antd';
 import { format, parseISO } from 'date-fns';
@@ -67,8 +68,8 @@ const PaymentHistoryComponent: React.FC<PaymentHistoryComponentProps> = () => {
                       {payment.price}
                     </td>
                     <td className="payment-history-table-data">
-                      {format(
-                        parseISO(payment.updated_at),
+                      {convertToKST(
+                        payment.updated_at,
                         'yyyy년 MM월 dd일 HH시 mm분'
                       )}
                     </td>

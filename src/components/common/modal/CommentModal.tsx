@@ -16,10 +16,9 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { useRouter } from 'next/router';
 import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { format, parseISO } from 'date-fns';
 import DragModal from './DragModal';
 import { UserRole } from 'types';
-import { handleError } from '@lib/utils/utils';
+import { convertToKST, handleError } from '@lib/utils/utils';
 
 interface CommentModalProps extends Omit<ModalProps, 'children'> {
   title: string;
@@ -164,7 +163,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                   content: comment.content,
                   role: comment.user?.role as UserRole,
                   id: comment.id,
-                  time: format(parseISO(comment.created_at), 'yy.MM.dd HH:mm'),
+                  time: convertToKST(comment.created_at, 'yy.MM.dd HH:mm'),
                   parrentId: questionId,
                   userId: comment.user?.id as number,
                 }}

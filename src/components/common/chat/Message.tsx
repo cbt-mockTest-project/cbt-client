@@ -1,7 +1,7 @@
 import { UserOutlined } from '@ant-design/icons';
+import { convertToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { MessageType } from 'customTypes';
-import { format, parseISO } from 'date-fns';
 import React from 'react';
 import styled, { css } from 'styled-components';
 
@@ -26,7 +26,7 @@ const Message: React.FC<MessageProps> = ({
         <div className="message-content-time-wrapper">
           <div className="message-content">{message}</div>
           <div className="message-time">
-            {format(parseISO(created_at), 'HH:mm')}
+            {convertToKST(created_at, 'HH:mm')}
           </div>
         </div>
       </div>

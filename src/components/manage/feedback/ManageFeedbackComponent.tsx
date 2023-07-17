@@ -9,10 +9,10 @@ import {
   useLazyGetFeedbacksWithFilter,
 } from '@lib/graphql/user/hook/useQuestionFeedback';
 import useInput from '@lib/hooks/useInput';
-import { format, parseISO } from 'date-fns';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import { FEEDBACK_TYPES, FEEDBACK_TYPE_MAP } from './ManageFeedback.constants';
 import { QuestionFeedbackType } from 'types';
+import { convertToKST } from '@lib/utils/utils';
 ('@lib/graphql/user/hook/useQuestionFeedback');
 
 interface ManageFeedbackComponentProps {}
@@ -172,7 +172,7 @@ const ManageFeedbackComponent: React.FC<ManageFeedbackComponentProps> = () => {
                     {FEEDBACK_TYPE_MAP[item.type]}
                   </Col>
                   <Col className="feedback-list-item-col" span={3}>
-                    {format(parseISO(item.created_at), 'yy.MM.dd HH:mm')}
+                    {convertToKST(item.created_at, 'yy.MM.dd HH:mm')}
                   </Col>
                 </Row>
               </a>

@@ -18,9 +18,8 @@ import { message } from 'antd';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import PostDetailSkeleton from './PostDetailSkeleton';
-import { handleError } from '@lib/utils/utils';
+import { convertToKST, handleError } from '@lib/utils/utils';
 import { UserOutlined } from '@ant-design/icons';
-import { format, parseISO } from 'date-fns';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -208,7 +207,7 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
                 <div>{post.user.nickname}</div>
               </div>
               <div className="post-detail-top-date">
-                {format(parseISO(post.created_at), 'yy.MM.dd HH:mm')}
+                {convertToKST(post.created_at, 'yy.MM.dd HH:mm')}
               </div>
             </div>
             <div className="post-detail-top-view-count">
@@ -272,10 +271,7 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
                     likesCount: comment.likesCount,
                     likeState: comment.likeState,
                     nickname: comment.user.nickname,
-                    time: format(
-                      parseISO(comment.created_at),
-                      'yy.MM.dd HH:mm'
-                    ),
+                    time: convertToKST(comment.created_at, 'yy.MM.dd HH:mm'),
                     userId: comment.user.id,
                     parrentId: post.id,
                   }}
