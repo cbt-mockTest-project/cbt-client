@@ -57,7 +57,7 @@ const DataComponent: React.FC<DataComponentProps> = () => {
       <ul className="data-list">
         {Array.from({ length: 6 }, (_, i) => i).map((el) => (
           <li className="data-list-item" key={el}>
-            <Link href="/">
+            <Link href="/data/1">
               <DataCard />
             </Link>
           </li>
