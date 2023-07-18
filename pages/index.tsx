@@ -25,13 +25,11 @@ interface TitlesAndCategories {
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
   titlesAndCategories: TitlesAndCategories[];
-  examLinks: ExamTitleAndId[];
 }
 
 const Home: NextPage<HomeProps> = ({
   categoriesQuery,
   titlesAndCategories,
-  examLinks,
 }) => {
   return (
     <>
@@ -102,23 +100,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
         }
       )
     );
-  const examLinks: ExamTitleAndId[] = [];
-  titlesAndCategories.forEach((el) => {
-    el.titles.forEach((title) => {
-      examLinks.unshift(title);
-    });
-  });
-  examLinks.sort((a, b) => {
-    if (a.title.includes('산업안전기사실기(필답형)')) {
-      return -1;
-    }
-    if (a.title.includes('산업안전산업기사')) {
-      return 1;
-    }
-    return 0;
-  });
+
   return addApolloState(apolloClient, {
-    props: { categoriesQuery, titlesAndCategories, examLinks },
+    props: { categoriesQuery, titlesAndCategories },
     revalidate: 43200,
   });
 };
