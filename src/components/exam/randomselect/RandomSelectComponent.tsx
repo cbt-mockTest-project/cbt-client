@@ -1,4 +1,3 @@
-import { ClearOutlined } from '@ant-design/icons';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { TitlesAndCategories } from '@components/main/MainComponent';
@@ -29,7 +28,10 @@ const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
   { value: QuestionState.Middle, label: triangleIcon },
   { value: QuestionState.Row, label: clearIcon },
-  { value: QuestionState.Core, label: '안푼거' },
+  {
+    value: QuestionState.Core,
+    label: <div className="checkbox-label">안푼거</div>,
+  },
 ];
 
 interface RandomSelectComponentProps {
@@ -48,7 +50,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const [selectedExams, setSelectedExams] = useState<number[]>([]);
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
   const [limit, setLimit] = useState(14);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState<string>();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
   const { data: meQuery, loading: meQueryLoading } = useMeQuery();
@@ -103,6 +105,14 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       const allTitleIds = titles
         .map((title) => Number(title.value))
         .filter((el) => el !== 0);
+      if (allTitleIds.length + 1 === value.length) {
+        setSelectedExams([]);
+        storage.set('randomExamInfo', {
+          ...savedRandomExamInfo,
+          selectedExams: [],
+        });
+        return;
+      }
       setSelectedExams(allTitleIds);
       storage.set('randomExamInfo', {
         ...savedRandomExamInfo,
@@ -115,10 +125,6 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       selectedExams: value,
     });
     setSelectedExams(value);
-  };
-
-  const onClearExams = () => {
-    setSelectedExams([]);
   };
 
   const handleStart = (type: 'exam' | 'solution') => {
@@ -156,51 +162,34 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   return (
     <RandomSelectComponentContainer>
       <div className="random-select-exam-wrapper">
-        <div className="random-select-exam-selector-wrapper">
-          <div className="random-select-exam-category-wrapper">
-            <Label content={'시험선택'} />
-            <div className="random-select-exam-category-info">
-              <div className="random-select-category-color-box admin" />
-              <label className="random-select-exam-category-info-label">
-                개발자 제작
-              </label>
-              <div className="random-select-category-color-box user" />
-              <label className="random-select-exam-category-info-label">
-                유저 제작
-              </label>
-            </div>
-          </div>
-          <Select value={category} onChange={onChangeCategory}>
-            {categories.map((category) => (
-              <Option
-                key={category.value as string}
-                value={category.value as string}
-                style={{
-                  color:
-                    category.authorRole === UserRole.Admin
-                      ? 'black'
-                      : palette.blue_600,
-                }}
-              >
-                {category.label}
-              </Option>
-            ))}
-          </Select>
-        </div>
-        <div className="random-select-exam-selector-wrapper">
-          <div className="random-select-exam-turn-label-wrapper">
-            <Label content={'회차추가'} />
-            <button
-              className="random-select-exam-turn-clear-button"
-              onClick={onClearExams}
+        <Select
+          value={category}
+          onChange={onChangeCategory}
+          size="large"
+          placeholder="카테고리를 선택해주세요"
+        >
+          {categories.map((category) => (
+            <Option
+              key={category.value as string}
+              value={category.value as string}
+              style={{
+                color:
+                  category.authorRole === UserRole.Admin
+                    ? 'black'
+                    : palette.blue_600,
+              }}
             >
-              <ClearOutlined />
-            </button>
-          </div>
+              {category.label}
+            </Option>
+          ))}
+        </Select>
+        <div className="random-select-exam-selector-wrapper">
           <Select
             className="multiple-random-exam-selector"
             mode="multiple"
+            size="large"
             options={titles}
+            placeholder="시험을 추가해주세요."
             value={selectedExams}
             onChange={onChangeExam}
           />
@@ -235,6 +224,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             />
           )}
           <div className="random-select-exam-modal-setting-count-wrapper">
+            <Label content={'문제 수'} />
             <Input
               value={limit}
               type="number"
@@ -282,15 +272,7 @@ const RandomSelectComponentContainer = styled.div`
     gap: 15px;
     align-items: center;
   }
-  .random-select-exam-turn-clear-button {
-    position: relative;
-    top: 5px;
-    :hover {
-      svg {
-        color: ${palette.antd_blue_01};
-      }
-    }
-  }
+
   .random-select-exam-wrapper {
     display: flex;
     flex-direction: column;
@@ -298,8 +280,10 @@ const RandomSelectComponentContainer = styled.div`
   }
   .random-select-exam-selector-wrapper {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    width: 100%;
     gap: 5px;
+    margin-top: 15px;
   }
   .random-select-exam-start-button-wrapper {
     display: flex;
@@ -313,37 +297,55 @@ const RandomSelectComponentContainer = styled.div`
     height: 40px;
   }
   .multiple-random-exam-selector {
+    width: 100%;
     .ant-select-selector {
       max-height: 250px;
       overflow-y: auto;
     }
   }
   .random-select-exam-modal-setting-wrapper {
-    margin-top: 15px;
     display: flex;
     flex-direction: column;
   }
   .random-select-exam-modal-setting-checkbox-group {
+    .ant-checkbox-wrapper {
+      span:last-child {
+        padding: 0 5px;
+      }
+    }
     .circle-icon {
       position: relative;
-      top: 1px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
+      bottom: 1px;
     }
     .triangle-icon {
       position: relative;
-      top: 2px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
+      bottom: 1px;
     }
     .clear-icon {
       position: relative;
-      top: 4px;
-      right: 3px;
+      bottom: 2px;
+      width: 20px !important;
       height: 20px;
-      width: 20px;
+    }
+    .checkbox-label {
+      position: relative;
+      bottom: 3px;
+      height: 16px;
+    }
+    .ant-checkbox-wrapper {
+      align-items: center;
+      span:last-child {
+        height: 16px;
+      }
     }
   }
   .random-select-exam-modal-setting-checkbox-wrapper {
     display: flex;
+    align-items: flex-end;
     .ant-checkbox-group {
       .ant-checkbox-group-item:not(:last-child) {
         max-width: 50px;
@@ -373,13 +375,7 @@ const RandomSelectComponentContainer = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-  .random-select-exam-category-info {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    position: relative;
-    top: 5px;
-  }
+
   .random-select-category-color-box {
     width: 20px;
     height: 10px;
@@ -390,11 +386,8 @@ const RandomSelectComponentContainer = styled.div`
   .random-select-category-color-box.user {
     background-color: ${palette.blue_600};
   }
-  .random-select-exam-category-info-label {
-    font-size: 0.8rem;
-    color: ${palette.gray_700};
-  }
-  @media (max-width: ${responsive.small}) {
+
+  @media (max-width: ${responsive.medium}) {
     position: fixed;
     margin-top: 60px;
     padding-top: 40px;

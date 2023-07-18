@@ -32,7 +32,6 @@ interface HomeProps {
 const Home: NextPage<HomeProps> = ({
   categoriesQuery,
   titlesAndCategories,
-  examLinks,
 }) => {
   return (
     <>
@@ -48,7 +47,6 @@ const Home: NextPage<HomeProps> = ({
         <MainComponent
           categoriesQuery={categoriesQuery}
           titlesAndCategories={titlesAndCategories}
-          examLinks={examLinks}
         />
       </HomeContainer>
     </>
@@ -124,14 +122,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
         }
       )
     );
-  const examLinks: ExamTitleAndId[] = [];
-  titlesAndCategories.forEach((el) => {
-    el.titles.forEach((title) => {
-      examLinks.unshift(title);
-    });
-  });
+
   return addApolloState(apolloClient, {
-    props: { categoriesQuery, titlesAndCategories, examLinks },
+    props: { categoriesQuery, titlesAndCategories },
     revalidate: 43200,
   });
 };
