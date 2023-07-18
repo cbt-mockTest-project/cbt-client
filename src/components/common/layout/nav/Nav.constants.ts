@@ -8,6 +8,11 @@ export const NAV_ITEMS: NavItem[] = [
     key: ['post', 'community'],
   },
   {
+    label: '자료실',
+    path: '/data',
+    key: ['data'],
+  },
+  {
     label: '스토어',
     path: '/pricing',
     key: ['store', 'pricing', 'basic'],

@@ -17,7 +17,7 @@ const settings = {
     styledComponents: true,
   },
   images: {
-    domains: ['cbteungwangnestjs961203.s3.amazonaws.com'],
+    domains: ['cbteungwangnestjs961203.s3.amazonaws.com','dxw2azlbq2ays.cloudfront.net'],
   },
   webpack: (config) => {
     // 아래를 추가합니다.
