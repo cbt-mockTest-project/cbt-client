@@ -1,9 +1,6 @@
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import DataShareModal from '@components/common/modal/DataShareModal';
 import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
-import MakeExamModal from '@components/common/modal/MakeExamModal';
 import NoticeModal from '@components/common/modal/NoticeModal';
-import RemoveAdModal from '@components/common/modal/RemoveAdModal';
 import Portal from '@components/common/portal/Portal';
 import {
   OPEN_CHAT_MODAL_STATE,
@@ -11,68 +8,43 @@ import {
   selectExamHistory,
   tempAnswerKey,
 } from '@lib/constants';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
-import { checkAdblock, checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import Select, { DefaultOptionType } from 'antd/lib/select';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ExamTitleAndId, User, UserRole } from 'types';
 import MainViewCount from './MainViewCount';
-import RecentNoticeSkeleton from './RecentNoticeSkeleton';
-import { responsive } from '@lib/utils/responsive';
 
-const RecentNotice = dynamic(() => import('./RecentNotice'), {
-  ssr: false,
-  loading: () => <RecentNoticeSkeleton />,
-});
 export interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
 }
-
 interface MainComponentProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
   titlesAndCategories: TitlesAndCategories[];
-  examLinks: ExamTitleAndId[];
 }
 
 const MainComponent: React.FC<MainComponentProps> = ({
   categoriesQuery,
   titlesAndCategories,
-  examLinks,
 }) => {
   const router = useRouter();
-  const { data: meQuery } = useMeQuery();
-  const isNotAllowAdBlock = useMemo(
-    () => checkAdblock() && !checkRole({ roleIds: [1, 2, 3], meQuery }),
-    [meQuery]
-  );
-
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
-  const { value: removeAdModalState, onToggle: onToggleRemoveAdModal } =
-    useToggle(false);
-
-  const { value: makeExamModalState, onToggle: onToggleMakeExamModal } =
-    useToggle();
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
-  const { value: dataShareModalState, onToggle: onToggleDataShareModal } =
-    useToggle(false);
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState<string>();
+  const [title, setTitle] = useState<string>();
   const storage = new LocalStorage();
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
@@ -174,26 +146,14 @@ const MainComponent: React.FC<MainComponentProps> = ({
   return (
     <MainComponentContainer>
       <div className="home-wrapper">
-        <div className="home-content-left-wrapper"></div>
         <div className="home-content-center-wrapper">
           <div className="home-content-top-wrapper">
-            <div className="home-content-exam-category-wrapper">
-              <p className="home-content-title">시험선택</p>
-              <div className="home-content-exam-category-info">
-                <div className="home-content-category-color-box admin" />
-                <label className="home-content-exam-category-info-label">
-                  개발자 제작
-                </label>
-                <div className="home-content-category-color-box user" />
-                <label className="home-content-exam-category-info-label">
-                  유저 제작
-                </label>
-              </div>
-            </div>
             <Select
               value={category}
+              size="large"
               onChange={onCategoryChange}
               data-cy="category-selector"
+              placeholder="카테고리를 선택해주세요"
             >
               {categories.map((category) => (
                 <Option
@@ -211,10 +171,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 </Option>
               ))}
             </Select>
-            <p className="home-content-title">회차선택</p>
             <Select
               options={titles}
+              size="large"
               value={title}
+              placeholder="시험을 선택해주세요."
               onChange={(value) => onTitleChange(Number(value), titles)}
               data-cy="exam-selector"
             />
@@ -238,7 +199,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
               </Button>
             </div>
           </div>
-
           <Button onClick={gotoRandomSelectPage}>랜덤모의고사</Button>
           <div className="home-content-devide-line" />
 
@@ -272,47 +232,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
             <MainViewCount />
           </div>
         </div>
-        <div className="home-content-right-wrapper">
-          {/* <ChatComponent /> */}
-        </div>
       </div>
-      <div className="home-exam-link-list">
-        <h2 className="home-exam-link-title">전체 시험지 리스트</h2>
-        {examLinks.map((link) => (
-          <li key={link.id} className="home-exam-link-item">
-            <Link href={`/exam/solution/${link.id}`}>{link.title}</Link>
-          </li>
-        ))}
-      </div>
-
       <Portal>
-        {kakaoChatModalState && (
-          <KakaoOpenChatModal
-            open={kakaoChatModalState}
-            onClose={onToggleKakaoChatModalState}
-          />
-        )}
-        {makeExamModalState && (
-          <MakeExamModal
-            open={makeExamModalState}
-            onClose={onToggleMakeExamModal}
-          />
-        )}
-        {dataShareModalState && (
-          <DataShareModal
-            open={dataShareModalState}
-            onClose={onToggleDataShareModal}
-          />
-        )}
-        {noticeModalState && (
-          <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
-        )}
-        {removeAdModalState && (
-          <RemoveAdModal
-            open={removeAdModalState}
-            onClose={onToggleRemoveAdModal}
-          />
-        )}
+        <KakaoOpenChatModal
+          open={kakaoChatModalState}
+          onClose={onToggleKakaoChatModalState}
+        />
+        <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
       </Portal>
     </MainComponentContainer>
   );
@@ -321,6 +247,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
 export default MainComponent;
 
 const MainComponentContainer = styled.div`
+  margin-top: 15px;
   .home-wrapper {
     margin: 10px auto 0 auto;
     display: flex;
@@ -358,22 +285,9 @@ const MainComponentContainer = styled.div`
       height: 45px;
     }
   }
-  .home-content-left-wrapper {
-    flex: 1;
-  }
-  .home-content-right-wrapper {
-    /* width: 33.3%; */
-    flex: 1;
-  }
-  .home-checkbox-wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 20px 0;
-  }
+
   .home-bottom-wrapper {
     margin: 0 auto;
-    margin-top: 10px;
   }
 
   .home-button-mode-wrapper {
@@ -381,9 +295,6 @@ const MainComponentContainer = styled.div`
     display: flex;
     width: 100%;
     gap: 10px;
-  }
-  .home-content-title {
-    margin-right: auto;
   }
 
   .home-kakao-open-chat-button-wrapper {
@@ -394,80 +305,12 @@ const MainComponentContainer = styled.div`
     font-size: 0.9rem;
     gap: 10px;
     transition: all 0.3s;
+    border-radius: 6px;
     :hover {
       opacity: 0.7;
     }
     svg {
       height: 25px;
-    }
-  }
-  .home-content-exam-category-wrapper {
-    width: 100%;
-    display: flex;
-  }
-  .home-content-exam-category-info {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-  }
-  .home-content-category-color-box {
-    width: 20px;
-    height: 10px;
-  }
-  .home-content-category-color-box.admin {
-    background-color: black;
-  }
-  .home-content-category-color-box.user {
-    background-color: ${palette.blue_600};
-  }
-  .home-content-exam-category-info-label {
-    font-size: 0.8rem;
-    color: ${palette.gray_700};
-  }
-
-  .home-exam-link-list,
-  .home-recent-notice-list {
-    width: max-content;
-    min-width: 285px;
-    justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
-    font-size: 0.8rem;
-    gap: 5px;
-    max-height: 300px;
-    overflow-y: scroll;
-    margin: 20px auto 40px auto;
-    border: 1px solid ${palette.gray_200};
-    position: relative;
-    .home-exam-link-title,
-    .home-recent-notice-title {
-      text-align: center;
-      position: sticky;
-      top: 0px;
-      background-color: white;
-      font-size: 0.9rem;
-      padding: 10px 20px;
-      box-shadow: rgb(0 0 0 / 10%) 0px 1px 5px 1px;
-    }
-    .home-exam-link-item,
-    .home-recent-notice-list-item {
-      list-style: none;
-      text-align: center;
-      a {
-        padding: 10px 20px;
-        display: block;
-      }
-      :hover {
-        background-color: ${palette.gray_100};
-      }
-    }
-  }
-  @media (max-width: ${responsive.medium}) {
-    .home-content-left-wrapper {
-      display: none;
-    }
-    .home-content-right-wrapper {
-      display: none;
     }
   }
 `;

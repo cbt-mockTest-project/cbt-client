@@ -47,7 +47,6 @@ const Home: NextPage<HomeProps> = ({
         <MainComponent
           categoriesQuery={categoriesQuery}
           titlesAndCategories={titlesAndCategories}
-          examLinks={examLinks}
         />
       </HomeContainer>
     </>
