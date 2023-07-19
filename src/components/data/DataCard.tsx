@@ -22,7 +22,7 @@ const DataCardBlock = styled(Card)`
     font-size: 15px;
     font-weight: bold;
     display: -webkit-box;
-    -webkit-line-clamp: 1; /* 여기의 숫자를 원하는 줄 수로 조정하세요 */
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -31,7 +31,7 @@ const DataCardBlock = styled(Card)`
     margin-top: 10px;
     color: ${palette.gray_900};
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* 여기의 숫자를 원하는 줄 수로 조정하세요 */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
