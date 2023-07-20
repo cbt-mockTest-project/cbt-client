@@ -45,7 +45,7 @@ const DataComponent: React.FC<DataComponentProps> = () => {
         size="large"
         placeholder="자료를 검색해보세요."
       />
-      <Link href="/">
+      <Link href="/data/register">
         <Button
           className="data-search-register-button"
           type="primary"
