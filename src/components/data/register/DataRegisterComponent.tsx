@@ -35,6 +35,8 @@ const DataRegisterComponentBlock = styled.form`
     font-size: 14px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    font-size: 14px;
+    color: ${palette.gray_700};
     :hover {
       border-color: ${palette.antd_blue_01};
       color: ${palette.antd_blue_01};
@@ -78,6 +80,7 @@ const DataRegisterComponentBlock = styled.form`
     font-size: 14px;
     color: ${palette.gray_700};
   }
+
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
   }
@@ -88,6 +91,8 @@ interface DataRegisterComponentProps {}
 const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
   const router = useRouter();
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
+  const [uploadedFileLoading, setUploadedFileLoading] =
+    useState<boolean>(false);
   const [pdfPageCount, setPdfPageCount] = useState<number>(0);
   const { value: title, onChange: onChangeTitle } = useInput('');
   const { value: content, setValue: setContent } = useInput('');
@@ -96,33 +101,40 @@ const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
   const isSubmitDisabled = !title || !removeHtmlTag(content) || !uploadedFile;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file && file.size > 50 * 1024 * 1024) {
-      alert('50MB 미만의 파일만 업로드 가능합니다.');
-      return;
+    try {
+      setUploadedFileLoading(true);
+      if (!e.target.files) return;
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file && file.size > 50 * 1024 * 1024) {
+        alert('50MB 미만의 파일만 업로드 가능합니다.');
+        return;
+      }
+      if (file && file.type !== 'application/pdf') {
+        alert('PDF파일만 업로드 가능합니다.');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', 'data');
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_RESTAPI_URL}uploads/pdf`,
+        formData
+      );
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pageCount = pdfDoc.getPageCount();
+      setUploadedFile({
+        url: result.data.url,
+        name: file.name,
+        page: pageCount,
+      });
+      setPdfPageCount(pageCount);
+    } catch (e) {
+      handleError(e);
+    } finally {
+      setUploadedFileLoading(false);
     }
-    if (file && file.type !== 'application/pdf') {
-      alert('PDF파일만 업로드 가능합니다.');
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('path', 'data');
-    const result = await axios.post(
-      `${process.env.NEXT_PUBLIC_RESTAPI_URL}uploads/pdf`,
-      formData
-    );
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfDoc = await PDFDocument.load(arrayBuffer);
-    const pageCount = pdfDoc.getPageCount();
-    setUploadedFile({
-      url: result.data.url,
-      name: file.name,
-      page: pageCount,
-    });
-    setPdfPageCount(pageCount);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -146,7 +158,7 @@ const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
       });
       if (res.data?.createPost) {
         message.success('성공적으로 등록되었습니다.');
-        router.push('/data');
+        router.push(`/data/${res.data.createPost.postId}`);
       }
     } catch (e) {
       handleError(e);
@@ -165,6 +177,7 @@ const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
       <DataRegisterEditor content={content} setContent={setContent} />
       <DataRegisterFileUploadButton
         uploadedFile={uploadedFile}
+        uploadedFileLoading={uploadedFileLoading}
         setUploadedFile={setUploadedFile}
         handleFileChange={handleFileChange}
         pdfPageCount={pdfPageCount}

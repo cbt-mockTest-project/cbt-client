@@ -17,7 +17,6 @@ import { useRouter } from 'next/router';
 import { convertToKST, isServer } from '@lib/utils/utils';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
-import LoginModal from '@components/common/modal/LoginModal';
 import { loginModal } from '@lib/constants';
 
 const DataComponentBlock = styled.div`

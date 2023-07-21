@@ -24,7 +24,7 @@ export type CreatePostMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'CreatePostOutput', error?: string | null, ok: boolean } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'CreatePostOutput', error?: string | null, ok: boolean, postId?: number | null } };
 
 export type DeletePostMutationVariables = Types.Exact<{
   input: Types.DeletePostInput;
@@ -88,6 +88,7 @@ export const CreatePostDocument = gql`
   createPost(input: $input) {
     error
     ok
+    postId
   }
 }
     `;

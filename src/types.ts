@@ -264,6 +264,7 @@ export type CreatePostOutput = {
   __typename?: 'CreatePostOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  postId?: Maybe<Scalars['Float']>;
 };
 
 export type CreateQuestionCardCategoryInput = {
