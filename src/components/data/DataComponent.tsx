@@ -15,6 +15,10 @@ import {
 import { dataActions } from '@modules/redux/slices/data';
 import { useRouter } from 'next/router';
 import { convertToKST, isServer } from '@lib/utils/utils';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { coreActions } from '@modules/redux/slices/core';
+import LoginModal from '@components/common/modal/LoginModal';
+import { loginModal } from '@lib/constants';
 
 const DataComponentBlock = styled.div`
   padding-bottom: 50px;
@@ -59,7 +63,9 @@ interface DataComponentProps {}
 
 const DataComponent: React.FC<DataComponentProps> = () => {
   const router = useRouter();
-  const [readPosts, { data: postsQuery }] = useLazyReadPosts();
+  const { data: meQuery } = useMeQuery();
+  const isLogin = meQuery?.me.user ? true : false;
+  const [readPosts] = useLazyReadPosts();
   const [keyword, setKeyword] = useState('');
   const dataList = useAppSelector((state) => state.data.dataList);
   const dataListQuery = useAppSelector((state) => state.data.dataListQuery);
@@ -117,7 +123,6 @@ const DataComponent: React.FC<DataComponentProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (!router.query.s) return;
     dispatch(dataActions.resetDataList());
   }, [router.query.s]);
 
@@ -131,15 +136,26 @@ const DataComponent: React.FC<DataComponentProps> = () => {
         placeholder="자료를 검색해보세요."
         onSearch={handleSearch}
       />
-      <Link href="/data/register">
+      {isLogin ? (
+        <Link href="/data/register">
+          <Button
+            className="data-search-register-button"
+            type="primary"
+            size="large"
+          >
+            자료 등록하기
+          </Button>
+        </Link>
+      ) : (
         <Button
           className="data-search-register-button"
           type="primary"
           size="large"
+          onClick={() => dispatch(coreActions.openModal(loginModal))}
         >
           자료 등록하기
         </Button>
-      </Link>
+      )}
       <ul className="data-list">
         {dataList.map((data) => (
           <li className="data-list-item" key={data.id}>
