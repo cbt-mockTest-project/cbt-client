@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DataCard from './DataCard';
 import Link from 'next/link';
-import { Button, Input, Pagination } from 'antd';
+import { Button, Input, Spin } from 'antd';
 import { responsive } from '@lib/utils/responsive';
+import shortid from 'shortid';
+import useInfinityScroll from '@lib/hooks/useInfinityScroll';
 
 const DataComponentBlock = styled.div`
   padding-bottom: 50px;
@@ -30,6 +32,12 @@ const DataComponentBlock = styled.div`
     margin-bottom: 20px;
     width: 100%;
   }
+  .data-list-loading-indicator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    align-items: center;
+  }
   @media (max-width: ${responsive.medium}) {
     padding: 20px 10px;
   }
@@ -37,7 +45,28 @@ const DataComponentBlock = styled.div`
 
 interface DataComponentProps {}
 
+function waitThreeSeconds(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+}
+
 const DataComponent: React.FC<DataComponentProps> = () => {
+  const [dataList, setDataList] = useState<number[]>(
+    Array.from({ length: 5 }, (_, i) => i)
+  );
+  const fetchData = async () => {
+    await waitThreeSeconds();
+    setDataList([...dataList, ...Array.from({ length: 5 }, (_, i) => i)]);
+    return;
+  };
+  const { isLoading, loadingRef } = useInfinityScroll({
+    loadMore: fetchData,
+    hasMore: dataList.length < 100,
+  });
+
   return (
     <DataComponentBlock>
       <Input.Search
@@ -55,17 +84,20 @@ const DataComponent: React.FC<DataComponentProps> = () => {
         </Button>
       </Link>
       <ul className="data-list">
-        {Array.from({ length: 6 }, (_, i) => i).map((el) => (
-          <li className="data-list-item" key={el}>
-            <Link href="/data/1">
+        {dataList.map((el) => (
+          <li className="data-list-item" key={shortid()}>
+            <Link href="/data/1" shallow={true}>
               <DataCard />
             </Link>
           </li>
         ))}
       </ul>
-      <div className="data-pagination-wrapper">
-        <Pagination total={600} current={1} defaultPageSize={6} />
-      </div>
+      {isLoading && (
+        <div className="data-list-loading-indicator">
+          <Spin />
+        </div>
+      )}
+      <div ref={loadingRef} />
     </DataComponentBlock>
   );
 };
