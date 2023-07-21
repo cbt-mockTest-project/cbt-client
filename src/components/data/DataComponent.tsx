@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import DataCard from './DataCard';
 import Link from 'next/link';
@@ -6,9 +6,22 @@ import { Button, Input, Spin } from 'antd';
 import { responsive } from '@lib/utils/responsive';
 import shortid from 'shortid';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
+import parse from 'html-react-parser';
+import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
+import { Post, PostCategory } from 'types';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
+import { dataActions } from '@modules/redux/slices/data';
+import { useRouter } from 'next/router';
+import { isServer } from '@lib/utils/utils';
 
 const DataComponentBlock = styled.div`
   padding-bottom: 50px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
   max-width: 800px;
   margin: 0 auto;
   .data-search-input {
@@ -45,27 +58,56 @@ const DataComponentBlock = styled.div`
 
 interface DataComponentProps {}
 
-function waitThreeSeconds(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
-  });
-}
-
 const DataComponent: React.FC<DataComponentProps> = () => {
-  const [dataList, setDataList] = useState<number[]>(
-    Array.from({ length: 5 }, (_, i) => i)
-  );
+  const router = useRouter();
+  const [readPosts, { data: postsQuery }] = useLazyReadPosts();
+  const dataList = useAppSelector((state) => state.data.dataList);
+  const dataListQuery = useAppSelector((state) => state.data.dataListQuery);
+  const dispatch = useAppDispatch();
   const fetchData = async () => {
-    await waitThreeSeconds();
-    setDataList([...dataList, ...Array.from({ length: 5 }, (_, i) => i)]);
+    const res = await readPosts({
+      variables: {
+        input: {
+          limit: 10,
+          page: dataListQuery.page,
+          category: PostCategory.Data,
+        },
+      },
+    });
+    if (res.data?.readPosts.ok && res.data.readPosts.posts) {
+      dispatch(
+        dataActions.setDataListQuery({
+          ...dataListQuery,
+          page: dataListQuery.page + 1,
+          totalCount: res.data?.readPosts.count || 1,
+        })
+      );
+      dispatch(
+        dataActions.setDataList([
+          ...dataList,
+          ...(res.data?.readPosts.posts as Post[]),
+        ])
+      );
+    }
     return;
   };
   const { isLoading, loadingRef } = useInfinityScroll({
     loadMore: fetchData,
-    hasMore: dataList.length < 100,
+    hasMore: dataList.length < dataListQuery.totalCount,
   });
+
+  useEffect(() => {
+    if (isServer()) return;
+    window.scrollTo(0, dataListQuery.scrollY);
+    const handleRouteChange = () => {
+      dispatch(dataActions.setDataListQueryScrollY(window.scrollY));
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, []);
 
   return (
     <DataComponentBlock>
@@ -84,10 +126,10 @@ const DataComponent: React.FC<DataComponentProps> = () => {
         </Button>
       </Link>
       <ul className="data-list">
-        {dataList.map((el) => (
-          <li className="data-list-item" key={shortid()}>
+        {dataList.map((data) => (
+          <li className="data-list-item" key={data.id}>
             <Link href="/data/1" shallow={true}>
-              <DataCard />
+              <DataCard title={data.title} content={parse(data.content)} />
             </Link>
           </li>
         ))}

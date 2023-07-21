@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card, Input } from 'antd';
-import Image from 'next/image';
+import { Card } from 'antd';
 import palette from '@styles/palette';
-import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 
 const { Meta } = Card;
 
@@ -62,32 +60,16 @@ const DataCardBlock = styled(Card)`
 
 interface DataCardProps {
   className?: string;
+  title: string;
+  content: string | JSX.Element | JSX.Element[];
 }
 
-const DataCard: React.FC<DataCardProps> = ({ className }) => {
+const DataCard: React.FC<DataCardProps> = ({ className, title, content }) => {
   return (
     <DataCardBlock hoverable className={className || ''}>
-      <Image
-        alt="image"
-        width={100}
-        height={141.4}
-        src="https://dxw2azlbq2ays.cloudfront.net/1676544448895áá³áá³ááµá«áá£áº 2023-02-16 áá©áá® 7.47.13.png"
-      />
       <div className="data-card-content">
-        <p className="data-card-content-title">
-          산업안전기사 실기 필답형-린현자료산업안전기사 실기
-          필답형-린현자료산업안전기사 실기 필답형-린현자료산업안전기사 실기
-          필답형-린현자료산업안전기사 실기 필답형-린현자료
-        </p>
-        <p className="data-card-content-description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero quam
-          excepturi explicabo iure totam? Nobis accusantium sunt cum voluptate
-          similique quaerat deserunt itaque voluptatem! Ut recusandae voluptas
-          nisi cupiditate voluptates.Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Libero quam excepturi explicabo iure totam? Nobis
-          accusantium sunt cum voluptate similique quaerat deserunt itaque
-          voluptatem! Ut recusandae voluptas nisi cupiditate voluptates.
-        </p>
+        <p className="data-card-content-title">{title}</p>
+        <p className="data-card-content-description">{content}</p>
         <div className="data-card-content-option-list">
           <div className="data-card-content-option"> 23.05.09</div>
           <div className="data-card-divider" />
