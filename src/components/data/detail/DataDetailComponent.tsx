@@ -14,7 +14,6 @@ import {
 import { useRouter } from 'next/router';
 import { dataActions } from '@modules/redux/slices/data';
 import { Post } from 'types';
-import Link from 'next/link';
 import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
 
 const DataDetailComponentBlock = styled.div`

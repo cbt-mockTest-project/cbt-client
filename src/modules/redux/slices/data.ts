@@ -36,6 +36,14 @@ const dataSlice = createSlice({
     setDataListQueryScrollY: (state, action: PayloadAction<number>) => {
       state.dataListQuery.scrollY = action.payload;
     },
+    resetDataList: (state) => {
+      state.dataList = [];
+      state.dataListQuery = {
+        page: 1,
+        totalCount: 1,
+        scrollY: 0,
+      };
+    },
     setDataDetail: (state, action: PayloadAction<Post>) => {
       state.dataDetail = action.payload;
     },

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DataCard from './DataCard';
 import Link from 'next/link';
@@ -60,6 +60,7 @@ interface DataComponentProps {}
 const DataComponent: React.FC<DataComponentProps> = () => {
   const router = useRouter();
   const [readPosts, { data: postsQuery }] = useLazyReadPosts();
+  const [keyword, setKeyword] = useState('');
   const dataList = useAppSelector((state) => state.data.dataList);
   const dataListQuery = useAppSelector((state) => state.data.dataListQuery);
   const dispatch = useAppDispatch();
@@ -70,6 +71,7 @@ const DataComponent: React.FC<DataComponentProps> = () => {
           limit: 10,
           page: dataListQuery.page,
           category: PostCategory.Data,
+          search: router.query.s as string,
         },
       },
     });
@@ -90,6 +92,12 @@ const DataComponent: React.FC<DataComponentProps> = () => {
     }
     return;
   };
+  const handleSearch = async () => {
+    router.push({
+      pathname: '/data',
+      query: { s: keyword },
+    });
+  };
   const { isLoading, loadingRef } = useInfinityScroll({
     loadMore: fetchData,
     hasMore: dataList.length < dataListQuery.totalCount,
@@ -108,12 +116,20 @@ const DataComponent: React.FC<DataComponentProps> = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!router.query.s) return;
+    dispatch(dataActions.resetDataList());
+  }, [router.query.s]);
+
   return (
     <DataComponentBlock>
       <Input.Search
         className="data-search-input"
         size="large"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
         placeholder="자료를 검색해보세요."
+        onSearch={handleSearch}
       />
       <Link href="/data/register">
         <Button
