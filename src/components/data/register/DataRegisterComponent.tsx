@@ -1,16 +1,18 @@
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
-import dynamic from 'next/dynamic';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Buffer } from 'buffer';
 import { PDFDocument } from 'pdf-lib';
 import { responsive } from '@lib/utils/responsive';
-import { Clear, PlusOneOutlined } from '@mui/icons-material';
-import { PlusOutlined } from '@ant-design/icons';
 import useInput from '@lib/hooks/useInput';
 import DataRegisterEditor from './DataRegisterEditor';
-import { removeHtmlTag } from '@lib/utils/utils';
+import { handleError, removeHtmlTag } from '@lib/utils/utils';
+import axios from 'axios';
+import { useCreatePost } from '@lib/graphql/user/hook/usePost';
+import { PostCategory } from 'types';
+import { UploadFile } from '../Data.type';
+import { useRouter } from 'next/router';
+import DataRegisterFileUploadButton from './DataRegisterFileUploadButton';
 
 const DataRegisterComponentBlock = styled.form`
   max-width: 800px;
@@ -83,24 +85,21 @@ const DataRegisterComponentBlock = styled.form`
 
 interface DataRegisterComponentProps {}
 
-const mockFile = {
-  name: '산업안전기사10개년 요약집.pdf',
-  url: 'https://moducbt.com',
-  page: 10,
-};
-
 const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
-  const [uploadedFile, setUploadedFile] = useState<any>(null);
+  const router = useRouter();
+  const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [pdfPageCount, setPdfPageCount] = useState<number>(0);
   const { value: title, onChange: onChangeTitle } = useInput('');
   const { value: content, setValue: setContent } = useInput('');
+  const [createPost, { loading: createPostLoading }] = useCreatePost();
+
   const isSubmitDisabled = !title || !removeHtmlTag(content) || !uploadedFile;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     if (!file) return;
     if (file && file.size > 50 * 1024 * 1024) {
-      // 50MB
       alert('50MB 미만의 파일만 업로드 가능합니다.');
       return;
     }
@@ -111,16 +110,49 @@ const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('path', 'data');
+    const result = await axios.post(
+      `${process.env.NEXT_PUBLIC_RESTAPI_URL}uploads/pdf`,
+      formData
+    );
     const arrayBuffer = await file.arrayBuffer();
     const pdfDoc = await PDFDocument.load(arrayBuffer);
-    setUploadedFile(mockFile);
-    setPdfPageCount(pdfDoc.getPageCount());
+    const pageCount = pdfDoc.getPageCount();
+    setUploadedFile({
+      url: result.data.url,
+      name: file.name,
+      page: pageCount,
+    });
+    setPdfPageCount(pageCount);
   };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isSubmitDisabled) return message.error('빈칸을 모두 채워주세요.');
-    console.log(title, content, uploadedFile);
+    try {
+      e.preventDefault();
+      if (isSubmitDisabled) return message.error('빈칸을 모두 채워주세요.');
+      const res = await createPost({
+        variables: {
+          input: {
+            title,
+            content,
+            category: PostCategory.Data,
+            data: {
+              price: 0,
+              fileUrl: uploadedFile.url,
+              fileName: uploadedFile.name,
+              filePage: uploadedFile.page,
+            },
+          },
+        },
+      });
+      if (res.data?.createPost) {
+        message.success('성공적으로 등록되었습니다.');
+        router.push('/data');
+      }
+    } catch (e) {
+      handleError(e);
+    }
   };
+
   return (
     <DataRegisterComponentBlock onSubmit={onSubmit}>
       <Input
@@ -131,49 +163,18 @@ const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
         size="large"
       />
       <DataRegisterEditor content={content} setContent={setContent} />
-      {!uploadedFile && (
-        <>
-          <label htmlFor="data-file" className="data-register-upload-label">
-            <span>
-              <PlusOutlined />
-            </span>
-            <span>파일 업로드 (최대용량 50MB)</span>
-          </label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="data-register-upload-input"
-            id="data-file"
-          />
-        </>
-      )}
-      {uploadedFile && (
-        <div className="data-register-uploaded-file-wrapper">
-          <button
-            className="data-register-uploaded-file-button"
-            type="button"
-            onClick={() => {}}
-          >
-            {uploadedFile.name}
-          </button>
-          <div className="data-register-uploaded-file-page">{`${pdfPageCount}페이지`}</div>
-          <button
-            className="data-register-uploaded-file-clear-button"
-            onClick={() => {
-              setUploadedFile(null);
-            }}
-          >
-            <Clear />
-          </button>
-        </div>
-      )}
-
+      <DataRegisterFileUploadButton
+        uploadedFile={uploadedFile}
+        setUploadedFile={setUploadedFile}
+        handleFileChange={handleFileChange}
+        pdfPageCount={pdfPageCount}
+      />
       <Button
         type="primary"
         size="large"
         htmlType="submit"
         disabled={isSubmitDisabled}
+        loading={createPostLoading}
       >
         등록하기
       </Button>

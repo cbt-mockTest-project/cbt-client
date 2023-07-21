@@ -256,6 +256,7 @@ export type CreatePostCommentOutput = {
 export type CreatePostInput = {
   category?: InputMaybe<PostCategory>;
   content: Scalars['String'];
+  data?: InputMaybe<PostDataInput>;
   title: Scalars['String'];
 };
 
@@ -697,11 +698,32 @@ export type GetFeedbacksWithFilterOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetMyBlogPostRankInput = {
+  blogName: Scalars['String'];
+  keyword: Scalars['String'];
+};
+
+export type GetMyBlogPostRankOutput = {
+  __typename?: 'GetMyBlogPostRankOutput';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  postInfo?: Maybe<PostInfo>;
+  searchCounts?: Maybe<SearchCounts>;
+};
+
 export type GetMyPaymentsOutput = {
   __typename?: 'GetMyPaymentsOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   payments?: Maybe<Array<Payment>>;
+};
+
+export type GetPartnersOutput = {
+  __typename?: 'GetPartnersOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  partners?: Maybe<Array<Partner>>;
 };
 
 export type GetRoleCountInput = {
@@ -1385,20 +1407,6 @@ export type NaverBlogViewMacroOutput = {
   ok: Scalars['Boolean'];
 };
 
-export type NaverViewTapCrawlerInput = {
-  blogName: Scalars['String'];
-  keyword: Scalars['String'];
-};
-
-export type NaverViewTapCrawlerOutput = {
-  __typename?: 'NaverViewTapCrawlerOutput';
-  error?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  ok: Scalars['Boolean'];
-  postInfo?: Maybe<PostInfo>;
-  searchCounts?: Maybe<SearchCounts>;
-};
-
 export type Notice = {
   __typename?: 'Notice';
   confirm: Scalars['Boolean'];
@@ -1442,6 +1450,7 @@ export type Post = {
   commentsCount: Scalars['Float'];
   content: Scalars['String'];
   created_at: Scalars['DateTime'];
+  data: PostData;
   id: Scalars['Float'];
   isHidden: Scalars['Boolean'];
   like: Array<PostLike>;
@@ -1456,6 +1465,7 @@ export type Post = {
 
 export enum PostCategory {
   Checkin = 'CHECKIN',
+  Data = 'DATA',
   Free = 'FREE',
   Notice = 'NOTICE',
   Recovery = 'RECOVERY',
@@ -1485,6 +1495,36 @@ export type PostCommentLike = {
   user: User;
 };
 
+export type PostData = {
+  __typename?: 'PostData';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  post: Array<Post>;
+  postFile: Array<PostFile>;
+  price: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PostDataInput = {
+  fileName?: InputMaybe<Scalars['String']>;
+  filePage?: InputMaybe<Scalars['Float']>;
+  fileUrl?: InputMaybe<Scalars['String']>;
+  price?: InputMaybe<Scalars['Float']>;
+};
+
+export type PostFile = {
+  __typename?: 'PostFile';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  page: Scalars['Float'];
+  postData: PostData;
+  updated_at: Scalars['DateTime'];
+  url: Scalars['String'];
+  user: User;
+};
+
 export type PostInfo = {
   __typename?: 'PostInfo';
   content: Scalars['String'];
@@ -1508,12 +1548,13 @@ export type Query = {
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
+  getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyPayments: GetMyPaymentsOutput;
+  getPartners: GetPartnersOutput;
   getRoleCount: GetRoleCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   getTodo: GetTodoOutput;
   me: MeOutput;
-  naverViewTapCrawlerTest: NaverViewTapCrawlerOutput;
   readAllMockExam: ReadAllMockExamsOutput;
   readAllMockExamCategories: ReadAllMockExamCategoriesOutput;
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
@@ -1563,6 +1604,11 @@ export type QueryGetFeedbacksWithFilterArgs = {
 };
 
 
+export type QueryGetMyBlogPostRankArgs = {
+  input: GetMyBlogPostRankInput;
+};
+
+
 export type QueryGetRoleCountArgs = {
   input: GetRoleCountInput;
 };
@@ -1570,11 +1616,6 @@ export type QueryGetRoleCountArgs = {
 
 export type QueryGetTodoArgs = {
   input: GetTodoInput;
-};
-
-
-export type QueryNaverViewTapCrawlerTestArgs = {
-  input: NaverViewTapCrawlerInput;
 };
 
 
@@ -2255,6 +2296,8 @@ export type User = {
   payments: Array<Payment>;
   post?: Maybe<Array<Post>>;
   postComment: Array<PostComment>;
+  postData: Array<PostData>;
+  postFile: Array<PostFile>;
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
