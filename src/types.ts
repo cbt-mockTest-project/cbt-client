@@ -1450,7 +1450,7 @@ export type Post = {
   commentsCount: Scalars['Float'];
   content: Scalars['String'];
   created_at: Scalars['DateTime'];
-  data: PostData;
+  data?: Maybe<PostData>;
   id: Scalars['Float'];
   isHidden: Scalars['Boolean'];
   like: Array<PostLike>;

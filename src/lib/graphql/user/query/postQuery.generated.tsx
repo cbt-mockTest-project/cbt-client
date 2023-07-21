@@ -10,14 +10,14 @@ export type ReadPostQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, category: Types.PostCategory, priority: number, comment: Array<{ __typename?: 'PostComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number } }>, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> } | null } };
+export type ReadPostQuery = { __typename?: 'Query', readPost: { __typename?: 'ReadPostOutput', error?: string | null, ok: boolean, post?: { __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, category: Types.PostCategory, priority: number, comment: Array<{ __typename?: 'PostComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number } }>, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }>, data?: { __typename?: 'PostData', id: number, price: number, postFile: Array<{ __typename?: 'PostFile', page: number, name: string, url: string }> } | null } | null } };
 
 export type ReadPostsQueryVariables = Types.Exact<{
   input: Types.ReadPostsInput;
 }>;
 
 
-export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, category: Types.PostCategory, priority: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }> }> | null } };
+export type ReadPostsQuery = { __typename?: 'Query', readPosts: { __typename?: 'ReadPostsOutput', count: number, error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'Post', content: string, created_at: any, id: number, title: string, updated_at: any, commentsCount: number, likesCount: number, likeState: boolean, view: number, category: Types.PostCategory, priority: number, user: { __typename?: 'User', id: number, nickname: string }, like: Array<{ __typename?: 'PostLike', id: number }>, data?: { __typename?: 'PostData', id: number, price: number, postFile: Array<{ __typename?: 'PostFile', page: number, name: string, url: string }> } | null }> | null } };
 
 export type CreatePostMutationVariables = Types.Exact<{
   input: Types.CreatePostInput;

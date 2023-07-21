@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { Card } from 'antd';
 import palette from '@styles/palette';
 
-const { Meta } = Card;
-
 const DataCardBlock = styled(Card)`
   .ant-card-body {
     display: flex;
@@ -62,20 +60,32 @@ interface DataCardProps {
   className?: string;
   title: string;
   content: string | JSX.Element | JSX.Element[];
+  date: string;
+  page: number;
+  price: number;
 }
 
-const DataCard: React.FC<DataCardProps> = ({ className, title, content }) => {
+const DataCard: React.FC<DataCardProps> = ({
+  className,
+  title,
+  content,
+  date,
+  page,
+  price,
+}) => {
   return (
     <DataCardBlock hoverable className={className || ''}>
       <div className="data-card-content">
         <p className="data-card-content-title">{title}</p>
         <p className="data-card-content-description">{content}</p>
         <div className="data-card-content-option-list">
-          <div className="data-card-content-option"> 23.05.09</div>
+          <div className="data-card-content-option"> {date}</div>
           <div className="data-card-divider" />
-          <div className="data-card-content-option"> 40페이지</div>
+          <div className="data-card-content-option"> {`${page}페이지`}</div>
           <div className="data-card-divider" />
-          <div className="data-card-content-option">5000원</div>
+          <div className="data-card-content-option">
+            {price ? `${price}원` : '무료'}
+          </div>
         </div>
       </div>
     </DataCardBlock>

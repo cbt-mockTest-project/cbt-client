@@ -7,13 +7,15 @@ interface DataListQuery {
   scrollY: number;
 }
 
-interface DataState {
+export interface DataState {
   dataList: Post[];
+  dataDetail: Post | null;
   dataListQuery: DataListQuery;
 }
 
 const dataState: DataState = {
   dataList: [],
+  dataDetail: null,
   dataListQuery: {
     page: 1,
     totalCount: 1,
@@ -33,6 +35,9 @@ const dataSlice = createSlice({
     },
     setDataListQueryScrollY: (state, action: PayloadAction<number>) => {
       state.dataListQuery.scrollY = action.payload;
+    },
+    setDataDetail: (state, action: PayloadAction<Post>) => {
+      state.dataDetail = action.payload;
     },
   },
 });

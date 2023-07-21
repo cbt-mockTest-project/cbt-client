@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import DataDetailPdfPreview from './DataDetailPdfPreview';
-import { Button, Card } from 'antd';
+import { Button, Card, message } from 'antd';
 import palette from '@styles/palette';
+import parse from 'html-react-parser';
+import { useLazyReadPost } from '@lib/graphql/user/hook/usePost';
+import { convertToKST } from '@lib/utils/utils';
+import EditorStyle from '@styles/editorStyle';
+import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
 import {
-  ArrowUpOutlined,
-  CaretDownOutlined,
-  CaretUpOutlined,
-  DownCircleFilled,
-  UpCircleFilled,
-  UpSquareFilled,
-} from '@ant-design/icons';
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
+import { useRouter } from 'next/router';
+import { dataActions } from '@modules/redux/slices/data';
+import { Post } from 'types';
+import Link from 'next/link';
+import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
 
 const DataDetailComponentBlock = styled.div`
   .data-detail-title {
@@ -19,6 +24,7 @@ const DataDetailComponentBlock = styled.div`
     border-bottom: 2px solid ${palette.gray_100};
   }
   .data-detail-description {
+    ${EditorStyle}
     margin-top: 25px;
   }
   .data-detail-info {
@@ -40,30 +46,21 @@ const DataDetailComponentBlock = styled.div`
     justify-content: center;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
   }
   .data-detail-vote-count {
     font-size: 20px;
     text-align: center;
   }
   .data-detail-vote-button {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 1px solid ${palette.gray_200};
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.3s;
     svg {
-      width: 20px;
-      height: 20px;
-    }
-    :hover {
-      border-color: ${palette.antd_blue_01};
-      svg {
-        color: ${palette.antd_blue_01};
-      }
+      width: 25px;
+      height: 25px;
+      color: ${palette.red_500};
     }
   }
   .data-detail-info-content-wrapper {
@@ -80,64 +77,114 @@ const DataDetailComponentBlock = styled.div`
 
 interface DataDetailComponentProps {}
 
-const DataDetailComponent: React.FC<DataDetailComponentProps> = () => {
+const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
+  const [readPost] = useLazyReadPost();
+  const [editPostLike] = useEditPostLike();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const post = useAppSelector((state) => state.data.dataDetail);
+
+  const handleLike = async () => {
+    if (!post) return;
+    const res = await editPostLike({
+      variables: {
+        input: {
+          postId: post.id,
+        },
+      },
+    });
+    if (res.data?.editPostLike.ok) {
+      const newPost = {
+        ...post,
+        likesCount: res.data.editPostLike.currentState
+          ? post.likesCount + 1
+          : post.likesCount - 1,
+        likeState: res.data.editPostLike.currentState,
+      };
+      dispatch(dataActions.setDataDetail(newPost));
+      return;
+    }
+    return message.error(res.data?.editPostLike.error);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const res = await readPost({
+        variables: {
+          input: {
+            id: Number(router.query.Id),
+          },
+        },
+      });
+      if (!res.data?.readPost.post) return;
+      dispatch(dataActions.setDataDetail(res.data.readPost.post as Post));
+    })();
+  }, [router.query.Id]);
+
+  if (!post) return null;
   return (
     <DataDetailComponentBlock>
       <Card>
-        <h1 className="data-detail-title">
-          산업안전기사 요약집!!산업안전기사 요약집!!산업안전기사
-          요약집!!산업안전기사 요약집!!산업안전기사 요약집!!산업안전기사
-          요약집!!
-        </h1>
+        <h1 className="data-detail-title">{post.title}</h1>
         <div className="data-detail-info-wrapper">
           <div className="data-detail-info-left-side">
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">제작자</p>
-              <p className="data-detail-info-content-value">부우부</p>
+              <p className="data-detail-info-content-value">
+                {post.user.nickname}
+              </p>
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">등록일</p>
-              <p className="data-detail-info-content-value">2023.07.18</p>
+              <p className="data-detail-info-content-value">
+                {convertToKST(post.created_at, 'yyyy.MM.dd')}
+              </p>
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">수정일</p>
-              <p className="data-detail-info-content-value">2023.08.18</p>
+              <p className="data-detail-info-content-value">
+                {convertToKST(post.updated_at, 'yyyy.MM.dd')}
+              </p>
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">페이지</p>
-              <p className="data-detail-info-content-value">123 페이지</p>
+              <p className="data-detail-info-content-value">{`${
+                post.data?.postFile[0].page || 0
+              } 페이지`}</p>
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">가격</p>
-              <p className="data-detail-info-content-value">무료</p>
+              <p className="data-detail-info-content-value">
+                {post.data?.price ? `${post.data.price}원` : '무료'}
+              </p>
             </div>
-            <Button
-              className="data-detail-download-button"
-              type="primary"
-              size="large"
+
+            <a
+              href={post.data?.postFile[0].url || ''}
+              target="_blank"
+              rel="noreferrer"
             >
-              다운로드
-            </Button>
+              <Button
+                className="data-detail-download-button"
+                type="primary"
+                size="large"
+              >
+                다운로드
+              </Button>
+            </a>
           </div>
           <div className="data-detail-info-right-side">
-            <button className="data-detail-vote-button">
-              <CaretUpOutlined />
+            <button className="data-detail-vote-button" onClick={handleLike}>
+              {post.likeState ? (
+                <FavoriteOutlined />
+              ) : (
+                <FavoriteBorderOutlined />
+              )}
             </button>
-            <div className="data-detail-vote-count">204</div>
-            <button className="data-detail-vote-button">
-              <CaretDownOutlined />
-            </button>
+            <div className="data-detail-vote-count">{post.likesCount}</div>
           </div>
         </div>
-        <p className="data-detail-description">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis eum
-          amet quasi doloremque cum suscipit asperiores minima animi
-          reprehenderit adipisci molestiae ducimus nesciunt quam, ratione
-          dolorum. Aliquid nemo dolore error. Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Debitis eum amet quasi doloremque cum
-          suscipit asperiores minima animi reprehenderit adipisci molestiae
-          ducimus nesciunt quam, ratione dolorum. Aliquid nemo dolore error.
-        </p>
+        <div className="data-detail-description">{parse(post.content)}</div>
       </Card>
     </DataDetailComponentBlock>
   );

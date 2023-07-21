@@ -4,7 +4,6 @@ import DataCard from './DataCard';
 import Link from 'next/link';
 import { Button, Input, Spin } from 'antd';
 import { responsive } from '@lib/utils/responsive';
-import shortid from 'shortid';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
 import parse from 'html-react-parser';
 import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
@@ -15,7 +14,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { dataActions } from '@modules/redux/slices/data';
 import { useRouter } from 'next/router';
-import { isServer } from '@lib/utils/utils';
+import { convertToKST, isServer } from '@lib/utils/utils';
 
 const DataComponentBlock = styled.div`
   padding-bottom: 50px;
@@ -79,7 +78,7 @@ const DataComponent: React.FC<DataComponentProps> = () => {
         dataActions.setDataListQuery({
           ...dataListQuery,
           page: dataListQuery.page + 1,
-          totalCount: res.data?.readPosts.count || 1,
+          totalCount: res.data ? res.data.readPosts.count : 1,
         })
       );
       dispatch(
@@ -128,8 +127,14 @@ const DataComponent: React.FC<DataComponentProps> = () => {
       <ul className="data-list">
         {dataList.map((data) => (
           <li className="data-list-item" key={data.id}>
-            <Link href="/data/1" shallow={true}>
-              <DataCard title={data.title} content={parse(data.content)} />
+            <Link href={`/data/${data.id}`} shallow={true}>
+              <DataCard
+                title={data.title}
+                content={parse(data.content)}
+                date={convertToKST(data.created_at, 'yy.MM.dd')}
+                price={data.data ? data.data.price : 0}
+                page={data.data ? data.data.postFile[0].page : 0}
+              />
             </Link>
           </li>
         ))}

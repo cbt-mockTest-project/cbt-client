@@ -10,6 +10,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import PostDetailComponent from '@components/post/detail/PostDetailComponent';
+import { PostCategory } from 'types';
 interface PostPageProps {
   postQueryOnStaticProps: ReadPostQuery;
 }
@@ -45,9 +46,11 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
       },
     });
     if (res.data.readPosts.posts) {
-      paths = res.data.readPosts.posts.map((el) => ({
-        params: { Id: String(el.id) },
-      }));
+      paths = res.data.readPosts.posts
+        .filter((el) => el.category !== PostCategory.Data)
+        .map((el) => ({
+          params: { Id: String(el.id) },
+        }));
     }
     return { paths, fallback: 'blocking' };
   } catch (err) {
