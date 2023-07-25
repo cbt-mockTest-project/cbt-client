@@ -4,17 +4,23 @@ import {
 } from '@lib/graphql/user/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { message, Select } from 'antd';
+import { Button, List, message, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/cascader';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MyExamListItem from './MyExamListItem';
 import { handleError } from '@lib/utils/utils';
+import Portal from '@components/common/portal/Portal';
+import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
+import useToggle from '@lib/hooks/useToggle';
+import Link from 'next/link';
 
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   const [readTitles, { data: examTitlesQuery }] = useReadExamTitles();
+  const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
+    useToggle(false);
   const { data: categoriesQuery } = useReadMyExamCategories();
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
@@ -60,31 +66,45 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
     <MyExamComponentContainer>
       <h3>내가만든 시험지 목록을 보여주는 페이지입니다.</h3>
       <Select
+        size="large"
         options={categories}
         onSelect={(value, option) => requestCategorySelect(option)}
         placeholder="카테고리명을 선택해주세요"
         className="my-exam-category-selector"
       />
-      {examTitlesQuery?.readMockExamTitlesByCateory.ok && (
-        <>
-          <div className="my-exam-list-menu-wrapper">
-            <p className="my-exam-list-menu-title">시험명</p>
-            <div className="my-exam-list-menu-label-wrapper">
-              <label>상태</label>
-              <label></label>
+      <List
+        className="my-exam-list"
+        dataSource={examTitlesQuery?.readMockExamTitlesByCateory.titles}
+        bordered
+        renderItem={(item) => (
+          <List.Item key={item.id}>
+            <div className="my-exam-list-item-wrapper">
+              <div>{item.title}</div>
+              <div className="my-exam-list-item-button-wrapper">
+                <Button type="primary" onClick={onToggleExamPreviewModal}>
+                  미리보기
+                </Button>
+                <Link
+                  href={`/exam/write?cl=${selectedCategory?.label}&cv=${selectedCategory?.value}&ev=${item.id}&el=${item.title}`}
+                >
+                  <Button type="primary">수정하기</Button>
+                </Link>
+              </div>
             </div>
-          </div>
-          <ul className="my-exam-list">
-            {examTitlesQuery?.readMockExamTitlesByCateory.titles.map((item) => (
-              <MyExamListItem
-                key={item.id}
-                selectedCategory={selectedCategory}
-                item={item}
+            <Portal>
+              <ExamPreviewModal
+                categoryName={
+                  selectedCategory ? (selectedCategory.label as string) : ''
+                }
+                examId={item.id}
+                examTitle={item.title}
+                onClose={onToggleExamPreviewModal}
+                open={previewModalState}
               />
-            ))}
-          </ul>
-        </>
-      )}
+            </Portal>
+          </List.Item>
+        )}
+      />
     </MyExamComponentContainer>
   );
 };
@@ -137,6 +157,19 @@ const MyExamComponentContainer = styled.div`
     gap: 20px;
     padding-left: 10px;
     border-left: 1px solid ${palette.gray_200};
+  }
+  .my-exam-list {
+    margin-top: 20px;
+  }
+  .my-exam-list-item-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .my-exam-list-item-button-wrapper {
+    display: flex;
+    gap: 10px;
   }
   @media (max-width: ${responsive.medium}) {
     margin-top: 20px;
