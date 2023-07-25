@@ -11,18 +11,19 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Checkbox, Input } from 'antd';
-import { Option } from 'antd/lib/mentions';
+import { Button, Checkbox, Input, Radio, RadioChangeEvent } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { QuestionState, User, UserRole } from 'types';
+import { QuestionState } from 'types';
 import { Categories } from '../../../../pages/exam/randomselect';
 import { useDispatch } from 'react-redux';
 import { coreActions } from '@modules/redux/slices/core';
 import { checkRole } from '@lib/utils/utils';
+import { EXAM_TYPE } from '@components/main/Main.type';
+import RandomMyExamSelector from './RandomMyExamSelector';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -47,10 +48,20 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const dispatch = useDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
-  const [selectedExams, setSelectedExams] = useState<number[]>([]);
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
+  const [isMyExam, setIsMyExam] = useState<boolean>(false);
   const [limit, setLimit] = useState(14);
-  const [category, setCategory] = useState<string>();
+
+  const [selectedModucbtCategory, setSelectedModucbtCategory] =
+    useState<DefaultOptionType | null>(null);
+  const [selectedModucbtTitles, setSelectedModucbtTitles] = useState<number[]>(
+    []
+  );
+
+  const [selectedMyCategory, setSelectedMyCategory] =
+    useState<DefaultOptionType | null>(null);
+  const [selectedMyTitles, setSelectedMyTitles] = useState<number[]>([]);
+
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
   const { data: meQuery, loading: meQueryLoading } = useMeQuery();
@@ -69,12 +80,15 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       }
       const savedRandomExamInfo = storage.get('randomExamInfo');
       if (savedRandomExamInfo) {
-        const { category, selectedExams } = savedRandomExamInfo;
+        const { category, selectedModucbtTitles } = savedRandomExamInfo;
         if (category) {
           onChangeCategory(category);
         }
-        if (Array.isArray(selectedExams) && selectedExams.length >= 1) {
-          onChangeExam(selectedExams);
+        if (
+          Array.isArray(selectedModucbtTitles) &&
+          selectedModucbtTitles.length >= 1
+        ) {
+          onChangeExam(selectedModucbtTitles);
         }
       }
     } catch (e) {
@@ -82,12 +96,15 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
     }
   }, []);
 
-  const onChangeCategory = async (value: string) => {
-    setSelectedExams([]);
-    storage.set('randomExamInfo', { category: value, selectedExams: [] });
-    setCategory(value);
+  const onChangeCategory = async (category: DefaultOptionType) => {
+    setSelectedModucbtTitles([]);
+    storage.set('randomExamInfo', {
+      category: category,
+      selectedModucbtTitles: [],
+    });
+    setSelectedModucbtCategory(category);
     const filteredTitles = titlesAndCategories.filter(
-      (el) => el.category === value
+      (el) => el.category === category.label
     );
     const titles: DefaultOptionType[] = filteredTitles[0].titles.map(
       (title) => ({
@@ -106,25 +123,25 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
         .map((title) => Number(title.value))
         .filter((el) => el !== 0);
       if (allTitleIds.length + 1 === value.length) {
-        setSelectedExams([]);
+        setSelectedModucbtTitles([]);
         storage.set('randomExamInfo', {
           ...savedRandomExamInfo,
-          selectedExams: [],
+          selectedModucbtTitles: [],
         });
         return;
       }
-      setSelectedExams(allTitleIds);
+      setSelectedModucbtTitles(allTitleIds);
       storage.set('randomExamInfo', {
         ...savedRandomExamInfo,
-        selectedExams: allTitleIds,
+        selectedModucbtTitles: allTitleIds,
       });
       return;
     }
     storage.set('randomExamInfo', {
       ...savedRandomExamInfo,
-      selectedExams: value,
+      selectedModucbtTitles: value,
     });
-    setSelectedExams(value);
+    setSelectedModucbtTitles(value);
   };
 
   const handleStart = (type: 'exam' | 'solution') => {
@@ -137,14 +154,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       return;
     }
     let es: string;
-    const isAllSelected = selectedExams.includes(0);
-    if (isAllSelected) {
-      const titleIds = titles.map((title) => title.value);
-      titleIds.shift();
-      es = JSON.stringify(titleIds);
-    } else {
-      es = JSON.stringify(selectedExams);
-    }
+    es = JSON.stringify(isMyExam ? selectedMyTitles : selectedModucbtTitles);
     setRouteLoading(true);
     router.push({
       pathname: type === 'exam' ? '/exam' : '/exam/solution',
@@ -155,44 +165,59 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
         q: '1',
         r: false,
         t: '랜덤모의고사',
-        c: category,
+        c: isMyExam
+          ? (selectedMyCategory?.label as string)
+          : (selectedModucbtCategory?.label as string),
       },
     });
+  };
+  const onChangeExamType = (e: RadioChangeEvent) => {
+    if (e.target.value === EXAM_TYPE.MODUCBT_EXAM) {
+      setIsMyExam(false);
+    } else {
+      setIsMyExam(true);
+    }
   };
   return (
     <RandomSelectComponentContainer>
       <div className="random-select-exam-wrapper">
-        <Select
-          value={category}
-          onChange={onChangeCategory}
-          size="large"
-          placeholder="카테고리를 선택해주세요"
-        >
-          {categories.map((category) => (
-            <Option
-              key={category.value as string}
-              value={category.value as string}
-              style={{
-                color:
-                  category.authorRole === UserRole.Admin
-                    ? 'black'
-                    : palette.blue_600,
-              }}
-            >
-              {category.label}
-            </Option>
-          ))}
-        </Select>
         <div className="random-select-exam-selector-wrapper">
-          <Select
-            className="multiple-random-exam-selector"
-            mode="multiple"
-            size="large"
-            options={titles}
-            placeholder="시험을 추가해주세요."
-            value={selectedExams}
-            onChange={onChangeExam}
-          />
+          <Radio.Group
+            onChange={onChangeExamType}
+            defaultValue={EXAM_TYPE.MODUCBT_EXAM}
+          >
+            <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>모두CBT</Radio.Button>
+            <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
+          </Radio.Group>
+          {isMyExam ? (
+            <RandomMyExamSelector
+              selectedMyCategory={selectedMyCategory}
+              selectedMyTitles={selectedMyTitles}
+              setSelectedMyCategory={setSelectedMyCategory}
+              setSelectedMyTitles={setSelectedMyTitles}
+            />
+          ) : (
+            <>
+              <Select
+                value={selectedModucbtCategory?.value}
+                onChange={(value, option) =>
+                  onChangeCategory(option as DefaultOptionType)
+                }
+                options={categories}
+                size="large"
+                placeholder="카테고리를 선택해주세요"
+              />
+              <Select
+                className="multiple-random-exam-selector"
+                mode="multiple"
+                size="large"
+                options={titles}
+                placeholder="시험을 추가해주세요."
+                value={selectedModucbtTitles}
+                onChange={onChangeExam}
+              />
+            </>
+          )}
         </div>
         <div className="random-select-exam-modal-setting-wrapper">
           <Label content={'성취도별 문항보기'} />
@@ -241,7 +266,10 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             onClick={() => handleStart('exam')}
             type="primary"
             loading={routeLoading}
-            disabled={selectedExams.length < 1}
+            disabled={
+              (isMyExam && selectedMyTitles.length < 1) ||
+              (!isMyExam && selectedModucbtTitles.length < 1)
+            }
           >
             풀이모드
           </Button>
@@ -250,7 +278,10 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             onClick={() => handleStart('solution')}
             type="primary"
             loading={routeLoading}
-            disabled={selectedExams.length < 1}
+            disabled={
+              (isMyExam && selectedMyTitles.length < 1) ||
+              (!isMyExam && selectedModucbtTitles.length < 1)
+            }
           >
             해설모드
           </Button>
@@ -280,10 +311,9 @@ const RandomSelectComponentContainer = styled.div`
   }
   .random-select-exam-selector-wrapper {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     width: 100%;
-    gap: 5px;
-    margin-top: 15px;
+    gap: 15px;
   }
   .random-select-exam-start-button-wrapper {
     display: flex;
