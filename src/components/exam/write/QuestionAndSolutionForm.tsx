@@ -31,54 +31,10 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   setQuestionImage,
   solutionImage,
   setSolutionImage,
-  examStatus,
-  setExamStatus,
   onToggleExamPreviewModal,
   examId,
 }) => {
   const { control, formState, getValues } = useFormContext();
-  const [editExam] = useEditExam();
-  let examSubmitLabel: string = '...';
-  switch (examStatus) {
-    case ExamStatus.Unset:
-      examSubmitLabel = '시험지 승인요청';
-      break;
-    case ExamStatus.Request:
-      examSubmitLabel = '시험지 승인대기중';
-      break;
-    case ExamStatus.Approved:
-      examSubmitLabel = '시험지 승인됨';
-      break;
-    case ExamStatus.Rejected:
-      examSubmitLabel = '시험지 승인거절됨';
-      break;
-
-    default:
-      break;
-  }
-  const examSubminButtonDisabled =
-    examStatus === ExamStatus.Approved ||
-    examStatus === ExamStatus.Request ||
-    !examId ||
-    questionNumbers.length < 5;
-  const onRequestApprove = async () => {
-    try {
-      const confirmed = confirm('승인요청 하시겠습니까?');
-      if (confirmed) {
-        const res = await editExam({
-          variables: { input: { id: examId, status: ExamStatus.Request } },
-        });
-        if (res.data?.editMockExam.ok) {
-          setExamStatus(ExamStatus.Request);
-          return message.success('승인요청이 완료되었습니다.');
-        }
-        return message.error(res.data?.editMockExam.error);
-      }
-    } catch (e) {
-      handleError(e);
-    }
-  };
-
   return (
     <QuestionAndSolutionFormContainer>
       <Label content={'2.본격작업 - 문제 등록하기'} />
@@ -191,11 +147,6 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
           </Button>
           <div className="create-exam-preview-button-wrapper">
             <Label content={'3.검토작업 - 시험지 미리보기'} />
-            <label className="create-exam-small-label">
-              시험지 승인요청 전, 미리보기를 통해 시험지를 확인해보세요.
-              <br />
-              미리보기에서는 북마크,성취도 등 일부 기능이 지원되지 않습니다.
-            </label>
             <Button
               type="dashed"
               className="create-exam-preview-button"
@@ -205,44 +156,11 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
               시험지 미리보기
             </Button>
           </div>
-          <div>
-            <Label content={'4.마무리작업 - 시험지 승인요청'} />
-            <label className="create-exam-small-label">
-              시험지 승인은 5문제 이상 등록 후 요청할 수 있습니다.
-              <br />
-              시험지 승인은 24시간 내에 완료 할 수 있도록 하겠습니다.
-              <br />
-              시험지 승인 후, 풀이모드/해설모드/랜덤모의고사 등의 기능을
-              이용하실 수 있습니다.
-              <br />
-              승인된 시험지는 모든 유저에게 공개됩니다.
-              <br />
-              승인된 시험지는 삭제할 수 없습니다.
-              <br />
-              승인된 시험지에서 문제수정은 가능합니다.
-            </label>
-          </div>
-
-          <Button
-            type="dashed"
-            className="create-exam-submit-button"
-            onClick={onRequestApprove}
-            disabled={examSubminButtonDisabled}
-          >
-            {examSubmitLabel}
-          </Button>
         </div>
-        <div>
-          <Label content={'5.카카오톡 문의'} />
+        <div className="create-exam-kakaotalk-link-wrapper">
+          <Label content={'4.카카오톡 문의'} />
           <label className="create-exam-small-label">
-            시험지 제작과 관련하여 문의사항이 있을 경우,
-            <br />
-            아래 링크로 문의주세요!
-            <br />
-            시험지 제작을 최대한 도와드리겠습니다.
-            <br />
-            시험지 제작 승인이 거절되었을 경우, 또는 승인이 이루어지지 않을
-            경우에도 문의주세요.
+            시험지 제작과 관련하여 문의사항이 있을 경우, 아래 링크로 문의주세요!
             <br />
             <a
               href="https://open.kakao.com/o/sZy6kxbf"
@@ -320,5 +238,8 @@ const QuestionAndSolutionFormContainer = styled.div`
     margin-top: 10px;
     width: 100%;
     height: 50px;
+  }
+  .create-exam-kakaotalk-link-wrapper {
+    margin-top: 30px;
   }
 `;

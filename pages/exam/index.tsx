@@ -27,11 +27,7 @@ const Exam: NextPage = () => {
       <Layout subNav="main">
         {
           <>
-            <ExamComponent
-              coAuthor={
-                router.query.t === '계산문제 제외 모음집' ? 'Pooh' : undefined
-              }
-            />
+            <ExamComponent />
             <GoogleAd type="display" />
           </>
         }

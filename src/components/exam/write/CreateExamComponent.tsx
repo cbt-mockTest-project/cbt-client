@@ -223,16 +223,17 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   const requestDeleteExam = async () => {
     try {
-      const confirmed = confirm(
-        '정말 삭제하시겠습니까?\n삭제시 등록된 모든 문제가 삭제됩니다.'
-      );
-      if (!confirmed) return;
       const examId = titles.filter(
         (title) => title.label?.toString().trim() === examTitle.trim()
       )[0]?.value;
       if (!examId) {
         return message.error('존재하지 않는 시험입니다.');
       }
+      const confirmed = confirm(
+        '정말 삭제하시겠습니까?\n삭제시 등록된 모든 문제가 삭제됩니다.'
+      );
+      if (!confirmed) return;
+
       const res = await deleteExam({
         variables: { input: { id: Number(examId) } },
       });
@@ -334,14 +335,15 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   const requestDeleteCategory = async () => {
     try {
-      const confirmed = confirm('정말 삭제하시겠습니까?');
-      if (!confirmed) return;
       const categoryId = categories.filter(
         (category) => category.label?.toString().trim() === categoryName.trim()
       )[0]?.value;
       if (!categoryId) {
         return message.error('존재하지 않는 카테고리입니다.');
       }
+      const confirmed = confirm('정말 삭제하시겠습니까?');
+      if (!confirmed) return;
+
       const res = await deleteCategory({
         variables: { input: { id: Number(categoryId) } },
       });
@@ -406,7 +408,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   const SelectCategoryProps: SelectAddProps = {
     selectOption: {
-      placeholder: '카테고리명 (시험 선택에 표시되는 이름)',
+      placeholder: '카테고리명',
       options: categories,
       onSelect: (value, option) => requestCategorySelect(option),
       value: selectedCategory?.value || null,
@@ -435,7 +437,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const SelectTitleProps: SelectAddProps = {
     selectOption: {
       disabled: !selectedCategory,
-      placeholder: '시험명 (회차 선택에 표시되는 이름)',
+      placeholder: '시험명',
       options: titles,
       onSelect: (value, option) => requestTitleSelect(option),
       value: selectedTitle?.value || null,
@@ -503,10 +505,6 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   return (
     <CreateExamComponentContainer>
       <Label content={'1.사전작업 - 카테고리,시험명 등록 및 선택하기'} />
-      <label className="create-exam-small-label">
-        시험 승인 이후에는, 카테고리명과 시험명 변경이 어려우니 신중하게
-        적어주세요.
-      </label>
       <div className="create-exam-input-button-wrapper">
         <SelectAdd {...SelectCategoryProps} />
         <SelectAdd {...SelectTitleProps} />
@@ -590,6 +588,7 @@ const CreateExamComponentContainer = styled.div`
   padding: 0 30px;
   padding-bottom: 50px;
   .create-exam-input-button-wrapper {
+    margin-top: 10px;
     display: flex;
     gap: 20px;
     .ant-select-single {

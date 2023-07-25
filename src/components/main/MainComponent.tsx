@@ -4,23 +4,24 @@ import NoticeModal from '@components/common/modal/NoticeModal';
 import Portal from '@components/common/portal/Portal';
 import {
   OPEN_CHAT_MODAL_STATE,
-  selectExamCategoryHistory,
-  selectExamHistory,
+  selectedCategoryHistory,
+  selectedTitleHistory,
   tempAnswerKey,
 } from '@lib/constants';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
 import palette from '@styles/palette';
-import { Button } from 'antd';
-import { Option } from 'antd/lib/mentions';
+import { Button, Radio, RadioChangeEvent } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ExamTitleAndId, User, UserRole } from 'types';
+import { ExamTitleAndId } from 'types';
 import MainViewCount from './MainViewCount';
+import { EXAM_TYPE } from './Main.type';
+import MyExamSelector from './MyExamSelector';
 
 export interface TitlesAndCategories {
   category: string;
@@ -40,18 +41,28 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
+
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
-  const [selectedExamId, setSelectedExamId] = useState<number>(0);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
-  const [category, setCategory] = useState<string>();
-  const [title, setTitle] = useState<string>();
+  const [isMyExam, setIsMyExam] = useState<boolean>(false);
+
+  const [selectedModucbtCategory, setSelectedModucbtCategory] =
+    useState<DefaultOptionType | null>(null);
+  const [selectedModucbtTitle, setSelectedModucbtTitle] =
+    useState<DefaultOptionType | null>(null);
+
+  const [selectedMyCategory, setSelectedMyCategory] =
+    useState<DefaultOptionType | null>(null);
+  const [selectedMyTitle, setSelectedMyTitle] =
+    useState<DefaultOptionType | null>(null);
+
   const storage = new LocalStorage();
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
   );
   useEffect(() => {
-    const savedCategory = localStorage.getItem(selectExamCategoryHistory);
-    const savedTitle = localStorage.getItem(selectExamHistory);
+    const savedCategory = storage.get(selectedCategoryHistory);
+    const savedTitle = storage.get(selectedTitleHistory);
     if (!storage.get(OPEN_CHAT_MODAL_STATE)) {
       onToggleNoticeModal();
     }
@@ -61,7 +72,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           savedCategory
         );
         if (savedTitle && currentTitles) {
-          onTitleChange(Number(savedTitle), currentTitles);
+          onTitleChange(savedTitle);
         }
       }
     })();
@@ -69,12 +80,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const onToggleKakaoChatModalState = () =>
     setKakaoChatModalState(!kakaoChatModalState);
-  const onCategoryChange = async (value: string) => {
-    setSelectedExamId(0);
-    setCategory(value);
-    setTitle('');
+
+  const onCategoryChange = async (category: DefaultOptionType) => {
+    setSelectedModucbtCategory(category);
+    setSelectedModucbtTitle(null);
     const filteredTitles = titlesAndCategories.filter(
-      (el) => el.category === value
+      (el) => el.category === category.value
     );
 
     const titles: DefaultOptionType[] =
@@ -84,28 +95,36 @@ const MainComponent: React.FC<MainComponentProps> = ({
             label: title.slug || title.title,
           }))
         : [];
-    localStorage.setItem(selectExamCategoryHistory, value);
+    storage.set(selectedCategoryHistory, category);
     setTitles(titles);
     return titles;
   };
 
-  const onTitleChange = async (value: number, titles: DefaultOptionType[]) => {
-    const currentTitle = titles.filter((title) => title.value === value);
-    if (currentTitle[0]) {
-      setSelectedExamId(value);
-      setTitle(String(currentTitle[0].label));
-      localStorage.setItem(selectExamHistory, String(value));
-    }
+  const onTitleChange = async (title: DefaultOptionType) => {
+    setSelectedModucbtTitle(title);
+    storage.set(selectedTitleHistory, title);
   };
 
   const gotoExamPage = () => {
-    if (!selectedExamId) return;
+    if (isMyExam && selectedMyTitle && selectedMyCategory) {
+      router.push({
+        pathname: '/exam',
+        query: {
+          e: selectedMyTitle?.value,
+          q: '1',
+          r: false,
+          t: selectedMyTitle?.label as string,
+          c: selectedMyCategory?.label as string,
+        },
+      });
+      return;
+    }
     const currentExamTitles = titlesAndCategories.filter(
-      (data) => data.category === category
+      (data) => data.category === selectedModucbtCategory?.label
     );
     if (currentExamTitles.length === 1) {
       const currentExamTitle = currentExamTitles[0].titles.filter(
-        (title) => title.id === selectedExamId
+        (title) => title.id === selectedModucbtTitle?.value
       )[0].title;
       const answerRecords = storage.get(tempAnswerKey);
       const selectedAnswerRecord = answerRecords[currentExamTitle];
@@ -123,18 +142,20 @@ const MainComponent: React.FC<MainComponentProps> = ({
     router.push({
       pathname: '/exam',
       query: {
-        e: selectedExamId,
+        e: selectedModucbtTitle?.value,
         q: '1',
         r: false,
-        t: title,
-        c: category,
+        t: selectedModucbtTitle?.label as string,
+        c: selectedModucbtCategory?.label as string,
       },
     });
   };
   const gotoSolutionPage = () => {
     setGotoSolutionPageLoading(true);
     router.push({
-      pathname: `/exam/solution/${selectedExamId}`,
+      pathname: `/exam/solution/${
+        isMyExam ? selectedMyTitle?.value : selectedModucbtTitle?.value
+      }`,
     });
   };
   const gotoRandomSelectPage = () => {
@@ -143,47 +164,71 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const onCloseNoticeModal = () => {
     onToggleNoticeModal();
   };
+  const onChangeExamType = (e: RadioChangeEvent) => {
+    if (e.target.value === EXAM_TYPE.MODUCBT_EXAM) {
+      setIsMyExam(false);
+    } else {
+      setIsMyExam(true);
+    }
+  };
   return (
     <MainComponentContainer>
       <div className="home-wrapper">
         <div className="home-content-center-wrapper">
           <div className="home-content-top-wrapper">
-            <Select
-              value={category}
-              size="large"
-              onChange={onCategoryChange}
-              data-cy="category-selector"
-              placeholder="카테고리를 선택해주세요"
+            <Radio.Group
+              onChange={onChangeExamType}
+              defaultValue={EXAM_TYPE.MODUCBT_EXAM}
             >
-              {categories.map((category) => (
-                <Option
-                  key={category.value}
-                  value={category.value}
-                  style={{
-                    color:
-                      category.authorRole === UserRole.Admin
-                        ? 'black'
-                        : palette.blue_600,
-                  }}
-                  data-cy="category-selector-option"
-                >
-                  {category.label}
-                </Option>
-              ))}
-            </Select>
-            <Select
-              options={titles}
-              size="large"
-              value={title}
-              placeholder="시험을 선택해주세요."
-              onChange={(value) => onTitleChange(Number(value), titles)}
-              data-cy="exam-selector"
-            />
+              <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>
+                모두CBT
+              </Radio.Button>
+              <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
+            </Radio.Group>
+            {isMyExam && (
+              <Link href="/exam/write">
+                <Button type="primary">시험지 만들기</Button>
+              </Link>
+            )}
+            {isMyExam ? (
+              <MyExamSelector
+                selectedMyCategory={selectedMyCategory}
+                setSelectedMyCategory={setSelectedMyCategory}
+                selectedMyTitle={selectedMyTitle}
+                setSelectedMyTitle={setSelectedMyTitle}
+              />
+            ) : (
+              <>
+                <Select
+                  value={selectedModucbtCategory}
+                  size="large"
+                  onChange={(value, option) =>
+                    onCategoryChange(option as DefaultOptionType)
+                  }
+                  data-cy="category-selector"
+                  placeholder="카테고리를 선택해주세요"
+                  options={categories}
+                />
+                <Select
+                  options={titles}
+                  size="large"
+                  value={selectedModucbtTitle}
+                  placeholder="시험을 선택해주세요."
+                  onChange={(value, option) =>
+                    onTitleChange(option as DefaultOptionType)
+                  }
+                  data-cy="exam-selector"
+                />
+              </>
+            )}
             <div className="home-button-mode-wrapper">
               <Button
                 type="primary"
                 onClick={gotoExamPage}
-                disabled={!Boolean(selectedExamId)}
+                disabled={
+                  !!(isMyExam && !selectedMyTitle) ||
+                  !!(!isMyExam && !selectedModucbtTitle)
+                }
                 loading={gotoExamPageLoading}
                 className="home-content-question-button"
               >
@@ -193,7 +238,10 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 type="primary"
                 loading={gotoSolutionPageLoading}
                 onClick={gotoSolutionPage}
-                disabled={!Boolean(selectedExamId)}
+                disabled={
+                  !!(isMyExam && !selectedMyTitle) ||
+                  !!(!isMyExam && !selectedModucbtTitle)
+                }
               >
                 해설모드
               </Button>
