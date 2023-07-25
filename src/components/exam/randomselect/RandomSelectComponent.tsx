@@ -24,6 +24,7 @@ import { coreActions } from '@modules/redux/slices/core';
 import { checkRole } from '@lib/utils/utils';
 import { EXAM_TYPE } from '@components/main/Main.type';
 import RandomMyExamSelector from './RandomMyExamSelector';
+import Link from 'next/link';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -189,6 +190,13 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>모두CBT</Radio.Button>
             <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
           </Radio.Group>
+          {isMyExam && (
+            <Link href="/exam/write">
+              <Button type="primary" size="large" style={{ width: '100%' }}>
+                시험지 만들기
+              </Button>
+            </Link>
+          )}
           {isMyExam ? (
             <RandomMyExamSelector
               selectedMyCategory={selectedMyCategory}
