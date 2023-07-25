@@ -1,34 +1,13 @@
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import DataShareModal from '@components/common/modal/DataShareModal';
-import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
-import MakeExamModal from '@components/common/modal/MakeExamModal';
-import NoticeModal from '@components/common/modal/NoticeModal';
-import PreventAdBlockModal from '@components/common/modal/PreventAdBlockModal';
-import RemoveAdModal from '@components/common/modal/RemoveAdModal';
-import Portal from '@components/common/portal/Portal';
-import {
-  OPEN_CHAT_MODAL_STATE,
-  selectExamCategoryHistory,
-  selectExamHistory,
-  tempAnswerKey,
-} from '@lib/constants';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
-import useToggle from '@lib/hooks/useToggle';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { checkAdblock, checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import Select, { DefaultOptionType } from 'antd/lib/select';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ExamTitleAndId, User, UserRole } from 'types';
+import { UserRole } from 'types';
 import MainViewCount from './MainViewCount';
-import RecentNoticeSkeleton from './RecentNoticeSkeleton';
 
 const MainCenterContentBlock = styled.div``;
 
