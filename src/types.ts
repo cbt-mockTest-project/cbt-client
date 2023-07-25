@@ -1543,6 +1543,12 @@ export type PostLike = {
   user: User;
 };
 
+/** Order by criteria for posts */
+export enum PostOrderType {
+  CreatedAt = 'createdAt',
+  Like = 'like'
+}
+
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
@@ -2015,6 +2021,7 @@ export type ReadPostsInput = {
   all?: InputMaybe<Scalars['Boolean']>;
   category?: InputMaybe<PostCategory>;
   limit?: InputMaybe<Scalars['Float']>;
+  order?: InputMaybe<PostOrderType>;
   page: Scalars['Float'];
   search?: InputMaybe<Scalars['String']>;
 };

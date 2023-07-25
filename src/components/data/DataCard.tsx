@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Card } from 'antd';
 import palette from '@styles/palette';
+import { HeartFilled, LikeFilled } from '@ant-design/icons';
 
 const DataCardBlock = styled(Card)`
   .ant-card-body {
@@ -54,15 +55,20 @@ const DataCardBlock = styled(Card)`
     position: relative;
     border-left: 1.5px solid ${palette.gray_700};
   }
+  .data-card-content-option-like-count {
+    margin-left: 5px;
+  }
 `;
 
 interface DataCardProps {
   className?: string;
   title: string;
   content: string | JSX.Element | JSX.Element[];
+  username: string;
   date: string;
   page: number;
   price: number;
+  likeCount: number;
 }
 
 const DataCard: React.FC<DataCardProps> = ({
@@ -72,6 +78,8 @@ const DataCard: React.FC<DataCardProps> = ({
   date,
   page,
   price,
+  username,
+  likeCount,
 }) => {
   return (
     <DataCardBlock hoverable className={className || ''}>
@@ -79,12 +87,23 @@ const DataCard: React.FC<DataCardProps> = ({
         <p className="data-card-content-title">{title}</p>
         <p className="data-card-content-description">{content}</p>
         <div className="data-card-content-option-list">
+          <div className="data-card-content-option"> {username}</div>
+          <div className="data-card-divider" />
           <div className="data-card-content-option"> {date}</div>
           <div className="data-card-divider" />
           <div className="data-card-content-option"> {`${page}페이지`}</div>
           <div className="data-card-divider" />
           <div className="data-card-content-option">
             {price ? `${price}원` : '무료'}
+          </div>
+          <div className="data-card-divider" />
+          <div className="data-card-content-option">
+            <span>
+              <HeartFilled />
+            </span>
+            <span className="data-card-content-option-like-count">
+              {likeCount}
+            </span>
           </div>
         </div>
       </div>
