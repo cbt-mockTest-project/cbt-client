@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Button, Card, message } from 'antd';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
-import { useLazyReadPost } from '@lib/graphql/user/hook/usePost';
-import { convertToKST } from '@lib/utils/utils';
+import { useDeletePost, useLazyReadPost } from '@lib/graphql/user/hook/usePost';
+import { convertToKST, handleError } from '@lib/utils/utils';
 import EditorStyle from '@styles/editorStyle';
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
 import {
@@ -15,12 +15,31 @@ import { useRouter } from 'next/router';
 import { dataActions } from '@modules/redux/slices/data';
 import { Post } from 'types';
 import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
+import DataDetailComment from './DataDetailComment';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import Link from 'next/link';
 
 const DataDetailComponentBlock = styled.div`
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  .data-detail-top-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid ${palette.gray_100};
+    gap: 15px;
+  }
+  .data-detail-top-button-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
   .data-detail-title {
     font-size: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid ${palette.gray_100};
+    word-break: break-all;
   }
   .data-detail-description {
     ${EditorStyle}
@@ -77,8 +96,10 @@ const DataDetailComponentBlock = styled.div`
 interface DataDetailComponentProps {}
 
 const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
+  const { data: meQuery } = useMeQuery();
   const [readPost] = useLazyReadPost();
   const [editPostLike] = useEditPostLike();
+  const [deletePost] = useDeletePost();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const post = useAppSelector((state) => state.data.dataDetail);
@@ -101,12 +122,35 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
         likeState: res.data.editPostLike.currentState,
       };
       dispatch(dataActions.setDataDetail(newPost));
+      dispatch(dataActions.updateDataList(newPost));
       return;
     }
     return message.error(res.data?.editPostLike.error);
   };
 
+  const handleDeletePost = async () => {
+    try {
+      if (!post) return;
+      const confirmed = confirm('삭제하시겠습니까?');
+      if (confirmed) {
+        const res = await deletePost({
+          variables: { input: { id: post.id } },
+        });
+        if (res.data?.deletePost.ok) {
+          message.success('게시글이 삭제됐습니다.');
+          dispatch(dataActions.resetDataList());
+          router.push('/data');
+          return;
+        }
+        return message.error(res.data?.deletePost.error);
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   useEffect(() => {
+    if (!router.query.Id) return;
     (async () => {
       const res = await readPost({
         variables: {
@@ -124,7 +168,17 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
   return (
     <DataDetailComponentBlock>
       <Card>
-        <h1 className="data-detail-title">{post.title}</h1>
+        <div className="data-detail-top-wrapper">
+          <h1 className="data-detail-title">{post.title}</h1>
+          {meQuery?.me.user?.id === post.user.id && (
+            <div className="data-detail-top-button-wrapper">
+              <Link href={`/data/register?id=${post.id}`}>
+                <Button>수정</Button>
+              </Link>
+              <Button onClick={handleDeletePost}>삭제</Button>
+            </div>
+          )}
+        </div>
         <div className="data-detail-info-wrapper">
           <div className="data-detail-info-left-side">
             <div className="data-detail-info-content-wrapper">
@@ -157,7 +211,6 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
                 {post.data?.price ? `${post.data.price}원` : '무료'}
               </p>
             </div>
-
             <a
               href={post.data?.postFile[0].url || ''}
               target="_blank"
@@ -185,6 +238,7 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
         </div>
         <div className="data-detail-description">{parse(post.content)}</div>
       </Card>
+      <DataDetailComment commentList={post.comment} postId={post.id} />
     </DataDetailComponentBlock>
   );
 };
