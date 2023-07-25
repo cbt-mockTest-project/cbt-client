@@ -25,8 +25,8 @@ export const adminBoards = [PostCategory.Notice];
 export const tempAnswerKey = 'tempAnswerKey';
 export const loginModal = 'loginModal';
 export const widhDrawalModal = 'widhDrawalModal';
-export const selectExamCategoryHistory = 'selectExamCategoryHistory';
-export const selectExamHistory = 'selectExamHistory';
+export const selectedCategoryHistory = 'selectedCategoryHistory';
+export const selectedTitleHistory = 'selectedTitleHistory';
 export const homeRouteStackKey = 'homeRouteStackKey';
 
 export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
