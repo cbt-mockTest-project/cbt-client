@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface CoreState {
+export interface CoreState {
   modalName: string;
 }
 

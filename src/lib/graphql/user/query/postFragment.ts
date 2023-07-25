@@ -14,6 +14,15 @@ export const FULL_POST_FRAGMENT = gql`
     like {
       id
     }
+    data {
+      id
+      postFile {
+        page
+        name
+        url
+      }
+      price
+    }
     commentsCount
     likesCount
     likeState

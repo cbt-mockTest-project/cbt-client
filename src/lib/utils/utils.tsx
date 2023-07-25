@@ -250,3 +250,18 @@ export const convertToKST = (
 
   return format(koreaTime, formatString);
 };
+
+export const reomveImgTag = (htmlString: string) => {
+  // DOMParser를 사용하여 문자열을 DOM 객체로 변환
+  let parser = new DOMParser();
+  let doc = parser.parseFromString(htmlString, 'text/html');
+
+  // <img> 태그를 모두 선택
+  let imgTags = doc.querySelectorAll('img');
+
+  // 각 <img> 태그를 순회하며 DOM에서 제거
+  imgTags.forEach((img) => img.remove());
+
+  // 변경된 HTML을 문자열로 반환
+  return doc.body.innerHTML;
+};

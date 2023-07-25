@@ -38,6 +38,7 @@ export const CREATE_POST = gql`
     createPost(input: $input) {
       error
       ok
+      postId
     }
   }
 `;

@@ -1,6 +1,8 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import type { AppProps } from 'next/app';
 import Globalstyles from '@styles/globalStyles';
 import { ApolloProvider } from '@apollo/client';
@@ -20,8 +22,9 @@ import { checkHomePage } from '@lib/constants/routes';
 import { isServer, someIncludes } from '@lib/utils/utils';
 import CalculatorComponent from '@components/calculator/CalculatorComponent';
 import CoreContainer from '@components/common/core/CoreContainer';
+import wrapper from '@modules/redux/store/configureStore';
 
-export default function App({ Component, pageProps }: AppProps<any>) {
+const App = ({ Component, pageProps }: AppProps<any>) => {
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
   const localStorage = new LocalStorage();
   const router = useRouter();
@@ -163,14 +166,14 @@ export default function App({ Component, pageProps }: AppProps<any>) {
       />
 
       <ApolloProvider client={client}>
-        <Provider store={store}>
-          <Globalstyles />
-          <CoreContainer />
-          <AppInner />
-          <Component {...pageProps} />
-          <CalculatorComponent />
-        </Provider>
+        <Globalstyles />
+        <CoreContainer />
+        <AppInner />
+        <Component {...pageProps} />
+        <CalculatorComponent />
       </ApolloProvider>
     </>
   );
-}
+};
+
+export default wrapper.withRedux(App);

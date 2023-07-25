@@ -20,7 +20,7 @@ import {
   useLazyReadPost,
 } from '@lib/graphql/user/hook/usePost';
 import { message } from 'antd';
-import { EditPostInput, PostCategory, UserRole } from 'types';
+import { PostCategory, UserRole } from 'types';
 import Select from 'antd/lib/select';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 

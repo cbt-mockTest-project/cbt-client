@@ -7,6 +7,7 @@ export const POST_CATEGORY_MAP = {
   RECOVERY: '시험지복원',
   REVIEW: '시험후기',
   SUGGENSTION: '건의하기',
+  DATA: '자료실',
 };
 
 export const postCategories = [
