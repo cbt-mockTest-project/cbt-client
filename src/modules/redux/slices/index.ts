@@ -6,6 +6,7 @@ import {
 import coreSlice, { CoreState } from './core';
 import dataSlice, { DataState } from './data';
 import { HYDRATE } from 'next-redux-wrapper';
+import { cloneDeep } from 'lodash';
 
 export interface RootState {
   data: DataState;
@@ -20,7 +21,12 @@ const rootReducer = (
 ): RootState => {
   switch (action.type) {
     case HYDRATE:
-      return action.payload;
+      const result = cloneDeep(action.payload);
+      if (state) {
+        result.data.dataList = state.data.dataList;
+        result.data.dataListQuery = state.data.dataListQuery;
+      }
+      return result;
     default: {
       const combineReducer = combineReducers({
         core: coreSlice.reducer,
