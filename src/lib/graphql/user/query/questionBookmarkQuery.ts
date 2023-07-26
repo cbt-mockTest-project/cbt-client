@@ -40,3 +40,12 @@ export const READ_EXAM_TITLE_AND_ID_OF_BOOKMARKED_QUESTION = gql`
     }
   }
 `;
+
+export const RESET_MY_QUESTION_BOOKMARK = gql`
+  mutation ResetMyQuestionBookmark {
+    resetMyQuestionBookmark {
+      error
+      ok
+    }
+  }
+`;

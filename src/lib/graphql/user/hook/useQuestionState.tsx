@@ -5,6 +5,7 @@ import {
   CREATE_OR_UPDATE_QUESTION_STATE,
   READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE,
   READ_QUESTION_STATE_QUERY,
+  RESET_MY_ALL_QUESTION_STATE,
   RESET_QUESTION_STATE_MUTATION,
 } from '../query/questionStateQuery';
 import {
@@ -16,6 +17,8 @@ import {
   ReadMyExamQuestionStateQueryVariables,
   ResetMyExamQuestionStateMutation,
   ResetMyExamQuestionStateMutationVariables,
+  RestMyAllQuestionStatesMutation,
+  RestMyAllQuestionStatesMutationVariables,
 } from '../query/questionStateQuery.generated';
 
 export const useChangeQuestionState = () =>
@@ -43,3 +46,9 @@ export const useReadExamTitleAndIdByState = () =>
     ReadExamTitleAndIdByQuestionStateQuery,
     ReadExamTitleAndIdByQuestionStateQueryVariables
   >(READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE);
+
+export const useResetAllQuestionState = () =>
+  useMutation<
+    RestMyAllQuestionStatesMutation,
+    RestMyAllQuestionStatesMutationVariables
+  >(RESET_MY_ALL_QUESTION_STATE);

@@ -564,6 +564,7 @@ export type EditPostCommentOutput = {
 
 export type EditPostInput = {
   content?: InputMaybe<Scalars['String']>;
+  data?: InputMaybe<PostDataInput>;
   id: Scalars['Float'];
   title?: InputMaybe<Scalars['String']>;
 };
@@ -1036,6 +1037,8 @@ export type Mutation = {
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
+  resetMyQuestionBookmark: CoreOutput;
+  restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
   sendFindPasswordMail: SendFindPasswordMailOutput;

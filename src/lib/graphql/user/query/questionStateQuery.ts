@@ -45,3 +45,12 @@ export const READ_EXAM_TITLE_AND_ID_BY_QUESTION_STATE = gql`
     }
   }
 `;
+
+export const RESET_MY_ALL_QUESTION_STATE = gql`
+  mutation RestMyAllQuestionStates {
+    restMyAllQuestionStates {
+      error
+      ok
+    }
+  }
+`;
