@@ -2,10 +2,13 @@ import GoogleAd from '@components/common/ad/GoogleAd';
 import { RoundCheckboxGroupOnChangeValueType } from '@components/common/checkbox/RoundCheckboxGroup';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/user/hook/useQuestionBookmark';
+import {
+  useReadExamTitleAndIdOfBookmarkedQuestion,
+  useResetMyQuestionBookmark,
+} from '@lib/graphql/user/hook/useQuestionBookmark';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import { Button, Select } from 'antd';
+import { Button, Select, message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { shuffle } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +22,7 @@ const BookmarkedQuestionsComponent: React.FC<
 > = () => {
   const { data: examTitleAndIdQuery, loading: loadingReadTitleAndId } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
+  const [resetBookmark] = useResetMyQuestionBookmark();
   const [
     readQuestions,
     { data: questionsQuery, loading: loadingReadQuestions },
@@ -55,11 +59,9 @@ const BookmarkedQuestionsComponent: React.FC<
   const requsetReadBookmarkedQuestions = async (
     examId: RoundCheckboxGroupOnChangeValueType
   ) => {
-    const res = await readQuestions({
+    await readQuestions({
       variables: { input: { id: Number(examId), bookmarked: true } },
     });
-    if (res.data?.readMockExamQuestionsByMockExamId.ok) {
-    }
   };
   const onToggleSolutionAllHide = () =>
     setIsSolutionAllHide(!isSolutionAllHide);
@@ -67,11 +69,27 @@ const BookmarkedQuestionsComponent: React.FC<
   const onShuffleQuestion = () => {
     setQuestions(shuffle);
   };
+  const onResetBookmark = async () => {
+    const confrimed = confirm('북마크를 초기화 하시겠습니까?');
+    if (confrimed) {
+      const res = await resetBookmark();
+      if (res.data?.resetMyQuestionBookmark.ok) {
+        message.success('북마크가 초기화 되었습니다.');
+        setQuestions(null);
+      }
+    }
+  };
 
   return (
     <BookmarkedQuestionsComponentBlock>
       <div className="bookmark-question-google-display-ad-wrapper">
         <GoogleAd type="display" />
+      </div>
+
+      <div className="bookmark-reset-button-wrapper">
+        <Button type="primary" onClick={onResetBookmark}>
+          북마크 초기화
+        </Button>
       </div>
       <Select
         className="bookmark-question-exam-title-select"
@@ -146,7 +164,9 @@ const BookmarkedQuestionsComponentBlock = styled.div`
   .bookmark-page-google-feed-ad-wrapper {
     margin-top: 20px;
   }
-
+  .bookmark-reset-button-wrapper {
+    margin-bottom: 20px;
+  }
   li {
     list-style: none;
   }

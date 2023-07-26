@@ -2,11 +2,14 @@ import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { useReadExamTitleAndIdByState } from '@lib/graphql/user/hook/useQuestionState';
+import {
+  useReadExamTitleAndIdByState,
+  useResetAllQuestionState,
+} from '@lib/graphql/user/hook/useQuestionState';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, message } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { shuffle } from 'lodash';
@@ -32,6 +35,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   const { data: examTitleAndIdQuery, loading: loadingExamTitleAndId } =
     useReadExamTitleAndIdByState();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
+  const [resetAllQuestionStates] = useResetAllQuestionState();
   const [
     readQuestions,
     { data: questionsQuery, loading: readQuestionsLoading },
@@ -96,11 +100,26 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
       },
     });
   };
+  const onResetQuestionStates = async () => {
+    const confrimed = confirm('성취도를 초기화 하시겠습니까?');
+    if (confrimed) {
+      const res = await resetAllQuestionStates();
+      if (res.data?.restMyAllQuestionStates.ok) {
+        message.success('성취도가 초기화 되었습니다.');
+        setQuestions(null);
+      }
+    }
+  };
 
   return (
     <ReviewNoteComponentContainer>
       <div className="review-note-google-display-ad-wrapper">
         <GoogleAd type="display" />
+      </div>
+      <div className="review-note-reset-button-wrapper">
+        <Button type="primary" onClick={onResetQuestionStates}>
+          성취도 초기화
+        </Button>
       </div>
       <Select
         className="review-note-exam-title-select"
@@ -207,6 +226,9 @@ const ReviewNoteComponentContainer = styled.div`
       height: 20px;
       width: 20px;
     }
+  }
+  .review-note-reset-button-wrapper {
+    margin-bottom: 20px;
   }
   li {
     list-style: none;

@@ -23,6 +23,11 @@ export type ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables = Types.Exact<{
 
 export type ReadExamTitleAndIdOfBookmarkedQuestionQuery = { __typename?: 'Query', readExamTitleAndIdOfBookmarkedQuestion: { __typename?: 'ReadExamTitleAndIdOfBookmarkedQuestionOutput', error?: string | null, ok: boolean, titleAndId?: Array<{ __typename?: 'TitleAndId', id?: number | null, title?: string | null }> | null } };
 
+export type ResetMyQuestionBookmarkMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ResetMyQuestionBookmarkMutation = { __typename?: 'Mutation', resetMyQuestionBookmark: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 
 export const EditMockExamQuestionBookmarkDocument = gql`
     mutation EditMockExamQuestionBookmark($input: EditMockExamQuestionBookmarkInput!) {
@@ -67,4 +72,16 @@ export const ReadExamTitleAndIdOfBookmarkedQuestionDocument = gql`
 
 export function useReadExamTitleAndIdOfBookmarkedQuestionQuery(options?: Omit<Urql.UseQueryArgs<ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadExamTitleAndIdOfBookmarkedQuestionQuery, ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables>({ query: ReadExamTitleAndIdOfBookmarkedQuestionDocument, ...options });
+};
+export const ResetMyQuestionBookmarkDocument = gql`
+    mutation ResetMyQuestionBookmark {
+  resetMyQuestionBookmark {
+    error
+    ok
+  }
+}
+    `;
+
+export function useResetMyQuestionBookmarkMutation() {
+  return Urql.useMutation<ResetMyQuestionBookmarkMutation, ResetMyQuestionBookmarkMutationVariables>(ResetMyQuestionBookmarkDocument);
 };
