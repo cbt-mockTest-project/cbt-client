@@ -68,6 +68,13 @@ const PricingComponentBlock = styled.div`
       overflow: hidden;
     }
   }
+  .pricing-refund-policy-anchor {
+    text-align: center;
+    margin-top: 20px;
+    color: ${palette.gray_700};
+    font-size: 14px;
+    text-decoration: underline;
+  }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;
     .pricing-title {
@@ -296,6 +303,14 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         rel="noreferrer"
       >
         <pre>{`[문의]\nhttps://open.kakao.com/o/sZy6kxbf`}</pre>
+      </a>
+      <a
+        className="pricing-refund-policy-anchor"
+        href="/refund/policy"
+        target="_blank"
+        rel="noreferrer"
+      >
+        환불안내
       </a>
     </PricingComponentBlock>
   );
