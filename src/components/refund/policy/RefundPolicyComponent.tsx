@@ -14,14 +14,19 @@ const RefundPolicyComponent: React.FC<RefundPolicyComponentProps> = () => {
           <li> - 회사의 귀책사유로 결제 오류가 발생한 경우</li>
           <li> - 회사의 귀책사유로 서비스가 중단되는 경우</li>
           <li>
-            - 강의시스템 결제
-            <pre>{`a. 강의 자료 다운로드 및 영상을 시청한 기록이 없으며, 구매 이후 7일이 경과하지 않았을 경우 환불이 가능합니다.`}</pre>
-          </li>
-          <li>
-            - 기타 서비스 이용 결제
+            - 서비스 이용 결제
             <pre>{`a. 결제 후 24시간이 경과되지 않았을 경우 환불이 가능합니다.`}</pre>
           </li>
         </ol>
+        <p>[문의]</p>
+        <a
+          className="refund-policy-contact-anchor"
+          href="https://open.kakao.com/o/sZy6kxbf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <pre>{`https://open.kakao.com/o/sZy6kxbf`}</pre>
+        </a>
       </div>
     </RefundPolicyComponentBlock>
   );
@@ -49,5 +54,8 @@ const RefundPolicyComponentBlock = styled.div`
         padding: 5px 15px;
       }
     }
+  }
+  .refund-policy-contact-anchor {
+    color: ${palette.blue_500};
   }
 `;
