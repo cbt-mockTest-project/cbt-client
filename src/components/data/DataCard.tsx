@@ -93,10 +93,10 @@ const DataCard: React.FC<DataCardProps> = ({
           <div className="data-card-divider" />
           <div className="data-card-content-option"> {`${page}페이지`}</div>
           <div className="data-card-divider" />
-          <div className="data-card-content-option">
+          {/* <div className="data-card-content-option">
             {price ? `${price}원` : '무료'}
           </div>
-          <div className="data-card-divider" />
+          <div className="data-card-divider" /> */}
           <div className="data-card-content-option">
             <span>
               <HeartFilled />

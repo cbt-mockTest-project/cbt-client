@@ -205,12 +205,12 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
                 post.data?.postFile[0].page || 0
               } 페이지`}</p>
             </div>
-            <div className="data-detail-info-content-wrapper">
+            {/* <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">가격</p>
               <p className="data-detail-info-content-value">
                 {post.data?.price ? `${post.data.price}원` : '무료'}
               </p>
-            </div>
+            </div> */}
             <a
               href={post.data?.postFile[0].url || ''}
               target="_blank"
