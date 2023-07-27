@@ -163,13 +163,15 @@ const DataDetailComment: React.FC<DataDetailCommentProps> = ({
               <div className="data-detail-comment-date">
                 {convertToKST(comment.created_at, 'yy.MM.dd hh:mm')}
               </div>
-              <Button
-                className="data-detail-comment-delete-button"
-                type="text"
-                onClick={() => handleDeleteComment(comment.id)}
-              >
-                <Clear />
-              </Button>
+              {meQuery?.me.user?.id === comment.user.id && (
+                <Button
+                  className="data-detail-comment-delete-button"
+                  type="text"
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
+                  <Clear />
+                </Button>
+              )}
             </div>
             <div className="data-detail-comment-content">{comment.content}</div>
           </li>
