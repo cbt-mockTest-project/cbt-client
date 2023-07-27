@@ -1,6 +1,6 @@
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
-import { message, UploadFile } from 'antd';
+import { Button, message, UploadFile } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
@@ -34,6 +34,7 @@ import useToggle from '@lib/hooks/useToggle';
 import { useRouter } from 'next/router';
 import EditNameModal from '@components/common/modal/EditNameModal';
 import { handleError } from '@lib/utils/utils';
+import CreateExamFeedbackModal from './modal/CreateExamFeedbackModal';
 
 interface CreateExamComponentProps {}
 
@@ -67,6 +68,8 @@ const findBlankQuestionNumber = (questionNumbers: QuestionNumber[]) => {
 const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const router = useRouter();
   const { data: categoriesQuery } = useReadMyExamCategories();
+  const { value: feedbackModalState, onToggle: onToggleFeedbackModal } =
+    useToggle(false);
   const [readTitles] = useReadExamTitles();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
   const [editExam, { loading: editExamLoading }] = useEditExam();
@@ -504,6 +507,11 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   return (
     <CreateExamComponentContainer>
+      <div>
+        <Button type="primary" onClick={onToggleFeedbackModal}>
+          피드백 남기기
+        </Button>
+      </div>
       <Label content={'1.사전작업 - 카테고리,시험명 등록 및 선택하기'} />
       <div className="create-exam-input-button-wrapper">
         <SelectAdd {...SelectCategoryProps} />
@@ -550,30 +558,30 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             }
           />
         )}
-        {editCategoryNameModal && (
-          <EditNameModal
-            open={editCategoryNameModal}
-            onClose={onToggleEditCategoryNameModal}
-            onConfirm={(value: string) => {
-              requestEditCategory(value);
-              setCategoryName(value);
-              return;
-            }}
-            defaultValue={categoryName}
-          />
-        )}
-        {editExamTitleModal && (
-          <EditNameModal
-            open={editExamTitleModal}
-            onClose={onToggleEditExamTitleModal}
-            onConfirm={(value: string) => {
-              requestEditTitle(value);
-              setExamTitle(value);
-              return;
-            }}
-            defaultValue={examTitle}
-          />
-        )}
+        <EditNameModal
+          open={editCategoryNameModal}
+          onClose={onToggleEditCategoryNameModal}
+          onConfirm={(value: string) => {
+            requestEditCategory(value);
+            setCategoryName(value);
+            return;
+          }}
+          defaultValue={categoryName}
+        />
+        <EditNameModal
+          open={editExamTitleModal}
+          onClose={onToggleEditExamTitleModal}
+          onConfirm={(value: string) => {
+            requestEditTitle(value);
+            setExamTitle(value);
+            return;
+          }}
+          defaultValue={examTitle}
+        />
+        <CreateExamFeedbackModal
+          open={feedbackModalState}
+          onClose={onToggleFeedbackModal}
+        />
       </Portal>
     </CreateExamComponentContainer>
   );
