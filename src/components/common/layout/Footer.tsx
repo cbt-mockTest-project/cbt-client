@@ -17,6 +17,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <div>{`© ${year} Moducbt`}</div>
           <a href="mailto:moducbt@gmail.com">Mail</a>
           <Link href={'/copyright'}>CopyRight</Link>
+          <Link href="https://www.buymeacoffee.com/moducbts">후원</Link>
         </section>
         <section className="footer-section-two">
           <div className="footer-section-two-description">상호명: 모두</div>
