@@ -15,8 +15,6 @@ const ExamPreviewModal: React.FC<ExamPreviewModalProps> = ({
   open,
   onClose,
   examId,
-  categoryName,
-  examTitle,
 }) => {
   return (
     <ExamPreviewModalContainer onClose={onClose} open={open}>

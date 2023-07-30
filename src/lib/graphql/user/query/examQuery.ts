@@ -134,3 +134,57 @@ export const READ_ALL_MOCK_EXAM = gql`
     }
   }
 `;
+
+export const CREATE_EXAM_CATEGORY_VIEWER = gql`
+  mutation CreateExamCategoryViewer($input: CreateExamCategoryViewerInput!) {
+    createExamCategoryViewer(input: $input) {
+      error
+      ok
+      examViewer {
+        isApprove
+        id
+        user {
+          id
+          nickname
+        }
+      }
+    }
+  }
+`;
+
+export const GET_EXAM_CATEGORY_VIEWERS = gql`
+  query GetExamCategoryViewers($input: GetExamCategoryViewrsInput!) {
+    getExamCategoryViewers(input: $input) {
+      error
+      ok
+      examViewers {
+        id
+        isApprove
+        user {
+          email
+          nickname
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_EXAM_CATEGORY_VIEWER = gql`
+  mutation DeleteExamCategoryViewer($input: DeleteExamCategoryViewerInput!) {
+    deleteExamCategoryViewer(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const UPDATE_EXAM_VIEWER_APPROVE_STATE = gql`
+  mutation UpdateExamViewerArroveState(
+    $input: UpdateExamViewerArroveStateInput!
+  ) {
+    updateExamViewerArroveState(input: $input) {
+      error
+      ok
+    }
+  }
+`;

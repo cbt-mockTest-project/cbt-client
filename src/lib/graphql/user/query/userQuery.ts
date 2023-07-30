@@ -217,3 +217,17 @@ export const GET_ROLE_COUNT = gql`
     }
   }
 `;
+
+export const GET_USER_BY_NICKNAME_OR_EMAIL = gql`
+  query GetUserByNicknameOrEmail($input: GetUserByNicknameOrEmailInput!) {
+    getUserByNicknameOrEmail(input: $input) {
+      ok
+      error
+      user {
+        id
+        email
+        nickname
+      }
+    }
+  }
+`;

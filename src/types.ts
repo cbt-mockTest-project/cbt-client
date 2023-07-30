@@ -87,6 +87,18 @@ export type CreateAttendanceOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CreateExamCategoryViewerInput = {
+  categoryId: Scalars['Float'];
+  viewerId: Scalars['Float'];
+};
+
+export type CreateExamCategoryViewerOutput = {
+  __typename?: 'CreateExamCategoryViewerOutput';
+  error?: Maybe<Scalars['String']>;
+  examViewer?: Maybe<ExamViewer>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateFeedbackInput = {
   content: Scalars['String'];
 };
@@ -332,6 +344,17 @@ export type DeleteAttendanceOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type DeleteExamCategoryViewerInput = {
+  categoryId: Scalars['Float'];
+  examViewerId: Scalars['Float'];
+};
+
+export type DeleteExamCategoryViewerOutput = {
+  __typename?: 'DeleteExamCategoryViewerOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeleteMockExamCategoryInput = {
   id: Scalars['Float'];
 };
@@ -564,6 +587,7 @@ export type EditPostCommentOutput = {
 
 export type EditPostInput = {
   content?: InputMaybe<Scalars['String']>;
+  data?: InputMaybe<PostDataInput>;
   id: Scalars['Float'];
   title?: InputMaybe<Scalars['String']>;
 };
@@ -641,6 +665,17 @@ export type ExamTitleAndIdByQuestionComment = {
   title: Scalars['String'];
 };
 
+export type ExamViewer = {
+  __typename?: 'ExamViewer';
+  created_at: Scalars['DateTime'];
+  exam: MockExam;
+  examCategory: MockExamCategory;
+  id: Scalars['Float'];
+  isApprove: Scalars['Boolean'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
 export type Feedback = {
   __typename?: 'Feedback';
   content: Scalars['String'];
@@ -659,6 +694,17 @@ export type FindMyExamHistoryOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   titleAndId?: Maybe<Array<TitleAndId>>;
+};
+
+export type GetExamCategoryViewrsInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type GetExamCategoryViewrsOutput = {
+  __typename?: 'GetExamCategoryViewrsOutput';
+  error?: Maybe<Scalars['String']>;
+  examViewers?: Maybe<Array<ExamViewer>>;
+  ok: Scalars['Boolean'];
 };
 
 export type GetExamTitleWithFeedbackOutput = {
@@ -756,6 +802,17 @@ export type GetTodoOutput = {
   todo?: Maybe<Todo>;
 };
 
+export type GetUserByNicknameOrEmailInput = {
+  keyword: Scalars['String'];
+};
+
+export type GetUserByNicknameOrEmailOutput = {
+  __typename?: 'GetUserByNicknameOrEmailOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  user?: Maybe<User>;
+};
+
 export type KakaoLoginInput = {
   code: Scalars['String'];
 };
@@ -799,6 +856,7 @@ export type MockExam = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
   mockExamCategory: MockExamCategory;
@@ -817,6 +875,7 @@ export type MockExamCategory = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examViewer?: Maybe<Array<ExamViewer>>;
   id: Scalars['Float'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
@@ -980,6 +1039,7 @@ export type Mutation = {
   checkPassword: CheckPasswordOutput;
   checkUserRole: CheckUserRoleOutput;
   createAttendance: CreateAttendanceOutput;
+  createExamCategoryViewer: CreateExamCategoryViewerOutput;
   createFeedback: CreateFeedbackOutput;
   createFreeTrialRole: CreateFreeTrialRoleOutput;
   createMockExam: CreateMockExamOutput;
@@ -1003,6 +1063,7 @@ export type Mutation = {
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteAttendance: DeleteAttendanceOutput;
+  deleteExamCategoryViewer: DeleteExamCategoryViewerOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
@@ -1036,6 +1097,8 @@ export type Mutation = {
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
+  resetMyQuestionBookmark: CoreOutput;
+  restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
   sendFindPasswordMail: SendFindPasswordMailOutput;
@@ -1044,6 +1107,7 @@ export type Mutation = {
   syncRole: CoreOutput;
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
+  updateExamViewerArroveState: UpdateExamViewerArroveStateOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updatePayment: UpdatePaymentOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
@@ -1080,6 +1144,11 @@ export type MutationCheckUserRoleArgs = {
 
 export type MutationCreateAttendanceArgs = {
   input: CreateAttendanceInput;
+};
+
+
+export type MutationCreateExamCategoryViewerArgs = {
+  input: CreateExamCategoryViewerInput;
 };
 
 
@@ -1175,6 +1244,11 @@ export type MutationCreateVideoArgs = {
 
 export type MutationDeleteAttendanceArgs = {
   input: DeleteAttendanceInput;
+};
+
+
+export type MutationDeleteExamCategoryViewerArgs = {
+  input: DeleteExamCategoryViewerInput;
 };
 
 
@@ -1368,6 +1442,11 @@ export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
 };
 
 
+export type MutationUpdateExamViewerArroveStateArgs = {
+  input: UpdateExamViewerArroveStateInput;
+};
+
+
 export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
   input: UpdateMockExamQuestionFeedbackRecommendationInput;
 };
@@ -1552,6 +1631,7 @@ export enum PostOrderType {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getExamCategoryViewers: GetExamCategoryViewrsOutput;
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
@@ -1561,6 +1641,7 @@ export type Query = {
   getRoleCount: GetRoleCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   getTodo: GetTodoOutput;
+  getUserByNicknameOrEmail: GetUserByNicknameOrEmailOutput;
   me: MeOutput;
   readAllMockExam: ReadAllMockExamsOutput;
   readAllMockExamCategories: ReadAllMockExamCategoriesOutput;
@@ -1601,6 +1682,11 @@ export type QueryFindMyExamHistoryArgs = {
 };
 
 
+export type QueryGetExamCategoryViewersArgs = {
+  input: GetExamCategoryViewrsInput;
+};
+
+
 export type QueryGetFeedbacksByRecommendationCountArgs = {
   input: GetFeedbacksByRecommendationCountInput;
 };
@@ -1623,6 +1709,11 @@ export type QueryGetRoleCountArgs = {
 
 export type QueryGetTodoArgs = {
   input: GetTodoInput;
+};
+
+
+export type QueryGetUserByNicknameOrEmailArgs = {
+  input: GetUserByNicknameOrEmailInput;
 };
 
 
@@ -2230,6 +2321,16 @@ export type UpdateApprovedStateOfMockExamQuestionOutput = {
   questionId: Scalars['Float'];
 };
 
+export type UpdateExamViewerArroveStateInput = {
+  examViewerId: Scalars['Float'];
+};
+
+export type UpdateExamViewerArroveStateOutput = {
+  __typename?: 'UpdateExamViewerArroveStateOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateMockExamQuestionFeedbackRecommendationInput = {
   feedbackId: Scalars['Float'];
   type: QuestionFeedbackRecommendationType;
@@ -2286,6 +2387,7 @@ export type User = {
   deletedAt: Scalars['DateTime'];
   email: Scalars['String'];
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examViewer?: Maybe<Array<ExamViewer>>;
   feedback: Array<Feedback>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
   id: Scalars['Float'];
