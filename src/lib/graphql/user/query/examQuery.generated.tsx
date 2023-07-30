@@ -78,6 +78,34 @@ export type ReadAllMockExamQueryVariables = Types.Exact<{
 
 export type ReadAllMockExamQuery = { __typename?: 'Query', readAllMockExam: { __typename?: 'ReadAllMockExamsOutput', error?: string | null, ok: boolean, mockExams: Array<{ __typename?: 'MockExam', id: number }> } };
 
+export type CreateExamCategoryViewerMutationVariables = Types.Exact<{
+  input: Types.CreateExamCategoryViewerInput;
+}>;
+
+
+export type CreateExamCategoryViewerMutation = { __typename?: 'Mutation', createExamCategoryViewer: { __typename?: 'CreateExamCategoryViewerOutput', error?: string | null, ok: boolean, examViewer?: { __typename?: 'ExamViewer', isApprove: boolean, id: number, user: { __typename?: 'User', id: number, nickname: string } } | null } };
+
+export type GetExamCategoryViewersQueryVariables = Types.Exact<{
+  input: Types.GetExamCategoryViewrsInput;
+}>;
+
+
+export type GetExamCategoryViewersQuery = { __typename?: 'Query', getExamCategoryViewers: { __typename?: 'GetExamCategoryViewrsOutput', error?: string | null, ok: boolean, examViewers?: Array<{ __typename?: 'ExamViewer', id: number, isApprove: boolean, user: { __typename?: 'User', email: string, nickname: string } }> | null } };
+
+export type DeleteExamCategoryViewerMutationVariables = Types.Exact<{
+  input: Types.DeleteExamCategoryViewerInput;
+}>;
+
+
+export type DeleteExamCategoryViewerMutation = { __typename?: 'Mutation', deleteExamCategoryViewer: { __typename?: 'DeleteExamCategoryViewerOutput', error?: string | null, ok: boolean } };
+
+export type UpdateExamViewerArroveStateMutationVariables = Types.Exact<{
+  input: Types.UpdateExamViewerArroveStateInput;
+}>;
+
+
+export type UpdateExamViewerArroveStateMutation = { __typename?: 'Mutation', updateExamViewerArroveState: { __typename?: 'UpdateExamViewerArroveStateOutput', error?: string | null, ok: boolean } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -246,4 +274,68 @@ export const ReadAllMockExamDocument = gql`
 
 export function useReadAllMockExamQuery(options: Omit<Urql.UseQueryArgs<ReadAllMockExamQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamQuery, ReadAllMockExamQueryVariables>({ query: ReadAllMockExamDocument, ...options });
+};
+export const CreateExamCategoryViewerDocument = gql`
+    mutation CreateExamCategoryViewer($input: CreateExamCategoryViewerInput!) {
+  createExamCategoryViewer(input: $input) {
+    error
+    ok
+    examViewer {
+      isApprove
+      id
+      user {
+        id
+        nickname
+      }
+    }
+  }
+}
+    `;
+
+export function useCreateExamCategoryViewerMutation() {
+  return Urql.useMutation<CreateExamCategoryViewerMutation, CreateExamCategoryViewerMutationVariables>(CreateExamCategoryViewerDocument);
+};
+export const GetExamCategoryViewersDocument = gql`
+    query GetExamCategoryViewers($input: GetExamCategoryViewrsInput!) {
+  getExamCategoryViewers(input: $input) {
+    error
+    ok
+    examViewers {
+      id
+      isApprove
+      user {
+        email
+        nickname
+      }
+    }
+  }
+}
+    `;
+
+export function useGetExamCategoryViewersQuery(options: Omit<Urql.UseQueryArgs<GetExamCategoryViewersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamCategoryViewersQuery, GetExamCategoryViewersQueryVariables>({ query: GetExamCategoryViewersDocument, ...options });
+};
+export const DeleteExamCategoryViewerDocument = gql`
+    mutation DeleteExamCategoryViewer($input: DeleteExamCategoryViewerInput!) {
+  deleteExamCategoryViewer(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteExamCategoryViewerMutation() {
+  return Urql.useMutation<DeleteExamCategoryViewerMutation, DeleteExamCategoryViewerMutationVariables>(DeleteExamCategoryViewerDocument);
+};
+export const UpdateExamViewerArroveStateDocument = gql`
+    mutation UpdateExamViewerArroveState($input: UpdateExamViewerArroveStateInput!) {
+  updateExamViewerArroveState(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpdateExamViewerArroveStateMutation() {
+  return Urql.useMutation<UpdateExamViewerArroveStateMutation, UpdateExamViewerArroveStateMutationVariables>(UpdateExamViewerArroveStateDocument);
 };
