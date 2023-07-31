@@ -41,6 +41,12 @@ export const useReadExamCategories = () =>
     ReadAllMockExamCategoriesQueryVariables
   >(READ_EXAM_CATEGORIES_QUERY);
 
+export const useLazyReadMyExamCategories = () =>
+  useLazyQuery<
+    ReadMyMockExamCategoriesQuery,
+    ReadMyMockExamCategoriesQueryVariables
+  >(READ_MY_EXAM_CATEORIES_QUERY);
+
 export const useReadMyExamCategories = () =>
   useQuery<
     ReadMyMockExamCategoriesQuery,
