@@ -8,12 +8,8 @@ import { makeMoneyString } from '@lib/utils/utils';
 import Portal from '@components/common/portal/Portal';
 import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
 import useToggle from '@lib/hooks/useToggle';
-import {
-  useLazyGetRoleCount,
-  useMeQuery,
-} from '@lib/graphql/user/hook/useUser';
+import { useLazyGetRoleCount } from '@lib/graphql/user/hook/useUser';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
-import { UserRole } from 'types';
 
 const PricingCardBlock = styled.div`
   .pricing-card-title {
@@ -143,7 +139,6 @@ const PricingCard: React.FC<PricingCardProps> = ({
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
 }) => {
-  const { data: meQuery } = useMeQuery();
   const [getRoleCount, { data: roleCountQuery }] = useLazyGetRoleCount();
   const {
     value: paymentNoticeModalState,
@@ -185,16 +180,15 @@ const PricingCard: React.FC<PricingCardProps> = ({
             </span>
             <span className="pricing-card-price-label">원</span>
           </p>
-          {meQuery?.me.user?.role === UserRole.Admin &&
-            (roleCountQuery?.getRoleCount.count ? (
-              <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRoleCount.count}명 이용중!! `}</div>
-            ) : (
-              <SkeletonBox
-                className="pricing-card-price-user-count"
-                width="110px"
-                height="20px"
-              />
-            ))}
+          {roleCountQuery?.getRoleCount.count ? (
+            <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRoleCount.count}명 이용중!! `}</div>
+          ) : (
+            <SkeletonBox
+              className="pricing-card-price-user-count"
+              width="110px"
+              height="20px"
+            />
+          )}
           <Button
             className="pricing-button"
             type="primary"
