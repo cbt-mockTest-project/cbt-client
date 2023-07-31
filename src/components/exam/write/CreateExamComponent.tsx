@@ -10,8 +10,8 @@ import {
   useDeleteExamCategory,
   useEditCategory,
   useEditExam,
+  useLazyReadMyExamCategories,
   useReadExamTitles,
-  useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { DefaultOptionType } from 'antd/lib/select';
 import useInput from '@lib/hooks/useInput';
@@ -35,6 +35,8 @@ import { useRouter } from 'next/router';
 import EditNameModal from '@components/common/modal/EditNameModal';
 import { handleError } from '@lib/utils/utils';
 import CreateExamFeedbackModal from './modal/CreateExamFeedbackModal';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import CreateExamComponentDimmed from './CreateExamComponentDimmed';
 
 interface CreateExamComponentProps {}
 
@@ -67,11 +69,16 @@ const findBlankQuestionNumber = (questionNumbers: QuestionNumber[]) => {
 
 const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const router = useRouter();
-  const { data: categoriesQuery } = useReadMyExamCategories();
+  const [
+    readCategories,
+    { data: categoriesQuery, loading: readCategoriesLoading },
+  ] = useLazyReadMyExamCategories();
+  const { data: meQuery } = useMeQuery();
   const { value: feedbackModalState, onToggle: onToggleFeedbackModal } =
     useToggle(false);
-  const [readTitles] = useReadExamTitles();
+  const [readTitles, { loading: readTitlesLoading }] = useReadExamTitles();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
+  const [isNotLoggedIn, setIsNotLoggedIn] = useState<boolean>(false);
   const [editExam, { loading: editExamLoading }] = useEditExam();
   const [readQuestionNumbers, { refetch: refetchReadQuestionNumbers }] =
     useLazyReadQuestionNumbers();
@@ -365,6 +372,16 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       handleError(e);
     }
   };
+
+  useEffect(() => {
+    if (meQuery && meQuery.me.user) {
+      readCategories();
+    }
+    if (meQuery && !meQuery.me.user) {
+      setIsNotLoggedIn(true);
+    }
+  }, [meQuery]);
+
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
       setCategories(() =>
@@ -436,6 +453,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       loading: deleteCategoryLoading,
       children: '삭제',
     },
+    isLoading: readCategoriesLoading,
   };
   const SelectTitleProps: SelectAddProps = {
     selectOption: {
@@ -465,6 +483,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       loading: deleteExamLoading,
       children: '삭제',
     },
+    isLoading: readTitlesLoading,
   };
   const onSubmit = async (data: CreateMockExamQuestionInput) => {
     try {
@@ -583,6 +602,9 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
           onClose={onToggleFeedbackModal}
         />
       </Portal>
+      {isNotLoggedIn && (
+        <CreateExamComponentDimmed content="로그인 후 이용해주세요." />
+      )}
     </CreateExamComponentContainer>
   );
 };
