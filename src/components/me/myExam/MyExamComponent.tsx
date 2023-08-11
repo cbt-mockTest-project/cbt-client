@@ -1,6 +1,7 @@
 import {
   useReadExamTitles,
   useReadMyExamCategories,
+  useUpdateExamOrder,
 } from '@lib/graphql/user/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -10,22 +11,23 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MyExamListItem from './MyExamListItem';
 import { handleError } from '@lib/utils/utils';
-import Portal from '@components/common/portal/Portal';
-import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
-import useToggle from '@lib/hooks/useToggle';
-import Link from 'next/link';
+import { ExamTitleAndId } from 'types';
+import { isEqual } from 'lodash';
 
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
-  const [readTitles, { data: examTitlesQuery }] = useReadExamTitles();
-  const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
-    useToggle(false);
+  const [readTitles] = useReadExamTitles();
+  const [updateExamOrder] = useUpdateExamOrder();
   const { data: categoriesQuery } = useReadMyExamCategories();
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
-  const [titles, setTitles] = useState<DefaultOptionType[]>([]);
+  const [titles, setTitles] = useState<ExamTitleAndId[]>([]);
+  const [orderChangedTitles, setOrderChangedTitles] = useState<
+    ExamTitleAndId[]
+  >([]);
+  const [orderChanged, setOrderChanged] = useState<boolean>(false);
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
       setCategories(() =>
@@ -46,14 +48,8 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
         variables: { input: { name: category.label as string, all: true } },
       });
       if (res.data?.readMockExamTitlesByCateory.ok) {
-        setTitles(() =>
-          res.data
-            ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
-                value: title.id,
-                label: title.title,
-              }))
-            : []
-        );
+        setTitles(res.data.readMockExamTitlesByCateory.titles);
+        setOrderChangedTitles(res.data.readMockExamTitlesByCateory.titles);
         return;
       }
       message.error(res.data?.readMockExamTitlesByCateory.error);
@@ -62,47 +58,62 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
     }
   };
 
+  const handleOrderChange = (data: { order: number; examId: number }) => {
+    const newOrderChangedTitles = orderChangedTitles.map((title) =>
+      title.id === data.examId ? { ...title, order: data.order } : title
+    );
+    setOrderChangedTitles(newOrderChangedTitles);
+    setOrderChanged(!isEqual(newOrderChangedTitles, titles));
+  };
+
+  const handleOrderSave = async () => {
+    const res = await updateExamOrder({
+      variables: {
+        input: {
+          examOrders: orderChangedTitles.map((title) => ({
+            examId: title.id,
+            order: title.order,
+          })),
+        },
+      },
+    });
+    if (res.data?.updateExamOrder.ok) {
+      return setTitles(orderChangedTitles.sort((a, b) => a.order - b.order));
+    }
+    message.error(res.data?.updateExamOrder.error);
+  };
+
   return (
     <MyExamComponentContainer>
       <h3>내가만든 시험지 목록을 보여주는 페이지입니다.</h3>
-      <Select
-        size="large"
-        options={categories}
-        onSelect={(value, option) => requestCategorySelect(option)}
-        placeholder="카테고리명을 선택해주세요"
-        className="my-exam-category-selector"
-      />
+      <div className="my-exam-select-and-order-save-button-wrapper">
+        <Select
+          size="large"
+          options={categories}
+          onSelect={(value, option) => requestCategorySelect(option)}
+          placeholder="카테고리명을 선택해주세요"
+          className="my-exam-category-selector"
+        />
+        <Button
+          type="primary"
+          size="large"
+          disabled={!orderChanged}
+          onClick={handleOrderSave}
+        >
+          순서저장
+        </Button>
+      </div>
       <List
         className="my-exam-list"
-        dataSource={examTitlesQuery?.readMockExamTitlesByCateory.titles}
+        dataSource={titles}
         bordered
         renderItem={(item) => (
-          <List.Item key={item.id}>
-            <div className="my-exam-list-item-wrapper">
-              <div>{item.title}</div>
-              <div className="my-exam-list-item-button-wrapper">
-                <Button type="primary" onClick={onToggleExamPreviewModal}>
-                  미리보기
-                </Button>
-                <Link
-                  href={`/exam/write?cl=${selectedCategory?.label}&cv=${selectedCategory?.value}&ev=${item.id}&el=${item.title}`}
-                >
-                  <Button type="primary">수정하기</Button>
-                </Link>
-              </div>
-            </div>
-            <Portal>
-              <ExamPreviewModal
-                categoryName={
-                  selectedCategory ? (selectedCategory.label as string) : ''
-                }
-                examId={item.id}
-                examTitle={item.title}
-                onClose={onToggleExamPreviewModal}
-                open={previewModalState}
-              />
-            </Portal>
-          </List.Item>
+          <MyExamListItem
+            key={item.id}
+            selectedCategory={selectedCategory}
+            selectedExam={item}
+            onChangeOrder={handleOrderChange}
+          />
         )}
       />
     </MyExamComponentContainer>
@@ -112,12 +123,16 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
 export default MyExamComponent;
 
 const MyExamComponentContainer = styled.div`
+  .my-exam-select-and-order-save-button-wrapper {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
   .my-exam-list-menu-wrapper {
     padding: 10px 0;
     border-bottom: 1px solid ${palette.gray_200};
   }
   .my-exam-category-selector {
-    margin-top: 20px;
     width: 300px;
   }
   .my-exam-list {
@@ -161,16 +176,7 @@ const MyExamComponentContainer = styled.div`
   .my-exam-list {
     margin-top: 20px;
   }
-  .my-exam-list-item-wrapper {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .my-exam-list-item-button-wrapper {
-    display: flex;
-    gap: 10px;
-  }
+
   @media (max-width: ${responsive.medium}) {
     margin-top: 20px;
     padding: 0 20px;

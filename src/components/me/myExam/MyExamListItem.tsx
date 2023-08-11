@@ -1,71 +1,69 @@
 import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
 import Portal from '@components/common/portal/Portal';
 import useToggle from '@lib/hooks/useToggle';
-import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, Input, List } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
-import React from 'react';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ExamStatus, ExamTitleAndId } from 'types';
+import { ExamTitleAndId } from 'types';
 
 interface MyExamListItemProps {
   selectedCategory: DefaultOptionType | null;
-  item: ExamTitleAndId;
+  selectedExam: ExamTitleAndId;
+  onChangeOrder: ({ order, examId }: { order: number; examId: number }) => void;
 }
 
 const MyExamListItem: React.FC<MyExamListItemProps> = ({
   selectedCategory,
-  item,
+  selectedExam,
+  onChangeOrder,
 }) => {
   const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
     useToggle(false);
-  let statusLabel = '...';
-  switch (item.status) {
-    case ExamStatus.Approved:
-      statusLabel = '승인됨';
-      break;
-    case ExamStatus.Rejected:
-      statusLabel = '거절됨';
-      break;
-    case ExamStatus.Unset:
-      statusLabel = '제작중';
-      break;
-    case ExamStatus.Request:
-      statusLabel = '승인대기';
-      break;
-    default:
-      break;
-  }
+  const [order, setOrder] = useState<number>(selectedExam.order);
+  useEffect(() => {
+    onChangeOrder({ order, examId: selectedExam.id });
+  }, [order]);
+
+  const onChangeOrderInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 값이 숫자가 아니면 0
+    if (isNaN(parseInt(e.target.value))) {
+      setOrder(0);
+      return;
+    }
+    setOrder(parseInt(e.target.value));
+  };
   return (
     <MyExamListItemContainer>
-      <p className="my-exam-item-title">
-        <a
-          href={`/exam/write?cl=${selectedCategory?.label}&cv=${selectedCategory?.value}&ev=${item.id}&el=${item.title}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {item.title}
-        </a>
-      </p>
-
-      <div className="my-exam-item-status-and-button-wrapper">
-        <label className="my-exam-item-status">{statusLabel}</label>
-        <Button
-          type="primary"
-          onClick={onToggleExamPreviewModal}
-          className="my-exam-item-preview-button"
-        >
-          미리보기
-        </Button>
+      <div className="my-exam-list-item-wrapper">
+        <div>{selectedExam.title}</div>
+        <div className="my-exam-list-item-button-wrapper">
+          <Button type="primary" onClick={onToggleExamPreviewModal}>
+            미리보기
+          </Button>
+          <Link
+            href={`/exam/write?cl=${selectedCategory?.label}&cv=${selectedCategory?.value}&ev=${selectedExam.id}&el=${selectedExam.title}`}
+          >
+            <Button type="primary">수정하기</Button>
+          </Link>
+          <Input
+            className="my-exam-list-item-order-input"
+            type="number"
+            width={20}
+            value={order}
+            onChange={onChangeOrderInput}
+            placeholder="순서"
+          />
+        </div>
       </div>
       <Portal>
         <ExamPreviewModal
           categoryName={
             selectedCategory ? (selectedCategory.label as string) : ''
           }
-          examId={item.id}
-          examTitle={item.title}
+          examId={selectedExam.id}
+          examTitle={selectedExam.title}
           onClose={onToggleExamPreviewModal}
           open={previewModalState}
         />
@@ -76,37 +74,18 @@ const MyExamListItem: React.FC<MyExamListItemProps> = ({
 
 export default MyExamListItem;
 
-const MyExamListItemContainer = styled.li`
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  :hover {
-    background-color: ${palette.gray_100};
+const MyExamListItemContainer = styled(List.Item)`
+  .my-exam-list-item-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .my-exam-item-title {
-    a {
-      padding: 20px 0;
-      display: block;
-    }
-
-    flex: 7;
+  .my-exam-list-item-button-wrapper {
+    display: flex;
+    gap: 10px;
   }
-  .my-exam-item-preview-button {
-    font-size: 0.8rem;
-  }
-  .my-exam-item-status-and-button-wrapper {
-    flex: 3;
-    min-width: 150px;
-  }
-  .my-exam-item-status {
+  .my-exam-list-item-order-input {
     width: 60px;
-    text-align: left;
-    font-size: 0.9rem;
-    color: ${palette.gray_700};
-  }
-  @media (max-width: ${responsive.small}) {
-    .my-exam-item-status-and-button-wrapper {
-      flex: 7;
-    }
   }
 `;
