@@ -62,7 +62,7 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, role: Types.UserRole, slug?: string | null }> } };
+export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, role: Types.UserRole, slug?: string | null, order: number }> } };
 
 export type FindMyExamHistoryQueryVariables = Types.Exact<{
   input: Types.FindMyExamHistoryInput;
@@ -77,6 +77,13 @@ export type ReadAllMockExamQueryVariables = Types.Exact<{
 
 
 export type ReadAllMockExamQuery = { __typename?: 'Query', readAllMockExam: { __typename?: 'ReadAllMockExamsOutput', error?: string | null, ok: boolean, mockExams: Array<{ __typename?: 'MockExam', id: number }> } };
+
+export type UpdateExamOrderMutationVariables = Types.Exact<{
+  input: Types.UpdateExamOrderInput;
+}>;
+
+
+export type UpdateExamOrderMutation = { __typename?: 'Mutation', updateExamOrder: { __typename?: 'UpdateExamOrderOutput', error?: string | null, ok: boolean } };
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
@@ -206,6 +213,7 @@ export const ReadMockExamTitlesByCateoryDocument = gql`
       status
       role
       slug
+      order
     }
     ok
     error
@@ -246,4 +254,16 @@ export const ReadAllMockExamDocument = gql`
 
 export function useReadAllMockExamQuery(options: Omit<Urql.UseQueryArgs<ReadAllMockExamQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamQuery, ReadAllMockExamQueryVariables>({ query: ReadAllMockExamDocument, ...options });
+};
+export const UpdateExamOrderDocument = gql`
+    mutation UpdateExamOrder($input: UpdateExamOrderInput!) {
+  updateExamOrder(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpdateExamOrderMutation() {
+  return Urql.useMutation<UpdateExamOrderMutation, UpdateExamOrderMutationVariables>(UpdateExamOrderDocument);
 };

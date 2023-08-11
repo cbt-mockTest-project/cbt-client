@@ -103,6 +103,7 @@ export const READ_EXAM_TITLES_QUERY = gql`
         status
         role
         slug
+        order
       }
       ok
       error
@@ -130,6 +131,15 @@ export const READ_ALL_MOCK_EXAM = gql`
       mockExams {
         id
       }
+      ok
+    }
+  }
+`;
+
+export const UPDATE_EXAM_ORDER = gql`
+  mutation UpdateExamOrder($input: UpdateExamOrderInput!) {
+    updateExamOrder(input: $input) {
+      error
       ok
     }
   }
