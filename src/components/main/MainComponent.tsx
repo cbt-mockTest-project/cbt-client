@@ -106,26 +106,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    if (isMyExam && selectedMyTitle && selectedMyCategory) {
-      router.push({
-        pathname: '/exam',
-        query: {
-          e: selectedMyTitle?.value,
-          q: '1',
-          r: false,
-          t: selectedMyTitle?.label as string,
-          c: selectedMyCategory?.label as string,
-        },
-      });
-      return;
-    }
+    const isSelectedMyExam = isMyExam && selectedMyTitle && selectedMyCategory;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === selectedModucbtCategory?.label
     );
     if (currentExamTitles.length === 1) {
-      const currentExamTitle = currentExamTitles[0].titles.filter(
-        (title) => title.id === selectedModucbtTitle?.value
-      )[0].title;
+      const currentExamTitle = isSelectedMyExam
+        ? (selectedMyTitle.label as string)
+        : currentExamTitles[0].titles.filter(
+            (title) => title.id === selectedModucbtTitle?.value
+          )[0].title;
       const answerRecords = storage.get(tempAnswerKey);
       const selectedAnswerRecord = answerRecords[currentExamTitle];
       if (selectedAnswerRecord) {
@@ -139,16 +129,27 @@ const MainComponent: React.FC<MainComponentProps> = ({
       }
     }
     setGotoExamPageLoading(true);
-    router.push({
-      pathname: '/exam',
-      query: {
-        e: selectedModucbtTitle?.value,
-        q: '1',
-        r: false,
-        t: selectedModucbtTitle?.label as string,
-        c: selectedModucbtCategory?.label as string,
-      },
-    });
+    const redirectToExam = (
+      title: DefaultOptionType | null,
+      category: DefaultOptionType | null
+    ) => {
+      router.push({
+        pathname: '/exam',
+        query: {
+          e: title?.value,
+          q: '1',
+          r: false,
+          t: title?.label as string,
+          c: category?.label as string,
+        },
+      });
+    };
+
+    if (isSelectedMyExam) {
+      redirectToExam(selectedMyTitle, selectedMyCategory);
+    } else {
+      redirectToExam(selectedModucbtTitle, selectedModucbtCategory);
+    }
   };
   const gotoSolutionPage = () => {
     setGotoSolutionPageLoading(true);
