@@ -78,7 +78,9 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
       },
     });
     if (res.data?.updateExamOrder.ok) {
-      return setTitles(orderChangedTitles.sort((a, b) => a.order - b.order));
+      setTitles(orderChangedTitles.sort((a, b) => a.order - b.order));
+      setOrderChanged(false);
+      return message.success('순서가 저장되었습니다.');
     }
     message.error(res.data?.updateExamOrder.error);
   };
