@@ -11,7 +11,7 @@ import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
-import { ExamTitleAndId, UserRole } from 'types';
+import { ExamTitleAndId } from 'types';
 import MainComponent from '@components/main/MainComponent';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';

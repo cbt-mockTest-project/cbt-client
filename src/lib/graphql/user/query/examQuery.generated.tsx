@@ -17,7 +17,9 @@ export type EditMockExamCategoryMutationVariables = Types.Exact<{
 
 export type EditMockExamCategoryMutation = { __typename?: 'Mutation', editMockExamCategory: { __typename?: 'DeleteMockExamCategoryOutput', error?: string | null, ok: boolean } };
 
-export type ReadMyMockExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type ReadMyMockExamCategoriesQueryVariables = Types.Exact<{
+  input?: Types.InputMaybe<Types.ReadMyMockExamCategoriesInput>;
+}>;
 
 
 export type ReadMyMockExamCategoriesQuery = { __typename?: 'Query', readMyMockExamCategories: { __typename?: 'ReadMyMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number }> } };
@@ -62,11 +64,7 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 }>;
 
 
-<<<<<<< HEAD
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, slug?: string | null }> } };
-=======
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, role: Types.UserRole, slug?: string | null, order: number }> } };
->>>>>>> release
+export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, slug?: string | null, order: number }> } };
 
 export type FindMyExamHistoryQueryVariables = Types.Exact<{
   input: Types.FindMyExamHistoryInput;
@@ -82,7 +80,13 @@ export type ReadAllMockExamQueryVariables = Types.Exact<{
 
 export type ReadAllMockExamQuery = { __typename?: 'Query', readAllMockExam: { __typename?: 'ReadAllMockExamsOutput', error?: string | null, ok: boolean, mockExams: Array<{ __typename?: 'MockExam', id: number }> } };
 
-<<<<<<< HEAD
+export type UpdateExamOrderMutationVariables = Types.Exact<{
+  input: Types.UpdateExamOrderInput;
+}>;
+
+
+export type UpdateExamOrderMutation = { __typename?: 'Mutation', updateExamOrder: { __typename?: 'UpdateExamOrderOutput', error?: string | null, ok: boolean } };
+
 export type CreateExamCategoryViewerMutationVariables = Types.Exact<{
   input: Types.CreateExamCategoryViewerInput;
 }>;
@@ -104,25 +108,17 @@ export type DeleteExamCategoryViewerMutationVariables = Types.Exact<{
 
 export type DeleteExamCategoryViewerMutation = { __typename?: 'Mutation', deleteExamCategoryViewer: { __typename?: 'DeleteExamCategoryViewerOutput', error?: string | null, ok: boolean } };
 
-export type UpdateExamViewerArroveStateMutationVariables = Types.Exact<{
-  input: Types.UpdateExamViewerArroveStateInput;
+export type UpdateExamViewerApproveStateMutationVariables = Types.Exact<{
+  input: Types.UpdateExamViewerApproveStateInput;
 }>;
 
 
-export type UpdateExamViewerArroveStateMutation = { __typename?: 'Mutation', updateExamViewerArroveState: { __typename?: 'UpdateExamViewerArroveStateOutput', error?: string | null, ok: boolean } };
+export type UpdateExamViewerApproveStateMutation = { __typename?: 'Mutation', updateExamViewerApproveState: { __typename?: 'UpdateExamViewerApproveStateOutput', error?: string | null, ok: boolean } };
 
 export type GetInvitedExamsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetInvitedExamsQuery = { __typename?: 'Query', getInvitedExams: { __typename?: 'GetInvitedExamsOutput', error?: string | null, ok: boolean, examViewers?: Array<{ __typename?: 'ExamViewer', id: number, isApprove: boolean, examCategory: { __typename?: 'MockExamCategory', name: string, user: { __typename?: 'User', nickname: string } } }> | null } };
-=======
-export type UpdateExamOrderMutationVariables = Types.Exact<{
-  input: Types.UpdateExamOrderInput;
-}>;
-
-
-export type UpdateExamOrderMutation = { __typename?: 'Mutation', updateExamOrder: { __typename?: 'UpdateExamOrderOutput', error?: string | null, ok: boolean } };
->>>>>>> release
+export type GetInvitedExamsQuery = { __typename?: 'Query', getInvitedExams: { __typename?: 'GetInvitedExamsOutput', error?: string | null, ok: boolean, examViewers?: Array<{ __typename?: 'ExamViewer', id: number, isApprove: boolean, examCategory: { __typename?: 'MockExamCategory', id: number, name: string, user: { __typename?: 'User', nickname: string } } }> | null } };
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
@@ -160,8 +156,8 @@ export function useEditMockExamCategoryMutation() {
   return Urql.useMutation<EditMockExamCategoryMutation, EditMockExamCategoryMutationVariables>(EditMockExamCategoryDocument);
 };
 export const ReadMyMockExamCategoriesDocument = gql`
-    query ReadMyMockExamCategories {
-  readMyMockExamCategories {
+    query ReadMyMockExamCategories($input: ReadMyMockExamCategoriesInput) {
+  readMyMockExamCategories(input: $input) {
     categories {
       name
       id
@@ -293,7 +289,18 @@ export const ReadAllMockExamDocument = gql`
 export function useReadAllMockExamQuery(options: Omit<Urql.UseQueryArgs<ReadAllMockExamQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllMockExamQuery, ReadAllMockExamQueryVariables>({ query: ReadAllMockExamDocument, ...options });
 };
-<<<<<<< HEAD
+export const UpdateExamOrderDocument = gql`
+    mutation UpdateExamOrder($input: UpdateExamOrderInput!) {
+  updateExamOrder(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpdateExamOrderMutation() {
+  return Urql.useMutation<UpdateExamOrderMutation, UpdateExamOrderMutationVariables>(UpdateExamOrderDocument);
+};
 export const CreateExamCategoryViewerDocument = gql`
     mutation CreateExamCategoryViewer($input: CreateExamCategoryViewerInput!) {
   createExamCategoryViewer(input: $input) {
@@ -337,32 +344,26 @@ export function useGetExamCategoryViewersQuery(options: Omit<Urql.UseQueryArgs<G
 export const DeleteExamCategoryViewerDocument = gql`
     mutation DeleteExamCategoryViewer($input: DeleteExamCategoryViewerInput!) {
   deleteExamCategoryViewer(input: $input) {
-=======
-export const UpdateExamOrderDocument = gql`
-    mutation UpdateExamOrder($input: UpdateExamOrderInput!) {
-  updateExamOrder(input: $input) {
->>>>>>> release
     error
     ok
   }
 }
     `;
 
-<<<<<<< HEAD
 export function useDeleteExamCategoryViewerMutation() {
   return Urql.useMutation<DeleteExamCategoryViewerMutation, DeleteExamCategoryViewerMutationVariables>(DeleteExamCategoryViewerDocument);
 };
-export const UpdateExamViewerArroveStateDocument = gql`
-    mutation UpdateExamViewerArroveState($input: UpdateExamViewerArroveStateInput!) {
-  updateExamViewerArroveState(input: $input) {
+export const UpdateExamViewerApproveStateDocument = gql`
+    mutation UpdateExamViewerApproveState($input: UpdateExamViewerApproveStateInput!) {
+  updateExamViewerApproveState(input: $input) {
     error
     ok
   }
 }
     `;
 
-export function useUpdateExamViewerArroveStateMutation() {
-  return Urql.useMutation<UpdateExamViewerArroveStateMutation, UpdateExamViewerArroveStateMutationVariables>(UpdateExamViewerArroveStateDocument);
+export function useUpdateExamViewerApproveStateMutation() {
+  return Urql.useMutation<UpdateExamViewerApproveStateMutation, UpdateExamViewerApproveStateMutationVariables>(UpdateExamViewerApproveStateDocument);
 };
 export const GetInvitedExamsDocument = gql`
     query GetInvitedExams {
@@ -373,6 +374,7 @@ export const GetInvitedExamsDocument = gql`
       id
       isApprove
       examCategory {
+        id
         name
         user {
           nickname
@@ -385,8 +387,4 @@ export const GetInvitedExamsDocument = gql`
 
 export function useGetInvitedExamsQuery(options?: Omit<Urql.UseQueryArgs<GetInvitedExamsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetInvitedExamsQuery, GetInvitedExamsQueryVariables>({ query: GetInvitedExamsDocument, ...options });
-=======
-export function useUpdateExamOrderMutation() {
-  return Urql.useMutation<UpdateExamOrderMutation, UpdateExamOrderMutationVariables>(UpdateExamOrderDocument);
->>>>>>> release
 };

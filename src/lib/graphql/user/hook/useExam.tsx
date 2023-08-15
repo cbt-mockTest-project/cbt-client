@@ -50,11 +50,17 @@ export const useLazyReadMyExamCategories = () =>
     ReadMyMockExamCategoriesQueryVariables
   >(READ_MY_EXAM_CATEORIES_QUERY);
 
-export const useReadMyExamCategories = () =>
+export const useReadMyExamCategories = (type: 'author' | 'viewer' = 'author') =>
   useQuery<
     ReadMyMockExamCategoriesQuery,
     ReadMyMockExamCategoriesQueryVariables
-  >(READ_MY_EXAM_CATEORIES_QUERY);
+  >(READ_MY_EXAM_CATEORIES_QUERY, {
+    variables: {
+      input: {
+        type,
+      },
+    },
+  });
 
 export const useCreateExamCategory = () =>
   useMutation<

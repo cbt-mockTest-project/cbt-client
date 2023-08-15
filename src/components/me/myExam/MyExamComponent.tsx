@@ -11,20 +11,18 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { handleError } from '@lib/utils/utils';
 import Portal from '@components/common/portal/Portal';
-import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
 import useToggle from '@lib/hooks/useToggle';
 import TooltipIconSVG from '@assets/svg/icon-noti-tooltip-question.svg';
-import Link from 'next/link';
 import MyExamInviteModal from './MyExamInviteModal';
 import { ExamTitleAndId } from 'types';
 import { isEqual } from 'lodash';
+import MyExamListItem from './MyExamListItem';
 
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   const [readTitles] = useReadExamTitles();
   const [updateExamOrder] = useUpdateExamOrder();
-  const [readTitles, { data: examTitlesQuery }] = useReadExamTitles();
   const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
     useToggle(false);
   const { value: inviteModalState, onToggle: onToggleInviteModal } =
@@ -104,7 +102,7 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
         <Button type="primary" size="large" onClick={onToggleInviteModal}>
           초대하기
         </Button>
-        <Tooltip title="내가 만든 시험지를 다른 사람이 이용할 수 있도록 초대합니다.">
+        <Tooltip title="내가 만든 시험지를 다른 사람이 볼 수 있도록 초대합니다.">
           <TooltipIconSVG />
         </Tooltip>
       </div>

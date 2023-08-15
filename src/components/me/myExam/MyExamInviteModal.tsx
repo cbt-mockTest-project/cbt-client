@@ -114,7 +114,6 @@ const MyExamInviteModal: React.FC<MyExamInviteModalProps> = (props) => {
     categoryId: number,
     examViewerId: number
   ) => {
-    console.log(categoryId, examViewerId);
     try {
       const confirmed = confirm('정말로 삭제하시겠습니까?');
       if (confirmed) {

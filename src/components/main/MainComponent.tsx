@@ -190,9 +190,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
               </Radio.Button>
               <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
             </Radio.Group>
-            <Button onClick={onToggleInviteExamModalState}>
-              시험지 초대함(1)
-            </Button>
+            {isMyExam && (
+              <Button onClick={onToggleInviteExamModalState}>
+                시험지 초대 관리
+              </Button>
+            )}
             {isMyExam && (
               <Link href="/exam/write">
                 <Button type="primary">시험지 만들기</Button>

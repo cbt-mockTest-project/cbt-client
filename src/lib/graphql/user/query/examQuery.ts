@@ -29,8 +29,8 @@ export const EDIT_EXAM_CATEGORY = gql`
 `;
 
 export const READ_MY_EXAM_CATEORIES_QUERY = gql`
-  query ReadMyMockExamCategories {
-    readMyMockExamCategories {
+  query ReadMyMockExamCategories($input: ReadMyMockExamCategoriesInput) {
+    readMyMockExamCategories(input: $input) {
       categories {
         name
         id
@@ -188,10 +188,10 @@ export const DELETE_EXAM_CATEGORY_VIEWER = gql`
 `;
 
 export const UPDATE_EXAM_VIEWER_APPROVE_STATE = gql`
-  mutation UpdateExamViewerArroveState(
-    $input: UpdateExamViewerArroveStateInput!
+  mutation UpdateExamViewerApproveState(
+    $input: UpdateExamViewerApproveStateInput!
   ) {
-    updateExamViewerArroveState(input: $input) {
+    updateExamViewerApproveState(input: $input) {
       error
       ok
     }
@@ -207,6 +207,7 @@ export const GET_INVITED_EXAMS = gql`
         id
         isApprove
         examCategory {
+          id
           name
           user {
             nickname

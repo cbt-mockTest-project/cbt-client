@@ -15,8 +15,8 @@ import {
   GetExamCategoryViewersQueryVariables,
   GetInvitedExamsQuery,
   GetInvitedExamsQueryVariables,
-  UpdateExamViewerArroveStateMutation,
-  UpdateExamViewerArroveStateMutationVariables,
+  UpdateExamViewerApproveStateMutation,
+  UpdateExamViewerApproveStateMutationVariables,
 } from '../query/examQuery.generated';
 
 export const useCreateExamCategoryViewer = () =>
@@ -39,8 +39,8 @@ export const useDeleteExamCategoryViewer = () =>
 
 export const useUpdateExamCategoryViewerApproveState = () =>
   useMutation<
-    UpdateExamViewerArroveStateMutation,
-    UpdateExamViewerArroveStateMutationVariables
+    UpdateExamViewerApproveStateMutation,
+    UpdateExamViewerApproveStateMutationVariables
   >(UPDATE_EXAM_VIEWER_APPROVE_STATE);
 
 export const useGetInvitedExams = () =>
