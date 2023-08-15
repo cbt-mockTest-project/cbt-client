@@ -4,6 +4,7 @@ import {
   useGetInvitedExams,
   useUpdateExamCategoryViewerApproveState,
 } from '@lib/graphql/user/hook/useExamViewer';
+import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, List, message } from 'antd';
@@ -14,6 +15,7 @@ import { ExamViewer } from 'types';
 const InviteExamModalBlock = styled(Modal)`
   padding: 20px;
   min-width: 500px;
+  width: 100%;
   height: 500px;
   overflow-y: auto;
   .invited-exam-modal-title {
@@ -57,6 +59,9 @@ const InviteExamModalBlock = styled(Modal)`
     display: flex;
     gap: 10px;
     margin-top: 15px;
+  }
+  @media (max-width: ${responsive.lsmall}) {
+    min-width: calc(100vw - 40px);
   }
 `;
 
