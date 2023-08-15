@@ -22,6 +22,7 @@ import { ExamTitleAndId } from 'types';
 import MainViewCount from './MainViewCount';
 import { EXAM_TYPE } from './Main.type';
 import MyExamSelector from './MyExamSelector';
+import InviteExamModal from './modal/InviteExamModal';
 
 export interface TitlesAndCategories {
   category: string;
@@ -37,6 +38,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
+  const [inviteExamModalState, setInviteExamModalState] = useState(false);
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
@@ -58,7 +60,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const storage = new LocalStorage();
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
-    (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
+    (el) => ({ value: el.name, label: el.name })
   );
   useEffect(() => {
     const savedCategory = storage.get(selectedCategoryHistory);
@@ -80,6 +82,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   const onToggleKakaoChatModalState = () =>
     setKakaoChatModalState(!kakaoChatModalState);
+  const onToggleInviteExamModalState = () =>
+    setInviteExamModalState(!inviteExamModalState);
 
   const onCategoryChange = async (category: DefaultOptionType) => {
     setSelectedModucbtCategory(category);
@@ -185,6 +189,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
               </Radio.Button>
               <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
             </Radio.Group>
+            <Button onClick={onToggleInviteExamModalState}>
+              시험지 초대함(1)
+            </Button>
             {isMyExam && (
               <Link href="/exam/write">
                 <Button type="primary">시험지 만들기</Button>
@@ -281,6 +288,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
           onClose={onToggleKakaoChatModalState}
         />
         <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
+        {inviteExamModalState && (
+          <InviteExamModal
+            open={inviteExamModalState}
+            onClose={onToggleInviteExamModalState}
+          />
+        )}
       </Portal>
     </MainComponentContainer>
   );

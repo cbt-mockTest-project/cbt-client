@@ -1,8 +1,9 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   CREATE_EXAM_CATEGORY_VIEWER,
   DELETE_EXAM_CATEGORY_VIEWER,
   GET_EXAM_CATEGORY_VIEWERS,
+  GET_INVITED_EXAMS,
   UPDATE_EXAM_VIEWER_APPROVE_STATE,
 } from '../query/examQuery';
 import {
@@ -12,6 +13,8 @@ import {
   DeleteExamCategoryViewerMutationVariables,
   GetExamCategoryViewersQuery,
   GetExamCategoryViewersQueryVariables,
+  GetInvitedExamsQuery,
+  GetInvitedExamsQueryVariables,
   UpdateExamViewerArroveStateMutation,
   UpdateExamViewerArroveStateMutationVariables,
 } from '../query/examQuery.generated';
@@ -39,3 +42,8 @@ export const useUpdateExamCategoryViewerApproveState = () =>
     UpdateExamViewerArroveStateMutation,
     UpdateExamViewerArroveStateMutationVariables
   >(UPDATE_EXAM_VIEWER_APPROVE_STATE);
+
+export const useGetInvitedExams = () =>
+  useQuery<GetInvitedExamsQuery, GetInvitedExamsQueryVariables>(
+    GET_INVITED_EXAMS
+  );

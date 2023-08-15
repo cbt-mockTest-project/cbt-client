@@ -101,7 +101,6 @@ export const READ_EXAM_TITLES_QUERY = gql`
         id
         title
         status
-        role
         slug
       }
       ok
@@ -185,6 +184,25 @@ export const UPDATE_EXAM_VIEWER_APPROVE_STATE = gql`
     updateExamViewerArroveState(input: $input) {
       error
       ok
+    }
+  }
+`;
+
+export const GET_INVITED_EXAMS = gql`
+  query GetInvitedExams {
+    getInvitedExams {
+      error
+      ok
+      examViewers {
+        id
+        isApprove
+        examCategory {
+          name
+          user {
+            nickname
+          }
+        }
+      }
     }
   }
 `;

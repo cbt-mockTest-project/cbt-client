@@ -62,7 +62,7 @@ export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, role: Types.UserRole, slug?: string | null }> } };
+export type ReadMockExamTitlesByCateoryQuery = { __typename?: 'Query', readMockExamTitlesByCateory: { __typename?: 'ReadMockExamTitlesByCateoryOutput', ok: boolean, error?: string | null, titles: Array<{ __typename?: 'ExamTitleAndId', id: number, title: string, status: Types.ExamStatus, slug?: string | null }> } };
 
 export type FindMyExamHistoryQueryVariables = Types.Exact<{
   input: Types.FindMyExamHistoryInput;
@@ -105,6 +105,11 @@ export type UpdateExamViewerArroveStateMutationVariables = Types.Exact<{
 
 
 export type UpdateExamViewerArroveStateMutation = { __typename?: 'Mutation', updateExamViewerArroveState: { __typename?: 'UpdateExamViewerArroveStateOutput', error?: string | null, ok: boolean } };
+
+export type GetInvitedExamsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetInvitedExamsQuery = { __typename?: 'Query', getInvitedExams: { __typename?: 'GetInvitedExamsOutput', error?: string | null, ok: boolean, examViewers?: Array<{ __typename?: 'ExamViewer', id: number, isApprove: boolean, examCategory: { __typename?: 'MockExamCategory', name: string, user: { __typename?: 'User', nickname: string } } }> | null } };
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
@@ -232,7 +237,6 @@ export const ReadMockExamTitlesByCateoryDocument = gql`
       id
       title
       status
-      role
       slug
     }
     ok
@@ -338,4 +342,26 @@ export const UpdateExamViewerArroveStateDocument = gql`
 
 export function useUpdateExamViewerArroveStateMutation() {
   return Urql.useMutation<UpdateExamViewerArroveStateMutation, UpdateExamViewerArroveStateMutationVariables>(UpdateExamViewerArroveStateDocument);
+};
+export const GetInvitedExamsDocument = gql`
+    query GetInvitedExams {
+  getInvitedExams {
+    error
+    ok
+    examViewers {
+      id
+      isApprove
+      examCategory {
+        name
+        user {
+          nickname
+        }
+      }
+    }
+  }
+}
+    `;
+
+export function useGetInvitedExamsQuery(options?: Omit<Urql.UseQueryArgs<GetInvitedExamsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetInvitedExamsQuery, GetInvitedExamsQueryVariables>({ query: GetInvitedExamsDocument, ...options });
 };
