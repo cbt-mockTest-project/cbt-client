@@ -20,7 +20,6 @@ import { cloneDeep } from 'lodash';
 interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
-  authorRole: UserRole;
 }
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -94,7 +93,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
           }
           titlesAndCategories.push({
             category: category.name,
-            authorRole: category.user.role,
             titles,
           });
         }

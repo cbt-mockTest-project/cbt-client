@@ -653,7 +653,6 @@ export enum ExamStatus {
 export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
-  role: UserRole;
   slug?: Maybe<Scalars['String']>;
   status: ExamStatus;
   title: Scalars['String'];
@@ -742,6 +741,13 @@ export type GetFeedbacksWithFilterOutput = {
   __typename?: 'GetFeedbacksWithFilterOutput';
   error?: Maybe<Scalars['String']>;
   feedbacks: Array<MockExamQuestionFeedback>;
+  ok: Scalars['Boolean'];
+};
+
+export type GetInvitedExamsOutput = {
+  __typename?: 'GetInvitedExamsOutput';
+  error?: Maybe<Scalars['String']>;
+  examViewers?: Maybe<Array<ExamViewer>>;
   ok: Scalars['Boolean'];
 };
 
@@ -1635,6 +1641,7 @@ export type Query = {
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
+  getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
