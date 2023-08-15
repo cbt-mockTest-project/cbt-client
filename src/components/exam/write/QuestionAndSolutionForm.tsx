@@ -54,7 +54,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
       </div>
       <div className="create-exam-question-part-wrapper">
         <label className="create-exam-small-label">
-          2.2 현재 등록된 문제번호
+          2.2 현재 등록된 문제번호 - 번호 클릭시 수정 및 삭제 가능
         </label>
         {questionNumbers.length >= 1 ? (
           <ul className="create-exam-question-number-wrapper">

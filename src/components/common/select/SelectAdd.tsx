@@ -17,6 +17,7 @@ export interface SelectAddProps {
   createButtonOption: ButtonProps;
   deleteButtonOption: ButtonProps;
   editButtonOption: ButtonProps;
+  isLoading?: boolean;
 }
 
 const SelectAdd: React.FC<SelectAddProps> = ({
@@ -25,10 +26,12 @@ const SelectAdd: React.FC<SelectAddProps> = ({
   createButtonOption,
   deleteButtonOption,
   editButtonOption,
+  isLoading,
 }) => {
   return (
     <Select
       {...selectOption}
+      loading={isLoading}
       dropdownRender={(menu) => (
         <>
           {menu}

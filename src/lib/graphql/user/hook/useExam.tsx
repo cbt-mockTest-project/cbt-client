@@ -11,6 +11,7 @@ import {
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_TITLES_QUERY,
   READ_MY_EXAM_CATEORIES_QUERY,
+  UPDATE_EXAM_ORDER,
 } from '../query/examQuery';
 import {
   CreateMockExamCategoryMutation,
@@ -33,6 +34,8 @@ import {
   ReadMockExamTitlesByCateoryQueryVariables,
   ReadMyMockExamCategoriesQuery,
   ReadMyMockExamCategoriesQueryVariables,
+  UpdateExamOrderMutation,
+  UpdateExamOrderMutationVariables,
 } from '../query/examQuery.generated';
 
 export const useReadExamCategories = () =>
@@ -40,6 +43,12 @@ export const useReadExamCategories = () =>
     ReadAllMockExamCategoriesQuery,
     ReadAllMockExamCategoriesQueryVariables
   >(READ_EXAM_CATEGORIES_QUERY);
+
+export const useLazyReadMyExamCategories = () =>
+  useLazyQuery<
+    ReadMyMockExamCategoriesQuery,
+    ReadMyMockExamCategoriesQueryVariables
+  >(READ_MY_EXAM_CATEORIES_QUERY);
 
 export const useReadMyExamCategories = () =>
   useQuery<
@@ -97,3 +106,8 @@ export const useEditCategory = () =>
     EditMockExamCategoryMutation,
     EditMockExamCategoryMutationVariables
   >(EDIT_EXAM_CATEGORY);
+
+export const useUpdateExamOrder = () =>
+  useMutation<UpdateExamOrderMutation, UpdateExamOrderMutationVariables>(
+    UPDATE_EXAM_ORDER
+  );

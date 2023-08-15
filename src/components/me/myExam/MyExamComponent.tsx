@@ -1,6 +1,7 @@
 import {
   useReadExamTitles,
   useReadMyExamCategories,
+  useUpdateExamOrder,
 } from '@lib/graphql/user/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -15,10 +16,14 @@ import useToggle from '@lib/hooks/useToggle';
 import TooltipIconSVG from '@assets/svg/icon-noti-tooltip-question.svg';
 import Link from 'next/link';
 import MyExamInviteModal from './MyExamInviteModal';
+import { ExamTitleAndId } from 'types';
+import { isEqual } from 'lodash';
 
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
+  const [readTitles] = useReadExamTitles();
+  const [updateExamOrder] = useUpdateExamOrder();
   const [readTitles, { data: examTitlesQuery }] = useReadExamTitles();
   const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
     useToggle(false);
@@ -28,6 +33,11 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
+  const [titles, setTitles] = useState<ExamTitleAndId[]>([]);
+  const [orderChangedTitles, setOrderChangedTitles] = useState<
+    ExamTitleAndId[]
+  >([]);
+  const [orderChanged, setOrderChanged] = useState<boolean>(false);
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
       setCategories(() =>
@@ -47,12 +57,44 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
       const res = await readTitles({
         variables: { input: { name: category.label as string, all: true } },
       });
+      if (res.data?.readMockExamTitlesByCateory.ok) {
+        setTitles(res.data.readMockExamTitlesByCateory.titles);
+        setOrderChangedTitles(res.data.readMockExamTitlesByCateory.titles);
+        return;
+      }
       if (res.data?.readMockExamTitlesByCateory.error) {
         message.error(res.data?.readMockExamTitlesByCateory.error);
       }
     } catch (e) {
       handleError(e);
     }
+  };
+
+  const handleOrderChange = (data: { order: number; examId: number }) => {
+    const newOrderChangedTitles = orderChangedTitles.map((title) =>
+      title.id === data.examId ? { ...title, order: data.order } : title
+    );
+    setOrderChangedTitles(newOrderChangedTitles);
+    setOrderChanged(!isEqual(newOrderChangedTitles, titles));
+  };
+
+  const handleOrderSave = async () => {
+    const res = await updateExamOrder({
+      variables: {
+        input: {
+          examOrders: orderChangedTitles.map((title) => ({
+            examId: title.id,
+            order: title.order,
+          })),
+        },
+      },
+    });
+    if (res.data?.updateExamOrder.ok) {
+      setTitles(orderChangedTitles.sort((a, b) => a.order - b.order));
+      setOrderChanged(false);
+      return message.success('순서가 저장되었습니다.');
+    }
+    message.error(res.data?.updateExamOrder.error);
   };
 
   return (
@@ -66,44 +108,34 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
           <TooltipIconSVG />
         </Tooltip>
       </div>
-      <Select
-        size="large"
-        options={categories}
-        onSelect={(value, option) => requestCategorySelect(option)}
-        placeholder="카테고리명을 선택해주세요"
-        className="my-exam-category-selector"
-      />
+      <div className="my-exam-select-and-order-save-button-wrapper">
+        <Select
+          size="large"
+          options={categories}
+          onSelect={(value, option) => requestCategorySelect(option)}
+          placeholder="카테고리명을 선택해주세요"
+          className="my-exam-category-selector"
+        />
+        <Button
+          type="primary"
+          size="large"
+          disabled={!orderChanged}
+          onClick={handleOrderSave}
+        >
+          순서저장
+        </Button>
+      </div>
       <List
         className="my-exam-list"
-        dataSource={examTitlesQuery?.readMockExamTitlesByCateory.titles}
+        dataSource={titles}
         bordered
         renderItem={(item) => (
-          <List.Item key={item.id}>
-            <div className="my-exam-list-item-wrapper">
-              <div>{item.title}</div>
-              <div className="my-exam-list-item-button-wrapper">
-                <Button type="primary" onClick={onToggleExamPreviewModal}>
-                  미리보기
-                </Button>
-                <Link
-                  href={`/exam/write?cl=${selectedCategory?.label}&cv=${selectedCategory?.value}&ev=${item.id}&el=${item.title}`}
-                >
-                  <Button type="primary">수정하기</Button>
-                </Link>
-              </div>
-            </div>
-            <Portal>
-              <ExamPreviewModal
-                categoryName={
-                  selectedCategory ? (selectedCategory.label as string) : ''
-                }
-                examId={item.id}
-                examTitle={item.title}
-                onClose={onToggleExamPreviewModal}
-                open={previewModalState}
-              />
-            </Portal>
-          </List.Item>
+          <MyExamListItem
+            key={item.id}
+            selectedCategory={selectedCategory}
+            selectedExam={item}
+            onChangeOrder={handleOrderChange}
+          />
         )}
       />
       <Portal>
@@ -120,12 +152,16 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
 export default MyExamComponent;
 
 const MyExamComponentContainer = styled.div`
+  .my-exam-select-and-order-save-button-wrapper {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
   .my-exam-list-menu-wrapper {
     padding: 10px 0;
     border-bottom: 1px solid ${palette.gray_200};
   }
   .my-exam-category-selector {
-    margin-top: 20px;
     width: 300px;
   }
   .my-exam-list {
@@ -188,6 +224,7 @@ const MyExamComponentContainer = styled.div`
       width: 300px;
     }
   }
+
   @media (max-width: ${responsive.medium}) {
     margin-top: 20px;
     padding: 0 20px;
