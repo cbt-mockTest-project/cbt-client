@@ -65,16 +65,8 @@ const BootPayComponent: React.FC<BootPayComponentProps> = () => {
       });
       switch (response.event) {
         case 'issued':
-          // 가상계좌 입금 완료처리
-          console.log('가상계좌 입금 완료');
         case 'done':
-          // 결제 완료
-          console.log('결제 완료', response);
-        // const confirmedData = await Bootpay.confirm();
-        // console.log(confirmedData);
-        // if (confirmedData.event === 'done') {
-        //   alert('결제 성공');
-        // }
+        // 결제 완료
         case 'confirm':
         // 결제 취소
       }

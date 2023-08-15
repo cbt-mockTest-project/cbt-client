@@ -315,7 +315,6 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const requestEditCategory = async (value: string) => {
     try {
       const categoryId = categories.filter((category) => {
-        console.log(category.label?.toString().trim(), categoryName.trim());
         return category.label?.toString().trim() === categoryName.trim();
       })[0]?.value;
       if (!categoryId) {

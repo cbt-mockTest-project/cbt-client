@@ -37,7 +37,6 @@ const dataSlice = createSlice({
       state.dataListQuery.scrollY = action.payload;
     },
     updateDataList: (state, action: PayloadAction<Post>) => {
-      console.log(action.payload);
       state.dataList = state.dataList.map((post) =>
         post.id === action.payload.id ? action.payload : post
       );
