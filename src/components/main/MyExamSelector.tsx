@@ -25,7 +25,7 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
   setSelectedMyTitle,
 }) => {
   const { data: categoriesQuery, loading: readCategoriesLoading } =
-    useReadMyExamCategories();
+    useReadMyExamCategories('viewer');
   const [readTitles, { data: examTitlesQuery, loading: readTitlesLoading }] =
     useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);

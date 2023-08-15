@@ -347,6 +347,7 @@ export type DeleteAttendanceOutput = {
 export type DeleteExamCategoryViewerInput = {
   categoryId: Scalars['Float'];
   examViewerId: Scalars['Float'];
+  executor?: InputMaybe<Scalars['String']>;
 };
 
 export type DeleteExamCategoryViewerOutput = {
@@ -659,7 +660,6 @@ export type ExamTitleAndId = {
   __typename?: 'ExamTitleAndId';
   id: Scalars['Float'];
   order: Scalars['Float'];
-  role: UserRole;
   slug?: Maybe<Scalars['String']>;
   status: ExamStatus;
   title: Scalars['String'];
@@ -748,6 +748,13 @@ export type GetFeedbacksWithFilterOutput = {
   __typename?: 'GetFeedbacksWithFilterOutput';
   error?: Maybe<Scalars['String']>;
   feedbacks: Array<MockExamQuestionFeedback>;
+  ok: Scalars['Boolean'];
+};
+
+export type GetInvitedExamsOutput = {
+  __typename?: 'GetInvitedExamsOutput';
+  error?: Maybe<Scalars['String']>;
+  examViewers?: Maybe<Array<ExamViewer>>;
   ok: Scalars['Boolean'];
 };
 
@@ -1114,7 +1121,7 @@ export type Mutation = {
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateExamOrder: UpdateExamOrderOutput;
-  updateExamViewerArroveState: UpdateExamViewerArroveStateOutput;
+  updateExamViewerApproveState: UpdateExamViewerApproveStateOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updatePayment: UpdatePaymentOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
@@ -1454,8 +1461,8 @@ export type MutationUpdateExamOrderArgs = {
 };
 
 
-export type MutationUpdateExamViewerArroveStateArgs = {
-  input: UpdateExamViewerArroveStateInput;
+export type MutationUpdateExamViewerApproveStateArgs = {
+  input: UpdateExamViewerApproveStateInput;
 };
 
 
@@ -1647,6 +1654,7 @@ export type Query = {
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
+  getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
@@ -1786,6 +1794,11 @@ export type QueryReadMockExamTitlesByCateoryArgs = {
 
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
+};
+
+
+export type QueryReadMyMockExamCategoriesArgs = {
+  input?: InputMaybe<ReadMyMockExamCategoriesInput>;
 };
 
 
@@ -2073,6 +2086,10 @@ export type ReadMyExamQuestionStateOutput = {
   state: MockExamQuestionState;
 };
 
+export type ReadMyMockExamCategoriesInput = {
+  type?: InputMaybe<Scalars['String']>;
+};
+
 export type ReadMyMockExamCategoriesOutput = {
   __typename?: 'ReadMyMockExamCategoriesOutput';
   categories: Array<MockExamCategory>;
@@ -2344,12 +2361,12 @@ export type UpdateExamOrderOutput = {
   ok: Scalars['Boolean'];
 };
 
-export type UpdateExamViewerArroveStateInput = {
+export type UpdateExamViewerApproveStateInput = {
   examViewerId: Scalars['Float'];
 };
 
-export type UpdateExamViewerArroveStateOutput = {
-  __typename?: 'UpdateExamViewerArroveStateOutput';
+export type UpdateExamViewerApproveStateOutput = {
+  __typename?: 'UpdateExamViewerApproveStateOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };

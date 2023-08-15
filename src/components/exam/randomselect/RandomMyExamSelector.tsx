@@ -23,7 +23,7 @@ const RandomMyExamSelector: React.FC<RandomMyExamSelectorProps> = ({
   setSelectedMyTitles,
 }) => {
   const { data: categoriesQuery, loading: readCategoriesLoading } =
-    useReadMyExamCategories();
+    useReadMyExamCategories('viewer');
   const [readTitles, { data: examTitlesQuery, loading: readTitlesLoading }] =
     useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);

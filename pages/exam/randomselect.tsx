@@ -21,12 +21,9 @@ import GoogleAd from '@components/common/ad/GoogleAd';
 interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
-  authorRole: UserRole;
 }
 
-export interface Categories extends DefaultOptionType {
-  authorRole: UserRole;
-}
+export interface Categories extends DefaultOptionType {}
 
 interface RandomSelectPageProps {
   categories: Categories[];
@@ -97,7 +94,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
           }
           titlesAndCategories.push({
             category: category.name,
-            authorRole: category.user.role,
             titles,
           });
         }
@@ -105,7 +101,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     );
 
   const categories = categoriesQuery?.readAllMockExamCategories.categories.map(
-    (el) => ({ value: el.name, label: el.name, authorRole: el.user.role })
+    (el) => ({ value: el.name, label: el.name })
   );
 
   return addApolloState(apolloClient, {

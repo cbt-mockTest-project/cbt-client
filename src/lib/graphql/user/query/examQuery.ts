@@ -29,8 +29,8 @@ export const EDIT_EXAM_CATEGORY = gql`
 `;
 
 export const READ_MY_EXAM_CATEORIES_QUERY = gql`
-  query ReadMyMockExamCategories {
-    readMyMockExamCategories {
+  query ReadMyMockExamCategories($input: ReadMyMockExamCategoriesInput) {
+    readMyMockExamCategories(input: $input) {
       categories {
         name
         id
@@ -101,7 +101,6 @@ export const READ_EXAM_TITLES_QUERY = gql`
         id
         title
         status
-        role
         slug
         order
       }
@@ -141,6 +140,80 @@ export const UPDATE_EXAM_ORDER = gql`
     updateExamOrder(input: $input) {
       error
       ok
+    }
+  }
+`;
+
+export const CREATE_EXAM_CATEGORY_VIEWER = gql`
+  mutation CreateExamCategoryViewer($input: CreateExamCategoryViewerInput!) {
+    createExamCategoryViewer(input: $input) {
+      error
+      ok
+      examViewer {
+        isApprove
+        id
+        user {
+          id
+          nickname
+        }
+      }
+    }
+  }
+`;
+
+export const GET_EXAM_CATEGORY_VIEWERS = gql`
+  query GetExamCategoryViewers($input: GetExamCategoryViewrsInput!) {
+    getExamCategoryViewers(input: $input) {
+      error
+      ok
+      examViewers {
+        id
+        isApprove
+        user {
+          email
+          nickname
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_EXAM_CATEGORY_VIEWER = gql`
+  mutation DeleteExamCategoryViewer($input: DeleteExamCategoryViewerInput!) {
+    deleteExamCategoryViewer(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const UPDATE_EXAM_VIEWER_APPROVE_STATE = gql`
+  mutation UpdateExamViewerApproveState(
+    $input: UpdateExamViewerApproveStateInput!
+  ) {
+    updateExamViewerApproveState(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const GET_INVITED_EXAMS = gql`
+  query GetInvitedExams {
+    getInvitedExams {
+      error
+      ok
+      examViewers {
+        id
+        isApprove
+        examCategory {
+          id
+          name
+          user {
+            nickname
+          }
+        }
+      }
     }
   }
 `;

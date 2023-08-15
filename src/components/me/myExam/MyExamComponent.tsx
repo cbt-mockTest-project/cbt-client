@@ -5,20 +5,28 @@ import {
 } from '@lib/graphql/user/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, List, message, Select } from 'antd';
+import { Button, List, message, Select, Tooltip } from 'antd';
 import { DefaultOptionType } from 'antd/lib/cascader';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import MyExamListItem from './MyExamListItem';
 import { handleError } from '@lib/utils/utils';
+import Portal from '@components/common/portal/Portal';
+import useToggle from '@lib/hooks/useToggle';
+import TooltipIconSVG from '@assets/svg/icon-noti-tooltip-question.svg';
+import MyExamInviteModal from './MyExamInviteModal';
 import { ExamTitleAndId } from 'types';
 import { isEqual } from 'lodash';
+import MyExamListItem from './MyExamListItem';
 
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   const [readTitles] = useReadExamTitles();
   const [updateExamOrder] = useUpdateExamOrder();
+  const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
+    useToggle(false);
+  const { value: inviteModalState, onToggle: onToggleInviteModal } =
+    useToggle(false);
   const { data: categoriesQuery } = useReadMyExamCategories();
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
@@ -52,7 +60,9 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
         setOrderChangedTitles(res.data.readMockExamTitlesByCateory.titles);
         return;
       }
-      message.error(res.data?.readMockExamTitlesByCateory.error);
+      if (res.data?.readMockExamTitlesByCateory.error) {
+        message.error(res.data?.readMockExamTitlesByCateory.error);
+      }
     } catch (e) {
       handleError(e);
     }
@@ -88,6 +98,14 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
   return (
     <MyExamComponentContainer>
       <h3>내가만든 시험지 목록을 보여주는 페이지입니다.</h3>
+      <div className="my-exam-invite-button-wrapper">
+        <Button type="primary" size="large" onClick={onToggleInviteModal}>
+          초대하기
+        </Button>
+        <Tooltip title="내가 만든 시험지를 다른 사람이 볼 수 있도록 초대합니다.">
+          <TooltipIconSVG />
+        </Tooltip>
+      </div>
       <div className="my-exam-select-and-order-save-button-wrapper">
         <Select
           size="large"
@@ -118,6 +136,13 @@ const MyExamComponent: React.FC<MyExamComponentProps> = () => {
           />
         )}
       />
+      <Portal>
+        <MyExamInviteModal
+          categories={categories}
+          open={inviteModalState}
+          onClose={onToggleInviteModal}
+        />
+      </Portal>
     </MyExamComponentContainer>
   );
 };
@@ -177,6 +202,25 @@ const MyExamComponentContainer = styled.div`
   }
   .my-exam-list {
     margin-top: 20px;
+  }
+  .my-exam-list-item-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .my-exam-list-item-button-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+  .my-exam-invite-button-wrapper {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    button {
+      width: 300px;
+    }
   }
 
   @media (max-width: ${responsive.medium}) {

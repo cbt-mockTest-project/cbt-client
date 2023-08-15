@@ -11,7 +11,7 @@ import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
-import { ExamTitleAndId, UserRole } from 'types';
+import { ExamTitleAndId } from 'types';
 import MainComponent from '@components/main/MainComponent';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
@@ -20,7 +20,6 @@ import { cloneDeep } from 'lodash';
 interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
-  authorRole: UserRole;
 }
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -94,7 +93,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
           }
           titlesAndCategories.push({
             category: category.name,
-            authorRole: category.user.role,
             titles,
           });
         }

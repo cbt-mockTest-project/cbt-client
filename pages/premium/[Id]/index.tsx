@@ -21,7 +21,6 @@ import { GetPartnersQuery } from '@lib/graphql/user/query/partnerQuery.generated
 interface TitlesAndCategories {
   category: string;
   titles: ExamTitleAndId[];
-  authorRole: UserRole;
 }
 interface HomeProps {
   categoriesQuery: ReadAllMockExamCategoriesQuery;
@@ -116,7 +115,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
             res.data.readMockExamTitlesByCateory.titles;
           titlesAndCategories.push({
             category: category.name,
-            authorRole: category.user.role,
             titles,
           });
         }
