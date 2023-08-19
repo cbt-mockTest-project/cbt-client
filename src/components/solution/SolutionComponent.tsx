@@ -5,14 +5,13 @@ import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/
 import { responsive } from '@lib/utils/responsive';
 import {
   blobToDataUrl,
-  checkRole,
   convertExamTitle,
   handleError,
   removeWhiteSpace,
 } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { Button, Card, Input, message } from 'antd';
 import { debounce, shuffle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -30,6 +29,9 @@ import useToggle from '@lib/hooks/useToggle';
 import { PdfDownloadSelectModalFooter } from '@components/common/modal/PdfDownloadSelectModal';
 import { SearchOutlined } from '@ant-design/icons';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import Portal from '@components/common/portal/Portal';
+import ContinueLearningModal from './ContinueLearningModal';
+import MoveExamSelectorBox from './MoveExamSelectorBox';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -63,6 +65,11 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   const {
     value: pdfDownloadConfirmModalState,
     onToggle: onTogglePdfDownloadConfirmModalState,
+  } = useToggle(false);
+  const {
+    value: continueLearningModalState,
+    onToggle: onToggleContinueLearningModalState,
+    setValue: setContinueLearningModalState,
   } = useToggle(false);
   const [pdfDownloadLoading, setPdfDownloadLoading] = useState(false);
   const [hasAdditionalAnswer, setHasAdditionalAnswer] = useState(true);
@@ -129,6 +136,10 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         }
       }
     })();
+
+    return () => {
+      setContinueLearningModalState(false);
+    };
   }, [router.query]);
   const currentQuestionsQuery = (questionsQueryOnClientSide ||
     questionsQuery) as ReadMockExamQuestionsByMockExamIdQuery;
@@ -154,15 +165,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     pdfMake,
   }: OnDownloadPdfArgs) => {
     try {
-      // if (!checkRole({ meQuery, roleIds: [1, 2] })) {
-      //   const confirmed = confirm(
-      //     '베이직플랜 가입 후 이용할 수 있습니다.\n가입하러 가시겠습니까?'
-      //   );
-      //   if (confirmed) {
-      //     router.push('/pricing');
-      //   }
-      //   return;
-      // }
       setPdfDownloadLoading(true);
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const contents: any[] = [];
@@ -328,97 +330,130 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   };
   return (
     <SolutionComponentContainer>
-      <div className="exam-solution-page-top-button-wrapper">
-        <Button
-          onClick={onToggleSolutionAllHide}
-          className="exam-solution-page-solution-all-hide-button"
-          type="primary"
-        >
-          {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
-        </Button>
-        <Button
-          onClick={onShuffleQuestion}
-          disabled={filteredQuestions !== null}
-          className="exam-solution-page-solution-all-hide-button"
-          type="primary"
-        >
-          섞기
-        </Button>
-        <Button
-          onClick={onClickDownloadButton}
-          className="exam-solution-page-solution-all-hide-button"
-          type="primary"
-        >
-          다운로드
-        </Button>
+      <div className="solution-component-left-section">
+        <div className="exam-solution-page-top-button-wrapper">
+          <Button
+            onClick={onToggleSolutionAllHide}
+            className="exam-solution-page-solution-all-hide-button"
+            type="primary"
+          >
+            {isSolutionAllHide ? '정답 모두 보이기' : '정답 모두 가리기'}
+          </Button>
+          <Button
+            onClick={onShuffleQuestion}
+            disabled={filteredQuestions !== null}
+            className="exam-solution-page-solution-all-hide-button"
+            type="primary"
+          >
+            섞기
+          </Button>
+          <Button
+            onClick={onClickDownloadButton}
+            className="exam-solution-page-solution-all-hide-button"
+            type="primary"
+          >
+            다운로드
+          </Button>
+        </div>
+        <h1 className="not-draggable">
+          {convertExamTitle(title || '')} 문제/해설
+        </h1>
+        {!isRandomMode && (
+          <p className="exam-solution-page-author-name">{`제작자: ${
+            currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
+          }${coAuthor ? ', ' + coAuthor : ''}`}</p>
+        )}
+        {subDescription && (
+          <p className="exam-solution-page-author-name">{subDescription}</p>
+        )}
+        {hasSearchInput && (
+          <div className="exam-solution-page-search-input-wrapper">
+            <Input
+              size="large"
+              prefix={<SearchOutlined />}
+              placeholder="문제 내용을 검색해보세요."
+              onChange={(e) => {
+                debounceOnChange(e.target.value);
+              }}
+            />
+          </div>
+        )}
+        <ul>
+          {(filteredQuestions || questions)?.map((el, index) => {
+            return (
+              <div key={index}>
+                <ExamSolutionList
+                  questionSubDescription={
+                    isRandomMode
+                      ? `${el?.mockExam?.title}
+              ${el?.number}번`
+                      : ''
+                  }
+                  index={isRandomMode ? index + 1 : 0}
+                  isSolutionAllHide={isSolutionAllHide}
+                  question={el}
+                  title={convertExamTitle(title || '')}
+                  isPreview={isPreview}
+                  hasNewWindowButton={hasNewWindowButton}
+                />
+                {questionsQueryOnClientSide &&
+                  index % 4 === 0 &&
+                  index + 1 !== questions.length && (
+                    <div className="exam-solution-page-google-feed-ad-wrapper">
+                      <GoogleAd type="feed" />
+                    </div>
+                  )}
+              </div>
+            );
+          })}
+        </ul>
+
+        {!isPreview && (
+          <Button
+            className="solution-component-continue-button"
+            size="large"
+            onClick={onToggleContinueLearningModalState}
+          >
+            이어서 학습하기
+          </Button>
+        )}
       </div>
-      <h1 className="not-draggable">
-        {convertExamTitle(title || '')} 문제/해설
-      </h1>
-      {!isRandomMode && (
-        <p className="exam-solution-page-author-name">{`제작자: ${
-          currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
-        }${coAuthor ? ', ' + coAuthor : ''}`}</p>
-      )}
-      {subDescription && (
-        <p className="exam-solution-page-author-name">{subDescription}</p>
-      )}
-      {hasSearchInput && (
-        <div className="exam-solution-page-search-input-wrapper">
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="문제 내용을 검색해보세요."
-            onChange={(e) => {
-              debounceOnChange(e.target.value);
-            }}
-          />
+      {!isPreview && !isRandomMode && (
+        <div className="move-exam-content-card-wrapper">
+          <Card className="move-exam-content-card">
+            <MoveExamSelectorBox key={examId} examId={examId} />
+          </Card>
         </div>
       )}
-      <ul>
-        {(filteredQuestions || questions)?.map((el, index) => {
-          return (
-            <div key={index}>
-              <ExamSolutionList
-                questionSubDescription={
-                  isRandomMode
-                    ? `${el?.mockExam?.title}
-              ${el?.number}번`
-                    : ''
-                }
-                index={isRandomMode ? index + 1 : 0}
-                isSolutionAllHide={isSolutionAllHide}
-                question={el}
-                title={convertExamTitle(title || '')}
-                isPreview={isPreview}
-                hasNewWindowButton={hasNewWindowButton}
-              />
-              {questionsQueryOnClientSide &&
-                index % 4 === 0 &&
-                index + 1 !== questions.length && (
-                  <div className="exam-solution-page-google-feed-ad-wrapper">
-                    <GoogleAd type="feed" />
-                  </div>
-                )}
-            </div>
-          );
-        })}
-      </ul>
-
-      {pdfDownloadConfirmModalState && (
-        <PdfDownloadSelectModal
-          open={pdfDownloadConfirmModalState}
-          onClose={onTogglePdfDownloadConfirmModalState}
-          onCancel={({ pdfMake, pdfFonts }) => {
-            onDownloadPdf({ hasSolution: false, pdfMake, pdfFonts });
-          }}
-          onConfirm={({ pdfMake, pdfFonts }) => {
-            onDownloadPdf({ hasSolution: true, pdfMake, pdfFonts });
-          }}
-          confirmButtonLoading={pdfDownloadLoading}
-          cancelButtonLoading={pdfDownloadLoading}
-          footerOptions={pdfDownloadSelectModalFooterOptions}
-        />
-      )}
+      <Portal>
+        {continueLearningModalState &&
+          !isPreview &&
+          !isRandomMode &&
+          !isRandomMode && (
+            <ContinueLearningModal
+              key={examId}
+              title={title || ''}
+              examId={examId}
+              open={continueLearningModalState}
+              onClose={onToggleContinueLearningModalState}
+            />
+          )}
+        {pdfDownloadConfirmModalState && examId && (
+          <PdfDownloadSelectModal
+            open={pdfDownloadConfirmModalState}
+            onClose={onTogglePdfDownloadConfirmModalState}
+            onCancel={({ pdfMake, pdfFonts }) => {
+              onDownloadPdf({ hasSolution: false, pdfMake, pdfFonts });
+            }}
+            onConfirm={({ pdfMake, pdfFonts }) => {
+              onDownloadPdf({ hasSolution: true, pdfMake, pdfFonts });
+            }}
+            confirmButtonLoading={pdfDownloadLoading}
+            cancelButtonLoading={pdfDownloadLoading}
+            footerOptions={pdfDownloadSelectModalFooterOptions}
+          />
+        )}
+      </Portal>
     </SolutionComponentContainer>
   );
 };
@@ -427,6 +462,11 @@ export default SolutionComponent;
 
 const SolutionComponentContainer = styled.div`
   padding: 20px;
+  display: flex;
+  gap: 20px;
+  .solution-component-left-section {
+    width: 100%;
+  }
   h1 {
     padding: 0px 20px 0px 0px;
     font-size: 1.3rem;
@@ -455,18 +495,32 @@ const SolutionComponentContainer = styled.div`
   .exam-solution-page-search-input-wrapper {
     margin-top: 10px;
     margin-bottom: -10px;
-    position: sticky;
-    top: 59px;
     z-index: 800;
-    margin-left: -20px;
-    margin-right: -20px;
-    input {
-      height: 30px;
-    }
+  }
+  .solution-component-continue-button {
+    margin-top: 20px;
+    width: 100%;
+  }
+  .move-exam-content-card-wrapper {
+    height: 100%;
+    top: 130px;
+    position: sticky;
+  }
+  .move-exam-content-card {
+    width: 245px;
+  }
+  .solution-component-continue-button {
+    display: none;
   }
   @media (max-width: ${responsive.medium}) {
     h1 {
       font-size: 1.1rem;
+    }
+    .move-exam-content-card-wrapper {
+      display: none;
+    }
+    .solution-component-continue-button {
+      display: block;
     }
   }
   .solution-page-google-ad {

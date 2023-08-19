@@ -32,7 +32,7 @@ const NavViewPc: React.FC<NavViewPcProps> = (props) => {
         )
           return null;
         return item.isNewTab ? (
-          <a href={item.path} target="_blank" rel="noreferrer">
+          <a key={item.path} href={item.path} target="_blank" rel="noreferrer">
             <span
               className={`nav-item ${
                 props.isSelectedNavItem(item.key) && 'active'

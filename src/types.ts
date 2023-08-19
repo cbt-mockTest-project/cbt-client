@@ -1672,6 +1672,7 @@ export type Query = {
   readExamTitleAndIdByQuestionState: ReadExamTitleAndIdByQuestionStateOutput;
   readExamTitleAndIdOfBookmarkedQuestion: ReadExamTitleAndIdOfBookmarkedQuestionOutput;
   readMockExam: ReadMockExamOutput;
+  readMockExamCategoryByExamId: ReadMockExamCategoryByExamIdOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
   readMockExamQuestionBookmark: ReadMockExamQuestionBookmarkOutput;
   readMockExamQuestionCommentLikesByQuestinId: ReadMockExamQuestionCommentLikesByQuestinIdOutput;
@@ -1749,6 +1750,11 @@ export type QueryReadAllMockExamCategoriesArgs = {
 
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
+};
+
+
+export type QueryReadMockExamCategoryByExamIdArgs = {
+  input: ReadMockExamCategoryByExamIdInput;
 };
 
 
@@ -1951,6 +1957,17 @@ export type ReadExamTitleAndIdOfBookmarkedQuestionOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   titleAndId?: Maybe<Array<TitleAndId>>;
+};
+
+export type ReadMockExamCategoryByExamIdInput = {
+  examId: Scalars['Float'];
+};
+
+export type ReadMockExamCategoryByExamIdOutput = {
+  __typename?: 'ReadMockExamCategoryByExamIdOutput';
+  category?: Maybe<MockExamCategory>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type ReadMockExamInput = {
@@ -2432,6 +2449,7 @@ export type User = {
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
   id: Scalars['Float'];
   isAllowAdblock: Scalars['Boolean'];
+  lastLogInIp: Scalars['String'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
   mockExamHistory: Array<MockExamHistory>;

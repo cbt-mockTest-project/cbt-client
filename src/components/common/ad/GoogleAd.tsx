@@ -19,9 +19,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
           {}
         );
       }
-    } catch (error: any) {
-      console.log('adsense error', error.message);
-    }
+    } catch (error: any) {}
   };
 
   useEffect(() => {

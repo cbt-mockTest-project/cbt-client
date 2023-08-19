@@ -12,6 +12,7 @@ import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import dynamic from 'next/dynamic';
 import SolutionComponentSkeleton from '@components/solution/SolutionComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
+import styled from 'styled-components';
 
 const SolutionComponent = dynamic(
   () => import('@components/solution/SolutionComponent'),
@@ -29,7 +30,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         title={`${convertExamTitle(title)} 해설 | 모두CBT`}
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
       />
-      <Layout subNav="main">
+      <StyledLayout subNav="main">
         <GoogleAd
           className="exam-solution-page-google-display-ad-wrapper"
           type="display"
@@ -39,12 +40,18 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
           hasSearchInput={true}
         />
         <GoogleAd type="display" />
-      </Layout>
+      </StyledLayout>
     </>
   );
 };
 
 export default Solution;
+
+const StyledLayout = styled(Layout)`
+  .layout-children-wrapper {
+    max-width: 1280px;
+  }
+`;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');

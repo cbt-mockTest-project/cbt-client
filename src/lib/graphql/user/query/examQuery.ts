@@ -217,3 +217,18 @@ export const GET_INVITED_EXAMS = gql`
     }
   }
 `;
+
+export const READ_EXAM_CATEGORY_BY_EXAM_ID = gql`
+  query ReadMockExamCategoryByExamId(
+    $input: ReadMockExamCategoryByExamIdInput!
+  ) {
+    readMockExamCategoryByExamId(input: $input) {
+      error
+      ok
+      category {
+        id
+        name
+      }
+    }
+  }
+`;

@@ -9,6 +9,7 @@ export interface ModalProps {
   className?: string;
   animationDirection?: 'top' | 'bottom';
   animation?: boolean;
+  hasCloseIcon?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -18,6 +19,7 @@ const Modal: React.FC<ModalProps> = ({
   children,
   onClose,
   className,
+  hasCloseIcon = true,
 }) => {
   if (!open) return null;
   return (
@@ -28,9 +30,11 @@ const Modal: React.FC<ModalProps> = ({
         animationDirection={animationDirection}
       >
         <div className="modal-wrapper">
-          <span onClick={onClose} className="modal-close-button">
-            <ClearIcon />
-          </span>
+          {hasCloseIcon && (
+            <span onClick={onClose} className="modal-close-button">
+              <ClearIcon />
+            </span>
+          )}
           {children}
         </div>
       </ModalContainer>

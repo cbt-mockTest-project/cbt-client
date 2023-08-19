@@ -1,5 +1,8 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { FindMyExamHistoryInput } from 'types';
+import {
+  FindMyExamHistoryInput,
+  ReadMockExamCategoryByExamIdInput,
+} from 'types';
 import {
   CREATE_MOCK_EXAM_CATEGORY,
   CREATE_MOCK_EXAM_TITLE,
@@ -9,6 +12,7 @@ import {
   EDIT_MOCK_EXAM,
   FIND_MY_EXAM_HISTORY_QUERY,
   READ_EXAM_CATEGORIES_QUERY,
+  READ_EXAM_CATEGORY_BY_EXAM_ID,
   READ_EXAM_TITLES_QUERY,
   READ_MY_EXAM_CATEORIES_QUERY,
   UPDATE_EXAM_ORDER,
@@ -30,6 +34,8 @@ import {
   FindMyExamHistoryQueryVariables,
   ReadAllMockExamCategoriesQuery,
   ReadAllMockExamCategoriesQueryVariables,
+  ReadMockExamCategoryByExamIdQuery,
+  ReadMockExamCategoryByExamIdQueryVariables,
   ReadMockExamTitlesByCateoryQuery,
   ReadMockExamTitlesByCateoryQueryVariables,
   ReadMyMockExamCategoriesQuery,
@@ -117,3 +123,21 @@ export const useUpdateExamOrder = () =>
   useMutation<UpdateExamOrderMutation, UpdateExamOrderMutationVariables>(
     UPDATE_EXAM_ORDER
   );
+
+export const useReadExamCategoryByExamId = (
+  input: ReadMockExamCategoryByExamIdInput
+) =>
+  useQuery<
+    ReadMockExamCategoryByExamIdQuery,
+    ReadMockExamCategoryByExamIdQueryVariables
+  >(READ_EXAM_CATEGORY_BY_EXAM_ID, {
+    variables: {
+      input,
+    },
+  });
+
+export const useLazyReadExamCategoryByExamId = () =>
+  useLazyQuery<
+    ReadMockExamCategoryByExamIdQuery,
+    ReadMockExamCategoryByExamIdQueryVariables
+  >(READ_EXAM_CATEGORY_BY_EXAM_ID);
