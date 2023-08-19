@@ -19,12 +19,15 @@ const MoveExamSelectorBoxBlock = styled.div`
     flex-direction: column;
     gap: 10px;
   }
-  .move-exam-content-label {
+
+  .move-exam-content-title-label {
     font-size: 14px;
     color: ${palette.gray_500};
   }
   .move-exam-content-title {
-    font-size: 16px;
+    font-size: 14px;
+    color: ${palette.gray_700};
+    font-weight: bold;
   }
   .move-exam-content-button-wrapper {
     display: flex;
@@ -52,6 +55,7 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
   const router = useRouter();
   const [readTitles, { loading: readTitlesLoading }] = useReadExamTitles();
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
+  const [currentTitle, setCurrentTitle] = useState('');
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [selectedTitle, setSelectedTitle] = useState<DefaultOptionType | null>(
     null
@@ -60,7 +64,6 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
     value: number,
     option: DefaultOptionType | DefaultOptionType[]
   ) => {
-    console.log(option);
     setSelectedTitle(option as DefaultOptionType);
   };
 
@@ -102,21 +105,27 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
               value: title.id,
             })
           );
+          const currentTitle = res.data.readMockExamTitlesByCateory.titles.find(
+            (title) => title.id === examId
+          );
+          setCurrentTitle(currentTitle?.slug || currentTitle?.title || '');
           setTitles(newTitles);
-          console.log(newTitles);
         }
       })();
     }
   }, [categoryQuery]);
 
   useEffect(() => {
-    console.log(titles);
     if (titles.length > 0) {
-      const defualtTitle = titles.find((title) => {
-        console.log(title.value, Number(examId));
-        return title.value === Number(examId);
+      let defaultTitle = titles[0];
+      titles.forEach((title, index) => {
+        if (title.value === Number(examId)) {
+          if (index < titles.length - 1) {
+            defaultTitle = titles[index + 1];
+          }
+        }
       });
-      if (defualtTitle) setSelectedTitle(defualtTitle);
+      setSelectedTitle(defaultTitle);
     }
   }, [titles]);
 
@@ -128,7 +137,10 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
         </div>
       ) : (
         <div className="move-exam-content-modal">
-          <p className="move-exam-content-label">회차 이동</p>
+          <div>
+            <p className="move-exam-content-title-label">현재 회차</p>
+            <p className="move-exam-content-title">{currentTitle}</p>
+          </div>
           <Select
             options={titles}
             value={selectedTitle?.value as number}
