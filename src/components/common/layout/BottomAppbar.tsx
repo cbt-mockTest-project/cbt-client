@@ -37,7 +37,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
   const isHome = checkHomePage(router.asPath);
   const onRouteChange = (path: string) => {
     if (!meQuery?.me.user && checkUrl({ url: path, allowUrls: authRoutes })) {
-      return router.push('/mobile/login');
+      return router.push('/login');
     }
     return router.push(path);
   };

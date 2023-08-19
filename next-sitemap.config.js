@@ -9,7 +9,7 @@ module.exports = {
     '/me*',
     '/register/*',
     '/exam/selectedresult',
-    '/mobile/findpw',
+    '/findpw',
     '/post/write',
     '/test',
     '/exam/write',

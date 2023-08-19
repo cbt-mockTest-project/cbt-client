@@ -26,8 +26,7 @@ import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import { Button, message } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
+import { Button, Input, message } from 'antd';
 import * as _ from 'lodash';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
@@ -43,6 +42,8 @@ import MovePannel from './MovePannel';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { ExamQuestionType } from './solution/ExamSolutionList';
+
+const TextArea = Input.TextArea;
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -405,9 +406,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
                 className="exam-container-bookmark-tooltip"
               >
                 <p className="exam-container-bookmark-tooltip-text">
-                  {`저장된 문제는 ${
-                    isMobile ? '북마크탭' : '활동내역'
-                  }에서\n확인할 수 있습니다.`}
+                  {'저장된 문제는 북마크탭에서\n확인할 수 있습니다.'}
                 </p>
               </Tooltip>
               <button
@@ -458,7 +457,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         />
 
         <div className="exam-solution-write-label-wrapper">
-          <Label content="답 작성" />
+          <span>답 작성</span>
           <button
             className="exam-solution-write-clear-button"
             onClick={onClearAnswer}
@@ -718,12 +717,15 @@ const ExamContainer = styled.div<ExamContainerProps>`
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 14px;
+    color: ${palette.gray_900};
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 5px;
   }
   .exam-solution-write-clear-button {
-    top: 5px;
     height: 18px;
     width: 18px;
-    margin-top: 4px;
     svg {
       transition: all 0.3s;
       width: 18px;

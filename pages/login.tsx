@@ -15,7 +15,7 @@ const MobileLogin: React.FC<MobileLoginProps> = () => {
         <div className="mobile-login-bottom-wrapper">
           <Link href="/register/confirm">회원가입</Link>
           <span className="mobile-login-vertical-line">|</span>
-          <Link href="/mobile/findpw">비밀번호 찾기</Link>
+          <Link href="/findpw">비밀번호 찾기</Link>
         </div>
       </MobileLoginContainer>
     </Layout>

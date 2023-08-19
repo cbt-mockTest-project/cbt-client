@@ -13,7 +13,7 @@ export const reviewnoteRoutes = ['/me/reviewnote'];
 export const communityRoutes = ['/community', '/post'];
 export const storeRoutes = ['/pricing'];
 export const profileRoutes = ['/me/edit'];
-export const loginRoutes = ['/mobile/login'];
+export const loginRoutes = ['/login'];
 export const checkStorePage = (path: string) =>
   checkUrl({
     url: path,

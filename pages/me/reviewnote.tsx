@@ -12,7 +12,7 @@ const ReviewNotePage: React.FC<ReviewNotePageProps> = () => {
   const { data: meQuery } = useMeQuery();
   const router = useRouter();
   useEffect(() => {
-    if (!meQuery?.me.user) router.push('/mobile/login');
+    if (!meQuery?.me.user) router.push('/login');
   }, [meQuery]);
   return (
     <>
