@@ -14,7 +14,7 @@ const RecentNotice: React.FC<RecentNoticeProps> = () => {
   useEffect(() => {
     readPosts({
       variables: {
-        input: { limit: 3, page: 1, category: PostCategory.Notice },
+        input: { limit: 10, page: 1, category: PostCategory.Notice },
       },
     });
   }, []);

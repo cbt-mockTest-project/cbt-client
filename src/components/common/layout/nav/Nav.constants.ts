@@ -24,12 +24,6 @@ export const NAV_ITEMS: NavItem[] = [
     key: [],
   },
   {
-    label: '스토어',
-    path: '/pricing',
-    key: ['store', 'pricing'],
-    permission: [UserRole.Admin, UserRole.PaymentTest],
-  },
-  {
     label: '관리',
     path: '/manage/exam',
     key: ['manage'],
