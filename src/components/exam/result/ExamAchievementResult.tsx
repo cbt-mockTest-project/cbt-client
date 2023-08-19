@@ -33,4 +33,7 @@ const ExamAchievementResultContainer = styled(BasicBox)`
   .exam-result-achieve-check-box-result-list {
     width: 100%;
   }
+  .exam-achievement-result-count-block {
+    padding: 10px 20px;
+  }
 `;

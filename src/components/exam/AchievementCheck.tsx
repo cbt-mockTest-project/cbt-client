@@ -43,6 +43,10 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
       message.error({ content: '문제가 존재하지 않습니다.' });
       return;
     }
+    const currentQuestionState = currentQuestion?.state[0].state;
+    if (currentQuestionState === state) {
+      return;
+    }
     const changeQuestionStateQuery = await changeQuestionState({
       variables: {
         input: {

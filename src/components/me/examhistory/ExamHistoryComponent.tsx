@@ -166,7 +166,11 @@ const ExamHistoryContainer = styled.div`
     }
   }
   .achievement-modal-result-list {
-    max-height: 350px;
+    padding: 10px 30px;
+    max-height: 300px;
+  }
+  .exam-achievement-result-count-block {
+    padding: 10px 50px;
   }
   .mypage-exam-list-wrapper {
     li {
@@ -188,6 +192,10 @@ const ExamHistoryContainer = styled.div`
     }
   }
   .achievement-modal-wrapper {
+    padding: 20px 0px 0px 0px;
+    .modal-close-button {
+      margin: 10px 50px;
+    }
     button {
       margin-top: 20px;
       width: 100%;

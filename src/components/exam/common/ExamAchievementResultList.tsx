@@ -3,7 +3,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { QuestionState, ReadMockExamQuestionsByMockExamIdInput } from 'types';
 
@@ -12,6 +12,9 @@ interface ExamAchievementResultProps {
   examId?: number;
   onListClick?: (value: number) => void;
   questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
+  onChangeQuestionStateCount?: (count: {
+    [key in QuestionState]: number;
+  }) => void;
 }
 
 const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
@@ -19,11 +22,16 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   onListClick,
   examId,
   questionQueryDataProps,
+  onChangeQuestionStateCount,
 }) => {
   const { data: meQuery } = useMeQuery();
+  const [questionStateCount, setQuestionStateCount] = useState<{
+    [key in QuestionState]: number;
+  }>();
   const [readQuestions, { data: questionQueryData }] =
     useLazyReadQuestionsByExamId('cache-and-network');
-
+  const questions = (questionQueryData || questionQueryDataProps)
+    ?.readMockExamQuestionsByMockExamId.questions;
   useEffect(() => {
     if (examId) {
       readQuestions({
@@ -32,36 +40,116 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
     }
   }, [examId]);
 
+  useEffect(() => {
+    if (questions) {
+      const questionStateCount = {
+        [QuestionState.Core]:
+          questions?.filter(
+            (question) => question.state[0].state === QuestionState.Core
+          ).length || 0,
+        [QuestionState.High]:
+          questions?.filter(
+            (question) => question.state[0].state === QuestionState.High
+          ).length || 0,
+        [QuestionState.Middle]:
+          questions?.filter(
+            (question) => question.state[0].state === QuestionState.Middle
+          ).length || 0,
+        [QuestionState.Row]:
+          questions?.filter(
+            (question) => question.state[0].state === QuestionState.Row
+          ).length || 0,
+      };
+      setQuestionStateCount(questionStateCount);
+    }
+  }, [questions]);
+
   if (!questionQueryDataProps && !questionQueryData) return null;
-  const questions = (questionQueryData || questionQueryDataProps)
-    ?.readMockExamQuestionsByMockExamId.questions;
+
   return (
-    <ExamAchievementResultContainer
-      className={className}
-      isHoverEffect={!!onListClick}
-    >
-      {questions?.map((question, idx) => (
-        <li
-          key={idx}
-          className="not-draggable"
-          onClick={() => onListClick && onListClick(idx + 1)}
-        >
-          <p className="achieve-result-index">{idx + 1}. </p>
-          <p>
-            {question.state.length >= 1 &&
-              convertStateToIcon(
-                meQuery?.me.user ? question.state[0].state : QuestionState.Core
-              )}
-          </p>
-        </li>
-      ))}
+    <ExamAchievementResultContainer>
+      <ExamAchievementResultContainerList
+        className={className}
+        isHoverEffect={!!onListClick}
+      >
+        {questions?.map((question, idx) => (
+          <li
+            key={idx}
+            className="not-draggable"
+            onClick={() => onListClick && onListClick(idx + 1)}
+          >
+            <p className="achieve-result-index">{idx + 1}. </p>
+            <p>
+              {question.state.length >= 1 &&
+                convertStateToIcon(
+                  meQuery?.me.user
+                    ? question.state[0].state
+                    : QuestionState.Core
+                )}
+            </p>
+          </li>
+        ))}
+      </ExamAchievementResultContainerList>
+      <div className="exam-achievement-result-count-block">
+        {Object.keys(questionStateCount || {})
+          .filter((el) => el !== QuestionState.Core)
+          .map((key, idx) => (
+            <div key={idx} className="exam-achievement-result-count-wrapper">
+              <span>{convertStateToIcon(key as QuestionState)}</span>
+              <span>
+                {questionStateCount
+                  ? questionStateCount[key as QuestionState]
+                  : 0}
+              </span>
+            </div>
+          ))}
+      </div>
     </ExamAchievementResultContainer>
   );
 };
 
 export default ExamAchievementResultList;
 
-const ExamAchievementResultContainer = styled.ul<{ isHoverEffect: boolean }>`
+const ExamAchievementResultContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  .exam-achievement-result-count-block {
+    display: flex;
+    justify-content: space-between;
+  }
+  .exam-achievement-result-count-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    span {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+  .circle-icon {
+    width: 80% !important;
+    position: relative;
+    top: 3px;
+    color: ${palette.antd_blue_02};
+  }
+  .triangle-icon {
+    color: ${palette.yellow_500};
+    position: relative;
+    top: 1px;
+  }
+  .clear-icon {
+    width: 100% !important;
+    position: relative;
+    top: 3px;
+    color: ${palette.red_500};
+  }
+`;
+
+const ExamAchievementResultContainerList = styled.ul<{
+  isHoverEffect: boolean;
+}>`
+  width: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -84,23 +172,6 @@ const ExamAchievementResultContainer = styled.ul<{ isHoverEffect: boolean }>`
     p {
       width: 25px;
       text-align: center;
-    }
-    .circle-icon {
-      width: 80% !important;
-      position: relative;
-      top: 3px;
-      color: ${palette.antd_blue_02};
-    }
-    .triangle-icon {
-      color: ${palette.yellow_500};
-      position: relative;
-      top: 1px;
-    }
-    .clear-icon {
-      width: 100% !important;
-      position: relative;
-      top: 3px;
-      color: ${palette.red_500};
     }
   }
   .achieve-result-index {

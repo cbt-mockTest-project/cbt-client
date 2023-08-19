@@ -131,7 +131,10 @@ const ProgressModalContainer = styled.div`
   }
   .progress-modal-achievement-result-list {
     padding: 10px 30px;
-    max-height: 350px;
+    max-height: 300px;
+  }
+  .exam-achievement-result-count-block {
+    padding: 10px 50px;
   }
   .progress-modal-info {
     border-top: 1px solid ${palette.gray_300};
