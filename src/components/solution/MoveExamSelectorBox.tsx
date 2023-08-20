@@ -94,7 +94,6 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
           variables: {
             input: {
               name: category.name,
-              all: true,
             },
           },
         });
