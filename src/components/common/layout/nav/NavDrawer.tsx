@@ -82,7 +82,7 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
         ) : (
           <>
             <div className="mobile-nav-item-wrapper-logout">
-              <Link href="/mobile/login">
+              <Link href="/login">
                 <StyledButton>로그인</StyledButton>
               </Link>
               <Link href="/register/confirm">
