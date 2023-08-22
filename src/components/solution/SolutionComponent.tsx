@@ -91,6 +91,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     ? questionsQuery.readMockExamQuestionsByMockExamId.title
     : questionsQueryOnClientSide?.readMockExamQuestionsByMockExamId.title;
   const examId = Number(String(router.query.Id));
+  const examIds = router.query.es ? JSON.parse(String(router.query.es)) : null;
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
@@ -438,7 +439,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
               onClose={onToggleContinueLearningModalState}
             />
           )}
-        {pdfDownloadConfirmModalState && examId && (
+        {pdfDownloadConfirmModalState && (examId || examIds) && (
           <PdfDownloadSelectModal
             open={pdfDownloadConfirmModalState}
             onClose={onTogglePdfDownloadConfirmModalState}
