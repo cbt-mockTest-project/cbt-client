@@ -35,6 +35,7 @@ const Home: NextPage<HomeProps> = ({
     <>
       <WithHead
         title="나눔cbt | nanumcbt"
+        description="모두CBT는 국가고시 실기시험 준비를 도와주는 서비스 입니다.\n 산업안전기사 실기,산업안전산업기사 실기,건설안전기사 실기, 정보처리기사 실기, 전기기사 실기,COMCBT, 나눔CBT 등"
         pageHeadingTitle="나눔cbt 페이지 | nunumcbt"
       />
       <HomeContainer
@@ -46,7 +47,6 @@ const Home: NextPage<HomeProps> = ({
           categoriesQuery={categoriesQuery}
           titlesAndCategories={titlesAndCategories}
         />
-        <RecentNotice />
       </HomeContainer>
     </>
   );
