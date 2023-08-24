@@ -18,12 +18,14 @@ import { handleError } from '@lib/utils/utils';
 
 interface QuestionComponentProps {
   questionQuery?: ReadMockExamQuestionQuery;
+  isSolutionAllHide?: boolean;
   isPreview?: boolean;
 }
 
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQuery,
   isPreview = false,
+  isSolutionAllHide = false,
 }) => {
   const router = useRouter();
   const client = useApollo({}, '');
@@ -96,7 +98,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <h3>{title}</h3>
       <GoogleAd type="display" />
       <ExamSolutionList
-        isSolutionAllHide={false}
+        isSolutionAllHide={isSolutionAllHide}
         title={question.question}
         commentType="basic"
         question={question}

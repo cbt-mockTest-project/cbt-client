@@ -14,7 +14,7 @@ const Question: NextPage = () => {
         pageHeadingTitle={`문제 미리보기 페이지`}
       />
       <Layout>
-        <QuestionComponent isPreview={true} />
+        <QuestionComponent isPreview={true} isSolutionAllHide={true} />
         <GoogleAd type="display" />
       </Layout>
     </>
