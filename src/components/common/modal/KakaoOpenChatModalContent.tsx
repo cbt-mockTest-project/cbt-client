@@ -3,6 +3,7 @@ import EngineeringIcon from '@mui/icons-material/Engineering';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import ComputerIcon from '@mui/icons-material/Computer';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import StarIcon from '@mui/icons-material/Star';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import { Button } from 'antd';
@@ -43,6 +44,17 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
         <div className="kakao-open-chat-modal-safe-room-link-box">
           <ConstructionIcon />
           <span>건설안전기사 실기방</span>
+        </div>
+      </a>
+      <a
+        href="https://open.kakao.com/o/gfNXScDf"
+        target="_blank"
+        rel="noreferrer"
+        className="kakao-open-chat-modal-safe-room-link"
+      >
+        <div className="kakao-open-chat-modal-safe-room-link-box">
+          <StarIcon />
+          <span>졸업자들을 위한방</span>
         </div>
       </a>
       {/* <a
