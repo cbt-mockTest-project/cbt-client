@@ -28,7 +28,10 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
         pageHeadingTitle={`${title} 상세 페이지`}
       />
       <Layout>
-        <QuestionComponent questionQuery={questionQuery} />
+        <QuestionComponent
+          questionQuery={questionQuery}
+          isSolutionAllHide={true}
+        />
         <GoogleAd type="display" />
       </Layout>
     </>
