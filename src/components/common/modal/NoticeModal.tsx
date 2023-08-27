@@ -11,7 +11,7 @@ const NoticeModal: React.FC<NoticeModalProps> = ({ open, onClose }) => {
       <h3 className="notice-modal-title">오픈채팅방 참여 안내</h3>
       <p className="notice-modal-content">
         {
-          '모두CBT 오픈채팅방에 참여해보세요!\n실시간으로 모두CBT 서비스에 대한\n문의사항을 질문하고, 다른 사용자들과\n의견을 나눌 수 있습니다.'
+          '실시간으로 모두CBT 서비스에 대한\n문의사항을 질문하고, 다른 사용자들과\n의견을 나눌 수 있습니다.\n\n오픈채팅방에는\n학습을 도와주는 AI봇이 있습니다.'
         }
       </p>
       <KakaoOpenChatModalContent onClose={onClose} />
