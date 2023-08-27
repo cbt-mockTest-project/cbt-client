@@ -11,9 +11,10 @@ import useToggle from '@lib/hooks/useToggle';
 import palette from '@styles/palette';
 import AdBannerInfoModal from '@components/common/modal/AdBannerInfoModal';
 import Link from 'next/link';
+import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 
 const MainBanner = () => {
-  const { value: adBannerInfoModalState, onToggle: onToggleAdBannerInfoModal } =
+  const { value: openChatModalState, onToggle: onToggleOpenChatModal } =
     useToggle();
   const isIosAndMobile = isIOS && window.innerWidth < 720;
   const isMobile = window.innerWidth < 720;
@@ -39,7 +40,7 @@ const MainBanner = () => {
         {/* <SwiperSlide>
           <button
             className="main-banner-text-banner"
-            onClick={onToggleAdBannerInfoModal}
+            onClick={onToggleOpenChatModal}
           >
             <p>해당 위치 광고 문의 or 협업 문의</p>
             <p className="main-banner-text-banner-icon-wrapper">
@@ -53,7 +54,7 @@ const MainBanner = () => {
         <SwiperSlide>
           <button
             className="main-banner-text-banner"
-            onClick={onToggleAdBannerInfoModal}
+            onClick={onToggleOpenChatModal}
           >
             <div className="home-main-banner-box advertise" />
           </button>
@@ -116,9 +117,13 @@ const MainBanner = () => {
         </SwiperSlide>
       </Swiper>
       <Portal>
-        <AdBannerInfoModal
-          open={adBannerInfoModalState}
-          onClose={onToggleAdBannerInfoModal}
+        {/* <AdBannerInfoModal
+          open={openChatModalState}
+          onClose={onToggleOpenChatModal}
+        /> */}
+        <KakaoOpenChatModal
+          open={openChatModalState}
+          onClose={onToggleOpenChatModal}
         />
       </Portal>
     </MainBannerContainer>
@@ -136,9 +141,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
     height: 180px;
     .swiper-pagination {
       top: 0;
-      text-align: left;
-      margin-left: 15px;
+      text-align: right;
       height: 20px;
+      margin-right: 20px;
     }
   }
   .home-main-banner-box {
@@ -161,7 +166,7 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
     background-image: url('/png/banner/main-banner-zep-pc01.png');
   }
   .home-main-banner-box.advertise {
-    background-image: url('/png/banner/main-banner-pc03.png') !important;
+    background-image: url('/png/banner/main-banner-pc04.png') !important;
   }
   .main-banner-text-banner {
     display: flex;
@@ -220,7 +225,7 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
       background-image: url('/png/banner/main-banner-zep-mobile01.png') !important;
     }
     .home-main-banner-box.advertise {
-      background-image: url('/png/banner/main-banner-mobile03.png') !important;
+      background-image: url('/png/banner/main-banner-mobile04.png') !important;
     }
   }
 `;
