@@ -19,6 +19,7 @@ module.exports = {
     '/manage/*',
     '/manage',
     '/pricing',
+    '/question/*/q_image'
   ],
   // ...other options
   transform: async (config, path) => {
