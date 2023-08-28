@@ -16,7 +16,7 @@ export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', rea
 export type ReadAllQuestionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ReadAllQuestionsQuery = { __typename?: 'Query', readAllQuestions: { __typename?: 'ReadAllQuestionsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null }> | null } };
+export type ReadAllQuestionsQuery = { __typename?: 'Query', readAllQuestions: { __typename?: 'ReadAllQuestionsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null }> | null } };
 
 export type ReadMockExamQuestionQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionInput;
@@ -118,6 +118,10 @@ export const ReadAllQuestionsDocument = gql`
     questions {
       id
       question_img {
+        url
+        name
+      }
+      solution_img {
         url
         name
       }
