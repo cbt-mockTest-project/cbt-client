@@ -56,6 +56,10 @@ export const READ_ALL_QUESTIONS = gql`
       ok
       questions {
         id
+        question_img {
+          url
+          name
+        }
       }
     }
   }

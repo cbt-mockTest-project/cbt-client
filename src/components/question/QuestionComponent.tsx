@@ -96,7 +96,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
         </div>
       )}
       <h3>{title}</h3>
-      <GoogleAd type="display" />
       <ExamSolutionList
         isSolutionAllHide={isSolutionAllHide}
         title={question.question}

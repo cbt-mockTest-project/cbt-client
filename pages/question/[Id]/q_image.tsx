@@ -1,7 +1,7 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
-import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
+import { addApolloState, initializeApollo } from '@modules/apollo';
 import {
   ReadAllQuestionsQuery,
   ReadMockExamQuestionQuery,
@@ -11,30 +11,26 @@ import {
   READ_ALL_QUESTIONS,
 } from '@lib/graphql/user/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
-import GoogleAd from '@components/common/ad/GoogleAd';
-import QuestionComponent from '@components/question/QuestionComponent';
+import { Image } from 'antd';
 
-interface QuestionProps {
-  questionQuery: ReadMockExamQuestionQuery;
+interface QuestionImageProps {
+  questionImageUrl: string;
 }
 
-const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
-  const title =
-    questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50);
+const QuestionImage: NextPage<QuestionImageProps> = ({ questionImageUrl }) => {
   return (
     <>
       <WithHead
-        title={`${title} | 모두CBT`}
-        pageHeadingTitle={`${title} 상세 페이지`}
+        title={`모두CBT-문제이미지`}
+        pageHeadingTitle={`모두CBT-문제이미지`}
+        image={questionImageUrl}
       />
-      <Layout>
-        <QuestionComponent questionQuery={questionQuery} />
-      </Layout>
+      <Image src={questionImageUrl} alt="문제이미지" />
     </>
   );
 };
 
-export default Question;
+export default QuestionImage;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');
@@ -44,9 +40,11 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
       query: READ_ALL_QUESTIONS,
     });
     if (res.data.readAllQuestions.questions) {
-      paths = res.data.readAllQuestions.questions.map((el) => ({
-        params: { Id: String(el.id) },
-      }));
+      paths = res.data.readAllQuestions.questions
+        .filter((el) => el.question_img && el.question_img?.length >= 1)
+        .map((el) => ({
+          params: { Id: String(el.id) },
+        }));
     }
     return { paths, fallback: 'blocking' };
   } catch (err) {
@@ -72,9 +70,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
       },
     },
   });
-  const questionQuery = res ? res.data : null;
+  const questionImageUrl = res.data.readMockExamQuestion.mockExamQusetion
+    ?.question_img
+    ? res.data.readMockExamQuestion.mockExamQusetion?.question_img[0]?.url
+    : '';
+  if (!questionImageUrl) {
+    return {
+      notFound: true,
+    };
+  }
   return addApolloState(apolloClient, {
-    props: { questionQuery },
+    props: { questionImageUrl },
     revalidate: 43200,
   });
 };
