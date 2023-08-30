@@ -139,14 +139,14 @@ const SelectedResultComponentContainer = styled.div`
     position: relative;
     border-radius: 5px;
     border-top-left-radius: 0;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     padding: 20px;
     flex: 4;
   }
   .selected-result-page-question-image-wrapper {
     flex: 6;
     text-align: center;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
   }
   .selected-result-page-question-image {
     width: 100%;
@@ -170,7 +170,7 @@ const SelectedResultComponentContainer = styled.div`
 
     .selected-result-page-question-image-wrapper {
       border: none;
-      border-bottom: 1px solid ${palette.gray_300};
+      border-bottom: 1px solid ${palette.gray_400};
     }
     pre {
       font-size: 0.9rem;

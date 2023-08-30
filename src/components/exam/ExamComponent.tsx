@@ -225,6 +225,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     if (isPreview) {
       return message.success('미리보기 모드에서는 지원하지 않습니다.');
     }
+    if (!meQuery?.me.user) {
+      setFinishModalState(false);
+      return openLonginModal();
+    }
     // 랜덤모의고사가 아니고, 로그인 상태일때
     if (!isRandomExam && meQuery?.me.user) {
       createExamHistory({

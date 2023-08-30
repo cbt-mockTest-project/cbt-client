@@ -97,7 +97,7 @@ const KakaoOpenChatModalContentContainer = styled.div`
     display: flex;
     align-items: center;
     font-size: 0.8rem;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     border-style: dotted;
     padding: 10px 0;
     transition: all 0.3s;

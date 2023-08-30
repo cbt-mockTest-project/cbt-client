@@ -34,8 +34,8 @@ const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
   };
 
   useEffect(() => {
-    if (!currentQuestion) return;
-    setSelectedState(currentQuestion.state[0].state);
+    if (!currentQuestion || !currentQuestion.state) return;
+    setSelectedState(currentQuestion.state[0]?.state);
   }, [currentQuestion]);
 
   return (

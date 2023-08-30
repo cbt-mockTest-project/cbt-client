@@ -38,7 +38,7 @@ const DataRegisterComponentBlock = styled.form`
     height: 40px;
     padding: 0 15px;
     border-radius: 8px;
-    border: 1px dashed ${palette.gray_300};
+    border: 1px dashed ${palette.gray_400};
     font-size: 14px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
@@ -58,7 +58,7 @@ const DataRegisterComponentBlock = styled.form`
     align-items: center;
     padding: 0 15px;
     font-size: 14px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
   }
   .data-register-uploaded-file-button {
     text-align: left;

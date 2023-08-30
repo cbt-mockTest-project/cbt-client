@@ -107,7 +107,7 @@ const ProgressModalContainer = styled.div`
     font-size: 1.1rem;
     font-weight: bold;
     color: ${palette.gray_900};
-    border-bottom: 1px solid ${palette.gray_300};
+    border-bottom: 1px solid ${palette.gray_400};
     padding: 0 0px 10px 50px;
   }
   .progress-modal-achievement-result-list {
@@ -118,7 +118,7 @@ const ProgressModalContainer = styled.div`
     padding: 10px 50px;
   }
   .progress-modal-info {
-    border-top: 1px solid ${palette.gray_300};
+    border-top: 1px solid ${palette.gray_400};
     padding-top: 10px;
     text-align: center;
     font-size: 0.9rem;

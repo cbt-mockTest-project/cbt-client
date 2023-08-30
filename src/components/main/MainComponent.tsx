@@ -325,7 +325,7 @@ const MainComponentContainer = styled.div`
     content: '';
     width: 100%;
     height: 2px;
-    border: 1px dashed ${palette.gray_300};
+    border: 1px dashed ${palette.gray_400};
   }
   .home-content-center-wrapper {
     flex: 1;

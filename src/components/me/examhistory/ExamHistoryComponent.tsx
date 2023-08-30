@@ -163,7 +163,7 @@ const ExamHistoryContainer = styled.div`
       li {
         font-size: 0.9rem;
         flex-direction: column;
-        border-color: ${palette.gray_300};
+        border-color: ${palette.gray_400};
       }
     }
     .mypage-exam-list-button-wrapper {

@@ -176,7 +176,7 @@ const EditorStyle = css`
 
   .ql-editor.ql-blank::before {
     font-style: normal;
-    color: ${palette.gray_300};
+    color: ${palette.gray_400};
     font-weight: normal;
     font-size: 15px;
   }

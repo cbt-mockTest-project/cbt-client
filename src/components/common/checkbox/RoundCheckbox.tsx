@@ -61,7 +61,7 @@ const RoundCheckboxContainer = styled.li<Partial<RoundCheckboxProps>>`
     transition: all 0.2s ease-in;
     cursor: pointer;
     padding: 10px 15px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;

@@ -36,8 +36,8 @@ export default BasicBox;
 
 const BasicBoxContainer = styled.pre<BasicBoxProps>`
   white-space: pre-wrap;
-  border: 1px solid ${palette.gray_300};
-  border-radius: 2px;
+  border: 1px solid ${palette.gray_400};
+  border-radius: 6px;
   position: relative;
   display: inline-block;
   width: 100%;

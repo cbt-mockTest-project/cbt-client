@@ -445,14 +445,14 @@ const ExamSolutionListContainer = styled.li`
     position: relative;
     border-radius: 5px;
     border-top-left-radius: 0;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     padding: 20px;
     flex: 4;
   }
   .solution-page-question-image-wrapper {
     flex: 6;
     text-align: center;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
   }
   .solution-page-question-image {
     width: 100%;
@@ -516,7 +516,7 @@ const ExamSolutionListContainer = styled.li`
     width: 90px;
     height: 35px;
     top: -35px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-width: 0;
@@ -544,7 +544,7 @@ const ExamSolutionListContainer = styled.li`
 
     .solution-page-question-image-wrapper {
       border: none;
-      border-bottom: 1px solid ${palette.gray_300};
+      border-bottom: 1px solid ${palette.gray_400};
     }
     pre {
       font-size: 0.9rem;

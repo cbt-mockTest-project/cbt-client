@@ -203,7 +203,7 @@ const NoticeDropBoxContainer = styled.div`
       padding: 0 10px;
       text-align: right;
       margin-right: 10px;
-      color: ${palette.gray_300};
+      color: ${palette.gray_400};
       font-weight: bold;
     }
     pre {

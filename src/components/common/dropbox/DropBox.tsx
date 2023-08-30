@@ -41,7 +41,7 @@ export default DropBox;
 const DropBoxContainer = styled.ul`
   position: absolute;
   padding: 10px 0px;
-  border: 1px solid ${palette.gray_300};
+  border: 1px solid ${palette.gray_400};
   background-color: white;
   border-radius: 5px;
   box-shadow: rgb(0 56 68 / 20%) 0px 5px 7px 0px;

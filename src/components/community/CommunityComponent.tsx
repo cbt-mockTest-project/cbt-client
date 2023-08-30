@@ -125,7 +125,7 @@ const CommunityComponentBlock = styled.div`
     display: flex;
     align-items: center;
     padding-bottom: 15px;
-    border-bottom: 1px solid ${palette.gray_300};
+    border-bottom: 1px solid ${palette.gray_400};
   }
   .community-header-title {
     font-size: 1.2rem;
@@ -177,7 +177,7 @@ const CommunityComponentBlock = styled.div`
   .community-board-title {
     width: 100%;
     padding-bottom: 10px;
-    border-bottom: 1px solid ${palette.gray_300};
+    border-bottom: 1px solid ${palette.gray_400};
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px;

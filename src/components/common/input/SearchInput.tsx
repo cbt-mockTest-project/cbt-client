@@ -24,7 +24,7 @@ const SearchInputBlock = styled.div<SearchInputBlockProps>`
   .search-input {
     width: 100%;
     height: 35px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     box-sizing: border-box;
     border-radius: 5px;
     font-size: 14px;

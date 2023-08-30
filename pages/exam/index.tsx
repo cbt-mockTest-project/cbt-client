@@ -6,6 +6,7 @@ import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 
 const ExamComponent = dynamic(() => import('@components/exam/ExamComponent'), {
   ssr: false,
@@ -24,16 +25,22 @@ const Exam: NextPage = () => {
         title={`${title}모두CBT`}
         pageHeadingTitle={`${title} 문제풀이 페이지`}
       />
-      <Layout subNav="main">
+      <StyledLayout subNav="main">
         {
           <>
             <ExamComponent />
             <GoogleAd type="display" />
           </>
         }
-      </Layout>
+      </StyledLayout>
     </>
   );
 };
 
 export default Exam;
+
+const StyledLayout = styled(Layout)`
+  .layout-children-wrapper {
+    margin-top: 20px;
+  }
+`;

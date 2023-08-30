@@ -161,7 +161,7 @@ const MemoCardContainer = styled.li`
   }
   .memo-page-question-card-list-item-solution {
     padding: 20px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     border-radius: 5px;
     border-top-left-radius: 0;
   }
@@ -170,7 +170,7 @@ const MemoCardContainer = styled.li`
     gap: 5px;
     justify-content: center;
     align-items: center;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     padding: 5px 10px 5px 0;
     border-bottom: 0;
     border-top-left-radius: 5px;

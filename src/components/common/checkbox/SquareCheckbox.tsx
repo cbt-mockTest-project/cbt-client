@@ -62,7 +62,7 @@ const SquareCheckboxContainer = styled.div<Partial<SquareCheckboxProps>>`
     align-items: center;
     justify-content: center;
     padding: 4px 10px;
-    border: 1px solid ${palette.gray_300};
+    border: 1px solid ${palette.gray_400};
     border-radius: 3px;
     min-width: ${(props) => props.minWidth}px;
     height: ${(props) => props.height}px;

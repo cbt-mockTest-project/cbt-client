@@ -249,7 +249,7 @@ const VideoTutorialComponentBlock = styled.div`
   }
   .video-tutorial-body-right-bottom-move-button-icon.disabled,
   .video-tutorial-body-right-bottom-move-button.disabled {
-    color: ${palette.gray_300};
+    color: ${palette.gray_400};
     opacity: 0.5;
   }
   .video-tutorial-body-right-bottom-move-button-icon.prev {
