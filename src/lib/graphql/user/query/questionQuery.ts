@@ -60,6 +60,10 @@ export const READ_ALL_QUESTIONS = gql`
           url
           name
         }
+        solution_img {
+          url
+          name
+        }
       }
     }
   }
