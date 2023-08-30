@@ -3,11 +3,11 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Image } from 'antd';
 import { QuestionType } from 'customTypes';
-import dynamic from 'next/dynamic';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { ExamQuestionType } from './solution/ExamSolutionList';
+import { QuestionListType } from '@modules/redux/slices/exam';
 
 export interface QuestionAndSolutionContent {
   content?: string;
@@ -17,8 +17,7 @@ export interface QuestionAndSolutionContent {
 
 interface QuestionAndSolutionBoxProps {
   content: QuestionAndSolutionContent;
-  question?: ExamQuestionType;
-  setQuestion?: Dispatch<SetStateAction<ExamQuestionType | undefined>>;
+  question?: QuestionListType[number] | null;
   visible?: boolean;
   feedback?: boolean;
   className?: string;
@@ -29,7 +28,6 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
   visible = true,
   feedback,
   question,
-  setQuestion,
   className = '',
 }) => {
   if (!visible) return null;
@@ -41,16 +39,10 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
     >
       <BasicBox minHeight={72} className="question-and-solution-box">
         {feedback && question && (
-          <ExamSolutionFeedback
-            question={question}
-            setQuestion={setQuestion}
-            type="me"
-          />
+          <ExamSolutionFeedback question={question} type="me" />
         )}
         <p>{content.content}</p>
-        {feedback && question && (
-          <ExamSolutionFeedback question={question} setQuestion={setQuestion} />
-        )}
+        {feedback && question && <ExamSolutionFeedback question={question} />}
       </BasicBox>
       {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">

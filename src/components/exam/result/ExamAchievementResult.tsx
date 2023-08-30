@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ExamAchievementResultList from '../common/ExamAchievementResultList';
 import { questionsVar } from '../ExamComponent';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 interface ExamAchievementResultProps {
   className?: string;
@@ -12,7 +13,7 @@ interface ExamAchievementResultProps {
 const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
   className,
 }) => {
-  const router = useRouter();
+  const questionList = useAppSelector((state) => state.exam.questionList);
   return (
     <ExamAchievementResultContainer
       className={`exam-result-achieve-check-box not-draggable ${className}`}
@@ -20,7 +21,7 @@ const ExamAchievementResult: React.FC<ExamAchievementResultProps> = ({
     >
       <ExamAchievementResultList
         className="exam-result-achieve-check-box-result-list"
-        questionQueryDataProps={questionsVar() || undefined}
+        questionList={questionList}
       />
     </ExamAchievementResultContainer>
   );

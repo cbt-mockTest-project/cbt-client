@@ -2,6 +2,7 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { convertStateToIcon } from '@lib/utils/utils';
+import { QuestionListType } from '@modules/redux/slices/exam';
 import palette from '@styles/palette';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -11,60 +12,54 @@ interface ExamAchievementResultProps {
   className?: string;
   examId?: number;
   onListClick?: (value: number) => void;
-  questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
-  onChangeQuestionStateCount?: (count: {
-    [key in QuestionState]: number;
-  }) => void;
+  questionList: QuestionListType;
 }
 
 const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
   className,
   onListClick,
   examId,
-  questionQueryDataProps,
-  onChangeQuestionStateCount,
+  questionList,
 }) => {
   const { data: meQuery } = useMeQuery();
   const [questionStateCount, setQuestionStateCount] = useState<{
     [key in QuestionState]: number;
   }>();
-  const [readQuestions, { data: questionQueryData }] =
-    useLazyReadQuestionsByExamId('cache-and-network');
-  const questions = (questionQueryData || questionQueryDataProps)
-    ?.readMockExamQuestionsByMockExamId.questions;
-  useEffect(() => {
-    if (examId) {
-      readQuestions({
-        variables: { input: { id: Number(examId) } },
-      });
-    }
-  }, [examId]);
+  // const [readQuestions, { data: questionQueryData }] =
+  //   useLazyReadQuestionsByExamId('cache-and-network');
+  // useEffect(() => {
+  //   if (examId) {
+  //     readQuestions({
+  //       variables: { input: { id: Number(examId) } },
+  //     });
+  //   }
+  // }, [examId]);
 
   useEffect(() => {
-    if (questions) {
+    if (questionList) {
       const questionStateCount = {
         [QuestionState.Core]:
-          questions?.filter(
+          questionList?.filter(
             (question) => question.state[0].state === QuestionState.Core
           ).length || 0,
         [QuestionState.High]:
-          questions?.filter(
+          questionList?.filter(
             (question) => question.state[0].state === QuestionState.High
           ).length || 0,
         [QuestionState.Middle]:
-          questions?.filter(
+          questionList?.filter(
             (question) => question.state[0].state === QuestionState.Middle
           ).length || 0,
         [QuestionState.Row]:
-          questions?.filter(
+          questionList?.filter(
             (question) => question.state[0].state === QuestionState.Row
           ).length || 0,
       };
       setQuestionStateCount(questionStateCount);
     }
-  }, [questions]);
+  }, [questionList]);
 
-  if (!questionQueryDataProps && !questionQueryData) return null;
+  if (!questionList) return null;
 
   return (
     <ExamAchievementResultContainer>
@@ -72,7 +67,7 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
         className={className}
         isHoverEffect={!!onListClick}
       >
-        {questions?.map((question, idx) => (
+        {questionList?.map((question, idx) => (
           <li
             key={idx}
             className="not-draggable"

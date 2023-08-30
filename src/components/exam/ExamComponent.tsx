@@ -17,14 +17,16 @@ import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookm
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import useIsMobile from '@lib/hooks/useIsMobile';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import { ellipsisText, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import * as _ from 'lodash';
@@ -41,9 +43,7 @@ import ExamSkeleton from './ExamSkeleton';
 import MovePannel from './MovePannel';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
-import { ExamQuestionType } from './solution/ExamSolutionList';
-
-const TextArea = Input.TextArea;
+import { examActions } from '@modules/redux/slices/exam';
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -57,30 +57,28 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const [readQuestions, { data: questionsQuery }] =
     useLazyReadQuestionsByExamId('cache-and-network');
 
+  const questionList = useAppSelector((state) => state.exam.questionList);
+  const currentQuestion = useAppSelector((state) => state.exam.currentQuestion);
+
   const client = useApollo({}, '');
   const router = useRouter();
-  const isMobile = useIsMobile();
   const dispatch = useAppDispatch();
-
-  const questions = questionsQuery?.readMockExamQuestionsByMockExamId.questions;
-
   const storage = new LocalStorage();
   const isRandomExam = router.query.es ? true : false;
   const questionIndex = Number(router.query.q);
   const examTitle = questionsQuery?.readMockExamQuestionsByMockExamId.title;
   const tempAnswerIndex = String(examTitle);
   const pageSubTitle = `${examTitle}-${questionIndex}번 문제`;
-
   const [answerboxVisible, setAnswerboxVisible] = useState(false);
   const [bookmarkState, setBookmarkState] = useState(false);
   const [answerValue, setAnswerValue] = useState('');
-  const [questionAndSolution, setQuestionAndSolution] =
-    useState<ExamQuestionType>();
+
   const [finishModalState, setFinishModalState] = useState(false);
   const [feedBackModalState, setFeedBackModalState] = useState(false);
   const [progressModalState, setProgressModalState] = useState(false);
   const [commentModalState, setCommentModalState] = useState(false);
   const [solutionWriteModalState, setSolutionWriteModalState] = useState(false);
+
   const [readQuestionInput, setReadQuestionInput] =
     useState<ReadMockExamQuestionsByMockExamIdInput>();
 
@@ -126,6 +124,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
               input: readQuestionInput,
             },
           });
+          dispatch(
+            examActions.setQuestionList(
+              res.data?.readMockExamQuestionsByMockExamId.questions || []
+            )
+          );
           if (!res.data?.readMockExamQuestionsByMockExamId.ok) {
             return message.error(
               res.data?.readMockExamQuestionsByMockExamId.error
@@ -138,7 +141,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
 
   useEffect(() => {
     try {
-      if (questions) {
+      if (questionList) {
         const savedAnswer = storage.get(tempAnswerKey)[tempAnswerIndex] || '';
         let currentAnswer = '';
         if (savedAnswer) {
@@ -146,32 +149,34 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             currentAnswer = savedAnswer[questionIndex] || '';
           } else {
             currentAnswer =
-              savedAnswer[String(questions[questionIndex - 1].number)] || '';
+              savedAnswer[String(questionList[questionIndex - 1].number)] || '';
           }
 
           setAnswerValue(currentAnswer);
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
         setBookmarkState(
-          questions[questionIndex - 1].mockExamQuestionBookmark.length >= 1
+          questionList[questionIndex - 1].mockExamQuestionBookmark.length >= 1
         );
-        setQuestionAndSolution(questions[questionIndex - 1]);
+        dispatch(
+          examActions.setCurrentQuestion({
+            question: questionList[questionIndex - 1],
+          })
+        );
       }
     } catch {
       router.push({
         pathname: '/exam',
         query: {
           ...router.query,
-          q: questions?.length || 1,
+          q: questionList?.length || 1,
         },
       });
     }
-  }, [router.query.q, questions]);
+  }, [router.query.q, questionList]);
 
   useEffect(() => {
-    //  문제번호가 바뀔 때 마다 데이터를 초기화해준다.
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setProgressModalState(false);
     setFeedBackModalState(false);
     setFinishModalState(false);
@@ -249,20 +254,26 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
       if (content.length <= 4) {
         return message.warning('5글자 이상 입력해주세요.');
       }
-      if (questionAndSolution && content) {
-        const questionId = questionAndSolution.id;
+      if (currentQuestion && content) {
+        const questionId = currentQuestion.id;
         const res = await createFeedBack({
           variables: { input: { type, content, questionId } },
         });
         if (res.data?.createMockExamQuestionFeedback.ok) {
-          setQuestionAndSolution({
-            ...questionAndSolution,
+          const newCurrentQuestion = {
+            ...currentQuestion,
             mockExamQuestionFeedback: [
               res.data.createMockExamQuestionFeedback
                 .feedback as MockExamQuestionFeedback,
-              ...questionAndSolution.mockExamQuestionFeedback,
+              ...currentQuestion.mockExamQuestionFeedback,
             ],
-          });
+          };
+          dispatch(
+            examActions.setCurrentQuestion({
+              question: newCurrentQuestion,
+              updateList: true,
+            })
+          );
           message.success('추가되었습니다.');
           setFeedBackModalState(false);
           return;
@@ -279,8 +290,9 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         openLonginModal();
         return;
       }
+      if (!currentQuestion) return;
       const res = await editBookmark({
-        variables: { input: { questionId: Number(questionAndSolution?.id) } },
+        variables: { input: { questionId: Number(currentQuestion.id) } },
       });
       if (res.data?.editMockExamQuestionBookmark.ok) {
         const queryResult =
@@ -295,33 +307,22 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           queryResult
         ) {
           setBookmarkState(true);
-          const newQuestions =
-            queryResult.readMockExamQuestionsByMockExamId.questions.map(
-              (prevQuestion) => {
-                if (prevQuestion.id === questionAndSolution?.id) {
-                  return {
-                    ...prevQuestion,
-                    mockExamQuestionBookmark: [
-                      {
-                        ...prevQuestion.mockExamQuestionBookmark[0],
-                        user: _.omit(meQuery?.me.user, 'nickname'),
-                      },
-                    ],
-                  };
-                }
-                return prevQuestion;
-              }
-            );
-          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-            query: READ_QUESTIONS_BY_ID,
-            data: {
-              readMockExamQuestionsByMockExamId: {
-                ...queryResult.readMockExamQuestionsByMockExamId,
-                questions: newQuestions,
-              },
-            },
+          const newQuestions = questionList.map((prevQuestion) => {
+            if (prevQuestion.id === currentQuestion.id) {
+              console.log(prevQuestion.mockExamQuestionBookmark);
+              return {
+                ...prevQuestion,
+                mockExamQuestionBookmark: [
+                  {
+                    ...prevQuestion.mockExamQuestionBookmark[0],
+                    user: _.omit(meQuery?.me.user, 'nickname'),
+                  },
+                ],
+              };
+            }
+            return prevQuestion;
           });
-
+          dispatch(examActions.setQuestionList(newQuestions));
           message.success('문제가 저장됐습니다.');
         }
         if (
@@ -329,26 +330,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           queryResult
         ) {
           setBookmarkState(false);
-          const newQuestions =
-            queryResult.readMockExamQuestionsByMockExamId.questions.map(
-              (prevQuestion) => {
-                if (prevQuestion.id === questionAndSolution?.id) {
-                  return { ...prevQuestion, mockExamQuestionBookmark: [] };
-                }
-                return prevQuestion;
-              }
-            );
-
-          client.writeQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-            query: READ_QUESTIONS_BY_ID,
-            data: {
-              readMockExamQuestionsByMockExamId: {
-                ...queryResult.readMockExamQuestionsByMockExamId,
-                questions: newQuestions,
-              },
-            },
+          const newQuestions = questionList.map((prevQuestion) => {
+            if (prevQuestion.id === currentQuestion.id) {
+              return { ...prevQuestion, mockExamQuestionBookmark: [] };
+            }
+            return prevQuestion;
           });
-
+          dispatch(examActions.setQuestionList(newQuestions));
           message.success('문제 저장이 해제됐습니다.');
         }
         return;
@@ -366,7 +354,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     if (isRandomExam) {
       valueObj[questionIndex] = value;
     } else {
-      valueObj[String(questionAndSolution?.number)] = value;
+      valueObj[String(currentQuestion?.number)] = value;
     }
 
     tempAnswer[tempAnswerIndex] = {
@@ -388,8 +376,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   };
 
   const onShareAction = () => {
-    if (window && (window as any)?.Share) {
-      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionAndSolution?.number}`;
+    if (window && (window as any)?.Share && currentQuestion) {
+      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${currentQuestion.number}`;
       return (window as any).Share.postMessage(questionPageLink);
     }
     onToggleQuestionShareModal();
@@ -437,10 +425,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
               </p>
             )}
           </h2>
-          {isRandomExam && questionAndSolution?.mockExam && (
+          {isRandomExam && currentQuestion?.mockExam && (
             <h3 className="exam-container-sub-title">
-              {`${questionAndSolution.mockExam.title}
-                ${questionAndSolution.number}번 문제`}
+              {`${currentQuestion.mockExam.title}
+                ${currentQuestion.number}번 문제`}
             </h3>
           )}
         </div>
@@ -448,10 +436,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         <QuestionAndSolutionBox
           className="exam-question-and-video-content"
           content={{
-            content: questionAndSolution
-              ? `${questionAndSolution.question}`
-              : '',
-            img: questionAndSolution?.question_img,
+            content: currentQuestion ? `${currentQuestion.question}` : '',
+            img: currentQuestion?.question_img,
             title: String(examTitle || ''),
           }}
         />
@@ -465,7 +451,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             <ClearOutlined />
           </button>
         </div>
-        <TextArea
+        <Input.TextArea
           autoSize={{ minRows: 3, maxRows: 8 }}
           value={answerValue}
           onChange={onChangeAnswer}
@@ -482,22 +468,17 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         </Button>
         <QuestionAndSolutionBox
           content={{
-            content:
-              (questionAndSolution && questionAndSolution.solution) ?? '',
-            img: questionAndSolution && questionAndSolution.solution_img,
+            content: (currentQuestion && currentQuestion.solution) ?? '',
+            img: currentQuestion && currentQuestion.solution_img,
           }}
-          setQuestion={setQuestionAndSolution}
-          question={questionAndSolution}
+          question={currentQuestion}
           feedback={true}
           visible={answerboxVisible}
         />
 
         {!isPreview && (
           <div className="exam-question-menubar-wrapper">
-            <AchievementCheck
-              questionIndex={questionIndex}
-              questionsQuery={questionsQuery}
-            />
+            <AchievementCheck />
             <div className="exam-question-menubar-modal-button-wrapper">
               <Button
                 type="primary"
@@ -518,9 +499,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
                 className="exam-question-menubar-check-button"
                 onClick={onToggleCommentModal}
               >
-                {`댓글 ${
-                  questionAndSolution?.mockExamQuestionComment.length || 0
-                }`}
+                {`댓글 ${currentQuestion?.mockExamQuestionComment.length || 0}`}
               </Button>
             </div>
           </div>
@@ -536,73 +515,81 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           questionIndex={questionIndex}
         />
       </ExamContainer>
-      <ConfirmModal
-        open={finishModalState}
-        content={'학습을 종료하시겠습니까?'}
-        onClose={onToggleFinishModal}
-        onCancel={onToggleFinishModal}
-        onConfirm={onFinishConfirmModal}
-        confirmLabel="종료하기"
-      />
-      <ReportModal
-        open={feedBackModalState}
-        onClose={onToggleFeedBackModal}
-        onCancel={onToggleFeedBackModal}
-        onConfirm={requestReport}
-        onChangeContent={(value) => {
-          reportValue.current.content = value;
-        }}
-        onChangeType={(value) => {
-          reportValue.current.type = value;
-        }}
-        confirmLabel="등록하기"
-        title={`${
-          isRandomExam ? questionAndSolution?.mockExam?.title : examTitle
-        }  ${questionAndSolution?.number}번 문제`}
-        placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
-      />
-      <ProgressModal
-        open={progressModalState}
-        onClose={onToggleProgressModal}
-        questionQueryDataProps={questionsQuery}
-        readQuestionInput={readQuestionInput}
-      />
-      <CommentModal
-        open={commentModalState}
-        onClose={onToggleCommentModal}
-        title={`${
-          isRandomExam ? questionAndSolution?.mockExam?.title : examTitle
-        }
-        ${questionAndSolution?.number}번 문제`}
-        questionId={questionAndSolution ? questionAndSolution.id : 0}
-      />
-      <QuestionShareModal
-        onClose={onToggleQuestionShareModal}
-        open={questionShareModalState}
-        questionId={questionAndSolution?.id || 0}
-        title={`${String(examTitle)}  ${questionAndSolution?.number}번 문제`}
-        shareTitle={`${String(examTitle)}  ${
-          questionAndSolution?.number
-        }번 문제`}
-        shareDescription={ellipsisText(questionAndSolution?.question || '', 50)}
-      />
-      <SolutionWriteModal
-        open={solutionWriteModalState}
-        onClose={onToggleSolutionWriteModal}
-        questionAndSolutionContent={{
-          content: questionAndSolution ? `${questionAndSolution.question}` : '',
-          img: questionAndSolution?.question_img,
-          title: String(examTitle || ''),
-        }}
-        pageSubTitle={pageSubTitle}
-        textAreaOption={{
-          autoSize: { minRows: 3, maxRows: 8 },
-          value: answerValue,
-          onChange: onChangeAnswer,
-          placeholder: '답을 확인하기 전에 먼저 답을 작성해 보세요.',
-        }}
-        onClearAnswer={onClearAnswer}
-      />
+      {finishModalState && (
+        <ConfirmModal
+          open={finishModalState}
+          content={'학습을 종료하시겠습니까?'}
+          onClose={onToggleFinishModal}
+          onCancel={onToggleFinishModal}
+          onConfirm={onFinishConfirmModal}
+          confirmLabel="종료하기"
+        />
+      )}
+      {feedBackModalState && (
+        <ReportModal
+          open={feedBackModalState}
+          onClose={onToggleFeedBackModal}
+          onCancel={onToggleFeedBackModal}
+          onConfirm={requestReport}
+          onChangeContent={(value) => {
+            reportValue.current.content = value;
+          }}
+          onChangeType={(value) => {
+            reportValue.current.type = value;
+          }}
+          confirmLabel="등록하기"
+          title={`${
+            isRandomExam ? currentQuestion?.mockExam?.title : examTitle
+          }  ${currentQuestion?.number}번 문제`}
+          placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
+        />
+      )}
+      {progressModalState && (
+        <ProgressModal
+          open={progressModalState}
+          onClose={onToggleProgressModal}
+          questionList={questionList}
+          readQuestionInput={readQuestionInput}
+        />
+      )}
+      {commentModalState && (
+        <CommentModal
+          open={commentModalState}
+          onClose={onToggleCommentModal}
+          title={`${isRandomExam ? currentQuestion?.mockExam?.title : examTitle}
+        ${currentQuestion?.number}번 문제`}
+          questionId={currentQuestion ? currentQuestion.id : 0}
+        />
+      )}
+      {questionShareModalState && (
+        <QuestionShareModal
+          onClose={onToggleQuestionShareModal}
+          open={questionShareModalState}
+          questionId={currentQuestion?.id || 0}
+          title={`${String(examTitle)}  ${currentQuestion?.number}번 문제`}
+          shareTitle={`${String(examTitle)}  ${currentQuestion?.number}번 문제`}
+          shareDescription={ellipsisText(currentQuestion?.question || '', 50)}
+        />
+      )}
+      {solutionWriteModalState && (
+        <SolutionWriteModal
+          open={solutionWriteModalState}
+          onClose={onToggleSolutionWriteModal}
+          questionAndSolutionContent={{
+            content: currentQuestion ? `${currentQuestion.question}` : '',
+            img: currentQuestion?.question_img,
+            title: String(examTitle || ''),
+          }}
+          pageSubTitle={pageSubTitle}
+          textAreaOption={{
+            autoSize: { minRows: 3, maxRows: 8 },
+            value: answerValue,
+            onChange: onChangeAnswer,
+            placeholder: '답을 확인하기 전에 먼저 답을 작성해 보세요.',
+          }}
+          onClearAnswer={onClearAnswer}
+        />
+      )}
     </>
   );
 };

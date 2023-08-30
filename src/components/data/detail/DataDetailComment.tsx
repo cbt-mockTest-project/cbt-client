@@ -14,6 +14,7 @@ import {
 import { Clear } from '@mui/icons-material';
 import palette from '@styles/palette';
 import { Button, Card, Input, message } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PostComment } from 'types';
@@ -138,7 +139,7 @@ const DataDetailComment: React.FC<DataDetailCommentProps> = ({
         <p className="data-detail-comment-count-label">댓글</p>
         <p className="data-detail-comment-count">{commentList.length}</p>
       </div>
-      <Input.TextArea
+      <TextArea
         value={commentValue}
         onChange={(e) => setCommentValue(e.target.value)}
         autoSize={{ minRows: 3, maxRows: 3 }}

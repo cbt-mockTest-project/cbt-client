@@ -10,7 +10,6 @@ import palette from '@styles/palette';
 
 interface DragModalProps extends Omit<ModalProps, 'children'> {
   className?: string;
-  type?: 'modal' | 'newPage';
   onNewWindow?: () => void;
   children: React.ReactNode;
 }
@@ -19,11 +18,9 @@ const DragModal: React.FC<DragModalProps> = ({
   onClose,
   open,
   className,
-  type = 'modal',
   onNewWindow,
   children,
 }) => {
-  const isnewpage = type === 'newPage';
   const onDragEnd = (
     event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
@@ -39,43 +36,30 @@ const DragModal: React.FC<DragModalProps> = ({
           <>
             <DragModalContainer
               className={className || ''}
-              drag={!isnewpage && 'y'}
-              dragConstraints={
-                !isnewpage && {
-                  bottom: 0,
-                  top: 0,
-                }
-              }
-              dragElastic={!isnewpage && 1}
-              initial={{ y: isnewpage ? 0 : '100%' }}
+              drag={'y'}
+              dragConstraints={{
+                bottom: 0,
+                top: 0,
+              }}
+              dragElastic={1}
+              initial={{ y: '100%' }}
               animate={{ y: '0', transition: { duration: 0.4 } }}
               exit={{ y: '100%', transition: { duration: 0.4 } }}
-              onDragEnd={!isnewpage ? onDragEnd : () => {}}
-              isnewpage={isnewpage}
+              onDragEnd={onDragEnd}
             >
               <div className="modal-wrapper">
-                {!isnewpage && (
-                  <>
-                    <span onClick={onClose} className="modal-close-button">
-                      <ClearIcon />
-                    </span>
-                    <span onClick={onClose} className="modal-drag-position">
-                      <DragHandleIcon />
-                    </span>
-
-                    <button
-                      onClick={onNewWindow}
-                      className="modal-new-window-button"
-                      type="button"
-                    >
-                      <OpenInNewIcon />
-                    </button>
-                  </>
-                )}
+                <>
+                  <span onClick={onClose} className="modal-close-button">
+                    <ClearIcon />
+                  </span>
+                  <span onClick={onClose} className="modal-drag-position">
+                    <DragHandleIcon />
+                  </span>
+                </>
                 {children}
               </div>
             </DragModalContainer>
-            {!isnewpage && <Dimmed onClick={onClose} />}
+            <Dimmed onClick={onClose} />
           </>
         )}
       </AnimatePresence>
@@ -85,9 +69,7 @@ const DragModal: React.FC<DragModalProps> = ({
 
 export default DragModal;
 
-interface DragModalContainerProps {
-  isnewpage: boolean;
-}
+interface DragModalContainerProps {}
 
 const DragModalContainer = styled(motion.div)<DragModalContainerProps>`
   position: fixed;
@@ -168,15 +150,7 @@ const DragModalContainer = styled(motion.div)<DragModalContainerProps>`
   .modal-drag-position {
     display: none;
   }
-  ${(props) =>
-    props.isnewpage &&
-    css`
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100vw;
-    `}
+
   @media (max-width: ${responsive.medium}) {
     padding: 30px 20px;
 

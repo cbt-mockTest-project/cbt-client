@@ -7,10 +7,12 @@ import coreSlice, { CoreState } from './core';
 import dataSlice, { DataState } from './data';
 import { HYDRATE } from 'next-redux-wrapper';
 import { cloneDeep } from 'lodash';
+import examSlice, { ExamState } from './exam';
 
 export interface RootState {
   data: DataState;
   core: CoreState;
+  exam: ExamState;
 }
 
 type TCombinedState = CombinedState<RootState> | undefined;
@@ -31,6 +33,7 @@ const rootReducer = (
       const combineReducer = combineReducers({
         core: coreSlice.reducer,
         data: dataSlice.reducer,
+        exam: examSlice.reducer,
       });
       return combineReducer(state, action);
     }

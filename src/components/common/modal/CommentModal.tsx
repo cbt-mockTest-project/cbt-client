@@ -41,7 +41,6 @@ const CommentModal: React.FC<CommentModalProps> = ({
   const [submitButtonState, setSubmitButtonState] = useState(false);
   const [readQuestionComment, { data: commentQuery }] =
     useLazyReadQuestionComment();
-  const isnewpage = type === 'newPage';
   const {
     value: content,
     setValue: setContent,
@@ -109,31 +108,16 @@ const CommentModal: React.FC<CommentModalProps> = ({
     );
   };
   return (
-    <DragModal
-      onClose={onClose}
-      open={open}
-      onNewWindow={onNewWindow}
-      type={type}
-    >
+    <DragModal onClose={onClose} open={open} onNewWindow={onNewWindow}>
       <div className="modal-wrapper">
-        {!isnewpage && (
-          <>
-            <span onClick={onClose} className="modal-close-button">
-              <ClearIcon />
-            </span>
-            <span onClick={onClose} className="modal-drag-position">
-              <DragHandleIcon />
-            </span>
-
-            <button
-              onClick={onNewWindow}
-              className="modal-new-window-button"
-              type="button"
-            >
-              <OpenInNewIcon />
-            </button>
-          </>
-        )}
+        <>
+          <span onClick={onClose} className="modal-close-button">
+            <ClearIcon />
+          </span>
+          <span onClick={onClose} className="modal-drag-position">
+            <DragHandleIcon />
+          </span>
+        </>
         <p className="comment-title">{title}</p>
         <div className="comment-input-wrapper">
           <TextArea

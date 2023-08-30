@@ -41,11 +41,13 @@ export const useLazyReadQuestionsByExamId = (
     ReadMockExamQuestionsByMockExamIdQueryVariables
   >(READ_QUESTIONS_BY_ID, { fetchPolicy });
 
-export const useReadQuestionsByExamId = () =>
+export const useReadQuestionsByExamId = (id: number) =>
   useQuery<
     ReadMockExamQuestionsByMockExamIdQuery,
     ReadMockExamQuestionsByMockExamIdQueryVariables
-  >(READ_QUESTIONS_BY_ID);
+  >(READ_QUESTIONS_BY_ID, {
+    variables: { input: { id } },
+  });
 
 export const useReadQuestion = () =>
   useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(

@@ -15,22 +15,23 @@ import {
   ReadMockExamQuestionsByMockExamIdInput,
 } from 'types';
 import Modal from './Modal';
+import { QuestionListType, examActions } from '@modules/redux/slices/exam';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 
 interface ProgressModalProps
   extends Pick<ComponentProps<typeof Modal>, 'open' | 'onClose'> {
-  questionQueryDataProps?: ReadMockExamQuestionsByMockExamIdQuery;
+  questionList: QuestionListType;
   readQuestionInput?: ReadMockExamQuestionsByMockExamIdInput;
 }
 
 const ProgressModal: React.FC<ProgressModalProps> = ({
   onClose,
   open,
-  questionQueryDataProps,
-  readQuestionInput,
+  questionList,
 }) => {
   const router = useRouter();
   const [resetQuestionStateMutate] = useResetQuestionState();
-  const client = useApollo({}, '');
+  const dispatch = useAppDispatch();
   const onMoveQuestion = (questionIndex: number) => {
     router.push({
       pathname: router.pathname,
@@ -39,21 +40,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   };
   const requestResetQuestionState = async () => {
     try {
-      let questionKeys = extractKeysOfCache(client, 'MockExamQuestion:');
-      const questionsQuery =
-        client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-          query: READ_QUESTIONS_BY_ID,
-          variables: {
-            input: readQuestionInput,
-          },
-        });
-      const questionIds =
-        questionsQuery?.readMockExamQuestionsByMockExamId.questions.map(
-          (question) => question.id
-        );
-      questionKeys = questionKeys.filter((key) =>
-        questionIds?.includes(Number(key.split(':')[1]))
-      );
+      const questionIds = questionList.map((el) => el.id);
       const res = await resetQuestionStateMutate({
         variables: {
           input: {
@@ -62,22 +49,16 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
         },
       });
       if (res.data?.resetMyExamQuestionState.ok) {
-        questionKeys.forEach((el) => {
-          client.cache.modify({
-            id: el,
-            fields: {
-              state(state) {
-                if (state.length === 1) {
-                  return state.map((state: MockExamQuestionState) => ({
-                    ...state,
-                    state: QuestionState.Core,
-                  }));
-                }
-                return state;
-              },
+        const newQuestionList = questionList.map((el) => ({
+          ...el,
+          state: [
+            {
+              ...el.state[0],
+              state: QuestionState.Core,
             },
-          });
-        });
+          ],
+        }));
+        dispatch(examActions.setQuestionList(newQuestionList));
         message.success({ content: '성취도가 초기화 되었습니다.' });
         return;
       }
@@ -96,7 +77,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
         <ExamAchievementResultList
           className="progress-modal-achievement-result-list"
           onListClick={onMoveQuestion}
-          questionQueryDataProps={questionQueryDataProps}
+          questionList={questionList}
         />
         <p className="progress-modal-info">
           번호를 클릭하면 해당 문제로 이동 합니다.

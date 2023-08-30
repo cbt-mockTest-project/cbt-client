@@ -1,32 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import { checkboxOption } from 'customTypes';
 import { QuestionState } from 'types';
-import SquareSelectboxGroup from '../selectbox/SquareSelectboxGroup';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
+import SquareSelectbox from '../selectbox/SquareSelectbox';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { handleError } from '@lib/utils/utils';
 interface AchievCheckButtonGroupProps {
   onCheckboxChange: (value: checkboxOption['value']) => Promise<void>;
-  currentQuestionId: number;
 }
 
 const AchievCheckButtonGroup: React.FC<AchievCheckButtonGroupProps> = ({
   onCheckboxChange,
-  currentQuestionId,
 }) => {
+  const [selectedState, setSelectedState] = useState<string>(
+    QuestionState.Core
+  );
+  const currentQuestion = useAppSelector((state) => state.exam.currentQuestion);
   const checkboxOptions: checkboxOption[] = [
     { value: QuestionState.High, label: circleIcon },
     { value: QuestionState.Middle, label: triangleIcon },
     { value: QuestionState.Row, label: clearIcon },
   ];
+  const requestOnclick = (value: string) => {
+    try {
+      onCheckboxChange(value);
+      setSelectedState(value);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentQuestion) return;
+    setSelectedState(currentQuestion.state[0].state);
+  }, [currentQuestion]);
+
   return (
     <AchievCheckButtonGroupContainer>
-      <SquareSelectboxGroup
-        options={checkboxOptions}
-        onClick={onCheckboxChange}
-        currentQuestionId={currentQuestionId}
-      />
+      <div className="select-box-group-wrapper">
+        {checkboxOptions.map((option, index) => {
+          return (
+            <SquareSelectbox
+              option={option}
+              key={index}
+              selected={option.value === selectedState}
+              onClick={() => requestOnclick(String(option.value))}
+            />
+          );
+        })}
+      </div>
     </AchievCheckButtonGroupContainer>
   );
 };
@@ -52,6 +77,10 @@ const AchievCheckButtonGroupContainer = styled.div`
     }
     color: ${palette.antd_blue_01} !important;
     border-color: ${palette.antd_blue_01} !important;
+  }
+  .select-box-group-wrapper {
+    display: flex;
+    gap: 10px;
   }
   @media (max-width: ${responsive.medium}) {
     margin-left: 0;

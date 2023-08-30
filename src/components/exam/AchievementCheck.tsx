@@ -3,47 +3,39 @@ import Tooltip from '@components/common/tooltip/Tooltip';
 import { loginModal } from '@lib/constants';
 import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
-import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { examActions } from '@modules/redux/slices/exam';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
+import { cloneDeep } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { MockExamQuestionState, QuestionState } from 'types';
-interface AchievementCheckProps {
-  questionIndex: number;
-  questionsQuery: ReadMockExamQuestionsByMockExamIdQuery;
-}
+import { QuestionState } from 'types';
+interface AchievementCheckProps {}
 
-const AchievementCheck: React.FC<AchievementCheckProps> = ({
-  questionIndex,
-  questionsQuery,
-}) => {
-  const client = useApollo({}, '');
+const AchievementCheck: React.FC<AchievementCheckProps> = ({}) => {
   const isMobile = useIsMobile();
   const [changeQuestionState] = useChangeQuestionState();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
   const onOpenLoginModal = () => dispatch(coreActions.openModal(loginModal));
-  const {
-    readMockExamQuestionsByMockExamId: { questions },
-  } = questionsQuery;
-  const currentQuestion = questions[questionIndex - 1];
-  const currentQuestionId = currentQuestion?.id;
+  const currentQuestion = useAppSelector((state) => state.exam.currentQuestion);
   const requestChangeState = async (state: checkboxOption['value']) => {
     if (!meQuery?.me.user) {
       onOpenLoginModal();
       return;
     }
-    if (!currentQuestionId) {
+    if (!currentQuestion?.id) {
       message.error({ content: '문제가 존재하지 않습니다.' });
       return;
     }
-    const currentQuestionState = currentQuestion?.state[0].state;
+    const currentQuestionState = currentQuestion.state[0].state;
     if (currentQuestionState === state) {
       return;
     }
@@ -51,7 +43,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
       variables: {
         input: {
           state: state as QuestionState,
-          questionId: currentQuestionId,
+          questionId: currentQuestion.id,
         },
       },
     });
@@ -63,19 +55,14 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
         message.error({ content: error });
       }
       if (ok && currentState) {
-        client.cache.modify({
-          id: `MockExamQuestion:${currentQuestionId}`,
-          fields: {
-            state(state) {
-              return state.length === 1
-                ? state.map((state: MockExamQuestionState) => ({
-                    ...state,
-                    state: currentState,
-                  }))
-                : state;
-            },
-          },
-        });
+        const newQuestion = cloneDeep(currentQuestion);
+        newQuestion.state[0].state = currentState;
+        dispatch(
+          examActions.setCurrentQuestion({
+            question: newQuestion,
+            updateList: true,
+          })
+        );
       }
     }
   };
@@ -91,10 +78,7 @@ const AchievementCheck: React.FC<AchievementCheckProps> = ({
         </p>
       </Tooltip>
       <span className="achievement-check-label select-none">성취도체크</span>
-      <AchievCheckButtonGroup
-        onCheckboxChange={requestChangeState}
-        currentQuestionId={currentQuestionId}
-      />
+      <AchievCheckButtonGroup onCheckboxChange={requestChangeState} />
     </AchievementCheckContainer>
   );
 };

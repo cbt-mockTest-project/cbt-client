@@ -29,6 +29,7 @@ import StateSelecboxGroup from '@components/common/selectbox/StateSelecboxGroup'
 import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { QuestionFeedbackType, QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
+import { QuestionListType } from '@modules/redux/slices/exam';
 
 const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
   ssr: false,
@@ -39,14 +40,13 @@ const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
   loading: () => <StarBorderOutlinedIcon />,
 });
 
-type ExamQuestionTypeByExamId =
-  ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0];
 type ExamQuestionTypeByQuestionId =
   ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
 
 export type ExamQuestionType =
-  | ExamQuestionTypeByExamId
+  | QuestionListType[number]
   | ExamQuestionTypeByQuestionId;
+
 interface ExamSolutionListProps {
   question: ExamQuestionType;
   title: string;
@@ -164,7 +164,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         };
         message.success('답안에 추가됐습니다.');
         // refetch();
-        setCurrentQuestion(newQuestion as ExamQuestionType);
+        setCurrentQuestion(newQuestion as QuestionListType[number]);
         setReportModalState(false);
         return;
       }
@@ -319,7 +319,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           className="solution-page-state-select-box-group"
           onClick={requestChangeQuestionState}
           defaultState={
-            (currentQuestion as ExamQuestionTypeByExamId).state[0].state
+            (currentQuestion as QuestionListType[number]).state[0].state
           }
         />
       )}

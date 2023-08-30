@@ -6,7 +6,7 @@ import palette from '@styles/palette';
 import { Button } from 'antd';
 import { TextAreaProps } from 'antd/lib/input';
 import TextArea from 'antd/lib/input/TextArea';
-import React, { SetStateAction, useEffect, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Label from '../label/Label';
 import Modal, { ModalProps } from './Modal';

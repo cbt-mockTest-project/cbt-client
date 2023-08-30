@@ -21,12 +21,12 @@ import {
   UserRole,
 } from 'types';
 import { ExamQuestionType } from './ExamSolutionList';
+import { QuestionListType, examActions } from '@modules/redux/slices/exam';
+import { cloneDeep } from 'lodash';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
-  setQuestion?:
-    | React.Dispatch<React.SetStateAction<ExamQuestionType>>
-    | React.Dispatch<React.SetStateAction<ExamQuestionType | undefined>>;
+  setQuestion?: React.Dispatch<React.SetStateAction<ExamQuestionType>>;
   type?: 'me' | 'others';
 }
 
@@ -49,15 +49,22 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
           variables: { input: { id: feedbackId } },
         });
         if (res.data?.deleteMockExamQuestionFeedback.ok) {
+          const newFeedback = question.mockExamQuestionFeedback.filter(
+            (feedback) => feedback.id !== feedbackId
+          );
+          const newQuestion: ExamQuestionType = {
+            ...question,
+            mockExamQuestionFeedback: newFeedback,
+          };
           if (setQuestion) {
-            const newFeedback = question.mockExamQuestionFeedback.filter(
-              (feedback) => feedback.id !== feedbackId
-            );
-            const newQuestion = {
-              ...question,
-              mockExamQuestionFeedback: newFeedback,
-            };
             setQuestion(newQuestion);
+          } else {
+            dispatch(
+              examActions.setCurrentQuestion({
+                question: newQuestion as QuestionListType[number],
+                updateList: true,
+              })
+            );
           }
 
           return message.success('삭제되었습니다.');
@@ -103,64 +110,74 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
       if (res.data?.updateMockExamQuestionFeedbackRecommendation.ok) {
         const feedbackResponse =
           res.data.updateMockExamQuestionFeedbackRecommendation;
-        if (setQuestion) {
-          const newQuestion: ExamQuestionType = {
-            ...question,
-            mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-              (feedback) => {
-                if (feedback.id === feedbackId) {
-                  let newReccomendationCount = feedback.recommendationCount;
-                  if (
-                    myRecommendationStatus.isGood &&
-                    type === QuestionFeedbackRecommendationType.Good
-                  ) {
-                    newReccomendationCount.good -= 1;
-                  } else if (
-                    myRecommendationStatus.isBad &&
-                    type === QuestionFeedbackRecommendationType.Bad
-                  ) {
-                    newReccomendationCount.bad -= 1;
-                  } else if (
-                    myRecommendationStatus.isGood &&
-                    type === QuestionFeedbackRecommendationType.Bad
-                  ) {
-                    newReccomendationCount.good -= 1;
-                    newReccomendationCount.bad += 1;
-                  } else if (
-                    myRecommendationStatus.isBad &&
-                    type === QuestionFeedbackRecommendationType.Good
-                  ) {
-                    newReccomendationCount.good += 1;
-                    newReccomendationCount.bad -= 1;
-                  } else if (
-                    !myRecommendationStatus.isGood &&
-                    type === QuestionFeedbackRecommendationType.Good
-                  ) {
-                    newReccomendationCount.good += 1;
-                  } else if (
-                    !myRecommendationStatus.isBad &&
-                    type === QuestionFeedbackRecommendationType.Bad
-                  ) {
-                    newReccomendationCount.bad += 1;
-                  }
-                  return {
-                    ...feedback,
-                    myRecommedationStatus: {
-                      isGood:
-                        feedbackResponse.recommendation?.type ===
-                        QuestionFeedbackRecommendationType.Good,
-                      isBad:
-                        feedbackResponse.recommendation?.type ===
-                        QuestionFeedbackRecommendationType.Bad,
-                    },
-                    recommendationCount: newReccomendationCount,
-                  };
+        const newQuestion: ExamQuestionType = {
+          ...question,
+          mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
+            (feedback) => {
+              if (feedback.id === feedbackId) {
+                let newReccomendationCount = cloneDeep(
+                  feedback.recommendationCount
+                );
+                if (
+                  myRecommendationStatus.isGood &&
+                  type === QuestionFeedbackRecommendationType.Good
+                ) {
+                  newReccomendationCount.good -= 1;
+                } else if (
+                  myRecommendationStatus.isBad &&
+                  type === QuestionFeedbackRecommendationType.Bad
+                ) {
+                  newReccomendationCount.bad -= 1;
+                } else if (
+                  myRecommendationStatus.isGood &&
+                  type === QuestionFeedbackRecommendationType.Bad
+                ) {
+                  newReccomendationCount.good -= 1;
+                  newReccomendationCount.bad += 1;
+                } else if (
+                  myRecommendationStatus.isBad &&
+                  type === QuestionFeedbackRecommendationType.Good
+                ) {
+                  newReccomendationCount.good += 1;
+                  newReccomendationCount.bad -= 1;
+                } else if (
+                  !myRecommendationStatus.isGood &&
+                  type === QuestionFeedbackRecommendationType.Good
+                ) {
+                  newReccomendationCount.good += 1;
+                } else if (
+                  !myRecommendationStatus.isBad &&
+                  type === QuestionFeedbackRecommendationType.Bad
+                ) {
+                  newReccomendationCount.bad += 1;
                 }
-                return feedback;
+                return {
+                  ...feedback,
+                  myRecommedationStatus: {
+                    isGood:
+                      feedbackResponse.recommendation?.type ===
+                      QuestionFeedbackRecommendationType.Good,
+                    isBad:
+                      feedbackResponse.recommendation?.type ===
+                      QuestionFeedbackRecommendationType.Bad,
+                  },
+                  recommendationCount: newReccomendationCount,
+                };
               }
-            ),
-          };
+              return feedback;
+            }
+          ),
+        };
+
+        if (setQuestion) {
           setQuestion(newQuestion);
+        } else {
+          dispatch(
+            examActions.setCurrentQuestion({
+              question: newQuestion as QuestionListType[number],
+              updateList: true,
+            })
+          );
         }
       }
     } catch (e) {
