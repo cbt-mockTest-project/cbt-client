@@ -174,26 +174,36 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     }
   };
   const requestEditBookmark = async () => {
+    const prevBookmarkState = bookmarkState;
+    const rollbackBookmarkState = () => {
+      if (prevBookmarkState) {
+        setBookmarkState(true);
+        message.error('문제 저장에 실패했습니다.');
+      }
+      if (!prevBookmarkState) {
+        setBookmarkState(false);
+        message.error('문제 저장 해제에 실패했습니다.');
+      }
+    };
     try {
       if (!meQuery?.me.ok) {
         return openLoginModal();
       }
+      if (bookmarkState) {
+        setBookmarkState(false);
+      }
+      if (!bookmarkState) {
+        setBookmarkState(true);
+      }
       const res = await editBookmark({
         variables: { input: { questionId: currentQuestion.id } },
       });
-      if (res.data?.editMockExamQuestionBookmark.ok) {
-        if (res.data?.editMockExamQuestionBookmark.currentState) {
-          setBookmarkState(true);
-          message.success('문제가 저장됐습니다.');
-        }
-        if (!res.data?.editMockExamQuestionBookmark.currentState) {
-          setBookmarkState(false);
-          message.success('문제 저장이 해제됐습니다.');
-        }
-        return;
+      if (!res.data?.editMockExamQuestionBookmark.ok) {
+        rollbackBookmarkState();
+        return message.error(res.data?.editMockExamQuestionBookmark.error);
       }
-      return message.error(res.data?.editMockExamQuestionBookmark.error);
     } catch (e) {
+      rollbackBookmarkState();
       handleError(e);
     }
   };

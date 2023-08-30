@@ -285,31 +285,36 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   };
 
   const requestEditBookmark = async () => {
+    const prevBookmarkState = bookmarkState;
+    const rollbackBookmarkState = () => {
+      if (prevBookmarkState) {
+        setBookmarkState(true);
+        message.error('문제 저장에 실패했습니다.');
+      }
+      if (!prevBookmarkState) {
+        setBookmarkState(false);
+        message.error('문제 저장 해제에 실패했습니다.');
+      }
+    };
     try {
       if (!meQuery?.me.user) {
         openLonginModal();
         return;
       }
       if (!currentQuestion) return;
+      if (bookmarkState) {
+        setBookmarkState(false);
+      }
+      if (!bookmarkState) {
+        setBookmarkState(true);
+      }
       const res = await editBookmark({
         variables: { input: { questionId: Number(currentQuestion.id) } },
       });
       if (res.data?.editMockExamQuestionBookmark.ok) {
-        const queryResult =
-          client.readQuery<ReadMockExamQuestionsByMockExamIdQuery>({
-            query: READ_QUESTIONS_BY_ID,
-            variables: {
-              input: readQuestionInput,
-            },
-          });
-        if (
-          res.data?.editMockExamQuestionBookmark.currentState &&
-          queryResult
-        ) {
-          setBookmarkState(true);
+        if (res.data?.editMockExamQuestionBookmark.currentState) {
           const newQuestions = questionList.map((prevQuestion) => {
             if (prevQuestion.id === currentQuestion.id) {
-              console.log(prevQuestion.mockExamQuestionBookmark);
               return {
                 ...prevQuestion,
                 mockExamQuestionBookmark: [
@@ -323,13 +328,8 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             return prevQuestion;
           });
           dispatch(examActions.setQuestionList(newQuestions));
-          message.success('문제가 저장됐습니다.');
         }
-        if (
-          !res.data?.editMockExamQuestionBookmark.currentState &&
-          queryResult
-        ) {
-          setBookmarkState(false);
+        if (!res.data?.editMockExamQuestionBookmark.currentState) {
           const newQuestions = questionList.map((prevQuestion) => {
             if (prevQuestion.id === currentQuestion.id) {
               return { ...prevQuestion, mockExamQuestionBookmark: [] };
@@ -337,12 +337,13 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             return prevQuestion;
           });
           dispatch(examActions.setQuestionList(newQuestions));
-          message.success('문제 저장이 해제됐습니다.');
         }
         return;
       }
+      rollbackBookmarkState();
       return message.error(res.data?.editMockExamQuestionBookmark.error);
     } catch (e) {
+      rollbackBookmarkState();
       handleError(e);
     }
   };
