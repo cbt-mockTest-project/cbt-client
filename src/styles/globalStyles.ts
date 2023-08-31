@@ -15,6 +15,10 @@ const Globalstyles = createGlobalStyle`
   figure, figcaption, footer, header, hgroup,
   main, menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
+    -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
     margin: 0;
     padding: 0;
     border: 0;
@@ -22,6 +26,7 @@ const Globalstyles = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
   }
+
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
   footer, header, hgroup, main, menu, nav, section {

@@ -740,7 +740,7 @@ const ExamContainer = styled.div<ExamContainerProps>`
     white-space: pre-wrap;
   }
   @media (max-width: ${responsive.medium}) {
-    padding: 20px;
+    padding: 0 20px;
     .exam-question-and-video-wrapper {
       flex-direction: column;
     }

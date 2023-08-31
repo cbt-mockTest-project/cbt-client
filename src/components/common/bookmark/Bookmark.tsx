@@ -23,7 +23,7 @@ const Bookmark: React.FC<BookmarkProps> = ({ active, className, onClick }) => {
 };
 
 export default Bookmark;
-const BookmarkBlock = styled.button`
+const BookmarkBlock = styled.div`
   position: relative;
   cursor: pointer;
   .star-icon {
