@@ -90,6 +90,8 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   const title = questionsQuery
     ? questionsQuery.readMockExamQuestionsByMockExamId.title
     : questionsQueryOnClientSide?.readMockExamQuestionsByMockExamId.title;
+  const isPremium = (questionsQuery || questionsQueryOnClientSide)
+    ?.readMockExamQuestionsByMockExamId.isPremium;
   const examId = Number(String(router.query.Id));
   const examIds = router.query.es ? JSON.parse(String(router.query.es)) : null;
   useEffect(() => {
@@ -166,6 +168,8 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     pdfMake,
   }: OnDownloadPdfArgs) => {
     try {
+      if (isPremium)
+        return message.error('해당 기능은 현재 사용할 수 없습니다.');
       setPdfDownloadLoading(true);
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
       const contents: any[] = [];
@@ -348,13 +352,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           >
             섞기
           </Button>
-          <Button
-            onClick={onClickDownloadButton}
-            className="exam-solution-page-solution-all-hide-button"
-            type="primary"
-          >
-            다운로드
-          </Button>
+          {!isPremium && (
+            <Button
+              onClick={onClickDownloadButton}
+              className="exam-solution-page-solution-all-hide-button"
+              type="primary"
+            >
+              다운로드
+            </Button>
+          )}
         </div>
         <h1 className="not-draggable">
           {convertExamTitle(title || '')} 문제/해설

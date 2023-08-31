@@ -15,6 +15,7 @@ export const READ_QUESTIONS_BY_ID = gql`
       ok
       title
       author
+      isPremium
       questions {
         ...FullQuestionIncludingExamIdParts
         mockExamQuestionComment {

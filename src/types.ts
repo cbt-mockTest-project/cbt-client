@@ -872,6 +872,7 @@ export type MockExam = {
   examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
+  isPremium: Scalars['Boolean'];
   mockExamCategory: MockExamCategory;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
@@ -2055,6 +2056,7 @@ export type ReadMockExamQuestionsByMockExamIdOutput = {
   author: Scalars['String'];
   count: Scalars['Float'];
   error?: Maybe<Scalars['String']>;
+  isPremium: Scalars['String'];
   ok: Scalars['Boolean'];
   questions: Array<MockExamQuestion>;
   title: Scalars['String'];
