@@ -37,20 +37,11 @@ const MainBanner = () => {
         modules={[Autoplay, Pagination]}
         className="home-main-banner-swiper"
       >
-        {/* <SwiperSlide>
-          <button
-            className="main-banner-text-banner"
-            onClick={onToggleOpenChatModal}
-          >
-            <p>해당 위치 광고 문의 or 협업 문의</p>
-            <p className="main-banner-text-banner-icon-wrapper">
-              <span>클릭</span>
-              <span className="main-banner-text-banner-icon">
-                <MouseIcon />
-              </span>
-            </p>
-          </button>
-        </SwiperSlide> */}
+        <SwiperSlide>
+          <Link href="https://ehs-master.com/" target="_blank" rel="noreferrer">
+            <div className="home-main-banner-box ehsmaster" />
+          </Link>
+        </SwiperSlide>
         <SwiperSlide>
           <button
             className="main-banner-text-banner"
@@ -168,6 +159,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
   .home-main-banner-box.advertise {
     background-image: url('/png/banner/main-banner-pc04.png') !important;
   }
+  .home-main-banner-box.ehsmaster {
+    background-image: url('/png/banner/ehs-banner-pc01.png') !important;
+  }
   .main-banner-text-banner {
     display: flex;
     flex-direction: column;
@@ -226,6 +220,9 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
     }
     .home-main-banner-box.advertise {
       background-image: url('/png/banner/main-banner-mobile04.png') !important;
+    }
+    .home-main-banner-box.ehsmaster {
+      background-image: url('/png/banner/ehs-banner-mobile01.png') !important;
     }
   }
 `;
