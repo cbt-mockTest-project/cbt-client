@@ -148,27 +148,19 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       onConfirm: handleBasicPlanPayment,
       roleId: 1,
     },
+    {
+      title: '직8딴 플랜',
+      intro:
+        '12기사 저자의 암기비법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
+      price: 10000,
+      benefits: ['직8딴 풀이모드 및 해설모드 제공', '직8딴 랜덤모의고사 제공'],
+      confirmDisabled: meQuery?.me.user
+        ? checkRole({ roleIds: [4], meQuery })
+        : false,
+      onConfirm: openEhsMasterPayModal,
+      roleId: 4,
+    },
   ];
-
-  useEffect(() => {
-    if ([1, 7729].includes(Number(meQuery?.me.user?.id))) {
-      pricingCardData.push({
-        title: '직8딴 플랜',
-        intro:
-          '12기사 저자의 암기비법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
-        price: 10000,
-        benefits: [
-          '직8딴 풀이모드 및 해설모드 제공',
-          '직8딴 랜덤모의고사 제공',
-        ],
-        confirmDisabled: meQuery?.me.user
-          ? checkRole({ roleIds: [4], meQuery })
-          : false,
-        onConfirm: openEhsMasterPayModal,
-        roleId: 4,
-      });
-    }
-  }, [meQuery]);
 
   return (
     <PricingComponentBlock>
@@ -215,12 +207,14 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       >
         환불안내
       </a>
-      <PricingSelectModal
-        open={selectModalState}
-        onClose={toggleSelectModal}
-        price={price}
-        setPrice={setPrice}
-      />
+      {selectModalState && (
+        <PricingSelectModal
+          open={selectModalState}
+          onClose={toggleSelectModal}
+          price={price}
+          setPrice={setPrice}
+        />
+      )}
     </PricingComponentBlock>
   );
 };
