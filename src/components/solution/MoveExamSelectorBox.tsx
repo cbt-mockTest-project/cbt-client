@@ -155,6 +155,7 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
             type="primary"
             loading={gotoSolutionPageLoading}
             onClick={gotoSolutionPage}
+            disabled={!selectedTitle}
           >
             이동하기
           </Button>

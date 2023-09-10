@@ -36,7 +36,7 @@ import EditNameModal from '@components/common/modal/EditNameModal';
 import { handleError } from '@lib/utils/utils';
 import CreateExamFeedbackModal from './modal/CreateExamFeedbackModal';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import CreateExamComponentDimmed from './CreateExamComponentDimmed';
+import Dimmed from '@components/common/dimmed/Dimmed';
 
 interface CreateExamComponentProps {}
 
@@ -601,9 +601,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
           onClose={onToggleFeedbackModal}
         />
       </Portal>
-      {isNotLoggedIn && (
-        <CreateExamComponentDimmed content="로그인 후 이용해주세요." />
-      )}
+      {isNotLoggedIn && <Dimmed content="로그인 후 이용해주세요." />}
     </CreateExamComponentContainer>
   );
 };

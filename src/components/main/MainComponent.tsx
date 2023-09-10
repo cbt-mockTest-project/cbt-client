@@ -23,6 +23,8 @@ import MainViewCount from './MainViewCount';
 import { EXAM_TYPE } from './Main.type';
 import MyExamSelector from './MyExamSelector';
 import InviteExamModal from './modal/InviteExamModal';
+import PartnerExamSelector from './PartnerExamSelector';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 export interface TitlesAndCategories {
   category: string;
@@ -38,15 +40,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
   const [inviteExamModalState, setInviteExamModalState] = useState(false);
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
+  const [examType, setExamType] = useState<EXAM_TYPE>(EXAM_TYPE.MODUCBT_EXAM);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
 
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
-  const [isMyExam, setIsMyExam] = useState<boolean>(false);
 
   const [selectedModucbtCategory, setSelectedModucbtCategory] =
     useState<DefaultOptionType | null>(null);
@@ -58,10 +61,21 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [selectedMyTitle, setSelectedMyTitle] =
     useState<DefaultOptionType | null>(null);
 
+  const [selectedPartnerCategory, setSelectedPartnerCategory] =
+    useState<DefaultOptionType | null>(null);
+  const [selectedPartnerTitle, setSelectedPartnerTitle] =
+    useState<DefaultOptionType | null>(null);
+
   const storage = new LocalStorage();
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
     (el) => ({ value: el.name, label: el.name })
   );
+
+  const notYetSelectedExam =
+    !!(examType === EXAM_TYPE.MY_EXAM && !selectedMyTitle) ||
+    !!(examType === EXAM_TYPE.EHS_MASTER && !selectedPartnerTitle) ||
+    !!(!(examType === EXAM_TYPE.MODUCBT_EXAM) && !selectedModucbtTitle);
+
   useEffect(() => {
     const savedCategory = storage.get(selectedCategoryHistory);
     const savedTitle = storage.get(selectedTitleHistory);
@@ -110,16 +124,24 @@ const MainComponent: React.FC<MainComponentProps> = ({
   };
 
   const gotoExamPage = () => {
-    const isSelectedMyExam = isMyExam && selectedMyTitle && selectedMyCategory;
+    const isSelectedMyExam =
+      examType === EXAM_TYPE.MY_EXAM && selectedMyTitle && selectedMyCategory;
+    const isSelectedPartnerExam =
+      examType === EXAM_TYPE.EHS_MASTER &&
+      selectedPartnerTitle &&
+      selectedPartnerCategory;
     const currentExamTitles = titlesAndCategories.filter(
       (data) => data.category === selectedModucbtCategory?.label
     );
     if (currentExamTitles.length === 1) {
       const currentExamTitle = isSelectedMyExam
         ? (selectedMyTitle.label as string)
+        : isSelectedPartnerExam
+        ? (selectedPartnerTitle.label as string)
         : currentExamTitles[0].titles.filter(
             (title) => title.id === selectedModucbtTitle?.value
           )[0].title;
+
       const answerRecords = storage.get(tempAnswerKey);
       const selectedAnswerRecord = answerRecords[currentExamTitle];
       if (selectedAnswerRecord) {
@@ -151,6 +173,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
     if (isSelectedMyExam) {
       redirectToExam(selectedMyTitle, selectedMyCategory);
+    } else if (isSelectedPartnerExam) {
+      redirectToExam(selectedPartnerTitle, selectedPartnerCategory);
     } else {
       redirectToExam(selectedModucbtTitle, selectedModucbtCategory);
     }
@@ -159,7 +183,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
     setGotoSolutionPageLoading(true);
     router.push({
       pathname: `/exam/solution/${
-        isMyExam ? selectedMyTitle?.value : selectedModucbtTitle?.value
+        examType === EXAM_TYPE.MY_EXAM
+          ? selectedMyTitle?.value
+          : examType === EXAM_TYPE.EHS_MASTER
+          ? selectedPartnerTitle?.value
+          : selectedModucbtTitle?.value
       }`,
     });
   };
@@ -170,11 +198,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
     onToggleNoticeModal();
   };
   const onChangeExamType = (e: RadioChangeEvent) => {
-    if (e.target.value === EXAM_TYPE.MODUCBT_EXAM) {
-      setIsMyExam(false);
-    } else {
-      setIsMyExam(true);
-    }
+    setExamType(e.target.value);
   };
   return (
     <MainComponentContainer>
@@ -188,26 +212,38 @@ const MainComponent: React.FC<MainComponentProps> = ({
               <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>
                 모두CBT
               </Radio.Button>
+              {[1, 7726].includes(Number(meQuery?.me.user?.id)) && (
+                <Radio.Button value={EXAM_TYPE.EHS_MASTER}>직8딴</Radio.Button>
+              )}
               <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
             </Radio.Group>
-            {isMyExam && (
+            {examType === EXAM_TYPE.MY_EXAM && (
               <Button onClick={onToggleInviteExamModalState}>
                 시험지 초대 관리
               </Button>
             )}
-            {isMyExam && (
+            {examType === EXAM_TYPE.MY_EXAM && (
               <Link href="/exam/write">
                 <Button type="primary">시험지 만들기</Button>
               </Link>
             )}
-            {isMyExam ? (
+            {examType === EXAM_TYPE.MY_EXAM && (
               <MyExamSelector
                 selectedMyCategory={selectedMyCategory}
                 setSelectedMyCategory={setSelectedMyCategory}
                 selectedMyTitle={selectedMyTitle}
                 setSelectedMyTitle={setSelectedMyTitle}
               />
-            ) : (
+            )}
+            {examType === EXAM_TYPE.EHS_MASTER && (
+              <PartnerExamSelector
+                selectedPartnerCategory={selectedPartnerCategory}
+                setSelectedPartnerCategory={setSelectedPartnerCategory}
+                selectedPartnerTitle={selectedPartnerTitle}
+                setSelectedPartnerTitle={setSelectedPartnerTitle}
+              />
+            )}
+            {examType === EXAM_TYPE.MODUCBT_EXAM && (
               <>
                 <Select
                   value={selectedModucbtCategory}
@@ -235,10 +271,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
               <Button
                 type="primary"
                 onClick={gotoExamPage}
-                disabled={
-                  !!(isMyExam && !selectedMyTitle) ||
-                  !!(!isMyExam && !selectedModucbtTitle)
-                }
+                disabled={notYetSelectedExam}
                 loading={gotoExamPageLoading}
                 className="home-content-question-button"
               >
@@ -248,10 +281,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
                 type="primary"
                 loading={gotoSolutionPageLoading}
                 onClick={gotoSolutionPage}
-                disabled={
-                  !!(isMyExam && !selectedMyTitle) ||
-                  !!(!isMyExam && !selectedModucbtTitle)
-                }
+                disabled={notYetSelectedExam}
               >
                 해설모드
               </Button>

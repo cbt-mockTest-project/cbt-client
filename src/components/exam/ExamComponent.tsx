@@ -15,13 +15,11 @@ import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQues
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import { ellipsisText, handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import {
   useAppDispatch,
@@ -31,7 +29,13 @@ import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import * as _ from 'lodash';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled, { css } from 'styled-components';
 import {
   MockExamQuestionFeedback,
@@ -44,6 +48,9 @@ import MovePannel from './MovePannel';
 import MoveQuestion from './MoveQuestion';
 import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { examActions } from '@modules/redux/slices/exam';
+import { 직8딴_산업안전기사_리스트 } from '@lib/constants/exam';
+import Dimmed from '@components/common/dimmed/Dimmed';
+import Link from 'next/link';
 
 export const questionsVar =
   makeVar<ReadMockExamQuestionsByMockExamIdQuery | null>(null);
@@ -59,8 +66,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
 
   const questionList = useAppSelector((state) => state.exam.questionList);
   const currentQuestion = useAppSelector((state) => state.exam.currentQuestion);
-
-  const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
   const storage = new LocalStorage();
@@ -87,12 +92,35 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     content: '',
     type: QuestionFeedbackType.Public,
   });
+  const examId = Number(router.query.e);
+  const examIds = router.query.es ? JSON.parse(String(router.query.es)) : null;
 
+  const isPremium = questionsQuery?.readMockExamQuestionsByMockExamId.isPremium;
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
   const { data: meQuery } = useMeQuery();
   const [createExamHistory] = useCreateExamHistory();
 
+  const 직8딴_산업안전기사_권한체크 = useMemo(() => {
+    if (
+      직8딴_산업안전기사_리스트.includes(examId) ||
+      (Array.isArray(examIds) &&
+        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+    ) {
+      if (
+        meQuery?.me.user &&
+        (meQuery.me.user.userRoles.some((role) => role.role.id !== 4) ||
+          meQuery.me.user.userRoles.length === 0)
+      ) {
+        return false;
+      }
+      if (meQuery && !meQuery.me.user) {
+        // 비로그인시
+        return false;
+      }
+    }
+    return true;
+  }, [examId, examIds, meQuery]);
   const {
     value: questionShareModalState,
     onToggle: onToggleQuestionShareModal,
@@ -390,7 +418,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
 
   return (
     <>
-      <ExamContainer answerboxVisible={answerboxVisible}>
+      <ExamContainer
+        answerboxVisible={answerboxVisible}
+        isPremium={isPremium || false}
+      >
         <div className="exam-container-title-wrapper">
           {!isPreview && (
             <div className="exam-container-bookmark-button-wrapper">
@@ -595,6 +626,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           onClearAnswer={onClearAnswer}
         />
       )}
+      {!직8딴_산업안전기사_권한체크 && (
+        <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
+          <Link href="/pricing">
+            <Button type="primary" size="large">
+              구매하러 가기
+            </Button>
+          </Link>
+        </Dimmed>
+      )}
     </>
   );
 };
@@ -603,11 +643,20 @@ export default ExamComponent;
 
 interface ExamContainerProps {
   answerboxVisible: boolean;
+  isPremium: boolean;
 }
 
 const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
+  ${(props) =>
+    props.isPremium &&
+    css`
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    `}
   .exam-container-title-wrapper {
     display: flex;
     flex-direction: column;
