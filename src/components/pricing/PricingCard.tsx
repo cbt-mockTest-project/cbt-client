@@ -170,7 +170,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
           ) : (
             <div style={{ height: '30.17px' }} />
           )}
-          <p className="pricing-card-price-wrapper">
+          <div className="pricing-card-price-wrapper">
             <span className="pricing-card-price-icon">
               <AttachMoneyIcon />
             </span>
@@ -179,8 +179,8 @@ const PricingCard: React.FC<PricingCardProps> = ({
               {makeMoneyString(price)}
             </span>
             <span className="pricing-card-price-label">원</span>
-          </p>
-          {roleCountQuery?.getRoleCount.count ? (
+          </div>
+          {typeof roleCountQuery?.getRoleCount.count === 'number' ? (
             <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRoleCount.count}명 이용중!! `}</div>
           ) : (
             <SkeletonBox

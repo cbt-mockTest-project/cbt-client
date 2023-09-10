@@ -1,5 +1,5 @@
 import { responsive } from '@lib/utils/responsive';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -21,6 +21,9 @@ import palette from '@styles/palette';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal } from '@lib/constants';
+import useToggle from '@lib/hooks/useToggle';
+import PricingSelectModal from './PricingSelectModal';
+import usePayment from './usePayment';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -92,118 +95,11 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [createFreeTrial] = useCreateFreeTrial();
-  const createdRoleId = useRef(0);
-  const { handleBootPay } = useBootpay();
+  const { handlePayment } = usePayment();
+  const [price, setPrice] = useState(0);
   const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
-  const [checkUserRoleRequest] = useCheckUserRole();
-  const [createPayment] = useCreatePayment();
-  const [createUserRole] = useCreateUserRole();
-  const [deleteUserRole] = useDeleteUserRole();
-
-  interface handlePaymentParams {
-    price: number;
-    orderName: string;
-    roleId: number;
-    checkRoleIds: number[];
-  }
-
-  const handlePayment = ({
-    orderName,
-    price,
-    roleId,
-    checkRoleIds,
-  }: handlePaymentParams) => {
-    const orderId = `${meQuery?.me.user?.id}_${shortid.generate()}`;
-    if (!meQuery?.me.user) {
-      openLoginModal();
-      return;
-    }
-    if (checkRole({ roleIds: checkRoleIds, meQuery })) {
-      message.error('이미 해당 서비스를 이용중입니다.');
-      return;
-    }
-    const user = meQuery?.me.user;
-    handleBootPay({
-      doneAction: refetchMeQuery,
-      executeBeforPayment: async () => {
-        const res = await checkUserRoleRequest({
-          variables: {
-            input: {
-              roleIds: checkRoleIds,
-            },
-          },
-        });
-        // 1. 해당서비스를 이용중이 아니다.
-        if (res.data?.checkUserRole.confirmed === false) {
-          // 2. 유저의 role을 변경한다.
-          if (!meQuery.me.user) return false;
-          const res = await createUserRole({
-            variables: {
-              input: {
-                roleId,
-                userId: meQuery.me.user.id,
-              },
-            },
-          });
-          if (res.data?.createUserRole.ok) {
-            createdRoleId.current = res.data.createUserRole.roleId as number;
-            return true;
-          }
-          return false;
-        }
-        if (res.data?.checkUserRole.confirmed === true) {
-          message.error(
-            '이미 해당 서비스를 이용중입니다.\n결제가 취소되었습니다.'
-          );
-          return false;
-        }
-        message.error(res.data?.checkUserRole.error);
-        return false;
-      },
-      executeAfterPayment: async ({ receiptId }) => {
-        const res = await createPayment({
-          variables: {
-            input: {
-              orderId,
-              productName: orderName,
-              price,
-              receiptId,
-            },
-          },
-        });
-        if (res.data?.createPayment.ok) {
-          return true;
-        }
-        return false;
-      },
-      executeRollback: async () => {
-        if (!createdRoleId.current) return;
-        await deleteUserRole({
-          variables: {
-            input: {
-              id: createdRoleId.current,
-            },
-          },
-        });
-      },
-      order_id: orderId,
-      order_name: orderName,
-      user: {
-        id: String(user.id),
-        username: user.nickname,
-        email: user.email,
-      },
-      price,
-      items: [
-        {
-          id: orderName,
-          name: orderName,
-          qty: 1,
-          price,
-        },
-      ],
-    });
-  };
+  const { value: selectModalState, onToggle: toggleSelectModal } =
+    useToggle(false);
 
   const handleFreeTrial = async () => {
     if (!meQuery?.me.user) {
@@ -226,6 +122,11 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       roleId: 1,
       checkRoleIds: [1, 2],
     });
+
+  const openEhsMasterPayModal = () => {
+    setPrice(10000);
+    toggleSelectModal();
+  };
 
   const handleSafePremiumPlanPayment = () =>
     handlePayment({
@@ -264,6 +165,17 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         : false,
       onConfirm: handleBasicPlanPayment,
       roleId: 1,
+    },
+    {
+      title: '직8딴 플랜',
+      intro: '12기사 저자의 암기비법을 담았다!!',
+      price: 10000,
+      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+      confirmDisabled: meQuery?.me.user
+        ? checkRole({ roleIds: [4], meQuery })
+        : false,
+      onConfirm: openEhsMasterPayModal,
+      roleId: 4,
     },
   ];
 
@@ -312,6 +224,12 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       >
         환불안내
       </a>
+      <PricingSelectModal
+        open={selectModalState}
+        onClose={toggleSelectModal}
+        price={price}
+        setPrice={setPrice}
+      />
     </PricingComponentBlock>
   );
 };
