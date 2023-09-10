@@ -16,7 +16,7 @@ import { debounce, shuffle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
 import axios from 'axios';
@@ -334,7 +334,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     onTogglePdfDownloadConfirmModalState();
   };
   return (
-    <SolutionComponentContainer>
+    <SolutionComponentContainer isPremium={isPremium || false}>
       <div className="solution-component-left-section">
         <div className="exam-solution-page-top-button-wrapper">
           <Button
@@ -467,10 +467,22 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
 
 export default SolutionComponent;
 
-const SolutionComponentContainer = styled.div`
+interface SolutionComponentContainerProps {
+  isPremium: boolean;
+}
+
+const SolutionComponentContainer = styled.div<SolutionComponentContainerProps>`
   padding: 20px;
   display: flex;
   gap: 20px;
+  ${(props) =>
+    props.isPremium &&
+    css`
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    `}
   .solution-component-left-section {
     width: 100%;
   }

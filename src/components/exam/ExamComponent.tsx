@@ -59,8 +59,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
 
   const questionList = useAppSelector((state) => state.exam.questionList);
   const currentQuestion = useAppSelector((state) => state.exam.currentQuestion);
-
-  const client = useApollo({}, '');
   const router = useRouter();
   const dispatch = useAppDispatch();
   const storage = new LocalStorage();
@@ -88,6 +86,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     type: QuestionFeedbackType.Public,
   });
 
+  const isPremium = questionsQuery?.readMockExamQuestionsByMockExamId.isPremium;
   const [editBookmark] = useEditQuestionBookmark();
   const [createFeedBack] = useCreateQuestionFeedBack();
   const { data: meQuery } = useMeQuery();
@@ -390,7 +389,10 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
 
   return (
     <>
-      <ExamContainer answerboxVisible={answerboxVisible}>
+      <ExamContainer
+        answerboxVisible={answerboxVisible}
+        isPremium={isPremium || false}
+      >
         <div className="exam-container-title-wrapper">
           {!isPreview && (
             <div className="exam-container-bookmark-button-wrapper">
@@ -603,11 +605,20 @@ export default ExamComponent;
 
 interface ExamContainerProps {
   answerboxVisible: boolean;
+  isPremium: boolean;
 }
 
 const ExamContainer = styled.div<ExamContainerProps>`
   display: flex;
   flex-direction: column;
+  ${(props) =>
+    props.isPremium &&
+    css`
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    `}
   .exam-container-title-wrapper {
     display: flex;
     flex-direction: column;
