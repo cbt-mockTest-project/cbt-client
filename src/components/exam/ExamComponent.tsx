@@ -109,7 +109,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     ) {
       if (
         meQuery?.me.user &&
-        (meQuery.me.user.userRoles.some((role) => role.role.id !== 4) ||
+        (!meQuery.me.user.userRoles.find((role) => role.role.id === 4) ||
           meQuery.me.user.userRoles.length === 0)
       ) {
         return false;
