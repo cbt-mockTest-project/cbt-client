@@ -70,17 +70,14 @@ interface PricingSelectModalProps extends Omit<ModalProps, 'children'> {
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const categoryOptions = [
-  { label: '산업안전기사', value: 2 },
-  { label: '건설안전기사', value: 1 },
-];
+const categoryOptions = [{ label: '산업안전기사', value: 1 }];
 
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
   const { price, setPrice, ...modalProps } = props;
   const { handlePayment } = usePayment();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
-  const handleEhsMasterPayment = () =>
+  const handleEhsMasterPayment = () => {
     handlePayment({
       orderName: `모두CBT 직8딴 플랜 ${
         selectedCategoryName ? `-${selectedCategoryName}` : ''
@@ -89,6 +86,8 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
       roleId: 4,
       checkRoleIds: [4],
     });
+    modalProps.onClose();
+  };
   return (
     <PricingSelectModalBlock {...modalProps}>
       <div className="pricing-select-modal-content">

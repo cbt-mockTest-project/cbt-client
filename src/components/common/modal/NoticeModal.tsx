@@ -25,7 +25,7 @@ const NoticeModalContainer = styled(Modal)`
   position: fixed;
   bottom: 0;
   top: 0;
-  height: 465px;
+  height: 490px;
   overflow-y: auto;
   .notice-modal-content {
     font-size: 0.9rem;

@@ -1,22 +1,12 @@
 import { responsive } from '@lib/utils/responsive';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import useBootpay from '@lib/hooks/useBootpay';
-import {
-  useCheckUserRole,
-  useCreateFreeTrial,
-  useCreateUserRole,
-  useDeleteUserRole,
-  useMeQuery,
-} from '@lib/graphql/user/hook/useUser';
+import { useCreateFreeTrial, useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { message } from 'antd';
-import { User, UserRole } from 'types';
-import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
 import { checkRole } from '@lib/utils/utils';
-import shortid from 'shortid';
 import palette from '@styles/palette';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
@@ -128,14 +118,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     toggleSelectModal();
   };
 
-  const handleSafePremiumPlanPayment = () =>
-    handlePayment({
-      orderName: '모두CBT 산안기 프리패스',
-      price: 30000,
-      roleId: 2,
-      checkRoleIds: [2],
-    });
-
   const pricingCardData: PricingCardProps[] = [
     {
       title: '무료 체험 - 1일',
@@ -166,18 +148,27 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       onConfirm: handleBasicPlanPayment,
       roleId: 1,
     },
-    {
-      title: '직8딴 플랜',
-      intro: '12기사 저자의 암기비법을 담았다!!',
-      price: 10000,
-      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-      confirmDisabled: meQuery?.me.user
-        ? checkRole({ roleIds: [4], meQuery })
-        : false,
-      onConfirm: openEhsMasterPayModal,
-      roleId: 4,
-    },
   ];
+
+  useEffect(() => {
+    if ([1, 7729].includes(Number(meQuery?.me.user?.id))) {
+      pricingCardData.push({
+        title: '직8딴 플랜',
+        intro:
+          '12기사 저자의 암기비법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
+        price: 10000,
+        benefits: [
+          '직8딴 풀이모드 및 해설모드 제공',
+          '직8딴 랜덤모의고사 제공',
+        ],
+        confirmDisabled: meQuery?.me.user
+          ? checkRole({ roleIds: [4], meQuery })
+          : false,
+        onConfirm: openEhsMasterPayModal,
+        roleId: 4,
+      });
+    }
+  }, [meQuery]);
 
   return (
     <PricingComponentBlock>

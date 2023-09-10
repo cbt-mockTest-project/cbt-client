@@ -18,6 +18,7 @@ const PricingCardBlock = styled.div`
   .pricing-card-intro {
     font-size: 14px;
     height: 44px;
+    white-space: pre-wrap;
   }
   .pricing-card-price-wrapper {
     display: flex;

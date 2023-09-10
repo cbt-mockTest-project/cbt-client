@@ -163,7 +163,10 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       openLoginModal();
       return;
     }
-    if (!checkRole({ roleIds: [1, 2, 3], meQuery })) {
+    if (
+      !checkRole({ roleIds: [1, 2, 3], meQuery }) &&
+      examType !== EXAM_TYPE.EHS_MASTER
+    ) {
       router.push('/pricing');
       return;
     }
@@ -206,7 +209,9 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             defaultValue={EXAM_TYPE.MODUCBT_EXAM}
           >
             <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>모두CBT</Radio.Button>
-            <Radio.Button value={EXAM_TYPE.EHS_MASTER}>직8딴</Radio.Button>
+            {[1, 7726].includes(Number(meQuery?.me.user?.id)) && (
+              <Radio.Button value={EXAM_TYPE.EHS_MASTER}>직8딴</Radio.Button>
+            )}
             <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
           </Radio.Group>
           {examType === EXAM_TYPE.MY_EXAM && (
