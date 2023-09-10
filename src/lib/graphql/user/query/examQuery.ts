@@ -232,3 +232,14 @@ export const READ_EXAM_CATEGORY_BY_EXAM_ID = gql`
     }
   }
 `;
+
+export const READ_EXAM_CATEGORIES = gql`
+  query ReadMockExamCategories($input: ReadMockExamCategoriesInput!) {
+    readMockExamCategories(input: $input) {
+      categories {
+        id
+        name
+      }
+    }
+  }
+`;

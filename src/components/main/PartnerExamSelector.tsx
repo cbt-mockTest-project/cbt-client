@@ -1,4 +1,5 @@
 import {
+  useReadExamCategories,
   useReadExamTitles,
   useReadMyExamCategories,
 } from '@lib/graphql/user/hook/useExam';
@@ -6,26 +7,27 @@ import { handleError } from '@lib/utils/utils';
 import { DefaultOptionType } from 'antd/es/select';
 import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
+import { ExamSource } from 'types';
 
 interface MyExamSelectorProps {
-  selectedMyCategory: DefaultOptionType | null;
-  selectedMyTitle: DefaultOptionType | null;
-  setSelectedMyCategory: React.Dispatch<
+  selectedPartnerCategory: DefaultOptionType | null;
+  selectedPartnerTitle: DefaultOptionType | null;
+  setSelectedPartnerCategory: React.Dispatch<
     React.SetStateAction<DefaultOptionType | null>
   >;
-  setSelectedMyTitle: React.Dispatch<
+  setSelectedPartnerTitle: React.Dispatch<
     React.SetStateAction<DefaultOptionType | null>
   >;
 }
 
-const MyExamSelector: React.FC<MyExamSelectorProps> = ({
-  selectedMyCategory,
-  selectedMyTitle,
-  setSelectedMyCategory,
-  setSelectedMyTitle,
+const PartnerExamSelector: React.FC<MyExamSelectorProps> = ({
+  selectedPartnerCategory,
+  selectedPartnerTitle,
+  setSelectedPartnerCategory,
+  setSelectedPartnerTitle,
 }) => {
   const { data: categoriesQuery, loading: readCategoriesLoading } =
-    useReadMyExamCategories('viewer');
+    useReadExamCategories({ source: ExamSource.EhsMaster });
   const [readTitles, { data: examTitlesQuery, loading: readTitlesLoading }] =
     useReadExamTitles();
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
@@ -34,26 +36,26 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
   useEffect(() => {
     if (
       categoriesQuery &&
-      categoriesQuery.readMyMockExamCategories.categories &&
-      selectedMyCategory
+      categoriesQuery.readMockExamCategories.categories &&
+      selectedPartnerCategory
     ) {
       readTitles({
         variables: {
-          input: { name: selectedMyCategory?.label as string, all: true },
+          input: {
+            name: selectedPartnerCategory?.label as string,
+          },
         },
       });
     }
   }, []);
 
   useEffect(() => {
-    if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
+    if (categoriesQuery && categoriesQuery.readMockExamCategories.categories) {
       setCategories(() =>
-        categoriesQuery?.readMyMockExamCategories.categories.map(
-          (category) => ({
-            label: category.name,
-            value: category.id,
-          })
-        )
+        categoriesQuery?.readMockExamCategories.categories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))
       );
     }
   }, [categoriesQuery]);
@@ -71,10 +73,14 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
 
   const requestCategorySelect = async (category: DefaultOptionType) => {
     try {
-      setSelectedMyCategory(category);
-      setSelectedMyTitle(null);
+      setSelectedPartnerCategory(category);
+      setSelectedPartnerTitle(null);
       await readTitles({
-        variables: { input: { name: category.label as string, all: true } },
+        variables: {
+          input: {
+            name: category.label as string,
+          },
+        },
       });
     } catch (e) {
       handleError(e);
@@ -86,7 +92,7 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
       <Select
         size="large"
         options={categories}
-        value={selectedMyCategory}
+        value={selectedPartnerCategory}
         loading={readCategoriesLoading}
         onChange={(value, option) =>
           requestCategorySelect(option as DefaultOptionType)
@@ -96,10 +102,10 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
       <Select
         size="large"
         options={titles}
-        value={selectedMyTitle}
+        value={selectedPartnerTitle}
         loading={readTitlesLoading}
         onChange={(value, option) =>
-          setSelectedMyTitle(option as DefaultOptionType)
+          setSelectedPartnerTitle(option as DefaultOptionType)
         }
         placeholder="시험을 선택해주세요."
       />
@@ -107,4 +113,4 @@ const MyExamSelector: React.FC<MyExamSelectorProps> = ({
   );
 };
 
-export default MyExamSelector;
+export default PartnerExamSelector;
