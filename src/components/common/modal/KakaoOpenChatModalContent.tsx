@@ -57,7 +57,7 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
         </div>
       </a>
       <a
-        href="https://open.kakao.com/o/gfNXScDf"
+        href="https://open.kakao.com/o/gruSqfVe"
         target="_blank"
         rel="noreferrer"
         className="kakao-open-chat-modal-safe-room-link"
