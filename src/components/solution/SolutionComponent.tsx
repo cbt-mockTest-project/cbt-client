@@ -15,7 +15,7 @@ import { Button, Card, Input, message } from 'antd';
 import { debounce, shuffle } from 'lodash';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
@@ -32,6 +32,9 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import Portal from '@components/common/portal/Portal';
 import ContinueLearningModal from './ContinueLearningModal';
 import MoveExamSelectorBox from './MoveExamSelectorBox';
+import { 직8딴_산업안전기사_리스트 } from '@lib/constants/exam';
+import Dimmed from '@components/common/dimmed/Dimmed';
+import Link from 'next/link';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -94,6 +97,27 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     ?.readMockExamQuestionsByMockExamId.isPremium;
   const examId = Number(String(router.query.Id));
   const examIds = router.query.es ? JSON.parse(String(router.query.es)) : null;
+
+  const 직8딴_산업안전기사_권한체크 = useMemo(() => {
+    if (
+      직8딴_산업안전기사_리스트.includes(examId) ||
+      (Array.isArray(examIds) &&
+        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+    ) {
+      if (
+        meQuery?.me.user &&
+        meQuery.me.user.userRoles.some((role) => role.role.id !== 5)
+      ) {
+        return false;
+      }
+      if (meQuery && !meQuery.me.user) {
+        // 비로그인시
+        return false;
+      }
+    }
+    return true;
+  }, [examId, examIds, meQuery]);
+
   useEffect(() => {
     (async () => {
       if (router.query.Id) {
@@ -461,6 +485,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           />
         )}
       </Portal>
+      {!직8딴_산업안전기사_권한체크 && (
+        <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
+          <Link href="/pricing">
+            <Button type="primary" size="large">
+              구매하러 가기
+            </Button>
+          </Link>
+        </Dimmed>
+      )}
     </SolutionComponentContainer>
   );
 };
@@ -483,6 +516,7 @@ const SolutionComponentContainer = styled.div<SolutionComponentContainerProps>`
       -ms-user-select: none;
       user-select: none;
     `}
+
   .solution-component-left-section {
     width: 100%;
   }

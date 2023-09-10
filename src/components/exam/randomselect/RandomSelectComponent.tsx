@@ -25,6 +25,7 @@ import { checkRole } from '@lib/utils/utils';
 import { EXAM_TYPE } from '@components/main/Main.type';
 import RandomMyExamSelector from './RandomMyExamSelector';
 import Link from 'next/link';
+import RandomPartnerExamSelector from './RandomPartnerExamSelector';
 
 const states: checkboxOption[] = [
   { value: QuestionState.High, label: circleIcon },
@@ -50,7 +51,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const storage = new LocalStorage();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
-  const [isMyExam, setIsMyExam] = useState<boolean>(false);
+  const [examType, setExamType] = useState<EXAM_TYPE>(EXAM_TYPE.MODUCBT_EXAM);
   const [limit, setLimit] = useState(14);
 
   const [selectedModucbtCategory, setSelectedModucbtCategory] =
@@ -61,12 +62,24 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
 
   const [selectedMyCategory, setSelectedMyCategory] =
     useState<DefaultOptionType | null>(null);
+
   const [selectedMyTitles, setSelectedMyTitles] = useState<number[]>([]);
+  const [selectedPartnerTitles, setSelectedPartnerTitles] = useState<number[]>(
+    []
+  );
+  const [selectedPartnerCategory, setSelectedPartnerCategory] =
+    useState<DefaultOptionType | null>(null);
 
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [routeLoading, setRouteLoading] = useState(false);
   const { data: meQuery, loading: meQueryLoading } = useMeQuery();
   const isLoggedIn = meQuery?.me.user ? true : false;
+
+  const notYetSelectedExam =
+    !!(examType === EXAM_TYPE.MY_EXAM && selectedMyTitles.length < 1) ||
+    !!(examType === EXAM_TYPE.EHS_MASTER && selectedPartnerTitles.length < 1) ||
+    !!(examType === EXAM_TYPE.MODUCBT_EXAM && selectedModucbtTitles.length < 1);
+
   useEffect(() => {
     try {
       const multipleSelector = document.querySelector(
@@ -155,7 +168,13 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
       return;
     }
     let es: string;
-    es = JSON.stringify(isMyExam ? selectedMyTitles : selectedModucbtTitles);
+    es = JSON.stringify(
+      examType === EXAM_TYPE.MY_EXAM
+        ? selectedMyTitles
+        : examType === EXAM_TYPE.EHS_MASTER
+        ? selectedPartnerTitles
+        : selectedModucbtTitles
+    );
     setRouteLoading(true);
     router.push({
       pathname: type === 'exam' ? '/exam' : '/exam/solution',
@@ -166,18 +185,17 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
         q: '1',
         r: false,
         t: '랜덤모의고사',
-        c: isMyExam
-          ? (selectedMyCategory?.label as string)
-          : (selectedModucbtCategory?.label as string),
+        c:
+          examType === EXAM_TYPE.MY_EXAM
+            ? (selectedMyCategory?.label as string)
+            : examType === EXAM_TYPE.EHS_MASTER
+            ? (selectedPartnerCategory?.label as string)
+            : (selectedModucbtCategory?.label as string),
       },
     });
   };
   const onChangeExamType = (e: RadioChangeEvent) => {
-    if (e.target.value === EXAM_TYPE.MODUCBT_EXAM) {
-      setIsMyExam(false);
-    } else {
-      setIsMyExam(true);
-    }
+    setExamType(e.target.value);
   };
   return (
     <RandomSelectComponentContainer>
@@ -188,24 +206,33 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             defaultValue={EXAM_TYPE.MODUCBT_EXAM}
           >
             <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>모두CBT</Radio.Button>
+            <Radio.Button value={EXAM_TYPE.EHS_MASTER}>직8딴</Radio.Button>
             <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
           </Radio.Group>
-
-          {isMyExam && (
+          {examType === EXAM_TYPE.MY_EXAM && (
             <Link href="/exam/write">
               <Button type="primary" size="large" style={{ width: '100%' }}>
                 시험지 만들기
               </Button>
             </Link>
           )}
-          {isMyExam ? (
+          {examType === EXAM_TYPE.MY_EXAM && (
             <RandomMyExamSelector
               selectedMyCategory={selectedMyCategory}
               selectedMyTitles={selectedMyTitles}
               setSelectedMyCategory={setSelectedMyCategory}
               setSelectedMyTitles={setSelectedMyTitles}
             />
-          ) : (
+          )}
+          {examType === EXAM_TYPE.EHS_MASTER && (
+            <RandomPartnerExamSelector
+              selectedPartnerCategory={selectedPartnerCategory}
+              selectedPartnerTitles={selectedPartnerTitles}
+              setSelectedPartnerCategory={setSelectedPartnerCategory}
+              setSelectedPartnerTitles={setSelectedPartnerTitles}
+            />
+          )}
+          {examType === EXAM_TYPE.MODUCBT_EXAM && (
             <>
               <Select
                 value={selectedModucbtCategory?.value}
@@ -275,10 +302,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             onClick={() => handleStart('exam')}
             type="primary"
             loading={routeLoading}
-            disabled={
-              (isMyExam && selectedMyTitles.length < 1) ||
-              (!isMyExam && selectedModucbtTitles.length < 1)
-            }
+            disabled={notYetSelectedExam}
           >
             풀이모드
           </Button>
@@ -287,10 +311,7 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             onClick={() => handleStart('solution')}
             type="primary"
             loading={routeLoading}
-            disabled={
-              (isMyExam && selectedMyTitles.length < 1) ||
-              (!isMyExam && selectedModucbtTitles.length < 1)
-            }
+            disabled={notYetSelectedExam}
           >
             해설모드
           </Button>

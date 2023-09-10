@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-const CreateExamComponentDimmedBlock = styled.div`
+const DimmedBlock = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1000;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 20px;
   p {
     font-size: 1.5rem;
     font-weight: 600;
@@ -19,25 +21,22 @@ const CreateExamComponentDimmedBlock = styled.div`
   }
 `;
 
-interface CreateExamComponentDimmedProps {
+interface DimmedProps {
   content?: string;
+  children?: React.ReactNode;
 }
 
-const CreateExamComponentDimmed: React.FC<CreateExamComponentDimmedProps> = ({
-  content,
-}) => {
+const Dimmed: React.FC<DimmedProps> = ({ content, children }) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, []);
 
   return (
-    <CreateExamComponentDimmedBlock>
+    <DimmedBlock>
       <p>{content}</p>
-    </CreateExamComponentDimmedBlock>
+      {children}
+    </DimmedBlock>
   );
 };
 
-export default CreateExamComponentDimmed;
+export default Dimmed;
