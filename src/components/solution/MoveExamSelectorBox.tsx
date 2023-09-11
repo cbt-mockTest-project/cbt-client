@@ -108,7 +108,7 @@ const MoveExamSelectorBox: React.FC<MoveExamSelectorBoxProps> = (props) => {
             (title) => title.id === examId
           );
           setCurrentTitle(currentTitle?.slug || currentTitle?.title || '');
-          setTitles(newTitles);
+          setTitles(newTitles.filter((title) => title.value !== examId));
         }
       })();
     }

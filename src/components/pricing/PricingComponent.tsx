@@ -123,6 +123,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       title: '무료 체험 - 1일',
       intro: '모두CBT 베이직 플랜을 체험해보세요!',
       price: 0,
+      endDate: '이용기간: 1일',
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       onConfirm: handleFreeTrial,
       confirmLabel: '무료체험 시작하기',
@@ -140,6 +141,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       title: '베이직 플랜',
       intro: '커피 한 잔 값으로, 학습효율을 높여보세요!',
       price: 5000,
+      endDate: '이용기간: 무제한',
       // beforeDiscountPrice: 7900,
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
@@ -150,10 +152,15 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     },
     {
       title: '직8딴 플랜',
+      endDate: '이용기간: ~ 2023-12-11 까지',
       intro:
-        '12기사 저자의 암기비법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
+        '12기사 저자의 암기법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
       price: 10000,
-      benefits: ['직8딴 풀이모드 및 해설모드 제공', '직8딴 랜덤모의고사 제공'],
+      benefits: [
+        '직8딴 풀이모드 및 해설모드 제공',
+        '직8딴 랜덤모의고사 제공',
+        '직8딴 구매자 전용 오픈카톡방을 통한 저자의 즉각 질문답변 대응',
+      ],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [4], meQuery })
         : false,

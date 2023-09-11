@@ -108,12 +108,20 @@ const PricingCardBlock = styled.div`
     vertical-align: text-bottom;
     position: relative;
   }
+  .pricing-card-end-date {
+    font-size: 14px;
+    color: ${palette.gray_700};
+    position: relative;
+    margin-top: 10px;
+    top: 20px;
+  }
 `;
 
 export interface PricingCardProps {
   title: string;
   intro: string;
   price: number;
+  endDate?: string;
   beforeDiscountPrice?: number;
   benefits: string[];
   onConfirm: () => void;
@@ -137,6 +145,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   confirmDisabled,
   beforeDiscountPrice,
   roleId,
+  endDate,
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
 }) => {
@@ -155,6 +164,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
     <PricingCardBlock>
       <h3 className="pricing-card-title">{title}</h3>
       <p className="pricing-card-intro">{intro}</p>
+      {endDate && <p className="pricing-card-end-date">{endDate}</p>}
       {isTempText ? (
         <div className="pricing-card-temp-text">{isTempText}</div>
       ) : (
