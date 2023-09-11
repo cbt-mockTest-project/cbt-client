@@ -430,7 +430,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
                 className="exam-container-bookmark-tooltip"
               >
                 <p className="exam-container-bookmark-tooltip-text">
-                  {'저장된 문제는 북마크탭에서\n확인할 수 있습니다.'}
+                  {'저장된 문제는 저장탭에서\n확인할 수 있습니다.'}
                 </p>
               </Tooltip>
               <button

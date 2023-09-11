@@ -242,7 +242,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               </p>
             </button>
           )}
-
+          {/* 
           {hasNewWindowButton && (
             <Tooltip placement="top" title="새창으로 보기">
               <a
@@ -254,7 +254,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
                 <OpenInNewIcon />
               </a>
             </Tooltip>
-          )}
+          )} */}
         </div>
         <div className="solution-page-question-pre-wrapper">
           {questionSubDescription && (

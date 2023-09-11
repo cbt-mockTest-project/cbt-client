@@ -32,7 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const MAIN_SUB_NAV_OPTIONS: SubNavOption[] = [
-  { label: '북마크', value: 'bookmark', path: '/me/bookmark' },
+  { label: '저장', value: 'bookmark', path: '/me/bookmark' },
   { label: '성취도', value: 'reviewnote', path: '/me/reviewnote' },
   { label: '시험지', value: 'myexam', path: '/me/myexam' },
   { label: '메모장', value: 'memo', path: '/me/memo' },

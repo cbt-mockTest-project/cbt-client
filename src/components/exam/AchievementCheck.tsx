@@ -20,7 +20,6 @@ import { QuestionState } from 'types';
 interface AchievementCheckProps {}
 
 const AchievementCheck: React.FC<AchievementCheckProps> = ({}) => {
-  const isMobile = useIsMobile();
   const [changeQuestionState] = useChangeQuestionState();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
