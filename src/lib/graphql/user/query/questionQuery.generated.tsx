@@ -65,6 +65,13 @@ export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
 
 export type ReadMockExamQuestionNumbersQuery = { __typename?: 'Query', readMockExamQuestionNumbers: { __typename?: 'ReadMockExamQuestionNumbersOutput', error?: string | null, ok: boolean, examStatus?: Types.ExamStatus | null, questionNumbers: Array<{ __typename?: 'QuestionNumber', questionNumber: number, questionId: number }> } };
 
+export type SearchQuestionsByKeywordQueryVariables = Types.Exact<{
+  input: Types.SearchQuestionsByKeywordInput;
+}>;
+
+
+export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question: string, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
+
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
     query ReadMockExamQuestionsByMockExamId($input: ReadMockExamQuestionsByMockExamIdInput!) {
@@ -289,4 +296,30 @@ export const ReadMockExamQuestionNumbersDocument = gql`
 
 export function useReadMockExamQuestionNumbersQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionNumbersQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionNumbersQuery, ReadMockExamQuestionNumbersQueryVariables>({ query: ReadMockExamQuestionNumbersDocument, ...options });
+};
+export const SearchQuestionsByKeywordDocument = gql`
+    query SearchQuestionsByKeyword($input: SearchQuestionsByKeywordInput!) {
+  searchQuestionsByKeyword(input: $input) {
+    error
+    ok
+    questions {
+      id
+      question
+      solution
+      question_img {
+        url
+      }
+      solution_img {
+        url
+      }
+      mockExam {
+        title
+      }
+    }
+  }
+}
+    `;
+
+export function useSearchQuestionsByKeywordQuery(options: Omit<Urql.UseQueryArgs<SearchQuestionsByKeywordQueryVariables>, 'query'>) {
+  return Urql.useQuery<SearchQuestionsByKeywordQuery, SearchQuestionsByKeywordQueryVariables>({ query: SearchQuestionsByKeywordDocument, ...options });
 };
