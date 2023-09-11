@@ -74,7 +74,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const notYetSelectedExam =
     !!(examType === EXAM_TYPE.MY_EXAM && !selectedMyTitle) ||
     !!(examType === EXAM_TYPE.EHS_MASTER && !selectedPartnerTitle) ||
-    !!(!(examType === EXAM_TYPE.MODUCBT_EXAM) && !selectedModucbtTitle);
+    !!(examType === EXAM_TYPE.MODUCBT_EXAM && !selectedModucbtTitle);
 
   useEffect(() => {
     const savedCategory = storage.get(selectedCategoryHistory);
