@@ -70,11 +70,11 @@ const BookmarkedQuestionsComponent: React.FC<
     setQuestions(shuffle);
   };
   const onResetBookmark = async () => {
-    const confrimed = confirm('북마크를 초기화 하시겠습니까?');
+    const confrimed = confirm('저장을 초기화 하시겠습니까?');
     if (confrimed) {
       const res = await resetBookmark();
       if (res.data?.resetMyQuestionBookmark.ok) {
-        message.success('북마크가 초기화 되었습니다.');
+        message.success('저장이 초기화 되었습니다.');
         setQuestions(null);
       }
     }
@@ -88,7 +88,7 @@ const BookmarkedQuestionsComponent: React.FC<
 
       <div className="bookmark-reset-button-wrapper">
         <Button type="primary" onClick={onResetBookmark}>
-          북마크 초기화
+          저장 초기화
         </Button>
       </div>
       <Select

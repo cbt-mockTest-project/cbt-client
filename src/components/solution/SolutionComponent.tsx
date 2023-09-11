@@ -415,6 +415,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
             return (
               <div key={index}>
                 <ExamSolutionList
+                  hasStateBox={false}
                   questionSubDescription={
                     isRandomMode
                       ? `${el?.mockExam?.title}
