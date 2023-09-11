@@ -25,7 +25,11 @@ const RandomSolutionPage: NextPage = () => {
           className="exam-solution-page-google-display-ad-wrapper"
           type="display"
         />
-        <SolutionComponent hasNewWindowButton={false} isRandomMode={true} />
+        <SolutionComponent
+          hasNewWindowButton={false}
+          isRandomMode={true}
+          hasSearchInput={true}
+        />
         <GoogleAd type="multiflex" />
       </Layout>
     </>

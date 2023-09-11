@@ -8,11 +8,12 @@ import { convertExamTitle } from '@lib/utils/utils';
 import WithHead from '@components/common/head/WithHead';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
-import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
+import { ReadMockExamQuestionsByMockExamIdInput, UserRole } from 'types';
 import dynamic from 'next/dynamic';
 import SolutionComponentSkeleton from '@components/solution/SolutionComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import styled from 'styled-components';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const SolutionComponent = dynamic(
   () => import('@components/solution/SolutionComponent'),
@@ -24,6 +25,7 @@ interface SolutionProps {
 
 const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
   const title = questionsQuery?.readMockExamQuestionsByMockExamId.title;
+  const { data: meQuery } = useMeQuery();
   return (
     <>
       <WithHead
@@ -38,6 +40,9 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         <SolutionComponent
           questionsQuery={questionsQuery}
           hasSearchInput={true}
+          hasNewWindowButton={
+            meQuery?.me.user?.role === UserRole.Admin ? true : false
+          }
         />
         <GoogleAd type="display" />
       </StyledLayout>
