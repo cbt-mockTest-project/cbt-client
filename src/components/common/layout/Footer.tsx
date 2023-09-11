@@ -23,11 +23,10 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <div className="footer-section-two-description">상호명: 모두</div>
           <div className="footer-section-two-description">
             사업자등록번호: 784-19-02020 ⁞ 대표: 심은광 ⁞ 이메일:
-            moducbt@gmail.com ⁞ 문의: 010-8426-2693
+            moducbt@gmail.com
           </div>
           <div className="footer-section-two-description">
-            사업장소재지: 서울특별시 구로구 가마산로77, 12층 1212호(구로동,
-            한솔로이젠트)
+            사업장소재지: 서울특별시 구로구 가마산로77
           </div>
           <div className="footer-section-two-description">
             통신판매업신고번호: 2023-서울구로-1204

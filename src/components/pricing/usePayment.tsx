@@ -1,4 +1,8 @@
 import { loginModal } from '@lib/constants';
+import {
+  useCheckDiscountCode,
+  useUpdateDiscountCode,
+} from '@lib/graphql/user/hook/useDiscount';
 import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
 import {
   useCheckUserRole,
@@ -13,12 +17,14 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { useRef } from 'react';
 import shortid from 'shortid';
+import { DiscountCodeStatus } from 'types';
 
 interface handlePaymentParams {
   price: number;
   orderName: string;
   roleId: number;
   checkRoleIds: number[];
+  discountCode?: string;
 }
 
 const usePayment = () => {
@@ -31,12 +37,15 @@ const usePayment = () => {
   const [createPayment] = useCreatePayment();
   const [createUserRole] = useCreateUserRole();
   const [deleteUserRole] = useDeleteUserRole();
+  const [checkDiscountCode] = useCheckDiscountCode();
+  const [updateDiscountCode] = useUpdateDiscountCode();
 
-  const handlePayment = ({
+  const handlePayment = async ({
     orderName,
     price,
     roleId,
     checkRoleIds,
+    discountCode,
   }: handlePaymentParams) => {
     const orderId = `${meQuery?.me.user?.id}_${shortid.generate()}`;
     if (!meQuery?.me.user) {
@@ -48,9 +57,31 @@ const usePayment = () => {
       return;
     }
     const user = meQuery?.me.user;
-    handleBootPay({
+    await handleBootPay({
       doneAction: refetchMeQuery,
       executeBeforPayment: async () => {
+        if (discountCode) {
+          const res = await checkDiscountCode({
+            variables: {
+              input: {
+                code: discountCode,
+              },
+            },
+          });
+          if (!res.data?.checkDiscountCode.ok) {
+            // 할인코드가 이미 이용중이다.
+            message.error(res.data?.checkDiscountCode.error);
+            return false;
+          }
+          await updateDiscountCode({
+            variables: {
+              input: {
+                code: discountCode,
+                status: DiscountCodeStatus.Used,
+              },
+            },
+          });
+        }
         const res = await checkUserRoleRequest({
           variables: {
             input: {
@@ -110,6 +141,15 @@ const usePayment = () => {
             },
           },
         });
+        if (discountCode)
+          await updateDiscountCode({
+            variables: {
+              input: {
+                code: discountCode,
+                status: DiscountCodeStatus.Unused,
+              },
+            },
+          }); // 할인코드를 원래대로 되돌린다.
       },
       order_id: orderId,
       order_name: orderName,

@@ -1,10 +1,12 @@
 import Modal, { ModalProps } from '@components/common/modal/Modal';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
-import { Button, Input, Select } from 'antd';
+import { Button, Input, Select, message } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { makeMoneyString } from '@lib/utils/utils';
 import usePayment from './usePayment';
+import { useCheckDiscountCode } from '@lib/graphql/user/hook/useDiscount';
+import useInput from '@lib/hooks/useInput';
 
 const PricingSelectModalBlock = styled(Modal)`
   padding: 30px 20px;
@@ -75,18 +77,40 @@ const categoryOptions = [{ label: '산업안전기사', value: 1 }];
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
   const { price, setPrice, ...modalProps } = props;
   const { handlePayment } = usePayment();
+  const { value: discountCode, onChange: onChangeDiscountCode } = useInput('');
+  const [isUsedDiscountCode, setIsUsedDiscountCode] = useState<boolean>(false);
+  const [checkDiscountCode, { loading: checkDiscountCodeLoading }] =
+    useCheckDiscountCode();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
-  const handleEhsMasterPayment = () => {
-    handlePayment({
+  const handleEhsMasterPayment = async () => {
+    await handlePayment({
       orderName: `모두CBT 직8딴 플랜 ${
         selectedCategoryName ? `-${selectedCategoryName}` : ''
       }`,
       price,
       roleId: 4,
       checkRoleIds: [4],
+      discountCode,
     });
     modalProps.onClose();
+  };
+
+  const handleApplyDiscount = async () => {
+    const res = await checkDiscountCode({
+      variables: {
+        input: {
+          code: discountCode,
+        },
+      },
+    });
+    if (res.data?.checkDiscountCode.ok) {
+      setPrice(5000);
+      message.success('할인코드가 적용되었습니다.');
+      setIsUsedDiscountCode(true);
+      return;
+    }
+    message.error(res.data?.checkDiscountCode.error);
   };
   return (
     <PricingSelectModalBlock {...modalProps}>
@@ -110,7 +134,6 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
           size="large"
           options={categoryOptions}
           onChange={(value, option) => {
-            console.log(option);
             setSelectedCategoryId(value);
             if (!Array.isArray(option)) setSelectedCategoryName(option.label);
           }}
@@ -121,12 +144,14 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
             className="pricing-select-modal-discount-input"
             placeholder="할인코드"
             size="large"
+            value={discountCode}
+            onChange={onChangeDiscountCode}
           />
           <Button
             size="large"
-            onClick={() => {
-              setPrice((el) => 0.5 * el);
-            }}
+            disabled={isUsedDiscountCode || !discountCode}
+            onClick={handleApplyDiscount}
+            loading={checkDiscountCodeLoading}
           >
             적용
           </Button>
