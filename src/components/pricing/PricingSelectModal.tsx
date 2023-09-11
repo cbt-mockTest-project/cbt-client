@@ -149,7 +149,7 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
           />
           <Button
             size="large"
-            disabled={isUsedDiscountCode}
+            disabled={isUsedDiscountCode || !discountCode}
             onClick={handleApplyDiscount}
             loading={checkDiscountCodeLoading}
           >

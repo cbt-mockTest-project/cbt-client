@@ -114,7 +114,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     });
 
   const openEhsMasterPayModal = () => {
-    setPrice(10000);
+    setPrice(15000);
     toggleSelectModal();
   };
 
@@ -155,7 +155,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       endDate: '이용기간: ~ 2023-12-11 까지',
       intro:
         '12기사 저자의 암기법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
-      price: 10000,
+      price: 15000,
       benefits: [
         '직8딴 풀이모드 및 해설모드 제공',
         '직8딴 랜덤모의고사 제공',
