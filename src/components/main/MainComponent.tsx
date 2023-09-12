@@ -25,6 +25,7 @@ import MyExamSelector from './MyExamSelector';
 import InviteExamModal from './modal/InviteExamModal';
 import PartnerExamSelector from './PartnerExamSelector';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { SearchOutlined } from '@ant-design/icons';
 
 export interface TitlesAndCategories {
   category: string;
@@ -290,9 +291,11 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
           <Button onClick={gotoRandomSelectPage}>랜덤모의고사</Button>
           <div className="home-content-devide-line" />
-
+          <Link href="/search/question">
+            <Button type="primary">문제 검색기</Button>
+          </Link>
           <Link href="/pricing" style={{ width: '100%' }}>
-            <Button type="primary">프리미엄 스토어</Button>
+            <Button>프리미엄 스토어</Button>
           </Link>
 
           <a
@@ -301,7 +304,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             rel="noreferrer"
             style={{ width: '100%' }}
           >
-            <Button>모두CBT 활용팁</Button>
+            <Button type="primary">모두CBT 활용팁</Button>
           </a>
           <button
             type="button"
@@ -401,5 +404,9 @@ const MainComponentContainer = styled.div`
     svg {
       height: 25px;
     }
+  }
+  .home-search-question-icon {
+    position: absolute;
+    left: 75px;
   }
 `;

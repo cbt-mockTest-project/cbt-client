@@ -13,6 +13,7 @@ import {
   READ_QUESTIONS_BY_ID,
   READ_QUESTIONS_BY_STATE,
   READ_QUESTION_NUMBERS,
+  SEARCH_QEUSTIONS,
 } from '../query/questionQuery';
 import {
   CreateMockExamQuestionMutation,
@@ -31,7 +32,10 @@ import {
   ReadMockExamQuestionsByMockExamIdQueryVariables,
   ReadMockExamQuestionsByStateQuery,
   ReadMockExamQuestionsByStateQueryVariables,
+  SearchQuestionsByKeywordQuery,
+  SearchQuestionsByKeywordQueryVariables,
 } from '../query/questionQuery.generated';
+import { SearchQuestionsByKeywordInput } from 'types';
 
 export const useLazyReadQuestionsByExamId = (
   fetchPolicy: WatchQueryFetchPolicy
@@ -103,3 +107,9 @@ export const useDeleteQuestion = () =>
     DeleteMockExamQuestionMutation,
     DeleteMockExamQuestionMutationVariables
   >(DELETE_QUESTION);
+
+export const useSearchQuestions = () =>
+  useLazyQuery<
+    SearchQuestionsByKeywordQuery,
+    SearchQuestionsByKeywordQueryVariables
+  >(SEARCH_QEUSTIONS);

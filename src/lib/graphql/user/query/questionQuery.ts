@@ -210,3 +210,27 @@ export const READ_QUESTION_NUMBERS = gql`
     }
   }
 `;
+
+export const SEARCH_QEUSTIONS = gql`
+  query SearchQuestionsByKeyword($input: SearchQuestionsByKeywordInput!) {
+    searchQuestionsByKeyword(input: $input) {
+      error
+      ok
+      questions {
+        id
+        question
+        solution
+        number
+        question_img {
+          url
+        }
+        solution_img {
+          url
+        }
+        mockExam {
+          title
+        }
+      }
+    }
+  }
+`;
