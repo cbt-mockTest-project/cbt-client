@@ -16,7 +16,7 @@ const AppInner: React.FC<AppInnerProps> = () => {
 
   useEffect(() => {
     if (
-      checkRole({ roleIds: [1, 2, 3], meQuery }) &&
+      checkRole({ roleIds: [1, 2, 3, 4], meQuery }) &&
       typeof window !== 'undefined'
     ) {
       try {

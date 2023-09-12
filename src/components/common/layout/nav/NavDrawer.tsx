@@ -37,7 +37,7 @@ const NavDrawer: React.FC<NavDrawerProps> = (props) => {
             <div className="mobile-nav-user-content">
               <span className="mobile-nav-user-content-profile-image">
                 {checkRole({
-                  roleIds: [1, 2, 3],
+                  roleIds: [1, 2, 3, 4],
                   meQuery: props.meQuery,
                 }) && (
                   <CrownTwoTone
