@@ -220,6 +220,7 @@ export const SEARCH_QEUSTIONS = gql`
         id
         question
         solution
+        number
         question_img {
           url
         }

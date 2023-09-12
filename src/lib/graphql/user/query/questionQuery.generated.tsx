@@ -70,7 +70,7 @@ export type SearchQuestionsByKeywordQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question: string, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
+export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question: string, solution?: string | null, number: number, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -306,6 +306,7 @@ export const SearchQuestionsByKeywordDocument = gql`
       id
       question
       solution
+      number
       question_img {
         url
       }
