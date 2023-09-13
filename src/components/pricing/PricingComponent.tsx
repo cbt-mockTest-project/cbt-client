@@ -154,12 +154,13 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       title: '직8딴 플랜',
       endDate: '이용기간: ~ 2023-12-11 까지',
       intro:
-        '12기사 저자의 암기법이 담긴\n직8딴 시리즈를 모두CBT에서 만나보세요!',
+        '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
       price: 15000,
       benefits: [
         '직8딴 풀이모드 및 해설모드 제공',
         '직8딴 랜덤모의고사 제공',
-        '직8딴 구매자 전용 오픈카톡방을 통한 저자의 즉각 질문답변 대응',
+        '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
+        '광고제거',
       ],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [4], meQuery })

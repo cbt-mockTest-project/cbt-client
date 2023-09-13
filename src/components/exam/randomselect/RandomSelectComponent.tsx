@@ -209,11 +209,10 @@ const RandomSelectComponent: React.FC<RandomSelectComponentProps> = ({
             defaultValue={EXAM_TYPE.MODUCBT_EXAM}
           >
             <Radio.Button value={EXAM_TYPE.MODUCBT_EXAM}>모두CBT</Radio.Button>
-
-            <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
             <Radio.Button value={EXAM_TYPE.EHS_MASTER}>
               직8딴(중복소거)
             </Radio.Button>
+            <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
           </Radio.Group>
           {examType === EXAM_TYPE.MY_EXAM && (
             <Link href="/exam/write">
