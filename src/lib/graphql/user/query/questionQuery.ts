@@ -81,6 +81,7 @@ export const READ_QUESTION = gql`
         }
         question
         solution
+        label
         mockExam {
           title
         }

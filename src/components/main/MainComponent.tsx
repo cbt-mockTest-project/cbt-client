@@ -141,7 +141,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
         ? (selectedPartnerTitle.label as string)
         : currentExamTitles[0].titles.filter(
             (title) => title.id === selectedModucbtTitle?.value
-          )[0].title;
+          )[0]?.title;
 
       const answerRecords = storage.get(tempAnswerKey);
       const selectedAnswerRecord = answerRecords[currentExamTitle];

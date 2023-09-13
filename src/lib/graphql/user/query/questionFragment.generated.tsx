@@ -5,7 +5,7 @@ export type PureQuestionPartsFragment = { __typename?: 'MockExamQuestion', quest
 
 export type FullQuestionPartsFragment = { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> };
 
-export type FullQuestionIncludingExamIdPartsFragment = { __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> };
+export type FullQuestionIncludingExamIdPartsFragment = { __typename?: 'MockExamQuestion', question: string, solution?: string | null, label: string, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> };
 
 export const PureQuestionPartsFragmentDoc = gql`
     fragment PureQuestionParts on MockExamQuestion {
@@ -45,6 +45,7 @@ export const FullQuestionIncludingExamIdPartsFragmentDoc = gql`
     fragment FullQuestionIncludingExamIdParts on MockExamQuestion {
   question
   solution
+  label
   question_img {
     url
   }

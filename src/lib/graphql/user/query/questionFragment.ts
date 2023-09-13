@@ -40,6 +40,7 @@ export const FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT = gql`
   fragment FullQuestionIncludingExamIdParts on MockExamQuestion {
     question
     solution
+    label
     question_img {
       url
     }

@@ -262,6 +262,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               {questionSubDescription}
             </div>
           )}
+          {currentQuestion.label && (
+            <p className="solution-page-question-label">
+              기출 {currentQuestion.label}회
+            </p>
+          )}
           <pre className="solution-page-question">
             {`Q${index || currentQuestion.number}. ${currentQuestion.question}`}
           </pre>
@@ -492,6 +497,10 @@ const ExamSolutionListContainer = styled.li`
     border: 1px solid ${palette.gray_100};
     background-color: ${palette.gray_100};
     font-size: 0.8rem;
+  }
+  .solution-page-question-label {
+    font-size: 14px;
+    color: ${palette.gray_700};
   }
   .solution-page-question-detail-link {
     svg {

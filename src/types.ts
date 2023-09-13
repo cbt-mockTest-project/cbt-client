@@ -974,6 +974,7 @@ export type MockExamQuestion = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  label: Scalars['String'];
   mockExam?: Maybe<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;

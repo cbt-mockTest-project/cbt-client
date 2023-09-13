@@ -182,10 +182,10 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
         <div className="data-detail-info-wrapper">
           <div className="data-detail-info-left-side">
             <div className="data-detail-info-content-wrapper">
-              <p className="data-detail-info-content-key">제작자</p>
+              {/* <p className="data-detail-info-content-key">제작자</p>
               <p className="data-detail-info-content-value">
                 {post.user.nickname}
-              </p>
+              </p> */}
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">등록일</p>

@@ -390,11 +390,11 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
         <h1 className="not-draggable">
           {convertExamTitle(title || '')} 문제/해설
         </h1>
-        {!isRandomMode && (
+        {/* {!isRandomMode && (
           <p className="exam-solution-page-author-name">{`제작자: ${
             currentQuestionsQuery?.readMockExamQuestionsByMockExamId?.author
           }${coAuthor ? ', ' + coAuthor : ''}`}</p>
-        )}
+        )} */}
         {subDescription && (
           <p className="exam-solution-page-author-name">{subDescription}</p>
         )}

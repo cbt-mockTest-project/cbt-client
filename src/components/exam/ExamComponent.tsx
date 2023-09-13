@@ -455,11 +455,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           )}
           <h2 className="exam-container-title">
             {pageSubTitle}
-            {!isRandomExam && (
+            {/* {!isRandomExam && (
               <p className="exam-container-author-name">
                 {`제작자:${questionsQuery.readMockExamQuestionsByMockExamId.author}`}
               </p>
-            )}
+            )} */}
           </h2>
           {isRandomExam && currentQuestion?.mockExam && (
             <h3 className="exam-container-sub-title">
@@ -468,6 +468,11 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
             </h3>
           )}
         </div>
+        {currentQuestion?.label && (
+          <p className="exam-container-label">
+            기출 {currentQuestion?.label}회
+          </p>
+        )}
         <div ref={scrollRef} />
         <QuestionAndSolutionBox
           className="exam-question-and-video-content"
@@ -690,6 +695,12 @@ const ExamContainer = styled.div<ExamContainerProps>`
     background-color: ${palette.gray_100};
     justify-content: center;
     align-items: center;
+  }
+  .exam-container-label {
+    font-size: 14px;
+    position: relative;
+    top: -10px;
+    color: ${palette.gray_700};
   }
   .exam-container-bookmark-tooltip {
     top: 4px;
