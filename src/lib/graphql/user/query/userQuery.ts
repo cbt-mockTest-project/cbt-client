@@ -218,6 +218,16 @@ export const GET_ROLE_COUNT = gql`
   }
 `;
 
+export const GET_ROLES_COUNT = gql`
+  query GetRolesCount($input: GetRolesCountInput!) {
+    getRolesCount(input: $input) {
+      count
+      error
+      ok
+    }
+  }
+`;
+
 export const GET_USER_BY_NICKNAME_OR_EMAIL = gql`
   query GetUserByNicknameOrEmail($input: GetUserByNicknameOrEmailInput!) {
     getUserByNicknameOrEmail(input: $input) {

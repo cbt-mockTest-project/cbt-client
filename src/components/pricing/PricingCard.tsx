@@ -8,7 +8,10 @@ import { makeMoneyString } from '@lib/utils/utils';
 import Portal from '@components/common/portal/Portal';
 import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
 import useToggle from '@lib/hooks/useToggle';
-import { useLazyGetRoleCount } from '@lib/graphql/user/hook/useUser';
+import {
+  useLazyGetRoleCount,
+  useLazyGetRolesCount,
+} from '@lib/graphql/user/hook/useUser';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
 const PricingCardBlock = styled.div`
@@ -131,7 +134,7 @@ export interface PricingCardProps {
   isTempText?: string;
   confirmDisabled?: boolean;
   isFreeTrial?: boolean;
-  roleId?: number;
+  roleIds?: number[];
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -144,19 +147,20 @@ const PricingCard: React.FC<PricingCardProps> = ({
   hasBeforePaymentModal,
   confirmDisabled,
   beforeDiscountPrice,
-  roleId,
+  roleIds,
   endDate,
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
 }) => {
-  const [getRoleCount, { data: roleCountQuery }] = useLazyGetRoleCount();
+  const [getRoleCount, { data: roleCountQuery }] = useLazyGetRolesCount();
   const {
     value: paymentNoticeModalState,
     onToggle: onTogglePaymentNoticeModal,
   } = useToggle(false);
   useEffect(() => {
-    if (roleId) {
-      getRoleCount({ variables: { input: { roleId } } });
+    if (roleIds && roleIds.length > 0) {
+      console.log('들어오니');
+      getRoleCount({ variables: { input: { roleIds } } });
     }
   }, []);
 
@@ -191,8 +195,8 @@ const PricingCard: React.FC<PricingCardProps> = ({
             </span>
             <span className="pricing-card-price-label">원</span>
           </div>
-          {typeof roleCountQuery?.getRoleCount.count === 'number' ? (
-            <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRoleCount.count}명 이용중!! `}</div>
+          {typeof roleCountQuery?.getRolesCount.count === 'number' ? (
+            <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRolesCount.count}명 이용중!! `}</div>
           ) : (
             <SkeletonBox
               className="pricing-card-price-user-count"

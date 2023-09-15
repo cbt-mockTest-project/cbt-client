@@ -135,6 +135,13 @@ export type GetRoleCountQueryVariables = Types.Exact<{
 
 export type GetRoleCountQuery = { __typename?: 'Query', getRoleCount: { __typename?: 'GetRoleCountOutput', count?: number | null, error?: string | null, ok: boolean } };
 
+export type GetRolesCountQueryVariables = Types.Exact<{
+  input: Types.GetRolesCountInput;
+}>;
+
+
+export type GetRolesCountQuery = { __typename?: 'Query', getRolesCount: { __typename?: 'GetRolesCountOutput', count?: number | null, error?: string | null, ok: boolean } };
+
 export type GetUserByNicknameOrEmailQueryVariables = Types.Exact<{
   input: Types.GetUserByNicknameOrEmailInput;
 }>;
@@ -419,6 +426,19 @@ export const GetRoleCountDocument = gql`
 
 export function useGetRoleCountQuery(options: Omit<Urql.UseQueryArgs<GetRoleCountQueryVariables>, 'query'>) {
   return Urql.useQuery<GetRoleCountQuery, GetRoleCountQueryVariables>({ query: GetRoleCountDocument, ...options });
+};
+export const GetRolesCountDocument = gql`
+    query GetRolesCount($input: GetRolesCountInput!) {
+  getRolesCount(input: $input) {
+    count
+    error
+    ok
+  }
+}
+    `;
+
+export function useGetRolesCountQuery(options: Omit<Urql.UseQueryArgs<GetRolesCountQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetRolesCountQuery, GetRolesCountQueryVariables>({ query: GetRolesCountDocument, ...options });
 };
 export const GetUserByNicknameOrEmailDocument = gql`
     query GetUserByNicknameOrEmail($input: GetUserByNicknameOrEmailInput!) {
