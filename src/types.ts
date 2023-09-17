@@ -184,6 +184,7 @@ export type CreateMockExamQuestionFeedbackOutput = {
 };
 
 export type CreateMockExamQuestionInput = {
+  label?: InputMaybe<Scalars['String']>;
   mockExamId: Scalars['Float'];
   number: Scalars['Float'];
   question: Scalars['String'];
@@ -571,6 +572,7 @@ export type EditMockExamQuestionFeedbackOutput = {
 
 export type EditMockExamQuestionInput = {
   id: Scalars['Float'];
+  label?: InputMaybe<Scalars['String']>;
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   solution?: InputMaybe<Scalars['String']>;
@@ -835,6 +837,17 @@ export type GetRoleCountOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetRolesCountInput = {
+  roleIds: Array<Scalars['Float']>;
+};
+
+export type GetRolesCountOutput = {
+  __typename?: 'GetRolesCountOutput';
+  count?: Maybe<Scalars['Float']>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetTodayAttendanceOutput = {
   __typename?: 'GetTodayAttendanceOutput';
   attendances?: Maybe<Array<Attendance>>;
@@ -974,7 +987,7 @@ export type MockExamQuestion = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
-  label: Scalars['String'];
+  label?: Maybe<Scalars['String']>;
   mockExam?: Maybe<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
@@ -1714,6 +1727,7 @@ export type Query = {
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
   getRoleCount: GetRoleCountOutput;
+  getRolesCount: GetRolesCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   getTodo: GetTodoOutput;
   getUserByNicknameOrEmail: GetUserByNicknameOrEmailOutput;
@@ -1783,6 +1797,11 @@ export type QueryGetMyBlogPostRankArgs = {
 
 export type QueryGetRoleCountArgs = {
   input: GetRoleCountInput;
+};
+
+
+export type QueryGetRolesCountArgs = {
+  input: GetRolesCountInput;
 };
 
 

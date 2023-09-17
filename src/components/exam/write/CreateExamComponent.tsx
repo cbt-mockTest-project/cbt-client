@@ -492,6 +492,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       const res = await createQuestion({
         variables: {
           input: {
+            label: data.label,
             mockExamId: selectedTitle.value as number,
             question: data.question,
             solution: data.solution,

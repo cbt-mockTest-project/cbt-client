@@ -7,9 +7,9 @@ import TextArea from 'antd/lib/input/TextArea';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
-import { ExamStatus, QuestionNumber } from 'types';
+import { ExamStatus, QuestionNumber, UserRole } from 'types';
 import ImageDragger from './ImageDragger';
-import { handleError } from '@lib/utils/utils';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 interface QuestionAndSolutionFormProps {
   questionNumbers: QuestionNumber[];
@@ -34,7 +34,8 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   onToggleExamPreviewModal,
   examId,
 }) => {
-  const { control, formState, getValues } = useFormContext();
+  const { control, formState, getValues, register } = useFormContext();
+  const { data: meQuery } = useMeQuery();
   return (
     <QuestionAndSolutionFormContainer>
       <Label content={'2.본격작업 - 문제 등록하기'} />
@@ -80,6 +81,20 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
         <label className="create-exam-small-label">
           2.3 문제,해설 내용 입력하기
         </label>
+        {meQuery?.me.user?.role === UserRole.Admin && (
+          <Controller
+            name="label"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input
+                placeholder="문제를 입력해주세요."
+                onChange={field.onChange}
+                value={getValues('label')}
+              />
+            )}
+          />
+        )}
         <div className="create-exam-question-and-solution-area-wrapper">
           <div className="create-exam-question-area">
             <Controller

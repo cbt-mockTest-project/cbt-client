@@ -135,7 +135,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
             meQuery,
           })
         : false,
-      roleId: 3,
+      roleIds: [3],
     },
     {
       title: '베이직 플랜',
@@ -148,7 +148,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         ? checkRole({ roleIds: [1, 2], meQuery })
         : false,
       onConfirm: handleBasicPlanPayment,
-      roleId: 1,
+      roleIds: [1],
     },
     {
       title: '직8딴 플랜',
@@ -162,11 +162,9 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
         '광고제거',
       ],
-      confirmDisabled: meQuery?.me.user
-        ? checkRole({ roleIds: [4], meQuery })
-        : false,
+      confirmDisabled: false,
       onConfirm: openEhsMasterPayModal,
-      roleId: 4,
+      roleIds: [4, 5],
     },
   ];
 

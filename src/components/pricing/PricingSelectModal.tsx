@@ -1,12 +1,13 @@
 import Modal, { ModalProps } from '@components/common/modal/Modal';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 import { Button, Input, Select, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { makeMoneyString } from '@lib/utils/utils';
+import { checkRole, makeMoneyString } from '@lib/utils/utils';
 import usePayment from './usePayment';
 import { useCheckDiscountCode } from '@lib/graphql/user/hook/useDiscount';
 import useInput from '@lib/hooks/useInput';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const PricingSelectModalBlock = styled(Modal)`
   padding: 30px 20px;
@@ -71,26 +72,30 @@ interface PricingSelectModalProps extends Omit<ModalProps, 'children'> {
   price: number;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }
-
-const categoryOptions = [{ label: '산업안전기사', value: 1 }];
+// value 는 roleId 와 동일하게 간다.
+const categoryOptions = [
+  { label: '산업안전기사', value: 4 },
+  { label: '건설안전기사', value: 5 },
+];
 
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
   const { price, setPrice, ...modalProps } = props;
   const { handlePayment } = usePayment();
+  const { data: meQuery } = useMeQuery();
   const { value: discountCode, onChange: onChangeDiscountCode } = useInput('');
   const [isUsedDiscountCode, setIsUsedDiscountCode] = useState<boolean>(false);
   const [checkDiscountCode, { loading: checkDiscountCodeLoading }] =
     useCheckDiscountCode();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
-  const handleEhsMasterPayment = async () => {
+  const handleEhsMasterPayment = async (roleId: number) => {
     await handlePayment({
       orderName: `모두CBT 직8딴 플랜 ${
         selectedCategoryName ? `-${selectedCategoryName}` : ''
       }`,
       price,
-      roleId: 4,
-      checkRoleIds: [4],
+      roleId,
+      checkRoleIds: [roleId],
       discountCode,
     });
     modalProps.onClose();
@@ -112,6 +117,15 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
     }
     message.error(res.data?.checkDiscountCode.error);
   };
+
+  const isUsingLicense = useMemo(
+    () =>
+      checkRole({
+        roleIds: [selectedCategoryId],
+        meQuery,
+      }),
+    [selectedCategoryId]
+  );
   return (
     <PricingSelectModalBlock {...modalProps}>
       <div className="pricing-select-modal-content">
@@ -160,10 +174,10 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
           className="pricing-select-modal-pay-button"
           size="large"
           type="primary"
-          disabled={!selectedCategoryId}
-          onClick={handleEhsMasterPayment}
+          disabled={!selectedCategoryId || isUsingLicense}
+          onClick={() => handleEhsMasterPayment(selectedCategoryId)}
         >
-          결제하기
+          {isUsingLicense ? '이용중인 과목입니다.' : '결제하기'}
         </Button>
       </div>
     </PricingSelectModalBlock>
