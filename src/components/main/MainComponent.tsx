@@ -26,6 +26,7 @@ import InviteExamModal from './modal/InviteExamModal';
 import PartnerExamSelector from './PartnerExamSelector';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { SearchOutlined } from '@ant-design/icons';
+import AppGuideModal from '@components/common/modal/appGuideModal/AppGuideModal';
 
 export interface TitlesAndCategories {
   category: string;
@@ -48,6 +49,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
+  const { value: appGuideModalState, onToggle: onToggleAppGuideModalState } =
+    useToggle();
 
   const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   const [kakaoChatModalState, setKakaoChatModalState] = useState(false);
@@ -293,8 +296,9 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <Link href="/search/question">
             <Button type="primary">문제 검색기</Button>
           </Link>
+          <Button onClick={onToggleAppGuideModalState}>앱 설치하기</Button>
           <Link href="/pricing" style={{ width: '100%' }}>
-            <Button>프리미엄 스토어</Button>
+            <Button type="primary">프리미엄 스토어</Button>
           </Link>
 
           <a
@@ -303,7 +307,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
             rel="noreferrer"
             style={{ width: '100%' }}
           >
-            <Button type="primary">모두CBT 활용팁</Button>
+            <Button>모두CBT 활용팁</Button>
           </a>
           <button
             type="button"
@@ -319,15 +323,25 @@ const MainComponent: React.FC<MainComponentProps> = ({
         </div>
       </div>
       <Portal>
-        <KakaoOpenChatModal
-          open={kakaoChatModalState}
-          onClose={onToggleKakaoChatModalState}
-        />
-        <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
+        {kakaoChatModalState && (
+          <KakaoOpenChatModal
+            open={kakaoChatModalState}
+            onClose={onToggleKakaoChatModalState}
+          />
+        )}
+        {noticeModalState && (
+          <NoticeModal open={noticeModalState} onClose={onCloseNoticeModal} />
+        )}
         {inviteExamModalState && (
           <InviteExamModal
             open={inviteExamModalState}
             onClose={onToggleInviteExamModalState}
+          />
+        )}
+        {appGuideModalState && (
+          <AppGuideModal
+            open={appGuideModalState}
+            onClose={onToggleAppGuideModalState}
           />
         )}
       </Portal>

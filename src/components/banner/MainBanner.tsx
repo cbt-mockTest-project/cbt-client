@@ -4,9 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper';
 import { responsive } from '@lib/utils/responsive';
 import { isIOS } from 'react-device-detect';
-import MouseIcon from '@mui/icons-material/Mouse';
 import Portal from '@components/common/portal/Portal';
-import IosAppGuideModal from '@components/common/modal/IosAppGuideModal';
 import useToggle from '@lib/hooks/useToggle';
 import palette from '@styles/palette';
 import AdBannerInfoModal from '@components/common/modal/AdBannerInfoModal';
@@ -16,20 +14,21 @@ import KakaoOpenChatModal from '@components/common/modal/KakaoOpenChatModal';
 const MainBanner = () => {
   const { value: openChatModalState, onToggle: onToggleOpenChatModal } =
     useToggle();
-  const isIosAndMobile = isIOS && window.innerWidth < 720;
-  const isMobile = window.innerWidth < 720;
-  const { value: appGuideModalState, onToggle: onToggleAppGuideModal } =
+  const { value: inquiryModalState, onToggle: onToggleInquiryModalState } =
     useToggle();
+
+  const isMobile = window.innerWidth < 720;
+
   return (
     <MainBannerContainer isIOS={isIOS}>
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
-          delay: 2500,
+          delay: 1500,
           disableOnInteraction: false,
         }}
-        speed={500}
+        speed={1000}
         loop={true}
         pagination={{
           clickable: true,
@@ -45,9 +44,17 @@ const MainBanner = () => {
         <SwiperSlide>
           <button
             className="main-banner-text-banner"
-            onClick={onToggleOpenChatModal}
+            onClick={onToggleInquiryModalState}
           >
             <div className="home-main-banner-box advertise" />
+          </button>
+        </SwiperSlide>
+        <SwiperSlide>
+          <button
+            className="main-banner-text-banner"
+            onClick={onToggleOpenChatModal}
+          >
+            <div className="home-main-banner-box bot" />
           </button>
         </SwiperSlide>
         <SwiperSlide>
@@ -65,57 +72,20 @@ const MainBanner = () => {
             </a>
           )}
         </SwiperSlide>
-
-        <SwiperSlide>
-          {isIosAndMobile ? (
-            <div
-              className="home-main-banner-box"
-              onClick={onToggleAppGuideModal}
-            >
-              <div className="home-main-banner-content">
-                <p className="home-main-banner-content-text">
-                  {'모두CBT를 앱처럼\n사용해 보세요'}
-                </p>
-                <div className="home-main-banner-content-bottom">
-                  <p>클릭!</p>
-                  <MouseIcon />
-                </div>
-              </div>
-              <Portal>
-                <IosAppGuideModal
-                  open={appGuideModalState}
-                  onClose={onToggleAppGuideModal}
-                />
-              </Portal>
-            </div>
-          ) : (
-            <>
-              {isMobile ? (
-                <Link href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1">
-                  <div className="home-main-banner-box playstore" />
-                </Link>
-              ) : (
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.moducbt&pli=1"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="home-main-banner-box playstore" />
-                </a>
-              )}
-            </>
-          )}
-        </SwiperSlide>
       </Swiper>
       <Portal>
-        {/* <AdBannerInfoModal
-          open={openChatModalState}
-          onClose={onToggleOpenChatModal}
-        /> */}
-        <KakaoOpenChatModal
-          open={openChatModalState}
-          onClose={onToggleOpenChatModal}
-        />
+        {inquiryModalState && (
+          <AdBannerInfoModal
+            open={inquiryModalState}
+            onClose={onToggleInquiryModalState}
+          />
+        )}
+        {openChatModalState && (
+          <KakaoOpenChatModal
+            open={openChatModalState}
+            onClose={onToggleOpenChatModal}
+          />
+        )}
       </Portal>
     </MainBannerContainer>
   );
@@ -156,11 +126,14 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
   .home-main-banner-box.zep {
     background-image: url('/png/banner/main-banner-zep-pc01.png');
   }
-  .home-main-banner-box.advertise {
+  .home-main-banner-box.bot {
     background-image: url('/png/banner/main-banner-pc04.png') !important;
   }
   .home-main-banner-box.ehsmaster {
     background-image: url('/png/banner/ehs-banner-pc01.png') !important;
+  }
+  .home-main-banner-box.advertise {
+    background-image: url('/png/banner/ad-banner-pc01.png') !important;
   }
   .main-banner-text-banner {
     display: flex;
@@ -218,8 +191,11 @@ const MainBannerContainer = styled.div<MainBannerContainerProps>`
     .home-main-banner-box.zep {
       background-image: url('/png/banner/main-banner-zep-mobile01.png') !important;
     }
-    .home-main-banner-box.advertise {
+    .home-main-banner-box.bot {
       background-image: url('/png/banner/main-banner-mobile04.png') !important;
+    }
+    .home-main-banner-box.advertise {
+      background-image: url('/png/banner/ad-banner-mobile01.png') !important;
     }
     .home-main-banner-box.ehsmaster {
       background-image: url('/png/banner/ehs-banner-mobile01.png') !important;
