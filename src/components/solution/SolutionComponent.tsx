@@ -19,12 +19,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import SolutionComponentSkeleton from './SolutionComponentSkeleton';
 import { OnDownloadPdfArgs } from '@components/me/memo/MemoComponent';
-import axios from 'axios';
-import {
-  MockExamImageType,
-  MockExamQuestionFeedback,
-  ReadMockExamQuestionsByMockExamIdInput,
-} from 'types';
+import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import useToggle from '@lib/hooks/useToggle';
 import { PdfDownloadSelectModalFooter } from '@components/common/modal/PdfDownloadSelectModal';
 import { SearchOutlined } from '@ant-design/icons';
@@ -35,6 +30,8 @@ import MoveExamSelectorBox from './MoveExamSelectorBox';
 import { 직8딴_산업안전기사_리스트 } from '@lib/constants/exam';
 import Dimmed from '@components/common/dimmed/Dimmed';
 import Link from 'next/link';
+import { pdf } from '@react-pdf/renderer';
+import ExamPdf from '@components/common/pdfTemplete/ExamPdf';
 
 const GoogleAd = dynamic(() => import('@components/common/ad/GoogleAd'), {
   ssr: false,
@@ -62,7 +59,6 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   hasSearchInput = false,
   isRandomMode = false,
   subDescription,
-  coAuthor,
 }) => {
   const { data: meQuery } = useMeQuery();
   const {
@@ -187,149 +183,22 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
     setQuestions(shuffle);
   };
 
-  const onDownloadPdf = async ({
-    hasSolution,
-    pdfFonts,
-    pdfMake,
-  }: OnDownloadPdfArgs) => {
+  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
     try {
-      if (isPremium)
-        return message.error('해당 기능은 현재 사용할 수 없습니다.');
       setPdfDownloadLoading(true);
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
-      const contents: any[] = [];
-      let number = 0;
-      for await (const item of questions) {
-        number += 1;
-        const hasQuestionImage =
-          item.question_img && item.question_img.length >= 1;
-        const hasSolutionImage =
-          item.solution_img && item.solution_img.length >= 1;
-
-        contents.push({
-          text: `Q${number}. ${item.question}`,
-          margin: hasQuestionImage ? [0, 0] : [0, 20],
-        });
-        if (hasQuestionImage) {
-          const { data } = await axios.get(
-            `${
-              (item.question_img as MockExamImageType[])[0].url
-            }?not-from-cache-please`,
-            {
-              responseType: 'blob',
-            }
-          );
-          const dataUrl = await blobToDataUrl(data);
-          contents.push({
-            image: dataUrl,
-            width: 400,
-            margin: [0, 10, 0, 20],
-          });
-        }
-        contents.push({
-          text: '정답',
-          style: 'subHeader',
-          margin: [0, 0, 0, 5],
-        });
-        const solutionText = hasSolution
-          ? item.solution
-          : item.solution?.replaceAll(/[^\n]/g, '') + '\n';
-        contents.push({
-          text: solutionText,
-          margin: hasSolutionImage
-            ? [0, 0, 0, 0]
-            : [0, 0, 0, hasAdditionalAnswer ? 10 : 40],
-        });
-        if (hasSolutionImage && hasSolution) {
-          const { data } = await axios.get(
-            `${
-              (item.solution_img as MockExamImageType[])[0].url
-            }?not-from-cache-please`,
-            {
-              responseType: 'blob',
-            }
-          );
-          const dataUrl = await blobToDataUrl(data);
-          contents.push({
-            image: dataUrl,
-            width: 400,
-            margin: [0, 10, 0, hasAdditionalAnswer ? 10 : 40],
-          });
-        }
-        if (hasAdditionalAnswer) {
-          const myFeedback: MockExamQuestionFeedback[] = [];
-          const userFeedback: MockExamQuestionFeedback[] = [];
-          let feedbackTotalCount = 0;
-          item.mockExamQuestionFeedback.forEach((feedback) => {
-            if (feedback.user.id === meQuery?.me.user?.id) {
-              myFeedback.push(feedback as MockExamQuestionFeedback);
-            } else {
-              userFeedback.push(feedback as MockExamQuestionFeedback);
-            }
-          });
-          if (meQuery?.me.user) {
-            feedbackTotalCount = myFeedback.length + userFeedback.length;
-          } else {
-            feedbackTotalCount = userFeedback.length;
-          }
-          if (feedbackTotalCount > 0) {
-            contents.push({
-              text: '추가답안',
-              style: 'subHeader',
-              margin: [0, 0, 0, 5],
-            });
-            myFeedback.forEach((feedback) => {
-              contents.push({
-                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
-                margin: [0, 0, 0, 10],
-              });
-            });
-            userFeedback.forEach((feedback) => {
-              contents.push({
-                text: `작성자: ${feedback.user.nickname}\n${feedback.content}\n추천: ${feedback.recommendationCount.good} 비추천: ${feedback.recommendationCount.bad}`,
-                margin: [0, 0, 0, 10],
-              });
-            });
-          }
-        }
-      }
-      const fonts = {
-        NotoSans: {
-          normal: 'NotoSansKR-Regular.otf',
-          bold: 'NotoSansKR-Bold.otf',
-        },
-      };
-      const docDefinition = {
-        content: [
-          {
-            text: '실기시험 준비는 모두CBT! (https://moducbt.com)',
-            link: 'https://moducbt.com',
-            color: '#1890ff',
-            fontSize: 12,
-          },
-          { text: title, style: 'header' },
-          ...contents,
-        ],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 0, 0, 10],
-          },
-          subHeader: {
-            fontSize: 12,
-            bold: true,
-          },
-        },
-        defaultStyle: {
-          font: 'NotoSans',
-        },
-      };
-      const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
-      await pdfDoc.download(
-        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
-      );
+      const pdfBlob = await pdf(
+        <ExamPdf mock={questions} isHideAnswer={!hasSolution} />
+      ).toBlob();
+      //pdf미리보기
+      const dataUrl = await blobToDataUrl(pdfBlob);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${title}${
+        hasSolution ? '(정답포함)' : '(정답미포함)'
+      }.pdf`;
+      link.click();
       setPdfDownloadLoading(false);
+      return;
     } catch (e) {
       handleError(e);
       setPdfDownloadLoading(false);
@@ -475,15 +344,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           <PdfDownloadSelectModal
             open={pdfDownloadConfirmModalState}
             onClose={onTogglePdfDownloadConfirmModalState}
-            onCancel={({ pdfMake, pdfFonts }) => {
-              onDownloadPdf({ hasSolution: false, pdfMake, pdfFonts });
+            onCancel={() => {
+              onDownloadPdf({ hasSolution: false });
             }}
-            onConfirm={({ pdfMake, pdfFonts }) => {
-              onDownloadPdf({ hasSolution: true, pdfMake, pdfFonts });
+            onConfirm={() => {
+              onDownloadPdf({ hasSolution: true });
             }}
             confirmButtonLoading={pdfDownloadLoading}
             cancelButtonLoading={pdfDownloadLoading}
-            footerOptions={pdfDownloadSelectModalFooterOptions}
+            // footerOptions={pdfDownloadSelectModalFooterOptions}
           />
         )}
       </Portal>

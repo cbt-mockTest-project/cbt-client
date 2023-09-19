@@ -18,16 +18,13 @@ import MemoCard, { OnUpdateQuestionCardArgs } from './MemoCard';
 import { QuestionCard } from 'types';
 import AddQuestionCardModal from '@components/common/modal/addQuestionCardModal/AddQuestionCardModal';
 import { shuffle } from 'lodash';
-import * as pdfMake from 'pdfmake/build/pdfmake.js';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { handleError } from '@lib/utils/utils';
-import ConfirmModal from '@components/common/modal/ConfirmModal';
 import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
 
 export type OnDownloadPdfArgs = {
   hasSolution: boolean;
-  pdfMake: any;
-  pdfFonts: any;
+  pdfMake?: any;
+  pdfFonts?: any;
 };
 
 interface MemoComponentProps {}
