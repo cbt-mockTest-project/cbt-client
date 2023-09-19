@@ -25,7 +25,6 @@ export default ExamHistorySkeleton;
 
 const ExamHistorySkeletonContainer = styled.div`
   .mypage-exam-list-wrapper {
-    margin-top: 50px;
     li {
       display: flex;
       flex-direction: column;

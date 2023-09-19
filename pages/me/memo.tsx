@@ -1,13 +1,8 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
-import ExamHistorySkeleton from '@components/me/examhistory/ExamHistorySkeleton';
-import dynamic from 'next/dynamic';
+import MemoComponent from '@components/me/memo/MemoComponent';
 import React from 'react';
 import styled from 'styled-components';
-const MemoComponent = dynamic(
-  () => import('@components/me/memo/MemoComponent'),
-  { ssr: false, loading: () => <ExamHistorySkeleton /> }
-);
 
 interface MemoPageProps {}
 

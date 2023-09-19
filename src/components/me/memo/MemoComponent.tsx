@@ -83,8 +83,6 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
     }
   }, [questionCardsData]);
 
-  if (readCategoriesLoading || !categoriesData) return <ExamHistorySkeleton />;
-
   const onChangeCategory = async (
     value: any,
     option: DefaultOptionType | DefaultOptionType[]
