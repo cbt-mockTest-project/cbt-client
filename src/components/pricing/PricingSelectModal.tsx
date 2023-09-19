@@ -75,7 +75,7 @@ interface PricingSelectModalProps extends Omit<ModalProps, 'children'> {
 // value 는 roleId 와 동일하게 간다.
 const categoryOptions = [
   { label: '산업안전기사', value: 4 },
-  { label: '건설안전기사', value: 5 },
+  // { label: '건설안전기사', value: 5 },
 ];
 
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
