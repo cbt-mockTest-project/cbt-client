@@ -26,7 +26,6 @@ const PdfDownloadSelectModal: React.FC<PdfDownloadSelectModalProps> = (
       onCancel={() => props.onCancel({ pdfMake, pdfFonts })}
       confirmLabel="정답 포함"
       cancelLabel="정답 미포함"
-      disabled={isMobile}
       content={<PdfDownloadSelectModalContent />}
       footer={
         props.footerOptions ? (
@@ -64,12 +63,6 @@ const PdfDownloadSelectModalFooter: React.FC<
 const PdfDownloadSelectModalContent: React.FC = () => (
   <PdfDownloadSelectModalContentContainer>
     <p>다운로드 형태를 선택해주세요.</p>
-    <p className="pdf-download-select-modal-description">
-      어플에서는 작동하지 않습니다.
-    </p>
-    <p className="pdf-download-select-modal-description">
-      pc환경에서 이용해주세요.
-    </p>
   </PdfDownloadSelectModalContentContainer>
 );
 
