@@ -108,6 +108,50 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
       message.error(router.query.message);
     }
   }, [router.query.message]);
+
+  async function subscribeUser() {
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.pushManager.getSubscription().then((subscription) => {
+        if (subscription) {
+          console.log('Already subscribed', subscription);
+        } else {
+          registration.pushManager
+            .subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+            })
+            .then((subscription) => {
+              console.log('Subscribed', subscription);
+              // save subscription on DB
+              // fetch('/api/subscribe', {
+              //   method: 'POST',
+              //   headers: {
+              //     'Content-Type': 'application/json',
+              //   },
+              //   body: JSON.stringify(subscription),
+              // });
+            });
+        }
+      });
+    });
+  }
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          subscribeUser();
+          console.log(
+            'Service Worker registered with scope:',
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
   return (
     <>
       <Head>
