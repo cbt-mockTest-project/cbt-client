@@ -132,7 +132,7 @@ const ExamPdf: React.FC<ExamPdfProps> = ({ mock, isHideAnswer = false }) => {
       <Page size="A4" style={styles.page}>
         <View style={styles.list}>
           {mock.map((item: any, index: number) => (
-            <View key={item.number} style={styles.section}>
+            <View key={item.number || index + 1} style={styles.section}>
               {index === 0 && (
                 <Link src="https://moducbt.com" style={styles.titleBox}>
                   <Image style={styles.logoImageBox} src="/png/logo01.png" />
@@ -143,7 +143,10 @@ const ExamPdf: React.FC<ExamPdfProps> = ({ mock, isHideAnswer = false }) => {
               )}
               <View style={styles.numberBox}>
                 <Text style={styles.numberText}>
-                  {`${String(item.number).padStart(2, '0')}번 문제`}
+                  {`${String(item.number || index + 1).padStart(
+                    2,
+                    '0'
+                  )}번 문제`}
                 </Text>
               </View>
               <View style={styles.questionBox}>

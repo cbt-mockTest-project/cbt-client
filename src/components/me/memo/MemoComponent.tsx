@@ -18,8 +18,10 @@ import MemoCard, { OnUpdateQuestionCardArgs } from './MemoCard';
 import { QuestionCard } from 'types';
 import AddQuestionCardModal from '@components/common/modal/addQuestionCardModal/AddQuestionCardModal';
 import { shuffle } from 'lodash';
-import { handleError } from '@lib/utils/utils';
+import { blobToDataUrl, handleError } from '@lib/utils/utils';
 import PdfDownloadSelectModal from '@components/common/modal/PdfDownloadSelectModal';
+import ExamPdf from '@components/common/pdfTemplete/ExamPdf';
+import { pdf } from '@react-pdf/renderer';
 
 export type OnDownloadPdfArgs = {
   hasSolution: boolean;
@@ -150,64 +152,25 @@ const MemoComponent: React.FC<MemoComponentProps> = () => {
     setQuestionCards(shuffle);
   };
 
-  const onDownloadPdf = async ({
-    hasSolution,
-    pdfFonts,
-    pdfMake,
-  }: OnDownloadPdfArgs) => {
+  const onDownloadPdf = async ({ hasSolution }: OnDownloadPdfArgs) => {
     try {
       setPdfDownloadLoading(true);
-      pdfMake.vfs = pdfFonts.pdfMake.vfs;
-      const title = selectedCardCategory?.label as string;
-      const contents: any[] = [];
-      questionCards.forEach((item, index) => {
-        contents.push({
-          text: `${index + 1}. ${item.question}`,
-          background: '#f0f3f3',
-          margin: [0, 20],
-        });
-        contents.push({
-          text: '정답',
-          style: 'subHeader',
-          margin: [0, 0, 0, 5],
-        });
-        const solutionText = hasSolution
-          ? item.solution
-          : item.solution.replaceAll(/[^\n]/g, '') + '\n';
-        contents.push({ text: solutionText, margin: [0, 0, 0, 20] });
-      });
-      const fonts = {
-        NotoSans: {
-          normal: 'NotoSansKR-Regular.otf',
-          bold: 'NotoSansKR-Bold.otf',
-        },
-      };
-      const docDefinition = {
-        content: [{ text: title, style: 'header' }, ...contents],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 0, 0, 10],
-          },
-          subHeader: {
-            fontSize: 12,
-            bold: true,
-          },
-        },
-        defaultStyle: {
-          font: 'NotoSans',
-        },
-      };
-      const pdfDoc = await pdfMake.createPdf(docDefinition, null, fonts);
-      await pdfDoc.download(
-        `${title}${hasSolution ? '(정답포함)' : '(정답미포함)'}.pdf`
-      );
-      setPdfDownloadLoading(false);
+      const pdfBlob = await pdf(
+        <ExamPdf mock={questionCards} isHideAnswer={!hasSolution} />
+      ).toBlob();
+      const dataUrl = await blobToDataUrl(pdfBlob);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${selectedCardCategory?.label}${
+        hasSolution ? '(정답포함)' : '(정답미포함)'
+      }.pdf`;
+      link.click();
+      return;
     } catch (e) {
       handleError(e);
-      setPdfDownloadLoading(false);
       message.error('다운로드에 실패했습니다.');
+    } finally {
+      setPdfDownloadLoading(false);
     }
   };
 
