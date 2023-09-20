@@ -547,6 +547,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             solutionImage={solutionImage}
             setSolutionImage={setSolutionImage}
             questionNumbers={questionNumbers}
+            setQuestionNumbers={setQuestionNumbers}
             selectedQuestionNumber={selectedQuestionNumber}
             examStatus={examStatus}
             setExamStatus={setExamStatus}

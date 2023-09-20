@@ -10,9 +10,11 @@ import styled from 'styled-components';
 import { ExamStatus, QuestionNumber, UserRole } from 'types';
 import ImageDragger from './ImageDragger';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import QuestionNumberItem from './QuestionNumberItem';
 
 interface QuestionAndSolutionFormProps {
   questionNumbers: QuestionNumber[];
+  setQuestionNumbers: React.Dispatch<React.SetStateAction<QuestionNumber[]>>;
   selectedQuestionNumber: number;
   questionImage: UploadFile<any>[];
   setQuestionImage: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>;
@@ -32,6 +34,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   solutionImage,
   setSolutionImage,
   onToggleExamPreviewModal,
+  setQuestionNumbers,
   examId,
 }) => {
   const { control, formState, getValues, register } = useFormContext();
@@ -60,15 +63,21 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
         {questionNumbers.length >= 1 ? (
           <ul className="create-exam-question-number-wrapper">
             {questionNumbers.map((questionNumber) => (
-              <li key={questionNumber.questionId}>
-                <a
-                  href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/preview/question/${questionNumber.questionId}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button>{questionNumber.questionNumber}</Button>
-                </a>
-              </li>
+              <QuestionNumberItem
+                key={questionNumber.questionId}
+                id={questionNumber.questionId}
+                number={questionNumber.questionNumber}
+                setNumbers={setQuestionNumbers}
+              />
+              // <li key={questionNumber.questionId}>
+              //   <a
+              //     href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/preview/question/${questionNumber.questionId}`}
+              //     target="_blank"
+              //     rel="noreferrer"
+              //   >
+              //     <Button>{questionNumber.questionNumber}</Button>
+              //   </a>
+              // </li>
             ))}
           </ul>
         ) : (
@@ -85,10 +94,10 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
           <Controller
             name="label"
             control={control}
-            rules={{ required: true }}
+            rules={{ required: false }}
             render={({ field }) => (
               <Input
-                placeholder="문제를 입력해주세요."
+                placeholder="라벨을 입력해주세요."
                 onChange={field.onChange}
                 value={getValues('label')}
               />
