@@ -4,6 +4,7 @@ import NoticeModal from '@components/common/modal/NoticeModal';
 import Portal from '@components/common/portal/Portal';
 import {
   OPEN_CHAT_MODAL_STATE,
+  loginModal,
   selectedCategoryHistory,
   selectedTitleHistory,
   tempAnswerKey,
@@ -27,6 +28,8 @@ import PartnerExamSelector from './PartnerExamSelector';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { SearchOutlined } from '@ant-design/icons';
 import AppGuideModal from '@components/common/modal/appGuideModal/AppGuideModal';
+import { coreActions } from '@modules/redux/slices/core';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 
 export interface TitlesAndCategories {
   category: string;
@@ -42,6 +45,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   titlesAndCategories,
 }) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
   const [inviteExamModalState, setInviteExamModalState] = useState(false);
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
@@ -69,6 +73,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
     useState<DefaultOptionType | null>(null);
   const [selectedPartnerTitle, setSelectedPartnerTitle] =
     useState<DefaultOptionType | null>(null);
+
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
 
   const storage = new LocalStorage();
   const categories = categoriesQuery.readAllMockExamCategories.categories.map(
@@ -204,6 +210,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const onChangeExamType = (e: RadioChangeEvent) => {
     setExamType(e.target.value);
   };
+  const handleGoToExamWrite = () => {
+    if (!meQuery?.me.user) {
+      openLoginModal();
+      return;
+    }
+    router.push('/exam/write');
+  };
   return (
     <MainComponentContainer>
       <div className="home-wrapper">
@@ -222,14 +235,27 @@ const MainComponent: React.FC<MainComponentProps> = ({
               <Radio.Button value={EXAM_TYPE.MY_EXAM}>내 시험지</Radio.Button>
             </Radio.Group>
             {examType === EXAM_TYPE.MY_EXAM && (
-              <Button onClick={onToggleInviteExamModalState}>
+              <Button
+                onClick={() => {
+                  if (!meQuery?.me.user) {
+                    openLoginModal();
+                    return;
+                  }
+                  onToggleInviteExamModalState();
+                }}
+              >
                 시험지 초대 관리
               </Button>
             )}
             {examType === EXAM_TYPE.MY_EXAM && (
-              <Link href="/exam/write">
-                <Button type="primary">시험지 만들기</Button>
-              </Link>
+              <Button
+                type="primary"
+                size="large"
+                style={{ width: '100%' }}
+                onClick={handleGoToExamWrite}
+              >
+                시험지 만들기
+              </Button>
             )}
             {examType === EXAM_TYPE.MY_EXAM && (
               <MyExamSelector
