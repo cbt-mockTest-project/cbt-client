@@ -26,7 +26,9 @@ const Globalstyles = createGlobalStyle`
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
   }
-
+button {
+  color : black;
+}
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
   footer, header, hgroup, main, menu, nav, section {
