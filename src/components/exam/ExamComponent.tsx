@@ -104,15 +104,15 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const { data: meQuery } = useMeQuery();
   const [createExamHistory] = useCreateExamHistory();
 
-  const 직8딴_산업안전기사_권한체크 = useMemo(() => {
+  const examPermissionCheck = (checkExamList: number[], roleId: number) => {
     if (
-      직8딴_산업안전기사_리스트.includes(examId) ||
+      checkExamList.includes(examId) ||
       (Array.isArray(examIds) &&
-        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+        examIds.some((id: number) => checkExamList.includes(id)))
     ) {
       if (
         meQuery?.me.user &&
-        (!meQuery.me.user.userRoles.find((role) => role.role.id === 4) ||
+        (!meQuery.me.user.userRoles.find((role) => role.role.id === roleId) ||
           meQuery.me.user.userRoles.length === 0)
       ) {
         return false;
@@ -123,28 +123,17 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
       }
     }
     return true;
-  }, [examId, examIds, meQuery]);
+  };
 
-  const 직8딴_건설안전기사_권한체크_플랜 = useMemo(() => {
-    if (
-      직8딴_건설안전기사_리스트.includes(examId) ||
-      (Array.isArray(examIds) &&
-        examIds.some((id: number) => 직8딴_건설안전기사_리스트.includes(id)))
-    ) {
-      if (
-        meQuery?.me.user &&
-        (!meQuery.me.user.userRoles.find((role) => role.role.id === 5) ||
-          meQuery.me.user.userRoles.length === 0)
-      ) {
-        return false;
-      }
-      if (meQuery && !meQuery.me.user) {
-        // 비로그인시
-        return false;
-      }
-    }
-    return true;
-  }, [examId, examIds, meQuery]);
+  const 직8딴_산업안전기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_산업안전기사_리스트, 4),
+    [examId, examIds, meQuery]
+  );
+
+  const 직8딴_건설안전기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_건설안전기사_리스트, 5),
+    [examId, examIds, meQuery]
+  );
 
   const {
     value: questionShareModalState,
@@ -450,14 +439,6 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
         <div className="exam-container-title-wrapper">
           {!isPreview && (
             <div className="exam-container-bookmark-button-wrapper">
-              <Tooltip
-                position="bottom"
-                className="exam-container-bookmark-tooltip"
-              >
-                <p className="exam-container-bookmark-tooltip-text">
-                  {'저장된 문제는 저장탭에서\n확인할 수 있습니다.'}
-                </p>
-              </Tooltip>
               <button
                 className="exam-container-bookmark-button"
                 onClick={requestEditBookmark}
@@ -656,7 +637,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           onClearAnswer={onClearAnswer}
         />
       )}
-      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크_플랜) && (
+      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크) && (
         <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
           <Link href="/pricing">
             <Button type="primary" size="large">
@@ -708,10 +689,12 @@ const ExamContainer = styled.div<ExamContainerProps>`
     display: flex;
     gap: 15px;
   }
+
   .exam-container-bookmark-button,
   .exam-container-share-button {
     display: flex;
     gap: 5px;
+    cursor: pointer;
     width: 110px;
     height: 35px;
     border: 1px solid ${palette.gray_100};

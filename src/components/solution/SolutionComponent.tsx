@@ -97,15 +97,15 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   const examId = Number(String(router.query.Id));
   const examIds = router.query.es ? JSON.parse(String(router.query.es)) : null;
 
-  const 직8딴_산업안전기사_권한체크 = useMemo(() => {
+  const examPermissionCheck = (checkExamList: number[], roleId: number) => {
     if (
-      직8딴_산업안전기사_리스트.includes(examId) ||
+      checkExamList.includes(examId) ||
       (Array.isArray(examIds) &&
-        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+        examIds.some((id: number) => checkExamList.includes(id)))
     ) {
       if (
         meQuery?.me.user &&
-        (!meQuery.me.user.userRoles.find((role) => role.role.id === 4) ||
+        (!meQuery.me.user.userRoles.find((role) => role.role.id === roleId) ||
           meQuery.me.user.userRoles.length === 0)
       ) {
         return false;
@@ -116,28 +116,17 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       }
     }
     return true;
-  }, [examId, examIds, meQuery]);
+  };
 
-  const 직8딴_건설안전기사_권한체크_플랜 = useMemo(() => {
-    if (
-      직8딴_건설안전기사_리스트.includes(examId) ||
-      (Array.isArray(examIds) &&
-        examIds.some((id: number) => 직8딴_건설안전기사_리스트.includes(id)))
-    ) {
-      if (
-        meQuery?.me.user &&
-        (!meQuery.me.user.userRoles.find((role) => role.role.id === 5) ||
-          meQuery.me.user.userRoles.length === 0)
-      ) {
-        return false;
-      }
-      if (meQuery && !meQuery.me.user) {
-        // 비로그인시
-        return false;
-      }
-    }
-    return true;
-  }, [examId, examIds, meQuery]);
+  const 직8딴_산업안전기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_산업안전기사_리스트, 4),
+    [examId, examIds, meQuery]
+  );
+
+  const 직8딴_건설안전기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_건설안전기사_리스트, 5),
+    [examId, examIds, meQuery]
+  );
 
   useEffect(() => {
     (async () => {
@@ -380,7 +369,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           />
         )}
       </Portal>
-      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크_플랜) && (
+      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크) && (
         <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
           <Link href="/pricing">
             <Button type="primary" size="large">
