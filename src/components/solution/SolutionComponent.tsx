@@ -27,7 +27,10 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import Portal from '@components/common/portal/Portal';
 import ContinueLearningModal from './ContinueLearningModal';
 import MoveExamSelectorBox from './MoveExamSelectorBox';
-import { 직8딴_산업안전기사_리스트 } from '@lib/constants/exam';
+import {
+  직8딴_건설안전기사_리스트,
+  직8딴_산업안전기사_리스트,
+} from '@lib/constants/exam';
 import Dimmed from '@components/common/dimmed/Dimmed';
 import Link from 'next/link';
 import { pdf } from '@react-pdf/renderer';
@@ -103,6 +106,27 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
       if (
         meQuery?.me.user &&
         (!meQuery.me.user.userRoles.find((role) => role.role.id === 4) ||
+          meQuery.me.user.userRoles.length === 0)
+      ) {
+        return false;
+      }
+      if (meQuery && !meQuery.me.user) {
+        // 비로그인시
+        return false;
+      }
+    }
+    return true;
+  }, [examId, examIds, meQuery]);
+
+  const 직8딴_건설안전기사_권한체크_플랜 = useMemo(() => {
+    if (
+      직8딴_건설안전기사_리스트.includes(examId) ||
+      (Array.isArray(examIds) &&
+        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+    ) {
+      if (
+        meQuery?.me.user &&
+        (!meQuery.me.user.userRoles.find((role) => role.role.id === 5) ||
           meQuery.me.user.userRoles.length === 0)
       ) {
         return false;
@@ -356,7 +380,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
           />
         )}
       </Portal>
-      {!직8딴_산업안전기사_권한체크 && (
+      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크_플랜) && (
         <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
           <Link href="/pricing">
             <Button type="primary" size="large">
