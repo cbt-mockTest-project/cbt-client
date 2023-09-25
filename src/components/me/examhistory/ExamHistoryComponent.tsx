@@ -1,21 +1,14 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import Modal from '@components/common/modal/Modal';
-import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import { useReadExamHistories } from '@lib/graphql/user/hook/useExamHistory';
-import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 import { responsive } from '@lib/utils/responsive';
-import {
-  convertToKST,
-  extractKeysOfCache,
-  handleError,
-} from '@lib/utils/utils';
+import { convertToKST } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestionState, QuestionState } from 'types';
 import ExamHistorySkeleton from './ExamHistorySkeleton';
 import ExamHistoryAchievementModal from './ExamHistoryAchievementModal';
 
@@ -25,7 +18,6 @@ const ExamHistory: React.FC = () => {
 
   const [achieveModalState, setAchieveModalState] = useState(false);
   const [examId, setExamId] = useState(0);
-  const client = useApollo({}, '');
   const onCheckAchievement = (examId: number) => {
     setExamId(examId);
     onToggleAchieveModalState();
@@ -43,7 +35,6 @@ const ExamHistory: React.FC = () => {
         <h3 className="mypage-exam-list-description">
           풀이모드로 제출한 최근 10개의 시험기록입니다.
         </h3>
-        <GoogleAd type="display" />
         <ul>
           {examHistoryQuery.readMyExamHistory.mockExams?.map((el, idx) => (
             <li key={el.id}>
@@ -80,13 +71,15 @@ const ExamHistory: React.FC = () => {
           ))}
         </ul>
       </div>
-      <ExamHistoryAchievementModal
-        key={examId}
-        open={achieveModalState}
-        onClose={onToggleAchieveModalState}
-        examId={examId}
-        className="achievement-modal-wrapper"
-      />
+      {achieveModalState && examId && (
+        <ExamHistoryAchievementModal
+          key={examId}
+          open={achieveModalState}
+          onClose={onToggleAchieveModalState}
+          examId={examId}
+          className="achievement-modal-wrapper"
+        />
+      )}
     </ExamHistoryContainer>
   );
 };
