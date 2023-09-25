@@ -327,14 +327,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
             <Button type="primary">프리미엄 스토어</Button>
           </Link>
 
-          <a
-            href="https://pinto-buffalo-54c.notion.site/CBT-760c3f095a8e4e29b17807835a8455bc"
-            target="_blank"
-            rel="noreferrer"
-            style={{ width: '100%' }}
-          >
-            <Button>모두CBT 활용팁</Button>
-          </a>
           <button
             type="button"
             className="home-kakao-open-chat-button-wrapper"
