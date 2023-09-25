@@ -129,7 +129,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     if (
       직8딴_건설안전기사_리스트.includes(examId) ||
       (Array.isArray(examIds) &&
-        examIds.some((id: number) => 직8딴_산업안전기사_리스트.includes(id)))
+        examIds.some((id: number) => 직8딴_건설안전기사_리스트.includes(id)))
     ) {
       if (
         meQuery?.me.user &&
