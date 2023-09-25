@@ -97,6 +97,8 @@ const PricingCardBlock = styled.div`
   }
   .pricing-card-before-discount-wrapper {
     display: flex;
+    position: relative;
+    top: 16px;
     align-items: flex-end;
   }
   .pricing-card-before-discount-price-notice {
@@ -113,10 +115,11 @@ const PricingCardBlock = styled.div`
   }
   .pricing-card-end-date {
     font-size: 14px;
-    color: ${palette.gray_700};
+    color: ${palette.gray_500};
     position: relative;
+    font-weight: bold;
     margin-top: 10px;
-    top: 20px;
+    top: 16px;
   }
 `;
 
@@ -126,6 +129,7 @@ export interface PricingCardProps {
   price: number;
   endDate?: string;
   beforeDiscountPrice?: number;
+  discountDate?: string;
   benefits: string[];
   onConfirm: () => void;
   confirmLabel?: string;
@@ -147,6 +151,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   hasBeforePaymentModal,
   confirmDisabled,
   beforeDiscountPrice,
+  discountDate,
   roleIds,
   endDate,
   confirmLabel = '결제하기',
@@ -179,7 +184,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
                 {makeMoneyString(beforeDiscountPrice)}
               </div>
               <div className="pricing-card-before-discount-price-notice">
-                ~ 06.31까지
+                ~{discountDate} 까지
               </div>
             </div>
           ) : (
