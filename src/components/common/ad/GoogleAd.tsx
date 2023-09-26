@@ -2,7 +2,6 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { checkRole } from '@lib/utils/utils';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { User } from 'types';
 
 interface GoogleAdProps {
   className?: string;
@@ -25,7 +24,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
-  if (checkRole({ roleIds: [1, 2, 3, 4], meQuery })) return null;
+  if (checkRole({ roleIds: [1, 2, 3, 4, 5], meQuery })) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
