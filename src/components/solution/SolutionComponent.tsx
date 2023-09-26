@@ -315,7 +315,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
                   index % 4 === 0 &&
                   index + 1 !== questions.length && (
                     <div className="exam-solution-page-google-feed-ad-wrapper">
-                      <GoogleAd type="feed" />
+                      <GoogleAd type="display" />
                     </div>
                   )}
               </div>
