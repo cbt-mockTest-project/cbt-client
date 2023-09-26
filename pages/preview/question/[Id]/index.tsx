@@ -15,7 +15,6 @@ const Question: NextPage = () => {
       />
       <Layout>
         <QuestionComponent isPreview={true} />
-        <GoogleAd type="display" />
       </Layout>
     </>
   );

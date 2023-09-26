@@ -41,7 +41,6 @@ const RandomSelectPage: React.FC<RandomSelectPageProps> = ({
         pageHeadingTitle="모두CBT 랜덤모의고사 선택 페이지"
       />
       <RandomSelectPageContainer>
-        <GoogleAd type="display" />
         <RandomSelectComponent
           categories={categories}
           titlesAndCategories={titlesAndCategories}

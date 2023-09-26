@@ -21,10 +21,6 @@ const Solution: NextPage = () => {
       />
 
       <Layout>
-        <GoogleAd
-          className="exam-solution-page-google-display-ad-wrapper"
-          type="display"
-        />
         <SolutionComponent isPreview={true} hasNewWindowButton={false} />
         <GoogleAd type="multiflex" />
       </Layout>

@@ -77,8 +77,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
     return null;
   };
 
-  // 심사중일때는 광고를 보여주지 않는다.
-  return null;
   return (
     <GoogleAdContainer className={className}>
       {isProd ? (

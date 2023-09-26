@@ -33,10 +33,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
       />
       <StyledLayout subNav="main">
-        <GoogleAd
-          className="exam-solution-page-google-display-ad-wrapper"
-          type="display"
-        />
         <SolutionComponent
           questionsQuery={questionsQuery}
           hasSearchInput={true}
