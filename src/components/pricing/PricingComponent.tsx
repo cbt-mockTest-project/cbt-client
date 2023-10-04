@@ -143,7 +143,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       price: 5900,
       endDate: '이용기간: 무제한',
       beforeDiscountPrice: 7900,
-      discountDate: '10.03',
+      discountDate: '10.07',
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
