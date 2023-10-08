@@ -142,8 +142,8 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro: '무제한 베이직 플랜으로\n학습효율을 높여보세요!',
       price: 5900,
       endDate: '이용기간: 무제한',
-      beforeDiscountPrice: 7900,
-      discountDate: '10.07',
+      // beforeDiscountPrice: 7900,
+      // discountDate: '10.07',
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
