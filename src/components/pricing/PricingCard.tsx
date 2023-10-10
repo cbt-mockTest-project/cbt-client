@@ -127,6 +127,7 @@ export interface PricingCardProps {
   title: string;
   intro: string;
   price: number;
+  priceAltText?: string;
   endDate?: string;
   beforeDiscountPrice?: number;
   discountDate?: string;
@@ -153,6 +154,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   beforeDiscountPrice,
   discountDate,
   roleIds,
+  priceAltText,
   endDate,
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
@@ -196,9 +198,11 @@ const PricingCard: React.FC<PricingCardProps> = ({
             </span>
 
             <span className="pricing-card-price-value">
-              {makeMoneyString(price)}
+              {priceAltText || makeMoneyString(price)}
             </span>
-            <span className="pricing-card-price-label">원</span>
+            {!priceAltText && (
+              <span className="pricing-card-price-label">원</span>
+            )}
           </div>
           {typeof roleCountQuery?.getRolesCount.count === 'number' ? (
             <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRolesCount.count}명 이용중!! `}</div>
