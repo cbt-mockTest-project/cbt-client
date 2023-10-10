@@ -114,7 +114,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     });
 
   const openEhsMasterPayModal = () => {
-    setPrice(15000);
+    setPrice(0);
     toggleSelectModal();
   };
 
@@ -157,6 +157,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro:
         '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
       price: 15000,
+      priceAltText: '10,000 ~ ',
       benefits: [
         '직8딴 풀이모드 및 해설모드 제공',
         '직8딴 랜덤모의고사 제공',
