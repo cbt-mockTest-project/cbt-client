@@ -8,7 +8,6 @@ import ProgressModal from '@components/common/modal/ProgressModal';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
 import ReportModal from '@components/common/modal/ReportModal';
 import SolutionWriteModal from '@components/common/modal/SolutionWriteModal';
-import Tooltip from '@components/common/tooltip/Tooltip';
 import { loginModal, tempAnswerKey } from '@lib/constants';
 import { useCreateExamHistory } from '@lib/graphql/user/hook/useExamHistory';
 import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
@@ -51,6 +50,7 @@ import { examActions } from '@modules/redux/slices/exam';
 import {
   직8딴_건설안전기사_리스트,
   직8딴_산업안전기사_리스트,
+  직8딴_위험물산업기사_리스트,
 } from '@lib/constants/exam';
 import Dimmed from '@components/common/dimmed/Dimmed';
 import Link from 'next/link';
@@ -133,6 +133,23 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
   const 직8딴_건설안전기사_권한체크 = useMemo(
     () => examPermissionCheck(직8딴_건설안전기사_리스트, 5),
     [examId, examIds, meQuery]
+  );
+
+  const 직8딴_위험물산업기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_위험물산업기사_리스트, 6),
+    [examId, examIds, meQuery]
+  );
+
+  const unAuthorizedExam = useMemo(
+    () =>
+      !직8딴_산업안전기사_권한체크 ||
+      !직8딴_건설안전기사_권한체크 ||
+      !직8딴_위험물산업기사_권한체크,
+    [
+      직8딴_산업안전기사_권한체크,
+      직8딴_건설안전기사_권한체크,
+      직8딴_위험물산업기사_권한체크,
+    ]
   );
 
   const {
@@ -637,7 +654,7 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
           onClearAnswer={onClearAnswer}
         />
       )}
-      {(!직8딴_산업안전기사_권한체크 || !직8딴_건설안전기사_권한체크) && (
+      {unAuthorizedExam && (
         <Dimmed content="직8딴 플랜 구매후 이용가능 합니다.">
           <Link href="/pricing">
             <Button type="primary" size="large">
