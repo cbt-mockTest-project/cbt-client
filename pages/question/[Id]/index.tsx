@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
@@ -21,6 +21,15 @@ interface QuestionProps {
 const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
   const title =
     questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50);
+  const googlePlaced =
+    typeof document !== 'undefined'
+      ? document.querySelector('google-auto-placed')
+      : null;
+  useEffect(() => {
+    if (googlePlaced) {
+      googlePlaced.remove();
+    }
+  }, [googlePlaced]);
   return (
     <>
       <WithHead

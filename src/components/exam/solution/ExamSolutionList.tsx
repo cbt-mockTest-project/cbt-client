@@ -5,10 +5,7 @@ import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import {
-  ReadMockExamQuestionQuery,
-  ReadMockExamQuestionsByMockExamIdQuery,
-} from '@lib/graphql/user/query/questionQuery.generated';
+import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { ellipsisText, handleError } from '@lib/utils/utils';
@@ -89,6 +86,12 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     content: '',
     type: QuestionFeedbackType.Public,
   });
+  const isSolutionEmpty = question.solution
+    ?.replace(/\s+/g, '')
+    .includes('사진참고');
+  const isQuestionEmpty = question.question
+    ?.replace(/\s+/g, '')
+    .includes('사진참고');
 
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
@@ -256,24 +259,40 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
             </Tooltip>
           )}
         </div>
-        <div className="solution-page-question-pre-wrapper">
-          {questionSubDescription && (
-            <div className="solution-page-question-sub-description">
-              {questionSubDescription}
-            </div>
-          )}
-          {currentQuestion.label && (
-            <p className="solution-page-question-label">
-              기출 {currentQuestion.label}회
-            </p>
-          )}
-          <pre className="solution-page-question">
-            {`Q${index || currentQuestion.number}. ${currentQuestion.question}`}
-          </pre>
-        </div>
+        {!isQuestionEmpty && (
+          <div className="solution-page-question-pre-wrapper">
+            {questionSubDescription && (
+              <div className="solution-page-question-sub-description">
+                {questionSubDescription}
+              </div>
+            )}
+            {currentQuestion.label && (
+              <p className="solution-page-question-label">
+                기출 {currentQuestion.label}회
+              </p>
+            )}
+            <pre className="solution-page-question">
+              {`Q${index || currentQuestion.number}. ${
+                currentQuestion.question
+              }`}
+            </pre>
+          </div>
+        )}
         {currentQuestion.question_img &&
           currentQuestion.question_img.length >= 1 && (
             <div className="solution-page-question-image-wrapper">
+              <div>
+                {questionSubDescription && (
+                  <div className="solution-page-question-sub-description">
+                    {questionSubDescription}
+                  </div>
+                )}
+                {currentQuestion.label && (
+                  <p className="solution-page-question-label">
+                    기출 {currentQuestion.label}회
+                  </p>
+                )}
+              </div>
               <Image
                 src={currentQuestion.question_img[0].url}
                 alt="question_image"
@@ -296,22 +315,26 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
             {isSolutionHide ? '보이기' : '가리기'}
           </p>
         </button>
-        <div className="solution-page-solution-pre-wrapper">
-          <ExamSolutionFeedback
-            question={currentQuestion}
-            setQuestion={setCurrentQuestion}
-            type="me"
-          />
-          <pre
-            className={`solution-page-question ${isSolutionHide ? 'hide' : ''}`}
-          >
-            {`${currentQuestion.solution}`}
+        {!isSolutionEmpty && (
+          <div className="solution-page-solution-pre-wrapper">
             <ExamSolutionFeedback
               question={currentQuestion}
               setQuestion={setCurrentQuestion}
+              type="me"
             />
-          </pre>
-        </div>
+            <pre
+              className={`solution-page-question ${
+                isSolutionHide ? 'hide' : ''
+              }`}
+            >
+              {`${currentQuestion.solution}`}
+              <ExamSolutionFeedback
+                question={currentQuestion}
+                setQuestion={setCurrentQuestion}
+              />
+            </pre>
+          </div>
+        )}
         {currentQuestion.solution_img &&
           currentQuestion.solution_img.length >= 1 && (
             <div
@@ -319,6 +342,13 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
                 isSolutionHide ? 'hide' : ''
               }`}
             >
+              {isSolutionEmpty && (
+                <ExamSolutionFeedback
+                  question={currentQuestion}
+                  setQuestion={setCurrentQuestion}
+                  type="me"
+                />
+              )}
               {!isSolutionHide && (
                 <Image
                   src={currentQuestion.solution_img[0].url}
@@ -326,9 +356,17 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
                   className={'solution-page-question-image'}
                 />
               )}
+              {isSolutionEmpty && (
+                <ExamSolutionFeedback
+                  question={currentQuestion}
+                  setQuestion={setCurrentQuestion}
+                />
+              )}
             </div>
           )}
       </div>
+      <div></div>
+
       {hasStateBox && (
         <StateSelecboxGroup
           className="solution-page-state-select-box-group"
@@ -458,7 +496,8 @@ const ExamSolutionListContainer = styled.li`
   }
   .solution-page-question-image-wrapper {
     flex: 6;
-    text-align: center;
+    padding: 20px;
+    text-align: left;
     border: 1px solid ${palette.gray_400};
   }
   .solution-page-question-image {
@@ -554,7 +593,7 @@ const ExamSolutionListContainer = styled.li`
     }
 
     .solution-page-question-image-wrapper {
-      border: none;
+      /* border: none; */
       border-bottom: 1px solid ${palette.gray_400};
     }
     pre {
