@@ -32,18 +32,23 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
 }) => {
   if (!visible) return null;
   const hasImage = content.img && content.img.length >= 1;
+  const isSolutionEmpty = content.content
+    ?.replace(/\s+/g, '')
+    .includes('사진참고');
   return (
     <QuestionAndSolutionBoxContainer
       className={className}
       hasImage={hasImage ? 'true' : 'false'}
     >
-      <BasicBox minHeight={72} className="question-and-solution-box">
-        {feedback && question && (
-          <ExamSolutionFeedback question={question} type="me" />
-        )}
-        <p>{content.content}</p>
-        {feedback && question && <ExamSolutionFeedback question={question} />}
-      </BasicBox>
+      {!isSolutionEmpty && (
+        <BasicBox minHeight={72} className="question-and-solution-box">
+          {feedback && question && (
+            <ExamSolutionFeedback question={question} type="me" />
+          )}
+          <p>{content.content}</p>
+          {feedback && question && <ExamSolutionFeedback question={question} />}
+        </BasicBox>
+      )}
       {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">
           <div className="question-and-solution-box-question-image-wrapper">

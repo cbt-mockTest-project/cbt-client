@@ -21,9 +21,10 @@ interface QuestionProps {
 const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
   const title =
     questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50);
-  const googlePlaced = document
-    ? document.querySelector('google-auto-placed')
-    : null;
+  const googlePlaced =
+    typeof document !== 'undefined'
+      ? document.querySelector('google-auto-placed')
+      : null;
   useEffect(() => {
     if (googlePlaced) {
       googlePlaced.remove();
