@@ -51,6 +51,9 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
       )}
       {content.img && content.img.length >= 1 && (
         <BasicBox minHeight={72} className="question-and-solution-image-box">
+          {isSolutionEmpty && feedback && question && (
+            <ExamSolutionFeedback question={question} type="me" />
+          )}
           <div className="question-and-solution-box-question-image-wrapper">
             <Image
               src={content.img[0].url}
@@ -58,6 +61,9 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
               alt={content.img[0].url}
             />
           </div>
+          {isSolutionEmpty && feedback && question && (
+            <ExamSolutionFeedback question={question} />
+          )}
         </BasicBox>
       )}
     </QuestionAndSolutionBoxContainer>
@@ -82,7 +88,6 @@ const QuestionAndSolutionBoxContainer = styled.div<QuestionAndSolutionBoxContain
     font-weight: 600;
   }
   .question-and-solution-box-question-image-wrapper {
-    text-align: center;
   }
   .question-and-solution-box-question-image {
     position: relative;
