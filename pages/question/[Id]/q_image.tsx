@@ -1,15 +1,8 @@
 import React from 'react';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import Layout from '@components/common/layout/Layout';
+import { GetServerSideProps, NextPage } from 'next';
 import { addApolloState, initializeApollo } from '@modules/apollo';
-import {
-  ReadAllQuestionsQuery,
-  ReadMockExamQuestionQuery,
-} from '@lib/graphql/user/query/questionQuery.generated';
-import {
-  READ_QUESTION,
-  READ_ALL_QUESTIONS,
-} from '@lib/graphql/user/query/questionQuery';
+import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import { Image } from 'antd';
 
@@ -32,30 +25,7 @@ const QuestionImage: NextPage<QuestionImageProps> = ({ questionImageUrl }) => {
 
 export default QuestionImage;
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
-  const apolloClient = initializeApollo({}, '');
-  let paths: { params: { Id: string } }[] = [];
-  try {
-    const res = await apolloClient.query<ReadAllQuestionsQuery>({
-      query: READ_ALL_QUESTIONS,
-    });
-    if (res.data.readAllQuestions.questions) {
-      paths = res.data.readAllQuestions.questions
-        .filter((el) => el.question_img && el.question_img?.length >= 1)
-        .map((el) => ({
-          params: { Id: String(el.id) },
-        }));
-    }
-    return { paths, fallback: 'blocking' };
-  } catch (err) {
-    return {
-      paths,
-      fallback: 'blocking',
-    };
-  }
-};
-
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!context.params?.Id) {
     return {
       notFound: true,
@@ -81,6 +51,5 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
   return addApolloState(apolloClient, {
     props: { questionImageUrl },
-    revalidate: 43200,
   });
 };
