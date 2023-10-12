@@ -206,6 +206,14 @@ const EditorStyle = css`
   .ql-indent-8 {
     padding-left: 24em;
   }
+  sub {
+    vertical-align: sub;
+    font-size: smaller;
+  }
+  sup {
+    vertical-align: super;
+    font-size: smaller;
+  }
 `;
 
 export default EditorStyle;

@@ -6,8 +6,9 @@ import { QuestionType } from 'customTypes';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
-import { ExamQuestionType } from './solution/ExamSolutionList';
 import { QuestionListType } from '@modules/redux/slices/exam';
+import parse from 'html-react-parser';
+import EditorStyle from '@styles/editorStyle';
 
 export interface QuestionAndSolutionContent {
   content?: string;
@@ -45,7 +46,9 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
           {feedback && question && (
             <ExamSolutionFeedback question={question} type="me" />
           )}
-          <p>{content.content}</p>
+          <p className="question-and-solution-box-content">
+            {parse(content.content || '')}
+          </p>
           {feedback && question && <ExamSolutionFeedback question={question} />}
         </BasicBox>
       )}
@@ -82,6 +85,9 @@ const QuestionAndSolutionBoxContainer = styled.div<QuestionAndSolutionBoxContain
   pre,
   p {
     white-space: pre-wrap;
+  }
+  .question-and-solution-box-content {
+    ${EditorStyle}
   }
   .question-and-solution-box-title {
     margin-bottom: 10px;

@@ -11,6 +11,7 @@ import { ExamStatus, QuestionNumber, UserRole } from 'types';
 import ImageDragger from './ImageDragger';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import QuestionNumberItem from './QuestionNumberItem';
+import CreateQuestionEditor from './CreateQuestionEditor';
 
 interface QuestionAndSolutionFormProps {
   questionNumbers: QuestionNumber[];
@@ -37,7 +38,8 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   setQuestionNumbers,
   examId,
 }) => {
-  const { control, formState, getValues, register } = useFormContext();
+  const { control, formState, getValues, register, setValue } =
+    useFormContext();
   const { data: meQuery } = useMeQuery();
   return (
     <QuestionAndSolutionFormContainer>
@@ -69,15 +71,6 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
                 number={questionNumber.questionNumber}
                 setNumbers={setQuestionNumbers}
               />
-              // <li key={questionNumber.questionId}>
-              //   <a
-              //     href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/preview/question/${questionNumber.questionId}`}
-              //     target="_blank"
-              //     rel="noreferrer"
-              //   >
-              //     <Button>{questionNumber.questionNumber}</Button>
-              //   </a>
-              // </li>
             ))}
           </ul>
         ) : (
@@ -106,6 +99,14 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
         )}
         <div className="create-exam-question-and-solution-area-wrapper">
           <div className="create-exam-question-area">
+            {meQuery?.me.user?.role === UserRole.Admin && (
+              <CreateQuestionEditor
+                content={getValues('question')}
+                setContent={(value) => {
+                  setValue('question', value);
+                }}
+              />
+            )}
             <Controller
               name="question"
               control={control}
@@ -133,6 +134,14 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             />
           </div>
           <div className="create-exam-question-area">
+            {meQuery?.me.user?.role === UserRole.Admin && (
+              <CreateQuestionEditor
+                content={getValues('solution')}
+                setContent={(value) => {
+                  setValue('solution', value);
+                }}
+              />
+            )}
             <Controller
               name="solution"
               control={control}

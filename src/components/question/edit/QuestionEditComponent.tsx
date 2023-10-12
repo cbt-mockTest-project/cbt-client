@@ -1,8 +1,10 @@
+import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
 import ImageDragger from '@components/exam/write/ImageDragger';
 import {
   useEditQuestion,
   useLazyReadQuestion,
 } from '@lib/graphql/user/hook/useExamQuestion';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { Button, message, UploadFile } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -13,6 +15,7 @@ import styled from 'styled-components';
 import {
   CreateMockExamQuestionInput,
   MockExamQuestionImageInputType,
+  UserRole,
 } from 'types';
 
 interface QuestionEditComponentProps {}
@@ -27,6 +30,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
   const [solutionImage, setSolutionImage] = useState<UploadFile<any>[]>([]);
   const [questionImage, setQuestionImage] = useState<UploadFile<any>[]>([]);
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
+  const { data: meQuery } = useMeQuery();
 
   useEffect(() => {
     (async () => {
@@ -106,6 +110,14 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       </h2>
       <div className="question-edit-block-wrapper">
         <div className="question-edit-block">
+          {meQuery?.me.user?.role === UserRole.Admin && (
+            <CreateQuestionEditor
+              content={getValues('question') || ''}
+              setContent={(value) => {
+                setValue('question', value);
+              }}
+            />
+          )}
           <Controller
             name="question"
             control={control}
@@ -127,6 +139,14 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
           />
         </div>
         <div className="question-edit-block">
+          {meQuery?.me.user?.role === UserRole.Admin && (
+            <CreateQuestionEditor
+              content={getValues('solution') || ''}
+              setContent={(value) => {
+                setValue('solution', value);
+              }}
+            />
+          )}
           <Controller
             name="solution"
             control={control}

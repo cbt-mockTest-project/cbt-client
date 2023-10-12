@@ -10,7 +10,9 @@ import { DefaultOptionType } from 'antd/lib/select';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import parse from 'html-react-parser';
 import ExamHistorySkeleton from '../examhistory/ExamHistorySkeleton';
+import EditorStyle from '@styles/editorStyle';
 
 interface QuestionCommentComponentProps {}
 
@@ -91,7 +93,7 @@ const QuestionCommentComponent: React.FC<
                   <OpenInNewIcon />
                 </a>
                 <p className="my-question-comment-list-item-question">
-                  {question.question}
+                  {parse(question.question)}
                 </p>
               </div>
               <div className="my-question-comment-list-item-comment-wrapper">
@@ -139,6 +141,7 @@ const QuestionCommentComponentContainer = styled.div`
     padding: 10px;
     background-color: ${palette.gray_100};
     border-radius: 5px;
+    ${EditorStyle}
   }
   .my-question-comment-list-item-comment-wrapper {
     padding: 0 10px;

@@ -27,6 +27,8 @@ import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState'
 import { QuestionFeedbackType, QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 import { QuestionListType } from '@modules/redux/slices/exam';
+import parse from 'html-react-parser';
+import EditorStyle from '@styles/editorStyle';
 
 const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
   ssr: false,
@@ -272,9 +274,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
               </p>
             )}
             <pre className="solution-page-question">
-              {`Q${index || currentQuestion.number}. ${
-                currentQuestion.question
-              }`}
+              {parse(
+                `Q${index || currentQuestion.number}. ${
+                  currentQuestion.question
+                }`
+              )}
             </pre>
           </div>
         )}
@@ -327,7 +331,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
                 isSolutionHide ? 'hide' : ''
               }`}
             >
-              {`${currentQuestion.solution}`}
+              {parse(`${currentQuestion.solution}`)}
               <ExamSolutionFeedback
                 question={currentQuestion}
                 setQuestion={setCurrentQuestion}
@@ -473,6 +477,7 @@ const ExamSolutionListContainer = styled.li`
   }
 
   .solution-page-question {
+    ${EditorStyle}
     white-space: pre-wrap;
     b {
       font-size: 1.1.rem;

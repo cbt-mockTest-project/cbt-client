@@ -13,14 +13,17 @@ import {
 import WithHead from '@components/common/head/WithHead';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import QuestionComponent from '@components/question/QuestionComponent';
+import parse from 'html-react-parser';
+import { removeHtmlTag } from '@lib/utils/utils';
 
 interface QuestionProps {
   questionQuery: ReadMockExamQuestionQuery;
 }
 
 const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
-  const title =
-    questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50);
+  const title = removeHtmlTag(
+    questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50)
+  );
   const googlePlaced =
     typeof document !== 'undefined'
       ? document.querySelector('google-auto-placed')
