@@ -7,8 +7,8 @@ import type { AppProps } from 'next/app';
 import Globalstyles from '@styles/globalStyles';
 import { ApolloProvider } from '@apollo/client';
 import { APOLLO_STATE_PROP_NAME, useApollo } from '@modules/apollo';
-import { Provider } from 'react-redux';
-import store from '@modules/redux/store/configureStore';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
@@ -108,6 +108,11 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
       message.error(router.query.message);
     }
   }, [router.query.message]);
+
+  useEffect(() => {
+    window.katex = katex;
+  }, []);
+
   return (
     <>
       <Head>

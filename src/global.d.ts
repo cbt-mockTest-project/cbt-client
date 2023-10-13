@@ -4,6 +4,7 @@ declare module 'pdfmake/build/vfs_fonts.js';
 declare module '*.d.ts' {
   global {
     interface Window {
+      katex: any;
       gtag: any;
       Share: any;
       Kakao: any;
