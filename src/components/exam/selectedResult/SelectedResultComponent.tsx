@@ -152,7 +152,6 @@ const SelectedResultComponentContainer = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    max-height: 220px;
   }
 
   .selected-result-page-question-wrapper {
