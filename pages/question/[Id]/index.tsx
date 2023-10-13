@@ -26,7 +26,7 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
   );
   const googlePlaced =
     typeof document !== 'undefined'
-      ? document.querySelector('google-auto-placed')
+      ? document.querySelector('.google-auto-placed')
       : null;
   useEffect(() => {
     if (googlePlaced) {
