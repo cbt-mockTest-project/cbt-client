@@ -284,13 +284,15 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
     width: 100%;
     border: 1px solid ${palette.gray_200};
   }
-  .exam-solution-feedback-item {
+  .exam-solution-feedback-item::before {
+    content: '' !important;
   }
   .exam-solution-feedback-info {
     color: red;
     font-size: 0.8rem;
   }
   .exam-solution-feedback-content {
+    font-size: 14px !important;
     white-space: pre-wrap;
   }
   .exam-solution-feedback-user-tab {
@@ -298,7 +300,7 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
     gap: 10px;
   }
   .exam-solution-feedback-user-name {
-    font-size: 0.8rem;
+    font-size: 14px !important;
     font-weight: bold;
     overflow: hidden;
     white-space: nowrap;

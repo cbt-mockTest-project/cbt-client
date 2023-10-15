@@ -93,12 +93,10 @@ const QuestionAndSolutionBoxContainer = styled.div<QuestionAndSolutionBoxContain
     margin-bottom: 10px;
     font-weight: 600;
   }
-  .question-and-solution-box-question-image-wrapper {
-  }
+
   .question-and-solution-box-question-image {
     position: relative;
     height: auto;
-    max-height: 220px;
   }
   .question-and-solution-box {
     flex: 5;
