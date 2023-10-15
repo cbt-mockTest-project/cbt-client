@@ -49,6 +49,7 @@ import QuestionAndSolutionBox from './QuestionAndSolutionBox';
 import { examActions } from '@modules/redux/slices/exam';
 import {
   직8딴_건설안전기사_리스트,
+  직8딴_대기환경기사_리스트,
   직8딴_산업안전기사_리스트,
   직8딴_위험물산업기사_리스트,
 } from '@lib/constants/exam';
@@ -140,15 +141,22 @@ const ExamComponent: React.FC<ExamComponentProps> = ({ isPreview = false }) => {
     [examId, examIds, meQuery]
   );
 
+  const 직8딴_대기환경기사_권한체크 = useMemo(
+    () => examPermissionCheck(직8딴_대기환경기사_리스트, 6),
+    [examId, examIds, meQuery]
+  );
+
   const unAuthorizedExam = useMemo(
     () =>
       !직8딴_산업안전기사_권한체크 ||
       !직8딴_건설안전기사_권한체크 ||
-      !직8딴_위험물산업기사_권한체크,
+      !직8딴_위험물산업기사_권한체크 ||
+      !직8딴_대기환경기사_권한체크,
     [
       직8딴_산업안전기사_권한체크,
       직8딴_건설안전기사_권한체크,
       직8딴_위험물산업기사_권한체크,
+      직8딴_대기환경기사_권한체크,
     ]
   );
 

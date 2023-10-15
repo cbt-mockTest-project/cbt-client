@@ -166,7 +166,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       ],
       confirmDisabled: false,
       onConfirm: openEhsMasterPayModal,
-      roleIds: [4, 5],
+      roleIds: [4, 5, 6, 7],
     },
   ];
 

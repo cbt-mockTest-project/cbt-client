@@ -24,7 +24,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
-  if (checkRole({ roleIds: [1, 2, 3, 4, 5, 6], meQuery })) return null;
+  if (checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery })) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
