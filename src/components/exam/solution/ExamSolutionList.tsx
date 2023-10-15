@@ -320,9 +320,10 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
           </p>
         </button>
         {!isSolutionEmpty && (
-          <div className="solution-page-solution-pre-wrapper">
+          <div className={`solution-page-solution-pre-wrapper`}>
             <ExamSolutionFeedback
               question={currentQuestion}
+              isBlur={isSolutionHide}
               setQuestion={setCurrentQuestion}
               type="me"
             />

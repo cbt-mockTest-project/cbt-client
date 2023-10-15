@@ -26,6 +26,7 @@ import { cloneDeep } from 'lodash';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
+  isBlur?: boolean;
   setQuestion?: React.Dispatch<React.SetStateAction<ExamQuestionType>>;
   type?: 'me' | 'others';
 }
@@ -33,6 +34,7 @@ interface ExamSolutionFeedbackProps {
 const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   question,
   setQuestion,
+  isBlur = false,
   type = 'others',
 }) => {
   const { data: meQuery } = useMeQuery();
@@ -186,7 +188,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   };
 
   return (
-    <ExamSolutionFeedbackContainer type={type}>
+    <ExamSolutionFeedbackContainer type={type} isBlur={isBlur}>
       {type === 'others' && (
         <div className="exam-solution-feedback-separation" />
       )}
@@ -266,12 +268,19 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
 export default ExamSolutionFeedback;
 
 interface ExamSolutionFeedbackContainerProps
-  extends Pick<ExamSolutionFeedbackProps, 'type'> {}
+  extends Pick<ExamSolutionFeedbackProps, 'type'> {
+  isBlur?: boolean;
+}
 
 const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerProps>`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  ${(props) =>
+    props.isBlur &&
+    css`
+      filter: blur(10px);
+    `}
   ${(props) =>
     props.type === 'others'
       ? css`
