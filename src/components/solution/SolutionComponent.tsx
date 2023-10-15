@@ -136,7 +136,7 @@ const SolutionComponent: React.FC<SolutionComponentProps> = ({
   );
 
   const 직8딴_대기환경기사_권한체크 = useMemo(
-    () => examPermissionCheck(직8딴_대기환경기사_리스트, 6),
+    () => examPermissionCheck(직8딴_대기환경기사_리스트, 7),
     [examId, examIds, meQuery]
   );
 
