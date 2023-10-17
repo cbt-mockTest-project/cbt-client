@@ -103,6 +103,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
         question={question}
         hasNewWindowButton={false}
         isPreview={isPreview}
+        isDetailPage={true}
       />
     </QuestionComponentContainer>
   );

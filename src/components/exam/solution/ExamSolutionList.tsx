@@ -17,7 +17,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, Image, message, Tooltip } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import dynamic from 'next/dynamic';
 import QuestionComment from '@components/question/QuestionComment';
 import QuestionShareModal from '@components/common/modal/QuestionShareModal';
@@ -55,6 +55,7 @@ interface ExamSolutionListProps {
   hasStateBox?: boolean;
   isPreview?: boolean;
   questionSubDescription?: string;
+  isDetailPage?: boolean;
   index?: number;
 }
 
@@ -67,6 +68,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   hasStateBox = false,
   isPreview = false,
   questionSubDescription,
+  isDetailPage = false,
   index,
 }) => {
   const [currentQuestion, setCurrentQuestion] =
@@ -230,7 +232,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   }, [question]);
 
   return (
-    <ExamSolutionListContainer>
+    <ExamSolutionListContainer isDetailPage={isDetailPage}>
       <div className="solution-page-question-wrapper">
         <div className="solution-page-question-bookmark-button-wrapper">
           {!isPreview && (
@@ -451,7 +453,11 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
 
 export default ExamSolutionList;
 
-const ExamSolutionListContainer = styled.li`
+interface ExamSolutionListContainerProps {
+  isDetailPage: boolean;
+}
+
+const ExamSolutionListContainer = styled.li<ExamSolutionListContainerProps>`
   .hide {
     filter: blur(10px);
   }
@@ -517,6 +523,12 @@ const ExamSolutionListContainer = styled.li`
     position: relative;
     margin-top: 65px;
     gap: 20px;
+    ${(props) =>
+      props.isDetailPage &&
+      css`
+        flex-direction: column;
+        gap: 0px;
+      `}
   }
 
   .solution-page-comment-modal {
@@ -598,7 +610,6 @@ const ExamSolutionListContainer = styled.li`
     }
 
     .solution-page-question-image-wrapper {
-      /* border: none; */
       border-bottom: 1px solid ${palette.gray_400};
     }
     pre {
