@@ -51,6 +51,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [gotoExamPageLoading, setGotoExamPageLoading] = useState(false);
   const [examType, setExamType] = useState<EXAM_TYPE>(EXAM_TYPE.MODUCBT_EXAM);
   const [gotoSolutionPageLoading, setGotoSolutionPageLoading] = useState(false);
+  const [gotoPrintPageLoading, setGotoPrintPageLoading] = useState(false);
   const { value: noticeModalState, onToggle: onToggleNoticeModal } =
     useToggle(false);
   const { value: appGuideModalState, onToggle: onToggleAppGuideModalState } =
@@ -201,6 +202,18 @@ const MainComponent: React.FC<MainComponentProps> = ({
       }`,
     });
   };
+  const gotoPrintPage = () => {
+    setGotoPrintPageLoading(true);
+    router.push({
+      pathname: `/exam/print/${
+        examType === EXAM_TYPE.MY_EXAM
+          ? selectedMyTitle?.value
+          : examType === EXAM_TYPE.EHS_MASTER
+          ? selectedPartnerTitle?.value
+          : selectedModucbtTitle?.value
+      }`,
+    });
+  };
   const gotoRandomSelectPage = () => {
     router.push(`${router.pathname}/exam/randomselect`);
   };
@@ -315,6 +328,16 @@ const MainComponent: React.FC<MainComponentProps> = ({
               >
                 해설모드
               </Button>
+              {examType !== EXAM_TYPE.EHS_MASTER && (
+                <Button
+                  type="primary"
+                  loading={gotoPrintPageLoading}
+                  onClick={gotoPrintPage}
+                  disabled={notYetSelectedExam}
+                >
+                  출력모드
+                </Button>
+              )}
             </div>
           </div>
           <Button onClick={gotoRandomSelectPage}>랜덤모의고사</Button>
@@ -414,10 +437,9 @@ const MainComponentContainer = styled.div`
   }
 
   .home-button-mode-wrapper {
-    margin-top: 10px;
     display: flex;
     width: 100%;
-    gap: 10px;
+    gap: 5px;
   }
 
   .home-kakao-open-chat-button-wrapper {
