@@ -9,6 +9,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { fetchImageAsBase64, handleError } from '@lib/utils/utils';
 import { Print } from '@mui/icons-material';
+import { MockExamImageType } from 'types';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -158,24 +159,36 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({
   useEffect(() => {
     try {
       const convertImagesToBase64 = async () => {
-        const images: {
-          [key: string]: string;
-        } = {};
+        const promises: Promise<void>[] = [];
+        const images: { [key: string]: string } = {};
+
         for (const question of questions) {
           if (question.question_img && question.question_img.length >= 1) {
-            images[question.question_img[0].url] = await fetchImageAsBase64(
+            const promise = fetchImageAsBase64(
               question.question_img[0].url
-            );
+            ).then((base64) => {
+              images[(question.question_img as MockExamImageType[])[0].url] =
+                base64;
+            });
+            promises.push(promise);
           }
+
           if (question.solution_img && question.solution_img.length >= 1) {
-            images[question.solution_img[0].url] = await fetchImageAsBase64(
+            const promise = fetchImageAsBase64(
               question.solution_img[0].url
-            );
+            ).then((base64) => {
+              images[(question.solution_img as MockExamImageType[])[0].url] =
+                base64;
+            });
+            promises.push(promise);
           }
         }
+
+        await Promise.all(promises);
         setBase64Images(images);
         setIsPageLoaded(true);
       };
+
       convertImagesToBase64();
     } catch (e) {
       handleError(e);
