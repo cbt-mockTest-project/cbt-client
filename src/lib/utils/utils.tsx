@@ -265,3 +265,14 @@ export const reomveImgTag = (htmlString: string) => {
   // 변경된 HTML을 문자열로 반환
   return doc.body.innerHTML;
 };
+
+export const fetchImageAsBase64 = async (url: string): Promise<string> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
