@@ -7,9 +7,8 @@ import palette from '@styles/palette';
 import { Button, Spin } from 'antd';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { fetchImageAsBase64 } from '@lib/utils/utils';
+import { fetchImageAsBase64, handleError } from '@lib/utils/utils';
 import { Print } from '@mui/icons-material';
-import { EyeOutlined } from '@ant-design/icons';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -157,26 +156,30 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({
   };
 
   useEffect(() => {
-    const convertImagesToBase64 = async () => {
-      const images: {
-        [key: string]: string;
-      } = {};
-      for (const question of questions) {
-        if (question.question_img && question.question_img.length >= 1) {
-          images[question.question_img[0].url] = await fetchImageAsBase64(
-            question.question_img[0].url
-          );
+    try {
+      const convertImagesToBase64 = async () => {
+        const images: {
+          [key: string]: string;
+        } = {};
+        for (const question of questions) {
+          if (question.question_img && question.question_img.length >= 1) {
+            images[question.question_img[0].url] = await fetchImageAsBase64(
+              question.question_img[0].url
+            );
+          }
+          if (question.solution_img && question.solution_img.length >= 1) {
+            images[question.solution_img[0].url] = await fetchImageAsBase64(
+              question.solution_img[0].url
+            );
+          }
         }
-        if (question.solution_img && question.solution_img.length >= 1) {
-          images[question.solution_img[0].url] = await fetchImageAsBase64(
-            question.solution_img[0].url
-          );
-        }
-      }
-      setBase64Images(images);
-      setIsPageLoaded(true);
-    };
-    convertImagesToBase64();
+        setBase64Images(images);
+        setIsPageLoaded(true);
+      };
+      convertImagesToBase64();
+    } catch (e) {
+      handleError(e);
+    }
   }, [questions]);
 
   useEffect(() => {

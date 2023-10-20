@@ -1,6 +1,5 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
@@ -29,12 +28,6 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
 
 export default Solution;
 
-const StyledLayout = styled(Layout)`
-  .layout-children-wrapper {
-    max-width: 1280px;
-  }
-`;
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!context.params?.Id) {
     return {
@@ -56,6 +49,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
   const questionsQuery = res?.data;
   return addApolloState(apolloClient, {
-    props: { questionsQuery, questionsQueryInput },
+    props: { questionsQuery },
   });
 };
