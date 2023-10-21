@@ -8,6 +8,8 @@ import { debounce } from 'lodash';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import parse from 'html-react-parser';
+import EditorStyle from '@styles/editorStyle';
 
 const SearchQuestionComponentBlock = styled.div`
   display: flex;
@@ -45,6 +47,9 @@ const SearchQuestionComponentBlock = styled.div`
   }
   pre {
     white-space: pre-wrap;
+  }
+  .search-question-content {
+    ${EditorStyle}
   }
 
   @media (max-width: ${responsive.medium}) {
@@ -101,7 +106,9 @@ const SearchQuestionComponent: React.FC<SearchQuestionComponentProps> = () => {
                 }
               >
                 <p className="search-question-card-label">문제</p>
-                <pre>{question.question}</pre>
+                <pre className="search-question-content">
+                  {parse(question.question || '')}
+                </pre>
 
                 {question.question_img && question.question_img.length >= 1 && (
                   <Image
@@ -112,7 +119,9 @@ const SearchQuestionComponent: React.FC<SearchQuestionComponentProps> = () => {
                 <br />
                 <br />
                 <p className="search-question-card-label">정답</p>
-                <pre>{question.solution}</pre>
+                <pre className="search-question-content">
+                  {parse(question.solution || '')}
+                </pre>
                 {question.solution_img && question.solution_img.length >= 1 && (
                   <Image
                     src={question.solution_img[0].url}
