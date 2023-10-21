@@ -19,12 +19,17 @@ const CreateQuestionEditorBlock = styled.div`
     .ql-container.ql-snow {
       min-height: 200px;
     }
+    ol,
+    ul {
+      padding: 0;
+    }
   }
 `;
 
 const formats: ComponentProps<typeof ReactQuill>['formats'] = [
   'header',
   'bold',
+  'list',
   'italic',
   'underline',
   'link',
@@ -45,11 +50,13 @@ const ReactQuillWrapper = dynamic(
 interface CreateQuestionEditorProps {
   content: string;
   setContent: (value: string) => void;
+  placeholder?: string;
 }
 
 const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
   content,
   setContent,
+  placeholder = '내용을 작성해주세요.',
 }) => {
   const reactQuillRef = useRef<ReactQuill | null>(null);
 
@@ -58,7 +65,8 @@ const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
       toolbar: {
         container: [
           [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
+          ['bold'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
           [{ script: 'sub' }, { script: 'super' }],
           ['link', 'formula'],
         ],
@@ -75,7 +83,7 @@ const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
         modules={modules}
         value={content}
         onChange={setContent}
-        placeholder="내용을 작성해주세요."
+        placeholder={placeholder}
       />
     </CreateQuestionEditorBlock>
   );

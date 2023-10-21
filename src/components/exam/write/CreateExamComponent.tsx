@@ -1,6 +1,6 @@
 import Label from '@components/common/label/Label';
 import palette from '@styles/palette';
-import { Button, message, UploadFile } from 'antd';
+import { message, UploadFile } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
@@ -526,11 +526,6 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
 
   return (
     <CreateExamComponentContainer>
-      <div>
-        <Button type="primary" onClick={onToggleFeedbackModal}>
-          피드백 남기기
-        </Button>
-      </div>
       <Label content={'1.사전작업 - 카테고리,시험명 등록 및 선택하기'} />
       <div className="create-exam-input-button-wrapper">
         <SelectAdd {...SelectCategoryProps} />

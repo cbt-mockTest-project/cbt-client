@@ -102,16 +102,64 @@ const EditorStyle = css`
       align-items: flex-start;
       &::before {
         counter-increment: ol;
-        content: '' counter(ol) '.';
+        content: counter(ol);
         width: 20px;
       }
+    }
+
+    @supports (not (content: counter(ol, '①'))) {
+      li:nth-child(1)::before {
+        content: '① ';
+      }
+      li:nth-child(2)::before {
+        content: '② ';
+      }
+      li:nth-child(3)::before {
+        content: '③ ';
+      }
+      li:nth-child(4)::before {
+        content: '④ ';
+      }
+      li:nth-child(5)::before {
+        content: '⑤ ';
+      }
+      li:nth-child(6)::before {
+        content: '⑥ ';
+      }
+      li:nth-child(7)::before {
+        content: '⑦ ';
+      }
+      li:nth-child(8)::before {
+        content: '⑧ ';
+      }
+      li:nth-child(9)::before {
+        content: '⑨ ';
+      }
+      li:nth-child(10)::before {
+        content: '⑩ ';
+      }
+      li:nth-child(11)::before {
+        content: '⑪ ';
+      }
+      li:nth-child(12)::before {
+        content: '⑫ ';
+      }
+      li:nth-child(13)::before {
+        content: '⑬ ';
+      }
+      li:nth-child(14)::before {
+        content: '⑭ ';
+      }
+      li:nth-child(15)::before {
+        content: '⑮ ';
+      }
+      /* 필요한 만큼 계속 추가 가능 */
     }
   }
   ul {
     li {
       &::before {
         content: '•';
-        width: 17px;
         display: inline-block;
       }
     }

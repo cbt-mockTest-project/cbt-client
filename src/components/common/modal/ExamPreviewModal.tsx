@@ -1,8 +1,6 @@
 import { Button } from 'antd';
-import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 import Modal, { ModalProps } from './Modal';
 
 interface ExamPreviewModalProps extends Omit<ModalProps, 'children'> {
@@ -20,18 +18,22 @@ const ExamPreviewModal: React.FC<ExamPreviewModalProps> = ({
     <ExamPreviewModalContainer onClose={onClose} open={open}>
       <h3>시험지 미리보기</h3>
       <div className="exam-preview-button-wrapper">
-        <Link
+        <a
           href={`/preview/exam?e=${examId}&q=1`}
           className="exam-preview-link"
+          target="_blank"
+          rel="noreferrer"
         >
           <Button type="primary">풀이모드</Button>
-        </Link>
-        <Link
+        </a>
+        <a
           href={`/preview/exam/solution/${examId}`}
           className="exam-preview-link"
+          target="_blank"
+          rel="noreferrer"
         >
           <Button type="primary">해설모드</Button>
-        </Link>
+        </a>
       </div>
     </ExamPreviewModalContainer>
   );

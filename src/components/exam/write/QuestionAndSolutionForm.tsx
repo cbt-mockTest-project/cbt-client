@@ -38,8 +38,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   setQuestionNumbers,
   examId,
 }) => {
-  const { control, formState, getValues, register, setValue } =
-    useFormContext();
+  const { control, formState, getValues, watch, setValue } = useFormContext();
   const { data: meQuery } = useMeQuery();
   return (
     <QuestionAndSolutionFormContainer>
@@ -99,26 +98,12 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
         )}
         <div className="create-exam-question-and-solution-area-wrapper">
           <div className="create-exam-question-area">
-            {meQuery?.me.user?.role === UserRole.Admin && (
-              <CreateQuestionEditor
-                content={getValues('question')}
-                setContent={(value) => {
-                  setValue('question', value);
-                }}
-              />
-            )}
-            <Controller
-              name="question"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextArea
-                  placeholder="문제를 입력해주세요."
-                  autoSize={true}
-                  onChange={field.onChange}
-                  value={getValues('question')}
-                />
-              )}
+            <CreateQuestionEditor
+              placeholder="문제를 입력해주세요."
+              content={watch('question') || ''}
+              setContent={(value) => {
+                setValue('question', value);
+              }}
             />
             {formState.errors.question?.type === 'required' && (
               <ErrorText
@@ -134,26 +119,12 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             />
           </div>
           <div className="create-exam-question-area">
-            {meQuery?.me.user?.role === UserRole.Admin && (
-              <CreateQuestionEditor
-                content={getValues('solution')}
-                setContent={(value) => {
-                  setValue('solution', value);
-                }}
-              />
-            )}
-            <Controller
-              name="solution"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextArea
-                  placeholder="해설을 입력해주세요."
-                  autoSize={true}
-                  onChange={field.onChange}
-                  value={getValues('solution')}
-                />
-              )}
+            <CreateQuestionEditor
+              placeholder="해설을 입력해주세요."
+              content={watch('solution') || ''}
+              setContent={(value) => {
+                setValue('solution', value);
+              }}
             />
             {formState.errors.solution?.type === 'required' && (
               <ErrorText

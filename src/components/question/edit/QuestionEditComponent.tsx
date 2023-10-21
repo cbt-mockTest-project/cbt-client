@@ -7,15 +7,13 @@ import {
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { Button, message, UploadFile } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import {
   CreateMockExamQuestionInput,
   MockExamQuestionImageInputType,
-  UserRole,
 } from 'types';
 
 interface QuestionEditComponentProps {}
@@ -30,7 +28,6 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
   const [solutionImage, setSolutionImage] = useState<UploadFile<any>[]>([]);
   const [questionImage, setQuestionImage] = useState<UploadFile<any>[]>([]);
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
-  const { data: meQuery } = useMeQuery();
 
   useEffect(() => {
     (async () => {
@@ -56,6 +53,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       }
     })();
   }, [router.query.Id]);
+
   const requestSumbit = async (data: CreateMockExamQuestionInput) => {
     try {
       setEditButtonDisabled(true);
@@ -100,7 +98,6 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       handleError(e);
     }
   };
-
   if (!readQuestionQuery) return null;
   const { mockExamQusetion } = readQuestionQuery.readMockExamQuestion;
   return (
@@ -110,27 +107,14 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       </h2>
       <div className="question-edit-block-wrapper">
         <div className="question-edit-block">
-          {meQuery?.me.user?.role === UserRole.Admin && (
-            <CreateQuestionEditor
-              content={getValues('question') || ''}
-              setContent={(value) => {
-                setValue('question', value);
-              }}
-            />
-          )}
-          <Controller
-            name="question"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextArea
-                placeholder="해설을 입력해주세요."
-                autoSize={true}
-                onChange={field.onChange}
-                value={getValues('question') as string}
-              />
-            )}
+          <CreateQuestionEditor
+            placeholder="문제를 입력해주세요."
+            content={watch('question') || ''}
+            setContent={(value) => {
+              setValue('question', value);
+            }}
           />
+
           <ImageDragger
             images={questionImage}
             setImages={setQuestionImage}
@@ -139,27 +123,14 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
           />
         </div>
         <div className="question-edit-block">
-          {meQuery?.me.user?.role === UserRole.Admin && (
-            <CreateQuestionEditor
-              content={getValues('solution') || ''}
-              setContent={(value) => {
-                setValue('solution', value);
-              }}
-            />
-          )}
-          <Controller
-            name="solution"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <TextArea
-                placeholder="해설을 입력해주세요."
-                autoSize={true}
-                onChange={field.onChange}
-                value={getValues('solution') as string}
-              />
-            )}
+          <CreateQuestionEditor
+            placeholder="해설을 입력해주세요."
+            content={watch('solution') || ''}
+            setContent={(value) => {
+              setValue('solution', value);
+            }}
           />
+
           <ImageDragger
             images={solutionImage}
             setImages={setSolutionImage}
