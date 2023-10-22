@@ -47,6 +47,7 @@
     "pdfmake": "^0.2.7",
     "plyr": "^3.7.8",
     "plyr-react": "^5.2.0",
+    "quill-better-table": "^1.2.10",
     "random-useragent": "^0.5.0",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",

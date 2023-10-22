@@ -9468,6 +9468,11 @@ queue@^6.0.1:
   dependencies:
     inherits "~2.0.3"
 
+quill-better-table@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/quill-better-table/-/quill-better-table-1.2.10.tgz#ed0e21cdbaff672189b902187720fde08ae2a96a"
+  integrity sha512-CFwxAQzt4EPCQuynQ65R/FU7Yu//kcDBb/rmBBOsFfO758+q50zvG/PDt4Lenv9DcrSgwnyNkfo4yeA5fzzVYQ==
+
 quill-delta@^3.6.2:
   version "3.6.3"
   resolved "https://registry.npmjs.org/quill-delta/-/quill-delta-3.6.3.tgz"

@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 import palette from './palette';
-
+import 'quill-better-table/dist/quill-better-table.css';
 const EditorStyle = css`
   h1,
   h2,
@@ -11,6 +11,15 @@ const EditorStyle = css`
   }
   li {
     margin: 0;
+  }
+  li[data-list='ordered'],
+  li[data-list='bullet'] {
+    padding: 0;
+    .ql-ui {
+      ::before {
+        content: none;
+      }
+    }
   }
   strong {
     font-weight: bold;
@@ -97,7 +106,7 @@ const EditorStyle = css`
   }
   ol {
     counter-reset: ol;
-    li {
+    li:not([data-list='bullet']) {
       display: flex;
       align-items: flex-start;
       &::before {
@@ -108,49 +117,49 @@ const EditorStyle = css`
     }
 
     @supports (not (content: counter(ol, '①'))) {
-      li:nth-child(1)::before {
+      li:not([data-list='bullet']):nth-child(1)::before {
         content: '① ';
       }
-      li:nth-child(2)::before {
+      li:not([data-list='bullet']):nth-child(2)::before {
         content: '② ';
       }
-      li:nth-child(3)::before {
+      li:not([data-list='bullet']):nth-child(3)::before {
         content: '③ ';
       }
-      li:nth-child(4)::before {
+      li:not([data-list='bullet']):nth-child(4)::before {
         content: '④ ';
       }
-      li:nth-child(5)::before {
+      li:not([data-list='bullet']):nth-child(5)::before {
         content: '⑤ ';
       }
-      li:nth-child(6)::before {
+      li:not([data-list='bullet']):nth-child(6)::before {
         content: '⑥ ';
       }
-      li:nth-child(7)::before {
+      li:not([data-list='bullet']):nth-child(7)::before {
         content: '⑦ ';
       }
-      li:nth-child(8)::before {
+      li:not([data-list='bullet']):nth-child(8)::before {
         content: '⑧ ';
       }
-      li:nth-child(9)::before {
+      li:not([data-list='bullet']):nth-child(9)::before {
         content: '⑨ ';
       }
-      li:nth-child(10)::before {
+      li:not([data-list='bullet']):nth-child(10)::before {
         content: '⑩ ';
       }
-      li:nth-child(11)::before {
+      li:not([data-list='bullet']):nth-child(11)::before {
         content: '⑪ ';
       }
-      li:nth-child(12)::before {
+      li:not([data-list='bullet']):nth-child(12)::before {
         content: '⑫ ';
       }
-      li:nth-child(13)::before {
+      li:not([data-list='bullet']):nth-child(13)::before {
         content: '⑬ ';
       }
-      li:nth-child(14)::before {
+      li:not([data-list='bullet']):nth-child(14)::before {
         content: '⑭ ';
       }
-      li:nth-child(15)::before {
+      li:not([data-list='bullet']):nth-child(15)::before {
         content: '⑮ ';
       }
       /* 필요한 만큼 계속 추가 가능 */
@@ -158,6 +167,14 @@ const EditorStyle = css`
   }
   ul {
     li {
+      &::before {
+        content: '•';
+        display: inline-block;
+      }
+    }
+  }
+  ol {
+    li[data-list='bullet'] {
       &::before {
         content: '•';
         display: inline-block;
