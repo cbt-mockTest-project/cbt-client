@@ -271,6 +271,13 @@ const EditorStyle = css`
   .ql-indent-8 {
     padding-left: 24em;
   }
+  li {
+    display: flex !important;
+    sub {
+      align-self: flex-end;
+      height: 22px;
+    }
+  }
   sub {
     vertical-align: sub;
     font-size: smaller;
