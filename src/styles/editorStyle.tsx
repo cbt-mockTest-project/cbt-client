@@ -272,7 +272,6 @@ const EditorStyle = css`
     padding-left: 24em;
   }
   li {
-    display: flex !important;
     sub {
       align-self: flex-end;
       height: 22px;
