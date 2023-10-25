@@ -1,3 +1,5 @@
+const { default: axios } = require('axios');
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_CLIENT_URL,
@@ -31,6 +33,15 @@ module.exports = {
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       alternateRefs: config.alternateRefs ?? [],
     };
+  },
+  additionalPaths : async (config) => {
+    const res = await axios.post('http://localhost:80/graphql', {
+      operationName : null,
+      variables : {},
+      query : "{\n  readAllQuestions {\n    ok\n    questions {\n      id\n    }\n  }\n}\n"
+    })
+    const questionIds = await Promise.all(res.data.data.readAllQuestions.questions.map(async (question) => await config.transform(config, `/question/${question.id}`)))
+    return questionIds;
   },
   robotsTxtOptions: {
     policies: [
