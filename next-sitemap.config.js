@@ -35,7 +35,7 @@ module.exports = {
     };
   },
   additionalPaths : async (config) => {
-    const res = await axios.post('http://localhost:80/graphql', {
+    const res = await axios.post('https://api.moducbt.com/graphql', {
       operationName : null,
       variables : {},
       query : "{\n  readAllQuestions {\n    ok\n    questions {\n      id\n    }\n  }\n}\n"

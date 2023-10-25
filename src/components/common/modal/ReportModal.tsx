@@ -1,11 +1,11 @@
 import palette from '@styles/palette';
-import TextArea from 'antd/lib/input/TextArea';
-import React, { ChangeEvent, ComponentProps, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ConfirmModal, { ConfirmModalProps } from './ConfirmModal';
 import { Radio } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { QuestionFeedbackType } from 'types';
+import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
 
 export const feedbackOptions: checkboxOption[] = [
   { label: '공개', value: QuestionFeedbackType.Public },
@@ -98,13 +98,11 @@ const Content: React.FC<Content> = ({
         }}
         options={feedbackOptions}
       />
-      <TextArea
+      <CreateQuestionEditor
+        content={content}
+        setContent={setContent}
         placeholder={placeholder}
-        autoSize={{ minRows: 6, maxRows: 10 }}
-        value={content}
-        onChange={(e) => {
-          setContent(e.target.value);
-        }}
+        className="content-feedback-editor"
       />
     </ContentContainer>
   );
@@ -161,5 +159,8 @@ const ContentContainer = styled.div`
     margin-top: 20px;
     text-align: center;
     width: 100%;
+  }
+  .content-feedback-editor {
+    margin-top: 20px;
   }
 `;

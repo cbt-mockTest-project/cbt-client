@@ -23,6 +23,8 @@ import {
 import { ExamQuestionType } from './ExamSolutionList';
 import { QuestionListType, examActions } from '@modules/redux/slices/exam';
 import { cloneDeep } from 'lodash';
+import EditorStyle from '@styles/editorStyle';
+import parse from 'html-react-parser';
 
 interface ExamSolutionFeedbackProps {
   question: ExamQuestionType;
@@ -221,7 +223,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
                 )}
               </div>
               <p className="exam-solution-feedback-content">
-                {feedback.content}
+                {parse(feedback.content)}
               </p>
               {type === 'others' && (
                 <div className="exam-solution-like-button-wrapper">
@@ -303,6 +305,7 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
   .exam-solution-feedback-content {
     font-size: 14px !important;
     white-space: pre-wrap;
+    ${EditorStyle}
   }
   .exam-solution-feedback-user-tab {
     display: flex;
@@ -336,9 +339,5 @@ const ExamSolutionFeedbackContainer = styled.ul<ExamSolutionFeedbackContainerPro
   }
   .exam-solution-feedback-downpvote-button.active {
     color: ${palette.red_500};
-  }
-
-  .exam-solution-feedback-upvote-button,
-  .exam-solution-feedback-downpvote-button {
   }
 `;

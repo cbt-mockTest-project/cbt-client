@@ -51,12 +51,14 @@ interface CreateQuestionEditorProps {
   content: string;
   setContent: (value: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
 const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
   content,
   setContent,
   placeholder = '내용을 작성해주세요.',
+  className = '',
 }) => {
   const reactQuillRef = useRef<ReactQuill | null>(null);
 
@@ -75,7 +77,7 @@ const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
   }, []);
 
   return (
-    <CreateQuestionEditorBlock>
+    <CreateQuestionEditorBlock className={className}>
       <ReactQuillWrapper
         theme="snow"
         forwardedRef={reactQuillRef}
