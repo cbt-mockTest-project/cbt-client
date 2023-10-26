@@ -340,6 +340,18 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </div>
         </div>
       </div>
+      <ul className="hidden-title">
+        {titlesAndCategories.map((el, index) => (
+          <li key={index}>
+            {el.titles.map((title) => (
+              <Link key={title.id} href={`/exam/solution/${title.id}`} passHref>
+                {title.title}
+              </Link>
+            ))}
+          </li>
+        ))}
+      </ul>
+
       <Portal>
         {kakaoChatModalState && (
           <KakaoOpenChatModal
