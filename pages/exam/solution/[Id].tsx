@@ -36,9 +36,7 @@ const Solution: NextPage<SolutionProps> = ({ questionsQuery }) => {
         <SolutionComponent
           questionsQuery={questionsQuery}
           hasSearchInput={true}
-          hasNewWindowButton={
-            meQuery?.me.user?.role === UserRole.Admin ? true : false
-          }
+          hasNewWindowButton={true}
         />
         <GoogleAd type="display" />
       </StyledLayout>
