@@ -79,7 +79,7 @@ export const handleError = async (error: any) => {
     typeof window !== 'undefined' ? window.navigator.userAgent : ''
   }\nIP:${clientIp}
       `;
-  sendErrorToTelegram(telegramMessage);
+  // sendErrorToTelegram(telegramMessage);
   pushErrorLogToSentry({ message: telegramMessage, level: 'error' });
 };
 
