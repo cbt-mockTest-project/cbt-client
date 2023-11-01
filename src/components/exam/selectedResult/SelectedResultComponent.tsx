@@ -6,6 +6,8 @@ import { Image } from 'antd';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
+import parse from 'html-react-parser';
+import EditorStyle from '@styles/editorStyle';
 
 interface SelectedResultComponentProps {
   questionsQuery: ReadMockExamQuestionsByStateQuery;
@@ -20,59 +22,63 @@ const SelectedResultComponent: React.FC<SelectedResultComponentProps> = ({
     <SelectedResultComponentContainer>
       <h3 className="selected-result-page-title">{router.query.title}</h3>
       <ul>
-        {readMockExamQuestionsByState.mockExamQusetions.map((state, index) => (
-          <li key={index}>
-            <div className="selected-result-question-top-wrapper">
-              <div className="selected-result-question-label-achievement-icon-wrapper">
-                <div
-                  className={`selected-result-question-label-achievement-icon ${state.state}`}
-                >
-                  {convertStateToIcon(state.state)}
-                </div>
-              </div>
-              <p className="selected-result-page-sub-title">{`${state.exam.title}  ${state.question.number}번 문제`}</p>
-            </div>
-            <div className="selected-result-page-question-wrapper">
-              <div className="selected-result-page-question-pre-wrapper">
-                <pre className="selected-result-page-question">
-                  {`Q${state.question.number}. ${state.question.question}`}
-                </pre>
-              </div>
-              {state.question.question_img &&
-                state.question.question_img.length >= 1 && (
-                  <div className="selected-result-page-question-image-wrapper">
-                    <Image
-                      src={state.question.question_img[0].url}
-                      alt="question_image"
-                      className="selected-result-page-question-image"
-                    />
-                  </div>
-                )}
-            </div>
-            <div className="selected-result-page-question-wrapper">
-              <div className="selected-result-page-solution-pre-wrapper">
-                <pre className={`selected-result-page-question`}>
-                  <b>[solution]</b>
-                  <br />
-                  <br />
-                  {`${state.question.solution}`}
-                </pre>
-              </div>
-              {state.question.solution_img &&
-                state.question.solution_img.length >= 1 && (
+        {readMockExamQuestionsByState.mockExamQusetions.map((state, index) => {
+          return (
+            <li key={index}>
+              <div className="selected-result-question-top-wrapper">
+                <div className="selected-result-question-label-achievement-icon-wrapper">
                   <div
-                    className={`selected-result-page-question-image-wrapper`}
+                    className={`selected-result-question-label-achievement-icon ${state.state}`}
                   >
-                    <Image
-                      src={state.question.solution_img[0].url}
-                      alt="question_image"
-                      className="selected-result-page-question-image"
-                    />
+                    {convertStateToIcon(state.state)}
                   </div>
-                )}
-            </div>
-          </li>
-        ))}
+                </div>
+                <p className="selected-result-page-sub-title">{`${state.exam.title}  ${state.question.number}번 문제`}</p>
+              </div>
+              <div className="selected-result-page-question-wrapper">
+                <div className="selected-result-page-question-pre-wrapper">
+                  <pre className="selected-result-page-question">
+                    {parse(
+                      `Q${state.question.number}. ${state.question.question}`
+                    )}
+                  </pre>
+                </div>
+                {state.question.question_img &&
+                  state.question.question_img.length >= 1 && (
+                    <div className="selected-result-page-question-image-wrapper">
+                      <Image
+                        src={state.question.question_img[0].url}
+                        alt="question_image"
+                        className="selected-result-page-question-image"
+                      />
+                    </div>
+                  )}
+              </div>
+              <div className="selected-result-page-question-wrapper">
+                <div className="selected-result-page-solution-pre-wrapper">
+                  <pre className={`selected-result-page-question`}>
+                    <b>[solution]</b>
+                    <br />
+                    <br />
+                    {parse(`${state.question.solution}`)}
+                  </pre>
+                </div>
+                {state.question.solution_img &&
+                  state.question.solution_img.length >= 1 && (
+                    <div
+                      className={`selected-result-page-question-image-wrapper`}
+                    >
+                      <Image
+                        src={state.question.solution_img[0].url}
+                        alt="question_image"
+                        className="selected-result-page-question-image"
+                      />
+                    </div>
+                  )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </SelectedResultComponentContainer>
   );
@@ -123,6 +129,7 @@ const SelectedResultComponentContainer = styled.div`
 
   .selected-result-page-question {
     white-space: pre-wrap;
+    ${EditorStyle}
     b {
       font-size: 1.1.rem;
       font-weight: bold;
