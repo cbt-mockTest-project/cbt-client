@@ -2,16 +2,9 @@ import React, { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
-import {
-  ReadAllQuestionsQuery,
-  ReadMockExamQuestionQuery,
-} from '@lib/graphql/user/query/questionQuery.generated';
-import {
-  READ_QUESTION,
-  READ_ALL_QUESTIONS,
-} from '@lib/graphql/user/query/questionQuery';
+import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
-import GoogleAd from '@components/common/ad/GoogleAd';
 import QuestionComponent from '@components/question/QuestionComponent';
 import parse from 'html-react-parser';
 import { removeHtmlTag } from '@lib/utils/utils';
@@ -30,6 +23,9 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
       <WithHead
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
+        description={removeHtmlTag(
+          questionQuery.readMockExamQuestion.mockExamQusetion?.question
+        )}
       />
       <Layout>
         <QuestionComponent questionQuery={questionQuery} />
