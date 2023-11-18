@@ -1,9 +1,7 @@
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
-import { useEditExam } from '@lib/graphql/user/hook/useExam';
 import palette from '@styles/palette';
-import { Button, Input, message, UploadFile, UploadProps } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
+import { Button, Input, UploadFile } from 'antd';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
@@ -24,6 +22,7 @@ interface QuestionAndSolutionFormProps {
   examStatus: ExamStatus;
   setExamStatus: React.Dispatch<React.SetStateAction<ExamStatus>>;
   examId: number;
+  createQuestionLoading: boolean;
   onToggleExamPreviewModal: () => void;
 }
 
@@ -36,6 +35,8 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
   setSolutionImage,
   onToggleExamPreviewModal,
   setQuestionNumbers,
+  createQuestionLoading,
+
   examId,
 }) => {
   const { control, formState, getValues, watch, setValue } = useFormContext();
@@ -146,6 +147,7 @@ const QuestionAndSolutionForm: React.FC<QuestionAndSolutionFormProps> = ({
             type="primary"
             className="create-exam-question-submit-button"
             htmlType="submit"
+            loading={createQuestionLoading}
           >
             문제 등록하기
           </Button>

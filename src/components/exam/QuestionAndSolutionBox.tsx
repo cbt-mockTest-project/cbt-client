@@ -9,6 +9,7 @@ import ExamSolutionFeedback from './solution/ExamSolutionFeedback';
 import { QuestionListType } from '@modules/redux/slices/exam';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
+import { removeHtmlTag } from '@lib/utils/utils';
 
 export interface QuestionAndSolutionContent {
   content?: string;
@@ -33,9 +34,9 @@ const QuestionAndSolutionBox: React.FC<QuestionAndSolutionBoxProps> = ({
 }) => {
   if (!visible) return null;
   const hasImage = content.img && content.img.length >= 1;
-  const isSolutionEmpty = content.content
-    ?.replace(/\s+/g, '')
-    .includes('사진참고');
+  const isSolutionEmpty =
+    content.content?.replace(/\s+/g, '').includes('사진참고') ||
+    removeHtmlTag(content.content || '') === '';
   return (
     <QuestionAndSolutionBoxContainer
       className={className}

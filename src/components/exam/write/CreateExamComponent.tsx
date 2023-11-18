@@ -82,6 +82,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   const [editExam, { loading: editExamLoading }] = useEditExam();
   const [readQuestionNumbers, { refetch: refetchReadQuestionNumbers }] =
     useLazyReadQuestionNumbers();
+  const [createQuestionLoading, setCreateQuestionLoading] =
+    useState<boolean>(false);
 
   const [selectedQuestionNumber, setSelectedQuestionNumber] =
     useState<number>(1);
@@ -486,6 +488,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
   };
   const onSubmit = async (data: CreateMockExamQuestionInput) => {
     try {
+      setCreateQuestionLoading(true);
       if (!selectedTitle) {
         return message.error('시험을 선택해주세요.');
       }
@@ -521,6 +524,8 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
       return message.error(res.data?.createMockExamQuestion.error);
     } catch (e) {
       handleError(e);
+    } finally {
+      setCreateQuestionLoading(false);
     }
   };
 
@@ -547,6 +552,7 @@ const CreateExamComponent: React.FC<CreateExamComponentProps> = () => {
             examStatus={examStatus}
             setExamStatus={setExamStatus}
             onToggleExamPreviewModal={onToggleExamPreviewModal}
+            createQuestionLoading={createQuestionLoading}
             examId={
               typeof selectedTitle?.value === 'number' ? selectedTitle.value : 0
             }

@@ -8,7 +8,7 @@ import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { ellipsisText, handleError } from '@lib/utils/utils';
+import { ellipsisText, handleError, removeHtmlTag } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
@@ -90,12 +90,12 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     content: '',
     type: QuestionFeedbackType.Public,
   });
-  const isSolutionEmpty = question.solution
-    ?.replace(/\s+/g, '')
-    .includes('사진참고');
-  const isQuestionEmpty = question.question
-    ?.replace(/\s+/g, '')
-    .includes('사진참고');
+  const isSolutionEmpty =
+    question.solution?.replace(/\s+/g, '').includes('사진참고') ||
+    removeHtmlTag(question.solution || '') === '';
+  const isQuestionEmpty =
+    question.question?.replace(/\s+/g, '').includes('사진참고') ||
+    removeHtmlTag(question.question || '') === '';
 
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
@@ -284,10 +284,18 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
             </pre>
           </div>
         )}
+        {/* {isQuestionEmpty && (
+          <div>Q.{index || currentQuestion.number}번 문제</div>
+        )} */}
         {currentQuestion.question_img &&
           currentQuestion.question_img.length >= 1 && (
             <div className="solution-page-question-image-wrapper">
               <div>
+                {isQuestionEmpty && (
+                  <div style={{ marginBottom: '10px' }}>
+                    Q{index || currentQuestion.number}.
+                  </div>
+                )}
                 {questionSubDescription && (
                   <div className="solution-page-question-sub-description">
                     {questionSubDescription}
