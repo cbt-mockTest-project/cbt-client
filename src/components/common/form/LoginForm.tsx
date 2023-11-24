@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import palette from '@styles/palette';
 import { Button, Input, message } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,6 +14,8 @@ import {
   KAKAO_REDIRECT_URI,
   KAKAO_REST_API,
 } from '@lib/constants';
+import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
 
 interface LoginFormProps {
   isMobile?: boolean;
@@ -21,6 +23,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   const { control, formState, handleSubmit } = useForm<LoginInput>();
+  const router = useRouter();
   const [loginMutation] = useLoginMutation();
   const [buttonState, setButtonState] = useState(false);
   const onKakaoAuth = () => {
@@ -29,6 +32,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   const onGoogleAuth = () => {
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}`;
   };
+
+  useEffect(() => {
+    setCookie('auth_redirect', router.asPath, {
+      expires: new Date(Date.now() + 1000 * 60 * 5),
+      path: '/',
+      domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+    });
+  }, []);
   const onSubmit = async (data: LoginInput) => {
     setButtonState(true);
     const res = await loginMutation({ variables: { input: data } });
