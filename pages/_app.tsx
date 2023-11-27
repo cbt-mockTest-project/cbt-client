@@ -175,7 +175,6 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
         <CoreContainer />
         <AppInner />
         <Component {...pageProps} />
-        <CalculatorComponent />
       </ApolloProvider>
     </>
   );
