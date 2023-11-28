@@ -29,7 +29,7 @@ export type GetFeedbacksByRecommendationCountQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetFeedbacksByRecommendationCountQuery = { __typename?: 'Query', getFeedbacksByRecommendationCount: { __typename?: 'GetFeedbacksByRecommendationCountOutput', error?: string | null, feedbacks?: Array<{ __typename?: 'MockExamQuestionFeedback', content: string, id: number, recommendation: Array<{ __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType, id: number }>, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number, question: string, solution?: string | null } }> | null } };
+export type GetFeedbacksByRecommendationCountQuery = { __typename?: 'Query', getFeedbacksByRecommendationCount: { __typename?: 'GetFeedbacksByRecommendationCountOutput', error?: string | null, feedbacks?: Array<{ __typename?: 'MockExamQuestionFeedback', content: string, id: number, recommendation: Array<{ __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType, id: number }>, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null } }> | null } };
 
 
 export const CreateMockExamQuestionFeedbackDocument = gql`

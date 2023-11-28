@@ -243,3 +243,36 @@ export const READ_EXAM_CATEGORIES = gql`
     }
   }
 `;
+
+export const READ_EXAM_CATEGORY_IDS = gql`
+  query ReadMockExamCategoryIds {
+    readMockExamCategoryIds {
+      error
+      ids
+      ok
+    }
+  }
+`;
+
+export const READ_EXAM_CATEGORY_BY_ID = gql`
+  query ReadMockExamCategoryByCategoryId(
+    $input: ReadMockExamCategoryByCategoryIdInput!
+  ) {
+    readMockExamCategoryByCategoryId(input: $input) {
+      category {
+        name
+        mockExam {
+          slug
+          title
+          id
+        }
+        user {
+          id
+          nickname
+        }
+      }
+      error
+      ok
+    }
+  }
+`;

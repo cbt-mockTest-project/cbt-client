@@ -13,7 +13,6 @@ import {
   GET_ROLES_COUNT,
   GET_ROLE_COUNT,
   GET_USER_BY_NICKNAME_OR_EMAIL,
-  KAKAO_LOGIN,
   LOGIN_MUTATION,
   LOGOUT_MUTATION,
   ME_QUERY,
@@ -50,8 +49,6 @@ import {
   GetRolesCountQueryVariables,
   GetUserByNicknameOrEmailQuery,
   GetUserByNicknameOrEmailQueryVariables,
-  KakaoLoginMutation,
-  KakaoLoginMutationVariables,
   LoginMutation,
   LoginMutationVariables,
   LogoutMutation,
@@ -123,9 +120,6 @@ export const useSendFindPasswordMail = () =>
     SendFindPasswordMailMutation,
     SendFindPasswordMailMutationVariables
   >(SEND_FIND_PASSWORD_MAIL_MUTATION);
-
-export const useKakaoLogin = () =>
-  useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KAKAO_LOGIN);
 
 export const useLazySearchUser = () =>
   useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SEARCH_USER, {

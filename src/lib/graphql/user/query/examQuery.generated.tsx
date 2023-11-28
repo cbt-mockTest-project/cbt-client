@@ -134,6 +134,18 @@ export type ReadMockExamCategoriesQueryVariables = Types.Exact<{
 
 export type ReadMockExamCategoriesQuery = { __typename?: 'Query', readMockExamCategories: { __typename?: 'ReadMockExamCategoriesOutput', categories: Array<{ __typename?: 'MockExamCategory', id: number, name: string }> } };
 
+export type ReadMockExamCategoryIdsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadMockExamCategoryIdsQuery = { __typename?: 'Query', readMockExamCategoryIds: { __typename?: 'ReadMockExamCategoryIdsOutput', error?: string | null, ids?: Array<number> | null, ok: boolean } };
+
+export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamCategoryByCategoryIdInput;
+}>;
+
+
+export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', name: string, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number }>, user: { __typename?: 'User', id: number, nickname: string } } | null } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -431,4 +443,41 @@ export const ReadMockExamCategoriesDocument = gql`
 
 export function useReadMockExamCategoriesQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamCategoriesQuery, ReadMockExamCategoriesQueryVariables>({ query: ReadMockExamCategoriesDocument, ...options });
+};
+export const ReadMockExamCategoryIdsDocument = gql`
+    query ReadMockExamCategoryIds {
+  readMockExamCategoryIds {
+    error
+    ids
+    ok
+  }
+}
+    `;
+
+export function useReadMockExamCategoryIdsQuery(options?: Omit<Urql.UseQueryArgs<ReadMockExamCategoryIdsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamCategoryIdsQuery, ReadMockExamCategoryIdsQueryVariables>({ query: ReadMockExamCategoryIdsDocument, ...options });
+};
+export const ReadMockExamCategoryByCategoryIdDocument = gql`
+    query ReadMockExamCategoryByCategoryId($input: ReadMockExamCategoryByCategoryIdInput!) {
+  readMockExamCategoryByCategoryId(input: $input) {
+    category {
+      name
+      mockExam {
+        slug
+        title
+        id
+      }
+      user {
+        id
+        nickname
+      }
+    }
+    error
+    ok
+  }
+}
+    `;
+
+export function useReadMockExamCategoryByCategoryIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamCategoryByCategoryIdQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamCategoryByCategoryIdQuery, ReadMockExamCategoryByCategoryIdQueryVariables>({ query: ReadMockExamCategoryByCategoryIdDocument, ...options });
 };

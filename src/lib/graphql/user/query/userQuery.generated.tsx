@@ -74,13 +74,6 @@ export type SendFindPasswordMailMutationVariables = Types.Exact<{
 
 export type SendFindPasswordMailMutation = { __typename?: 'Mutation', sendFindPasswordMail: { __typename?: 'SendFindPasswordMailOutput', error?: string | null, ok: boolean } };
 
-export type KakaoLoginMutationVariables = Types.Exact<{
-  input: Types.KakaoLoginInput;
-}>;
-
-
-export type KakaoLoginMutation = { __typename?: 'Mutation', kakaoLogin: { __typename?: 'KakaoLoginOutput', error?: string | null, ok: boolean } };
-
 export type SearchUserQueryVariables = Types.Exact<{
   input: Types.SearchUserInput;
 }>;
@@ -303,18 +296,6 @@ export const SendFindPasswordMailDocument = gql`
 
 export function useSendFindPasswordMailMutation() {
   return Urql.useMutation<SendFindPasswordMailMutation, SendFindPasswordMailMutationVariables>(SendFindPasswordMailDocument);
-};
-export const KakaoLoginDocument = gql`
-    mutation KakaoLogin($input: KakaoLoginInput!) {
-  kakaoLogin(input: $input) {
-    error
-    ok
-  }
-}
-    `;
-
-export function useKakaoLoginMutation() {
-  return Urql.useMutation<KakaoLoginMutation, KakaoLoginMutationVariables>(KakaoLoginDocument);
 };
 export const SearchUserDocument = gql`
     query SearchUser($input: SearchUserInput!) {

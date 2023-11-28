@@ -42,7 +42,7 @@ export type ReadMyQuestionCommentsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMyQuestionCommentsQuery = { __typename?: 'Query', readMyQuestionComments: { __typename?: 'ReadMyQuestionCommentsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question: string, number: number, mockExam?: { __typename?: 'MockExam', title: string } | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', id: number, content: string, created_at: any }> }> | null } };
+export type ReadMyQuestionCommentsQuery = { __typename?: 'Query', readMyQuestionComments: { __typename?: 'ReadMyQuestionCommentsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question?: string | null, number: number, mockExam?: { __typename?: 'MockExam', title: string } | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', id: number, content: string, created_at: any }> }> | null } };
 
 
 export const CreateMockExamQuestionCommentDocument = gql`

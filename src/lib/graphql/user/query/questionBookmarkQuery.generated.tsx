@@ -16,7 +16,7 @@ export type ReadMockExamQuestionBookmarkQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionBookmarkQuery = { __typename?: 'Query', readMockExamQuestionBookmark: { __typename?: 'ReadMockExamQuestionBookmarkOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question: string, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null }> } };
+export type ReadMockExamQuestionBookmarkQuery = { __typename?: 'Query', readMockExamQuestionBookmark: { __typename?: 'ReadMockExamQuestionBookmarkOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null }> } };
 
 export type ReadExamTitleAndIdOfBookmarkedQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
