@@ -1,4 +1,3 @@
-import { Feedback } from './../../../../types';
 import { gql } from '@apollo/client';
 
 export const CREATE_QUESTION_FEEDBACK = gql`
@@ -12,6 +11,7 @@ export const CREATE_QUESTION_FEEDBACK = gql`
         id
         content
         type
+        created_at
         recommendationCount {
           bad
           good
@@ -71,6 +71,17 @@ export const READ_FEEDBACK_BY_RECOMMENDATION_COUNT = gql`
           solution
         }
       }
+    }
+  }
+`;
+
+export const EDIT_QUESTION_FEEDBACK = gql`
+  mutation EditMockExamQuestionFeedback(
+    $input: EditMockExamQuestionFeedbackInput!
+  ) {
+    editMockExamQuestionFeedback(input: $input) {
+      error
+      ok
     }
   }
 `;

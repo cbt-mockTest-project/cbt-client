@@ -1,4 +1,4 @@
-import { MockExamQuestionComment } from './types';
+import { MockExamQuestionComment, MockExamQuestionFeedback } from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/user/query/questionQuery.generated';
 export interface QuestionType
@@ -37,4 +37,20 @@ export interface MessageType {
 export interface ChatUserInfo {
   username: string;
   clientId: string;
+}
+
+export enum ExamMode {
+  CARD = 'card',
+  SOLUTION = 'solution',
+  TYPYING = 'typing',
+}
+
+export interface SetQuestionFeedbackPayload {
+  questionId: number;
+  feedback: MockExamQuestionFeedback;
+}
+
+export interface SetQuestionFeedbacksPayload {
+  questionId: number;
+  feedbacks: MockExamQuestionFeedback[];
 }

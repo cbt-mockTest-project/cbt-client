@@ -8,7 +8,7 @@ export type CreateMockExamQuestionFeedbackMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean, feedback?: { __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean }, user: { __typename?: 'User', nickname: string, id: number } } | null } };
+export type CreateMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', createMockExamQuestionFeedback: { __typename?: 'CreateMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean, feedback?: { __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean }, user: { __typename?: 'User', nickname: string, id: number } } | null } };
 
 export type CreateFeedbackMutationVariables = Types.Exact<{
   input: Types.CreateFeedbackInput;
@@ -31,6 +31,13 @@ export type GetFeedbacksByRecommendationCountQueryVariables = Types.Exact<{
 
 export type GetFeedbacksByRecommendationCountQuery = { __typename?: 'Query', getFeedbacksByRecommendationCount: { __typename?: 'GetFeedbacksByRecommendationCountOutput', error?: string | null, feedbacks?: Array<{ __typename?: 'MockExamQuestionFeedback', content: string, id: number, recommendation: Array<{ __typename?: 'MockExamQuestionFeedbackRecommendation', type: Types.QuestionFeedbackRecommendationType, id: number }>, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null } }> | null } };
 
+export type EditMockExamQuestionFeedbackMutationVariables = Types.Exact<{
+  input: Types.EditMockExamQuestionFeedbackInput;
+}>;
+
+
+export type EditMockExamQuestionFeedbackMutation = { __typename?: 'Mutation', editMockExamQuestionFeedback: { __typename?: 'EditMockExamQuestionFeedbackOutput', error?: string | null, ok: boolean } };
+
 
 export const CreateMockExamQuestionFeedbackDocument = gql`
     mutation CreateMockExamQuestionFeedback($input: CreateMockExamQuestionFeedbackInput!) {
@@ -41,6 +48,7 @@ export const CreateMockExamQuestionFeedbackDocument = gql`
       id
       content
       type
+      created_at
       recommendationCount {
         bad
         good
@@ -111,4 +119,16 @@ export const GetFeedbacksByRecommendationCountDocument = gql`
 
 export function useGetFeedbacksByRecommendationCountQuery(options: Omit<Urql.UseQueryArgs<GetFeedbacksByRecommendationCountQueryVariables>, 'query'>) {
   return Urql.useQuery<GetFeedbacksByRecommendationCountQuery, GetFeedbacksByRecommendationCountQueryVariables>({ query: GetFeedbacksByRecommendationCountDocument, ...options });
+};
+export const EditMockExamQuestionFeedbackDocument = gql`
+    mutation EditMockExamQuestionFeedback($input: EditMockExamQuestionFeedbackInput!) {
+  editMockExamQuestionFeedback(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useEditMockExamQuestionFeedbackMutation() {
+  return Urql.useMutation<EditMockExamQuestionFeedbackMutation, EditMockExamQuestionFeedbackMutationVariables>(EditMockExamQuestionFeedbackDocument);
 };

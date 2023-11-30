@@ -13,6 +13,8 @@ import {
   GetFeedbacksWithFilterQueryVariables,
 } from '../query/questionFeedbackQuery.generated';
 import {
+  EditMockExamQuestionFeedbackMutation,
+  EditMockExamQuestionFeedbackMutationVariables,
   GetFeedbacksByRecommendationCountQuery,
   GetFeedbacksByRecommendationCountQueryVariables,
   UpdateMockExamQuestionFeedbackRecommendationMutation,
@@ -21,6 +23,7 @@ import {
 import {
   UPDATE_FEEDBACK_RECOMMENDATION,
   READ_FEEDBACK_BY_RECOMMENDATION_COUNT,
+  EDIT_QUESTION_FEEDBACK,
 } from '../query/feedbackQuery';
 
 export const useDeleteQuestionFeedback = () =>
@@ -56,3 +59,9 @@ export const useLazyGetFeedbacksWithFilter = () =>
     GetFeedbacksWithFilterQuery,
     GetFeedbacksWithFilterQueryVariables
   >(GET_FEEDBACKS_WITH_FILTER);
+
+export const useEditQuestionFeedback = () =>
+  useMutation<
+    EditMockExamQuestionFeedbackMutation,
+    EditMockExamQuestionFeedbackMutationVariables
+  >(EDIT_QUESTION_FEEDBACK);
