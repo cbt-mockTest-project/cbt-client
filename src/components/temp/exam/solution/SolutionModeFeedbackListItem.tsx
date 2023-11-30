@@ -9,6 +9,7 @@ import {
   MockExamQuestion,
   MockExamQuestionFeedback,
   QuestionFeedbackType,
+  UserRole,
 } from 'types';
 import {
   EllipsisOutlined,
@@ -22,6 +23,7 @@ import {
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import QuestionFeedbackModal from '../QuestionFeedbackModal';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 const SolutionModeFeedbackListItemBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,6 +125,7 @@ interface SolutionModeFeedbackListItemProps {
 const SolutionModeFeedbackListItem: React.FC<
   SolutionModeFeedbackListItemProps
 > = ({ feedback, question }) => {
+  const { data: meQuery } = useMeQuery();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
   const [deleteFeedback] = useDeleteQuestionFeedback();
@@ -212,14 +215,17 @@ const SolutionModeFeedbackListItem: React.FC<
             <FrownOutlined />
             <span>{feedback.recommendationCount.bad}</span>
           </div>
-          <Dropdown
-            menu={{ items: controlDropdownItems }}
-            placement="topCenter"
-          >
-            <div className="feedback-control-button-wrapper">
-              <EllipsisOutlined />
-            </div>
-          </Dropdown>
+          {(meQuery?.me.user?.id === feedback.user.id ||
+            meQuery?.me.user?.role === UserRole.Admin) && (
+            <Dropdown
+              menu={{ items: controlDropdownItems }}
+              placement="topCenter"
+            >
+              <div className="feedback-control-button-wrapper">
+                <EllipsisOutlined />
+              </div>
+            </Dropdown>
+          )}
         </div>
         <div className="feedback-date">
           {convertToKST(feedback.created_at, 'yy.MM.dd HH:mm')}
