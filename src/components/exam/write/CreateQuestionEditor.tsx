@@ -68,7 +68,6 @@ const CreateQuestionEditor: React.FC<CreateQuestionEditorProps> = ({
         container: [
           [{ header: [1, 2, false] }],
           ['bold'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
           [{ script: 'sub' }, { script: 'super' }],
           ['link', 'formula'],
         ],
