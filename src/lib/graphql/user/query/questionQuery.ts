@@ -235,3 +235,51 @@ export const SEARCH_QEUSTIONS = gql`
     }
   }
 `;
+
+export const READ_QUESTIONS_BY_EXAM_IDS = gql`
+  query ReadQuestionsByExamIds($input: ReadQuestionsByExamIdsInput!) {
+    readQuestionsByExamIds(input: $input) {
+      error
+      ok
+      questions {
+        mockExam {
+          id
+          title
+        }
+        id
+        isBookmarked
+        myQuestionState
+        commentCount
+        number
+        question
+        question_img {
+          url
+          uid
+        }
+        solution
+        solution_img {
+          uid
+          url
+        }
+        mockExamQuestionFeedback {
+          recommendationCount {
+            bad
+            good
+          }
+          myRecommedationStatus {
+            isBad
+            isGood
+          }
+          user {
+            id
+            nickname
+          }
+          id
+          type
+          content
+          created_at
+        }
+      }
+    }
+  }
+`;

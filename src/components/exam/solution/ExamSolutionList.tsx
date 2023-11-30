@@ -453,7 +453,7 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
         open={shareModalState}
         onClose={onToggleShareModal}
         shareTitle={`${title} ${currentQuestion.number}번 문제`}
-        shareDescription={ellipsisText(currentQuestion.question, 50)}
+        shareDescription={ellipsisText(currentQuestion.question || '', 50)}
       />
     </ExamSolutionListContainer>
   );

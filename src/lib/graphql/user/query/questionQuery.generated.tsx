@@ -72,6 +72,13 @@ export type SearchQuestionsByKeywordQueryVariables = Types.Exact<{
 
 export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null, number: number, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
 
+export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
+  input: Types.ReadQuestionsByExamIdsInput;
+}>;
+
+
+export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> }> } };
+
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
     query ReadMockExamQuestionsByMockExamId($input: ReadMockExamQuestionsByMockExamIdInput!) {
@@ -324,4 +331,55 @@ export const SearchQuestionsByKeywordDocument = gql`
 
 export function useSearchQuestionsByKeywordQuery(options: Omit<Urql.UseQueryArgs<SearchQuestionsByKeywordQueryVariables>, 'query'>) {
   return Urql.useQuery<SearchQuestionsByKeywordQuery, SearchQuestionsByKeywordQueryVariables>({ query: SearchQuestionsByKeywordDocument, ...options });
+};
+export const ReadQuestionsByExamIdsDocument = gql`
+    query ReadQuestionsByExamIds($input: ReadQuestionsByExamIdsInput!) {
+  readQuestionsByExamIds(input: $input) {
+    error
+    ok
+    questions {
+      mockExam {
+        id
+        title
+      }
+      id
+      isBookmarked
+      myQuestionState
+      commentCount
+      number
+      question
+      question_img {
+        url
+        uid
+      }
+      solution
+      solution_img {
+        uid
+        url
+      }
+      mockExamQuestionFeedback {
+        recommendationCount {
+          bad
+          good
+        }
+        myRecommedationStatus {
+          isBad
+          isGood
+        }
+        user {
+          id
+          nickname
+        }
+        id
+        type
+        content
+        created_at
+      }
+    }
+  }
+}
+    `;
+
+export function useReadQuestionsByExamIdsQuery(options: Omit<Urql.UseQueryArgs<ReadQuestionsByExamIdsQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadQuestionsByExamIdsQuery, ReadQuestionsByExamIdsQueryVariables>({ query: ReadQuestionsByExamIdsDocument, ...options });
 };

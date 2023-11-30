@@ -4,15 +4,15 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import palette from '@styles/palette';
 
-interface BookmarkProps {
+interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
   active: boolean;
-  onClick?: React.MouseEventHandler<HTMLElement>;
   className?: string;
 }
 
-const Bookmark: React.FC<BookmarkProps> = ({ active, className, onClick }) => {
+const Bookmark: React.FC<BookmarkProps> = (props) => {
+  const { active, ...divProps } = props;
   return (
-    <BookmarkBlock className={className} onClick={onClick}>
+    <BookmarkBlock {...divProps}>
       {active ? (
         <StarIcon className="star-icon active" />
       ) : (
@@ -27,7 +27,7 @@ const BookmarkBlock = styled.div`
   position: relative;
   cursor: pointer;
   .star-icon {
-    color: ${palette.gray_900};
+    color: ${palette.gray_700};
   }
   .star-icon.active {
     color: ${palette.yellow_500};
