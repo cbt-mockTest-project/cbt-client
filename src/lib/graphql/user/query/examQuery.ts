@@ -7,6 +7,7 @@ export const READ_EXAM_CATEGORIES_QUERY = gql`
         name
         id
         user {
+          nickname
           role
         }
         partner {

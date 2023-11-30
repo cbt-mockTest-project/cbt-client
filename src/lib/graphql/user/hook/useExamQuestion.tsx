@@ -10,6 +10,7 @@ import {
   EDIT_QUESTION,
   READ_ALL_QUESTION,
   READ_QUESTION,
+  READ_QUESTIONS_BY_EXAM_IDS,
   READ_QUESTIONS_BY_ID,
   READ_QUESTIONS_BY_STATE,
   READ_QUESTION_NUMBERS,
@@ -32,10 +33,16 @@ import {
   ReadMockExamQuestionsByMockExamIdQueryVariables,
   ReadMockExamQuestionsByStateQuery,
   ReadMockExamQuestionsByStateQueryVariables,
+  ReadQuestionsByExamIdsQuery,
+  ReadQuestionsByExamIdsQueryVariables,
   SearchQuestionsByKeywordQuery,
   SearchQuestionsByKeywordQueryVariables,
 } from '../query/questionQuery.generated';
-import { SearchQuestionsByKeywordInput } from 'types';
+import {
+  ReadQuestionCardInput,
+  ReadQuestionsByExamIdsInput,
+  SearchQuestionsByKeywordInput,
+} from 'types';
 
 export const useLazyReadQuestionsByExamId = (
   fetchPolicy: WatchQueryFetchPolicy
@@ -113,3 +120,13 @@ export const useSearchQuestions = () =>
     SearchQuestionsByKeywordQuery,
     SearchQuestionsByKeywordQueryVariables
   >(SEARCH_QEUSTIONS);
+
+export const useReadQuestionsByExamIds = (input: ReadQuestionsByExamIdsInput) =>
+  useQuery<ReadQuestionsByExamIdsQuery, ReadQuestionsByExamIdsQueryVariables>(
+    READ_QUESTIONS_BY_EXAM_IDS,
+    {
+      variables: {
+        input,
+      },
+    }
+  );

@@ -8,7 +8,7 @@ export type ReadAllMockExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number, user: { __typename?: 'User', role: Types.UserRole }, partner?: { __typename?: 'Partner', id: number } | null }> } };
+export type ReadAllMockExamCategoriesQuery = { __typename?: 'Query', readAllMockExamCategories: { __typename?: 'ReadAllMockExamCategoriesOutput', error?: string | null, ok: boolean, categories: Array<{ __typename?: 'MockExamCategory', name: string, id: number, user: { __typename?: 'User', nickname: string, role: Types.UserRole }, partner?: { __typename?: 'Partner', id: number } | null }> } };
 
 export type EditMockExamCategoryMutationVariables = Types.Exact<{
   input: Types.EditMockExamCategoryInput;
@@ -154,6 +154,7 @@ export const ReadAllMockExamCategoriesDocument = gql`
       name
       id
       user {
+        nickname
         role
       }
       partner {
