@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {
   MockExamQuestion,
   MockExamQuestionFeedback,
+  MyRecommedationStatus,
   QuestionFeedbackRecommendationType,
   QuestionFeedbackType,
   UserRole,
@@ -26,6 +27,7 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import QuestionFeedbackModal from '../QuestionFeedbackModal';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { cloneDeep } from 'lodash';
 const SolutionModeFeedbackListItemBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -158,37 +160,69 @@ const SolutionModeFeedbackListItem: React.FC<
     }
   };
   const handleUpdateFeedbackRecommendation = async (
-    type: QuestionFeedbackRecommendationType
+    type: QuestionFeedbackRecommendationType,
+    myRecommendationStatus: MyRecommedationStatus
   ) => {
     try {
       const newQuestion = {
         ...question,
         mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (el) => {
-            if (el.id === feedback.id) {
+          (feedback) => {
+            if (feedback.id === feedback.id) {
+              let newReccomendationCount = cloneDeep(
+                feedback.recommendationCount
+              );
+              let newMyRecommedationStatus = cloneDeep(
+                feedback.myRecommedationStatus
+              );
+              if (myRecommendationStatus.isGood) {
+                if (type === QuestionFeedbackRecommendationType.Good) {
+                  newReccomendationCount.good -= 1;
+                  newMyRecommedationStatus.isGood = false;
+                }
+                if (type === QuestionFeedbackRecommendationType.Bad) {
+                  newReccomendationCount.good -= 1;
+                  newReccomendationCount.bad += 1;
+                  newMyRecommedationStatus.isGood = false;
+                  newMyRecommedationStatus.isBad = true;
+                }
+              }
+              if (myRecommendationStatus.isBad) {
+                if (type === QuestionFeedbackRecommendationType.Good) {
+                  newReccomendationCount.good += 1;
+                  newReccomendationCount.bad -= 1;
+                  newMyRecommedationStatus.isGood = true;
+                  newMyRecommedationStatus.isBad = false;
+                }
+                if (type === QuestionFeedbackRecommendationType.Bad) {
+                  newReccomendationCount.bad -= 1;
+                  newMyRecommedationStatus.isBad = false;
+                }
+              }
+              if (
+                !myRecommendationStatus.isGood &&
+                !myRecommendationStatus.isBad
+              ) {
+                if (type === QuestionFeedbackRecommendationType.Good) {
+                  newReccomendationCount.good += 1;
+                  newMyRecommedationStatus.isGood = true;
+                }
+                if (type === QuestionFeedbackRecommendationType.Bad) {
+                  newReccomendationCount.bad += 1;
+                  newMyRecommedationStatus.isBad = true;
+                }
+              }
               return {
-                ...el,
-                myRecommedationStatus: {
-                  isGood: type === QuestionFeedbackRecommendationType.Good,
-                  isBad: type === QuestionFeedbackRecommendationType.Bad,
-                },
-                recommendationCount: {
-                  good:
-                    type === QuestionFeedbackRecommendationType.Good
-                      ? el.recommendationCount.good + 1
-                      : el.recommendationCount.good,
-                  bad:
-                    type === QuestionFeedbackRecommendationType.Bad
-                      ? el.recommendationCount.bad + 1
-                      : el.recommendationCount.bad,
-                },
+                ...feedback,
+                myRecommedationStatus: newMyRecommedationStatus,
+                recommendationCount: newReccomendationCount,
               };
             }
-            return el;
+            return feedback;
           }
         ),
       };
-
+      dispatch(mockExamActions.setQuestion(newQuestion));
       updateFeedbackRecommendation({
         variables: {
           input: {
@@ -249,17 +283,31 @@ const SolutionModeFeedbackListItem: React.FC<
       <div className="feedback-footer">
         <div className="feedback-button-wrapper">
           <div
+            role="button"
             className={`feedback-recommendation-icon-and-value good ${
               feedback.myRecommedationStatus.isGood ? 'active' : ''
             }`}
+            onClick={() =>
+              handleUpdateFeedbackRecommendation(
+                QuestionFeedbackRecommendationType.Good,
+                feedback.myRecommedationStatus
+              )
+            }
           >
             <SmileOutlined />
             <span>{feedback.recommendationCount.good}</span>
           </div>
           <div
+            role="button"
             className={`feedback-recommendation-icon-and-value bad ${
               feedback.myRecommedationStatus.isBad ? 'active' : ''
             }`}
+            onClick={() =>
+              handleUpdateFeedbackRecommendation(
+                QuestionFeedbackRecommendationType.Bad,
+                feedback.myRecommedationStatus
+              )
+            }
           >
             <FrownOutlined />
             <span>{feedback.recommendationCount.bad}</span>
