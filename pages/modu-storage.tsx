@@ -1,5 +1,5 @@
 import Layout02 from '@components/common/layout/Layout02';
-import PublicStorageComponent from '@components/publicStorage/PublicStorageComponent';
+import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
 import { READ_EXAM_CATEGORIES_QUERY } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
@@ -8,25 +8,25 @@ import { MockExamCategory } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 
-interface PublicStorageProps {
+interface ModuStorageProps {
   categories: MockExamCategory[];
 }
 
-const PublicStorage: NextPage<PublicStorageProps> = ({ categories }) => {
+const ModuStorage: NextPage<ModuStorageProps> = ({ categories }) => {
   return (
     <>
       <WithHead
-        title="모두CBT | 공개 저장소"
-        pageHeadingTitle="모두CBT 서비스 공개 저장소 페이지"
+        title="모두CBT | 모두 저장소"
+        pageHeadingTitle="모두CBT 서비스 모두 저장소 페이지"
       />
       <Layout02>
-        <PublicStorageComponent categories={categories} />
+        <ModuStorageComponent categories={categories} />
       </Layout02>
     </>
   );
 };
 
-export default PublicStorage;
+export default ModuStorage;
 
 export const getStaticProps: GetStaticProps = async (context) => {
   try {

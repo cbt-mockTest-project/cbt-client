@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {
   MockExamQuestion,
   MockExamQuestionFeedback,
+  QuestionFeedbackRecommendationType,
   QuestionFeedbackType,
   UserRole,
 } from 'types';
@@ -19,6 +20,7 @@ import {
 import {
   useDeleteQuestionFeedback,
   useEditQuestionFeedback,
+  useUpdateQuestionFeedbackRecommendation,
 } from '@lib/graphql/user/hook/useQuestionFeedback';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
@@ -129,6 +131,8 @@ const SolutionModeFeedbackListItem: React.FC<
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
   const [deleteFeedback] = useDeleteQuestionFeedback();
+  const [updateFeedbackRecommendation] =
+    useUpdateQuestionFeedbackRecommendation();
   const dispatch = useAppDispatch();
   const handleDeleteFeedback = async () => {
     try {
@@ -151,6 +155,51 @@ const SolutionModeFeedbackListItem: React.FC<
       } else message.error(res.data?.deleteMockExamQuestionFeedback.error);
     } catch {
       message.error('삭제 실패');
+    }
+  };
+  const handleUpdateFeedbackRecommendation = async (
+    type: QuestionFeedbackRecommendationType
+  ) => {
+    try {
+      const newQuestion = {
+        ...question,
+        mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
+          (el) => {
+            if (el.id === feedback.id) {
+              return {
+                ...el,
+                myRecommedationStatus: {
+                  isGood: type === QuestionFeedbackRecommendationType.Good,
+                  isBad: type === QuestionFeedbackRecommendationType.Bad,
+                },
+                recommendationCount: {
+                  good:
+                    type === QuestionFeedbackRecommendationType.Good
+                      ? el.recommendationCount.good + 1
+                      : el.recommendationCount.good,
+                  bad:
+                    type === QuestionFeedbackRecommendationType.Bad
+                      ? el.recommendationCount.bad + 1
+                      : el.recommendationCount.bad,
+                },
+              };
+            }
+            return el;
+          }
+        ),
+      };
+
+      updateFeedbackRecommendation({
+        variables: {
+          input: {
+            feedbackId: feedback.id,
+            type,
+          },
+        },
+      });
+    } catch {
+      dispatch(mockExamActions.setQuestion(question));
+      message.error('오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
   const controlDropdownItems: MenuProps['items'] = [

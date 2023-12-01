@@ -6,17 +6,23 @@ import styled from 'styled-components';
 import { DrawerProps } from 'antd/lib';
 import { navList } from './layout.constants';
 import UserAuthBox from './UserAuthBox';
+import { useRouter } from 'next/router';
 
 interface MobileDrawerProps extends DrawerProps {}
 
 const MobileDrawer: React.FC<MobileDrawerProps> = (props) => {
   const { ...drawerProps } = props;
-
+  const router = useRouter();
   return (
     <StyledDrawer {...drawerProps} title="메뉴" width={200}>
       <ul className="mobile-drawer-list">
         {navList.map((nav) => (
-          <li className="mobile-drawer-item" key={nav.name}>
+          <li
+            className={`mobile-drawer-item ${
+              router.pathname === nav.path ? 'active' : ''
+            }`}
+            key={nav.name}
+          >
             <Link href={nav.path}>
               {nav.icon}
               <span>{nav.name}</span>
@@ -58,6 +64,19 @@ const StyledDrawer = styled(Drawer)`
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+    svg {
+      font-size: 18px;
+    }
+  }
+  .mobile-drawer-item.active {
+    background-color: ${palette.gray_100};
+    color: ${palette.antd_blue_02};
+    a {
+      color: ${palette.antd_blue_02};
+    }
+    svg {
+      fill: ${palette.antd_blue_02};
     }
   }
 `;

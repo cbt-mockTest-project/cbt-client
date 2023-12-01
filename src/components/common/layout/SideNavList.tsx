@@ -28,6 +28,9 @@ const SideNavListBlock = styled.ul`
       align-items: center;
       gap: 10px;
     }
+    svg {
+      font-size: 18px;
+    }
   }
   .side-nav-list-item.active {
     background-color: ${palette.gray_100};

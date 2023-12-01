@@ -4,25 +4,25 @@ import CategoryFolderList from './CategoryFolderList';
 import { MockExamCategory } from 'types';
 import { responsive } from '@lib/utils/responsive';
 
-const PublicStorageComponentBlock = styled.div`
+const ModuStorageComponentBlock = styled.div`
   padding: 30px;
   @media (max-width: ${responsive.medium}) {
     padding: 20px 16px;
   }
 `;
 
-interface PublicStorageComponentProps {
+interface ModuStorageComponentProps {
   categories: MockExamCategory[];
 }
 
-const PublicStorageComponent: React.FC<PublicStorageComponentProps> = ({
+const ModuStorageComponent: React.FC<ModuStorageComponentProps> = ({
   categories,
 }) => {
   return (
-    <PublicStorageComponentBlock>
+    <ModuStorageComponentBlock>
       <CategoryFolderList categories={categories} />
-    </PublicStorageComponentBlock>
+    </ModuStorageComponentBlock>
   );
 };
 
-export default PublicStorageComponent;
+export default ModuStorageComponent;
