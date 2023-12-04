@@ -1,6 +1,7 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   FindMyExamHistoryInput,
+  GetExamCategoriesInput,
   ReadMockExamCategoriesInput,
   ReadMockExamCategoryByExamIdInput,
 } from 'types';
@@ -12,6 +13,7 @@ import {
   EDIT_EXAM_CATEGORY,
   EDIT_MOCK_EXAM,
   FIND_MY_EXAM_HISTORY_QUERY,
+  GET_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_CATEGORY_BY_EXAM_ID,
@@ -34,6 +36,8 @@ import {
   EditMockExamMutationVariables,
   FindMyExamHistoryQuery,
   FindMyExamHistoryQueryVariables,
+  GetExamCategoriesQuery,
+  GetExamCategoriesQueryVariables,
   ReadMockExamCategoriesQuery,
   ReadMockExamCategoriesQueryVariables,
   ReadMockExamCategoryByExamIdQuery,
@@ -146,4 +150,9 @@ export const useReadExamCategories = (input: ReadMockExamCategoriesInput) =>
         input,
       },
     }
+  );
+
+export const useLazyGetExamCategories = () =>
+  useLazyQuery<GetExamCategoriesQuery, GetExamCategoriesQueryVariables>(
+    GET_EXAM_CATEGORIES
   );

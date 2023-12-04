@@ -64,7 +64,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
     <CategoryComponentBlock>
       <div className="category-creator-info">
         <span className="category-creator-name">{category?.user.nickname}</span>
-        <span className="category-creator-label">님의 폴더</span>
+        <span className="category-creator-label">의 암기장</span>
       </div>
       <div className="category-info">
         <FolderOutlined />

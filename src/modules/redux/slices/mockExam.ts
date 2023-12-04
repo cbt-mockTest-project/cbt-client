@@ -1,8 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import {
-  SetQuestionFeedbackPayload,
-  SetQuestionFeedbacksPayload,
-} from 'customTypes';
 import { MockExam, MockExamQuestion } from 'types';
 
 export interface MockExamState {

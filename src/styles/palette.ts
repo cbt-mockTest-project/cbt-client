@@ -24,14 +24,8 @@ const palette = {
   gray_400: '#d9d9d9',
   gray_500: '#abb1b1',
   gray_700: '#939999',
+  gray_800: '#5e6464',
   gray_900: '#384040',
-  recruit_white: '#F2F5FE',
-  recruit_blue_50: '#F2F5FE',
-  recruit_blue_100: '#CED7F9',
-  recruit_blue_200: '#A0B1F4',
-  recruit_blue_300: '#728CEF',
-  recruit_blue_400: '#4566E9',
-  recruit_blue_500: '#1535B3',
 };
 
 export default palette;

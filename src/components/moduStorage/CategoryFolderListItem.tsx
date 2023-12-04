@@ -1,6 +1,7 @@
 import BasicCard from '@components/common/card/BasicCard';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import { Tag } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -13,6 +14,12 @@ const CategoryFolderListItemBlock = styled(Link)`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .category-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
   }
   .category-wrapper {
     display: flex;
@@ -51,10 +58,15 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
     <CategoryFolderListItemBlock href={`/category/${category.id}`}>
       <BasicCard>
         <div className="category-wrapper">
-          <span className="category-name">{category.name}</span>
+          <div className="category-header-wrapper">
+            <span className="category-name">{category.name}</span>
+            <Tag color={category.isPublic ? 'blue' : 'default'}>
+              {category.isPublic ? '공개' : '비공개'}
+            </Tag>
+          </div>
           <div className="category-user-info">
             <span className="category-user-name">{category.user.nickname}</span>
-            <span className="category-user-label">님의 폴더</span>
+            <span className="category-user-label">의 암기장</span>
           </div>
         </div>
       </BasicCard>

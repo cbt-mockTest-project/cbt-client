@@ -126,6 +126,8 @@ export type CreateFreeTrialRoleOutput = {
 };
 
 export type CreateMockExamCategoryInput = {
+  description?: InputMaybe<Scalars['String']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -510,7 +512,9 @@ export enum DiscountCodeType {
 }
 
 export type EditMockExamCategoryInput = {
+  description?: InputMaybe<Scalars['String']>;
   id: Scalars['Float'];
+  isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
 
@@ -743,6 +747,17 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetExamCategoriesInput = {
+  examSource?: InputMaybe<ExamSource>;
+};
+
+export type GetExamCategoriesOutput = {
+  __typename?: 'GetExamCategoriesOutput';
+  categories?: Maybe<Array<MockExamCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetExamCategoryViewrsInput = {
   categoryId: Scalars['Float'];
 };
@@ -930,9 +945,11 @@ export type MockExamCategory = {
   __typename?: 'MockExamCategory';
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
+  description: Scalars['String'];
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examViewer?: Maybe<Array<ExamViewer>>;
   id: Scalars['Float'];
+  isPublic: Scalars['Boolean'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
   order: Scalars['Float'];
@@ -1711,6 +1728,7 @@ export enum PostOrderType {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getExamCategories: GetExamCategoriesOutput;
   getExamCategoryViewers: GetExamCategoryViewrsOutput;
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
@@ -1759,6 +1777,7 @@ export type Query = {
   readVisitCount: ReadVisitCountOutput;
   readVisitHistory: ReadVisitHistoryOutput;
   searchMockExam: SearchMockExamOutput;
+  searchMockExamCategories: SearchMockExamCategoriesOutput;
   searchQuestionsByKeyword: SearchQuestionsByKeywordOutput;
   searchUser: SearchUserOutput;
   test: Array<Scalars['String']>;
@@ -1768,6 +1787,11 @@ export type Query = {
 
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
+};
+
+
+export type QueryGetExamCategoriesArgs = {
+  input: GetExamCategoriesInput;
 };
 
 
@@ -1923,6 +1947,11 @@ export type QueryReadQuestionsByExamIdsArgs = {
 
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
+};
+
+
+export type QuerySearchMockExamCategoriesArgs = {
+  input: SearchMockExamCategoriesInput;
 };
 
 
@@ -2402,6 +2431,21 @@ export type SearchCounts = {
   __typename?: 'SearchCounts';
   daum: SearchCount;
   naver: SearchCount;
+};
+
+export type SearchMockExamCategoriesInput = {
+  isPublic: Scalars['Boolean'];
+  keyword: Scalars['String'];
+  limit: Scalars['Float'];
+  page: Scalars['Float'];
+};
+
+export type SearchMockExamCategoriesOutput = {
+  __typename?: 'SearchMockExamCategoriesOutput';
+  categories?: Maybe<Array<MockExamCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  totalCount?: Maybe<Scalars['Float']>;
 };
 
 export type SearchMockExamInput = {
