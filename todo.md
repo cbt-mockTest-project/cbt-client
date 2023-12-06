@@ -10,8 +10,10 @@ AuthModal 개발
 
 DarkMode UI적용
 
+- [] 반응형
 - [] 카테고리 상세
 - [] 정답모드
+- [v] Drawer
 
 Layout 작업
 

@@ -13,16 +13,18 @@ const MobileHeaderBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1.5px solid ${palette.gray_200};
+    background-color: ${palette.containerBackgroundColor};
+    border-bottom: 1.5px solid ${palette.borderColor};
     z-index: 500;
     height: 57px;
     width: 100vw;
     padding: 0px 16px;
-    background-color: white;
+    .mobile-menu-button {
+      color: ${palette.textColor};
+    }
     .mobile-header-title {
       font-size: 16px;
       font-weight: 700;
-      color: black;
     }
   }
 `;
