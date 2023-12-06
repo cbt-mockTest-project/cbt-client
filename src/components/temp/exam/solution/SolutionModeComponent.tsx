@@ -5,14 +5,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
-import { useReadQuestionsByExamIds } from '@lib/graphql/user/hook/useExamQuestion';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useDispatch } from 'react-redux';
+
 import palette from '@styles/palette';
-import { useAppSelector } from '@modules/redux/store/configureStore';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
+
 import SolutionModeHeader from './SolutionModeHeader';
 import { responsive } from '@lib/utils/responsive';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const SolutionModeComponentBlock = styled.div`
   background-color: ${palette.gray_100};
@@ -49,27 +47,12 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const { data: meQuery } = useMeQuery();
-  const questions = useAppSelector((state) => state.mockExam.questions);
-  const dispatch = useDispatch();
-  const { refetch } = useReadQuestionsByExamIds(questionsQueryInput);
+  const { questions, fetchQuestions, isLoggedIn } = useQuestions();
+  const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
 
   useEffect(() => {
-    if (!meQuery?.me.user) return;
-    refetch({
-      input: questionsQueryInput,
-    }).then((res) => {
-      if (res.data?.readQuestionsByExamIds.questions) {
-        dispatch(
-          mockExamActions.setQuestions(
-            res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
-          )
-        );
-      }
-    });
-  }, [meQuery]);
-
-  const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
+    if (isLoggedIn) fetchQuestions(questionsQueryInput);
+  }, [isLoggedIn]);
 
   return (
     <SolutionModeComponentBlock>

@@ -10,6 +10,7 @@ import LoginModal from '../modal/LoginModal';
 import { isServer } from '@lib/utils/utils';
 import { AppInfo } from './CoreContainer.type';
 import AppUpdateNotification from './modal/AppUpdateNotification';
+import AuthModal from '@components/auth/AuthModal';
 
 interface CoreContainerProps {}
 
@@ -45,7 +46,7 @@ const CoreContainer: React.FC<CoreContainerProps> = () => {
   return (
     <CoreContainerBlock>
       {modalName === loginModal && (
-        <LoginModal open={modalName === loginModal} onClose={onCloseModal} />
+        <AuthModal open={true} onCancel={onCloseModal} />
       )}
       <div id="portal" />
       {appUpdateNotificationState && <AppUpdateNotification />}

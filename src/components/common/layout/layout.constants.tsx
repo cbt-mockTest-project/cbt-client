@@ -6,36 +6,35 @@ import {
   UsergroupAddOutlined,
   CloudOutlined,
 } from '@ant-design/icons';
-
-export const navList = [
+export const navItems = [
   {
-    path: '/modu-storage',
+    key: '/modu-storage',
     icon: <CloudOutlined />,
-    name: '모두 암기장',
+    label: '모두 암기장',
   },
   {
-    path: '/premium-storage',
+    key: '/premium-storage',
     icon: <CrownOutlined />,
-    name: '프리미엄 암기장',
+    label: '프리미엄 암기장',
   },
   {
-    path: '/user-storage',
+    key: '/user-storage',
     icon: <UsergroupAddOutlined />,
-    name: '유저 암기장',
+    label: '유저 암기장',
   },
   {
-    path: '/my-storage',
+    key: '/my-storage',
     icon: <FolderOutlined />,
-    name: '내 암기장',
+    label: '내 암기장',
   },
   {
-    path: '/store',
+    key: '/store',
     icon: <GoldOutlined />,
-    name: '스토어',
+    label: '스토어',
   },
   {
-    path: '/me',
+    key: '/me',
     icon: <UserOutlined />,
-    name: '내 정보',
+    label: '내 정보',
   },
 ];

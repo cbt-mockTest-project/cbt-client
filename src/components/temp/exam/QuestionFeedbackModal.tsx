@@ -1,18 +1,11 @@
 import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Modal, ModalProps, Radio, message } from 'antd';
+import { Modal, ModalProps, Radio } from 'antd';
 import { checkboxOption } from 'customTypes';
-import {
-  MockExamQuestion,
-  MockExamQuestionFeedback,
-  QuestionFeedbackType,
-} from 'types';
+import { MockExamQuestion, QuestionFeedbackType } from 'types';
 import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
-import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
-import { useEditQuestionFeedback } from '@lib/graphql/user/hook/useQuestionFeedback';
+import useQuestions from '@lib/hooks/useQuestions';
 
 export const feedbackOptions: checkboxOption[] = [
   { label: '공개', value: QuestionFeedbackType.Public },
@@ -22,98 +15,35 @@ export const feedbackOptions: checkboxOption[] = [
 interface QuestionFeedbackModalProps extends Omit<ModalProps, 'children'> {
   title: string | string[];
   question: MockExamQuestion;
-  /**
-   * 피드백 수정시 피드백 아이디
-   */
   feedbackId?: number;
   onClose: () => void;
 }
 
 const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
   const { feedbackId = 0, onClose, question, title, ...modalProps } = props;
-  const [addQuestionFeedback, { loading: addQuestionFeedbackLoading }] =
-    useCreateQuestionFeedBack();
-  const [editQuestionFeedback] = useEditQuestionFeedback();
+  const { editFeedback, addFeedback, addFeedbackLoading, editFeedbackLoading } =
+    useQuestions();
 
-  const dispatch = useAppDispatch();
   const [selectedType, setSelectedType] = useState<QuestionFeedbackType>(
     QuestionFeedbackType.Public
   );
   const [content, setContent] = useState('');
   const handleAddQuestionFeedback = async () => {
-    try {
-      const res = await addQuestionFeedback({
-        variables: {
-          input: {
-            questionId: question.id,
-            type: selectedType,
-            content,
-          },
-        },
-      });
-      if (!res.data?.createMockExamQuestionFeedback.ok) {
-        message.error('피드백 등록에 실패했습니다.');
-        return;
-      }
-      if (res.data?.createMockExamQuestionFeedback.feedback) {
-        const newFeedback = res.data?.createMockExamQuestionFeedback
-          .feedback as MockExamQuestionFeedback;
-        const mockExamQuestionFeedback = [...question.mockExamQuestionFeedback];
-        if (newFeedback.type === QuestionFeedbackType.Private) {
-          mockExamQuestionFeedback.unshift(newFeedback);
-        } else {
-          mockExamQuestionFeedback.push(newFeedback);
-        }
-        const newQuestion = {
-          ...question,
-          mockExamQuestionFeedback,
-        };
-        dispatch(mockExamActions.setQuestion(newQuestion as MockExamQuestion));
-        message.success('피드백이 등록되었습니다.');
-        onClose();
-      }
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('피드백 등록에 실패했습니다.');
-    }
+    await addFeedback({
+      content,
+      selectedType,
+      question,
+    });
+    onClose();
   };
   const handleEditQuestionFeedback = async () => {
-    try {
-      const res = await editQuestionFeedback({
-        variables: {
-          input: {
-            id: feedbackId,
-            content,
-            type: selectedType,
-          },
-        },
-      });
-      if (!res.data?.editMockExamQuestionFeedback.ok) {
-        message.error('피드백 수정에 실패했습니다.');
-        return;
-      }
-      const newQuestion: MockExamQuestion = {
-        ...question,
-        mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (el) => {
-            if (el.id === feedbackId) {
-              return {
-                ...el,
-                content,
-                type: selectedType,
-              };
-            }
-            return el;
-          }
-        ),
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      message.success('피드백이 수정되었습니다.');
-      onClose();
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('피드백 수정에 실패했습니다.');
-    }
+    await editFeedback({
+      content,
+      selectedType,
+      question,
+      feedbackId,
+    });
+    onClose();
   };
 
   return (
@@ -122,7 +52,7 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
       onOk={feedbackId ? handleEditQuestionFeedback : handleAddQuestionFeedback}
       okText={feedbackId ? '수정하기' : '등록하기'}
       cancelText="닫기"
-      okButtonProps={{ loading: addQuestionFeedbackLoading }}
+      okButtonProps={{ loading: addFeedbackLoading || editFeedbackLoading }}
     >
       <div className="add-answer-modal-inner">
         <label className="content-label">오류신고 및 답안추가</label>

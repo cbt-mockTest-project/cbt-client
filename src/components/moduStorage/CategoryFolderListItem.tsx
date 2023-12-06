@@ -39,7 +39,7 @@ const CategoryFolderListItemBlock = styled(Link)`
   .category-user-label {
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${palette.subTextColor};
   }
 
   @media (max-width: ${responsive.medium}) {

@@ -9,6 +9,7 @@ const Layout02Block = styled.div`
   display: flex;
   position: relative;
   overflow-y: auto;
+  color: ${palette.textColor};
   .layout-body {
     margin-left: 200px;
     min-height: 100vh;
@@ -17,11 +18,13 @@ const Layout02Block = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: ${palette.gray_100};
+    background-color: ${palette.backgroundColor};
   }
   .layout-body-wrapper {
     max-width: 1200px;
-    background-color: white;
+    border: 1px solid ${palette.borderColor};
+    border-radius: 5px;
+    background-color: ${palette.containerBackgroundColor};
     height: 100%;
     width: 100%;
   }

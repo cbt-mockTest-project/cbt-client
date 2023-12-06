@@ -13,7 +13,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { message } from 'antd';
+import { ConfigProvider, message, theme } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -172,9 +172,15 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
 
       <ApolloProvider client={client}>
         <Globalstyles />
-        <CoreContainer />
-        <AppInner />
-        <Component {...pageProps} />
+        <ConfigProvider
+          theme={{
+            algorithm: theme.darkAlgorithm,
+          }}
+        >
+          <CoreContainer />
+          <AppInner />
+          <Component {...pageProps} />
+        </ConfigProvider>
       </ApolloProvider>
     </>
   );

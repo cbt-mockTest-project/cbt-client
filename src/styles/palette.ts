@@ -26,6 +26,14 @@ const palette = {
   gray_700: '#939999',
   gray_800: '#5e6464',
   gray_900: '#384040',
+  backgroundColor: '#01040a',
+  borderColor: '#22262d',
+  borderHoverColor: '#3c89e8',
+  containerBackgroundColor: '#141414',
+  cardColor: '#21262d',
+  textColor: '#FFFFFFD9',
+  subTextColor: '#7d8590',
+  emphasisTextColor: '#2465c0',
 };
 
 export default palette;

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 import { DrawerProps } from 'antd/lib';
-import { navList } from './layout.constants';
+import { navItems } from './layout.constants';
 import UserAuthBox from './UserAuthBox';
 import { useRouter } from 'next/router';
 
@@ -16,16 +16,16 @@ const MobileDrawer: React.FC<MobileDrawerProps> = (props) => {
   return (
     <StyledDrawer {...drawerProps} title="메뉴" width={200}>
       <ul className="mobile-drawer-list">
-        {navList.map((nav) => (
+        {navItems.map((nav) => (
           <li
             className={`mobile-drawer-item ${
-              router.pathname === nav.path ? 'active' : ''
+              router.pathname === nav.key ? 'active' : ''
             }`}
-            key={nav.name}
+            key={nav.key}
           >
-            <Link href={nav.path}>
+            <Link href={nav.key}>
               {nav.icon}
-              <span>{nav.name}</span>
+              <span>{nav.label}</span>
             </Link>
           </li>
         ))}

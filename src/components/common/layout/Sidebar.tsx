@@ -5,11 +5,12 @@ import SideNavList from './SideNavList';
 import UserAuthBox from './UserAuthBox';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
+import palette from '@styles/palette';
 
 const SidebarBlock = styled.div`
   max-width: 200px;
   width: 100%;
-  background-color: white;
+  background-color: ${palette.containerBackgroundColor};
   min-height: 100vh;
   position: fixed;
   top: 0;

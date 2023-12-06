@@ -1,65 +1,27 @@
 import palette from '@styles/palette';
-import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { navList } from './layout.constants';
+import { navItems } from './layout.constants';
 import { useRouter } from 'next/router';
+import { Menu } from 'antd';
 
-const SideNavListBlock = styled.ul`
-  display: flex;
-  flex-direction: column;
-  .side-nav-list-item {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin: 3px 4px;
-    padding: 0px 10px 0px 24px;
-    border-radius: 5px;
-    transition: background-color 0.2s ease-in-out;
-    font-size: 14px;
-    &:hover {
-      background-color: ${palette.gray_100};
-    }
-    a {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    svg {
-      font-size: 18px;
-    }
-  }
-  .side-nav-list-item.active {
-    background-color: ${palette.gray_100};
-    color: ${palette.antd_blue_02};
-    svg {
-      fill: ${palette.antd_blue_02};
-    }
-  }
-`;
+const SideNavListBlock = styled.ul``;
 
 interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
+
   return (
     <SideNavListBlock>
-      {navList.map((nav) => (
-        <li
-          className={`side-nav-list-item ${
-            router.pathname === nav.path ? 'active' : ''
-          }`}
-          key={nav.name}
-        >
-          <Link href={nav.path}>
-            {nav.icon}
-            <span>{nav.name}</span>
-          </Link>
-        </li>
-      ))}
+      <Menu
+        onClick={(e) => router.push(e.key.toString())}
+        selectedKeys={[router.pathname]}
+        style={{ backgroundColor: palette.containerBackgroundColor }}
+        mode="inline"
+        theme="dark"
+        items={navItems}
+      />
     </SideNavListBlock>
   );
 };

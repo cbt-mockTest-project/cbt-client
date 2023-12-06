@@ -3,13 +3,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 const BasicCardBlock = styled.div`
-  background-color: white;
+  background-color: ${palette.containerBackgroundColor};
   border-radius: 10px;
   padding: 20px;
   list-style: none;
-  border: 1px solid ${palette.gray_200};
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  border: 1px solid ${palette.borderColor};
   width: 100%;
+  transition: border-color 0.2s ease-in-out;
+  :hover {
+    border-color: ${palette.borderHoverColor};
+  }
 `;
 
 interface BasicCardProps extends React.HTMLAttributes<HTMLDivElement> {

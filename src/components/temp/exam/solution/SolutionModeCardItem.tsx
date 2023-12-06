@@ -14,11 +14,7 @@ import Bookmark from '@components/common/bookmark/Bookmark';
 import SolutionModeFeedbackList from './SolutionModeFeedbackList';
 import { EditOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '../QuestionFeedbackModal';
-import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
-import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -133,57 +129,10 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   index,
   isAnswerAllHidden,
 }) => {
+  const { saveBookmark, saveQuestionState } = useQuestions();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
-  const [editBookmark] = useEditQuestionBookmark();
-  const [changeQuestionState] = useChangeQuestionState();
-
-  const dispatch = useAppDispatch();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
-
-  const handleSaveBookmark = (questionId: number) => {
-    try {
-      const newQuestion = {
-        ...question,
-        isBookmarked: !question.isBookmarked,
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      editBookmark({
-        variables: {
-          input: {
-            questionId,
-          },
-        },
-      });
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('북마크 저장에 실패했습니다.');
-    }
-  };
-
-  const handleSaveQuestionState = (
-    questionId: number,
-    state: QuestionState
-  ) => {
-    try {
-      const newQuestion = {
-        ...question,
-        myQuestionState: state,
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      changeQuestionState({
-        variables: {
-          input: {
-            questionId,
-            state,
-          },
-        },
-      });
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('문제 상태 저장에 실패했습니다.');
-    }
-  };
 
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
@@ -196,7 +145,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
           <div className="solution-mode-question-card-header">
             <p className="solution-mode-question-card-number">{index + 1}번</p>
             <Bookmark
-              onClick={() => handleSaveBookmark(question.id)}
+              onClick={() => saveBookmark(question)}
               role="button"
               active={!!question.isBookmarked}
               className="solution-mode-question-card-bookmark"
@@ -239,9 +188,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
           className={`solution-mode-control-button ${
             question.myQuestionState === QuestionState.High ? 'active' : ''
           }`}
-          onClick={() =>
-            handleSaveQuestionState(question.id, QuestionState.High)
-          }
+          onClick={() => saveQuestionState(question, QuestionState.High)}
         >
           <PanoramaFishEyeIcon />
         </button>
@@ -249,9 +196,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
           className={`solution-mode-control-button ${
             question.myQuestionState === QuestionState.Row ? 'active' : ''
           }`}
-          onClick={() =>
-            handleSaveQuestionState(question.id, QuestionState.Row)
-          }
+          onClick={() => saveQuestionState(question, QuestionState.Row)}
         >
           <ClearIcon />
         </button>

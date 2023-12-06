@@ -130,3 +130,9 @@ export const useReadQuestionsByExamIds = (input: ReadQuestionsByExamIdsInput) =>
       },
     }
   );
+
+export const useLazyReadQuestionsByExamIds = () =>
+  useLazyQuery<
+    ReadQuestionsByExamIdsQuery,
+    ReadQuestionsByExamIdsQueryVariables
+  >(READ_QUESTIONS_BY_EXAM_IDS);

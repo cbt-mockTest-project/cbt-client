@@ -2,7 +2,7 @@ import { FeedbackTypeMap } from '@lib/constants/feedback';
 import { convertToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
-import { Divider, Dropdown, MenuProps, Modal, Tag, message } from 'antd';
+import { Dropdown, MenuProps, Modal, Tag } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
@@ -18,16 +18,10 @@ import {
   FrownOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
-import {
-  useDeleteQuestionFeedback,
-  useEditQuestionFeedback,
-  useUpdateQuestionFeedbackRecommendation,
-} from '@lib/graphql/user/hook/useQuestionFeedback';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
+
 import QuestionFeedbackModal from '../QuestionFeedbackModal';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { cloneDeep } from 'lodash';
+import useQuestions from '@lib/hooks/useQuestions';
 const SolutionModeFeedbackListItemBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -132,110 +126,8 @@ const SolutionModeFeedbackListItem: React.FC<
   const { data: meQuery } = useMeQuery();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
-  const [deleteFeedback] = useDeleteQuestionFeedback();
-  const [updateFeedbackRecommendation] =
-    useUpdateQuestionFeedbackRecommendation();
-  const dispatch = useAppDispatch();
-  const handleDeleteFeedback = async () => {
-    try {
-      const res = await deleteFeedback({
-        variables: {
-          input: {
-            id: feedback.id,
-          },
-        },
-      });
-      if (res.data?.deleteMockExamQuestionFeedback.ok) {
-        const newQuestion: MockExamQuestion = {
-          ...question,
-          mockExamQuestionFeedback: question.mockExamQuestionFeedback.filter(
-            (el) => el.id !== feedback.id
-          ),
-        };
-        dispatch(mockExamActions.setQuestion(newQuestion));
-        return message.success('삭제 완료');
-      } else message.error(res.data?.deleteMockExamQuestionFeedback.error);
-    } catch {
-      message.error('삭제 실패');
-    }
-  };
-  const handleUpdateFeedbackRecommendation = async (
-    type: QuestionFeedbackRecommendationType,
-    myRecommendationStatus: MyRecommedationStatus
-  ) => {
-    try {
-      const newQuestion = {
-        ...question,
-        mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (feedback) => {
-            if (feedback.id === feedback.id) {
-              let newReccomendationCount = cloneDeep(
-                feedback.recommendationCount
-              );
-              let newMyRecommedationStatus = cloneDeep(
-                feedback.myRecommedationStatus
-              );
-              if (myRecommendationStatus.isGood) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good -= 1;
-                  newMyRecommedationStatus.isGood = false;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.good -= 1;
-                  newReccomendationCount.bad += 1;
-                  newMyRecommedationStatus.isGood = false;
-                  newMyRecommedationStatus.isBad = true;
-                }
-              }
-              if (myRecommendationStatus.isBad) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good += 1;
-                  newReccomendationCount.bad -= 1;
-                  newMyRecommedationStatus.isGood = true;
-                  newMyRecommedationStatus.isBad = false;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.bad -= 1;
-                  newMyRecommedationStatus.isBad = false;
-                }
-              }
-              if (
-                !myRecommendationStatus.isGood &&
-                !myRecommendationStatus.isBad
-              ) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good += 1;
-                  newMyRecommedationStatus.isGood = true;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.bad += 1;
-                  newMyRecommedationStatus.isBad = true;
-                }
-              }
-              return {
-                ...feedback,
-                myRecommedationStatus: newMyRecommedationStatus,
-                recommendationCount: newReccomendationCount,
-              };
-            }
-            return feedback;
-          }
-        ),
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      updateFeedbackRecommendation({
-        variables: {
-          input: {
-            feedbackId: feedback.id,
-            type,
-          },
-        },
-      });
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('오류가 발생했습니다. 다시 시도해주세요.');
-    }
-  };
+  const { deleteFeedback, updateFeedbackRecommendation } = useQuestions();
+
   const controlDropdownItems: MenuProps['items'] = [
     {
       key: 1,
@@ -244,7 +136,7 @@ const SolutionModeFeedbackListItem: React.FC<
           onClick={() => {
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
-              onOk: handleDeleteFeedback,
+              onOk: () => deleteFeedback({ question, feedback }),
             });
           }}
         >
@@ -288,10 +180,12 @@ const SolutionModeFeedbackListItem: React.FC<
               feedback.myRecommedationStatus.isGood ? 'active' : ''
             }`}
             onClick={() =>
-              handleUpdateFeedbackRecommendation(
-                QuestionFeedbackRecommendationType.Good,
-                feedback.myRecommedationStatus
-              )
+              updateFeedbackRecommendation({
+                type: QuestionFeedbackRecommendationType.Good,
+                myRecommendationStatus: feedback.myRecommedationStatus,
+                question,
+                feedback,
+              })
             }
           >
             <SmileOutlined />
@@ -303,10 +197,12 @@ const SolutionModeFeedbackListItem: React.FC<
               feedback.myRecommedationStatus.isBad ? 'active' : ''
             }`}
             onClick={() =>
-              handleUpdateFeedbackRecommendation(
-                QuestionFeedbackRecommendationType.Bad,
-                feedback.myRecommedationStatus
-              )
+              updateFeedbackRecommendation({
+                type: QuestionFeedbackRecommendationType.Bad,
+                myRecommendationStatus: feedback.myRecommedationStatus,
+                question,
+                feedback,
+              })
             }
           >
             <FrownOutlined />
