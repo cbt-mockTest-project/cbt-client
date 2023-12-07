@@ -1,12 +1,14 @@
 import { Button, Checkbox, InputNumber, Modal, ModalProps, Radio } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
-import { ExamMode } from 'customTypes';
+import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { EXAM_SETTINGS } from '@lib/constants';
 
 const ExamSelectModalBlock = styled(Modal)`
   .exam-select-random-checkbox-wrapper,
@@ -40,10 +42,12 @@ const ExamSelectModalBlock = styled(Modal)`
 
 interface ExamSelectModalProps extends Omit<ModalProps, 'children'> {
   examIds: number[];
+  categoryId: number;
 }
 
 const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
-  const { examIds, ...modalProps } = props;
+  const { categoryId, examIds, ...modalProps } = props;
+  const localStorage = new LocalStorage();
   const router = useRouter();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [isRandom, setIsRandom] = useState<boolean>(false);
@@ -69,6 +73,26 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
   };
 
   const handleStart = () => {
+    const currentExamSettings: ExamSettingType = {
+      categoryId,
+      mode,
+      isRandom,
+      questionStates,
+      limit,
+      examIds,
+    };
+    const prevExamSettings: ExamSettingType[] =
+      localStorage.get(EXAM_SETTINGS) || [];
+    const settingIndex = prevExamSettings.findIndex(
+      (setting) => setting.categoryId === categoryId
+    );
+    if (settingIndex !== -1) {
+      prevExamSettings[settingIndex] = currentExamSettings;
+    } else {
+      prevExamSettings.push(currentExamSettings);
+    }
+    localStorage.set(EXAM_SETTINGS, prevExamSettings);
+
     if (isRandom) {
       return;
     }
@@ -83,6 +107,19 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
     // });
     // router.push();
   };
+
+  useEffect(() => {
+    const examSettings: ExamSettingType[] =
+      localStorage.get(EXAM_SETTINGS) || [];
+    const examSetting = examSettings.find(
+      (setting) => setting.categoryId === categoryId
+    );
+    if (!examSetting) return;
+    setMode(examSetting.mode);
+    setIsRandom(examSetting.isRandom);
+    setQuestionStates(examSetting.questionStates);
+    setLimit(examSetting.limit);
+  }, []);
   return (
     <ExamSelectModalBlock {...modalProps} title="학습 설정하기" footer={false}>
       <div>

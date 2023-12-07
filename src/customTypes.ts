@@ -54,3 +54,12 @@ export interface SetQuestionFeedbacksPayload {
   questionId: number;
   feedbacks: MockExamQuestionFeedback[];
 }
+
+export interface ExamSettingType {
+  categoryId: number;
+  mode: ExamMode;
+  isRandom: boolean;
+  questionStates: QuestionState[];
+  limit: number | null;
+  examIds: number[];
+}

@@ -2,7 +2,7 @@ import { FolderOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Checkbox } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   MockExamCategory,
@@ -10,6 +10,9 @@ import {
 } from 'types';
 import ExamList from './ExamList';
 import ExamSelectModal from './ExamSelectModal';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { ExamSettingType } from 'customTypes';
+import { EXAM_SETTINGS } from '@lib/constants';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -58,8 +61,19 @@ interface CategoryComponentProps {
 }
 
 const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
+  const localStorage = new LocalStorage();
   const [selectedExamIds, setSelectedExamIds] = useState<number[]>([]);
   const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
+
+  useEffect(() => {
+    const examSettings: ExamSettingType[] =
+      localStorage.get(EXAM_SETTINGS) || [];
+    const examSetting = examSettings.find(
+      (setting) => setting.categoryId === category.id
+    );
+    if (!examSetting) return;
+    setSelectedExamIds(examSetting.examIds);
+  }, []);
   return (
     <CategoryComponentBlock>
       <div className="category-creator-info">
@@ -96,6 +110,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
         setSelectedExamIds={setSelectedExamIds}
       />
       <ExamSelectModal
+        categoryId={category.id}
         examIds={selectedExamIds}
         open={examSelectModalVisible}
         onCancel={() => setExamSelectModalVisible(false)}
