@@ -10,7 +10,6 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { RegisterInput } from 'types';
-import Layout from '@components/common/layout/Layout';
 import WithHead from '@components/common/head/WithHead';
 import { responsive } from '@lib/utils/responsive';
 import BasicBox from '@components/common/box/BasicBox';
@@ -103,76 +102,71 @@ const Register = () => {
   return (
     <>
       <WithHead title="회원가입 | 모두CBT" pageHeadingTitle="회원가입 페이지" />
-      <Layout>
-        <RegisterContainer onSubmit={handleSubmit(onSubmit)}>
-          <h1>모두CBT 회원가입</h1>
-          <div className="register-input-wrapper">
-            <label className="register-label">이메일</label>
-            <Input value={email} disabled={true} className="register-input" />
-            <label className="register-label">닉네임</label>
-            <Controller
-              control={control}
-              name="nickname"
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input onChange={field.onChange} className="register-input" />
-              )}
+      <RegisterContainer onSubmit={handleSubmit(onSubmit)}>
+        <p className="register-title">모두CBT 회원가입</p>
+        <div className="register-input-wrapper">
+          <label className="register-label">이메일</label>
+          <Input value={email} disabled={true} className="register-input" />
+          <label className="register-label">닉네임</label>
+          <Controller
+            control={control}
+            name="nickname"
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input onChange={field.onChange} className="register-input" />
+            )}
+          />
+          {formState.errors['nickname']?.type === 'required' && (
+            <ErrorText
+              content="닉네임을 입력해주세요."
+              className="register-error-text"
             />
-            {formState.errors['nickname']?.type === 'required' && (
-              <ErrorText
-                content="닉네임을 입력해주세요."
-                className="register-error-text"
+          )}
+        </div>
+        <div className="register-input-wrapper">
+          <label className="register-label">비밀번호</label>
+          <Controller
+            control={control}
+            name="password"
+            rules={{ required: true, minLength: 4 }}
+            render={({ field }) => (
+              <Input
+                onChange={field.onChange}
+                type="password"
+                className="register-input"
+                placeholder="4글자 이상 입력해주세요."
               />
             )}
-          </div>
-          <div className="register-input-wrapper">
-            <label className="register-label">비밀번호</label>
-            <Controller
-              control={control}
-              name="password"
-              rules={{ required: true, minLength: 4 }}
-              render={({ field }) => (
-                <Input
-                  onChange={field.onChange}
-                  type="password"
-                  className="register-input"
-                  placeholder="4글자 이상 입력해주세요."
-                />
-              )}
+          />
+          {['minLength', 'required'].includes(
+            String(formState.errors['password']?.type)
+          ) && (
+            <ErrorText
+              content="비밀번호를 4글자 이상 입력해주세요."
+              className="register-error-text"
             />
-            {['minLength', 'required'].includes(
-              String(formState.errors['password']?.type)
-            ) && (
-              <ErrorText
-                content="비밀번호를 4글자 이상 입력해주세요."
-                className="register-error-text"
-              />
-            )}
-          </div>
-          <BasicBox
-            maxHeight={200}
-            className="register-terms-condition-wrapper"
-          >
-            {termsCondition}
-          </BasicBox>
-          <div className="register-terms-condition-checkbox-wrapper">
-            <div>동의</div>
-            <Checkbox
-              onChange={onChangeTermsConditionCheckbox}
-              checked={termsConditionChecked}
-            />
-          </div>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="register-button"
-            loading={registerLoading}
-            disabled={registerButtonDisabled}
-          >
-            회원가입
-          </Button>
-        </RegisterContainer>
-      </Layout>
+          )}
+        </div>
+        <BasicBox maxHeight={200} className="register-terms-condition-wrapper">
+          {termsCondition}
+        </BasicBox>
+        <div className="register-terms-condition-checkbox-wrapper">
+          <div>동의</div>
+          <Checkbox
+            onChange={onChangeTermsConditionCheckbox}
+            checked={termsConditionChecked}
+          />
+        </div>
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="register-button"
+          loading={registerLoading}
+          disabled={registerButtonDisabled}
+        >
+          회원가입
+        </Button>
+      </RegisterContainer>
     </>
   );
 };
@@ -180,31 +174,24 @@ const Register = () => {
 export default Register;
 
 const RegisterContainer = styled.form`
-  margin-bottom: 50px !important;
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+
   .register-input-wrapper {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
   }
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  margin-top: 50px;
-  h1 {
+  .register-title {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 30px;
   }
-  .register-input {
-    width: 400px;
-  }
-  .register-button {
-    margin-top: 10px;
-  }
+
   .register-label {
     margin-top: 20px;
     margin-bottom: 5px;
-    color: ${palette.gray_700};
+    color: ${palette.subTextColor};
   }
   .register-error-text {
     margin-top: 5px;
@@ -212,28 +199,19 @@ const RegisterContainer = styled.form`
   .register-terms-condition-wrapper {
     font-size: 0.8rem;
     margin-top: 20px;
-    width: 400px;
   }
   .register-terms-condition-checkbox-wrapper {
     display: flex;
     gap: 10px;
     align-items: center;
-    margin: 5px 0;
-    margin-left: auto;
+    margin: 10px 0;
     font-size: 0.8rem;
+    margin-left: auto;
   }
   @media (max-width: ${responsive.medium}) {
-    justify-content: center;
-    align-items: center;
-    .register-input {
-      width: 100%;
-      min-width: 250px;
-    }
-    .register-terms-condition-wrapper {
-      width: 250px;
-    }
-    .register-button {
-      min-width: 250px;
+    padding: 20px 16px;
+    .register-title {
+      font-size: 1rem;
     }
   }
 `;

@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import LoginTab from './LoginTab';
 import RegisterTab from './RegisterTab';
 import FindPasswordTab from './FindPasswordTab';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import useAuthModal from '@lib/hooks/useAuthModal';
 
 const AuthModalBlock = styled(Modal)`
   .ant-modal-content {
@@ -26,22 +29,29 @@ const AuthModalBlock = styled(Modal)`
 interface AuthModalProps extends Omit<ModalProps, 'children'> {}
 
 const AuthModal: React.FC<AuthModalProps> = (props) => {
-  const [currentTab, setCurrentTab] = useState<
-    'login' | 'register' | 'findPassword'
-  >('login');
+  const router = useRouter();
+  const { closeAuthModal } = useAuthModal();
+  const [currentTab, setCurrentTab] = useState<'login' | 'findPassword'>(
+    'login'
+  );
   const isLoginTab = currentTab === 'login';
   const { ...modalProps } = props;
+  const handleRouteForRegister = () => {
+    closeAuthModal();
+    router.push('/register/confirm');
+  };
   return (
     <AuthModalBlock {...modalProps} footer={false}>
       {currentTab === 'login' && <LoginTab />}
-      {currentTab === 'register' && <RegisterTab />}
       {currentTab === 'findPassword' && <FindPasswordTab />}
       <div className="auth-modal-tab-wrapper">
         {isLoginTab && (
           <>
-            <Button type="text" onClick={() => setCurrentTab('register')}>
-              회원가입
-            </Button>
+            <Link href="/register/confirm">
+              <Button onClick={handleRouteForRegister} type="text">
+                회원가입
+              </Button>
+            </Link>
             <Divider type="vertical" style={{ marginTop: '4px' }} />
             <Button type="text" onClick={() => setCurrentTab('findPassword')}>
               비밀번호 찾기

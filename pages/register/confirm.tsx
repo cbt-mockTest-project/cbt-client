@@ -39,35 +39,35 @@ const Confirm = () => {
         title="이메일 인증 | 모두CBT"
         pageHeadingTitle="이메일 인증 페이지"
       />
-      <Layout>
-        <ConfirmContainer onSubmit={handleSubmit(onSubmit)}>
-          <h1>가입을 위해 이메일을 인증해주세요.</h1>
-          <div className="email-confirm-input-wrapper">
-            <label className="email-confirm-input-label">이메일</label>
-            <Controller
-              control={control}
-              name="email"
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Input
-                  placeholder="example@google.com"
-                  onChange={field.onChange}
-                  type="email"
-                />
-              )}
-            />
-            {formState.errors['email']?.type === 'required' && (
-              <ErrorText
-                content="이메일을 입력해주세요."
-                className="register-error-text"
+      <ConfirmContainer onSubmit={handleSubmit(onSubmit)}>
+        <p className="email-confirm-title">
+          가입을 위해 이메일을 인증해주세요.
+        </p>
+        <div className="email-confirm-input-wrapper">
+          <label className="email-confirm-input-label">이메일</label>
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Input
+                placeholder="example@google.com"
+                onChange={field.onChange}
+                type="email"
               />
             )}
-          </div>
-          <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
-            이메일 인증요청
-          </Button>
-        </ConfirmContainer>
-      </Layout>
+          />
+          {formState.errors['email']?.type === 'required' && (
+            <ErrorText
+              content="이메일을 입력해주세요."
+              className="register-error-text"
+            />
+          )}
+        </div>
+        <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
+          이메일 인증요청
+        </Button>
+      </ConfirmContainer>
     </>
   );
 };
@@ -75,47 +75,37 @@ const Confirm = () => {
 export default Confirm;
 
 const ConfirmContainer = styled.form`
-  h1 {
+  padding: 20px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  .email-confirm-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 30px;
   }
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  margin-top: 50px;
+
   .email-confirm-input-wrapper {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
   }
   .email-confirm-input-label {
     margin-top: 20px;
     margin-bottom: 5px;
     color: ${palette.gray_700};
   }
-  input {
-    width: 400px;
-  }
+
   button {
-    margin-top: 20px;
+    margin-top: 15px;
   }
   .register-error-text {
     margin-top: 5px;
   }
   @media (max-width: ${responsive.medium}) {
-    justify-content: center;
-    align-items: center;
-    h1 {
+    padding: 20px 16px;
+    .email-confirm-title {
       font-size: 1rem;
       margin-bottom: 10px;
-    }
-    input {
-      width: 100%;
-      min-width: 250px;
-    }
-    button {
-      min-width: 250px;
     }
   }
 `;

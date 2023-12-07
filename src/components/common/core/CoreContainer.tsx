@@ -6,7 +6,6 @@ import {
 } from '@modules/redux/store/configureStore';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import LoginModal from '../modal/LoginModal';
 import { isServer } from '@lib/utils/utils';
 import { AppInfo } from './CoreContainer.type';
 import AppUpdateNotification from './modal/AppUpdateNotification';

@@ -131,17 +131,15 @@ const PasswordContainer = styled.form`
   display: flex;
   flex-direction: column;
   padding: 20px 30px 30px 30px;
+  max-width: 450px;
   h1 {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 30px;
   }
-  input {
-    max-width: 400px;
-  }
+
   button {
     margin-top: 20px;
-    max-width: 400px;
   }
   .password-label {
     color: ${palette.subTextColor};
