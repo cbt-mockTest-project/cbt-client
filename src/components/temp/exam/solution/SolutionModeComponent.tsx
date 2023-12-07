@@ -13,7 +13,7 @@ import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 
 const SolutionModeComponentBlock = styled.div`
-  background-color: ${palette.gray_100};
+  background-color: ${palette.backgroundColor};
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;

@@ -56,7 +56,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
 }) => {
   return (
     <CategoryFolderListItemBlock href={`/category/${category.id}`}>
-      <BasicCard>
+      <BasicCard hoverEffect>
         <div className="category-wrapper">
           <div className="category-header-wrapper">
             <span className="category-name">{category.name}</span>

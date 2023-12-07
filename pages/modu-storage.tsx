@@ -1,4 +1,4 @@
-import Layout02 from '@components/common/layout/Layout02';
+import Layout02 from '@components/common/layout/MainLayout';
 import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/user/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
@@ -19,9 +19,7 @@ const ModuStorage: NextPage<ModuStorageProps> = () => {
         title="모두CBT | 모두 저장소"
         pageHeadingTitle="모두CBT 서비스 모두 저장소 페이지"
       />
-      <Layout02 title="모두 암기장">
-        <ModuStorageComponent />
-      </Layout02>
+      <ModuStorageComponent />
     </>
   );
 };

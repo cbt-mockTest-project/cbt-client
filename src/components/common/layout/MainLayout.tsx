@@ -5,12 +5,12 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import MobileHeader from './MobileHeader';
 
-const Layout02Block = styled.div`
+const MainLayoutBlock = styled.div`
   display: flex;
   position: relative;
   overflow-y: auto;
   color: ${palette.textColor};
-  .layout-body {
+  .main-layout-body {
     margin-left: 200px;
     min-height: 100vh;
     width: 100%;
@@ -20,7 +20,7 @@ const Layout02Block = styled.div`
     padding: 20px;
     background-color: ${palette.backgroundColor};
   }
-  .layout-body-wrapper {
+  .main-layout-body-wrapper {
     max-width: 1200px;
     border: 1px solid ${palette.borderColor};
     border-radius: 5px;
@@ -30,32 +30,37 @@ const Layout02Block = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     flex-direction: column;
-    .layout-body {
+    .main-layout-body {
       margin-left: 0px;
       padding: 0px;
       min-height: calc(100 * 1vh - 60px);
     }
-    .layout-body-wrapper {
+    .main-layout-body-wrapper {
       min-height: calc(100 * 1vh - 60px);
     }
   }
 `;
 
-interface Layout02Props {
+interface MainLayoutProps {
   children: React.ReactNode;
   title?: string;
+  className?: string;
 }
 
-const Layout02: React.FC<Layout02Props> = ({ children, title = '모두CBT' }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({
+  children,
+  className = '',
+  title = '모두CBT',
+}) => {
   return (
-    <Layout02Block>
+    <MainLayoutBlock className={className}>
       <MobileHeader title={title} />
       <Sidebar />
-      <div className="layout-body">
-        <div className="layout-body-wrapper">{children}</div>
+      <div className="main-layout-body">
+        <div className="main-layout-body-wrapper">{children}</div>
       </div>
-    </Layout02Block>
+    </MainLayoutBlock>
   );
 };
 
-export default Layout02;
+export default MainLayout;

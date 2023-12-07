@@ -1,13 +1,12 @@
-import Layout02 from '@components/common/layout/Layout02';
-import LayoutWithoutNav from '@components/common/layout/LayoutWithoutNav';
 import SolutionModeComponent from '@components/temp/exam/solution/SolutionModeComponent';
+import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/user/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/user/query/questionQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
-import wrapper, { useAppSelector } from '@modules/redux/store/configureStore';
+import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
@@ -21,6 +20,8 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
 }) => {
   return <SolutionModeComponent questionsQueryInput={questionsQueryInput} />;
 };
+
+ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;
 
 export default ExamSolutionPage;
 

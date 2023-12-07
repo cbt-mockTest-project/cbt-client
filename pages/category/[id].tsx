@@ -1,6 +1,5 @@
 import CategoryComponent from '@components/category/CategoryComponent';
 import WithHead from '@components/common/head/WithHead';
-import Layout02 from '@components/common/layout/Layout02';
 import {
   READ_EXAM_CATEGORY_BY_ID,
   READ_EXAM_CATEGORY_IDS,
@@ -25,9 +24,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category }) => {
         title="모두CBT | 국가고시 실기시험 부시기!"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      <Layout02 title={category?.name}>
-        {category && <CategoryComponent category={category} />}
-      </Layout02>
+      {category && <CategoryComponent category={category} />}
     </>
   );
 };

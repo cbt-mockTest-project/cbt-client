@@ -43,11 +43,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           }
         }}
       />
-      <Link
-        className="exam-list-item-link"
-        href={`/temp/exam/solution/${exam.id}`}
-      >
-        <BasicCard>
+      <Link className="exam-list-item-link" href={`/exam/solution/${exam.id}`}>
+        <BasicCard hoverEffect>
           <span>{exam.title}</span>
         </BasicCard>
       </Link>

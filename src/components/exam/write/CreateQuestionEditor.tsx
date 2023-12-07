@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import editorStyle from '@styles/editorStyle';
 
 import { Spin } from 'antd';
+import palette from '@styles/palette';
 
 const CreateQuestionEditorBlock = styled.div`
   min-height: 200px;
@@ -22,6 +23,13 @@ const CreateQuestionEditorBlock = styled.div`
     ol,
     ul {
       padding: 0;
+    }
+    .ql-blank::before {
+      color: #ffffff40 !important;
+    }
+    .ql-toolbar.ql-snow,
+    .ql-container.ql-snow {
+      border-color: ${palette.borderColorLight};
     }
   }
 `;

@@ -20,14 +20,20 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkHomePage } from '@lib/constants/routes';
 import { isServer, someIncludes } from '@lib/utils/utils';
-import CalculatorComponent from '@components/calculator/CalculatorComponent';
 import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
+import MainLayout from '@components/common/layout/MainLayout';
+import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
+  const router = useRouter();
+
+  const pagesWithoutLayout: string[] = [EXAM_SOLUTION_PAGE];
+  const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
+
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
   const localStorage = new LocalStorage();
-  const router = useRouter();
+
   useEffect(() => {
     const excludePath = ['/exam/randomselect', '/exam/solution'];
     if (!someIncludes(excludePath, router.asPath)) {
@@ -179,7 +185,13 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
         >
           <CoreContainer />
           <AppInner />
-          <Component {...pageProps} />
+          {hasLayout ? (
+            <MainLayout>
+              <Component {...pageProps} />
+            </MainLayout>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </ConfigProvider>
       </ApolloProvider>
     </>

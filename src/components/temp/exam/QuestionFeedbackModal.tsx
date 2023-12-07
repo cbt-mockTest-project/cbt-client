@@ -96,8 +96,8 @@ const QuestionFeedbackModalBlock = styled(Modal)`
       bottom: 15px;
       width: max-content;
       font-size: 0.8rem;
-      color: ${palette.antd_blue_01};
-      border: 1px solid ${palette.antd_blue_01};
+      color: ${palette.emphasisTextColor};
+      border: 1px solid ${palette.emphasisTextColor};
       padding: 5px 20px;
       border-radius: 50px;
     }

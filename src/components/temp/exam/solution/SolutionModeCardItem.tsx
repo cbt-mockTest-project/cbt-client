@@ -40,13 +40,12 @@ const SolutionModeCardItemBlock = styled.div`
   }
   .solution-mode-question-card-number {
     font-weight: bold;
-
-    color: ${palette.gray_700};
+    color: ${palette.subTextColor};
   }
   .solution-mode-question-card-answer-label {
     font-weight: bold;
     margin-bottom: 5px;
-    color: ${palette.gray_700};
+    color: ${palette.subTextColor};
   }
   .solution-mode-answer-box {
     margin-top: 20px;
@@ -94,7 +93,8 @@ const SolutionModeCardItemBlock = styled.div`
   .solution-mode-control-button {
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.gray_200};
+    border: 2px solid ${palette.borderColor};
+    color: ${palette.textColor};
     border-radius: 50%;
     display: flex;
     align-items: center;

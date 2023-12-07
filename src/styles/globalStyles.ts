@@ -1,5 +1,6 @@
 import { responsive } from '@lib/utils/responsive';
 import { createGlobalStyle } from 'styled-components';
+import palette from './palette';
 
 const Globalstyles = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -25,10 +26,9 @@ const Globalstyles = createGlobalStyle`
     font-size: 100%;
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
+    color: ${palette.textColor};
   }
-button {
-  color : black;
-}
+
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
   footer, header, hgroup, main, menu, nav, section {
@@ -116,6 +116,9 @@ button {
     @media (max-width: ${responsive.medium}) {
       display: none;
     }
+  }
+  .display-none {
+    display: none;
   }
   .hidden-title {
     overflow: hidden;

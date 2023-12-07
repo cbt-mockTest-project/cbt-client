@@ -28,6 +28,7 @@ const palette = {
   gray_900: '#384040',
   backgroundColor: '#01040a',
   borderColor: '#22262d',
+  borderColorLight: '#424242',
   borderHoverColor: '#3c89e8',
   containerBackgroundColor: '#141414',
   cardColor: '#21262d',

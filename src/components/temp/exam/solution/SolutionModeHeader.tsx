@@ -6,14 +6,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const SolutionModeHeaderBlock = styled.div`
-  background-color: white;
+  background-color: ${palette.containerBackgroundColor};
   width: 100%;
   top: 0;
   position: sticky;
   z-index: 1;
   //아래쪽 그림자
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid ${palette.gray_300};
+  border-bottom: 1px solid ${palette.borderColor};
   .solution-mode-header-inner {
     height: 57px;
     max-width: 1280px;
