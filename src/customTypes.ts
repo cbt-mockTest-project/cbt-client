@@ -63,3 +63,11 @@ export interface ExamSettingType {
   limit: number | null;
   examIds: number[];
 }
+
+export interface StudyQuery {
+  order: 'random' | 'normal';
+  states: string;
+  limit: string;
+  examIds: string;
+  mode: ExamMode;
+}

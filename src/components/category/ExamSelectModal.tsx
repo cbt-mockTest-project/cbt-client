@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
-import { ExamMode, ExamSettingType } from 'customTypes';
+import { ExamMode, ExamSettingType, StudyQuery } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -93,19 +93,16 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
     }
     localStorage.set(EXAM_SETTINGS, prevExamSettings);
 
-    if (isRandom) {
-      return;
-    }
-    if (mode === ExamMode.SOLUTION) {
-      // router.push(`/temp/exam/solution/${examIds[0]}`);
-    }
-    // const params = addQueryParams(`/study/${mode}`, {
-    //   order: isRandom ? 'random' : 'normal',
-    //   questionStates: questionStates.join(','),
-    //   limit: limit ? limit.toString() : '',
-    //   examIds: examIds.join(','),
-    // });
-    // router.push();
+    router.push({
+      pathname: '/study',
+      query: {
+        order: isRandom ? 'random' : 'normal',
+        states: questionStates.join(','),
+        limit: limit ? limit.toString() : '',
+        examIds: examIds.join(','),
+        mode,
+      },
+    });
   };
 
   useEffect(() => {
