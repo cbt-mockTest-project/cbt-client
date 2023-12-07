@@ -14,7 +14,7 @@ const MobileHeaderBlock = styled.div`
     justify-content: space-between;
     align-items: center;
     background-color: ${palette.containerBackgroundColor};
-    border-bottom: 1.5px solid ${palette.borderColor};
+    border-bottom: 1px solid ${palette.borderColor};
     z-index: 500;
     height: 57px;
     width: 100vw;
