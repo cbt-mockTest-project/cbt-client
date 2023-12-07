@@ -42,6 +42,7 @@ const Globalstyles = createGlobalStyle`
       display: none;
   }
   body {
+    background-color: ${palette.backgroundColor};
     overflow-x: hidden !important;
     overflow-y : scroll ;
   }
