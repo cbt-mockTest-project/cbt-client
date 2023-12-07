@@ -1,14 +1,54 @@
+import { useSendFindPasswordMail } from '@lib/graphql/user/hook/useUser';
+import useInput from '@lib/hooks/useInput';
+import { Button, Input, message } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
-const FindPasswordTabBlock = styled.div``;
+const FindPasswordTabBlock = styled.div`
+  .find-password-tab-title {
+    margin-bottom: 15px;
+  }
+  .find-password-tab-button {
+    margin-top: 10px;
+    width: 100%;
+  }
+`;
 
 interface FindPasswordTabProps {}
 
 const FindPasswordTab: React.FC<FindPasswordTabProps> = () => {
+  const { value: email, onChange: onEmailChange } = useInput('');
+  const [sendFindPasswordMailMutation, { loading: sendFindPasswordLoading }] =
+    useSendFindPasswordMail();
+  const handleFindPassword = async () => {
+    const res = await sendFindPasswordMailMutation({
+      variables: {
+        input: { email },
+      },
+    });
+    if (res.data?.sendFindPasswordMail.ok) {
+      return message.success('메일을 확인해주세요.');
+    }
+    return message.error(res.data?.sendFindPasswordMail.error);
+  };
   return (
     <FindPasswordTabBlock>
-      {/* 컴포넌트의 내용을 여기에 작성하세요. */}
+      <p className="find-password-tab-title">비밀번호 찾기</p>
+      <Input
+        type="email"
+        placeholder="이메일을 입력해주세요."
+        value={email}
+        disabled={sendFindPasswordLoading}
+        onChange={onEmailChange}
+      />
+      <Button
+        className="find-password-tab-button"
+        type="primary"
+        onClick={handleFindPassword}
+        disabled={sendFindPasswordLoading}
+      >
+        메일 발송
+      </Button>
     </FindPasswordTabBlock>
   );
 };

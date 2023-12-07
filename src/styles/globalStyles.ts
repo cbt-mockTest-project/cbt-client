@@ -137,6 +137,10 @@ const Globalstyles = createGlobalStyle`
       display: none; /* Chrome, Safari, Opera*/
     }
   }
+  .ant-message-notice-content {
+    background: #1F1F1F !important;
+    color : rgba(255, 255, 255, 0.85);
+  }
   a {
     :hover{
       color : unset ;
