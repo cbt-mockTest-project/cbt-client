@@ -56,7 +56,9 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
 
   return (
     <SolutionModeComponentBlock>
-      <SolutionModeHeader title={questions[0].mockExam?.title || ''} />
+      <SolutionModeHeader
+        title={(questions.length > 0 && questions[0].mockExam?.title) || ''}
+      />
       <div className="solution-mode-body">
         <Button
           className="solution-mode-all-hide-toggle-button"
