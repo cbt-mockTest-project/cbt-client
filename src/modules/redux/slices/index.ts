@@ -10,6 +10,7 @@ import { cloneDeep } from 'lodash';
 import examSlice, { ExamState } from './exam';
 import mockExamSlice, { MockExamState } from './mockExam';
 import moduStorageSlice, { ModuStorageState } from './moduStorage';
+import examSettingSlice, { ExamSettingState } from './examSetting';
 
 export interface RootState {
   data: DataState;
@@ -17,6 +18,7 @@ export interface RootState {
   exam: ExamState;
   mockExam: MockExamState;
   moduStorage: ModuStorageState;
+  examSetting: ExamSettingState;
 }
 
 type TCombinedState = CombinedState<RootState> | undefined;
@@ -40,6 +42,7 @@ const rootReducer = (
         exam: examSlice.reducer,
         mockExam: mockExamSlice.reducer,
         moduStorage: moduStorageSlice.reducer,
+        examSetting: examSettingSlice.reducer,
       });
       return combineReducer(state, action);
     }
