@@ -27,7 +27,7 @@ export default ExamSolutionPage;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');
-  let paths: { params: { id: string } }[] = [];
+  let paths: { params: { Id: string } }[] = [];
   try {
     const res = await apolloClient.query<ReadAllMockExamQuery>({
       query: READ_ALL_MOCK_EXAM,
@@ -41,7 +41,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
     });
     if (res.data.readAllMockExam.mockExams) {
       paths = res.data.readAllMockExam.mockExams.map((el) => ({
-        params: { id: String(el.id) },
+        params: { Id: String(el.id) },
       }));
     }
     return { paths, fallback: 'blocking' };
@@ -56,13 +56,13 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
     try {
-      if (!context.params?.id) {
+      if (!context.params?.Id) {
         return {
           notFound: true,
         };
       }
       const apolloClient = initializeApollo({}, '');
-      const examId = context.params?.id;
+      const examId = context.params?.Id;
       const questionsQueryInput: ReadQuestionsByExamIdsInput = {
         ids: [Number(String(examId))],
       };

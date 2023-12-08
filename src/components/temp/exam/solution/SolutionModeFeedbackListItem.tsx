@@ -51,7 +51,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     white-space: pre-wrap;
   }
   .feedback-date {
-    color: ${palette.gray_500};
+    color: ${palette.subTextColor};
     font-size: 12px;
   }
   .feedback-footer {
@@ -66,6 +66,18 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     margin-top: 10px;
     svg {
       font-size: 22px;
+    }
+  }
+
+  .feedback-control-button-wrapper {
+    svg {
+      color: ${palette.textColor};
+    }
+
+    &:hover {
+      svg {
+        color: ${palette.antd_blue_02};
+      }
     }
   }
   .feedback-recommendation-icon-and-value {
@@ -133,6 +145,7 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 1,
       label: (
         <button
+          style={{ color: palette.textColor }}
           onClick={() => {
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
@@ -148,6 +161,7 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 2,
       label: (
         <button
+          style={{ color: palette.textColor }}
           onClick={() => {
             setIsQuestionFeedbackModalOpen(true);
           }}

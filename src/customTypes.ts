@@ -57,11 +57,12 @@ export interface SetQuestionFeedbacksPayload {
 
 export interface ExamSettingType {
   categoryId: number;
-  mode: ExamMode;
-  isRandom: boolean;
-  questionStates: QuestionState[];
-  limit: number | null;
+  mode?: ExamMode;
+  isRandom?: boolean;
+  questionStates?: QuestionState[];
+  limit?: number | null;
   examIds: number[];
+  isMultipleSelectMode?: boolean;
 }
 
 export interface StudyQuery {

@@ -23,12 +23,12 @@ import { isServer, someIncludes } from '@lib/utils/utils';
 import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
-import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
+import { EXAM_SOLUTION_PAGE, STUDY_PAGE } from '@lib/constants/displayName';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
 
-  const pagesWithoutLayout: string[] = [EXAM_SOLUTION_PAGE];
+  const pagesWithoutLayout: string[] = [EXAM_SOLUTION_PAGE, STUDY_PAGE];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
 
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
