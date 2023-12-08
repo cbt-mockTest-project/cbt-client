@@ -5,15 +5,14 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 
-const SolutionModeHeaderBlock = styled.div`
+const StudyHeaderBlock = styled.div`
   background-color: ${palette.containerBackgroundColor};
   width: 100%;
   top: 0;
   position: sticky;
   z-index: 1;
-  //아래쪽 그림자
   border-bottom: 1px solid ${palette.borderColor};
-  .solution-mode-header-inner {
+  .study-header-inner {
     height: 57px;
     max-width: 1280px;
     margin: 0 auto;
@@ -25,12 +24,12 @@ const SolutionModeHeaderBlock = styled.div`
     padding: 0 20px;
     justify-content: center;
     position: relative;
-    .solution-mode-back-button {
+    .study-header-back-button {
       cursor: pointer;
       position: absolute;
       left: 20px;
     }
-    .solution-mode-header-title {
+    .study-header-title {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -41,35 +40,35 @@ const SolutionModeHeaderBlock = styled.div`
     }
   }
   @media (max-width: ${responsive.medium}) {
-    .solution-mode-header-inner {
+    .study-header-inner {
       padding: 0 10px;
     }
-    .solution-mode-back-button {
+    .study-header-back-button {
       left: 10px;
     }
   }
 `;
 
-interface SolutionModeHeaderProps {
+interface StudyHeaderProps {
   title: string;
 }
 
-const SolutionModeHeader: React.FC<SolutionModeHeaderProps> = ({ title }) => {
+const StudyHeader: React.FC<StudyHeaderProps> = ({ title }) => {
   const router = useRouter();
   return (
-    <SolutionModeHeaderBlock>
-      <div className="solution-mode-header-inner">
+    <StudyHeaderBlock>
+      <div className="study-header-inner">
         <div
-          className="solution-mode-back-button"
+          className="study-header-back-button"
           role="button"
           onClick={router.back}
         >
           <LeftOutlined />
         </div>
-        <div className="solution-mode-header-title">{title}</div>
+        <div className="study-header-title">{title}</div>
       </div>
-    </SolutionModeHeaderBlock>
+    </StudyHeaderBlock>
   );
 };
 
-export default SolutionModeHeader;
+export default StudyHeader;

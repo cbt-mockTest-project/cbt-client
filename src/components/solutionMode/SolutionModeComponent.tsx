@@ -8,9 +8,10 @@ import SolutionModeCardItem from './SolutionModeCardItem';
 
 import palette from '@styles/palette';
 
-import SolutionModeHeader from './SolutionModeHeader';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
+import StudyHeader from '@components/study/StudyHeader';
+import { useRouter } from 'next/router';
 
 const SolutionModeComponentBlock = styled.div`
   background-color: ${palette.backgroundColor};
@@ -47,8 +48,10 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
+  const router = useRouter();
   const { questions, fetchQuestions } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
+  const isMultipleSelectMode = !!router.query.examIds;
 
   useEffect(() => {
     fetchQuestions(questionsQueryInput);
@@ -56,8 +59,12 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
 
   return (
     <SolutionModeComponentBlock>
-      <SolutionModeHeader
-        title={(questions.length > 0 && questions[0].mockExam?.title) || ''}
+      <StudyHeader
+        title={
+          (questions.length > 0 && isMultipleSelectMode
+            ? '다중 선택 해설모드'
+            : questions[0].mockExam?.title) || ''
+        }
       />
       <div className="solution-mode-body">
         <Button
