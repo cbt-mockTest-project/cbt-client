@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import palette from '@styles/palette';
-import { ExamMode, ExamSettingType, StudyQuery } from 'customTypes';
+import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { EXAM_SETTINGS } from '@lib/constants';
+import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 
 const ExamSelectModalBlock = styled(Modal)`
   .exam-select-random-checkbox-wrapper,
@@ -47,7 +46,8 @@ interface ExamSelectModalProps extends Omit<ModalProps, 'children'> {
 
 const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
   const { categoryId, examIds, ...modalProps } = props;
-  const localStorage = new LocalStorage();
+  const { getExamSettingHistory, setExamSettingHistory } =
+    useExamSettingHistory();
   const router = useRouter();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [isRandom, setIsRandom] = useState<boolean>(false);
@@ -81,18 +81,7 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
       limit,
       examIds,
     };
-    const prevExamSettings: ExamSettingType[] =
-      localStorage.get(EXAM_SETTINGS) || [];
-    const settingIndex = prevExamSettings.findIndex(
-      (setting) => setting.categoryId === categoryId
-    );
-    if (settingIndex !== -1) {
-      prevExamSettings[settingIndex] = currentExamSettings;
-    } else {
-      prevExamSettings.push(currentExamSettings);
-    }
-    localStorage.set(EXAM_SETTINGS, prevExamSettings);
-
+    setExamSettingHistory(currentExamSettings);
     router.push({
       pathname: '/study',
       query: {
@@ -106,16 +95,13 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
   };
 
   useEffect(() => {
-    const examSettings: ExamSettingType[] =
-      localStorage.get(EXAM_SETTINGS) || [];
-    const examSetting = examSettings.find(
-      (setting) => setting.categoryId === categoryId
-    );
+    const examSetting = getExamSettingHistory(categoryId);
     if (!examSetting) return;
-    setMode(examSetting.mode);
-    setIsRandom(examSetting.isRandom);
-    setQuestionStates(examSetting.questionStates);
-    setLimit(examSetting.limit);
+    const { mode, isRandom, questionStates, limit } = examSetting;
+    if (mode) setMode(mode);
+    if (isRandom) setIsRandom(isRandom);
+    if (questionStates) setQuestionStates(questionStates);
+    if (limit) setLimit(limit);
   }, []);
   return (
     <ExamSelectModalBlock {...modalProps} title="학습 설정하기" footer={false}>

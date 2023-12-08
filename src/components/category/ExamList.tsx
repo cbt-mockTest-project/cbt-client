@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import ExamListItem from './ExamListItem';
+import useExamSetting from '@lib/hooks/useExamSetting';
 
 const ExamListBlock = styled.ul`
   margin-top: 20px;
@@ -12,23 +13,19 @@ const ExamListBlock = styled.ul`
 
 interface ExamListProps {
   category: MockExamCategory;
-  selectedExamIds: number[];
-  setSelectedExamIds: (selectedStudyNoteIds: number[]) => void;
+  handleExamSelect: (examId: number) => void;
 }
 
-const ExamList: React.FC<ExamListProps> = ({
-  category,
-  selectedExamIds,
-  setSelectedExamIds,
-}) => {
+const ExamList: React.FC<ExamListProps> = ({ category, handleExamSelect }) => {
+  const { examSetting } = useExamSetting({ category });
   return (
     <ExamListBlock>
       {category?.mockExam.map((exam) => (
         <ExamListItem
           key={exam.id}
           exam={exam}
-          selectedExamIds={selectedExamIds}
-          setSelectedExamIds={setSelectedExamIds}
+          examSetting={examSetting}
+          handleExamSelect={handleExamSelect}
         />
       ))}
     </ExamListBlock>

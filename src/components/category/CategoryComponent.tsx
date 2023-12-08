@@ -1,18 +1,14 @@
 import { FolderOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {
-  MockExamCategory,
-  ReadMockExamCategoryByCategoryIdOutput,
-} from 'types';
+import { MockExamCategory } from 'types';
 import ExamList from './ExamList';
 import ExamSelectModal from './ExamSelectModal';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { ExamSettingType } from 'customTypes';
-import { EXAM_SETTINGS } from '@lib/constants';
+import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
+import useExamSetting from '@lib/hooks/useExamSetting';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -51,6 +47,17 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
+  .category-multiple-select-toggle-switch-wrapper {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+  }
+  .category-all-checkbox-and-study-button-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+  }
   @media (max-width: ${responsive.medium}) {
     padding: 20px 16px;
   }
@@ -61,19 +68,26 @@ interface CategoryComponentProps {
 }
 
 const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
-  const localStorage = new LocalStorage();
-  const [selectedExamIds, setSelectedExamIds] = useState<number[]>([]);
+  const {
+    examSetting,
+    setExamSetting,
+    handleAllExamsSelect,
+    handleExamSelect,
+    handleChangeMultipleSelectMode,
+  } = useExamSetting({ category });
+
   const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
+  const { getExamSettingHistory } = useExamSettingHistory();
 
   useEffect(() => {
-    const examSettings: ExamSettingType[] =
-      localStorage.get(EXAM_SETTINGS) || [];
-    const examSetting = examSettings.find(
-      (setting) => setting.categoryId === category.id
-    );
+    const examSetting = getExamSettingHistory(category.id);
     if (!examSetting) return;
-    setSelectedExamIds(examSetting.examIds);
+    const { examIds, isMultipleSelectMode } = examSetting;
+    if (examIds) setExamSetting({ categoryId: category.id, examIds });
+    if (isMultipleSelectMode)
+      setExamSetting({ categoryId: category.id, isMultipleSelectMode });
   }, []);
+
   return (
     <CategoryComponentBlock>
       <div className="category-creator-info">
@@ -84,34 +98,37 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
         <FolderOutlined />
         <span className="category-name">{category?.name}</span>
       </div>
-      <Button
-        className="category-study-button"
-        type="primary"
-        size="large"
-        disabled={selectedExamIds.length === 0}
-        onClick={() => setExamSelectModalVisible(true)}
-      >
-        학습하기
-      </Button>
-      <div className="category-exam-all-checkbox-wrapper">
-        <Checkbox
-          checked={category.mockExam.length === selectedExamIds.length}
-          onClick={() => {
-            if (category.mockExam.length === selectedExamIds.length)
-              setSelectedExamIds([]);
-            else setSelectedExamIds(category.mockExam.map((exam) => exam.id));
-          }}
+      <div className="category-multiple-select-toggle-switch-wrapper">
+        <Switch
+          checked={examSetting.isMultipleSelectMode}
+          onChange={handleChangeMultipleSelectMode}
         />
-        <span>전체 선택</span>
+        <span>다중 선택 모드</span>
       </div>
-      <ExamList
-        category={category}
-        selectedExamIds={selectedExamIds}
-        setSelectedExamIds={setSelectedExamIds}
-      />
+      {examSetting.isMultipleSelectMode && (
+        <div className="category-all-checkbox-and-study-button-wrapper">
+          <div className="category-exam-all-checkbox-wrapper">
+            <Checkbox
+              checked={category.mockExam.length === examSetting.examIds.length}
+              onClick={handleAllExamsSelect}
+            />
+            <span>전체 선택</span>
+          </div>
+          <Button
+            className="category-study-button"
+            type="primary"
+            disabled={examSetting.examIds.length === 0}
+            onClick={() => setExamSelectModalVisible(true)}
+          >
+            학습하기
+          </Button>
+        </div>
+      )}
+
+      <ExamList category={category} handleExamSelect={handleExamSelect} />
       <ExamSelectModal
         categoryId={category.id}
-        examIds={selectedExamIds}
+        examIds={examSetting.examIds}
         open={examSelectModalVisible}
         onCancel={() => setExamSelectModalVisible(false)}
       />

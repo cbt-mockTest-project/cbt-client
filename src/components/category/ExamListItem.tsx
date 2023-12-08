@@ -1,6 +1,8 @@
 import BasicCard from '@components/common/card/BasicCard';
+import useExamSetting from '@lib/hooks/useExamSetting';
 import { responsive } from '@lib/utils/responsive';
 import { Checkbox } from 'antd';
+import { ExamSettingType } from 'customTypes';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -22,27 +24,23 @@ const ExamListItemBlock = styled.div`
 
 interface ExamListItemProps {
   exam: MockExam;
-  selectedExamIds: number[];
-  setSelectedExamIds: (selectedStudyNoteIds: number[]) => void;
+  examSetting: ExamSettingType;
+  handleExamSelect: (examId: number) => void;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
   exam,
-  selectedExamIds,
-  setSelectedExamIds,
+  examSetting,
+  handleExamSelect,
 }) => {
   return (
     <ExamListItemBlock>
-      <Checkbox
-        checked={selectedExamIds.includes(exam.id)}
-        onClick={() => {
-          if (selectedExamIds.includes(exam.id)) {
-            setSelectedExamIds(selectedExamIds.filter((id) => id !== exam.id));
-          } else {
-            setSelectedExamIds([...selectedExamIds, exam.id]);
-          }
-        }}
-      />
+      {examSetting.isMultipleSelectMode && (
+        <Checkbox
+          checked={examSetting.examIds.includes(exam.id)}
+          onClick={() => handleExamSelect(exam.id)}
+        />
+      )}
       <Link className="exam-list-item-link" href={`/exam/solution/${exam.id}`}>
         <BasicCard hoverEffect>
           <span>{exam.title}</span>
