@@ -66,7 +66,6 @@ const useQuestions = () => {
     questionsQueryInput: ReadQuestionsByExamIdsInput
   ) => {
     try {
-      if (!meQuery?.me.user) return dispatch(coreActions.openModal(loginModal));
       const res = await readQuestionsQuery({
         variables: {
           input: questionsQueryInput,
