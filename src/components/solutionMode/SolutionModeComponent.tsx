@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -47,12 +47,12 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const { questions, fetchQuestions, isLoggedIn } = useQuestions();
+  const { questions, fetchQuestions } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) fetchQuestions(questionsQueryInput);
-  }, [isLoggedIn]);
+    fetchQuestions(questionsQueryInput);
+  }, []);
 
   return (
     <SolutionModeComponentBlock>

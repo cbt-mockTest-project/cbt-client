@@ -1,7 +1,7 @@
 import { Divider } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion, MockExamQuestionFeedback } from 'types';
+import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackListItem from './SolutionModeFeedbackListItem';
 
 const SolutionModeFeedbackListBlock = styled.div`

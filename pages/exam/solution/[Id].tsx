@@ -1,4 +1,4 @@
-import SolutionModeComponent from '@components/temp/exam/solution/SolutionModeComponent';
+import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';

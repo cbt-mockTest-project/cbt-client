@@ -60,7 +60,6 @@ const useQuestions = () => {
   const [updateFeedbackRecommendationMutaion] =
     useUpdateQuestionFeedbackRecommendation();
   const [changeQuestionState] = useChangeQuestionState();
-  const isLoggedIn = meQuery?.me.ok;
 
   const fetchQuestions = async (
     questionsQueryInput: ReadQuestionsByExamIdsInput
@@ -324,7 +323,6 @@ const useQuestions = () => {
     editFeedback,
     editFeedbackLoading,
     updateFeedbackRecommendation,
-    isLoggedIn,
   };
 };
 

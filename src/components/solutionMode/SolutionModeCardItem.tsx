@@ -5,7 +5,7 @@ import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Image, Popover, message } from 'antd';
+import { Image, Popover } from 'antd';
 import EditorStyle from '@styles/editorStyle';
 import palette from '@styles/palette';
 import { QuestionState, ReadQuestionsByExamIdsOutput } from 'types';
@@ -13,7 +13,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import SolutionModeFeedbackList from './SolutionModeFeedbackList';
 import { EditOutlined } from '@ant-design/icons';
-import QuestionFeedbackModal from '../QuestionFeedbackModal';
+import QuestionFeedbackModal from './QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 
 const SolutionModeCardItemBlock = styled.div`

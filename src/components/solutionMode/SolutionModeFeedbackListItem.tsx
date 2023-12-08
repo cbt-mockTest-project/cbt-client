@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import {
   MockExamQuestion,
   MockExamQuestionFeedback,
-  MyRecommedationStatus,
   QuestionFeedbackRecommendationType,
   QuestionFeedbackType,
   UserRole,
@@ -19,7 +18,7 @@ import {
   SmileOutlined,
 } from '@ant-design/icons';
 
-import QuestionFeedbackModal from '../QuestionFeedbackModal';
+import QuestionFeedbackModal from './QuestionFeedbackModal';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import useQuestions from '@lib/hooks/useQuestions';
 const SolutionModeFeedbackListItemBlock = styled.div`
