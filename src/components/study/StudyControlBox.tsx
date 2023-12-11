@@ -7,11 +7,12 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
 import { EditOutlined } from '@ant-design/icons';
-import { Popover } from 'antd';
+import { Button, Popover } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import useAuthModal from '@lib/hooks/useAuthModal';
+import StudyScoreModal from './StudyScoreModal';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -67,6 +68,7 @@ const StudyControlBoxBlock = styled.div`
 `;
 
 interface StudyControlBoxProps {
+  className?: string;
   question: MockExamQuestion;
   saveQuestionState: (question: MockExamQuestion, state: QuestionState) => void;
   answerHiddenOption?: {
@@ -76,12 +78,14 @@ interface StudyControlBoxProps {
 }
 
 const StudyControlBox: React.FC<StudyControlBoxProps> = ({
+  className = '',
   question,
   saveQuestionState,
   answerHiddenOption,
 }) => {
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
+  const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
   const handleOpenFeedbackModal = () => {
@@ -91,14 +95,19 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     }
     setIsQuestionFeedbackModalOpen(true);
   };
+  const handleSaveQuestionState = (state: QuestionState) => {
+    const newState =
+      question.myQuestionState !== state ? state : QuestionState.Core;
+    saveQuestionState(question, newState);
+  };
   return (
-    <StudyControlBoxBlock>
+    <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box">
         <button
           className={`study-control-button ${
             question.myQuestionState === QuestionState.High ? 'active' : ''
           }`}
-          onClick={() => saveQuestionState(question, QuestionState.High)}
+          onClick={() => handleSaveQuestionState(QuestionState.High)}
         >
           <PanoramaFishEyeIcon />
         </button>
@@ -106,7 +115,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           className={`study-control-button ${
             question.myQuestionState === QuestionState.Row ? 'active' : ''
           }`}
-          onClick={() => saveQuestionState(question, QuestionState.Row)}
+          onClick={() => handleSaveQuestionState(QuestionState.Row)}
         >
           <ClearIcon />
         </button>
@@ -134,7 +143,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
             {<EditOutlined />}
           </button>
         </Popover>
+        <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
       </BasicCard>
+
       {isQuestionFeedbackModalOpen && (
         <QuestionFeedbackModal
           question={question}
@@ -144,6 +155,12 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           title={`${String(question.mockExam?.title)}\n${
             question.number
           }번 문제`}
+        />
+      )}
+      {isStudyScoreModalOpen && (
+        <StudyScoreModal
+          open={isStudyScoreModalOpen}
+          onCancel={() => setIsStudyScoreModalOpen(false)}
         />
       )}
     </StudyControlBoxBlock>
