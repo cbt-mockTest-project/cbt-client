@@ -2,15 +2,16 @@ import { LeftOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { MockExamQuestion } from 'types';
 
 const StudyHeaderBlock = styled.div`
   background-color: ${palette.containerBackgroundColor};
   width: 100%;
   top: 0;
   position: sticky;
-  z-index: 1;
+  z-index: 10;
   border-bottom: 1px solid ${palette.borderColor};
   .study-header-inner {
     height: 57px;
@@ -50,11 +51,21 @@ const StudyHeaderBlock = styled.div`
 `;
 
 interface StudyHeaderProps {
-  title: string;
+  questions: MockExamQuestion[];
 }
 
-const StudyHeader: React.FC<StudyHeaderProps> = ({ title }) => {
+const StudyHeader: React.FC<StudyHeaderProps> = ({ questions }) => {
   const router = useRouter();
+  const isMultipleSelectMode = !!router.query.examIds;
+  const title = useMemo(() => {
+    if (isMultipleSelectMode) {
+      return '다중 선택 모드';
+    }
+    if (questions.length > 0) {
+      return questions[0].mockExam?.title || '';
+    }
+    return '';
+  }, [isMultipleSelectMode, questions]);
   return (
     <StudyHeaderBlock>
       <div className="study-header-inner">

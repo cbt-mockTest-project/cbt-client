@@ -192,14 +192,14 @@ const SolutionModeFeedbackListItem: React.FC<
             className={`feedback-recommendation-icon-and-value good ${
               feedback.myRecommedationStatus.isGood ? 'active' : ''
             }`}
-            onClick={() =>
+            onClick={() => {
               updateFeedbackRecommendation({
                 type: QuestionFeedbackRecommendationType.Good,
                 myRecommendationStatus: feedback.myRecommedationStatus,
                 question,
                 feedback,
-              })
-            }
+              });
+            }}
           >
             <SmileOutlined />
             <span>{feedback.recommendationCount.good}</span>

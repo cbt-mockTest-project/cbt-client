@@ -51,7 +51,6 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   const router = useRouter();
   const { questions, fetchQuestions } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
-  const isMultipleSelectMode = !!router.query.examIds;
 
   useEffect(() => {
     fetchQuestions(questionsQueryInput);
@@ -59,13 +58,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
 
   return (
     <SolutionModeComponentBlock>
-      <StudyHeader
-        title={
-          (questions.length > 0 && isMultipleSelectMode
-            ? '다중 선택 해설모드'
-            : questions[0].mockExam?.title) || ''
-        }
-      />
+      <StudyHeader questions={questions} />
       <div className="solution-mode-body">
         <Button
           className="solution-mode-all-hide-toggle-button"

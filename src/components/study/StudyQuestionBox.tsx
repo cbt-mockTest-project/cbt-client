@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Image } from 'antd';
 import { MockExamQuestion } from 'types';
 import palette from '@styles/palette';
+import { useRouter } from 'next/router';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -31,6 +32,10 @@ const StudyQuestionBoxBlock = styled.div`
     margin-top: 10px;
     border-radius: 5px;
   }
+  .study-question-exam-title {
+    font-size: 14px;
+    color: ${palette.subTextColor};
+  }
 `;
 
 interface StudyQuestionBoxProps {
@@ -44,6 +49,8 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   question,
   questionNumber,
 }) => {
+  const router = useRouter();
+  const isMultipleSelectMode = !!router.query.examIds;
   return (
     <StudyQuestionBoxBlock>
       <div className="study-question-box-header">
@@ -54,6 +61,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           active={!!question.isBookmarked}
           className="study-question-box-bookmark"
         />
+        {isMultipleSelectMode && (
+          <div className="study-question-exam-title">
+            {question.mockExam?.title}
+          </div>
+        )}
       </div>
       <div className="study-question-box-question">
         {parse(question.question || '')}

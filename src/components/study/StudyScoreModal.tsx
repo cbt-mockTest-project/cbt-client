@@ -7,7 +7,6 @@ import { STUDY_STATE_ICON } from './study';
 import { QuestionState } from 'types';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
-import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
 
 const StudyScoreModalBlock = styled(Modal)`
   .study-score-item-list {

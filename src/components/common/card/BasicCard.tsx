@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 const BasicCardBlock = styled.div<{ hoverEffect: boolean }>`
   background-color: ${palette.containerBackgroundColor};
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px 20px;
   list-style: none;
   border: 1px solid ${palette.borderColor};
   width: 100%;

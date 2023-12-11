@@ -6,13 +6,15 @@ import ClearIcon from '@mui/icons-material/Clear';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import useAuthModal from '@lib/hooks/useAuthModal';
 import StudyScoreModal from './StudyScoreModal';
+import SwiperCore from 'swiper';
+import { responsive } from '@lib/utils/responsive';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -57,6 +59,13 @@ const StudyControlBoxBlock = styled.div`
       font-size: 20px;
     }
   }
+  .study-swiper-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    gap: 10px;
+  }
   .study-control-button.active {
     border-color: ${palette.antd_blue_02};
     color: ${palette.antd_blue_02};
@@ -64,6 +73,11 @@ const StudyControlBoxBlock = styled.div`
   .study-question-card-answer {
     word-break: break-all;
     white-space: pre-wrap;
+  }
+  @media (max-width: ${responsive.medium}) {
+    .study-swiper-button-wrapper {
+      display: none;
+    }
   }
 `;
 
@@ -75,6 +89,7 @@ interface StudyControlBoxProps {
     isAnswerHidden: boolean;
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
   };
+  swiper?: SwiperCore;
 }
 
 const StudyControlBox: React.FC<StudyControlBoxProps> = ({
@@ -82,6 +97,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   question,
   saveQuestionState,
   answerHiddenOption,
+  swiper,
 }) => {
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
@@ -144,6 +160,26 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           </button>
         </Popover>
         <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
+        {swiper && (
+          <div className="study-swiper-button-wrapper">
+            <button
+              className="study-control-button"
+              onClick={() => {
+                swiper.slidePrev();
+              }}
+            >
+              <LeftOutlined />
+            </button>
+            <button
+              className="study-control-button"
+              onClick={() => {
+                swiper.slideNext();
+              }}
+            >
+              <RightOutlined />
+            </button>
+          </div>
+        )}
       </BasicCard>
 
       {isQuestionFeedbackModalOpen && (
