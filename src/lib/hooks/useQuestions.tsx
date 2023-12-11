@@ -196,13 +196,11 @@ const useQuestions = () => {
       const newQuestion = {
         ...question,
         mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (feedback) => {
-            if (feedback.id === feedback.id) {
-              let newReccomendationCount = cloneDeep(
-                feedback.recommendationCount
-              );
+          (item) => {
+            if (item.id === feedback.id) {
+              let newReccomendationCount = cloneDeep(item.recommendationCount);
               let newMyRecommedationStatus = cloneDeep(
-                feedback.myRecommedationStatus
+                item.myRecommedationStatus
               );
               if (myRecommendationStatus.isGood) {
                 if (type === QuestionFeedbackRecommendationType.Good) {
@@ -242,12 +240,12 @@ const useQuestions = () => {
                 }
               }
               return {
-                ...feedback,
+                ...item,
                 myRecommedationStatus: newMyRecommedationStatus,
                 recommendationCount: newReccomendationCount,
               };
             }
-            return feedback;
+            return item;
           }
         ),
       };
@@ -342,6 +340,10 @@ const useQuestions = () => {
     }
   };
 
+  const resetQuestions = () => {
+    dispatch(mockExamActions.setQuestions([]));
+  };
+
   return {
     questions,
     saveBookmark,
@@ -354,6 +356,7 @@ const useQuestions = () => {
     editFeedbackLoading,
     updateFeedbackRecommendation,
     resetQuestionState,
+    resetQuestions,
   };
 };
 
