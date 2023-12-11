@@ -7,7 +7,11 @@ import {
   useEditQuestionFeedback,
   useUpdateQuestionFeedbackRecommendation,
 } from '@lib/graphql/user/hook/useQuestionFeedback';
-import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
+import {
+  useChangeQuestionState,
+  useResetAllQuestionState,
+  useResetQuestionState,
+} from '@lib/graphql/user/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
@@ -60,6 +64,7 @@ const useQuestions = () => {
   const [updateFeedbackRecommendationMutaion] =
     useUpdateQuestionFeedbackRecommendation();
   const [changeQuestionState] = useChangeQuestionState();
+  const [resetQuestionStateMutation] = useResetQuestionState();
 
   const fetchQuestions = async (
     questionsQueryInput: ReadQuestionsByExamIdsInput
@@ -70,6 +75,7 @@ const useQuestions = () => {
           input: questionsQueryInput,
         },
       });
+
       if (res.data?.readQuestionsByExamIds.questions) {
         dispatch(
           mockExamActions.setQuestions(
@@ -125,6 +131,30 @@ const useQuestions = () => {
     } catch {
       dispatch(mockExamActions.setQuestion(question));
       message.error('문제 상태 저장에 실패했습니다.');
+    }
+  };
+
+  const resetQuestionState = async () => {
+    try {
+      const res = await resetQuestionStateMutation({
+        variables: {
+          input: {
+            questionIds: questions.map((question) => question.id),
+          },
+        },
+      });
+      if (res.data?.resetMyExamQuestionState.ok) {
+        const newQuestions = questions.map((question) => ({
+          ...question,
+          myQuestionState: QuestionState.Core,
+        }));
+        dispatch(mockExamActions.setQuestions(newQuestions));
+        return;
+      }
+      message.error(res.data?.resetMyExamQuestionState.error);
+    } catch (e) {
+      message.error('문제 상태 초기화에 실패했습니다.');
+      handleError(e);
     }
   };
 
@@ -323,6 +353,7 @@ const useQuestions = () => {
     editFeedback,
     editFeedbackLoading,
     updateFeedbackRecommendation,
+    resetQuestionState,
   };
 };
 

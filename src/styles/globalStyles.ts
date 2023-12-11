@@ -138,9 +138,21 @@ const Globalstyles = createGlobalStyle`
       display: none; /* Chrome, Safari, Opera*/
     }
   }
+  .ant-modal-content {
+    background: #1F1F1F !important;
+    color : rgba(255, 255, 255, 0.85) !important;;
+  }
+  .ant-modal-confirm-title, .ant-modal-confirm-content {
+    color : rgba(255, 255, 255, 0.85) !important;;
+  }
   .ant-message-notice-content {
     background: #1F1F1F !important;
-    color : rgba(255, 255, 255, 0.85);
+    color : rgba(255, 255, 255, 0.85) !important;;
+  }
+  .ant-btn-default {
+    background-color: #141414;
+    border-color: #424242;
+    color: #FFFFFFD9;
   }
   a {
     :hover{
