@@ -98,7 +98,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <h3>{title}</h3>
       <ExamSolutionList
         isSolutionAllHide={isSolutionAllHide}
-        title={question.question}
+        title={question.question || ''}
         commentType="basic"
         question={question}
         hasNewWindowButton={false}

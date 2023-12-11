@@ -15,7 +15,10 @@ interface QuestionProps {
 
 const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
   const title = removeHtmlTag(
-    questionQuery.readMockExamQuestion.mockExamQusetion?.question.slice(0, 50)
+    (questionQuery.readMockExamQuestion.mockExamQusetion?.question || '').slice(
+      0,
+      50
+    )
   );
 
   return (
@@ -24,7 +27,7 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
         description={removeHtmlTag(
-          questionQuery.readMockExamQuestion.mockExamQusetion?.question
+          questionQuery.readMockExamQuestion.mockExamQusetion?.question || ''
         )}
       />
       <Layout>

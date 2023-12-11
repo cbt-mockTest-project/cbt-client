@@ -93,7 +93,7 @@ const QuestionCommentComponent: React.FC<
                   <OpenInNewIcon />
                 </a>
                 <p className="my-question-comment-list-item-question">
-                  {parse(question.question)}
+                  {parse(question.question || '')}
                 </p>
               </div>
               <div className="my-question-comment-list-item-comment-wrapper">
