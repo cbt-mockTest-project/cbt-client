@@ -56,13 +56,12 @@ const StudyScoreModalBlock = styled(Modal)`
 `;
 
 interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
-  swiper: SwiperCore;
+  onClickItem?: (index: number) => void;
 }
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
-  const { swiper, ...modalProps } = props;
+  const { onClickItem, ...modalProps } = props;
   const { questions, resetQuestionState } = useQuestions();
-  const router = useRouter();
 
   const handleResetScore = async () => {
     Modal.confirm({
@@ -81,7 +80,10 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
         {questions.map((question, index) => (
           <div
             key={question.id}
-            onClick={() => swiper.slideTo(index, 0)}
+            onClick={() => {
+              if (!onClickItem) return;
+              onClickItem(index);
+            }}
             className={`study-score-item ${
               question.myQuestionState === QuestionState.High ? 'high' : 'low'
             }`}

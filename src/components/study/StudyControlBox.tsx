@@ -15,6 +15,7 @@ import useAuthModal from '@lib/hooks/useAuthModal';
 import StudyScoreModal from './StudyScoreModal';
 import SwiperCore from 'swiper';
 import { responsive } from '@lib/utils/responsive';
+import { useRouter } from 'next/router';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -99,6 +100,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   answerHiddenOption,
   swiper,
 }) => {
+  const router = useRouter();
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
@@ -193,9 +195,21 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           }번 문제`}
         />
       )}
-      {isStudyScoreModalOpen && swiper && (
+      {isStudyScoreModalOpen && (
         <StudyScoreModal
-          swiper={swiper}
+          onClickItem={(index) => {
+            if (swiper) {
+              swiper.slideTo(index, 0);
+            } else {
+              const a = document.getElementById(`question-${index}`);
+              if (a) {
+                window.scrollTo({
+                  top: a.getBoundingClientRect().top + window.scrollY - 60,
+                  behavior: 'smooth',
+                });
+              }
+            }
+          }}
           open={isStudyScoreModalOpen}
           onCancel={() => setIsStudyScoreModalOpen(false)}
         />

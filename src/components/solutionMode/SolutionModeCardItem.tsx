@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import parse from 'html-react-parser';
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
-import ClearIcon from '@mui/icons-material/Clear';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Image, Popover } from 'antd';
 import EditorStyle from '@styles/editorStyle';
-import palette from '@styles/palette';
-import { QuestionState, ReadQuestionsByExamIdsOutput } from 'types';
+import { ReadQuestionsByExamIdsOutput } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
-import { EditOutlined } from '@ant-design/icons';
-import QuestionFeedbackModal from './QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
@@ -29,7 +20,8 @@ const SolutionModeCardItemBlock = styled.div`
   }
 `;
 
-interface SolutionModeCardItemProps {
+interface SolutionModeCardItemProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   question: ReadQuestionsByExamIdsOutput['questions'][0];
   index: number;
   isAnswerAllHidden: boolean;
@@ -48,7 +40,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   }, [isAnswerAllHidden]);
 
   return (
-    <SolutionModeCardItemBlock>
+    <SolutionModeCardItemBlock id={`question-${index}`}>
       <BasicCard className="solution-mode-question-card">
         <div className="solution-mode-question-content-wrapper">
           <StudyQuestionBox
