@@ -10,10 +10,7 @@ import TypingModeItem from './TypingModeItem';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
-import {
-  TYPING_MODE_NEXT_NAVIGATION,
-  TYPING_MODE_PREV_NAVIGATION,
-} from './typingMode';
+import StudyEnd from '@components/study/StudyEnd';
 
 const TypingModeComponentBlock = styled.div`
   background-color: ${palette.backgroundColor};
@@ -84,8 +81,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
 
   useEffect(() => {
     if (swiper && !swiper.destroyed) {
-      console.log(swiper);
-      swiper.slideTo(questionIndex);
+      swiper.slideTo(questionIndex, 9);
     }
   }, [swiper, questionIndex]);
 
@@ -99,7 +95,6 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
           modules={[Navigation]}
           onSwiper={(swiper) => {
             setSwiper(swiper);
-            swiper.slideTo(questionIndex);
           }}
           onSlideChange={(swiper) => {
             router.replace({
@@ -118,6 +113,11 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
                 />
               </SwiperSlide>
             ))}
+          {questions.length >= 1 && swiper && (
+            <SwiperSlide key={-1}>
+              <StudyEnd swiper={swiper} />
+            </SwiperSlide>
+          )}
         </Swiper>
       </div>
     </TypingModeComponentBlock>

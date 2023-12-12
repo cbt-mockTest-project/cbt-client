@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { STUDY_STATE_ICON } from './study';
 import { QuestionState } from 'types';
 import palette from '@styles/palette';
+import SwiperCore from 'swiper';
 import { useRouter } from 'next/router';
 
 const StudyScoreModalBlock = styled(Modal)`
@@ -54,10 +55,12 @@ const StudyScoreModalBlock = styled(Modal)`
   }
 `;
 
-interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {}
+interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
+  swiper: SwiperCore;
+}
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
-  const { ...modalProps } = props;
+  const { swiper, ...modalProps } = props;
   const { questions, resetQuestionState } = useQuestions();
   const router = useRouter();
 
@@ -78,15 +81,7 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
         {questions.map((question, index) => (
           <div
             key={question.id}
-            onClick={() => {
-              router.replace({
-                pathname: router.pathname,
-                query: {
-                  ...router.query,
-                  qIndex: index,
-                },
-              });
-            }}
+            onClick={() => swiper.slideTo(index, 0)}
             className={`study-score-item ${
               question.myQuestionState === QuestionState.High ? 'high' : 'low'
             }`}

@@ -193,8 +193,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           }번 문제`}
         />
       )}
-      {isStudyScoreModalOpen && (
+      {isStudyScoreModalOpen && swiper && (
         <StudyScoreModal
+          swiper={swiper}
           open={isStudyScoreModalOpen}
           onCancel={() => setIsStudyScoreModalOpen(false)}
         />
