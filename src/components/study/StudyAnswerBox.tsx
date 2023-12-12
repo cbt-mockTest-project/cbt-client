@@ -38,14 +38,16 @@ const StudyAnswerBoxBlock = styled.div`
 interface StudyAnswerBoxProps {
   isAnswerHidden?: boolean;
   question: MockExamQuestion;
+  className?: string;
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   isAnswerHidden = false,
   question,
+  className = '',
 }) => {
   return (
-    <StudyAnswerBoxBlock>
+    <StudyAnswerBoxBlock className={className}>
       <p className="study-answer-box-question-card-answer-label">정답</p>
       <div
         className={`study-answer-box-question-card-anwswer-wrapper ${

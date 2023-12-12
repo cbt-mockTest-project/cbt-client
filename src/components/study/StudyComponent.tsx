@@ -1,3 +1,4 @@
+import CardModeComponent from '@components/cardMode/CardModeComponent';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import TypingModeComponent from '@components/typingMode/TypingModeComponent';
 import useQuestions from '@lib/hooks/useQuestions';
@@ -51,6 +52,9 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
       )}
       {mode === ExamMode.TYPYING && questionsQueryInput && (
         <TypingModeComponent questionsQueryInput={questionsQueryInput} />
+      )}
+      {mode === ExamMode.CARD && questionsQueryInput && (
+        <CardModeComponent questionsQueryInput={questionsQueryInput} />
       )}
     </StudyComponentBlock>
   );

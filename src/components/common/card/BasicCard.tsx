@@ -22,12 +22,17 @@ const BasicCardBlock = styled.div<{ hoverEffect: boolean }>`
 interface BasicCardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverEffect?: boolean;
   children: React.ReactNode;
+  className?: string;
 }
 
 const BasicCard: React.FC<BasicCardProps> = (props) => {
-  const { children, hoverEffect = false, ...divProps } = props;
+  const { className = '', children, hoverEffect = false, ...divProps } = props;
   return (
-    <BasicCardBlock {...divProps} hoverEffect={hoverEffect}>
+    <BasicCardBlock
+      {...divProps}
+      hoverEffect={hoverEffect}
+      className={className}
+    >
       {children}
     </BasicCardBlock>
   );

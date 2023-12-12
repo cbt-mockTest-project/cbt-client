@@ -90,6 +90,7 @@ interface StudyControlBoxProps {
     isAnswerHidden: boolean;
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
   };
+  additionalControlButton?: React.ReactNode;
   swiper?: SwiperCore;
 }
 
@@ -99,6 +100,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   saveQuestionState,
   answerHiddenOption,
   swiper,
+  additionalControlButton,
 }) => {
   const router = useRouter();
   const { data } = useMeQuery();
@@ -161,6 +163,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
             {<EditOutlined />}
           </button>
         </Popover>
+        {additionalControlButton && additionalControlButton}
         <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
         {swiper && (
           <div className="study-swiper-button-wrapper">

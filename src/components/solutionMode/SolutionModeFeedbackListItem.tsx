@@ -47,6 +47,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     text-overflow: ellipsis;
   }
   .feedback-content {
+    word-break: break-all;
     white-space: pre-wrap;
   }
   .feedback-date {
@@ -145,7 +146,8 @@ const SolutionModeFeedbackListItem: React.FC<
       label: (
         <button
           style={{ color: palette.textColor }}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
               onOk: () => deleteFeedback({ question, feedback }),
@@ -161,7 +163,8 @@ const SolutionModeFeedbackListItem: React.FC<
       label: (
         <button
           style={{ color: palette.textColor }}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsQuestionFeedbackModalOpen(true);
           }}
         >
@@ -192,7 +195,8 @@ const SolutionModeFeedbackListItem: React.FC<
             className={`feedback-recommendation-icon-and-value good ${
               feedback.myRecommedationStatus.isGood ? 'active' : ''
             }`}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               updateFeedbackRecommendation({
                 type: QuestionFeedbackRecommendationType.Good,
                 myRecommendationStatus: feedback.myRecommedationStatus,
@@ -209,14 +213,15 @@ const SolutionModeFeedbackListItem: React.FC<
             className={`feedback-recommendation-icon-and-value bad ${
               feedback.myRecommedationStatus.isBad ? 'active' : ''
             }`}
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               updateFeedbackRecommendation({
                 type: QuestionFeedbackRecommendationType.Bad,
                 myRecommendationStatus: feedback.myRecommedationStatus,
                 question,
                 feedback,
-              })
-            }
+              });
+            }}
           >
             <FrownOutlined />
             <span>{feedback.recommendationCount.bad}</span>
@@ -227,7 +232,10 @@ const SolutionModeFeedbackListItem: React.FC<
               menu={{ items: controlDropdownItems }}
               placement="topCenter"
             >
-              <div className="feedback-control-button-wrapper">
+              <div
+                className="feedback-control-button-wrapper"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <EllipsisOutlined />
               </div>
             </Dropdown>
