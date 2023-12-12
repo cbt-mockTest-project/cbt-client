@@ -56,7 +56,9 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
         extra={
           <div className="study-end-button-wrapper">
             <Button onClick={() => swiper.slideTo(0, 0)}>다시 풀기</Button>
-            <Button type="primary">종료하기</Button>
+            <Button type="primary" onClick={router.back}>
+              종료하기
+            </Button>
           </div>
         }
       />
