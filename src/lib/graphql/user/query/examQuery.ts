@@ -88,6 +88,8 @@ export const CREATE_MOCK_EXAM_CATEGORY = gql`
       category {
         id
         name
+        description
+        isPublic
       }
       error
       ok

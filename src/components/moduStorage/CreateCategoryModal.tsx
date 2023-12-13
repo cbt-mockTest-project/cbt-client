@@ -1,5 +1,6 @@
-import useModuCategories from '@lib/hooks/useStorage';
+import useStorage from '@lib/hooks/useStorage';
 import { Input, Modal, ModalProps, Radio, message } from 'antd';
+import { StorageType } from 'customTypes';
 import React from 'react';
 import styled from 'styled-components';
 import { CreateMockExamCategoryInput } from 'types';
@@ -20,6 +21,7 @@ const SaveCategoryModalBlock = styled(Modal)`
 
 interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
   defaultValues?: CreateMockExamCategoryInput;
+  storageType: StorageType;
   categoryId?: number;
   onClose: () => void;
 }
@@ -30,7 +32,7 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
     handleCreateCategory,
     editCategoryLoading,
     handleEditCategory,
-  } = useModuCategories();
+  } = useStorage(props.storageType);
 
   const { onClose, categoryId, defaultValues, ...modalProps } = props;
   const [isPublic, setIsPublic] = React.useState<boolean>(

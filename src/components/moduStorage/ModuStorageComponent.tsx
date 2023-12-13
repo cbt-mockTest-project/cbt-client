@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFolderList from './CategoryFolderList';
-import { ExamSource, MockExamCategory, UserRole } from 'types';
+import { UserRole } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import { PlusOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import useModuCategories from '@lib/hooks/useStorage';
 import SaveCategoryModal from './CreateCategoryModal';
-import { useLazyGetExamCategories } from '@lib/graphql/user/hook/useExam';
-import { useDispatch } from 'react-redux';
-import { storageActions } from '@modules/redux/slices/storage';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
+import { useRouter } from 'next/router';
 
 const ModuStorageComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -56,29 +53,16 @@ interface ModuStorageComponentProps {}
 
 const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
-  const dispatch = useDispatch();
-  const [getExamCategories] = useLazyGetExamCategories();
   const [isSaveCategoryModalOpen, setIsSaveCategoryModalOpen] =
     useState<boolean>(false);
-  const { categories } = useStorage(StorageType.MODU);
+  const { categories, fetchCategories } = useStorage(StorageType.MODU);
 
   useEffect(() => {
     if (meQuery?.me.user?.role === UserRole.Admin) {
-      getExamCategories({
-        variables: {
-          input: {
-            examSource: ExamSource.MoudCbt,
-          },
-        },
-      }).then((res) => {
-        dispatch(
-          storageActions.setModuStorageCategories(
-            res.data?.getExamCategories.categories as MockExamCategory[]
-          )
-        );
-      });
+      fetchCategories();
     }
   }, [meQuery]);
+
   return (
     <ModuStorageComponentBlock>
       <div className="modu-storage-header">
@@ -98,6 +82,7 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
         open={isSaveCategoryModalOpen}
         onCancel={() => setIsSaveCategoryModalOpen(false)}
         onClose={() => setIsSaveCategoryModalOpen(false)}
+        storageType={StorageType.MODU}
       />
     </ModuStorageComponentBlock>
   );

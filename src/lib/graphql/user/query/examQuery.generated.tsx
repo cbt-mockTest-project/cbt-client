@@ -57,7 +57,7 @@ export type CreateMockExamCategoryMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } };
+export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string, description: string, isPublic: boolean } | null } };
 
 export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
   input: Types.ReadMockExamTitlesByCateoryInput;
@@ -151,7 +151,7 @@ export type GetExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
 
 
 export const ReadAllMockExamCategoriesDocument = gql`
@@ -263,6 +263,8 @@ export const CreateMockExamCategoryDocument = gql`
     category {
       id
       name
+      description
+      isPublic
     }
     error
     ok
@@ -493,6 +495,7 @@ export const GetExamCategoriesDocument = gql`
     query GetExamCategories($input: GetExamCategoriesInput!) {
   getExamCategories(input: $input) {
     categories {
+      id
       name
       isPublic
       user {

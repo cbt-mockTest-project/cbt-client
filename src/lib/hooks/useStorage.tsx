@@ -1,8 +1,10 @@
 import {
   useCreateExamCategory,
   useEditCategory,
+  useLazyGetExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { handleError } from '@lib/utils/utils';
 import { storageActions } from '@modules/redux/slices/storage';
 import {
   useAppDispatch,
@@ -10,15 +12,19 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
+import { sendError } from 'next/dist/server/api-utils';
+import { useMemo } from 'react';
 import {
   CoreOutput,
   CreateMockExamCategoryInput,
   EditMockExamCategoryInput,
+  ExamSource,
   MockExamCategory,
 } from 'types';
 
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
+  const [getExamCategories] = useLazyGetExamCategories();
   const { data: meQuery } = useMeQuery();
   const categories = useAppSelector((state) => {
     if (type === StorageType.PREMIUM)
@@ -30,33 +36,62 @@ const useStorage = (type: StorageType) => {
     useCreateExamCategory();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
 
+  const examSource = useMemo(() => {
+    if (type === StorageType.PREMIUM) return ExamSource.EhsMaster;
+    if (type === StorageType.MY) return ExamSource.User;
+    return ExamSource.MoudCbt;
+  }, [type]);
+
+  const fetchCategories = async () => {
+    const res = await getExamCategories({
+      variables: {
+        input: {
+          examSource,
+        },
+      },
+    });
+    if (res.data?.getExamCategories.categories) {
+      setCategories(
+        res.data?.getExamCategories.categories as MockExamCategory[]
+      );
+    }
+  };
+
   const handleCreateCategory = async (
     input: CreateMockExamCategoryInput
   ): Promise<CoreOutput> => {
-    if (!meQuery?.me.user)
+    try {
+      if (!meQuery?.me.user)
+        return {
+          ok: false,
+          error: '로그인이 필요합니다.',
+        };
+      const res = await createCategory({
+        variables: {
+          input,
+        },
+      });
+      if (res.data?.createMockExamCategory.ok) {
+        const category = {
+          ...res.data?.createMockExamCategory.category,
+          user: meQuery.me.user,
+        } as MockExamCategory;
+        setCategories([category, ...categories]);
+        return {
+          ok: true,
+        };
+      }
       return {
         ok: false,
-        error: '로그인이 필요합니다.',
+        error: res.data?.createMockExamCategory.error,
       };
-    const res = await createCategory({
-      variables: {
-        input,
-      },
-    });
-    if (res.data?.createMockExamCategory.ok) {
-      const category = {
-        ...res.data?.createMockExamCategory.category,
-        user: meQuery.me.user,
-      } as MockExamCategory;
-      setCategories([...categories, category]);
+    } catch (e) {
+      handleError(e);
       return {
-        ok: true,
+        ok: false,
+        error: '카테고리 생성에 실패했습니다.',
       };
     }
-    return {
-      ok: false,
-      error: res.data?.createMockExamCategory.error,
-    };
   };
 
   const handleEditCategory = async (input: EditMockExamCategoryInput) => {
@@ -101,6 +136,7 @@ const useStorage = (type: StorageType) => {
     handleEditCategory,
     createCategoryLoading,
     editCategoryLoading,
+    fetchCategories,
   };
 };
 
