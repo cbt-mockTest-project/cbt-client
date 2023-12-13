@@ -11,6 +11,7 @@ import examSlice, { ExamState } from './exam';
 import mockExamSlice, { MockExamState } from './mockExam';
 import moduStorageSlice, { ModuStorageState } from './moduStorage';
 import examSettingSlice, { ExamSettingState } from './examSetting';
+import examCategorySlice, { ExamCategoryState } from './examCategory';
 
 export interface RootState {
   data: DataState;
@@ -19,6 +20,7 @@ export interface RootState {
   mockExam: MockExamState;
   moduStorage: ModuStorageState;
   examSetting: ExamSettingState;
+  examCategory: ExamCategoryState;
 }
 
 type TCombinedState = CombinedState<RootState> | undefined;
@@ -43,6 +45,7 @@ const rootReducer = (
         mockExam: mockExamSlice.reducer,
         moduStorage: moduStorageSlice.reducer,
         examSetting: examSettingSlice.reducer,
+        examCategory: examCategorySlice.reducer,
       });
       return combineReducer(state, action);
     }
