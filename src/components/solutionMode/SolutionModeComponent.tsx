@@ -48,7 +48,6 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const router = useRouter();
   const { questions, fetchQuestions } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
 

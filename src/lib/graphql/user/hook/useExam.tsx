@@ -17,6 +17,7 @@ import {
   READ_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_CATEGORY_BY_EXAM_ID,
+  READ_EXAM_CATEGORY_BY_ID,
   READ_EXAM_TITLES_QUERY,
   READ_MY_EXAM_CATEORIES_QUERY,
   UPDATE_EXAM_ORDER,
@@ -40,6 +41,8 @@ import {
   GetExamCategoriesQueryVariables,
   ReadMockExamCategoriesQuery,
   ReadMockExamCategoriesQueryVariables,
+  ReadMockExamCategoryByCategoryIdQuery,
+  ReadMockExamCategoryByCategoryIdQueryVariables,
   ReadMockExamCategoryByExamIdQuery,
   ReadMockExamCategoryByExamIdQueryVariables,
   ReadMockExamTitlesByCateoryQuery,
@@ -156,3 +159,9 @@ export const useLazyGetExamCategories = () =>
   useLazyQuery<GetExamCategoriesQuery, GetExamCategoriesQueryVariables>(
     GET_EXAM_CATEGORIES
   );
+
+export const useLazyReadCategoryById = () =>
+  useLazyQuery<
+    ReadMockExamCategoryByCategoryIdQuery,
+    ReadMockExamCategoryByCategoryIdQueryVariables
+  >(READ_EXAM_CATEGORY_BY_ID);

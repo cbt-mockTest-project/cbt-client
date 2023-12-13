@@ -8,7 +8,7 @@ import useExamSettingHistory from './useExamSettingHistory';
 import { MockExamCategory } from 'types';
 
 interface UseExamSettingProps {
-  category: MockExamCategory;
+  category: MockExamCategory | null;
 }
 
 const useExamSetting = ({ category }: UseExamSettingProps) => {
@@ -18,6 +18,7 @@ const useExamSetting = ({ category }: UseExamSettingProps) => {
   const { setExamSettingHistory } = useExamSettingHistory();
 
   const handleAllExamsSelect = () => {
+    if (!category) return;
     if (category.mockExam.length === examSetting.examIds?.length) {
       setExamSetting({ categoryId: category.id, examIds: [] });
       setExamSettingHistory({
@@ -35,6 +36,7 @@ const useExamSetting = ({ category }: UseExamSettingProps) => {
   };
 
   const handleExamSelect = (examId: number) => {
+    if (!category) return;
     if (examSetting.examIds.includes(examId)) {
       const newSelectedExamIds = examSetting.examIds.filter(
         (id) => id !== examId
@@ -55,6 +57,7 @@ const useExamSetting = ({ category }: UseExamSettingProps) => {
   };
 
   const handleChangeMultipleSelectMode = () => {
+    if (!category) return;
     setExamSetting({
       categoryId: category.id,
       isMultipleSelectMode: !examSetting.isMultipleSelectMode,

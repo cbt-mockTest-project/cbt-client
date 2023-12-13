@@ -9,22 +9,24 @@ import {
   ReadMockExamCategoryIdsQuery,
 } from '@lib/graphql/user/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
+import { examCategoryActions } from '@modules/redux/slices/examCategory';
+import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
-import { MockExamCategory } from 'types';
+import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
 interface CategoryPageProps {
-  category: MockExamCategory;
+  categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
 }
 
-const CategoryPage: NextPage<CategoryPageProps> = ({ category }) => {
+const CategoryPage: NextPage<CategoryPageProps> = ({ categoryQueryInput }) => {
   return (
     <>
       <WithHead
         title="모두CBT | 국가고시 실기시험 부시기!"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      {category && <CategoryComponent category={category} />}
+      <CategoryComponent categoryQueryInput={categoryQueryInput} />
     </>
   );
 };
@@ -51,43 +53,48 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    const apolloClient = initializeApollo({}, '');
-    const categoryId = context.params?.id;
-    if (!categoryId) {
-      return {
-        notFound: true,
-      };
-    }
-    const res = await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>(
-      {
-        query: READ_EXAM_CATEGORY_BY_ID,
-        variables: {
-          input: {
-            id: Number(categoryId),
-          },
-        },
+export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
+  (store) => async (context) => {
+    try {
+      const apolloClient = initializeApollo({}, '');
+      const categoryId = context.params?.id;
+      if (!categoryId) {
+        return {
+          notFound: true,
+          revalidate: 1,
+        };
       }
-    );
-    if (!res.data.readMockExamCategoryByCategoryId.ok) {
+      const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
+        id: Number(categoryId),
+      };
+      const res =
+        await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>({
+          query: READ_EXAM_CATEGORY_BY_ID,
+          variables: {
+            input: categoryQueryInput,
+          },
+        });
+      if (!res.data.readMockExamCategoryByCategoryId.ok) {
+        return {
+          notFound: true,
+          revalidate: 1,
+        };
+      }
+      const category = res.data.readMockExamCategoryByCategoryId.category;
+      store.dispatch(
+        examCategoryActions.setCategory({
+          category: category as MockExamCategory,
+        })
+      );
+      return addApolloState(apolloClient, {
+        props: { categoryQueryInput, category },
+        revalidate: 43200,
+      });
+    } catch {
       return {
         notFound: true,
+        revalidate: 1,
       };
     }
-    const category = res.data.readMockExamCategoryByCategoryId.category;
-    if (!category) {
-      return {
-        notFound: true,
-      };
-    }
-    return addApolloState(apolloClient, {
-      props: { category },
-      revalidate: 43200,
-    });
-  } catch {
-    return {
-      notFound: true,
-    };
   }
-};
+);

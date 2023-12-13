@@ -1,4 +1,8 @@
-import { MockExamQuestionComment, MockExamQuestionFeedback } from './types';
+import {
+  MockExamCategory,
+  MockExamQuestionComment,
+  MockExamQuestionFeedback,
+} from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/user/query/questionQuery.generated';
 export interface QuestionType
@@ -71,4 +75,9 @@ export interface StudyQuery {
   limit: string;
   examIds: string;
   mode: ExamMode;
+}
+
+export interface SetCategoryPayload {
+  category: MockExamCategory;
+  shouldUpdateOriginal?: boolean;
 }

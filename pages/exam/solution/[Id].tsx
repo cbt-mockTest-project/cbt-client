@@ -59,6 +59,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       if (!context.params?.Id) {
         return {
           notFound: true,
+          revalidate: 1,
         };
       }
       const apolloClient = initializeApollo({}, '');

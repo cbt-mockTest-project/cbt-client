@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import ExamListItem from './ExamListItem';
 import useExamSetting from '@lib/hooks/useExamSetting';
+import useExamCategory from '@lib/graphql/user/hook/useExamCategory';
 
 const ExamListBlock = styled.ul`
   margin-top: 20px;
@@ -12,11 +13,11 @@ const ExamListBlock = styled.ul`
 `;
 
 interface ExamListProps {
-  category: MockExamCategory;
   handleExamSelect: (examId: number) => void;
 }
 
-const ExamList: React.FC<ExamListProps> = ({ category, handleExamSelect }) => {
+const ExamList: React.FC<ExamListProps> = ({ handleExamSelect }) => {
+  const { category } = useExamCategory();
   const { examSetting } = useExamSetting({ category });
   return (
     <ExamListBlock>

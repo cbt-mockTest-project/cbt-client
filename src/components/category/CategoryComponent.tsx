@@ -1,14 +1,15 @@
 import { FolderOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Checkbox, Switch } from 'antd';
+import { Button, Checkbox, Input, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MockExamCategory } from 'types';
+import { ReadMockExamCategoryByCategoryIdInput } from 'types';
 import ExamList from './ExamList';
 import ExamSelectModal from './ExamSelectModal';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
+import useExamCategory from '@lib/graphql/user/hook/useExamCategory';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -58,16 +59,31 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
+  .category-exam-filter-input {
+    margin-top: 20px;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
   @media (max-width: ${responsive.medium}) {
     padding: 20px 16px;
   }
 `;
 
 interface CategoryComponentProps {
-  category: MockExamCategory;
+  categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
 }
 
-const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
+const CategoryComponent: React.FC<CategoryComponentProps> = ({
+  categoryQueryInput,
+}) => {
+  const { originalCategory, category, fetchCategory, setExamCategory } =
+    useExamCategory();
   const {
     examSetting,
     setExamSetting,
@@ -80,6 +96,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
   const { getExamSettingHistory } = useExamSettingHistory();
 
   useEffect(() => {
+    fetchCategory(categoryQueryInput);
+    if (!category) return;
     const examSetting = getExamSettingHistory(category.id);
     if (!examSetting) return;
     const { examIds, isMultipleSelectMode } = examSetting;
@@ -87,6 +105,18 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
     if (isMultipleSelectMode)
       setExamSetting({ categoryId: category.id, isMultipleSelectMode });
   }, []);
+
+  const onChangeExamFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!originalCategory) return;
+    const filteredCategory = {
+      ...originalCategory,
+      mockExam: originalCategory.mockExam.filter((exam) =>
+        exam.title.includes(e.target.value)
+      ),
+    };
+    setExamCategory(filteredCategory, false);
+  };
+  if (!category) return null;
 
   return (
     <CategoryComponentBlock>
@@ -105,11 +135,18 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
         />
         <span>다중 선택 모드</span>
       </div>
+      <div>
+        <Input
+          onChange={onChangeExamFilter}
+          className="category-exam-filter-input"
+          placeholder="암기장 필터링"
+        />
+      </div>
       {examSetting.isMultipleSelectMode && (
         <div className="category-all-checkbox-and-study-button-wrapper">
           <div className="category-exam-all-checkbox-wrapper">
             <Checkbox
-              checked={category.mockExam.length === examSetting.examIds.length}
+              checked={category?.mockExam.length === examSetting.examIds.length}
               onClick={handleAllExamsSelect}
             />
             <span>전체 선택</span>
@@ -124,8 +161,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({ category }) => {
           </Button>
         </div>
       )}
-
-      <ExamList category={category} handleExamSelect={handleExamSelect} />
+      <ExamList handleExamSelect={handleExamSelect} />
       <ExamSelectModal
         categoryId={category.id}
         examIds={examSetting.examIds}
