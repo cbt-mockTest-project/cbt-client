@@ -176,7 +176,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     {
       key: 3,
       label: (
-        <button style={{ color: palette.textColor }}>암기세트 추가하기</button>
+        <button style={{ color: palette.textColor }}>시험지 추가하기</button>
       ),
     },
   ];
