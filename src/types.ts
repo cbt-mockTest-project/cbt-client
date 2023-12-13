@@ -839,6 +839,13 @@ export type GetMyBlogPostRankOutput = {
   searchCounts?: Maybe<SearchCounts>;
 };
 
+export type GetMyBookmarkedExamsOutput = {
+  __typename?: 'GetMyBookmarkedExamsOutput';
+  error?: Maybe<Scalars['String']>;
+  exams?: Maybe<Array<MockExam>>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetMyExamsOutput = {
   __typename?: 'GetMyExamsOutput';
   error?: Maybe<Scalars['String']>;
@@ -942,6 +949,7 @@ export type MockExam = {
   __typename?: 'MockExam';
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
+  examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
@@ -957,6 +965,13 @@ export type MockExam = {
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
+};
+
+export type MockExamBookmark = {
+  __typename?: 'MockExamBookmark';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
 };
 
 export type MockExamCategory = {
@@ -1205,6 +1220,7 @@ export type Mutation = {
   sendMessageToTelegram: SendMessageToTelegramOutput;
   sendVerificationMail: SendVerificationMailOutput;
   syncRole: CoreOutput;
+  toggleExamBookmark: ToggleExamBookmarkOutput;
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateDiscountCode: UpdateDiscountCodeOutput;
@@ -1549,6 +1565,11 @@ export type MutationSendVerificationMailArgs = {
 };
 
 
+export type MutationToggleExamBookmarkArgs = {
+  input: ToggleExamBookmarkInput;
+};
+
+
 export type MutationUpdateAdBlockPermissionArgs = {
   input: UpdateAdblockPermissionInput;
 };
@@ -1765,6 +1786,7 @@ export type Query = {
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
+  getMyBookmarkedExams: GetMyBookmarkedExamsOutput;
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
@@ -2581,6 +2603,17 @@ export type TodoListInputType = {
   todo: Scalars['String'];
 };
 
+export type ToggleExamBookmarkInput = {
+  examId: Scalars['Float'];
+};
+
+export type ToggleExamBookmarkOutput = {
+  __typename?: 'ToggleExamBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  isBookmarked?: Maybe<Scalars['Boolean']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateAdblockPermissionInput = {
   userId: Scalars['Float'];
 };
@@ -2692,6 +2725,7 @@ export type User = {
   deletedAt: Scalars['DateTime'];
   discountCode?: Maybe<Array<DiscountCode>>;
   email: Scalars['String'];
+  examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examViewer?: Maybe<Array<ExamViewer>>;
   feedback: Array<Feedback>;
