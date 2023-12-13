@@ -1,7 +1,15 @@
-import { FolderOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Checkbox, Input, Switch } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Input,
+  MenuProps,
+  Modal,
+  Switch,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
@@ -9,11 +17,13 @@ import ExamList from './ExamList';
 import ExamSelectModal from './ExamSelectModal';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
-import useExamCategory from '@lib/graphql/user/hook/useExamCategory';
+import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
+import { useMeQuery } from '@lib/graphql/user/hook/useUser';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
+  position: relative;
   .category-creator-info {
     display: flex;
     gap: 3px;
@@ -70,9 +80,35 @@ const CategoryComponentBlock = styled.div`
     border-top: none;
     border-left: none;
     border-right: none;
+    max-width: 500px;
 
     &:focus {
       box-shadow: none;
+    }
+  }
+  .category-setting-button-wrapper {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid ${palette.textColor};
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s all ease-in;
+
+    svg {
+      font-size: 24px;
+      color: ${palette.textColor};
+    }
+    &:hover {
+      border-color: ${palette.antd_blue_02};
+      svg {
+        color: ${palette.antd_blue_02};
+      }
     }
   }
   @media (max-width: ${responsive.medium}) {
@@ -87,8 +123,14 @@ interface CategoryComponentProps {
 const CategoryComponent: React.FC<CategoryComponentProps> = ({
   categoryQueryInput,
 }) => {
-  const { originalCategory, category, fetchCategory, setExamCategory } =
-    useExamCategory();
+  const { data: meQuery } = useMeQuery();
+  const {
+    originalCategory,
+    category,
+    fetchCategory,
+    setExamCategory,
+    deleteCategory,
+  } = useExamCategory();
   const {
     examSetting,
     setExamSetting,
@@ -99,6 +141,46 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
   const { getExamSettingHistory } = useExamSettingHistory();
+
+  const categorySettingDropdownItems: MenuProps['items'] = [
+    {
+      key: 1,
+      label: <button style={{ color: palette.textColor }}>수정하기</button>,
+    },
+    {
+      key: 2,
+      label: (
+        <button
+          style={{ color: palette.textColor }}
+          onClick={(e) => {
+            Modal.confirm({
+              title: '정말로 삭제하시겠습니까?',
+              onOk: () => deleteCategory(),
+            });
+          }}
+        >
+          삭제하기
+        </button>
+      ),
+    },
+    {
+      key: 3,
+      label: (
+        <button style={{ color: palette.textColor }}>암기세트 추가하기</button>
+      ),
+    },
+  ];
+
+  const onChangeExamFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!originalCategory) return;
+    const filteredCategory = {
+      ...originalCategory,
+      mockExam: originalCategory.mockExam.filter((exam) =>
+        exam.title.includes(e.target.value)
+      ),
+    };
+    setExamCategory(filteredCategory, false);
+  };
 
   useEffect(() => {
     fetchCategory(categoryQueryInput);
@@ -111,16 +193,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       setExamSetting({ categoryId: category.id, isMultipleSelectMode });
   }, []);
 
-  const onChangeExamFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!originalCategory) return;
-    const filteredCategory = {
-      ...originalCategory,
-      mockExam: originalCategory.mockExam.filter((exam) =>
-        exam.title.includes(e.target.value)
-      ),
-    };
-    setExamCategory(filteredCategory, false);
-  };
   if (!category) return null;
 
   return (
@@ -181,6 +253,19 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         </>
       ) : (
         <CategoryEmpty />
+      )}
+      {meQuery?.me.user?.id === category.user.id && (
+        <Dropdown
+          menu={{ items: categorySettingDropdownItems }}
+          placement="bottomRight"
+        >
+          <div
+            className="category-setting-button-wrapper"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <EllipsisOutlined />
+          </div>
+        </Dropdown>
       )}
     </CategoryComponentBlock>
   );

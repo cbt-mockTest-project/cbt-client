@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import ExamListItem from './ExamListItem';
 import useExamSetting from '@lib/hooks/useExamSetting';
-import useExamCategory from '@lib/graphql/user/hook/useExamCategory';
+import useExamCategory from '@lib/hooks/useExamCategory';
 
 const ExamListBlock = styled.ul`
   margin-top: 20px;
