@@ -10,6 +10,7 @@ import ExamSelectModal from './ExamSelectModal';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/graphql/user/hook/useExamCategory';
+import CategoryEmpty from './CategoryEmpty';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -133,46 +134,54 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         <span className="category-name">{category?.name}</span>
       </div>
       <div className="category-description">{category.description}</div>
-      <div className="category-multiple-select-toggle-switch-wrapper">
-        <Switch
-          checked={examSetting.isMultipleSelectMode}
-          onChange={handleChangeMultipleSelectMode}
-        />
-        <span>다중 선택 모드</span>
-      </div>
-      <div>
-        <Input
-          onChange={onChangeExamFilter}
-          className="category-exam-filter-input"
-          placeholder="암기장 필터링"
-        />
-      </div>
-      {examSetting.isMultipleSelectMode && (
-        <div className="category-all-checkbox-and-study-button-wrapper">
-          <div className="category-exam-all-checkbox-wrapper">
-            <Checkbox
-              checked={category?.mockExam.length === examSetting.examIds.length}
-              onClick={handleAllExamsSelect}
+      {category.mockExam.length >= 1 ? (
+        <>
+          <div className="category-multiple-select-toggle-switch-wrapper">
+            <Switch
+              checked={examSetting.isMultipleSelectMode}
+              onChange={handleChangeMultipleSelectMode}
             />
-            <span>전체 선택</span>
+            <span>다중 선택 모드</span>
           </div>
-          <Button
-            className="category-study-button"
-            type="primary"
-            disabled={examSetting.examIds.length === 0}
-            onClick={() => setExamSelectModalVisible(true)}
-          >
-            학습하기
-          </Button>
-        </div>
+          <div>
+            <Input
+              onChange={onChangeExamFilter}
+              className="category-exam-filter-input"
+              placeholder="암기장 필터링"
+            />
+          </div>
+          {examSetting.isMultipleSelectMode && (
+            <div className="category-all-checkbox-and-study-button-wrapper">
+              <div className="category-exam-all-checkbox-wrapper">
+                <Checkbox
+                  checked={
+                    category?.mockExam.length === examSetting.examIds.length
+                  }
+                  onClick={handleAllExamsSelect}
+                />
+                <span>전체 선택</span>
+              </div>
+              <Button
+                className="category-study-button"
+                type="primary"
+                disabled={examSetting.examIds.length === 0}
+                onClick={() => setExamSelectModalVisible(true)}
+              >
+                학습하기
+              </Button>
+            </div>
+          )}
+          <ExamList handleExamSelect={handleExamSelect} />
+          <ExamSelectModal
+            categoryId={category.id}
+            examIds={examSetting.examIds}
+            open={examSelectModalVisible}
+            onCancel={() => setExamSelectModalVisible(false)}
+          />
+        </>
+      ) : (
+        <CategoryEmpty />
       )}
-      <ExamList handleExamSelect={handleExamSelect} />
-      <ExamSelectModal
-        categoryId={category.id}
-        examIds={examSetting.examIds}
-        open={examSelectModalVisible}
-        onCancel={() => setExamSelectModalVisible(false)}
-      />
     </CategoryComponentBlock>
   );
 };
