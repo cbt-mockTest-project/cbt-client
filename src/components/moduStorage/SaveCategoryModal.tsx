@@ -1,3 +1,4 @@
+import useExamCategory from '@lib/hooks/useExamCategory';
 import useStorage from '@lib/hooks/useStorage';
 import { Input, Modal, ModalProps, Radio, message } from 'antd';
 import { StorageType } from 'customTypes';
@@ -27,12 +28,10 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
-  const {
-    createCategoryLoading,
-    handleCreateCategory,
-    editCategoryLoading,
-    handleEditCategory,
-  } = useStorage(props.storageType);
+  const { createCategoryLoading, handleCreateCategory } = useStorage(
+    props.storageType
+  );
+  const { handleEditCategory, editCategoryLoading } = useExamCategory();
 
   const { onClose, categoryId, defaultValues, ...modalProps } = props;
   const [isPublic, setIsPublic] = React.useState<boolean>(
@@ -46,21 +45,18 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   );
   const handleSaveFolder = async () => {
     if (!name) return message.error('제목을 입력해주세요.');
-    if (categoryId) {
-      await handleEditCategory({
-        id: categoryId,
-        name,
-        description,
-        isPublic,
-      });
-      return;
-    }
-    const res = await handleCreateCategory({
-      name,
-      description,
-      isPublic,
-    });
-    if (res.error) return message.error(res.error);
+    categoryId
+      ? await handleEditCategory({
+          id: categoryId,
+          name,
+          description,
+          isPublic,
+        })
+      : await handleCreateCategory({
+          name,
+          description,
+          isPublic,
+        });
     onClose();
   };
 

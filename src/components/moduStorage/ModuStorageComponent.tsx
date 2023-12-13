@@ -6,10 +6,9 @@ import { responsive } from '@lib/utils/responsive';
 import { PlusOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import SaveCategoryModal from './CreateCategoryModal';
+import SaveCategoryModal from './SaveCategoryModal';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
-import { useRouter } from 'next/router';
 
 const ModuStorageComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;

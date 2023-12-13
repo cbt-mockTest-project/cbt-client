@@ -20,6 +20,7 @@ import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -129,7 +130,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     category,
     fetchCategory,
     setExamCategory,
-    deleteCategory,
+    handleDeleteCategory,
+    storageType,
   } = useExamCategory();
   const {
     examSetting,
@@ -139,13 +141,21 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     handleChangeMultipleSelectMode,
   } = useExamSetting({ category });
 
+  const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
   const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
   const { getExamSettingHistory } = useExamSettingHistory();
 
   const categorySettingDropdownItems: MenuProps['items'] = [
     {
       key: 1,
-      label: <button style={{ color: palette.textColor }}>수정하기</button>,
+      label: (
+        <button
+          style={{ color: palette.textColor }}
+          onClick={() => setSaveCategoryModalOpen(true)}
+        >
+          수정하기
+        </button>
+      ),
     },
     {
       key: 2,
@@ -155,7 +165,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onClick={(e) => {
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
-              onOk: () => deleteCategory(),
+              onOk: () => handleDeleteCategory(),
             });
           }}
         >
@@ -267,6 +277,18 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           </div>
         </Dropdown>
       )}
+      <SaveCategoryModal
+        open={saveCategoryModalOpen}
+        onCancel={() => setSaveCategoryModalOpen(false)}
+        onClose={() => setSaveCategoryModalOpen(false)}
+        storageType={storageType}
+        categoryId={category.id}
+        defaultValues={{
+          name: category.name,
+          description: category.description,
+          isPublic: category.isPublic,
+        }}
+      />
     </CategoryComponentBlock>
   );
 };

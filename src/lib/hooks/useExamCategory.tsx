@@ -1,10 +1,12 @@
 import {
+  EditMockExamCategoryInput,
   ExamSource,
   MockExamCategory,
   ReadMockExamCategoryByCategoryIdInput,
 } from 'types';
 import {
   useDeleteExamCategory,
+  useEditCategory,
   useLazyReadCategoryById,
 } from '../graphql/user/hook/useExam';
 import {
@@ -15,17 +17,25 @@ import { handleError } from '@lib/utils/utils';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import { useRouter } from 'next/router';
 import { message } from 'antd';
+import { useMemo } from 'react';
+import { StorageType } from 'customTypes';
 
 const useExamCategory = () => {
   const router = useRouter();
   const [readCategory] = useLazyReadCategoryById();
-  const [deleteCategoryMutation, { loading: deleteCategoryLoading }] =
-    useDeleteExamCategory();
+  const [deleteCategory] = useDeleteExamCategory();
+  const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
+
   const dispatch = useAppDispatch();
   const category = useAppSelector((state) => state.examCategory.category);
   const originalCategory = useAppSelector(
     (state) => state.examCategory.originalCategory
   );
+  const storageType = useMemo(() => {
+    if (category?.source === ExamSource.EhsMaster) return StorageType.PREMIUM;
+    if (category?.source === ExamSource.MoudCbt) return StorageType.MODU;
+    return StorageType.MY;
+  }, [category]);
 
   const fetchCategory = async (
     input: ReadMockExamCategoryByCategoryIdInput
@@ -46,13 +56,31 @@ const useExamCategory = () => {
     }
   };
 
-  const deleteCategory = async () => {
+  const handleEditCategory = async (input: EditMockExamCategoryInput) => {
     try {
-      console.log('hi');
-      console.log(category.id);
+      const res = await editCategory({
+        variables: {
+          input,
+        },
+      });
+      if (res.data?.editMockExamCategory.ok) {
+        const updatedCategory = { ...category, ...input } as MockExamCategory;
+        setExamCategory(updatedCategory);
+        message.success('폴더가 수정되었습니다.');
+        return;
+      }
+      message.error(res.data?.editMockExamCategory.error);
+    } catch (e) {
+      handleError(e);
+      message.error('폴더 수정에 실패했습니다.');
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
       if (!category?.id) return;
       console.log('bi');
-      const res = await deleteCategoryMutation({
+      const res = await deleteCategory({
         variables: {
           input: {
             id: category?.id,
@@ -72,7 +100,7 @@ const useExamCategory = () => {
       message.error(res.data?.deleteMockExamCategory.error);
     } catch (e) {
       handleError(e);
-      message.error('카테고리 삭제에 실패했습니다.');
+      message.error('폴더 삭제에 실패했습니다.');
     }
   };
 
@@ -89,7 +117,10 @@ const useExamCategory = () => {
     fetchCategory,
     setExamCategory,
     category,
-    deleteCategory,
+    storageType,
+    handleDeleteCategory,
+    handleEditCategory,
+    editCategoryLoading,
     originalCategory,
   };
 };

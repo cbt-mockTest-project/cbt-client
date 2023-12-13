@@ -1,6 +1,5 @@
 import {
   useCreateExamCategory,
-  useEditCategory,
   useLazyGetExamCategories,
 } from '@lib/graphql/user/hook/useExam';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
@@ -12,12 +11,9 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
-import { sendError } from 'next/dist/server/api-utils';
 import { useMemo } from 'react';
 import {
-  CoreOutput,
   CreateMockExamCategoryInput,
-  EditMockExamCategoryInput,
   ExamSource,
   MockExamCategory,
 } from 'types';
@@ -34,7 +30,6 @@ const useStorage = (type: StorageType) => {
   });
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
-  const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
 
   const examSource = useMemo(() => {
     if (type === StorageType.PREMIUM) return ExamSource.EhsMaster;
@@ -57,9 +52,7 @@ const useStorage = (type: StorageType) => {
     }
   };
 
-  const handleCreateCategory = async (
-    input: CreateMockExamCategoryInput
-  ): Promise<CoreOutput> => {
+  const handleCreateCategory = async (input: CreateMockExamCategoryInput) => {
     try {
       if (!meQuery?.me.user)
         return {
@@ -77,41 +70,13 @@ const useStorage = (type: StorageType) => {
           user: meQuery.me.user,
         } as MockExamCategory;
         setCategories([category, ...categories]);
-        return {
-          ok: true,
-        };
-      }
-      return {
-        ok: false,
-        error: res.data?.createMockExamCategory.error,
-      };
-    } catch (e) {
-      handleError(e);
-      return {
-        ok: false,
-        error: '카테고리 생성에 실패했습니다.',
-      };
-    }
-  };
-
-  const handleEditCategory = async (input: EditMockExamCategoryInput) => {
-    try {
-      const res = await editCategory({
-        variables: {
-          input,
-        },
-      });
-
-      if (res.data?.editMockExamCategory.ok) {
-        const newCategories = categories.map((category) =>
-          category.id === input.id ? { ...category, ...input } : category
-        ) as MockExamCategory[];
-        setCategories(newCategories);
+        message.success('폴더가 생성되었습니다.');
         return;
       }
-      message.error('카테고리 수정에 실패했습니다.');
-    } catch {
-      message.error('카테고리 수정에 실패했습니다.');
+      message.error(res.data?.createMockExamCategory.error);
+    } catch (e) {
+      message.error('폴더 생성에 실패했습니다.');
+      handleError(e);
     }
   };
 
@@ -133,9 +98,7 @@ const useStorage = (type: StorageType) => {
   return {
     categories,
     handleCreateCategory,
-    handleEditCategory,
     createCategoryLoading,
-    editCategoryLoading,
     fetchCategories,
   };
 };
