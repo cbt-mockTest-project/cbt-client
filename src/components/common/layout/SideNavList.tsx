@@ -15,7 +15,10 @@ const SideNavList: React.FC<SideNavListProps> = () => {
   return (
     <SideNavListBlock>
       <Menu
-        onClick={(e) => router.push(e.key.toString())}
+        onClick={(e) => {
+          if (e.key.toString() === router.pathname) return;
+          router.push(e.key.toString());
+        }}
         selectedKeys={[router.pathname]}
         style={{ backgroundColor: palette.containerBackgroundColor }}
         mode="inline"
