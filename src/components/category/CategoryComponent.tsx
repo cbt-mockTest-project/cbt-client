@@ -77,6 +77,10 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
+  .category-exam-filter-input {
+    margin-top: 20px;
+    max-width: 500px;
+  }
 
   .category-setting-button-wrapper {
     position: absolute;
@@ -212,6 +216,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           </div>
           <div>
             <TextInput
+              className="category-exam-filter-input"
               onChange={(e) => handleFilterExams(e.target.value)}
               placeholder="시험지 필터링"
             />

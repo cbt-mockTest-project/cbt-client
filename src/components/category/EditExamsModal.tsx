@@ -27,6 +27,7 @@ const EditExamsModalBlock = styled(Modal)`
     gap: 5px;
   }
   .edit-exams-filter-box {
+    margin-top: 20px;
     margin-bottom: 10px;
     display: flex;
     align-items: flex-end;

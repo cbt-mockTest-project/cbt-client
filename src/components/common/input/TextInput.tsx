@@ -3,15 +3,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const TextInputBlock = styled(Input)`
-  margin-top: 20px;
-  border-radius: 0;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  max-width: 500px;
-  background-color: transparent;
+  border-radius: 0 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  background-color: transparent !important;
   &:focus {
-    box-shadow: none;
+    box-shadow: none !important;
   }
 `;
 
