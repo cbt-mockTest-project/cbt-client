@@ -13,6 +13,17 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddExamToCategoryInput = {
+  categoryId: Scalars['Float'];
+  examId: Scalars['Float'];
+};
+
+export type AddExamToCategoryOutput = {
+  __typename?: 'AddExamToCategoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type Attendance = {
   __typename?: 'Attendance';
   content: Scalars['String'];
@@ -828,6 +839,13 @@ export type GetMyBlogPostRankOutput = {
   searchCounts?: Maybe<SearchCounts>;
 };
 
+export type GetMyExamsOutput = {
+  __typename?: 'GetMyExamsOutput';
+  error?: Maybe<Scalars['String']>;
+  exams?: Maybe<Array<MockExam>>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetMyPaymentsOutput = {
   __typename?: 'GetMyPaymentsOutput';
   error?: Maybe<Scalars['String']>;
@@ -929,7 +947,7 @@ export type MockExam = {
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
   isPremium: Scalars['Boolean'];
-  mockExamCategory: MockExamCategory;
+  mockExamCategory: Array<MockExamCategory>;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
   order: Scalars['Float'];
@@ -1111,6 +1129,7 @@ export type MockExamVideoType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addExamToCategory: AddExamToCategoryOutput;
   changeClientRole: CoreOutput;
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
@@ -1175,6 +1194,7 @@ export type Mutation = {
   logout: CoreOutput;
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
+  removeExamFromCategory: RemoveExamFromCategoryOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
   restMyAllQuestionStates: CoreOutput;
@@ -1196,6 +1216,11 @@ export type Mutation = {
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
   viewPost: ViewPostOutput;
+};
+
+
+export type MutationAddExamToCategoryArgs = {
+  input: AddExamToCategoryInput;
 };
 
 
@@ -1484,6 +1509,11 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationRemoveExamFromCategoryArgs = {
+  input: RemoveExamFromCategoryInput;
+};
+
+
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
@@ -1735,6 +1765,7 @@ export type Query = {
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
+  getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
   getRoleCount: GetRoleCountOutput;
@@ -2381,6 +2412,17 @@ export type RegisterInput = {
 
 export type RegisterOutput = {
   __typename?: 'RegisterOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type RemoveExamFromCategoryInput = {
+  categoryId: Scalars['Float'];
+  examId: Scalars['Float'];
+};
+
+export type RemoveExamFromCategoryOutput = {
+  __typename?: 'RemoveExamFromCategoryOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };

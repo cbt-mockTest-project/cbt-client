@@ -299,3 +299,38 @@ export const GET_EXAM_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_MY_EXAMS = gql`
+  query GetMyExams {
+    getMyExams {
+      error
+      exams {
+        id
+        slug
+        title
+        user {
+          id
+        }
+      }
+      ok
+    }
+  }
+`;
+
+export const ADD_EXAM_TO_CATEGORY = gql`
+  mutation AddExamToCategory($input: AddExamToCategoryInput!) {
+    addExamToCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const REMOVE_EXAM_FROM_CATEGORY = gql`
+  mutation RemoveExamFromCategory($input: RemoveExamFromCategoryInput!) {
+    removeExamFromCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;

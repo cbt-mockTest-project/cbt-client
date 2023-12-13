@@ -153,6 +153,25 @@ export type GetExamCategoriesQueryVariables = Types.Exact<{
 
 export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
 
+export type GetMyExamsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetMyExamsQuery = { __typename?: 'Query', getMyExams: { __typename?: 'GetMyExamsOutput', error?: string | null, ok: boolean, exams?: Array<{ __typename?: 'MockExam', id: number, slug?: string | null, title: string, user: { __typename?: 'User', id: number } }> | null } };
+
+export type AddExamToCategoryMutationVariables = Types.Exact<{
+  input: Types.AddExamToCategoryInput;
+}>;
+
+
+export type AddExamToCategoryMutation = { __typename?: 'Mutation', addExamToCategory: { __typename?: 'AddExamToCategoryOutput', error?: string | null, ok: boolean } };
+
+export type RemoveExamFromCategoryMutationVariables = Types.Exact<{
+  input: Types.RemoveExamFromCategoryInput;
+}>;
+
+
+export type RemoveExamFromCategoryMutation = { __typename?: 'Mutation', removeExamFromCategory: { __typename?: 'RemoveExamFromCategoryOutput', error?: string | null, ok: boolean } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -513,4 +532,48 @@ export const GetExamCategoriesDocument = gql`
 
 export function useGetExamCategoriesQuery(options: Omit<Urql.UseQueryArgs<GetExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetExamCategoriesQuery, GetExamCategoriesQueryVariables>({ query: GetExamCategoriesDocument, ...options });
+};
+export const GetMyExamsDocument = gql`
+    query GetMyExams {
+  getMyExams {
+    error
+    exams {
+      id
+      slug
+      title
+      user {
+        id
+      }
+    }
+    ok
+  }
+}
+    `;
+
+export function useGetMyExamsQuery(options?: Omit<Urql.UseQueryArgs<GetMyExamsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetMyExamsQuery, GetMyExamsQueryVariables>({ query: GetMyExamsDocument, ...options });
+};
+export const AddExamToCategoryDocument = gql`
+    mutation AddExamToCategory($input: AddExamToCategoryInput!) {
+  addExamToCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useAddExamToCategoryMutation() {
+  return Urql.useMutation<AddExamToCategoryMutation, AddExamToCategoryMutationVariables>(AddExamToCategoryDocument);
+};
+export const RemoveExamFromCategoryDocument = gql`
+    mutation RemoveExamFromCategory($input: RemoveExamFromCategoryInput!) {
+  removeExamFromCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useRemoveExamFromCategoryMutation() {
+  return Urql.useMutation<RemoveExamFromCategoryMutation, RemoveExamFromCategoryMutationVariables>(RemoveExamFromCategoryDocument);
 };
