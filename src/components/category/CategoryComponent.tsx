@@ -39,6 +39,10 @@ const CategoryComponentBlock = styled.div`
       font-size: 24px;
     }
   }
+  .category-description {
+    margin-top: 10px;
+    font-size: 14px;
+  }
   .category-study-button {
     margin-top: 20px;
   }
@@ -128,6 +132,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         <FolderOutlined />
         <span className="category-name">{category?.name}</span>
       </div>
+      <div className="category-description">{category.description}</div>
       <div className="category-multiple-select-toggle-switch-wrapper">
         <Switch
           checked={examSetting.isMultipleSelectMode}
