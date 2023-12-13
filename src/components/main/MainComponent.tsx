@@ -9,7 +9,7 @@ import {
   selectedTitleHistory,
   tempAnswerKey,
 } from '@lib/constants';
-import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { ReadAllMockExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { LocalStorage } from '@lib/utils/localStorage';
 import palette from '@styles/palette';
@@ -25,7 +25,7 @@ import { EXAM_TYPE } from './Main.type';
 import MyExamSelector from './MyExamSelector';
 import InviteExamModal from './modal/InviteExamModal';
 import PartnerExamSelector from './PartnerExamSelector';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { SearchOutlined } from '@ant-design/icons';
 import AppGuideModal from '@components/common/modal/appGuideModal/AppGuideModal';
 import { coreActions } from '@modules/redux/slices/core';

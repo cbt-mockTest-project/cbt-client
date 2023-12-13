@@ -1,6 +1,6 @@
 import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
-import { GET_EXAM_CATEGORIES } from '@lib/graphql/user/query/examQuery';
-import { GetExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
+import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { GetStaticProps, NextPage } from 'next';
 import { ExamSource, MockExamCategory } from 'types';

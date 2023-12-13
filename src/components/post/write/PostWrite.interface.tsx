@@ -1,7 +1,7 @@
 import ReactQuill from 'react-quill';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { SetStateAction, ComponentProps, Dispatch } from 'react';
-import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
+import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import { EditPostInput, PostCategory } from 'types';
 
 export interface CreatePostInput {

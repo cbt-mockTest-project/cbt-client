@@ -1,4 +1,4 @@
-import { useReadVisitHistory } from '@lib/graphql/user/hook/useVisit';
+import { useReadVisitHistory } from '@lib/graphql/hook/useVisit';
 import palette from '@styles/palette';
 import { skeletonStyle } from '@styles/utils';
 import React from 'react';

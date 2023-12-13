@@ -1,7 +1,7 @@
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/query/questionQuery';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
 import {
   blobToDataUrl,
@@ -23,7 +23,7 @@ import { ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import useToggle from '@lib/hooks/useToggle';
 import { PdfDownloadSelectModalFooter } from '@components/common/modal/PdfDownloadSelectModal';
 import { SearchOutlined } from '@ant-design/icons';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import Portal from '@components/common/portal/Portal';
 import ContinueLearningModal from './ContinueLearningModal';
 import MoveExamSelectorBox from './MoveExamSelectorBox';

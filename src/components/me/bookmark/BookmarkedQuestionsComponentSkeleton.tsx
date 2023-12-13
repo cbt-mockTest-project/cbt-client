@@ -1,6 +1,6 @@
 import { RoundCheckboxGroupOnChangeValueType } from '@components/common/checkbox/RoundCheckboxGroup';
-import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/user/hook/useQuestionBookmark';
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/hook/useQuestionBookmark';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
 import { checkboxOption } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';

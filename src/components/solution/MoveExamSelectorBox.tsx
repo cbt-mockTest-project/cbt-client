@@ -1,7 +1,7 @@
 import {
   useLazyReadExamCategoryByExamId,
   useReadExamTitles,
-} from '@lib/graphql/user/hook/useExam';
+} from '@lib/graphql/hook/useExam';
 import palette from '@styles/palette';
 import { Button, Spin, Select } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';

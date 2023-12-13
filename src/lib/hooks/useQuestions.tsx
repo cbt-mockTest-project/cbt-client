@@ -1,18 +1,18 @@
 import { loginModal } from '@lib/constants';
-import { useLazyReadQuestionsByExamIds } from '@lib/graphql/user/hook/useExamQuestion';
-import { useCreateQuestionFeedBack } from '@lib/graphql/user/hook/useFeedBack';
-import { useEditQuestionBookmark } from '@lib/graphql/user/hook/useQuestionBookmark';
+import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
+import { useCreateQuestionFeedBack } from '@lib/graphql/hook/useFeedBack';
+import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 import {
   useDeleteQuestionFeedback,
   useEditQuestionFeedback,
   useUpdateQuestionFeedbackRecommendation,
-} from '@lib/graphql/user/hook/useQuestionFeedback';
+} from '@lib/graphql/hook/useQuestionFeedback';
 import {
   useChangeQuestionState,
   useResetAllQuestionState,
   useResetQuestionState,
-} from '@lib/graphql/user/hook/useQuestionState';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useQuestionState';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';

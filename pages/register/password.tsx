@@ -1,7 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import Label from '@components/common/label/Label';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
-import { useChangePasswordAfterVerifyingMutation } from '@lib/graphql/user/hook/useUser';
+import { useChangePasswordAfterVerifyingMutation } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';

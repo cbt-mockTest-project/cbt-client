@@ -2,7 +2,7 @@ import {
   useCreateUserRole,
   useDeleteUserRole,
   useUpdateAdblockPermission,
-} from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import { checkRole, handleError } from '@lib/utils/utils';
 import { Checkbox, message } from 'antd';

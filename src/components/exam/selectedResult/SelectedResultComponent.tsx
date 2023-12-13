@@ -1,4 +1,4 @@
-import { ReadMockExamQuestionsByStateQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { ReadMockExamQuestionsByStateQuery } from '@lib/graphql/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
 import { convertStateToIcon } from '@lib/utils/utils';
 import palette from '@styles/palette';

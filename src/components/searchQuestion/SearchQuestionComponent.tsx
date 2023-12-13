@@ -1,4 +1,4 @@
-import { useSearchQuestions } from '@lib/graphql/user/hook/useExamQuestion';
+import { useSearchQuestions } from '@lib/graphql/hook/useExamQuestion';
 import useInput from '@lib/hooks/useInput';
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';

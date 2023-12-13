@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import PostDetailSkeleton from './PostDetailSkeleton';
 import { convertToKST } from '@lib/utils/utils';
 import { UserOutlined } from '@ant-design/icons';

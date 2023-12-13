@@ -6,7 +6,7 @@ import {
   useEditProfileMutation,
   useLogoutMutation,
   useMeQuery,
-} from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';

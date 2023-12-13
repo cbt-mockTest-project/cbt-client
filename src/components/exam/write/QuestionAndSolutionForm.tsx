@@ -7,7 +7,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import { ExamStatus, QuestionNumber, UserRole } from 'types';
 import ImageDragger from './ImageDragger';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import QuestionNumberItem from './QuestionNumberItem';
 import CreateQuestionEditor from './CreateQuestionEditor';
 

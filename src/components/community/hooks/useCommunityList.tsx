@@ -1,6 +1,6 @@
 import { adminBoards } from '@lib/constants';
-import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useLazyReadPosts } from '@lib/graphql/hook/usePost';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { PostCategory, UserRole } from 'types';

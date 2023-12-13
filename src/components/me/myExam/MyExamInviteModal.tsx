@@ -3,8 +3,8 @@ import {
   useCreateExamCategoryViewer,
   useDeleteExamCategoryViewer,
   useLazyGetExamCategoryViewers,
-} from '@lib/graphql/user/hook/useExamViewer';
-import { useLazyGetUser } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useExamViewer';
+import { useLazyGetUser } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { Clear } from '@mui/icons-material';
 import { Button, Input, List, Select, message } from 'antd';

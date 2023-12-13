@@ -2,8 +2,8 @@ import { loginModal } from '@lib/constants';
 import {
   useCreatePostComment,
   useDeletePostComment,
-} from '@lib/graphql/user/hook/usePostComment';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/usePostComment';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { convertToKST, handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { dataActions } from '@modules/redux/slices/data';

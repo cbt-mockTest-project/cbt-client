@@ -3,11 +3,11 @@ import {
   useDeletePost,
   useLazyReadPost,
   useViewPost,
-} from '@lib/graphql/user/hook/usePost';
-import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
-import { FULL_POST_FRAGMENT } from '@lib/graphql/user/query/postFragment';
-import { READ_POST } from '@lib/graphql/user/query/postQuery';
-import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
+} from '@lib/graphql/hook/usePost';
+import { useEditPostLike } from '@lib/graphql/hook/usePostLike';
+import { FULL_POST_FRAGMENT } from '@lib/graphql/query/postFragment';
+import { READ_POST } from '@lib/graphql/query/postQuery';
+import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { message } from 'antd';

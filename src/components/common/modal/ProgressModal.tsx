@@ -1,7 +1,7 @@
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
-import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { useResetQuestionState } from '@lib/graphql/hook/useQuestionState';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/query/questionQuery';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { extractKeysOfCache, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';

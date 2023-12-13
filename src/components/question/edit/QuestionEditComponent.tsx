@@ -3,8 +3,8 @@ import ImageDragger from '@components/exam/write/ImageDragger';
 import {
   useEditQuestion,
   useLazyReadQuestion,
-} from '@lib/graphql/user/hook/useExamQuestion';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useExamQuestion';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { Button, message, UploadFile } from 'antd';
 import { useRouter } from 'next/router';

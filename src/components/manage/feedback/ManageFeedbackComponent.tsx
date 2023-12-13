@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import {
   useGetExamTitleWithFeedback,
   useLazyGetFeedbacksWithFilter,
-} from '@lib/graphql/user/hook/useQuestionFeedback';
+} from '@lib/graphql/hook/useQuestionFeedback';
 import useInput from '@lib/hooks/useInput';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import { FEEDBACK_TYPES, FEEDBACK_TYPE_MAP } from './ManageFeedback.constants';

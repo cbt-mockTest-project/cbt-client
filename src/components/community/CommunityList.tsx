@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { PostCategory } from 'types';
 import { useRouter } from 'next/router';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { secretBoards } from '@lib/constants';
 
 export interface CommunityListProps {

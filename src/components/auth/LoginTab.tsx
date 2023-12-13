@@ -5,7 +5,7 @@ import {
   KAKAO_REDIRECT_URI,
   KAKAO_REST_API,
 } from '@lib/constants';
-import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
+import { useLoginMutation } from '@lib/graphql/hook/useUser';
 import { Button, Divider, Input, message } from 'antd';
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';

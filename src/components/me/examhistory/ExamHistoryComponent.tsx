@@ -1,6 +1,6 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import Modal from '@components/common/modal/Modal';
-import { useReadExamHistories } from '@lib/graphql/user/hook/useExamHistory';
+import { useReadExamHistories } from '@lib/graphql/hook/useExamHistory';
 import { responsive } from '@lib/utils/responsive';
 import { convertToKST } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';

@@ -12,12 +12,12 @@ import {
   useCreatePost,
   useEditPost,
   useLazyReadPost,
-} from '@lib/graphql/user/hook/usePost';
+} from '@lib/graphql/hook/usePost';
 import { CreatePostInput, EditPostInput, PostCategory } from 'types';
 import { UploadFile } from '../Data.type';
 import { useRouter } from 'next/router';
 import DataRegisterFileUploadButton from './DataRegisterFileUploadButton';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { dataActions } from '@modules/redux/slices/data';
 

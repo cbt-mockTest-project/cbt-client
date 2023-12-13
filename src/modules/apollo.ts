@@ -11,7 +11,7 @@ import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
-import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
 import { isServer, pushErrorLogToSentry } from '@lib/utils/utils';
 import React from 'react';
 

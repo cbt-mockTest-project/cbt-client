@@ -1,9 +1,9 @@
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
-import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
-import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
-import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/user/query/questionQuery';
-import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
+import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
+import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
+import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';

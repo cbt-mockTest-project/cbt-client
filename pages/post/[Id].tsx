@@ -1,10 +1,10 @@
 import Layout from '@components/common/layout/Layout';
-import { READ_POST, READ_POSTS } from '@lib/graphql/user/query/postQuery';
+import { READ_POST, READ_POSTS } from '@lib/graphql/query/postQuery';
 import {
   ReadPostQuery,
   ReadPostQueryVariables,
   ReadPostsQuery,
-} from '@lib/graphql/user/query/postQuery.generated';
+} from '@lib/graphql/query/postQuery.generated';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';

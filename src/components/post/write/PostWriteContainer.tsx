@@ -18,11 +18,11 @@ import {
   useCreatePost,
   useEditPost,
   useLazyReadPost,
-} from '@lib/graphql/user/hook/usePost';
+} from '@lib/graphql/hook/usePost';
 import { message } from 'antd';
 import { PostCategory, UserRole } from 'types';
 import Select from 'antd/lib/select';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 
 interface PostWriteContainerProps {}
 

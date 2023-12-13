@@ -1,4 +1,4 @@
-import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
+import { useLazyReadPosts } from '@lib/graphql/hook/usePost';
 import palette from '@styles/palette';
 import Link from 'next/link';
 import React, { useEffect } from 'react';

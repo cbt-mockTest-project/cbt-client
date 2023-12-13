@@ -1,7 +1,7 @@
 import {
   useReadExamTitles,
   useReadMyExamCategories,
-} from '@lib/graphql/user/hook/useExam';
+} from '@lib/graphql/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { message, Select } from 'antd';

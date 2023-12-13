@@ -1,7 +1,7 @@
 import Modal, { ModalProps } from '@components/common/modal/Modal';
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
-import { useReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { useResetQuestionState } from '@lib/graphql/user/hook/useQuestionState';
+import { useReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
+import { useResetQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { handleError } from '@lib/utils/utils';
 import { QuestionListType } from '@modules/redux/slices/exam';
 import { useAppDispatch } from '@modules/redux/store/configureStore';

@@ -10,7 +10,7 @@ import { EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Popover } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useAuthModal from '@lib/hooks/useAuthModal';
 import StudyScoreModal from './StudyScoreModal';
 import SwiperCore from 'swiper';

@@ -1,6 +1,6 @@
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { convertStateToIcon } from '@lib/utils/utils';
 import { QuestionListType } from '@modules/redux/slices/exam';
 import palette from '@styles/palette';

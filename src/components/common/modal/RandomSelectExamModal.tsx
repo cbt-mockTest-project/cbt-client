@@ -1,7 +1,7 @@
 import { ClearOutlined } from '@ant-design/icons';
 import { TitlesAndCategories } from '@components/main/MainComponent';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import palette from '@styles/palette';
 import { Button, Checkbox, InputNumber, Tag } from 'antd';

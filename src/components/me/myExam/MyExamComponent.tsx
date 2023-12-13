@@ -2,7 +2,7 @@ import {
   useReadExamTitles,
   useReadMyExamCategories,
   useUpdateExamOrder,
-} from '@lib/graphql/user/hook/useExam';
+} from '@lib/graphql/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, List, message, Select, Tooltip } from 'antd';

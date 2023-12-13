@@ -3,10 +3,10 @@ import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import {
   useLazyReadQuestion,
   useDeleteQuestion,
-} from '@lib/graphql/user/hook/useExamQuestion';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { READ_QUESTION } from '@lib/graphql/user/query/questionQuery';
-import { ReadMockExamQuestionQuery } from '@lib/graphql/user/query/questionQuery.generated';
+} from '@lib/graphql/hook/useExamQuestion';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
+import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { useApollo } from '@modules/apollo';
 import { Button, message } from 'antd';
 import Link from 'next/link';

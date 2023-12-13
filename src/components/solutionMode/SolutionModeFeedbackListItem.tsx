@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 
 import QuestionFeedbackModal from './QuestionFeedbackModal';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useQuestions from '@lib/hooks/useQuestions';
 const SolutionModeFeedbackListItemBlock = styled.div`
   display: flex;

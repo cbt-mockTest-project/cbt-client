@@ -2,10 +2,10 @@ import QuestionCommentContainer from '@components/common/card/commentCard/Questi
 import {
   useCreateQuestionCommnet,
   useLazyReadQuestionComment,
-} from '@lib/graphql/user/hook/useQusetionComment';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
-import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
+} from '@lib/graphql/hook/useQusetionComment';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
+import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { convertToKST, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';

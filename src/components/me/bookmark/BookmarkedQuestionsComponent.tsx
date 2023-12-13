@@ -1,12 +1,12 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import { RoundCheckboxGroupOnChangeValueType } from '@components/common/checkbox/RoundCheckboxGroup';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
 import {
   useReadExamTitleAndIdOfBookmarkedQuestion,
   useResetMyQuestionBookmark,
-} from '@lib/graphql/user/hook/useQuestionBookmark';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+} from '@lib/graphql/hook/useQuestionBookmark';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
 import { Button, Select, message } from 'antd';
 import { checkboxOption } from 'customTypes';

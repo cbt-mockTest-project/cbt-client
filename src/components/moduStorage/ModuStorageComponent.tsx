@@ -5,7 +5,7 @@ import { UserRole } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import { PlusOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from './SaveCategoryModal';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';

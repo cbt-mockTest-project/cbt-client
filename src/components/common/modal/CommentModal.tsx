@@ -8,11 +8,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import {
   useCreateQuestionCommnet,
   useLazyReadQuestionComment,
-} from '@lib/graphql/user/hook/useQusetionComment';
+} from '@lib/graphql/hook/useQusetionComment';
 import { useApollo } from '@modules/apollo';
-import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
-import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
+import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import QuestionCommentContainer from '../card/commentCard/QuestionCommentContainer';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';

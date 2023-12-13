@@ -1,7 +1,7 @@
 import {
   useReadExamTitles,
   useReadExamCategories,
-} from '@lib/graphql/user/hook/useExam';
+} from '@lib/graphql/hook/useExam';
 import { handleError } from '@lib/utils/utils';
 import { DefaultOptionType } from 'antd/es/select';
 import React, { useEffect, useState } from 'react';

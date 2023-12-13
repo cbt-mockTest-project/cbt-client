@@ -3,11 +3,11 @@ import WithHead from '@components/common/head/WithHead';
 import {
   READ_EXAM_CATEGORY_BY_ID,
   READ_EXAM_CATEGORY_IDS,
-} from '@lib/graphql/user/query/examQuery';
+} from '@lib/graphql/query/examQuery';
 import {
   ReadMockExamCategoryByCategoryIdQuery,
   ReadMockExamCategoryIdsQuery,
-} from '@lib/graphql/user/query/examQuery.generated';
+} from '@lib/graphql/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import wrapper from '@modules/redux/store/configureStore';

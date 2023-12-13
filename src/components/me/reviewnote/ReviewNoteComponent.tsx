@@ -1,12 +1,12 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import { circleIcon, clearIcon, triangleIcon } from '@lib/constants';
-import { useLazyReadQuestionsByExamId } from '@lib/graphql/user/hook/useExamQuestion';
+import { useLazyReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
 import {
   useReadExamTitleAndIdByState,
   useResetAllQuestionState,
-} from '@lib/graphql/user/hook/useQuestionState';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+} from '@lib/graphql/hook/useQuestionState';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import { Button, Checkbox, message } from 'antd';

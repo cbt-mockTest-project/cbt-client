@@ -7,7 +7,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import CategoryIcon from '@mui/icons-material/Category';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { homeRouteStackKey } from '@lib/constants';
 import { checkUrl } from '@lib/utils/utils';

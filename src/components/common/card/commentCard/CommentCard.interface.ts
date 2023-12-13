@@ -1,4 +1,4 @@
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { UserRole } from 'types';
 
 export interface CommentCardOption {

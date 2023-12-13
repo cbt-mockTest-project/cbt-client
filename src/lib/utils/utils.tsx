@@ -1,14 +1,14 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 import { circleIcon } from '@lib/constants';
-import { PUSH_TO_TELEGRAM } from '@lib/graphql/user/query/telegramQuery';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
 import { initializeApollo } from '@modules/apollo';
 import * as Sentry from '@sentry/nextjs';
 import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
+import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { cloneDeep } from 'lodash';
 import { addHours, format } from 'date-fns';
 

@@ -3,14 +3,14 @@ import { addApolloState, initializeApollo } from '@modules/apollo';
 import {
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_TITLES_QUERY,
-} from '@lib/graphql/user/query/examQuery';
+} from '@lib/graphql/query/examQuery';
 import Layout from '@components/common/layout/Layout';
 import { GetStaticProps } from 'next';
 import WithHead from '@components/common/head/WithHead';
 import {
   ReadAllMockExamCategoriesQuery,
   ReadMockExamTitlesByCateoryQuery,
-} from '@lib/graphql/user/query/examQuery.generated';
+} from '@lib/graphql/query/examQuery.generated';
 import { ExamTitleAndId, UserRole } from 'types';
 import styled from 'styled-components';
 import { cloneDeep } from 'lodash';

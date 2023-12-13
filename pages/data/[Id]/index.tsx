@@ -1,12 +1,12 @@
 import WithHead from '@components/common/head/WithHead';
 import Layout from '@components/common/layout/Layout';
 import DataDetailComponent from '@components/data/detail/DataDetailComponent';
-import { READ_POST, READ_POSTS } from '@lib/graphql/user/query/postQuery';
+import { READ_POST, READ_POSTS } from '@lib/graphql/query/postQuery';
 import {
   ReadPostQuery,
   ReadPostQueryVariables,
   ReadPostsQuery,
-} from '@lib/graphql/user/query/postQuery.generated';
+} from '@lib/graphql/query/postQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { dataActions } from '@modules/redux/slices/data';
 import wrapper, { useAppSelector } from '@modules/redux/store/configureStore';

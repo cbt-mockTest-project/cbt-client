@@ -1,5 +1,5 @@
 import Modal, { ModalProps } from '@components/common/modal/Modal';
-import { useCreateFeedback } from '@lib/graphql/user/hook/useFeedBack';
+import { useCreateFeedback } from '@lib/graphql/hook/useFeedBack';
 import TextArea from 'antd/lib/input/TextArea';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';

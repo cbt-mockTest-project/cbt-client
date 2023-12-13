@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { LoginInput } from 'types';
 import ErrorText from '../layout/errorText/ErrorText';
-import { useLoginMutation } from '@lib/graphql/user/hook/useUser';
+import { useLoginMutation } from '@lib/graphql/hook/useUser';
 import GoogleIconSVG from '@mui/icons-material/Google';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
 import {

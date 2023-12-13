@@ -2,18 +2,18 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Layout from '@components/common/layout/Layout';
 import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/user/query/questionQuery';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
+import { READ_QUESTIONS_BY_ID } from '@lib/graphql/query/questionQuery';
 import { convertExamTitle } from '@lib/utils/utils';
 import WithHead from '@components/common/head/WithHead';
-import { READ_ALL_MOCK_EXAM } from '@lib/graphql/user/query/examQuery';
-import { ReadAllMockExamQuery } from '@lib/graphql/user/query/examQuery.generated';
+import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
+import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { ReadMockExamQuestionsByMockExamIdInput, UserRole } from 'types';
 import dynamic from 'next/dynamic';
 import SolutionComponentSkeleton from '@components/solution/SolutionComponentSkeleton';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import styled from 'styled-components';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 
 const SolutionComponent = dynamic(
   () => import('@components/solution/SolutionComponent'),

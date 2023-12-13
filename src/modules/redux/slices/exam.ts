@@ -1,4 +1,4 @@
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/user/query/questionQuery.generated';
+import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export type QuestionListType =

@@ -1,4 +1,4 @@
-import { useUpdatePayment } from '@lib/graphql/user/hook/usePayment';
+import { useUpdatePayment } from '@lib/graphql/hook/usePayment';
 import { isServer, loadScript } from '@lib/utils/utils';
 import { message } from 'antd';
 import { useEffect } from 'react';

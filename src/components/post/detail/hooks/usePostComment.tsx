@@ -1,6 +1,6 @@
-import { useCreatePostComment } from '@lib/graphql/user/hook/usePostComment';
-import { READ_POST } from '@lib/graphql/user/query/postQuery';
-import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
+import { useCreatePostComment } from '@lib/graphql/hook/usePostComment';
+import { READ_POST } from '@lib/graphql/query/postQuery';
+import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';

@@ -1,4 +1,4 @@
-import { useSendFindPasswordMail } from '@lib/graphql/user/hook/useUser';
+import { useSendFindPasswordMail } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { Button, Input, message } from 'antd';
 import React from 'react';

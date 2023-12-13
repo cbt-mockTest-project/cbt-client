@@ -1,8 +1,8 @@
 import AchievCheckButtonGroup from '@components/common/button/AchievCheckButtonGroup';
 import Tooltip from '@components/common/tooltip/Tooltip';
 import { loginModal } from '@lib/constants';
-import { useChangeQuestionState } from '@lib/graphql/user/hook/useQuestionState';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
 import { coreActions } from '@modules/redux/slices/core';

@@ -12,7 +12,7 @@ import {
   useEditExam,
   useLazyReadMyExamCategories,
   useReadExamTitles,
-} from '@lib/graphql/user/hook/useExam';
+} from '@lib/graphql/hook/useExam';
 import { DefaultOptionType } from 'antd/lib/select';
 import useInput from '@lib/hooks/useInput';
 import SelectAdd, { SelectAddProps } from '@components/common/select/SelectAdd';
@@ -27,7 +27,7 @@ import QuestionAndSolutionForm from './QuestionAndSolutionForm';
 import {
   useCreateQusetion,
   useLazyReadQuestionNumbers,
-} from '@lib/graphql/user/hook/useExamQuestion';
+} from '@lib/graphql/hook/useExamQuestion';
 import Portal from '@components/common/portal/Portal';
 import ExamPreviewModal from '@components/common/modal/ExamPreviewModal';
 import useToggle from '@lib/hooks/useToggle';
@@ -35,7 +35,7 @@ import { useRouter } from 'next/router';
 import EditNameModal from '@components/common/modal/EditNameModal';
 import { handleError } from '@lib/utils/utils';
 import CreateExamFeedbackModal from './modal/CreateExamFeedbackModal';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import Dimmed from '@components/common/dimmed/Dimmed';
 
 interface CreateExamComponentProps {}

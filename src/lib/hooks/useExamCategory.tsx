@@ -8,7 +8,7 @@ import {
   useDeleteExamCategory,
   useEditCategory,
   useLazyReadCategoryById,
-} from '../graphql/user/hook/useExam';
+} from '../graphql/hook/useExam';
 import {
   useAppDispatch,
   useAppSelector,

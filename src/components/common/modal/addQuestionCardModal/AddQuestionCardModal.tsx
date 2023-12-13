@@ -1,4 +1,4 @@
-import { useCreateQuestionCard } from '@lib/graphql/user/hook/useQuestionCard';
+import { useCreateQuestionCard } from '@lib/graphql/hook/useQuestionCard';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Select, { DefaultOptionType } from 'antd/lib/select';

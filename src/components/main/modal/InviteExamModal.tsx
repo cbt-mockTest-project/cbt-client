@@ -3,7 +3,7 @@ import {
   useDeleteExamCategoryViewer,
   useGetInvitedExams,
   useUpdateExamCategoryViewerApproveState,
-} from '@lib/graphql/user/hook/useExamViewer';
+} from '@lib/graphql/hook/useExamViewer';
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';

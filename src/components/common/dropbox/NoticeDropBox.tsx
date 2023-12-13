@@ -7,10 +7,10 @@ import {
   useDeleteAllNotices,
   useDeleteNotice,
   useEditNotice,
-} from '@lib/graphql/user/hook/useNotice';
+} from '@lib/graphql/hook/useNotice';
 import { useApollo } from '@modules/apollo';
-import { MeQuery } from '@lib/graphql/user/query/userQuery.generated';
-import { ME_QUERY } from '@lib/graphql/user/query/userQuery';
+import { MeQuery } from '@lib/graphql/query/userQuery.generated';
+import { ME_QUERY } from '@lib/graphql/query/userQuery';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';

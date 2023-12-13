@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useLogoutMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { DropBoxOption } from '../../dropbox/DropBox';

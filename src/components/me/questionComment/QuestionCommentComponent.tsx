@@ -1,8 +1,8 @@
 import {
   useReadExamTitleAndIdByComment,
   useLazyReadMyQuestionComments,
-} from '@lib/graphql/user/hook/useQusetionComment';
-import { ReadMyQuestionCommentsQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
+} from '@lib/graphql/hook/useQusetionComment';
+import { ReadMyQuestionCommentsQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Select } from 'antd';

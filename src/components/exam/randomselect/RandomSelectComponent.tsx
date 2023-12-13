@@ -7,7 +7,7 @@ import {
   loginModal,
   triangleIcon,
 } from '@lib/constants';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';

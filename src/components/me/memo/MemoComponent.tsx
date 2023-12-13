@@ -5,7 +5,7 @@ import {
   useLazyReadQuestionCards,
   useReadQuestionCardCategories,
   useUpdateQuestionCard,
-} from '@lib/graphql/user/hook/useQuestionCard';
+} from '@lib/graphql/hook/useQuestionCard';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';

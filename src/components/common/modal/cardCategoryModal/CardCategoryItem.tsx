@@ -1,7 +1,7 @@
 import {
   useDeleteQuestionCardCategory,
   useUpdateQuestionCardCategory,
-} from '@lib/graphql/user/hook/useQuestionCard';
+} from '@lib/graphql/hook/useQuestionCard';
 import useInput from '@lib/hooks/useInput';
 import useToggle from '@lib/hooks/useToggle';
 import { handleError } from '@lib/utils/utils';

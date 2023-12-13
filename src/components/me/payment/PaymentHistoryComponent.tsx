@@ -1,4 +1,4 @@
-import { useGetMyPayments } from '@lib/graphql/user/hook/usePayment';
+import { useGetMyPayments } from '@lib/graphql/hook/usePayment';
 import { responsive } from '@lib/utils/responsive';
 import { convertToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';

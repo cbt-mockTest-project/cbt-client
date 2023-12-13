@@ -2,14 +2,14 @@ import { loginModal } from '@lib/constants';
 import {
   useCheckDiscountCode,
   useUpdateDiscountCode,
-} from '@lib/graphql/user/hook/useDiscount';
-import { useCreatePayment } from '@lib/graphql/user/hook/usePayment';
+} from '@lib/graphql/hook/useDiscount';
+import { useCreatePayment } from '@lib/graphql/hook/usePayment';
 import {
   useCheckUserRole,
   useCreateUserRole,
   useDeleteUserRole,
   useMeQuery,
-} from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useUser';
 import useBootpay from '@lib/hooks/useBootpay';
 import { checkRole } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';

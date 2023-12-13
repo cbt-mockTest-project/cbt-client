@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import { useCreateFreeTrial, useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useCreateFreeTrial, useMeQuery } from '@lib/graphql/hook/useUser';
 import { message } from 'antd';
 import { checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';

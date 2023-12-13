@@ -5,9 +5,9 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { checkRole, makeMoneyString } from '@lib/utils/utils';
 import usePayment from './usePayment';
-import { useCheckDiscountCode } from '@lib/graphql/user/hook/useDiscount';
+import { useCheckDiscountCode } from '@lib/graphql/hook/useDiscount';
 import useInput from '@lib/hooks/useInput';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 
 const PricingSelectModalBlock = styled(Modal)`
   padding: 30px 20px;

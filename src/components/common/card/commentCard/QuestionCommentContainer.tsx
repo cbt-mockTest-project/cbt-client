@@ -1,12 +1,12 @@
 import {
   useDeleteQuestionCommnet,
   useEditQuestionCommnet,
-} from '@lib/graphql/user/hook/useQusetionComment';
-import { useEditQuestionCommentLike } from '@lib/graphql/user/hook/useQusetionCommentLike';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { FULL_QUESTION_COMMENT_FRAGMENT } from '@lib/graphql/user/query/questionCommentFragment';
-import { READ_QUESTION_COMMENT } from '@lib/graphql/user/query/questionCommentQuery';
-import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/user/query/questionCommentQuery.generated';
+} from '@lib/graphql/hook/useQusetionComment';
+import { useEditQuestionCommentLike } from '@lib/graphql/hook/useQusetionCommentLike';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { FULL_QUESTION_COMMENT_FRAGMENT } from '@lib/graphql/query/questionCommentFragment';
+import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
+import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';

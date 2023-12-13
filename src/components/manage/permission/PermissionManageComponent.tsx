@@ -1,5 +1,5 @@
 import SearchInput from '@components/common/input/SearchInput';
-import { useLazySearchUser } from '@lib/graphql/user/hook/useUser';
+import { useLazySearchUser } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { responsive } from '@lib/utils/responsive';
 import { Checkbox, Col, List, Row } from 'antd';

@@ -1,12 +1,12 @@
 import {
   useDeletePostComment,
   useEditPostComment,
-} from '@lib/graphql/user/hook/usePostComment';
-import { useEditPostCommentLike } from '@lib/graphql/user/hook/usePostCommentLike';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { FULL_POST_COMMENT_FRAGMENT } from '@lib/graphql/user/query/postCommentFragment';
-import { READ_POST } from '@lib/graphql/user/query/postQuery';
-import { ReadPostQuery } from '@lib/graphql/user/query/postQuery.generated';
+} from '@lib/graphql/hook/usePostComment';
+import { useEditPostCommentLike } from '@lib/graphql/hook/usePostCommentLike';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { FULL_POST_COMMENT_FRAGMENT } from '@lib/graphql/query/postCommentFragment';
+import { READ_POST } from '@lib/graphql/query/postQuery';
+import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';

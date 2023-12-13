@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { loginModal } from '@lib/constants';
-import { useLogoutMutation, useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useLogoutMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';

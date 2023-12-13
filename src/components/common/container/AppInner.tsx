@@ -1,5 +1,5 @@
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import { useCreateVisit } from '@lib/graphql/user/hook/useVisit';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useCreateVisit } from '@lib/graphql/hook/useVisit';
 import { checkRole, handleError } from '@lib/utils/utils';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';

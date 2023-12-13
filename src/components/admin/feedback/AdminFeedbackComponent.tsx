@@ -1,4 +1,4 @@
-import { useReadQuestionFeedbackByRecommendationCount } from '@lib/graphql/user/hook/useQuestionFeedback';
+import { useReadQuestionFeedbackByRecommendationCount } from '@lib/graphql/hook/useQuestionFeedback';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';

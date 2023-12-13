@@ -3,7 +3,7 @@ import ErrorText from '@components/common/layout/errorText/ErrorText';
 import {
   useEmailVerification,
   useRegisterMutation,
-} from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useUser';
 import palette from '@styles/palette';
 import { Button, Checkbox, Input, message } from 'antd';
 import { Controller, useForm } from 'react-hook-form';

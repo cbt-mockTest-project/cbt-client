@@ -1,4 +1,4 @@
-import { useDeleteQuestion } from '@lib/graphql/user/hook/useExamQuestion';
+import { useDeleteQuestion } from '@lib/graphql/hook/useExamQuestion';
 import { handleError } from '@lib/utils/utils';
 import { Button, Popconfirm, message } from 'antd';
 import { useRouter } from 'next/router';

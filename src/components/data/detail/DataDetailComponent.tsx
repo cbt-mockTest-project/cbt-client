@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button, Card, message } from 'antd';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
-import { useDeletePost, useLazyReadPost } from '@lib/graphql/user/hook/usePost';
+import { useDeletePost, useLazyReadPost } from '@lib/graphql/hook/usePost';
 import { convertToKST, handleError } from '@lib/utils/utils';
 import EditorStyle from '@styles/editorStyle';
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
@@ -14,9 +14,9 @@ import {
 import { useRouter } from 'next/router';
 import { dataActions } from '@modules/redux/slices/data';
 import { Post } from 'types';
-import { useEditPostLike } from '@lib/graphql/user/hook/usePostLike';
+import { useEditPostLike } from '@lib/graphql/hook/usePostLike';
 import DataDetailComment from './DataDetailComment';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import Link from 'next/link';
 
 const DataDetailComponentBlock = styled.div`

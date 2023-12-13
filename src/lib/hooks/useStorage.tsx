@@ -1,8 +1,8 @@
 import {
   useCreateExamCategory,
   useLazyGetExamCategories,
-} from '@lib/graphql/user/hook/useExam';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useExam';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { storageActions } from '@modules/redux/slices/storage';
 import {

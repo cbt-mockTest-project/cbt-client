@@ -6,7 +6,7 @@ import { Button, Input, Select, Spin } from 'antd';
 import { responsive } from '@lib/utils/responsive';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
 import parse from 'html-react-parser';
-import { useLazyReadPosts } from '@lib/graphql/user/hook/usePost';
+import { useLazyReadPosts } from '@lib/graphql/hook/usePost';
 import { Post, PostCategory, PostOrderType } from 'types';
 import {
   useAppDispatch,
@@ -15,7 +15,7 @@ import {
 import { dataActions } from '@modules/redux/slices/data';
 import { useRouter } from 'next/router';
 import { convertToKST, isServer, reomveImgTag } from '@lib/utils/utils';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal } from '@lib/constants';
 import { DATA_ORDER_OPTIONS } from './Data.constants';

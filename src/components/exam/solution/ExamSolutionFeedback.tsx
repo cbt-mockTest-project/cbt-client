@@ -3,8 +3,8 @@ import { loginModal } from '@lib/constants';
 import {
   useDeleteQuestionFeedback,
   useUpdateQuestionFeedbackRecommendation,
-} from '@lib/graphql/user/hook/useQuestionFeedback';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useQuestionFeedback';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';

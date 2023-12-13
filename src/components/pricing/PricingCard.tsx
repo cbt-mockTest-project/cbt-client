@@ -11,7 +11,7 @@ import useToggle from '@lib/hooks/useToggle';
 import {
   useLazyGetRoleCount,
   useLazyGetRolesCount,
-} from '@lib/graphql/user/hook/useUser';
+} from '@lib/graphql/hook/useUser';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
 const PricingCardBlock = styled.div`

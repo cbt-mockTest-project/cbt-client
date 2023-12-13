@@ -1,4 +1,4 @@
-import { MockExamQuestionComment } from './../../../../types';
+import { MockExamQuestionComment } from '../../../types';
 import { FULL_QUESTION_COMMENT_FRAGMENT } from './questionCommentFragment';
 import { gql } from '@apollo/client';
 

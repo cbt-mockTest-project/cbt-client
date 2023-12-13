@@ -1,4 +1,4 @@
-import { useSendFindPasswordMail } from '@lib/graphql/user/hook/useUser';
+import { useSendFindPasswordMail } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';

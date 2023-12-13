@@ -1,4 +1,4 @@
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { checkRole } from '@lib/utils/utils';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';

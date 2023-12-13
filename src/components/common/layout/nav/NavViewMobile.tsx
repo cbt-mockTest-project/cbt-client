@@ -1,6 +1,6 @@
 import NoticeDropBox from '@components/common/dropbox/NoticeDropBox';
 import OuterClick from '@components/common/outerClick/OuterClick';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';

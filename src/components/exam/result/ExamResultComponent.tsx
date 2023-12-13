@@ -13,7 +13,7 @@ import {
   triangleIcon,
 } from '@lib/constants';
 import { responsive } from '@lib/utils/responsive';
-import { useMeQuery } from '@lib/graphql/user/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { questionsVar } from '../ExamComponent';

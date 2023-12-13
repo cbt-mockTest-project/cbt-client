@@ -4,7 +4,7 @@ import {
   MockExamQuestionFeedback,
 } from './types';
 import { QuestionState } from 'types';
-import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/user/query/questionQuery.generated';
+import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/query/questionQuery.generated';
 export interface QuestionType
   extends Pick<
     ReadMockExamQuestionsByMockExamIdQuery['readMockExamQuestionsByMockExamId']['questions'][0],
