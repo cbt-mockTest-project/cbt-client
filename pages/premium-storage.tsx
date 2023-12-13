@@ -7,7 +7,7 @@ import { ExamSource, MockExamCategory } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import wrapper from '@modules/redux/store/configureStore';
-import { moduStorageActions } from '@modules/redux/slices/moduStorage';
+import { moduStorageActions } from '@modules/redux/slices/storage';
 
 interface ModuStorageProps {}
 

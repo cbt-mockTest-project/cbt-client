@@ -81,3 +81,9 @@ export interface SetCategoryPayload {
   category: MockExamCategory;
   shouldUpdateOriginal?: boolean;
 }
+
+export enum StorageType {
+  MODU = 'modu',
+  PREMIUM = 'premium',
+  MY = 'my',
+}

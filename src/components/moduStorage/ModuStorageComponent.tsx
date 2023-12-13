@@ -6,11 +6,13 @@ import { responsive } from '@lib/utils/responsive';
 import { PlusOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/user/hook/useUser';
-import useModuCategories from '@lib/hooks/useModuCategories';
+import useModuCategories from '@lib/hooks/useStorage';
 import SaveCategoryModal from './CreateCategoryModal';
 import { useLazyGetExamCategories } from '@lib/graphql/user/hook/useExam';
 import { useDispatch } from 'react-redux';
-import { moduStorageActions } from '@modules/redux/slices/moduStorage';
+import { storageActions } from '@modules/redux/slices/storage';
+import useStorage from '@lib/hooks/useStorage';
+import { StorageType } from 'customTypes';
 
 const ModuStorageComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -58,7 +60,7 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
   const [getExamCategories] = useLazyGetExamCategories();
   const [isSaveCategoryModalOpen, setIsSaveCategoryModalOpen] =
     useState<boolean>(false);
-  const { categories } = useModuCategories();
+  const { categories } = useStorage(StorageType.MODU);
 
   useEffect(() => {
     if (meQuery?.me.user?.role === UserRole.Admin) {
@@ -70,7 +72,7 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
         },
       }).then((res) => {
         dispatch(
-          moduStorageActions.setCategories(
+          storageActions.setModuStorageCategories(
             res.data?.getExamCategories.categories as MockExamCategory[]
           )
         );

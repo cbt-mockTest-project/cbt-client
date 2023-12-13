@@ -1,4 +1,4 @@
-import useModuCategories from '@lib/hooks/useModuCategories';
+import useModuCategories from '@lib/hooks/useStorage';
 import { Input, Modal, ModalProps, Radio, message } from 'antd';
 import React from 'react';
 import styled from 'styled-components';

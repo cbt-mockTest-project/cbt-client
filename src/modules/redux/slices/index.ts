@@ -9,16 +9,16 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { cloneDeep } from 'lodash';
 import examSlice, { ExamState } from './exam';
 import mockExamSlice, { MockExamState } from './mockExam';
-import moduStorageSlice, { ModuStorageState } from './moduStorage';
 import examSettingSlice, { ExamSettingState } from './examSetting';
 import examCategorySlice, { ExamCategoryState } from './examCategory';
+import storageSlice, { StorageState } from './storage';
 
 export interface RootState {
   data: DataState;
   core: CoreState;
   exam: ExamState;
   mockExam: MockExamState;
-  moduStorage: ModuStorageState;
+  storage: StorageState;
   examSetting: ExamSettingState;
   examCategory: ExamCategoryState;
 }
@@ -43,7 +43,7 @@ const rootReducer = (
         data: dataSlice.reducer,
         exam: examSlice.reducer,
         mockExam: mockExamSlice.reducer,
-        moduStorage: moduStorageSlice.reducer,
+        storage: storageSlice.reducer,
         examSetting: examSettingSlice.reducer,
         examCategory: examCategorySlice.reducer,
       });

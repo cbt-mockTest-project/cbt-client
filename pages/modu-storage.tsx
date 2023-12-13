@@ -1,4 +1,3 @@
-import Layout02 from '@components/common/layout/MainLayout';
 import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/user/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/user/query/examQuery.generated';
@@ -8,7 +7,7 @@ import { ExamSource, MockExamCategory } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import wrapper from '@modules/redux/store/configureStore';
-import { moduStorageActions } from '@modules/redux/slices/moduStorage';
+import { storageActions } from '@modules/redux/slices/storage';
 
 interface ModuStorageProps {}
 
@@ -46,7 +45,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         };
       }
       store.dispatch(
-        moduStorageActions.setCategories(categories as MockExamCategory[])
+        storageActions.setModuStorageCategories(
+          categories as MockExamCategory[]
+        )
       );
       return addApolloState(apolloClient, {
         revalidate: 43200,
