@@ -16,15 +16,20 @@ import React from 'react';
 import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
 interface CategoryPageProps {
+  category: MockExamCategory;
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
 }
 
-const CategoryPage: NextPage<CategoryPageProps> = ({ categoryQueryInput }) => {
+const CategoryPage: NextPage<CategoryPageProps> = ({
+  categoryQueryInput,
+  category,
+}) => {
   return (
     <>
       <WithHead
-        title="모두CBT | 국가고시 실기시험 부시기!"
-        pageHeadingTitle="모두CBT 서비스 메인페이지"
+        title={category.name + ' | 모두CBT'}
+        description={category.description}
+        pageHeadingTitle="모두CBT 카테고리 페이지"
       />
       <CategoryComponent categoryQueryInput={categoryQueryInput} />
     </>
