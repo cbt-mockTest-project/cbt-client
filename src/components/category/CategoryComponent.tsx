@@ -21,6 +21,8 @@ import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
+import EditExamsModal from './EditExamsModal';
+import TextInput from '@components/common/input/TextInput';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -75,18 +77,7 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
-  .category-exam-filter-input {
-    margin-top: 20px;
-    border-radius: 0;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    max-width: 500px;
 
-    &:focus {
-      box-shadow: none;
-    }
-  }
   .category-setting-button-wrapper {
     position: absolute;
     top: 30px;
@@ -126,10 +117,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 }) => {
   const { data: meQuery } = useMeQuery();
   const {
-    originalCategory,
+    handleFilterExams,
     category,
     fetchCategory,
-    setExamCategory,
     handleDeleteCategory,
     storageType,
   } = useExamCategory();
@@ -141,6 +131,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     handleChangeMultipleSelectMode,
   } = useExamSetting({ category });
 
+  const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
   const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
   const { getExamSettingHistory } = useExamSettingHistory();
@@ -176,21 +167,15 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     {
       key: 3,
       label: (
-        <button style={{ color: palette.textColor }}>시험지 추가하기</button>
+        <button
+          style={{ color: palette.textColor }}
+          onClick={() => setEditExamsModalOpen(true)}
+        >
+          시험지 추가하기
+        </button>
       ),
     },
   ];
-
-  const onChangeExamFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!originalCategory) return;
-    const filteredCategory = {
-      ...originalCategory,
-      mockExam: originalCategory.mockExam.filter((exam) =>
-        exam.title.includes(e.target.value)
-      ),
-    };
-    setExamCategory(filteredCategory, false);
-  };
 
   useEffect(() => {
     fetchCategory(categoryQueryInput);
@@ -226,10 +211,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             <span>다중 선택 모드</span>
           </div>
           <div>
-            <Input
-              onChange={onChangeExamFilter}
-              className="category-exam-filter-input"
-              placeholder="암기장 필터링"
+            <TextInput
+              onChange={(e) => handleFilterExams(e.target.value)}
+              placeholder="시험지 필터링"
             />
           </div>
           {examSetting.isMultipleSelectMode && (
@@ -277,18 +261,26 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           </div>
         </Dropdown>
       )}
-      <SaveCategoryModal
-        open={saveCategoryModalOpen}
-        onCancel={() => setSaveCategoryModalOpen(false)}
-        onClose={() => setSaveCategoryModalOpen(false)}
-        storageType={storageType}
-        categoryId={category.id}
-        defaultValues={{
-          name: category.name,
-          description: category.description,
-          isPublic: category.isPublic,
-        }}
-      />
+      {saveCategoryModalOpen && (
+        <SaveCategoryModal
+          open={saveCategoryModalOpen}
+          onCancel={() => setSaveCategoryModalOpen(false)}
+          onClose={() => setSaveCategoryModalOpen(false)}
+          storageType={storageType}
+          categoryId={category.id}
+          defaultValues={{
+            name: category.name,
+            description: category.description,
+            isPublic: category.isPublic,
+          }}
+        />
+      )}
+      {editExamsModalOpen && (
+        <EditExamsModal
+          open={editExamsModalOpen}
+          onCancel={() => setEditExamsModalOpen(false)}
+        />
+      )}
     </CategoryComponentBlock>
   );
 };

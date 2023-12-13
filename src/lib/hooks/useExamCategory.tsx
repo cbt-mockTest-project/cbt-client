@@ -1,13 +1,17 @@
 import {
   EditMockExamCategoryInput,
   ExamSource,
+  MockExam,
   MockExamCategory,
   ReadMockExamCategoryByCategoryIdInput,
 } from 'types';
 import {
+  useAddExamToCategory,
   useDeleteExamCategory,
   useEditCategory,
+  useLazyGetMyExams,
   useLazyReadCategoryById,
+  useRemoveExamFromCategory,
 } from '../graphql/hook/useExam';
 import {
   useAppDispatch,
@@ -19,15 +23,25 @@ import { useRouter } from 'next/router';
 import { message } from 'antd';
 import { useMemo } from 'react';
 import { StorageType } from 'customTypes';
+import useExamSetting from './useExamSetting';
+import { debounce } from 'lodash';
 
 const useExamCategory = () => {
   const router = useRouter();
   const [readCategory] = useLazyReadCategoryById();
+  const [getMyExams] = useLazyGetMyExams();
+  const [addExamToCategory] = useAddExamToCategory();
+  const [removeExamFromCategory] = useRemoveExamFromCategory();
   const [deleteCategory] = useDeleteExamCategory();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
 
   const dispatch = useAppDispatch();
   const category = useAppSelector((state) => state.examCategory.category);
+  const { handleExamSelect } = useExamSetting({ category });
+  const myExams = useAppSelector((state) => state.examCategory.myExams);
+  const originalMyExams = useAppSelector(
+    (state) => state.examCategory.originalMyExams
+  );
   const originalCategory = useAppSelector(
     (state) => state.examCategory.originalCategory
   );
@@ -50,6 +64,17 @@ const useExamCategory = () => {
         setExamCategory(
           res.data.readMockExamCategoryByCategoryId.category as MockExamCategory
         );
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const fetchMyExams = async () => {
+    try {
+      const res = await getMyExams();
+      if (res.data?.getMyExams.ok) {
+        setMyExams(res.data.getMyExams.exams as MockExam[]);
       }
     } catch (e) {
       handleError(e);
@@ -104,6 +129,76 @@ const useExamCategory = () => {
     }
   };
 
+  const handleAddExamToCategory = async (examId: number) => {
+    try {
+      if (!category?.id) return;
+      const res = await addExamToCategory({
+        variables: {
+          input: {
+            categoryId: category.id,
+            examId,
+          },
+        },
+      });
+      if (res.data?.addExamToCategory.ok) {
+        const newExam = myExams.find((exam) => exam.id === examId);
+        const updatedCategory = {
+          ...category,
+          mockExam: [newExam, ...category.mockExam],
+        } as MockExamCategory;
+        setExamCategory(updatedCategory);
+        return;
+      }
+      message.error(res.data?.addExamToCategory.error);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const handleRemoveExamFromCategory = async (examId: number) => {
+    try {
+      if (!category?.id) return;
+      const res = await removeExamFromCategory({
+        variables: {
+          input: {
+            categoryId: category.id,
+            examId,
+          },
+        },
+      });
+      if (res.data?.removeExamFromCategory.ok) {
+        handleExamSelect(examId);
+        const updatedCategory = {
+          ...category,
+          mockExam: category.mockExam.filter((exam) => exam.id !== examId),
+        } as MockExamCategory;
+        setExamCategory(updatedCategory);
+        return;
+      }
+      message.error(res.data?.removeExamFromCategory.error);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const handleFilterExams = debounce((keyword: string) => {
+    if (!originalCategory) return;
+    const filteredCategory = {
+      ...originalCategory,
+      mockExam: originalCategory.mockExam.filter((exam) =>
+        exam.title.includes(keyword)
+      ),
+    };
+    setExamCategory(filteredCategory, false);
+  }, 300);
+
+  const handleFilterMyExams = debounce((keyword: string) => {
+    const filteredExams = originalMyExams.filter((exam) =>
+      exam.title.includes(keyword)
+    );
+    setMyExams(filteredExams, false);
+  }, 300);
+
   const setExamCategory = (
     category: MockExamCategory,
     shouldUpdateOriginal: boolean = true
@@ -113,13 +208,25 @@ const useExamCategory = () => {
     );
   };
 
+  const setMyExams = (
+    myExams: MockExam[],
+    shouldUpdateOriginal: boolean = true
+  ) =>
+    dispatch(examCategoryActions.setMyExams({ myExams, shouldUpdateOriginal }));
+
   return {
     fetchCategory,
+    fetchMyExams,
     setExamCategory,
     category,
+    myExams,
     storageType,
     handleDeleteCategory,
     handleEditCategory,
+    handleAddExamToCategory,
+    handleRemoveExamFromCategory,
+    handleFilterExams,
+    handleFilterMyExams,
     editCategoryLoading,
     originalCategory,
   };

@@ -310,6 +310,7 @@ export const GET_MY_EXAMS = gql`
         title
         user {
           id
+          nickname
         }
       }
       ok

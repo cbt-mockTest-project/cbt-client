@@ -6,6 +6,7 @@ import {
   ReadMockExamCategoryByExamIdInput,
 } from 'types';
 import {
+  ADD_EXAM_TO_CATEGORY,
   CREATE_MOCK_EXAM_CATEGORY,
   CREATE_MOCK_EXAM_TITLE,
   DELETE_MOCK_EXAM,
@@ -14,15 +15,19 @@ import {
   EDIT_MOCK_EXAM,
   FIND_MY_EXAM_HISTORY_QUERY,
   GET_EXAM_CATEGORIES,
+  GET_MY_EXAMS,
   READ_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_CATEGORY_BY_EXAM_ID,
   READ_EXAM_CATEGORY_BY_ID,
   READ_EXAM_TITLES_QUERY,
   READ_MY_EXAM_CATEORIES_QUERY,
+  REMOVE_EXAM_FROM_CATEGORY,
   UPDATE_EXAM_ORDER,
 } from '../query/examQuery';
 import {
+  AddExamToCategoryMutation,
+  AddExamToCategoryMutationVariables,
   CreateMockExamCategoryMutation,
   CreateMockExamCategoryMutationVariables,
   CreateMockExamMutation,
@@ -39,6 +44,8 @@ import {
   FindMyExamHistoryQueryVariables,
   GetExamCategoriesQuery,
   GetExamCategoriesQueryVariables,
+  GetMyExamsQuery,
+  GetMyExamsQueryVariables,
   ReadMockExamCategoriesQuery,
   ReadMockExamCategoriesQueryVariables,
   ReadMockExamCategoryByCategoryIdQuery,
@@ -49,6 +56,8 @@ import {
   ReadMockExamTitlesByCateoryQueryVariables,
   ReadMyMockExamCategoriesQuery,
   ReadMyMockExamCategoriesQueryVariables,
+  RemoveExamFromCategoryMutation,
+  RemoveExamFromCategoryMutationVariables,
   UpdateExamOrderMutation,
   UpdateExamOrderMutationVariables,
 } from '../query/examQuery.generated';
@@ -165,3 +174,20 @@ export const useLazyReadCategoryById = () =>
     ReadMockExamCategoryByCategoryIdQuery,
     ReadMockExamCategoryByCategoryIdQueryVariables
   >(READ_EXAM_CATEGORY_BY_ID);
+
+export const useGetMyExams = () =>
+  useQuery<GetMyExamsQuery, GetMyExamsQueryVariables>(GET_MY_EXAMS);
+
+export const useLazyGetMyExams = () =>
+  useLazyQuery<GetMyExamsQuery, GetMyExamsQueryVariables>(GET_MY_EXAMS);
+
+export const useAddExamToCategory = () =>
+  useMutation<AddExamToCategoryMutation, AddExamToCategoryMutationVariables>(
+    ADD_EXAM_TO_CATEGORY
+  );
+
+export const useRemoveExamFromCategory = () =>
+  useMutation<
+    RemoveExamFromCategoryMutation,
+    RemoveExamFromCategoryMutationVariables
+  >(REMOVE_EXAM_FROM_CATEGORY);

@@ -1,4 +1,5 @@
 import {
+  MockExam,
   MockExamCategory,
   MockExamQuestionComment,
   MockExamQuestionFeedback,
@@ -79,6 +80,11 @@ export interface StudyQuery {
 
 export interface SetCategoryPayload {
   category: MockExamCategory;
+  shouldUpdateOriginal?: boolean;
+}
+
+export interface SetMyExamsPayload {
+  myExams: MockExam[];
   shouldUpdateOriginal?: boolean;
 }
 
