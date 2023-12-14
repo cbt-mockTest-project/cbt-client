@@ -10,6 +10,7 @@ export const GET_MY_BOOKMARKED_EXAMS = gql`
         slug
         title
         user {
+          profileImg
           id
           nickname
         }

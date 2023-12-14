@@ -62,7 +62,7 @@ const UserAuthBox: React.FC<UserAuthBoxProps> = ({ className }) => {
           <div className="user-auth-user-info">
             <Image
               className="user-auth-user-info-profile-image"
-              src="/png/profile/profile_default.png"
+              src={user.profileImg || '/png/profile/profile_default.png'}
               alt="프로필이미지"
               width={25}
               height={25}

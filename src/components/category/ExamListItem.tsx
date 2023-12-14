@@ -3,6 +3,8 @@ import BasicCard from '@components/common/card/BasicCard';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { responsive } from '@lib/utils/responsive';
+import { BookmarkOutlined } from '@mui/icons-material';
+import palette from '@styles/palette';
 import { Button, Checkbox, Modal } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import Image from 'next/image';
@@ -32,6 +34,13 @@ const ExamListItemBlock = styled.div`
     gap: 10px;
     font-size: 14px;
   }
+  .exam-list-item-user-profile-image {
+    border-radius: 50%;
+    background-color: ${palette.gray_200};
+  }
+  .exam-list-item-bookmark-button {
+    color: ${palette.textColor};
+  }
   @media (max-width: ${responsive.medium}) {
     width: 100%;
   }
@@ -59,6 +68,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       },
     });
   };
+  const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
   return (
     <ExamListItemBlock>
       {examSetting.isMultipleSelectMode && (
@@ -71,16 +83,23 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         <BasicCard hoverEffect>
           <div className="exam-list-item-top-wrapper">
             <span>{exam.title}</span>
-            {category?.user.id === meQuery?.me.user?.id && (
+            {category?.user.id === meQuery?.me.user?.id ? (
               <Button type="primary" onClick={handleRemoveExam}>
                 <MinusOutlined />
               </Button>
+            ) : (
+              <button
+                className="exam-list-item-bookmark-button"
+                onClick={handleBookmark}
+              >
+                <BookmarkOutlined />
+              </button>
             )}
           </div>
           <div className="exam-list-item-bottom-wrapper">
             <Image
               className="exam-list-item-user-profile-image"
-              src="/png/profile/profile_default.png"
+              src={exam.user.profileImg || '/png/profile/profile_default.png'}
               alt="프로필이미지"
               width={20}
               height={20}

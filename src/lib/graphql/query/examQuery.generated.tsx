@@ -144,19 +144,19 @@ export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, user: { __typename?: 'User', id: number, nickname: string } }>, user: { __typename?: 'User', id: number, nickname: string } } | null } };
+export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
 
 export type GetExamCategoriesQueryVariables = Types.Exact<{
   input: Types.GetExamCategoriesInput;
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
 
 export type GetMyExamsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMyExamsQuery = { __typename?: 'Query', getMyExams: { __typename?: 'GetMyExamsOutput', error?: string | null, ok: boolean, exams?: Array<{ __typename?: 'MockExam', id: number, slug?: string | null, title: string, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type GetMyExamsQuery = { __typename?: 'Query', getMyExams: { __typename?: 'GetMyExamsOutput', error?: string | null, ok: boolean, exams?: Array<{ __typename?: 'MockExam', id: number, slug?: string | null, title: string, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
 
 export type AddExamToCategoryMutationVariables = Types.Exact<{
   input: Types.AddExamToCategoryInput;
@@ -500,11 +500,13 @@ export const ReadMockExamCategoryByCategoryIdDocument = gql`
         title
         id
         user {
+          profileImg
           id
           nickname
         }
       }
       user {
+        profileImg
         id
         nickname
       }
@@ -526,6 +528,7 @@ export const GetExamCategoriesDocument = gql`
       name
       isPublic
       user {
+        profileImg
         id
         nickname
       }
@@ -546,6 +549,7 @@ export const GetMyExamsDocument = gql`
       slug
       title
       user {
+        profileImg
         id
         nickname
       }

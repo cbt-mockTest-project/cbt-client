@@ -6,7 +6,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type GetMyBookmarkedExamsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMyBookmarkedExamsQuery = { __typename?: 'Query', getMyBookmarkedExams: { __typename?: 'GetMyBookmarkedExamsOutput', error?: string | null, ok: boolean, exams?: Array<{ __typename?: 'MockExam', id: number, slug?: string | null, title: string, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type GetMyBookmarkedExamsQuery = { __typename?: 'Query', getMyBookmarkedExams: { __typename?: 'GetMyBookmarkedExamsOutput', error?: string | null, ok: boolean, exams?: Array<{ __typename?: 'MockExam', id: number, slug?: string | null, title: string, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
 
 export type ToggleExamBookmarkMutationVariables = Types.Exact<{
   input: Types.ToggleExamBookmarkInput;
@@ -26,6 +26,7 @@ export const GetMyBookmarkedExamsDocument = gql`
       slug
       title
       user {
+        profileImg
         id
         nickname
       }

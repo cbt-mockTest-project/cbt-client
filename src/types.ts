@@ -2749,6 +2749,7 @@ export type User = {
   postComment: Array<PostComment>;
   postData: Array<PostData>;
   postFile: Array<PostFile>;
+  profileImg: Scalars['String'];
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;

@@ -273,11 +273,13 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           title
           id
           user {
+            profileImg
             id
             nickname
           }
         }
         user {
+          profileImg
           id
           nickname
         }
@@ -296,6 +298,7 @@ export const GET_EXAM_CATEGORIES = gql`
         name
         isPublic
         user {
+          profileImg
           id
           nickname
         }
@@ -313,6 +316,7 @@ export const GET_MY_EXAMS = gql`
         slug
         title
         user {
+          profileImg
           id
           nickname
         }
