@@ -665,6 +665,7 @@ export type EditPostOutput = {
 export type EditProfileInput = {
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
+  profileImg?: InputMaybe<Scalars['String']>;
 };
 
 export type EditProfileOutput = {
@@ -691,6 +692,12 @@ export type ExamCoAuthor = {
   examCategory: MockExamCategory;
   id: Scalars['Float'];
   updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type ExamLike = {
+  __typename?: 'ExamLike';
+  exam: MockExam;
   user: User;
 };
 
@@ -846,6 +853,17 @@ export type GetMyBookmarkedExamsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetMyExamCategoriesOutput = {
+  __typename?: 'GetMyExamCategoriesOutput';
+  categories?: Maybe<Array<MockExamCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type GetMyExamsInput = {
+  isBookmarked?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type GetMyExamsOutput = {
   __typename?: 'GetMyExamsOutput';
   error?: Maybe<Scalars['String']>;
@@ -951,9 +969,12 @@ export type MockExam = {
   created_at: Scalars['DateTime'];
   examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examLikes: Array<ExamLike>;
   examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
+  isBookmarked?: Maybe<Scalars['Boolean']>;
+  isLiked?: Maybe<Scalars['Boolean']>;
   isPremium: Scalars['Boolean'];
   mockExamCategory: Array<MockExamCategory>;
   mockExamQuestion: Array<MockExamQuestion>;
@@ -969,9 +990,8 @@ export type MockExam = {
 
 export type MockExamBookmark = {
   __typename?: 'MockExamBookmark';
-  created_at: Scalars['DateTime'];
-  id: Scalars['Float'];
-  updated_at: Scalars['DateTime'];
+  exam: MockExam;
+  user: User;
 };
 
 export type MockExamCategory = {
@@ -1787,6 +1807,7 @@ export type Query = {
   getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyBookmarkedExams: GetMyBookmarkedExamsOutput;
+  getMyExamCategories: GetMyExamCategoriesOutput;
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
@@ -1865,6 +1886,11 @@ export type QueryGetFeedbacksWithFilterArgs = {
 
 export type QueryGetMyBlogPostRankArgs = {
   input: GetMyBlogPostRankInput;
+};
+
+
+export type QueryGetMyExamsArgs = {
+  input: GetMyExamsInput;
 };
 
 
@@ -2727,6 +2753,7 @@ export type User = {
   email: Scalars['String'];
   examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examLikes: Array<ExamLike>;
   examViewer?: Maybe<Array<ExamViewer>>;
   feedback: Array<Feedback>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;

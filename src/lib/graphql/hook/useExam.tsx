@@ -16,6 +16,7 @@ import {
   FIND_MY_EXAM_HISTORY_QUERY,
   GET_EXAM_CATEGORIES,
   GET_MY_EXAMS,
+  GET_MY_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES_QUERY,
   READ_EXAM_CATEGORY_BY_EXAM_ID,
@@ -44,6 +45,8 @@ import {
   FindMyExamHistoryQueryVariables,
   GetExamCategoriesQuery,
   GetExamCategoriesQueryVariables,
+  GetMyExamCategoriesQuery,
+  GetMyExamCategoriesQueryVariables,
   GetMyExamsQuery,
   GetMyExamsQueryVariables,
   ReadMockExamCategoriesQuery,
@@ -191,3 +194,8 @@ export const useRemoveExamFromCategory = () =>
     RemoveExamFromCategoryMutation,
     RemoveExamFromCategoryMutationVariables
   >(REMOVE_EXAM_FROM_CATEGORY);
+
+export const useLazyGetMyExamCategories = () =>
+  useLazyQuery<GetMyExamCategoriesQuery, GetMyExamCategoriesQueryVariables>(
+    GET_MY_EXAM_CATEGORIES
+  );

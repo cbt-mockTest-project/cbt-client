@@ -345,3 +345,22 @@ export const REMOVE_EXAM_FROM_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_MY_EXAM_CATEGORIES = gql`
+  query GetMyExamCategories {
+    getMyExamCategories {
+      error
+      categories {
+        id
+        name
+        isPublic
+        user {
+          id
+          nickname
+          profileImg
+        }
+      }
+      ok
+    }
+  }
+`;

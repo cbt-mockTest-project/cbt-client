@@ -1,6 +1,7 @@
 import {
   useCreateExamCategory,
   useLazyGetExamCategories,
+  useLazyGetMyExamCategories,
 } from '@lib/graphql/hook/useExam';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
@@ -21,6 +22,7 @@ import {
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
   const [getExamCategories] = useLazyGetExamCategories();
+  const [getMyExamCategories] = useLazyGetMyExamCategories();
   const { data: meQuery } = useMeQuery();
   const categories = useAppSelector((state) => {
     if (type === StorageType.PREMIUM)
@@ -38,6 +40,15 @@ const useStorage = (type: StorageType) => {
   }, [type]);
 
   const fetchCategories = async () => {
+    if (type === StorageType.MY) {
+      const res = await getMyExamCategories();
+      if (res.data?.getMyExamCategories.categories) {
+        setCategories(
+          res.data?.getMyExamCategories.categories as MockExamCategory[]
+        );
+      }
+      return;
+    }
     const res = await getExamCategories({
       variables: {
         input: {
