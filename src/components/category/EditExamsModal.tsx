@@ -1,11 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import palette from '@styles/palette';
-import { Button, Divider, Modal, ModalProps, Select } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, Modal, ModalProps, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditExamItem from './EditExamItem';
 import TextInput from '@components/common/input/TextInput';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 
 const EditExamsModalBlock = styled(Modal)`
   .edit-exams-filter-select {
@@ -39,11 +40,16 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {}
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
   const { fetchMyExams, myExams, handleFilterMyExams } = useExamCategory();
+  const { data: meQuery } = useMeQuery();
+  const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');
   const { ...modalProps } = props;
 
   useEffect(() => {
-    fetchMyExams();
-  }, []);
+    if (!meQuery?.me.user) return;
+    fetchMyExams({
+      isBookmarked: examType === 'bookmarked',
+    });
+  }, [meQuery, examType]);
   return (
     <EditExamsModalBlock {...modalProps} footer={false}>
       <p className="edit-exams-modal-title">시험지 추가</p>
@@ -54,17 +60,18 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       <div className="edit-exams-filter-box">
         <Select
           className="edit-exams-filter-select"
-          defaultValue="내 시험지"
+          value={examType}
           options={[
             {
               label: '내 시험지',
-              value: '내 시험지',
+              value: 'me',
             },
             {
               label: '저장된',
-              value: '저장된',
+              value: 'bookmarked',
             },
           ]}
+          onChange={setExamType}
         />
         <TextInput
           placeholder="시험지 필터링"

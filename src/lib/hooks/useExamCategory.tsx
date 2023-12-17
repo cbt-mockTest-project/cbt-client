@@ -48,6 +48,7 @@ const useExamCategory = () => {
   const originalCategory = useAppSelector(
     (state) => state.examCategory.originalCategory
   );
+
   const storageType = useMemo(() => {
     if (category?.source === ExamSource.EhsMaster) return StorageType.PREMIUM;
     if (category?.source === ExamSource.MoudCbt) return StorageType.MODU;
@@ -76,9 +77,19 @@ const useExamCategory = () => {
     }
   };
 
-  const fetchMyExams = async () => {
+  const fetchMyExams = async ({
+    isBookmarked = false,
+  }: {
+    isBookmarked?: boolean;
+  }) => {
     try {
-      const res = await getMyExams();
+      const res = await getMyExams({
+        variables: {
+          input: {
+            isBookmarked,
+          },
+        },
+      });
       if (res.data?.getMyExams.ok) {
         setMyExams(res.data.getMyExams.exams as MockExam[]);
       }
@@ -110,7 +121,6 @@ const useExamCategory = () => {
   const handleDeleteCategory = async () => {
     try {
       if (!category?.id) return;
-      console.log('bi');
       const res = await deleteCategory({
         variables: {
           input: {
@@ -119,13 +129,7 @@ const useExamCategory = () => {
         },
       });
       if (res.data?.deleteMockExamCategory.ok) {
-        const path =
-          category.source === ExamSource.User
-            ? '/user-storage'
-            : category.source === ExamSource.EhsMaster
-            ? '/premium-storage'
-            : '/modu-storage';
-        router.push(path);
+        router.push('/my-storage');
         return;
       }
       message.error(res.data?.deleteMockExamCategory.error);
