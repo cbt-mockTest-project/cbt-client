@@ -5,6 +5,7 @@ import { UserRole } from 'types';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
+import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 
 const ModuStorageComponentBlock = styled.div``;
 
@@ -12,7 +13,9 @@ interface ModuStorageComponentProps {}
 
 const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
-
+  const { openSaveCategoryModal, placeholder } = useSaveCategoryModal(
+    StorageType.MODU
+  );
   const { categories, fetchCategories } = useStorage(StorageType.MODU);
 
   useEffect(() => {
@@ -23,7 +26,11 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
 
   return (
     <ModuStorageComponentBlock>
-      <CategoryFolderList categories={categories} />
+      <CategoryFolderList
+        categories={categories}
+        openSaveCategoryModal={openSaveCategoryModal}
+      />
+      {placeholder}
     </ModuStorageComponentBlock>
   );
 };

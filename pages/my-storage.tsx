@@ -27,9 +27,7 @@ const MyStorage: NextPage<MyStorageProps> = () => {
       />
       <StorageLayout
         storageType={StorageType.MY}
-        hasOpenSaveCategoryModalButton={
-          meQuery?.me.user?.id === categories[0]?.user.id
-        }
+        hasOpenSaveCategoryModalButton={!!meQuery?.me.user}
         title="내 암기장"
       >
         <MyStorageComponent />
