@@ -11,7 +11,7 @@ const CategoryFolderListBlock = styled.ul`
 `;
 
 interface CategoryFolderListProps {
-  categories: MockExamCategory[];
+  categories: MockExamCategory[] | null;
   openSaveCategoryModal: () => void;
 }
 
@@ -21,10 +21,10 @@ const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
 }) => {
   return (
     <CategoryFolderListBlock>
-      {categories.map((category) => (
+      {categories?.map((category) => (
         <CategoryFolderListItem key={category.id} category={category} />
       ))}
-      {categories.length === 0 && (
+      {categories?.length === 0 && (
         <StorageEmpty handleButtonClick={openSaveCategoryModal} />
       )}
     </CategoryFolderListBlock>

@@ -2,15 +2,15 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MockExam, MockExamCategory, MockExamQuestion } from 'types';
 
 export interface StorageState {
-  moduStorageCategories: MockExamCategory[];
-  premiumStorageCategories: MockExamCategory[];
-  myStorageCategories: MockExamCategory[];
+  moduStorageCategories: MockExamCategory[] | null;
+  premiumStorageCategories: MockExamCategory[] | null;
+  myStorageCategories: MockExamCategory[] | null;
 }
 
 const storageState: StorageState = {
-  moduStorageCategories: [],
-  premiumStorageCategories: [],
-  myStorageCategories: [],
+  moduStorageCategories: null,
+  premiumStorageCategories: null,
+  myStorageCategories: null,
 };
 
 const storageSlice = createSlice({

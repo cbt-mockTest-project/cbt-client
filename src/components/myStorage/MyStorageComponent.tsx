@@ -9,7 +9,7 @@ const MyStorageComponentBlock = styled.div``;
 
 interface MyStorageComponentProps {}
 
-const MyStorageComponent: React.FC<MyStorageComponentProps> = () => {
+const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   const { openSaveCategoryModal, placeholder } = useSaveCategoryModal(
     StorageType.MY
   );

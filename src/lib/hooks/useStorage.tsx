@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client';
 import {
   useCreateExamCategory,
   useLazyGetExamCategories,
@@ -21,8 +22,12 @@ import {
 
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
-  const [getExamCategories] = useLazyGetExamCategories();
-  const [getMyExamCategories] = useLazyGetMyExamCategories();
+  const [getExamCategories, { loading: getExamCategoriesLoading }] =
+    useLazyGetExamCategories();
+  const [
+    getMyExamCategories,
+    { data: getMyExamCategoriesQuery, loading: getMyExamCategoriesLoading },
+  ] = useLazyGetMyExamCategories();
   const { data: meQuery } = useMeQuery();
   const categories = useAppSelector((state) => {
     if (type === StorageType.PREMIUM)
@@ -41,7 +46,11 @@ const useStorage = (type: StorageType) => {
 
   const fetchCategories = async () => {
     if (type === StorageType.MY) {
-      const res = await getMyExamCategories();
+      const res = await getMyExamCategories({
+        fetchPolicy: getMyExamCategoriesQuery
+          ? 'cache-and-network'
+          : 'no-cache',
+      });
       if (res.data?.getMyExamCategories.categories) {
         setCategories(
           res.data?.getMyExamCategories.categories as MockExamCategory[]
@@ -80,7 +89,7 @@ const useStorage = (type: StorageType) => {
           ...res.data?.createMockExamCategory.category,
           user: meQuery.me.user,
         } as MockExamCategory;
-        setCategories([category, ...categories]);
+        setCategories([category, ...(categories || [])]);
         message.success('폴더가 생성되었습니다.');
         return;
       }
@@ -111,6 +120,8 @@ const useStorage = (type: StorageType) => {
     handleCreateCategory,
     createCategoryLoading,
     fetchCategories,
+    getMyExamCategoriesLoading,
+    getExamCategoriesLoading,
   };
 };
 

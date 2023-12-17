@@ -4,15 +4,15 @@ import WithHead from '@components/common/head/WithHead';
 import MyStorageComponent from '@components/myStorage/MyStorageComponent';
 import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { useLazyGetMyExamCategories } from '@lib/graphql/hook/useExam';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
+import withAuth from '@lib/hocs/withAuth';
 
 interface MyStorageProps {}
 
 const MyStorage: NextPage<MyStorageProps> = () => {
   const { data: meQuery } = useMeQuery();
-  const { fetchCategories, categories } = useStorage(StorageType.MY);
+  const { fetchCategories } = useStorage(StorageType.MY);
 
   useEffect(() => {
     if (meQuery?.me.user) {
@@ -30,10 +30,10 @@ const MyStorage: NextPage<MyStorageProps> = () => {
         hasOpenSaveCategoryModalButton={!!meQuery?.me.user}
         title="내 암기장"
       >
-        <MyStorageComponent />
+        {meQuery?.me.user && <MyStorageComponent />}
       </StorageLayout>
     </>
   );
 };
 
-export default MyStorage;
+export default withAuth(MyStorage);
