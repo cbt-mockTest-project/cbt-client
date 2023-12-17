@@ -34,12 +34,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
   };
 
   useEffect(() => {
+    if (router.asPath === '/auth' || !router.asPath) return;
     setCookie('auth_redirect', router.asPath, {
       expires: new Date(Date.now() + 1000 * 60 * 5),
       path: '/',
       domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
     });
-  }, []);
+  }, [router.asPath]);
   const onSubmit = async (data: LoginInput) => {
     setButtonState(true);
     const res = await loginMutation({ variables: { input: data } });

@@ -24,6 +24,7 @@ import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import { EXAM_SOLUTION_PAGE, STUDY_PAGE } from '@lib/constants/displayName';
+import { setCookie } from 'cookies-next';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
@@ -45,6 +46,14 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
         } catch (e) {}
       }
     }
+
+    // 로그인 후 리다이렉트
+    if (router.asPath === '/auth' || !router.asPath) return;
+    setCookie('auth_redirect', router.asPath, {
+      expires: new Date(Date.now() + 1000 * 60 * 5),
+      path: '/',
+      domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+    });
   }, [router.asPath]);
 
   // 모바일 앱에서, target="_blank"인 링크를 클릭하면 웹뷰에서 열리도록 합니다.

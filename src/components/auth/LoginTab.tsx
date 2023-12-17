@@ -7,7 +7,7 @@ import {
 } from '@lib/constants';
 import { useLoginMutation } from '@lib/graphql/hook/useUser';
 import { Button, Divider, Input, message } from 'antd';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -76,7 +76,7 @@ const LoginTab: React.FC<LoginTabProps> = () => {
   const [buttonState, setButtonState] = useState(false);
 
   useEffect(() => {
-    if (!router.asPath) return;
+    if (router.asPath === '/auth' || !router.asPath) return;
     setCookie('auth_redirect', router.asPath, {
       expires: new Date(Date.now() + 1000 * 60 * 5),
       path: '/',
@@ -93,7 +93,8 @@ const LoginTab: React.FC<LoginTabProps> = () => {
         setButtonState(false);
         return message.error({ content: login.error });
       }
-      isMobile ? location.replace('/') : location.reload();
+      const authRedirectPath = String(getCookie('auth_redirect') || '/');
+      location.replace(authRedirectPath);
     }
   };
   return (
