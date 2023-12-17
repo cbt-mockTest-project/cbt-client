@@ -1,9 +1,9 @@
 import { MinusOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
+import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { responsive } from '@lib/utils/responsive';
-import { BookmarkOutlined } from '@mui/icons-material';
 import palette from '@styles/palette';
 import { Button, Checkbox, Modal } from 'antd';
 import { ExamSettingType } from 'customTypes';
@@ -11,7 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { MockExam, ReadMockExamCategoryByCategoryIdOutput } from 'types';
+import { MockExam } from 'types';
 
 const ExamListItemBlock = styled.div`
   width: calc(50% - 10px);
@@ -41,6 +41,9 @@ const ExamListItemBlock = styled.div`
   .exam-list-item-bookmark-button {
     color: ${palette.textColor};
   }
+  .exam-list-item-bookmark-button-active {
+    color: ${palette.yellow_500};
+  }
   @media (max-width: ${responsive.medium}) {
     width: 100%;
   }
@@ -57,7 +60,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   examSetting,
   handleExamSelect,
 }) => {
-  const { handleRemoveExamFromCategory, category } = useExamCategory();
+  const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
+    useExamCategory();
   const { data: meQuery } = useMeQuery();
   const handleRemoveExam = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -68,9 +72,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       },
     });
   };
-  const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-  };
+
   return (
     <ExamListItemBlock>
       {examSetting.isMultipleSelectMode && (
@@ -88,12 +90,13 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
                 <MinusOutlined />
               </Button>
             ) : (
-              <button
-                className="exam-list-item-bookmark-button"
-                onClick={handleBookmark}
-              >
-                <BookmarkOutlined />
-              </button>
+              <ExamBookmark
+                handleToggleBookmark={(e) => {
+                  e.preventDefault();
+                  handleToggleExamBookmark(exam.id);
+                }}
+                isBookmarked={exam.isBookmarked || false}
+              />
             )}
           </div>
           <div className="exam-list-item-bottom-wrapper">

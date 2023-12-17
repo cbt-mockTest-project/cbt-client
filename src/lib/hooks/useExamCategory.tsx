@@ -24,7 +24,9 @@ import { message } from 'antd';
 import { useMemo } from 'react';
 import { StorageType } from 'customTypes';
 import useExamSetting from './useExamSetting';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
+import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
+import { WatchQueryFetchPolicy } from '@apollo/client';
 
 const useExamCategory = () => {
   const router = useRouter();
@@ -33,6 +35,7 @@ const useExamCategory = () => {
   const [addExamToCategory] = useAddExamToCategory();
   const [removeExamFromCategory] = useRemoveExamFromCategory();
   const [deleteCategory] = useDeleteExamCategory();
+  const [toggleExamBookmark] = useToggleExamBookmark();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
 
   const dispatch = useAppDispatch();
@@ -52,14 +55,17 @@ const useExamCategory = () => {
   }, [category]);
 
   const fetchCategory = async (
-    input: ReadMockExamCategoryByCategoryIdInput
+    input: ReadMockExamCategoryByCategoryIdInput,
+    fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
   ) => {
     try {
       const res = await readCategory({
         variables: {
           input,
         },
+        fetchPolicy,
       });
+      console.log(res);
       if (res.data?.readMockExamCategoryByCategoryId.category) {
         setExamCategory(
           res.data.readMockExamCategoryByCategoryId.category as MockExamCategory
@@ -199,6 +205,35 @@ const useExamCategory = () => {
     setMyExams(filteredExams, false);
   }, 300);
 
+  const handleToggleExamBookmark = async (examId: number) => {
+    try {
+      const res = await toggleExamBookmark({
+        variables: {
+          input: {
+            examId,
+          },
+        },
+      });
+      if (res.data?.toggleExamBookmark.ok) {
+        const newCategory = cloneDeep(category);
+        if (!newCategory) return;
+        newCategory.mockExam = newCategory.mockExam.map((exam) => {
+          if (exam.id === examId) {
+            exam.isBookmarked = !exam.isBookmarked;
+          }
+          return exam;
+        });
+        setExamCategory(newCategory);
+        if (res.data.toggleExamBookmark.isBookmarked)
+          return message.success('북마크 되었습니다.');
+        else return message.success('북마크가 해제되었습니다.');
+      }
+      message.error(res.data?.toggleExamBookmark.error);
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const setExamCategory = (
     category: MockExamCategory,
     shouldUpdateOriginal: boolean = true
@@ -225,6 +260,7 @@ const useExamCategory = () => {
     handleEditCategory,
     handleAddExamToCategory,
     handleRemoveExamFromCategory,
+    handleToggleExamBookmark,
     handleFilterExams,
     handleFilterMyExams,
     editCategoryLoading,

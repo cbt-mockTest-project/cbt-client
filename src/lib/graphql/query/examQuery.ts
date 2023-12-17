@@ -277,6 +277,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
             id
             nickname
           }
+          isBookmarked
         }
         user {
           profileImg
@@ -308,13 +309,14 @@ export const GET_EXAM_CATEGORIES = gql`
 `;
 
 export const GET_MY_EXAMS = gql`
-  query GetMyExams {
-    getMyExams {
+  query GetMyExams($input: GetMyExamsInput!) {
+    getMyExams(input: $input) {
       error
       exams {
         id
         slug
         title
+        isBookmarked
         user {
           profileImg
           id

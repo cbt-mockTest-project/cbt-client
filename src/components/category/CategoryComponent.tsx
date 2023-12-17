@@ -182,7 +182,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   ];
 
   useEffect(() => {
-    fetchCategory(categoryQueryInput);
+    if (!meQuery?.me.user) return;
+    fetchCategory(categoryQueryInput, 'no-cache');
     if (!category) return;
     const examSetting = getExamSettingHistory(category.id);
     if (!examSetting) return;
@@ -190,7 +191,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     if (examIds) setExamSetting({ categoryId: category.id, examIds });
     if (isMultipleSelectMode)
       setExamSetting({ categoryId: category.id, isMultipleSelectMode });
-  }, []);
+  }, [meQuery]);
 
   if (!category) return null;
 
