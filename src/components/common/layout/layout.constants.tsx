@@ -12,16 +12,16 @@ export const navItems = [
     icon: <CloudOutlined />,
     label: '모두 암기장',
   },
-  {
-    key: '/premium-storage',
-    icon: <CrownOutlined />,
-    label: '프리미엄 암기장',
-  },
-  {
-    key: '/user-storage',
-    icon: <UsergroupAddOutlined />,
-    label: '유저 암기장',
-  },
+  // {
+  //   key: '/premium-storage',
+  //   icon: <CrownOutlined />,
+  //   label: '프리미엄 암기장',
+  // },
+  // {
+  //   key: '/user-storage',
+  //   icon: <UsergroupAddOutlined />,
+  //   label: '유저 암기장',
+  // },
   {
     key: '/my-storage',
     icon: <FolderOutlined />,

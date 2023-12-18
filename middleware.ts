@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     request.nextUrl.pathname.startsWith('/data/register')
   ) {
     if (!request.cookies.get('jwt-token')) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return NextResponse.redirect(new URL('/auth', request.url));
     }
   }
 }
