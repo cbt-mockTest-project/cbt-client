@@ -16,13 +16,15 @@ const MyStorage: NextPage<MyStorageProps> = () => {
 
   useEffect(() => {
     if (meQuery?.me.user) {
-      fetchCategories();
+      fetchCategories({
+        categoryMakerId: meQuery.me.user.id,
+      });
     }
   }, [meQuery]);
   return (
     <>
       <WithHead
-        title="모두CBT | 모두 저장소"
+        title="내 암기장 | 모두CBT"
         pageHeadingTitle="모두CBT 서비스 모두 저장소 페이지"
       />
       <StorageLayout

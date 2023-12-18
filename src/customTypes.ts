@@ -92,4 +92,5 @@ export enum StorageType {
   MODU = 'modu',
   PREMIUM = 'premium',
   MY = 'my',
+  USER = 'user',
 }

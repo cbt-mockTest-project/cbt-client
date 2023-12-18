@@ -233,3 +233,17 @@ export const GET_USER_BY_NICKNAME_OR_EMAIL = gql`
     }
   }
 `;
+
+export const GET_USER = gql`
+  query UserProfile($input: UserProfileInput!) {
+    userProfile(input: $input) {
+      error
+      ok
+      user {
+        id
+        profileImg
+        nickname
+      }
+    }
+  }
+`;

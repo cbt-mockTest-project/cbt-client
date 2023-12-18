@@ -142,6 +142,13 @@ export type GetUserByNicknameOrEmailQueryVariables = Types.Exact<{
 
 export type GetUserByNicknameOrEmailQuery = { __typename?: 'Query', getUserByNicknameOrEmail: { __typename?: 'GetUserByNicknameOrEmailOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', id: number, email: string, nickname: string } | null } };
 
+export type UserProfileQueryVariables = Types.Exact<{
+  input: Types.UserProfileInput;
+}>;
+
+
+export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileOutput', error?: string | null, ok: boolean, user?: { __typename?: 'User', id: number, profileImg: string, nickname: string } | null } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -438,4 +445,21 @@ export const GetUserByNicknameOrEmailDocument = gql`
 
 export function useGetUserByNicknameOrEmailQuery(options: Omit<Urql.UseQueryArgs<GetUserByNicknameOrEmailQueryVariables>, 'query'>) {
   return Urql.useQuery<GetUserByNicknameOrEmailQuery, GetUserByNicknameOrEmailQueryVariables>({ query: GetUserByNicknameOrEmailDocument, ...options });
+};
+export const UserProfileDocument = gql`
+    query UserProfile($input: UserProfileInput!) {
+  userProfile(input: $input) {
+    error
+    ok
+    user {
+      id
+      profileImg
+      nickname
+    }
+  }
+}
+    `;
+
+export function useUserProfileQuery(options: Omit<Urql.UseQueryArgs<UserProfileQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserProfileQuery, UserProfileQueryVariables>({ query: UserProfileDocument, ...options });
 };

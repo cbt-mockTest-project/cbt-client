@@ -1,8 +1,6 @@
-import { WatchQueryFetchPolicy } from '@apollo/client';
 import {
   useCreateExamCategory,
   useLazyGetExamCategories,
-  useLazyGetMyExamCategories,
 } from '@lib/graphql/hook/useExam';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
@@ -13,57 +11,34 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
-import { useMemo } from 'react';
 import {
   CreateMockExamCategoryInput,
-  ExamSource,
+  GetExamCategoriesInput,
   MockExamCategory,
 } from 'types';
 
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
-  const [getExamCategories, { loading: getExamCategoriesLoading }] =
+  const [getExamCategories, { data: getExamCategoriesQuery }] =
     useLazyGetExamCategories();
-  const [
-    getMyExamCategories,
-    { data: getMyExamCategoriesQuery, loading: getMyExamCategoriesLoading },
-  ] = useLazyGetMyExamCategories();
+
   const { data: meQuery } = useMeQuery();
   const categories = useAppSelector((state) => {
     if (type === StorageType.PREMIUM)
       return state.storage.premiumStorageCategories;
     if (type === StorageType.MY) return state.storage.myStorageCategories;
+    if (type === StorageType.USER) return state.storage.userStorageCategories;
     return state.storage.moduStorageCategories;
   });
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
 
-  const examSource = useMemo(() => {
-    if (type === StorageType.PREMIUM) return ExamSource.EhsMaster;
-    if (type === StorageType.MY) return ExamSource.User;
-    return ExamSource.MoudCbt;
-  }, [type]);
-
-  const fetchCategories = async () => {
-    if (type === StorageType.MY) {
-      const res = await getMyExamCategories({
-        fetchPolicy: getMyExamCategoriesQuery
-          ? 'cache-and-network'
-          : 'no-cache',
-      });
-      if (res.data?.getMyExamCategories.categories) {
-        setCategories(
-          res.data?.getMyExamCategories.categories as MockExamCategory[]
-        );
-      }
-      return;
-    }
+  const fetchCategories = async (input: GetExamCategoriesInput) => {
     const res = await getExamCategories({
       variables: {
-        input: {
-          examSource,
-        },
+        input,
       },
+      fetchPolicy: getExamCategoriesQuery ? 'cache-first' : 'network-only',
     });
     if (res.data?.getExamCategories.categories) {
       setCategories(
@@ -109,10 +84,14 @@ const useStorage = (type: StorageType) => {
   const setMyCateogries = (categories: MockExamCategory[]) =>
     dispatch(storageActions.setMyStorageCategories(categories));
 
+  const setUserCateogries = (categories: MockExamCategory[]) =>
+    dispatch(storageActions.setUserStorageCategories(categories));
+
   const setCategories = (categories: MockExamCategory[]) => {
     if (type === StorageType.MODU) setModuCateogries(categories);
     if (type === StorageType.PREMIUM) setPremiumCateogries(categories);
     if (type === StorageType.MY) setMyCateogries(categories);
+    if (type === StorageType.USER) setUserCateogries(categories);
   };
 
   return {
@@ -120,8 +99,6 @@ const useStorage = (type: StorageType) => {
     handleCreateCategory,
     createCategoryLoading,
     fetchCategories,
-    getMyExamCategoriesLoading,
-    getExamCategoriesLoading,
   };
 };
 

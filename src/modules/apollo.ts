@@ -12,7 +12,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
-import { isServer, pushErrorLogToSentry } from '@lib/utils/utils';
+import { isServer } from '@lib/utils/utils';
 import React from 'react';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
@@ -37,13 +37,11 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
         data.path
       }\nUserAgent: ${userAgent}\nIP: ${ip}\nCurrentPagePath: ${currentPagePath}`;
       sendErrorToTelegram(message);
-      pushErrorLogToSentry({ message, level: 'error' });
     });
 
   if (networkError) {
     const message = `[Network Error]: ${networkError}`;
     sendErrorToTelegram(message);
-    pushErrorLogToSentry({ message, level: 'error' });
   }
 });
 

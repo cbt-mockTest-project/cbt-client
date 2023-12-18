@@ -1,4 +1,3 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
 import ExamSolutionList from '@components/exam/solution/ExamSolutionList';
 import {
   useLazyReadQuestion,

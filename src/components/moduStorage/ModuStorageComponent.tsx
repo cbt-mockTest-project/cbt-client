@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CategoryFolderList from './CategoryFolderList';
-import { UserRole } from 'types';
+import { ExamSource, UserRole } from 'types';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
@@ -20,7 +20,7 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
 
   useEffect(() => {
     if (meQuery?.me.user?.role === UserRole.Admin) {
-      fetchCategories();
+      fetchCategories({ examSource: ExamSource.MoudCbt });
     }
   }, [meQuery]);
 

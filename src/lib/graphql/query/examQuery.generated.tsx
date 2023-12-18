@@ -151,7 +151,7 @@ export type GetExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
 
 export type GetMyExamsQueryVariables = Types.Exact<{
   input: Types.GetMyExamsInput;
@@ -531,6 +531,8 @@ export function useReadMockExamCategoryByCategoryIdQuery(options: Omit<Urql.UseQ
 export const GetExamCategoriesDocument = gql`
     query GetExamCategories($input: GetExamCategoriesInput!) {
   getExamCategories(input: $input) {
+    ok
+    error
     categories {
       id
       name

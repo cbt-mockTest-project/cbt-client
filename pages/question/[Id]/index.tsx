@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import Layout from '@components/common/layout/Layout';
-import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
+import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
-import parse from 'html-react-parser';
 import { removeHtmlTag } from '@lib/utils/utils';
 
 interface QuestionProps {
@@ -30,9 +28,7 @@ const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
           questionQuery.readMockExamQuestion.mockExamQusetion?.question || ''
         )}
       />
-      <Layout>
-        <QuestionComponent questionQuery={questionQuery} />
-      </Layout>
+      <QuestionComponent questionQuery={questionQuery} />
     </>
   );
 };
@@ -64,6 +60,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.Id) {
     return {
       notFound: true,
+      revalidate: 1,
     };
   }
   const apolloClient = initializeApollo({}, '');

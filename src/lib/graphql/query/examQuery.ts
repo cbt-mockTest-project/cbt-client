@@ -294,6 +294,8 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
 export const GET_EXAM_CATEGORIES = gql`
   query GetExamCategories($input: GetExamCategoriesInput!) {
     getExamCategories(input: $input) {
+      ok
+      error
       categories {
         id
         name
