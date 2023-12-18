@@ -766,6 +766,7 @@ export type FindMyExamHistoryOutput = {
 };
 
 export type GetExamCategoriesInput = {
+  categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
 };
 

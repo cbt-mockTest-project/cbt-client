@@ -75,57 +75,45 @@ export const READ_QUESTION = gql`
     readMockExamQuestion(input: $input) {
       isCoAuthor
       mockExamQusetion {
-        user {
-          id
-          role
-        }
-        question
-        solution
-        label
         mockExam {
+          id
           title
         }
-        question_video {
-          url
-          size
-        }
-        question_img {
-          url
-          name
-          uid
-        }
-        solution_img {
-          url
-          name
-          uid
+        user {
+          id
         }
         id
+        isBookmarked
+        myQuestionState
+        commentCount
         number
-        approved
-        mockExamQuestionComment {
-          ...QusetionCommentParts
+        question
+        question_img {
+          url
+          uid
         }
-        mockExamQuestionBookmark {
-          id
+        solution
+        solution_img {
+          uid
+          url
         }
         mockExamQuestionFeedback {
-          id
-          content
-          type
           recommendationCount {
-            good
             bad
+            good
           }
           myRecommedationStatus {
-            isGood
             isBad
+            isGood
           }
           user {
-            nickname
             id
+            nickname
           }
+          id
+          type
+          content
           created_at
-          updated_at
         }
       }
       error
@@ -245,6 +233,9 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         mockExam {
           id
           title
+        }
+        user {
+          id
         }
         id
         isBookmarked

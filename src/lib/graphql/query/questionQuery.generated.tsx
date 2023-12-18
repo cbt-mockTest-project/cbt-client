@@ -23,7 +23,7 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, label?: string | null, id: number, number: number, approved: boolean, user: { __typename?: 'User', id: number, role: Types.UserRole }, mockExam?: { __typename?: 'MockExam', title: string } | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', id: number }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, created_at: any, updated_at: any, recommendationCount: { __typename?: 'RecommendationCount', good: number, bad: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean }, user: { __typename?: 'User', nickname: string, id: number } }> } } };
+export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> } } };
 
 export type EditMockExamQuestionMutationVariables = Types.Exact<{
   input: Types.EditMockExamQuestionInput;
@@ -77,7 +77,7 @@ export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> }> } };
+export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -153,64 +153,52 @@ export const ReadMockExamQuestionDocument = gql`
   readMockExamQuestion(input: $input) {
     isCoAuthor
     mockExamQusetion {
-      user {
-        id
-        role
-      }
-      question
-      solution
-      label
       mockExam {
+        id
         title
       }
-      question_video {
-        url
-        size
-      }
-      question_img {
-        url
-        name
-        uid
-      }
-      solution_img {
-        url
-        name
-        uid
+      user {
+        id
       }
       id
+      isBookmarked
+      myQuestionState
+      commentCount
       number
-      approved
-      mockExamQuestionComment {
-        ...QusetionCommentParts
+      question
+      question_img {
+        url
+        uid
       }
-      mockExamQuestionBookmark {
-        id
+      solution
+      solution_img {
+        uid
+        url
       }
       mockExamQuestionFeedback {
-        id
-        content
-        type
         recommendationCount {
-          good
           bad
+          good
         }
         myRecommedationStatus {
-          isGood
           isBad
+          isGood
         }
         user {
-          nickname
           id
+          nickname
         }
+        id
+        type
+        content
         created_at
-        updated_at
       }
     }
     error
     ok
   }
 }
-    ${QusetionCommentPartsFragmentDoc}`;
+    `;
 
 export function useReadMockExamQuestionQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>({ query: ReadMockExamQuestionDocument, ...options });
@@ -341,6 +329,9 @@ export const ReadQuestionsByExamIdsDocument = gql`
       mockExam {
         id
         title
+      }
+      user {
+        id
       }
       id
       isBookmarked
