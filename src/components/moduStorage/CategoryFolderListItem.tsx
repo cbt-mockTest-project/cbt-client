@@ -2,6 +2,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Tag } from 'antd';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -41,6 +42,11 @@ const CategoryFolderListItemBlock = styled(Link)`
     font-weight: bold;
     color: ${palette.subTextColor};
   }
+  .category-user-profile-image {
+    border-radius: 50%;
+    background-color: ${palette.gray_200};
+    margin-right: 5px;
+  }
 
   @media (max-width: ${responsive.medium}) {
     width: 100%;
@@ -65,6 +71,15 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
             </Tag>
           </div>
           <div className="category-user-info">
+            <Image
+              className="category-user-profile-image"
+              src={
+                category.user.profileImg || '/png/profile/profile_default.png'
+              }
+              alt="프로필이미지"
+              width={20}
+              height={20}
+            />
             <span className="category-user-name">{category.user.nickname}</span>
             <span className="category-user-label">의 암기장</span>
           </div>
