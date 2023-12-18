@@ -8,12 +8,13 @@ import {
 import { ME_QUERY } from '@lib/graphql/query/userQuery';
 import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
 import { message } from 'antd';
 import { RcFile } from 'antd/lib/upload';
+import { User } from 'types';
+import useApolloClient from './useApolloCient';
 
 const useMyInfo = () => {
-  const client = useApollo({}, '');
+  const { updateCache } = useApolloClient();
   const [logoutMutation] = useLogoutMutation();
   const [checkPasswordMutation] = useCheckPasswordMutation();
   const [editProfileMutation] = useEditProfileMutation();
@@ -35,24 +36,16 @@ const useMyInfo = () => {
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
 
-      const currentData = client.readQuery<MeQuery>({
-        query: ME_QUERY,
-      });
-      if (!currentData) return;
-      const newData = {
-        ...currentData,
+      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+        ...prev,
         me: {
-          ...currentData.me,
+          ...prev.me,
           user: {
-            ...currentData.me.user,
+            ...prev.me.user,
             nickname,
-          },
+          } as User,
         },
-      };
-      client.writeQuery({
-        query: ME_QUERY,
-        data: newData,
-      });
+      }));
       message.success('닉네임이 변경되었습니다.');
     } catch (e) {
       handleError(e);
@@ -73,24 +66,17 @@ const useMyInfo = () => {
 
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
-      const currentData = client.readQuery<MeQuery>({
-        query: ME_QUERY,
-      });
-      if (!currentData) return;
-      const newData = {
-        ...currentData,
+
+      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+        ...prev,
         me: {
-          ...currentData.me,
+          ...prev.me,
           user: {
-            ...currentData.me.user,
+            ...prev.me.user,
             profileImg,
-          },
+          } as User,
         },
-      };
-      client.writeQuery({
-        query: ME_QUERY,
-        data: newData,
-      });
+      }));
 
       message.success('프로필 이미지가 변경되었습니다.');
     } catch (e) {
@@ -108,24 +94,16 @@ const useMyInfo = () => {
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
 
-      const currentData = client.readQuery<MeQuery>({
-        query: ME_QUERY,
-      });
-      if (!currentData) return;
-      const newData = {
-        ...currentData,
+      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+        ...prev,
         me: {
-          ...currentData.me,
+          ...prev.me,
           user: {
-            ...currentData.me.user,
+            ...prev.me.user,
             profileImg: '',
-          },
+          } as User,
         },
-      };
-      client.writeQuery({
-        query: ME_QUERY,
-        data: newData,
-      });
+      }));
 
       message.success('프로필 이미지가 삭제되었습니다.');
     } catch (e) {
