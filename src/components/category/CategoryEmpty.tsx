@@ -11,15 +11,27 @@ const CategoryEmptyBlock = styled.div`
   gap: 20px;
 `;
 
-interface CategoryEmptyProps {}
+interface CategoryEmptyProps {
+  hasButton?: boolean;
+  handleButtonClick?: () => void;
+}
 
-const CategoryEmpty: React.FC<CategoryEmptyProps> = () => {
+const CategoryEmpty: React.FC<CategoryEmptyProps> = ({
+  hasButton,
+  handleButtonClick,
+}) => {
   return (
     <CategoryEmptyBlock>
       <Empty description="시험지가 존재하지 않습니다." />
-      <Button type="dashed" size="large">
-        시험지 만들러 가기
-      </Button>
+      {hasButton && (
+        <Button
+          type="dashed"
+          size="large"
+          onClick={() => handleButtonClick?.()}
+        >
+          시험지 추가하기
+        </Button>
+      )}
     </CategoryEmptyBlock>
   );
 };

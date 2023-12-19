@@ -266,7 +266,12 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           />
         </>
       ) : (
-        <CategoryEmpty />
+        <CategoryEmpty
+          hasButton={category.user.id === meQuery?.me.user?.id}
+          handleButtonClick={() => {
+            setEditExamsModalOpen(true);
+          }}
+        />
       )}
       {meQuery?.me.user?.id === category.user.id && (
         <Dropdown
