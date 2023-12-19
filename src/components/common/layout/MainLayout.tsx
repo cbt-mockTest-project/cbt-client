@@ -4,12 +4,15 @@ import Sidebar from './Sidebar';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import MobileHeader from './MobileHeader';
+import Footer from './Footer';
 
 const MainLayoutBlock = styled.div`
-  display: flex;
-  position: relative;
   overflow-y: auto;
   color: ${palette.textColor};
+  .main-layout-wrapper {
+    display: flex;
+    position: relative;
+  }
   .main-layout-body {
     margin-left: 200px;
     min-height: 100vh;
@@ -55,10 +58,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   return (
     <MainLayoutBlock className={className}>
       <MobileHeader title={title} />
-      <Sidebar />
-      <div className="main-layout-body">
-        <div className="main-layout-body-wrapper">{children}</div>
+      <div className="main-layout-wrapper">
+        <Sidebar />
+        <div className="main-layout-body">
+          <div className="main-layout-body-wrapper">{children}</div>
+        </div>
       </div>
+      <Footer className="layout-pc-footer" />
     </MainLayoutBlock>
   );
 };
