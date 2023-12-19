@@ -138,9 +138,10 @@ const useMyInfo = () => {
         variables: { input: { password } },
       });
 
-      if (!res.data?.checkPassword.ok)
-        return message.error(res.data?.checkPassword.error);
-
+      if (!res.data?.checkPassword.ok) {
+        message.error(res.data?.checkPassword.error);
+        return false;
+      }
       message.success('비밀번호가 확인되었습니다.');
       return true;
     } catch (e) {
