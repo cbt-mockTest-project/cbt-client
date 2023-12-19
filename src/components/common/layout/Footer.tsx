@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 
 const FooterContainer = styled.div`
-  margin-top: 100px;
+  margin-top: 300px;
   width: 100%;
   background-color: ${palette.backgroundColor};
   max-width: 1200px;
