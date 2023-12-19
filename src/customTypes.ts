@@ -93,4 +93,5 @@ export enum StorageType {
   PREMIUM = 'premium',
   MY = 'my',
   USER = 'user',
+  BOOKMARK = 'bookmark',
 }

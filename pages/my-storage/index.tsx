@@ -12,12 +12,18 @@ interface MyStorageProps {}
 
 const MyStorage: NextPage<MyStorageProps> = () => {
   const { data: meQuery } = useMeQuery();
-  const { fetchCategories } = useStorage(StorageType.MY);
+  const { fetchCategories: fetchMyCategories } = useStorage(StorageType.MY);
+  const { fetchCategories: fetchBookmarkedCategories } = useStorage(
+    StorageType.BOOKMARK
+  );
 
   useEffect(() => {
     if (meQuery?.me.user) {
-      fetchCategories({
+      fetchMyCategories({
         categoryMakerId: meQuery.me.user.id,
+      });
+      fetchBookmarkedCategories({
+        isBookmarked: true,
       });
     }
   }, [meQuery]);

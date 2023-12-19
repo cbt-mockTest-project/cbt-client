@@ -5,6 +5,7 @@ export interface StorageState {
   moduStorageCategories: MockExamCategory[] | null;
   premiumStorageCategories: MockExamCategory[] | null;
   myStorageCategories: MockExamCategory[] | null;
+  bookmarkedStorageCategories: MockExamCategory[] | null;
   userStorageCategories: MockExamCategory[] | null;
 }
 
@@ -13,6 +14,7 @@ const storageState: StorageState = {
   premiumStorageCategories: null,
   myStorageCategories: null,
   userStorageCategories: null,
+  bookmarkedStorageCategories: null,
 };
 
 const storageSlice = createSlice({
@@ -42,6 +44,12 @@ const storageSlice = createSlice({
       action: PayloadAction<MockExamCategory[]>
     ) => {
       state.userStorageCategories = action.payload;
+    },
+    setBookmarkedStorageCategories: (
+      state,
+      action: PayloadAction<MockExamCategory[]>
+    ) => {
+      state.bookmarkedStorageCategories = action.payload;
     },
   },
 });

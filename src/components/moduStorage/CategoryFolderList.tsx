@@ -12,12 +12,10 @@ const CategoryFolderListBlock = styled.ul`
 
 interface CategoryFolderListProps {
   categories: MockExamCategory[] | null;
-  openSaveCategoryModal: () => void;
 }
 
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
-  openSaveCategoryModal,
 }) => {
   return (
     <CategoryFolderListBlock>

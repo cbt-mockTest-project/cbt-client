@@ -20,26 +20,27 @@ enum CategoryOptionEnum {
 }
 
 const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
-  const { openSaveCategoryModal, placeholder } = useSaveCategoryModal(
+  const [storageType, setStorageType] = React.useState<StorageType>(
     StorageType.MY
   );
-  const { categories } = useStorage(StorageType.MY);
+  const { categories } = useStorage(storageType);
   return (
     <MyStorageComponentBlock>
       <Select
         className="my-storage-filter-select"
         style={{ width: '200px' }}
         defaultValue={CategoryOptionEnum.ME}
+        onChange={(value) => {
+          if (value === CategoryOptionEnum.ME) setStorageType(StorageType.MY);
+          if (value === CategoryOptionEnum.BOOKMARKED)
+            setStorageType(StorageType.BOOKMARK);
+        }}
         options={[
           { label: '내 암기장', value: CategoryOptionEnum.ME },
           { label: '저장된', value: CategoryOptionEnum.BOOKMARKED },
         ]}
       />
-      <CategoryFolderList
-        categories={categories}
-        openSaveCategoryModal={openSaveCategoryModal}
-      />
-      {placeholder}
+      <CategoryFolderList categories={categories} />
     </MyStorageComponentBlock>
   );
 };
