@@ -4,6 +4,32 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 
+const FooterContainer = styled.div`
+  margin-top: 100px;
+  width: 100%;
+  background-color: ${palette.backgroundColor};
+  max-width: 1200px;
+  .footer-section-one {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    gap: 20px;
+    a,
+    button {
+      color: ${palette.antd_blue_02};
+    }
+  }
+  .footer-section-two {
+  }
+  .footer-section-two-description {
+    font-size: 0.8rem;
+    color: ${palette.gray_500};
+  }
+  @media (max-width: ${responsive.medium}) {
+    display: none;
+  }
+`;
+
 interface FooterProps {
   className: string;
 }
@@ -38,33 +64,3 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
 };
 
 export default Footer;
-
-const FooterContainer = styled.div`
-  width: 100%;
-  padding: 20px 0;
-  background-color: ${palette.gray_50};
-  .footer-wrapper {
-    margin: 0 auto;
-    max-width: 1024px;
-  }
-  .footer-section-one {
-    display: flex;
-    align-items: center;
-    font-size: 0.8rem;
-    gap: 40px;
-    a,
-    button {
-      color: ${palette.antd_blue_01};
-    }
-  }
-  .footer-section-two {
-    margin-top: 20px;
-    .footer-section-two-description {
-      font-size: 0.8rem;
-      color: ${palette.gray_500};
-    }
-  }
-  @media (max-width: ${responsive.medium}) {
-    padding: 20px 15px;
-  }
-`;
