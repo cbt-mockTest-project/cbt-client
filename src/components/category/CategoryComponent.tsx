@@ -9,6 +9,7 @@ import {
   MenuProps,
   Modal,
   Switch,
+  message,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -23,6 +24,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import TextInput from '@components/common/input/TextInput';
+import { useRouter } from 'next/router';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -119,6 +121,7 @@ interface CategoryComponentProps {
 const CategoryComponent: React.FC<CategoryComponentProps> = ({
   categoryQueryInput,
 }) => {
+  const router = useRouter();
   const { data: meQuery } = useMeQuery();
   const {
     handleFilterExams,
@@ -182,15 +185,26 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   ];
 
   useEffect(() => {
-    if (!meQuery?.me.user) return;
-    fetchCategory(categoryQueryInput, 'no-cache');
-    if (!category) return;
-    const examSetting = getExamSettingHistory(category.id);
-    if (!examSetting) return;
-    const { examIds, isMultipleSelectMode } = examSetting;
-    if (examIds) setExamSetting({ categoryId: category.id, examIds });
-    if (isMultipleSelectMode)
-      setExamSetting({ categoryId: category.id, isMultipleSelectMode });
+    if (!meQuery) return;
+    if (meQuery.me.user) {
+      fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
+        if (!res?.hasAccess) {
+          message.error('접근 권한이 없습니다.');
+          router.push('/');
+        }
+      });
+      if (!category) return;
+      const examSetting = getExamSettingHistory(category.id);
+      if (!examSetting) return;
+      const { examIds, isMultipleSelectMode } = examSetting;
+      if (examIds) setExamSetting({ categoryId: category.id, examIds });
+      if (isMultipleSelectMode)
+        setExamSetting({ categoryId: category.id, isMultipleSelectMode });
+    }
+    if (!meQuery.me.user && category && !category.isPublic) {
+      message.error('접근 권한이 없습니다.');
+      router.push('/');
+    }
   }, [meQuery]);
 
   if (!category) return null;

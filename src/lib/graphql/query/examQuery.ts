@@ -263,6 +263,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
   ) {
     readMockExamCategoryByCategoryId(input: $input) {
       category {
+        hasAccess
         id
         source
         name

@@ -685,6 +685,23 @@ export type EmailVerificationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ExamCategoryBookmark = {
+  __typename?: 'ExamCategoryBookmark';
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type ExamCategoryInvitation = {
+  __typename?: 'ExamCategoryInvitation';
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
 export type ExamCoAuthor = {
   __typename?: 'ExamCoAuthor';
   created_at: Scalars['DateTime'];
@@ -768,6 +785,8 @@ export type FindMyExamHistoryOutput = {
 export type GetExamCategoriesInput = {
   categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
+  isBookmarked?: InputMaybe<Scalars['Boolean']>;
+  limit?: InputMaybe<Scalars['Float']>;
 };
 
 export type GetExamCategoriesOutput = {
@@ -845,6 +864,13 @@ export type GetMyBlogPostRankOutput = {
   ok: Scalars['Boolean'];
   postInfo?: Maybe<PostInfo>;
   searchCounts?: Maybe<SearchCounts>;
+};
+
+export type GetMyBookmarkedExamCategoriesOutput = {
+  __typename?: 'GetMyBookmarkedExamCategoriesOutput';
+  categories?: Maybe<Array<MockExamCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type GetMyBookmarkedExamsOutput = {
@@ -991,7 +1017,9 @@ export type MockExam = {
 
 export type MockExamBookmark = {
   __typename?: 'MockExamBookmark';
+  created_at: Scalars['DateTime'];
   exam: MockExam;
+  updated_at: Scalars['DateTime'];
   user: User;
 };
 
@@ -1000,8 +1028,11 @@ export type MockExamCategory = {
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
+  examCategoryBookmarks: Array<ExamCategoryBookmark>;
+  examCategoryInvitations: Array<ExamCategoryInvitation>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examViewer?: Maybe<Array<ExamViewer>>;
+  hasAccess?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isPublic: Scalars['Boolean'];
   mockExam: Array<MockExam>;
@@ -1242,6 +1273,7 @@ export type Mutation = {
   sendVerificationMail: SendVerificationMailOutput;
   syncRole: CoreOutput;
   toggleExamBookmark: ToggleExamBookmarkOutput;
+  toggleExamCategorieBookmark: ToggleExamCategoryBookmarkOutput;
   updateAdBlockPermission: UpdateAdblockPermissionOutput;
   updateApprovedStateOfMockExamQuestion: UpdateApprovedStateOfMockExamQuestionOutput;
   updateDiscountCode: UpdateDiscountCodeOutput;
@@ -1591,6 +1623,11 @@ export type MutationToggleExamBookmarkArgs = {
 };
 
 
+export type MutationToggleExamCategorieBookmarkArgs = {
+  input: ToggleExamCategoryBookmarkInput;
+};
+
+
 export type MutationUpdateAdBlockPermissionArgs = {
   input: UpdateAdblockPermissionInput;
 };
@@ -1807,6 +1844,7 @@ export type Query = {
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
+  getMyBookmarkedExamCategories: GetMyBookmarkedExamCategoriesOutput;
   getMyBookmarkedExams: GetMyBookmarkedExamsOutput;
   getMyExamCategories: GetMyExamCategoriesOutput;
   getMyExams: GetMyExamsOutput;
@@ -2641,6 +2679,17 @@ export type ToggleExamBookmarkOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ToggleExamCategoryBookmarkInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type ToggleExamCategoryBookmarkOutput = {
+  __typename?: 'ToggleExamCategoryBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  isBookmarked?: Maybe<Scalars['Boolean']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateAdblockPermissionInput = {
   userId: Scalars['Float'];
 };
@@ -2753,6 +2802,8 @@ export type User = {
   discountCode?: Maybe<Array<DiscountCode>>;
   email: Scalars['String'];
   examBookmarks: Array<MockExamBookmark>;
+  examCategoryBookmarks: Array<ExamCategoryBookmark>;
+  examCategoryInvitations: Array<ExamCategoryInvitation>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examLikes: Array<ExamLike>;
   examViewer?: Maybe<Array<ExamViewer>>;

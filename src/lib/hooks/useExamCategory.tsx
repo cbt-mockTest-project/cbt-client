@@ -66,12 +66,12 @@ const useExamCategory = () => {
         },
         fetchPolicy,
       });
-      console.log(res);
       if (res.data?.readMockExamCategoryByCategoryId.category) {
         setExamCategory(
           res.data.readMockExamCategoryByCategoryId.category as MockExamCategory
         );
       }
+      return res.data?.readMockExamCategoryByCategoryId.category;
     } catch (e) {
       handleError(e);
     }
