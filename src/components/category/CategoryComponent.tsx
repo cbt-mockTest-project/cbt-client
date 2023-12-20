@@ -90,7 +90,7 @@ const CategoryComponentBlock = styled.div`
     right: 30px;
     cursor: pointer;
     border-radius: 50%;
-    border: 1px solid ${palette.textColor};
+    border: 1px solid ${palette.colorText};
     width: 35px;
     height: 35px;
     display: flex;
@@ -100,7 +100,7 @@ const CategoryComponentBlock = styled.div`
 
     svg {
       font-size: 24px;
-      color: ${palette.textColor};
+      color: ${palette.colorText};
     }
     &:hover {
       border-color: ${palette.antd_blue_02};
@@ -148,7 +148,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       key: 1,
       label: (
         <button
-          style={{ color: palette.textColor }}
+          style={{ color: palette.colorText }}
           onClick={() => setSaveCategoryModalOpen(true)}
         >
           수정하기
@@ -159,7 +159,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       key: 2,
       label: (
         <button
-          style={{ color: palette.textColor }}
+          style={{ color: palette.colorText }}
           onClick={(e) => {
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
@@ -175,7 +175,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       key: 3,
       label: (
         <button
-          style={{ color: palette.textColor }}
+          style={{ color: palette.colorText }}
           onClick={() => setEditExamsModalOpen(true)}
         >
           시험지 추가하기

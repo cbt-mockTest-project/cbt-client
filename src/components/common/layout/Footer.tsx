@@ -7,7 +7,7 @@ import Link from 'next/link';
 const FooterContainer = styled.div`
   width: 100%;
   padding: 20px 0;
-  background-color: ${palette.backgroundColor};
+  background-color: ${palette.colorBg};
   .footer-wrapper {
     margin: 0 auto;
     max-width: 1024px;

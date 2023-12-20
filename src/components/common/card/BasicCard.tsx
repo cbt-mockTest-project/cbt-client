@@ -3,18 +3,18 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const BasicCardBlock = styled.div<{ hoverEffect: boolean }>`
-  background-color: ${palette.containerBackgroundColor};
+  background-color: ${palette.colorBgContainer};
   border-radius: 10px;
   padding: 10px 20px;
   list-style: none;
-  border: 1px solid ${palette.borderColor};
+  border: 1px solid ${palette.colorBorder};
   width: 100%;
   transition: border-color 0.2s ease-in-out;
   ${(props) =>
     props.hoverEffect &&
     css`
       &:hover {
-        border-color: ${palette.borderHoverColor};
+        border-color: ${palette.colorBorderHover};
       }
     `}
 `;

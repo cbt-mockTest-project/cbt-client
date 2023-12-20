@@ -51,7 +51,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     white-space: pre-wrap;
   }
   .feedback-date {
-    color: ${palette.subTextColor};
+    color: ${palette.colorTextLabel};
     font-size: 12px;
   }
   .feedback-footer {
@@ -71,7 +71,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
 
   .feedback-control-button-wrapper {
     svg {
-      color: ${palette.textColor};
+      color: ${palette.colorText};
     }
 
     &:hover {
@@ -145,7 +145,7 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 1,
       label: (
         <button
-          style={{ color: palette.textColor }}
+          style={{ color: palette.colorText }}
           onClick={(e) => {
             e.stopPropagation();
             Modal.confirm({
@@ -162,7 +162,7 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 2,
       label: (
         <button
-          style={{ color: palette.textColor }}
+          style={{ color: palette.colorText }}
           onClick={(e) => {
             e.stopPropagation();
             setIsQuestionFeedbackModalOpen(true);

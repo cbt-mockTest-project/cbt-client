@@ -7,12 +7,12 @@ import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 
 const StudyHeaderBlock = styled.div`
-  background-color: ${palette.containerBackgroundColor};
+  background-color: ${palette.colorBgContainer};
   width: 100%;
   top: 0;
   position: sticky;
   z-index: 10;
-  border-bottom: 1px solid ${palette.borderColor};
+  border-bottom: 1px solid ${palette.colorBorder};
   .study-header-inner {
     height: 57px;
     max-width: 1280px;

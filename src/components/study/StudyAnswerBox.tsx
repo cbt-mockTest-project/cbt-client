@@ -10,7 +10,7 @@ const StudyAnswerBoxBlock = styled.div`
   .study-answer-box-question-card-answer-label {
     font-weight: bold;
     margin-bottom: 5px;
-    color: ${palette.subTextColor};
+    color: ${palette.colorTextLabel};
   }
   .study-answer-box-question-card-answer {
     word-break: break-all;

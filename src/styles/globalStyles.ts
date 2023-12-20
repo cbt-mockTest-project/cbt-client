@@ -26,7 +26,7 @@ const Globalstyles = createGlobalStyle`
     font-size: 100%;
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
-    color: ${palette.textColor};
+    color: ${palette.colorText};
   }
 
   /* HTML5 display-role reset for older browsers */
@@ -42,7 +42,7 @@ const Globalstyles = createGlobalStyle`
       display: none;
   }
   body {
-    background-color: ${palette.backgroundColor};
+    background-color: ${palette.colorBg};
     overflow-x: hidden !important;
     overflow-y : scroll ;
   }

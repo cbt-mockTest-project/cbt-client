@@ -29,7 +29,7 @@ const CreateQuestionEditorBlock = styled.div`
     }
     .ql-toolbar.ql-snow,
     .ql-container.ql-snow {
-      border-color: ${palette.borderColorLight};
+      border-color: ${palette.colorBorder};
     }
   }
 `;

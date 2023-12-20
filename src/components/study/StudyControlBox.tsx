@@ -46,8 +46,8 @@ const StudyControlBoxBlock = styled.div`
   .study-control-button {
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.borderColor};
-    color: ${palette.textColor};
+    border: 2px solid ${palette.colorBorder};
+    color: ${palette.colorText};
     border-radius: 50%;
     display: flex;
     align-items: center;

@@ -63,7 +63,7 @@ const LoginTabBlock = styled.form`
   .login-divider-label {
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.subTextColor};
+    color: ${palette.colorTextLabel};
   }
 `;
 

@@ -18,14 +18,14 @@ const CardModeItemBlock = styled.div`
       width: 5px; /* 스크롤 바의 너비 */
     }
     ::-webkit-scrollbar-thumb {
-      background-color: ${palette.subTextColor}; /* 스크롤 막대의 색상 */
+      background-color: ${palette.colorTextLabel}; /* 스크롤 막대의 색상 */
       border-radius: 6px; /* 둥근 모서리 */
     }
     ::-webkit-scrollbar-thumb:hover {
       background-color: grey;
     }
     ::-webkit-scrollbar-track {
-      background-color: ${palette.containerBackgroundColor}; /* 스크롤 바의 전체 색상 */
+      background-color: ${palette.colorBgContainer}; /* 스크롤 바의 전체 색상 */
       border-radius: 6px; /* 둥근 모서리 */
     }
   }

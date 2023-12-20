@@ -26,15 +26,13 @@ const palette = {
   gray_700: '#939999',
   gray_800: '#5e6464',
   gray_900: '#384040',
-  backgroundColor: '#01040a',
-  borderColor: '#22262d',
-  borderColorLight: '#424242',
-  borderHoverColor: '#3c89e8',
-  containerBackgroundColor: '#141414',
-  cardColor: '#21262d',
-  textColor: '#FFFFFFD9',
-  subTextColor: '#7d8590',
-  emphasisTextColor: '#2465c0',
+  colorBg: '#1e1e20',
+  colorBorder: '#424242',
+  colorBorderHover: '#3c89e8',
+  colorBgContainer: '#272829',
+  colorText: '#FFFFFFD9',
+  colorTextLabel: '#7d8590',
+  colorEmphasisText: '#2465c0',
 };
 
 export default palette;

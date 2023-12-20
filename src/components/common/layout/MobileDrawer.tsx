@@ -27,6 +27,6 @@ export default MobileDrawer;
 const StyledDrawer = styled(Drawer)`
   .ant-drawer-body {
     padding: 0px !important;
-    background-color: ${palette.containerBackgroundColor};
+    background-color: ${palette.colorBgContainer};
   }
 `;

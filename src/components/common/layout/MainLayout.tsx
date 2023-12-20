@@ -8,7 +8,7 @@ import Footer from './Footer';
 
 const MainLayoutBlock = styled.div`
   overflow-y: auto;
-  color: ${palette.textColor};
+  color: ${palette.colorText};
   .main-layout-wrapper {
     display: flex;
     position: relative;
@@ -21,13 +21,13 @@ const MainLayoutBlock = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: ${palette.backgroundColor};
+    background-color: ${palette.colorBg};
   }
   .main-layout-body-wrapper {
     max-width: 1200px;
-    border: 1px solid ${palette.borderColor};
+    border: 1px solid ${palette.colorBorder};
     border-radius: 5px;
-    background-color: ${palette.containerBackgroundColor};
+    background-color: ${palette.colorBgContainer};
     height: 100%;
     width: 100%;
   }

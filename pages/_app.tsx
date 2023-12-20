@@ -190,6 +190,13 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
         <ConfigProvider
           theme={{
             algorithm: theme.darkAlgorithm,
+            token: {
+              colorBgContainer: '#272829',
+              colorText: '#FFFFFFD9',
+              colorTextLabel: '#7d8590',
+              colorBgBase: '#272829',
+              colorBorder: '#424242',
+            },
           }}
         >
           <CoreContainer />

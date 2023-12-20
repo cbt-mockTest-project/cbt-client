@@ -20,7 +20,7 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           router.push(e.key.toString());
         }}
         selectedKeys={[router.pathname]}
-        style={{ backgroundColor: palette.containerBackgroundColor }}
+        style={{ backgroundColor: palette.colorBgContainer }}
         mode="inline"
         theme="dark"
         items={navItems}

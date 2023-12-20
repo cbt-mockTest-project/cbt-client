@@ -26,7 +26,7 @@ const ExamSelectModalBlock = styled(Modal)`
   .exam-select-description {
     margin-top: 5px;
     font-size: 12px;
-    color: ${palette.subTextColor};
+    color: ${palette.colorTextLabel};
   }
   .exam-select-score-icon {
     font-size: 16px;
