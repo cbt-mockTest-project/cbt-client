@@ -40,7 +40,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
           { label: '저장된', value: CategoryOptionEnum.BOOKMARKED },
         ]}
       />
-      <CategoryFolderList categories={categories} />
+      <CategoryFolderList categories={categories} hasAllExamFolder />
     </MyStorageComponentBlock>
   );
 };
