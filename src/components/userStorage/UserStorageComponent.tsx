@@ -16,10 +16,7 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
   const { categories } = useStorage(StorageType.USER);
   return (
     <UserStorageComponentBlock>
-      <CategoryFolderList
-        categories={categories}
-        openSaveCategoryModal={openSaveCategoryModal}
-      />
+      <CategoryFolderList categories={categories} />
       {placeholder}
     </UserStorageComponentBlock>
   );

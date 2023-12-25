@@ -1,9 +1,9 @@
 import { checkboxOption } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Navigation } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import RoundCheckbox from './RoundCheckbox';
+import { Navigation } from 'swiper/modules';
 
 export type RoundCheckboxGroupOnChangeValueType =
   | checkboxOption['value'][]

@@ -71,7 +71,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
   questionsQueryInput,
 }) => {
   const { questions, fetchQuestions } = useQuestions();
-  const [swiper, setSwiper] = useState<SwiperCore | null>(null);
+  const [swiper, setSwiper] = useState<any | null>(null);
   const router = useRouter();
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;

@@ -62,7 +62,7 @@ const CardModeItemBlock = styled.div`
 interface CardModeItemProps {
   question: MockExamQuestion;
   number: number;
-  swiper: SwiperCore;
+  swiper: any;
 }
 
 const CardModeItem: React.FC<CardModeItemProps> = ({

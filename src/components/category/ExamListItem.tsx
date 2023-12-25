@@ -9,9 +9,10 @@ import { Button, Checkbox, Modal } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExam } from 'types';
+import ExamSelecModal from './ExamSelecModal';
 
 const ExamListItemBlock = styled.div`
   width: calc(50% - 10px);
@@ -62,6 +63,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 }) => {
   const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
     useExamCategory();
+  const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
   const handleRemoveExam = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -72,6 +74,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       },
     });
   };
+  const handleExamClick = () => {
+    setIsExamSelectModalOpen(true);
+  };
 
   return (
     <ExamListItemBlock>
@@ -81,38 +86,43 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           onClick={() => handleExamSelect(exam.id)}
         />
       )}
-      <Link className="exam-list-item-link" href={`/exam/solution/${exam.id}`}>
-        <BasicCard hoverEffect>
-          <div className="exam-list-item-top-wrapper">
-            <span>{exam.title}</span>
-            {category?.user.id === meQuery?.me.user?.id ? (
-              <Button type="primary" onClick={handleRemoveExam}>
-                <MinusOutlined />
-              </Button>
-            ) : (
-              <ExamBookmark
-                handleToggleBookmark={(e) => {
-                  e.preventDefault();
-                  handleToggleExamBookmark(exam.id);
-                }}
-                isBookmarked={exam.isBookmarked || false}
-              />
-            )}
-          </div>
-          <div className="exam-list-item-bottom-wrapper">
-            <Image
-              className="exam-list-item-user-profile-image"
-              src={exam.user.profileImg || '/png/profile/profile_default.png'}
-              alt="프로필이미지"
-              width={20}
-              height={20}
+      {/* <Link className="exam-list-item-link" href={`/exam/solution/${exam.id}`}> */}
+      <BasicCard hoverEffect onClick={handleExamClick}>
+        <div className="exam-list-item-top-wrapper">
+          <span>{exam.title}</span>
+          {category?.user.id === meQuery?.me.user?.id ? (
+            <Button type="primary" onClick={handleRemoveExam}>
+              <MinusOutlined />
+            </Button>
+          ) : (
+            <ExamBookmark
+              handleToggleBookmark={(e) => {
+                e.preventDefault();
+                handleToggleExamBookmark(exam.id);
+              }}
+              isBookmarked={exam.isBookmarked || false}
             />
-            <span className="exam-list-item-user-name">
-              {exam.user.nickname}
-            </span>
-          </div>
-        </BasicCard>
-      </Link>
+          )}
+        </div>
+        <div className="exam-list-item-bottom-wrapper">
+          <Image
+            className="exam-list-item-user-profile-image"
+            src={exam.user.profileImg || '/png/profile/profile_default.png'}
+            alt="프로필이미지"
+            width={20}
+            height={20}
+          />
+          <span className="exam-list-item-user-name">{exam.user.nickname}</span>
+        </div>
+      </BasicCard>
+      {/* </Link> */}
+      {isExamSelectModalOpen && (
+        <ExamSelecModal
+          examId={exam.id}
+          open={isExamSelectModalOpen}
+          onCancel={() => setIsExamSelectModalOpen(false)}
+        />
+      )}
     </ExamListItemBlock>
   );
 };

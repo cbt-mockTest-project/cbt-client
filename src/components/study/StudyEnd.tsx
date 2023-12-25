@@ -18,7 +18,7 @@ const StudyEndBlock = styled.div`
 `;
 
 interface StudyEndProps {
-  swiper: SwiperCore;
+  swiper: any;
 }
 
 const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {

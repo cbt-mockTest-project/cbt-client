@@ -103,7 +103,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const categories = categoryRes.data.getExamCategories
         .categories as MockExamCategory[];
       const user = userRes.data.userProfile.user as User;
-      store.dispatch(storageActions.setUserStorageCategories(categories));
+      store.dispatch(storageActions.setUserStorageCategories({ categories }));
       return addApolloState(apolloClient, {
         props: { user },
         revalidate: 43200,

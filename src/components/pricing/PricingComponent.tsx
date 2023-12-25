@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper';
 import { useCreateFreeTrial, useMeQuery } from '@lib/graphql/hook/useUser';
 import { message } from 'antd';
 import { checkRole } from '@lib/utils/utils';
@@ -14,6 +13,7 @@ import { loginModal } from '@lib/constants';
 import useToggle from '@lib/hooks/useToggle';
 import PricingSelectModal from './PricingSelectModal';
 import usePayment from './usePayment';
+import { Pagination } from 'swiper/modules';
 
 const PricingComponentBlock = styled.div`
   display: flex;

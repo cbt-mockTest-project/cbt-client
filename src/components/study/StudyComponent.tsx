@@ -21,20 +21,33 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { order, states, limit, examIds, mode } = router.query;
-    if (!order || !limit || !examIds || !mode) return;
-    const input: ReadQuestionsByExamIdsInput = {
-      order: order as string,
-      limit: Number(limit),
-      ids: String(examIds)
-        .split(',')
-        .map((id) => Number(id)),
-    };
-    if (states && typeof states === 'string')
-      input.states = states.split(',') as QuestionState[];
 
-    setQuestionsQueryInput(input);
-    fetchQuestions(input);
+    const { order, states, limit, examIds, mode, examId } = router.query;
+    // 단일 문제 풀이
+    if (examId) {
+      const input: ReadQuestionsByExamIdsInput = {
+        order: 'normal',
+        ids: [Number(examId)],
+      };
+      setQuestionsQueryInput(input);
+      fetchQuestions(input);
+    }
+    // 다중 문제 풀이
+    else {
+      if (!order || !limit || !examIds || !mode) return;
+      const input: ReadQuestionsByExamIdsInput = {
+        order: order as string,
+        limit: Number(limit),
+        ids: String(examIds)
+          .split(',')
+          .map((id) => Number(id)),
+      };
+      if (states && typeof states === 'string')
+        input.states = states.split(',') as QuestionState[];
+
+      setQuestionsQueryInput(input);
+      fetchQuestions(input);
+    }
   }, [router.isReady]);
 
   useEffect(() => {

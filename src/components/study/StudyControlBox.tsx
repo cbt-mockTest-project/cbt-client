@@ -46,7 +46,7 @@ const StudyControlBoxBlock = styled.div`
   .study-control-button {
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.colorBorder};
+    border: 2px solid ${palette.colorBorderLight};
     color: ${palette.colorText};
     border-radius: 50%;
     display: flex;
@@ -91,7 +91,7 @@ interface StudyControlBoxProps {
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
   };
   additionalControlButton?: React.ReactNode;
-  swiper?: SwiperCore;
+  swiper?: any;
 }
 
 const StudyControlBox: React.FC<StudyControlBoxProps> = ({

@@ -38,8 +38,8 @@ interface CardModeComponentProps {
 }
 
 const CardModeComponent: React.FC<CardModeComponentProps> = () => {
-  const { questions, fetchQuestions } = useQuestions();
-  const [swiper, setSwiper] = useState<SwiperCore | null>(null);
+  const { questions } = useQuestions();
+  const [swiper, setSwiper] = useState<any>(null);
   const router = useRouter();
   return (
     <CardModeComponentBlock>

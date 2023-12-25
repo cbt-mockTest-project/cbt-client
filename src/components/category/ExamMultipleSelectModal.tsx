@@ -9,26 +9,26 @@ import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 
-const ExamSelectModalBlock = styled(Modal)`
-  .exam-select-random-checkbox-wrapper,
-  .exam-select-card-limit-wrapper,
-  .exam-select-score-checkbox-wrapper,
-  .exam-select-option-wrapper {
+const ExamMultipleSelectModalBlock = styled(Modal)`
+  .exam-multiple-select-random-checkbox-wrapper,
+  .exam-multiple-select-card-limit-wrapper,
+  .exam-multiple-select-score-checkbox-wrapper,
+  .exam-multiple-select-option-wrapper {
     display: flex;
     flex-direction: column;
     margin-top: 15px;
   }
-  .exam-select-label {
+  .exam-multiple-select-label {
     margin-bottom: 5px;
     font-size: 14px;
     font-weight: 500;
   }
-  .exam-select-description {
+  .exam-multiple-select-description {
     margin-top: 5px;
     font-size: 12px;
     color: ${palette.colorSubText};
   }
-  .exam-select-score-icon {
+  .exam-multiple-select-score-icon {
     font-size: 16px;
     position: relative;
     top: 3px;
@@ -39,12 +39,14 @@ const ExamSelectModalBlock = styled(Modal)`
   }
 `;
 
-interface ExamSelectModalProps extends Omit<ModalProps, 'children'> {
+interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
   examIds: number[];
   categoryId: number;
 }
 
-const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
+const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
+  props
+) => {
   const { categoryId, examIds, ...modalProps } = props;
   const { getExamSettingHistory, setExamSettingHistory } =
     useExamSettingHistory();
@@ -104,14 +106,18 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
     if (limit) setLimit(limit);
   }, []);
   return (
-    <ExamSelectModalBlock {...modalProps} title="학습 설정하기" footer={false}>
+    <ExamMultipleSelectModalBlock
+      {...modalProps}
+      title="학습 설정하기"
+      footer={false}
+    >
       <div>
-        <div className="exam-select-option-wrapper">
-          <label className="exam-select-label">
+        <div className="exam-multiple-select-option-wrapper">
+          <label className="exam-multiple-select-label">
             * 학습 형태를 선택해주세요.
           </label>
           <Radio.Group
-            className="exam-select-radio-group"
+            className="exam-multiple-select-radio-group"
             value={mode}
             onChange={(e) => {
               setMode(e.target.value);
@@ -122,8 +128,8 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
             <Radio.Button value={ExamMode.CARD}>카드</Radio.Button>
           </Radio.Group>
         </div>
-        <div className="exam-select-random-checkbox-wrapper">
-          <label className="exam-select-label">* 문제 순서</label>
+        <div className="exam-multiple-select-random-checkbox-wrapper">
+          <label className="exam-multiple-select-label">* 문제 순서</label>
           <div>
             <Checkbox
               checked={isRandom}
@@ -133,8 +139,8 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
             </Checkbox>
           </div>
         </div>
-        <div className="exam-select-score-checkbox-wrapper">
-          <label className="exam-select-label">* 점수별 필터링</label>
+        <div className="exam-multiple-select-score-checkbox-wrapper">
+          <label className="exam-multiple-select-label">* 점수별 필터링</label>
           <div>
             <Checkbox
               checked={questionStates.length === 3}
@@ -146,13 +152,13 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
               checked={questionStates.includes(QuestionState.High)}
               onClick={() => handleQuestionStateChange(QuestionState.High)}
             >
-              <PanoramaFishEyeIcon className="exam-select-score-icon" />
+              <PanoramaFishEyeIcon className="exam-multiple-select-score-icon" />
             </Checkbox>
             <Checkbox
               checked={questionStates.includes(QuestionState.Row)}
               onClick={() => handleQuestionStateChange(QuestionState.Row)}
             >
-              <ClearIcon className="exam-select-score-icon" />
+              <ClearIcon className="exam-multiple-select-score-icon" />
             </Checkbox>
             <Checkbox
               checked={questionStates.includes(QuestionState.Core)}
@@ -161,12 +167,16 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
               무
             </Checkbox>
           </div>
-          <p className="exam-select-description">{`"무"는 점수가 체크 되지 않은 문항입니다.`}</p>
+          <p className="exam-multiple-select-description">{`"무"는 점수가 체크 되지 않은 문항입니다.`}</p>
         </div>
-        <div className="exam-select-card-limit-wrapper">
-          <label className="exam-select-label">* 문항수</label>
-          <InputNumber size="small" value={limit} onChange={setLimit} />
-          <p className="exam-select-description">{`입력하지 않을 경우 전체 문항이 출제됩니다.`}</p>
+        <div className="exam-multiple-select-card-limit-wrapper">
+          <label className="exam-multiple-select-label">* 문항수</label>
+          <InputNumber
+            size="small"
+            value={limit}
+            onChange={(value) => setLimit(value)}
+          />
+          <p className="exam-multiple-select-description">{`입력하지 않을 경우 전체 문항이 출제됩니다.`}</p>
         </div>
         <Button
           className="exam-start-button"
@@ -176,8 +186,8 @@ const ExamSelectModal: React.FC<ExamSelectModalProps> = (props) => {
           학습하기
         </Button>
       </div>
-    </ExamSelectModalBlock>
+    </ExamMultipleSelectModalBlock>
   );
 };
 
-export default ExamSelectModal;
+export default ExamMultipleSelectModal;

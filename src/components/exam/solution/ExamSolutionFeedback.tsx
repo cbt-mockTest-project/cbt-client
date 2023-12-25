@@ -56,7 +56,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
           const newFeedback = question.mockExamQuestionFeedback.filter(
             (feedback) => feedback.id !== feedbackId
           );
-          const newQuestion: ExamQuestionType = {
+          const newQuestion: any = {
             ...question,
             mockExamQuestionFeedback: newFeedback,
           };
@@ -114,7 +114,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
       if (res.data?.updateMockExamQuestionFeedbackRecommendation.ok) {
         const feedbackResponse =
           res.data.updateMockExamQuestionFeedbackRecommendation;
-        const newQuestion: ExamQuestionType = {
+        const newQuestion: any = {
           ...question,
           mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
             (feedback) => {

@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
 import ExamList from './ExamList';
-import ExamSelectModal from './ExamSelectModal';
+import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
@@ -141,7 +141,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
-  const [examSelectModalVisible, setExamSelectModalVisible] = useState(false);
+  const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
+    useState(false);
+
   const { getExamSettingHistory } = useExamSettingHistory();
 
   const categorySettingDropdownItems: MenuProps['items'] = [
@@ -252,18 +254,18 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
                 className="category-study-button"
                 type="primary"
                 disabled={examSetting.examIds.length === 0}
-                onClick={() => setExamSelectModalVisible(true)}
+                onClick={() => setExamMultipleSelectModalOpen(true)}
               >
                 학습하기
               </Button>
             </div>
           )}
           <ExamList handleExamSelect={handleExamSelect} />
-          <ExamSelectModal
+          <ExamMultipleSelectModal
             categoryId={category.id}
             examIds={examSetting.examIds}
-            open={examSelectModalVisible}
-            onCancel={() => setExamSelectModalVisible(false)}
+            open={examMutipleSelectModalOpen}
+            onCancel={() => setExamMultipleSelectModalOpen(false)}
           />
         </>
       ) : (

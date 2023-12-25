@@ -14,7 +14,7 @@ const TypingModeItemBlock = styled.div``;
 interface TypingModeItemProps {
   question: MockExamQuestion;
   number: number;
-  swiper: SwiperCore;
+  swiper: any;
 }
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({

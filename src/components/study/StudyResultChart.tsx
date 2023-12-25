@@ -51,12 +51,12 @@ const StudyResultChart: React.FC<StudyResultChartProps> = ({ scoreCounts }) => {
           scoreCounts.lowScoreLength,
           scoreCounts.coreScoreLength,
         ],
-        colorBg: [
+        backgroundColor: [
           'rgba(54, 162, 235, 0.2)',
           'rgba(255, 99, 132, 0.2)',
           'rgba(201, 203, 207, 0.2)',
         ],
-        colorBorder: [
+        borderColor: [
           'rgba(54, 162, 235, 1)',
           'rgba(255, 99, 132, 1)',
           'rgba(201, 203, 207, 1)',

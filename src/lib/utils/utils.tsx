@@ -154,7 +154,7 @@ export const checkAdblock = (): boolean => {
 
 export const isScriptLoaded = (url: string): boolean => {
   const scripts = document.getElementsByTagName('script');
-  for (const script of scripts) {
+  for (const script of scripts as any) {
     if (script.src === url) {
       return true;
     }

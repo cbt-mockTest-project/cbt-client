@@ -1,9 +1,6 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper';
+import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { isIOS } from 'react-device-detect';
 import { skeletonStyle } from '@styles/utils';
 
 const MainBannerSkeleton = () => {

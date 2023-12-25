@@ -7,7 +7,7 @@ import { ExamSource, MockExamCategory } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import wrapper from '@modules/redux/store/configureStore';
-import { moduStorageActions } from '@modules/redux/slices/storage';
+import { storageActions } from '@modules/redux/slices/storage';
 
 interface ModuStorageProps {}
 
@@ -45,7 +45,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         };
       }
       store.dispatch(
-        moduStorageActions.setCategories(categories as MockExamCategory[])
+        storageActions.setPremiumStorageCategories({
+          categories: categories as MockExamCategory[],
+        })
       );
       return addApolloState(apolloClient, {
         revalidate: 43200,
