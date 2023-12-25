@@ -149,7 +149,6 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           `,
         }}
       />
-
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
@@ -186,12 +185,9 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
       />
 
       <ApolloProvider client={client}>
-        <Globalstyles />
-        <ConfigProvider
-          theme={{
-            algorithm: theme.darkAlgorithm,
-          }}
-        >
+        <ConfigProvider>
+          <Globalstyles />
+
           <CoreContainer />
           <AppInner />
           {hasLayout ? (

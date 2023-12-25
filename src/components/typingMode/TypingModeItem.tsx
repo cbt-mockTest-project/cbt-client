@@ -3,13 +3,18 @@ import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import useQuestions from '@lib/hooks/useQuestions';
+import palette from '@styles/palette';
 import { Button, Input } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import SwiperCore from 'swiper';
 import { MockExamQuestion } from 'types';
-const TypingModeItemBlock = styled.div``;
+const TypingModeItemBlock = styled.div`
+  .typing-mode-textarea {
+    border-color: ${palette.colorBorder};
+  }
+`;
 
 interface TypingModeItemProps {
   question: MockExamQuestion;

@@ -25,7 +25,9 @@ const MainLayoutBlock = styled.div`
   }
   .main-layout-body-wrapper {
     max-width: 1200px;
-    border: 1px solid ${palette.colorBorder};
+    border: 1px solid ${palette.colorBorderLight};
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
+    min-height: 750px;
     border-radius: 5px;
     background-color: ${palette.colorContainerBg};
     height: 100%;

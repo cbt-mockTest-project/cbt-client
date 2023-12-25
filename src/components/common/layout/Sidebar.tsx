@@ -11,6 +11,8 @@ const SidebarBlock = styled.div`
   max-width: 200px;
   width: 100%;
   background-color: ${palette.colorContainerBg};
+  border-right: 1px solid ${palette.colorBorderLight};
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
   min-height: 100vh;
   position: fixed;
   top: 0;
@@ -23,6 +25,9 @@ const SidebarBlock = styled.div`
   }
   .side-user-auth-box {
     margin-top: 15px;
+  }
+  .ant-menu {
+    border: none !important;
   }
   @media (max-width: ${responsive.medium}) {
     display: none;

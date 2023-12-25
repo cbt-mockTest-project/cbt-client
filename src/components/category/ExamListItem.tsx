@@ -87,7 +87,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         />
       )}
       {/* <Link className="exam-list-item-link" href={`/exam/solution/${exam.id}`}> */}
-      <BasicCard hoverEffect onClick={handleExamClick}>
+      <BasicCard onClick={handleExamClick} hoverEffect>
         <div className="exam-list-item-top-wrapper">
           <span>{exam.title}</span>
           {category?.user.id === meQuery?.me.user?.id ? (

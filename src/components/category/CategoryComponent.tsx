@@ -42,7 +42,7 @@ const CategoryComponentBlock = styled.div`
   .category-creator-label {
     font-size: 14px;
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${palette.colorSubText};
   }
   .category-info {
     display: flex;
@@ -90,14 +90,13 @@ const CategoryComponentBlock = styled.div`
     right: 30px;
     cursor: pointer;
     border-radius: 50%;
-    border: 1px solid ${palette.colorText};
+    border: 1px solid ${palette.colorBorder};
     width: 35px;
     height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: 0.2s all ease-in;
-
     svg {
       font-size: 24px;
       color: ${palette.colorText};
@@ -256,7 +255,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
                 disabled={examSetting.examIds.length === 0}
                 onClick={() => setExamMultipleSelectModalOpen(true)}
               >
-                학습하기
+                다중 학습하기
               </Button>
             </div>
           )}

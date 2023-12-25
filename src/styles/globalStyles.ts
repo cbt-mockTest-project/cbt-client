@@ -26,7 +26,7 @@ const Globalstyles = createGlobalStyle`
     font-size: 100%;
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
-    color: ${palette.colorText};
+    /* color: ${palette.colorText}; */
   }
 
   /* HTML5 display-role reset for older browsers */
@@ -42,7 +42,7 @@ const Globalstyles = createGlobalStyle`
       display: none;
   }
   body {
-    background-color: ${palette.colorBg};
+    /* background-color: ${palette.colorBg}; */
     overflow-x: hidden !important;
     overflow-y : scroll ;
   }
@@ -138,7 +138,7 @@ const Globalstyles = createGlobalStyle`
       display: none; /* Chrome, Safari, Opera*/
     }
   }
-  .ant-modal-content {
+  /* .ant-modal-content {
     background: #1F1F1F !important;
     color : rgba(255, 255, 255, 0.85) !important;;
   }
@@ -153,7 +153,7 @@ const Globalstyles = createGlobalStyle`
     background-color: #141414;
     border-color: #424242;
     color: #FFFFFFD9;
-  }
+  } */
   a {
     :hover{
       color : unset ;

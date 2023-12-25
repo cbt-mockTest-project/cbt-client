@@ -7,14 +7,17 @@ const BasicCardBlock = styled.div<{ hoverEffect: boolean }>`
   border-radius: 10px;
   padding: 10px 20px;
   list-style: none;
-  border: 1px solid ${palette.colorBorder};
+  border: 1px solid ${palette.colorBorderLight};
   width: 100%;
-  transition: border-color 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   ${(props) =>
     props.hoverEffect &&
     css`
       &:hover {
-        border-color: ${palette.colorBorderHover};
+        /* border-color: ${palette.colorBorderHover}; */
+        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+          0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
       }
     `}
 `;
