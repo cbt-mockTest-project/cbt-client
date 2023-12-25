@@ -75,7 +75,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   return (
     <CardModeItemBlock>
       <div className={`card ${isFlipped ? 'is-flipped' : ''}`}>
-        <div className="card-front">
+        <div
+          className="card-front"
+          onClick={() => setIsFlipped((prev) => !prev)}
+        >
           <BasicCard className="card-basic-wrapper">
             <div className="card-container">
               <StudyQuestionBox
@@ -87,7 +90,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
             </div>
           </BasicCard>
         </div>
-        <div className="card-back">
+        <div
+          className="card-back"
+          onClick={() => setIsFlipped((prev) => !prev)}
+        >
           <BasicCard className="card-basic-wrapper">
             <div className="card-container">
               <StudyAnswerBox
@@ -102,11 +108,6 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
       <StudyControlBox
         className="study-control-box"
         question={question}
-        additionalControlButton={
-          <Button onClick={() => setIsFlipped((prev) => !prev)}>
-            {isFlipped ? '문제' : '정답'}
-          </Button>
-        }
         saveQuestionState={saveQuestionState}
         swiper={swiper}
       />
