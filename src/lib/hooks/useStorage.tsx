@@ -64,7 +64,10 @@ const useStorage = (type: StorageType) => {
     }
   };
 
-  const handleCreateCategory = async (input: CreateMockExamCategoryInput) => {
+  const handleCreateCategory = async (
+    input: CreateMockExamCategoryInput,
+    successCallback?: () => void
+  ) => {
     try {
       if (!meQuery?.me.user)
         return {
@@ -83,6 +86,7 @@ const useStorage = (type: StorageType) => {
         } as MockExamCategory;
         setCategories([category, ...(categories || [])]);
         message.success('폴더가 생성되었습니다.');
+        successCallback?.();
         return;
       }
       message.error(res.data?.createMockExamCategory.error);

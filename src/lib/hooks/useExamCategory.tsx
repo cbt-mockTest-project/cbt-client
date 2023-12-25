@@ -101,7 +101,10 @@ const useExamCategory = () => {
     }
   };
 
-  const handleEditCategory = async (input: EditMockExamCategoryInput) => {
+  const handleEditCategory = async (
+    input: EditMockExamCategoryInput,
+    successCallback?: () => void
+  ) => {
     try {
       const res = await editCategory({
         variables: {
@@ -112,6 +115,7 @@ const useExamCategory = () => {
         const updatedCategory = { ...category, ...input } as MockExamCategory;
         setExamCategory(updatedCategory);
         message.success('폴더가 수정되었습니다.');
+        successCallback?.();
         return;
       }
       message.error(res.data?.editMockExamCategory.error);

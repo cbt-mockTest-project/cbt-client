@@ -46,18 +46,23 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   const handleSaveFolder = async () => {
     if (!name) return message.error('제목을 입력해주세요.');
     categoryId
-      ? await handleEditCategory({
-          id: categoryId,
-          name,
-          description,
-          isPublic,
-        })
-      : await handleCreateCategory({
-          name,
-          description,
-          isPublic,
-        });
-    onClose();
+      ? await handleEditCategory(
+          {
+            id: categoryId,
+            name,
+            description,
+            isPublic,
+          },
+          onClose
+        )
+      : await handleCreateCategory(
+          {
+            name,
+            description,
+            isPublic,
+          },
+          onClose
+        );
   };
 
   return (
