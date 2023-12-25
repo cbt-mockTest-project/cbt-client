@@ -4,8 +4,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ExamBookmarkBlock = styled.button<{ isBookmarked: boolean }>`
+  svg {
+    font-size: 30px;
+  }
   color: ${(props) =>
-    props.isBookmarked ? palette.yellow_500 : palette.colorText};
+    props.isBookmarked ? palette.yellow_500 : palette.colorSubText};
 `;
 
 interface ExamBookmarkProps {
