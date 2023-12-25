@@ -8,7 +8,9 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
 
-const StudyComponentBlock = styled.div``;
+const StudyComponentBlock = styled.div`
+  height: 100vh;
+`;
 
 interface StudyComponentProps {}
 

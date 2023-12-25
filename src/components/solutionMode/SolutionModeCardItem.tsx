@@ -41,7 +41,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
 
   return (
     <SolutionModeCardItemBlock id={`question-${index}`}>
-      <BasicCard className="solution-mode-question-card">
+      <BasicCard className="solution-mode-question-card" type="primary">
         <div className="solution-mode-question-content-wrapper">
           <StudyQuestionBox
             saveBookmark={saveBookmark}

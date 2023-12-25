@@ -1,13 +1,15 @@
 import { LeftOutlined } from '@ant-design/icons';
 import HeaderLayout from '@components/common/header/HeaderLayout';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 
 const StudyHeaderBlock = styled.div`
+  top: 0;
+  position: sticky;
+  z-index: 999;
   .study-header-back-button {
     cursor: pointer;
     position: absolute;

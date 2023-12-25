@@ -11,7 +11,6 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyHeader from '@components/study/StudyHeader';
-import { useRouter } from 'next/router';
 
 const SolutionModeComponentBlock = styled.div`
   background-color: ${palette.colorBg};

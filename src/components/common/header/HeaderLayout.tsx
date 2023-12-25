@@ -6,10 +6,9 @@ import styled from 'styled-components';
 const HeaderLayoutBlock = styled.div`
   background-color: ${palette.colorContainerBg};
   width: 100%;
-  top: 0;
-  position: sticky;
-  z-index: 10;
-  border-bottom: 1px solid ${palette.colorBorder};
+  border-bottom: 1px solid ${palette.colorBorderLight};
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   .header-layout-inner {
     height: 57px;
     max-width: 1280px;

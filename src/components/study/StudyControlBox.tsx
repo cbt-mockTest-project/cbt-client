@@ -122,7 +122,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   };
   return (
     <StudyControlBoxBlock className={className}>
-      <BasicCard className="study-control-box">
+      <BasicCard className="study-control-box" type="primary">
         <button
           className={`study-control-button ${
             question.myQuestionState === QuestionState.High ? 'active' : ''

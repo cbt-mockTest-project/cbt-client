@@ -31,7 +31,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   const { saveBookmark, saveQuestionState } = useQuestions();
   return (
     <TypingModeItemBlock>
-      <BasicCard>
+      <BasicCard type="primary">
         <StudyQuestionBox
           question={question}
           saveBookmark={saveBookmark}
