@@ -23,7 +23,7 @@ export const navItems = [
   //   label: '유저 암기장',
   // },
   {
-    key: '/my-storage',
+    key: '/me/storage',
     icon: <FolderOutlined />,
     label: '내 암기장',
   },

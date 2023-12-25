@@ -136,7 +136,7 @@ const useExamCategory = () => {
         },
       });
       if (res.data?.deleteMockExamCategory.ok) {
-        router.push('/my-storage');
+        router.push('/me/storage');
         return;
       }
       message.error(res.data?.deleteMockExamCategory.error);
