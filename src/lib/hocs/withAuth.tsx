@@ -24,9 +24,7 @@ function withAuth<T>(
     return <WrappedComponent {...props} />;
   };
 
-  WithAuthComponent.displayName = `WithAuth(${
-    WrappedComponent.displayName || WrappedComponent.name || 'Component'
-  })`;
+  WithAuthComponent.displayName = WrappedComponent.displayName;
 
   return WithAuthComponent;
 }
