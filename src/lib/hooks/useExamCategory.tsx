@@ -24,7 +24,7 @@ import { message } from 'antd';
 import { useMemo } from 'react';
 import { StorageType } from 'customTypes';
 import useExamSetting from './useExamSetting';
-import { cloneDeep, debounce } from 'lodash';
+import { cloneDeep, debounce, isEqual } from 'lodash';
 import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
 
@@ -90,7 +90,10 @@ const useExamCategory = () => {
           },
         },
       });
-      if (res.data?.getMyExams.ok) {
+      if (
+        res.data?.getMyExams.ok &&
+        !isEqual(myExams, res.data.getMyExams.exams)
+      ) {
         setMyExams(res.data.getMyExams.exams as MockExam[]);
       }
     } catch (e) {

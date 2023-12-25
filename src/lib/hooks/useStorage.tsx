@@ -11,7 +11,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 import {
   CreateMockExamCategoryInput,
   GetExamCategoriesInput,
@@ -54,7 +54,10 @@ const useStorage = (type: StorageType) => {
       },
       fetchPolicy: getExamCategoriesQuery ? 'cache-first' : 'network-only',
     });
-    if (res.data?.getExamCategories.categories) {
+    if (
+      res.data?.getExamCategories.categories &&
+      !isEqual(categories, res.data.getExamCategories.categories)
+    ) {
       setCategories(
         res.data?.getExamCategories.categories as MockExamCategory[]
       );
