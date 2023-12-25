@@ -1,14 +1,13 @@
-import { MinusOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Checkbox, Modal } from 'antd';
+import { Checkbox, Dropdown, MenuProps, Modal } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import Image from 'next/image';
-import Link from 'next/link';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExam } from 'types';
@@ -45,6 +44,21 @@ const ExamListItemBlock = styled.div`
   .exam-list-item-bookmark-button-active {
     color: ${palette.yellow_500};
   }
+  .exam-list-item-control-option-wrapper {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: 1px solid ${palette.colorBorder};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      border-color: ${palette.antd_blue_02};
+      svg {
+        color: ${palette.antd_blue_02};
+      }
+    }
+  }
   @media (max-width: ${responsive.medium}) {
     width: 100%;
   }
@@ -65,8 +79,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
-  const handleRemoveExam = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleRemoveExam = () => {
     Modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       onOk() {
@@ -78,6 +91,34 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     setIsExamSelectModalOpen(true);
   };
 
+  const examSettingDropdownItems: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleRemoveExam();
+          }}
+        >
+          제거하기
+        </button>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            //TODO: 수정하기
+          }}
+        >
+          수정하기
+        </button>
+      ),
+    },
+  ];
   return (
     <ExamListItemBlock>
       {examSetting.isMultipleSelectMode && (
@@ -91,13 +132,24 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         <div className="exam-list-item-top-wrapper">
           <span>{exam.title}</span>
           {category?.user.id === meQuery?.me.user?.id ? (
-            <Button type="primary" onClick={handleRemoveExam}>
-              <MinusOutlined />
-            </Button>
+            <Dropdown
+              menu={{
+                items: examSettingDropdownItems,
+              }}
+            >
+              <div
+                className="exam-list-item-control-option-wrapper"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <EllipsisOutlined />
+              </div>
+            </Dropdown>
           ) : (
             <ExamBookmark
               handleToggleBookmark={(e) => {
-                e.preventDefault();
+                e.stopPropagation();
                 handleToggleExamBookmark(exam.id);
               }}
               isBookmarked={exam.isBookmarked || false}
