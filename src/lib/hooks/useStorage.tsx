@@ -11,6 +11,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
+import { debounce } from 'lodash';
 import {
   CreateMockExamCategoryInput,
   GetExamCategoriesInput,
@@ -31,6 +32,17 @@ const useStorage = (type: StorageType) => {
     if (type === StorageType.BOOKMARK)
       return state.storage.bookmarkedStorageCategories;
     return state.storage.moduStorageCategories;
+  });
+  const originalCategories = useAppSelector((state) => {
+    if (type === StorageType.PREMIUM)
+      return state.storage.originalPremiumStorageCategories;
+    if (type === StorageType.MY)
+      return state.storage.originalMyStorageCategories;
+    if (type === StorageType.USER)
+      return state.storage.originalUserStorageCategories;
+    if (type === StorageType.BOOKMARK)
+      return state.storage.originalBookmarkedStorageCategories;
+    return state.storage.originalModuStorageCategories;
   });
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
@@ -77,33 +89,90 @@ const useStorage = (type: StorageType) => {
     }
   };
 
-  const setModuCateogries = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setModuStorageCategories(categories));
+  const handleFilterCategories = debounce((keyword: string) => {
+    if (!originalCategories) return;
+    const filteredCategories = originalCategories.filter((category) =>
+      category.name.includes(keyword)
+    );
+    setCategories(filteredCategories, false);
+  }, 300);
 
-  const setPremiumCateogries = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setPremiumStorageCategories(categories));
+  const setModuCateogries = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal = true
+  ) =>
+    dispatch(
+      storageActions.setModuStorageCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
 
-  const setMyCateogries = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setMyStorageCategories(categories));
+  const setPremiumCateogries = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal = true
+  ) =>
+    dispatch(
+      storageActions.setPremiumStorageCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
 
-  const setUserCateogries = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setUserStorageCategories(categories));
+  const setMyCateogries = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal: boolean
+  ) =>
+    dispatch(
+      storageActions.setMyStorageCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
 
-  const setBookmarkedCateogries = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setBookmarkedStorageCategories(categories));
+  const setUserCateogries = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal: boolean
+  ) =>
+    dispatch(
+      storageActions.setUserStorageCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
 
-  const setCategories = (categories: MockExamCategory[]) => {
-    if (type === StorageType.MODU) setModuCateogries(categories);
-    if (type === StorageType.PREMIUM) setPremiumCateogries(categories);
-    if (type === StorageType.MY) setMyCateogries(categories);
-    if (type === StorageType.USER) setUserCateogries(categories);
-    if (type === StorageType.BOOKMARK) setBookmarkedCateogries(categories);
+  const setBookmarkedCateogries = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal: boolean
+  ) =>
+    dispatch(
+      storageActions.setBookmarkedStorageCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
+
+  const setCategories = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal = true
+  ) => {
+    if (type === StorageType.MODU)
+      setModuCateogries(categories, shouldUpdateOriginal);
+    if (type === StorageType.PREMIUM)
+      setPremiumCateogries(categories, shouldUpdateOriginal);
+    if (type === StorageType.MY)
+      setMyCateogries(categories, shouldUpdateOriginal);
+    if (type === StorageType.USER)
+      setUserCateogries(categories, shouldUpdateOriginal);
+    if (type === StorageType.BOOKMARK)
+      setBookmarkedCateogries(categories, shouldUpdateOriginal);
   };
 
   return {
     categories,
     handleCreateCategory,
     createCategoryLoading,
+    handleFilterCategories,
     fetchCategories,
   };
 };

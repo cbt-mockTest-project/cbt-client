@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import CategoryFolderListItem from './CategoryFolderListItem';
-import StorageEmpty from './StorageEmpty';
+import TextInput from '@components/common/input/TextInput';
 
 const CategoryFolderListBlock = styled.ul`
   display: flex;
@@ -22,9 +22,6 @@ const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
       {categories?.map((category) => (
         <CategoryFolderListItem key={category.id} category={category} />
       ))}
-      {/* {categories?.length === 0 && (
-        <StorageEmpty handleButtonClick={openSaveCategoryModal} />
-      )} */}
     </CategoryFolderListBlock>
   );
 };

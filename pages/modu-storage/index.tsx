@@ -57,9 +57,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         };
       }
       store.dispatch(
-        storageActions.setModuStorageCategories(
-          categories as MockExamCategory[]
-        )
+        storageActions.setModuStorageCategories({
+          categories: categories as MockExamCategory[],
+        })
       );
       return addApolloState(apolloClient, {
         revalidate: 43200,

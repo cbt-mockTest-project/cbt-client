@@ -88,6 +88,11 @@ export interface SetMyExamsPayload {
   shouldUpdateOriginal?: boolean;
 }
 
+export interface SetStorageCategoriesPayload {
+  categories: MockExamCategory[];
+  shouldUpdateOriginal?: boolean;
+}
+
 export enum StorageType {
   MODU = 'modu',
   PREMIUM = 'premium',
