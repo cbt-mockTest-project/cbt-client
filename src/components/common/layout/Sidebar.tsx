@@ -10,7 +10,7 @@ import palette from '@styles/palette';
 const SidebarBlock = styled.div`
   max-width: 200px;
   width: 100%;
-  background-color: ${palette.containerBackgroundColor};
+  background-color: ${palette.colorContainerBg};
   min-height: 100vh;
   position: fixed;
   top: 0;

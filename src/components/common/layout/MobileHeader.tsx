@@ -13,14 +13,14 @@ const MobileHeaderBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: ${palette.containerBackgroundColor};
-    border-bottom: 1px solid ${palette.borderColor};
+    background-color: ${palette.colorContainerBg};
+    border-bottom: 1px solid ${palette.colorBorder};
     z-index: 500;
     height: 57px;
     width: 100vw;
     padding: 0px 16px;
     .mobile-menu-button {
-      color: ${palette.textColor};
+      color: ${palette.colorText};
     }
     .mobile-header-title {
       font-size: 16px;

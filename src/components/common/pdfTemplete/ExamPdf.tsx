@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
     width: '100%',
-    backgroundColor: 'white',
+    colorBg: 'white',
   },
   section: {
     flexDirection: 'column',
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: 550,
     padding: 10,
-    backgroundColor: palette.blue_100,
+    colorBg: palette.blue_100,
   },
   logoImageBox: {
     width: 50,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     left: 0,
-    backgroundColor: 'white',
+    colorBg: 'white',
   },
   //font
   titleText: {

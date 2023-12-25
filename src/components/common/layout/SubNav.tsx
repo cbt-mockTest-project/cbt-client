@@ -61,7 +61,7 @@ const SubNav: React.FC<SubNavProps> = ({ options }) => {
         className="sub-nav-blur"
         style={{
           filter: 'blur(10px)',
-          backgroundColor: 'white',
+          colorBg: 'white',
           position: 'fixed',
           top: 58,
           right: -10,

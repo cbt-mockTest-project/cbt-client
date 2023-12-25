@@ -7,7 +7,7 @@ import Link from 'next/link';
 const FooterContainer = styled.div`
   margin-top: 300px;
   width: 100%;
-  background-color: ${palette.backgroundColor};
+  background-color: ${palette.colorBg};
   max-width: 1200px;
   .footer-section-one {
     display: flex;

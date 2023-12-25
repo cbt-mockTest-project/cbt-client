@@ -39,7 +39,7 @@ const ExamListItemBlock = styled.div`
     background-color: ${palette.gray_200};
   }
   .exam-list-item-bookmark-button {
-    color: ${palette.textColor};
+    color: ${palette.colorText};
   }
   .exam-list-item-bookmark-button-active {
     color: ${palette.yellow_500};

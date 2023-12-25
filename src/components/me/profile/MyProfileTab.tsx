@@ -33,7 +33,7 @@ const MyProfileTabBlock = styled.div`
   }
   .my-profile-tab-profile-image-control-desc {
     font-size: 0.8rem;
-    color: ${palette.subTextColor};
+    color: ${palette.colorSubText};
     margin-top: 5px;
   }
   .my-profile-tab-input-button-wrapper {

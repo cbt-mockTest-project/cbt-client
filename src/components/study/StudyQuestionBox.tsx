@@ -21,7 +21,7 @@ const StudyQuestionBoxBlock = styled.div`
     font-weight: bold;
     width: fit-content;
     flex-shrink: 0;
-    color: ${palette.subTextColor};
+    color: ${palette.colorSubText};
   }
   .study-question-box-question {
     word-break: break-all;
@@ -36,7 +36,7 @@ const StudyQuestionBoxBlock = styled.div`
   }
   .study-question-exam-title {
     font-size: 14px;
-    color: ${palette.subTextColor};
+    color: ${palette.colorSubText};
   }
 `;
 

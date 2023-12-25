@@ -14,7 +14,7 @@ import StudyHeader from '@components/study/StudyHeader';
 import { useRouter } from 'next/router';
 
 const SolutionModeComponentBlock = styled.div`
-  background-color: ${palette.backgroundColor};
+  background-color: ${palette.colorBg};
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;

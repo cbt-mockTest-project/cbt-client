@@ -191,7 +191,7 @@ const RegisterContainer = styled.form`
   .register-label {
     margin-top: 20px;
     margin-bottom: 5px;
-    color: ${palette.subTextColor};
+    color: ${palette.colorSubText};
   }
   .register-error-text {
     margin-top: 5px;

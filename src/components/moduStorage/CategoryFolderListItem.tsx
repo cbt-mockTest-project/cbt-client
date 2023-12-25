@@ -40,7 +40,7 @@ const CategoryFolderListItemBlock = styled(Link)`
   .category-user-label {
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.subTextColor};
+    color: ${palette.colorSubText};
   }
   .category-user-profile-image {
     border-radius: 50%;

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const ExamBookmarkBlock = styled.button<{ isBookmarked: boolean }>`
   color: ${(props) =>
-    props.isBookmarked ? palette.yellow_500 : palette.textColor};
+    props.isBookmarked ? palette.yellow_500 : palette.colorText};
 `;
 
 interface ExamBookmarkProps {
