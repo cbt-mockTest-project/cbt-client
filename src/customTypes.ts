@@ -100,3 +100,15 @@ export enum StorageType {
   USER = 'user',
   BOOKMARK = 'bookmark',
 }
+
+export interface CreateExamForm {
+  questions: CreateQuestionForm[];
+  title: string;
+}
+export interface CreateQuestionForm {
+  question?: string;
+  solution?: string;
+  question_img?: string;
+  solution_img?: string;
+  questionId?: number;
+}

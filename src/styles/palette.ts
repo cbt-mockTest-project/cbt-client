@@ -40,7 +40,7 @@ const palette = {
   colorBorderLight: '#f1f1f1',
   colorBorderHover: '#3c89e8',
   colorContainerBg: 'white',
-  colorContainerBgLight: 'white',
+  colorContainerBgGrey: '#f0f3f3',
   colorText: '#1f1f1f',
   colorSubText: '#697b8c',
   colorEmphasisText: '#2465c0',

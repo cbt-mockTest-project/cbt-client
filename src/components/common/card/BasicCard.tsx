@@ -17,7 +17,7 @@ const BasicCardBlock = styled.div<{
   hoverEffect: boolean;
   type: BasicCardType;
 }>`
-  background-color: ${palette.colorContainerBgLight};
+  background-color: ${palette.colorContainerBg};
   border-radius: 10px;
   padding: 10px 20px;
   list-style: none;

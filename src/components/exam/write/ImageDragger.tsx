@@ -1,10 +1,12 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { message, UploadFile, UploadProps } from 'antd';
-import Dragger, { DraggerProps } from 'antd/lib/upload/Dragger';
+import { message, Upload, UploadFile, UploadProps } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import styled from 'styled-components';
 
+// const Dragger = dynamic(() => import('antd/lib/upload/Dragger'), {
+//   ssr: false,
+// });
 interface ImageDraggerProps {
   text?: string;
   hint?: string;
@@ -76,7 +78,7 @@ const ImageDragger: React.FC<ImageDraggerProps> = ({
 
   return (
     <ImageDraggerContainer>
-      <Dragger {...questionImageDraagerProps}>
+      {/* <Upload {...questionImageDraagerProps}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -84,7 +86,7 @@ const ImageDragger: React.FC<ImageDraggerProps> = ({
         <p className="ant-upload-hint" style={{ whiteSpace: 'pre-wrap' }}>
           {hint}
         </p>
-      </Dragger>
+      </Upload> */}
     </ImageDraggerContainer>
   );
 };
