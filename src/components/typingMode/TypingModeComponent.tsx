@@ -63,21 +63,14 @@ const TypingModeComponentBlock = styled.div`
   }
 `;
 
-interface TypingModeComponentProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
-}
+interface TypingModeComponentProps {}
 
-const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
-  questionsQueryInput,
-}) => {
-  const { questions, fetchQuestions } = useQuestions();
+const TypingModeComponent: React.FC<TypingModeComponentProps> = () => {
+  const { questions } = useQuestions();
   const [swiper, setSwiper] = useState<SwiperCore | null>(null);
   const router = useRouter();
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
-  useEffect(() => {
-    fetchQuestions(questionsQueryInput);
-  }, []);
 
   useEffect(() => {
     if (swiper && !swiper.destroyed) {
@@ -87,7 +80,6 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
 
   return (
     <TypingModeComponentBlock>
-      <StudyHeader questions={questions} />
       <div className="typing-mode-body">
         <Swiper
           className="swiper-container"

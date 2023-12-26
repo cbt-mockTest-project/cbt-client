@@ -33,17 +33,14 @@ const CardModeComponentBlock = styled.div`
   }
 `;
 
-interface CardModeComponentProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
-}
+interface CardModeComponentProps {}
 
 const CardModeComponent: React.FC<CardModeComponentProps> = () => {
-  const { questions, fetchQuestions } = useQuestions();
+  const { questions } = useQuestions();
   const [swiper, setSwiper] = useState<SwiperCore | null>(null);
   const router = useRouter();
   return (
     <CardModeComponentBlock>
-      <StudyHeader questions={questions} />
       <div className="card-mode-body">
         <Swiper
           className="swiper-container"
