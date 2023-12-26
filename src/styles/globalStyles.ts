@@ -26,7 +26,6 @@ const Globalstyles = createGlobalStyle`
     font-size: 100%;
     font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
-    /* color: ${palette.colorText}; */
   }
 
   /* HTML5 display-role reset for older browsers */

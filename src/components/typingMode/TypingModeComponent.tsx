@@ -1,11 +1,9 @@
-import StudyHeader from '@components/study/StudyHeader';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { ReadQuestionsByExamIdsInput } from 'types';
 import TypingModeItem from './TypingModeItem';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
@@ -63,21 +61,14 @@ const TypingModeComponentBlock = styled.div`
   }
 `;
 
-interface TypingModeComponentProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
-}
+interface TypingModeComponentProps {}
 
-const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
-  questionsQueryInput,
-}) => {
+const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
   const { questions, fetchQuestions } = useQuestions();
   const [swiper, setSwiper] = useState<any | null>(null);
   const router = useRouter();
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
-  useEffect(() => {
-    fetchQuestions(questionsQueryInput);
-  }, []);
 
   useEffect(() => {
     if (swiper && !swiper.destroyed) {
@@ -87,7 +78,6 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({
 
   return (
     <TypingModeComponentBlock>
-      <StudyHeader questions={questions} />
       <div className="typing-mode-body">
         <Swiper
           className="swiper-container"

@@ -7,6 +7,9 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
+import StudyHeader from './StudyHeader';
+import { HashLoader } from 'react-spinners';
+import FullPageLoader from '@components/common/loader/FullPageLoader';
 
 const StudyComponentBlock = styled.div`
   height: 100vh;
@@ -15,13 +18,15 @@ const StudyComponentBlock = styled.div`
 interface StudyComponentProps {}
 
 const StudyComponent: React.FC<StudyComponentProps> = () => {
-  const { fetchQuestions, resetQuestions } = useQuestions();
+  const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
+  const { fetchQuestions, resetQuestions, questions } = useQuestions();
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();
   const mode = router.query.mode as ExamMode;
 
   useEffect(() => {
+    setFetchQuestionsLoading(true);
     if (!router.isReady) return;
 
     const { order, states, limit, examIds, mode, examId } = router.query;
@@ -59,18 +64,17 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   }, []);
 
   if (!questionsQueryInput || !mode) return null;
-
+  if (fetchQuestionsLoading) return <FullPageLoader />;
   return (
     <StudyComponentBlock>
+      <StudyHeader questions={questions} />
       {mode === ExamMode.SOLUTION && questionsQueryInput && (
-        <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
+        <SolutionModeComponent />
       )}
       {mode === ExamMode.TYPYING && questionsQueryInput && (
-        <TypingModeComponent questionsQueryInput={questionsQueryInput} />
+        <TypingModeComponent />
       )}
-      {mode === ExamMode.CARD && questionsQueryInput && (
-        <CardModeComponent questionsQueryInput={questionsQueryInput} />
-      )}
+      {mode === ExamMode.CARD && questionsQueryInput && <CardModeComponent />}
     </StudyComponentBlock>
   );
 };

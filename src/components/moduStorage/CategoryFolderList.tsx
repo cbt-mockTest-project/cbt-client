@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import CategoryFolderListItem from './CategoryFolderListItem';
-import TextInput from '@components/common/input/TextInput';
+import CategoryFolderIncludingAllExams from './CategoryFolderIncludingAllExams';
 
 const CategoryFolderListBlock = styled.ul`
   display: flex;
@@ -12,13 +12,16 @@ const CategoryFolderListBlock = styled.ul`
 
 interface CategoryFolderListProps {
   categories: MockExamCategory[] | null;
+  hasAllExamFolder?: boolean;
 }
 
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
+  hasAllExamFolder = false,
 }) => {
   return (
     <CategoryFolderListBlock>
+      {hasAllExamFolder && <CategoryFolderIncludingAllExams />}
       {categories?.map((category) => (
         <CategoryFolderListItem key={category.id} category={category} />
       ))}

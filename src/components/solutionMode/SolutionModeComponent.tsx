@@ -40,23 +40,14 @@ const SolutionModeComponentBlock = styled.div`
   }
 `;
 
-interface SolutionModeComponentProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
-}
+interface SolutionModeComponentProps {}
 
-const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
-  questionsQueryInput,
-}) => {
-  const { questions, fetchQuestions } = useQuestions();
+const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({}) => {
+  const { questions } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
-
-  useEffect(() => {
-    fetchQuestions(questionsQueryInput);
-  }, []);
 
   return (
     <SolutionModeComponentBlock>
-      <StudyHeader questions={questions} />
       <div className="solution-mode-body">
         <Button
           className="solution-mode-all-hide-toggle-button"

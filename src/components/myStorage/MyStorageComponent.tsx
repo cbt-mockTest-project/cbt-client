@@ -1,6 +1,5 @@
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
-import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 import useStorage from '@lib/hooks/useStorage';
 import { Select } from 'antd';
 import { StorageType } from 'customTypes';

@@ -194,7 +194,6 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
       <ApolloProvider client={client}>
         <ConfigProvider>
           <Globalstyles />
-
           <CoreContainer />
           <AppInner />
           {hasLayout ? (

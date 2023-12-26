@@ -1,4 +1,3 @@
-import StudyHeader from '@components/study/StudyHeader';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -6,7 +5,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { ReadQuestionsByExamIdsInput } from 'types';
 import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import CardModeItem from './CardModeItem';
@@ -33,9 +31,7 @@ const CardModeComponentBlock = styled.div`
   }
 `;
 
-interface CardModeComponentProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
-}
+interface CardModeComponentProps {}
 
 const CardModeComponent: React.FC<CardModeComponentProps> = () => {
   const { questions } = useQuestions();
@@ -43,7 +39,6 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
   const router = useRouter();
   return (
     <CardModeComponentBlock>
-      <StudyHeader questions={questions} />
       <div className="card-mode-body">
         <Swiper
           className="swiper-container"
