@@ -25,40 +25,12 @@ import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import TextInput from '@components/common/input/TextInput';
 import { useRouter } from 'next/router';
+import CategoryHeader from './CategoryHeader';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
   position: relative;
-  .category-creator-info {
-    display: flex;
-    gap: 3px;
-    align-items: flex-end;
-  }
-  .category-creator-name {
-    font-size: 18px;
-    font-weight: bold;
-  }
 
-  .category-creator-label {
-    font-size: 14px;
-    font-weight: bold;
-    color: ${palette.colorSubText};
-  }
-  .category-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    svg {
-      font-size: 24px;
-    }
-  }
-  .category-description {
-    margin-top: 10px;
-    font-size: 14px;
-  }
   .category-study-button {
     margin-top: 20px;
   }
@@ -68,20 +40,11 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
-  .category-multiple-select-toggle-switch-wrapper {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 17px;
-  }
+
   .category-all-checkbox-and-study-button-wrapper {
     display: flex;
     align-items: center;
     gap: 17px;
-  }
-  .category-exam-filter-input {
-    margin-top: 20px;
-    max-width: 500px;
   }
 
   .category-setting-button-wrapper {
@@ -213,15 +176,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   return (
     <CategoryComponentBlock>
-      <div className="category-creator-info">
-        <span className="category-creator-name">{category?.user.nickname}</span>
-        <span className="category-creator-label">의 암기장</span>
-      </div>
-      <div className="category-info">
-        <FolderOutlined />
-        <span className="category-name">{category?.name}</span>
-      </div>
-      <div className="category-description">{category.description}</div>
+      <CategoryHeader
+        userName={category.user.nickname}
+        categoryName={category.name}
+        categoryDescription={category.description}
+      />
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
           <div className="category-multiple-select-toggle-switch-wrapper">
