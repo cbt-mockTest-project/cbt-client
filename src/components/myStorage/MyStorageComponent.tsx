@@ -53,7 +53,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
           handleFilterCategories(e.target.value);
         }}
       />
-      <CategoryFolderList categories={categories} />
+      <CategoryFolderList categories={categories} hasAllExamFolder />
     </MyStorageComponentBlock>
   );
 };
