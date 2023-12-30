@@ -54,13 +54,15 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
 }) => {
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
-  const toggleBold = () => {
+  const toggleBold = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
     quill.format('bold', !format.bold);
   };
-  const toggleItalic = () => {
+  const toggleItalic = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
@@ -71,13 +73,19 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
     const quill = reactQuillRef.current.getEditor();
     quill.format('color', value.toHexString());
   };
-  const toggleScriptSub = () => {
+  const toggleScriptSub = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
     quill.format('script', format.script === 'sub' ? false : 'sub');
   };
-  const toggleScriptSuper = () => {
+  const toggleScriptSuper = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
@@ -104,7 +112,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
       >
         x<sup>2</sup>
       </button>
-      <button>
+      <button onClick={(e) => e.preventDefault()}>
         <ColorPicker
           size="small"
           onChange={changeColor}
