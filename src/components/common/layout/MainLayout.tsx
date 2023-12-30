@@ -67,7 +67,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           <Footer className="layout-pc-footer" />
         </div>
       </div>
-      <Footer className="layout-pc-footer" />
     </MainLayoutBlock>
   );
 };
