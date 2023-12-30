@@ -33,10 +33,12 @@ const ExamCreateEditorBlock = styled.div`
   .ant-upload-list-item-container {
     width: 80px !important;
     height: 80px !important;
+    flex-shrink: 0;
   }
   .exam-create-editor-image-wrapper {
     width: 80px;
     height: 80px;
+    flex-shrink: 0;
     position: relative;
   }
   .exam-create-editor-image-hover-wrapper {
@@ -68,6 +70,8 @@ const ExamCreateEditorBlock = styled.div`
 `;
 
 interface ExamCreateEditorProps {
+  key: React.Key;
+  defaultValue?: string;
   onChangeText: (text: string) => void;
   onChangeImage: (url: string) => void;
   editorPlaceholder?: string;
@@ -75,6 +79,8 @@ interface ExamCreateEditorProps {
 }
 
 const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
+  key,
+  defaultValue,
   onChangeText,
   onChangeImage,
   editorPlaceholder = '',
@@ -128,8 +134,9 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   );
 
   return (
-    <ExamCreateEditorBlock>
+    <ExamCreateEditorBlock key={key}>
       <CustomEditor
+        defaultValue={defaultValue}
         onChangeText={onChangeText}
         placeholder={editorPlaceholder}
       />

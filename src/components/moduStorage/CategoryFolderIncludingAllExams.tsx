@@ -39,7 +39,7 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
   .category-user-label {
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.colorTextLabel};
+    color: ${palette.colorSubText};
   }
   .category-user-profile-image {
     border-radius: 50%;
@@ -65,7 +65,7 @@ const CategoryFolderIncludingAllExams: React.FC<
       <BasicCard className="category-basic-card" hoverEffect>
         <div className="category-wrapper">
           <div className="category-header-wrapper">
-            <span className="category-name">전체 시험지 모음</span>
+            <span className="category-name">전체 시험지</span>
           </div>
           <div className="category-user-info">
             <Image
