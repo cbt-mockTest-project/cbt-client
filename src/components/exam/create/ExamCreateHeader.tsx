@@ -3,6 +3,7 @@ import HeaderLayout from '@components/common/header/HeaderLayout';
 import { Button } from 'antd';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
 const ExamCreateHeaderBlock = styled.div`
@@ -31,6 +32,7 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
   title = '시험지 만들기',
 }) => {
   const router = useRouter();
+  const { formState } = useFormContext();
   return (
     <ExamCreateHeaderBlock>
       <HeaderLayout>
@@ -46,6 +48,7 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
           type="primary"
           className="exam-create-save-button"
           htmlType="submit"
+          loading={formState.isSubmitting}
         >
           저장
         </Button>
@@ -54,4 +57,4 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
   );
 };
 
-export default ExamCreateHeader;
+export default React.memo(ExamCreateHeader);

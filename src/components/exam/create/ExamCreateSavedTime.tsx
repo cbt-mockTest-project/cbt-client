@@ -1,28 +1,43 @@
-import { convertToKST } from '@lib/utils/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 import palette from '@styles/palette';
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import styled from 'styled-components';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+
+const blinkAnimation = keyframes`
+  50% {
+    opacity: 0;
+  }
+`;
 
 const ExamCreateSavedTimeBlock = styled.div`
   font-size: 12px;
   color: ${palette.colorSubText};
   transition: all 0.3s;
+  &.blink {
+    animation: ${blinkAnimation} 0.3s forwards;
+  }
 `;
 
 interface ExamCreateSavedTimeProps {}
 
 const ExamCreateSavedTime: React.FC<ExamCreateSavedTimeProps> = () => {
-  const [time, setTime] = useState('');
-  const { formState } = useFormContext();
+  const savedTime = useAppSelector((state) => state.examCreate.savedTime);
+  const [isBlinking, setBlinking] = useState(false);
+  const savedTimeRef = useRef(savedTime);
+
   useEffect(() => {
-    if (formState.isSubmitSuccessful && !formState.isSubmitting) {
-      setTime(new Date().toISOString());
+    if (savedTime !== savedTimeRef.current) {
+      setBlinking(true);
+      savedTimeRef.current = savedTime;
+      setTimeout(() => setBlinking(false), 500);
     }
-  }, [formState]);
+  }, [savedTime]);
+
+  if (!savedTime) return null;
+
   return (
-    <ExamCreateSavedTimeBlock>
-      {time ? `${convertToKST(time, 'yy-MM-dd hh:mm:ss')} 저장됨` : ''}
+    <ExamCreateSavedTimeBlock className={isBlinking ? 'blink' : ''}>
+      {savedTime} 저장됨
     </ExamCreateSavedTimeBlock>
   );
 };

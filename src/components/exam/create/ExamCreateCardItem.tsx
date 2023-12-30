@@ -161,6 +161,7 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
     );
     setQuestions(getValues('questions'));
   };
+
   return (
     <ExamCreateCardItemBlock>
       <div className="exam-create-item-header">

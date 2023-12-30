@@ -10,10 +10,10 @@ import ExamCreateCardList from './ExamCreateCardList';
 import { message } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, pick } from 'lodash';
-import { handleError, removeHtmlTag } from '@lib/utils/utils';
-import { useLazyReadMockExam, useSaveExam } from '@lib/graphql/hook/useExam';
+import { useLazyReadMockExam } from '@lib/graphql/hook/useExam';
 import { useRouter } from 'next/router';
 import ExamCreateSavedTime from './ExamCreateSavedTime';
+import useSaveExamHandler from './useSaveExamHandler';
 
 const ExamCreateComponentBlock = styled.div`
   background-color: ${palette.colorContainerBg};
@@ -44,7 +44,7 @@ interface ExamCreateComponentProps {}
 
 const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
   const router = useRouter();
-  const [saveExam] = useSaveExam();
+  const { handleSaveExam, debouncedSaveExam } = useSaveExamHandler();
   const [readExam] = useLazyReadMockExam();
   const [defaultForm, setDefaultForm] = useState<CreateExamForm>({
     title: '',
@@ -65,56 +65,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     },
   });
 
-  const { handleSubmit, setValue, getValues } = methods;
-
-  const onSubmit = async (data: CreateExamForm) => {
-    try {
-      if (!data.title) {
-        return message.error('시험지 제목을 입력해주세요.');
-      }
-      const questions = Array.from(data.questions).filter(
-        (v) =>
-          Object.values(v).filter((v) => {
-            if (typeof v === 'string') {
-              return removeHtmlTag(v).length > 0;
-            }
-            if (Array.isArray(v)) {
-              return v.length > 0 && v[0].url;
-            }
-            return true;
-          }).length > 1
-      );
-      const questionOrderIds = questions.map((v) => v.orderId);
-
-      if (questions.length === 0) {
-        return message.error('문제를 1개 이상 입력해주세요.');
-      }
-      const res = await saveExam({
-        variables: {
-          input: {
-            title: data.title,
-            uuid: data.uuid,
-            questionOrderIds,
-            questions,
-          },
-        },
-      });
-      if (res.data.saveExam.error) {
-        return message.error(res.data.saveExam.error);
-      }
-      if (!router.query.examId) {
-        router.replace({
-          pathname: router.pathname,
-          query: {
-            examId: res.data.saveExam.examId,
-          },
-        });
-      }
-      return message.success('시험지가 저장되었습니다.');
-    } catch (e) {
-      handleError(e);
-    }
-  };
+  const { handleSubmit, setValue, getValues, watch } = methods;
 
   useEffect(() => {
     if (router.query.examId) {
@@ -168,10 +119,21 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     }
   }, [router.query.examId]);
 
+  useEffect(() => {
+    watch((data) => {
+      debouncedSaveExam(getValues());
+    });
+  }, []);
   return (
     <FormProvider {...methods}>
       <ExamCreateComponentBlock>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit((data, e) => {
+            e.preventDefault();
+            handleSaveExam(data, true);
+          })}
+          id="exam-create-form"
+        >
           <ExamCreateHeader />
           <div className="exam-create-body">
             <div className="exam-create-input-and-time">
