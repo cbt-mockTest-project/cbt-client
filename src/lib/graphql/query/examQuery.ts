@@ -367,3 +367,43 @@ export const GET_MY_EXAM_CATEGORIES = gql`
     }
   }
 `;
+
+export const READ_MOCK_EXAM = gql`
+  query ReadMockExam($input: ReadMockExamInput!) {
+    readMockExam(input: $input) {
+      error
+      ok
+      mockExam {
+        id
+        title
+        uuid
+        mockExamQuestion {
+          id
+          orderId
+          question_img {
+            url
+            name
+            uid
+          }
+          solution_img {
+            url
+            uid
+            name
+          }
+          question
+          solution
+        }
+      }
+    }
+  }
+`;
+
+export const SAVE_EXAM = gql`
+  mutation SaveExam($input: SaveExamInput!) {
+    saveExam(input: $input) {
+      error
+      ok
+      examId
+    }
+  }
+`;

@@ -179,6 +179,20 @@ export type GetMyExamCategoriesQueryVariables = Types.Exact<{ [key: string]: nev
 
 export type GetMyExamCategoriesQuery = { __typename?: 'Query', getMyExamCategories: { __typename?: 'GetMyExamCategoriesOutput', error?: string | null, ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string, profileImg: string } }> | null } };
 
+export type ReadMockExamQueryVariables = Types.Exact<{
+  input: Types.ReadMockExamInput;
+}>;
+
+
+export type ReadMockExamQuery = { __typename?: 'Query', readMockExam: { __typename?: 'ReadMockExamOutput', error?: string | null, ok: boolean, mockExam: { __typename?: 'MockExam', id: number, title: string, uuid: string, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number, orderId: string, question?: string | null, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string, name: string }> | null }> } } };
+
+export type SaveExamMutationVariables = Types.Exact<{
+  input: Types.SaveExamInput;
+}>;
+
+
+export type SaveExamMutation = { __typename?: 'Mutation', saveExam: { __typename?: 'SaveExamOutput', error?: string | null, ok: boolean, examId?: number | null } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -619,4 +633,50 @@ export const GetMyExamCategoriesDocument = gql`
 
 export function useGetMyExamCategoriesQuery(options?: Omit<Urql.UseQueryArgs<GetMyExamCategoriesQueryVariables>, 'query'>) {
   return Urql.useQuery<GetMyExamCategoriesQuery, GetMyExamCategoriesQueryVariables>({ query: GetMyExamCategoriesDocument, ...options });
+};
+export const ReadMockExamDocument = gql`
+    query ReadMockExam($input: ReadMockExamInput!) {
+  readMockExam(input: $input) {
+    error
+    ok
+    mockExam {
+      id
+      title
+      uuid
+      mockExamQuestion {
+        id
+        orderId
+        question_img {
+          url
+          name
+          uid
+        }
+        solution_img {
+          url
+          uid
+          name
+        }
+        question
+        solution
+      }
+    }
+  }
+}
+    `;
+
+export function useReadMockExamQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamQuery, ReadMockExamQueryVariables>({ query: ReadMockExamDocument, ...options });
+};
+export const SaveExamDocument = gql`
+    mutation SaveExam($input: SaveExamInput!) {
+  saveExam(input: $input) {
+    error
+    ok
+    examId
+  }
+}
+    `;
+
+export function useSaveExamMutation() {
+  return Urql.useMutation<SaveExamMutation, SaveExamMutationVariables>(SaveExamDocument);
 };

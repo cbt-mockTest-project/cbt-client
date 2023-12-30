@@ -3,6 +3,7 @@ import {
   MockExamCategory,
   MockExamQuestionComment,
   MockExamQuestionFeedback,
+  MockExamQuestionImageInputType,
 } from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/query/questionQuery.generated';
@@ -104,11 +105,12 @@ export enum StorageType {
 export interface CreateExamForm {
   questions: CreateQuestionForm[];
   title: string;
+  uuid: string;
 }
 export interface CreateQuestionForm {
   question?: string;
   solution?: string;
-  question_img?: string;
-  solution_img?: string;
-  questionId?: number;
+  question_img?: MockExamQuestionImageInputType[];
+  solution_img?: MockExamQuestionImageInputType[];
+  orderId: string;
 }
