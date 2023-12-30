@@ -60,11 +60,13 @@ const ReactQuillWrapper = dynamic(
 interface CustomEditorProps {
   onChangeText: (value: string) => void;
   placeholder?: string;
+  defaultValue?: string;
 }
 
 const CustomEditor: React.FC<CustomEditorProps> = ({
   onChangeText,
   placeholder = '내용을 작성해주세요.',
+  defaultValue,
 }) => {
   const uniqueKey = useMemo(uniqueId, []);
   const reactQuillRef = useRef<ReactQuill | null>(null);
@@ -130,6 +132,7 @@ const CustomEditor: React.FC<CustomEditorProps> = ({
         forwardedRef={reactQuillRef}
         formats={formats}
         modules={modules}
+        defaultValue={defaultValue}
         onChange={onChangeText}
         placeholder={placeholder}
       />
