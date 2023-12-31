@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         props: { categoryQueryInput, category },
         revalidate: 43200,
       });
-    } catch {
+    } catch (e) {
       return {
         notFound: true,
         revalidate: 1,

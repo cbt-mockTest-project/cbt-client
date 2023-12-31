@@ -2861,6 +2861,7 @@ export type RoleInputType = {
 };
 
 export type SaveExamInput = {
+  categoryId?: InputMaybe<Scalars['Float']>;
   questionOrderIds: Array<Scalars['String']>;
   questions?: InputMaybe<Array<PartialMockExamQuestionInput>>;
   title: Scalars['String'];

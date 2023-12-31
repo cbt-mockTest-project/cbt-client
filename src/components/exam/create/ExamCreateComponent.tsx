@@ -120,7 +120,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
   }, [router.query.examId]);
 
   useEffect(() => {
-    watch((data) => {
+    watch(() => {
       debouncedSaveExam(getValues());
     });
   }, []);

@@ -12,9 +12,10 @@ import { useRouter } from 'next/router';
 
 const useSaveExamHandler = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const savedTime = useAppSelector((state) => state.examCreate.savedTime);
   const [saveExam] = useSaveExam();
-  const router = useRouter();
+  const categoryId = router.query.categoryId;
   const handleSaveExam = async (
     data: CreateExamForm,
     hasSuccessMessage: boolean = false
@@ -31,6 +32,7 @@ const useSaveExamHandler = () => {
             uuid: data.uuid,
             questionOrderIds,
             questions: data.questions,
+            ...(categoryId ? { categoryId: Number(categoryId) } : {}),
           },
         },
       });
@@ -41,6 +43,7 @@ const useSaveExamHandler = () => {
         router.replace({
           pathname: router.pathname,
           query: {
+            ...router.query,
             examId: res.data.saveExam.examId,
           },
         });

@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import EditExamItem from './EditExamItem';
 import TextInput from '@components/common/input/TextInput';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const EditExamsModalBlock = styled(Modal)`
   .edit-exams-filter-select {
@@ -39,10 +41,12 @@ const EditExamsModalBlock = styled(Modal)`
 interface EditExamsModalProps extends Omit<ModalProps, 'children'> {}
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
+  const router = useRouter();
   const { fetchMyExams, myExams, handleFilterMyExams } = useExamCategory();
   const { data: meQuery } = useMeQuery();
   const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');
   const { ...modalProps } = props;
+  const categoryId = router.query.id;
 
   useEffect(() => {
     if (!meQuery?.me.user) return;
@@ -50,13 +54,25 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       isBookmarked: examType === 'bookmarked',
     });
   }, [meQuery, examType]);
+  if (!categoryId) return null;
   return (
     <EditExamsModalBlock {...modalProps} footer={false}>
       <p className="edit-exams-modal-title">시험지 추가</p>
-      <Button className="edit-exams-make-button" type="dashed" size="large">
-        <PlusOutlined />
-        <span>시험지 만들기</span>
-      </Button>
+      <Link
+        href={{
+          pathname: '/exam/create',
+          query: categoryId
+            ? {
+                categoryId,
+              }
+            : {},
+        }}
+      >
+        <Button className="edit-exams-make-button" type="dashed" size="large">
+          <PlusOutlined />
+          <span>시험지 만들기</span>
+        </Button>
+      </Link>
       <div className="edit-exams-filter-box">
         <Select
           className="edit-exams-filter-select"
