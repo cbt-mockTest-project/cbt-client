@@ -32,7 +32,7 @@ const CategoryControlbar: React.FC<CategoryControlbarProps> = ({
     <CategoryControlbarBlock>
       <div className="category-multiple-select-toggle-switch-wrapper">
         <Switch checked={checked} onChange={onChangeSwitch} />
-        <span>다중 선택 모드</span>
+        <div>다중 선택 모드</div>
       </div>
       <div>
         <TextInput

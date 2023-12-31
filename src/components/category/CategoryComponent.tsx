@@ -26,6 +26,7 @@ import EditExamsModal from './EditExamsModal';
 import TextInput from '@components/common/input/TextInput';
 import { useRouter } from 'next/router';
 import CategoryHeader from './CategoryHeader';
+import CategoryControlbar from './CategoryControlbar';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -183,20 +184,15 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       />
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
-          <div className="category-multiple-select-toggle-switch-wrapper">
-            <Switch
-              checked={examSetting.isMultipleSelectMode}
-              onChange={handleChangeMultipleSelectMode}
-            />
-            <span>다중 선택 모드</span>
-          </div>
-          <div>
-            <TextInput
-              className="category-exam-filter-input"
-              onChange={(e) => handleFilterExams(e.target.value)}
-              placeholder="시험지 필터링"
-            />
-          </div>
+          <CategoryControlbar
+            switch={{
+              checked: examSetting.isMultipleSelectMode,
+              onChangeSwitch: handleChangeMultipleSelectMode,
+            }}
+            textInput={{
+              onChangeText: (v) => handleFilterExams(v),
+            }}
+          />
           {examSetting.isMultipleSelectMode && (
             <div className="category-all-checkbox-and-study-button-wrapper">
               <div className="category-exam-all-checkbox-wrapper">
