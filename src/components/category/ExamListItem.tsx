@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExam } from 'types';
 import ExamSelecModal from './ExamSelecModal';
+import { useRouter } from 'next/router';
 
 const ExamListItemBlock = styled.div`
   width: calc(50% - 10px);
@@ -75,10 +76,13 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   examSetting,
   handleExamSelect,
 }) => {
+  const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
     useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
+  const categoryId = router.query.id;
+
   const handleRemoveExam = () => {
     Modal.confirm({
       title: '정말로 삭제하시겠습니까?',
@@ -111,7 +115,13 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            //TODO: 수정하기
+            router.push({
+              pathname: '/exam/create',
+              query: {
+                ...(categoryId && { categoryId }),
+                examId: exam.id,
+              },
+            });
           }}
         >
           수정하기
