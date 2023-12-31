@@ -1,20 +1,22 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import BasicCard from '@components/common/card/BasicCard';
-import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useExamCategory from '@lib/hooks/useExamCategory';
-import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Checkbox, Dropdown, MenuProps, Modal } from 'antd';
+import useMyAllExams from '@lib/hooks/useMyAllExams';
 import { ExamSettingType } from 'customTypes';
-import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExam } from 'types';
-import ExamSelecModal from './ExamSelecModal';
-import { useRouter } from 'next/router';
+import { MyExamType } from './AllExamsComponent';
+import { Checkbox, Dropdown } from 'antd';
+import BasicCard from '@components/common/card/BasicCard';
+import { EllipsisOutlined } from '@ant-design/icons';
+import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
+import { MenuProps } from 'antd/lib';
+import ExamSelecModal from '@components/category/ExamSelecModal';
+import Image from 'next/image';
+import palette from '@styles/palette';
+import { responsive } from '@lib/utils/responsive';
 
-const ExamListItemBlock = styled.div`
+const AllExamListItemBlock = styled.div`
   width: calc(50% - 10px);
   display: flex;
   gap: 10px;
@@ -65,50 +67,23 @@ const ExamListItemBlock = styled.div`
   }
 `;
 
-interface ExamListItemProps {
+interface AllExamListItemProps {
   exam: MockExam;
   examSetting: ExamSettingType;
+  examType: MyExamType;
   handleExamSelect: (examId: number) => void;
 }
 
-const ExamListItem: React.FC<ExamListItemProps> = ({
-  exam,
+const AllExamListItem: React.FC<AllExamListItemProps> = ({
+  examType,
   examSetting,
   handleExamSelect,
+  exam,
 }) => {
   const router = useRouter();
-  const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
-    useExamCategory();
+  const { handleToggleExamBookmark } = useMyAllExams();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
-  const { data: meQuery } = useMeQuery();
-  const categoryId = router.query.id;
-
-  const handleRemoveExam = () => {
-    Modal.confirm({
-      title: '정말로 삭제하시겠습니까?',
-      onOk() {
-        handleRemoveExamFromCategory(exam.id);
-      },
-    });
-  };
-  const handleExamClick = () => {
-    setIsExamSelectModalOpen(true);
-  };
-
   const examSettingDropdownItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemoveExam();
-          }}
-        >
-          제거하기
-        </button>
-      ),
-    },
     {
       key: '2',
       label: (
@@ -118,7 +93,6 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
             router.push({
               pathname: '/exam/create',
               query: {
-                ...(categoryId && { categoryId }),
                 examId: exam.id,
               },
             });
@@ -130,17 +104,17 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     },
   ];
   return (
-    <ExamListItemBlock>
+    <AllExamListItemBlock>
       {examSetting.isMultipleSelectMode && (
         <Checkbox
           checked={examSetting.examIds.includes(exam.id)}
           onClick={() => handleExamSelect(exam.id)}
         />
       )}
-      <BasicCard onClick={handleExamClick} hoverEffect>
+      <BasicCard onClick={() => setIsExamSelectModalOpen(true)} hoverEffect>
         <div className="exam-list-item-top-wrapper">
           <span>{exam.title}</span>
-          {category?.user.id === meQuery?.me.user?.id ? (
+          {examType !== 'bookmarked' ? (
             <Dropdown
               menu={{
                 items: examSettingDropdownItems,
@@ -183,8 +157,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           onCancel={() => setIsExamSelectModalOpen(false)}
         />
       )}
-    </ExamListItemBlock>
+    </AllExamListItemBlock>
   );
 };
 
-export default ExamListItem;
+export default AllExamListItem;

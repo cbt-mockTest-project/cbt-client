@@ -26,7 +26,8 @@ const examSettingSlice = createSlice({
         examIds,
         isMultipleSelectMode,
       } = action.payload;
-      if (categoryId) state.examSetting.categoryId = categoryId;
+      if (typeof categoryId === 'number')
+        state.examSetting.categoryId = categoryId;
       if (mode) state.examSetting.mode = mode;
       if (isRandom) state.examSetting.isRandom = isRandom;
       if (questionStates) state.examSetting.questionStates = questionStates;

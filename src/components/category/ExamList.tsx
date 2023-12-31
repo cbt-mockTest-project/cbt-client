@@ -12,13 +12,11 @@ const ExamListBlock = styled.ul`
   gap: 20px;
 `;
 
-interface ExamListProps {
-  handleExamSelect: (examId: number) => void;
-}
+interface ExamListProps {}
 
-const ExamList: React.FC<ExamListProps> = ({ handleExamSelect }) => {
+const ExamList: React.FC<ExamListProps> = () => {
   const { category } = useExamCategory();
-  const { examSetting } = useExamSetting({
+  const { examSetting, handleExamSelect } = useExamSetting({
     categoryId: category.id,
     exams: category.mockExam,
   });

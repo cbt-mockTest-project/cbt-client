@@ -78,7 +78,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     examSetting,
     setExamSetting,
     handleAllExamsSelect,
-    handleExamSelect,
     handleChangeMultipleSelectMode,
   } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
 
@@ -185,7 +184,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
               examIds={examSetting.examIds}
             />
           )}
-          <ExamList handleExamSelect={handleExamSelect} />
+          <ExamList />
         </>
       ) : (
         <CategoryEmpty

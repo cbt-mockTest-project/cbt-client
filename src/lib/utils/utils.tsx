@@ -46,16 +46,6 @@ export const pushErrorLogToSentry = ({
 };
 
 export const handleError = async (error: any) => {
-  const apolloClient = initializeApollo({}, '');
-  const sendErrorToTelegram = (message: string) =>
-    apolloClient.mutate({
-      mutation: PUSH_TO_TELEGRAM,
-      variables: {
-        input: {
-          message,
-        },
-      },
-    });
   if (error?.message === 'Forbidden resource') {
     return message.error({ content: '로그인이 필요합니다' });
   }
