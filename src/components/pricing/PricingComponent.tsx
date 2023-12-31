@@ -1,5 +1,5 @@
 import { responsive } from '@lib/utils/responsive';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -18,21 +18,23 @@ import { Pagination } from 'swiper/modules';
 const PricingComponentBlock = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   margin: 0 auto;
   max-width: 100vw;
+  height: 100vh;
+  padding: 20px 30px 30px 30px;
+  font-size: 14px;
   .pricing-title {
-    text-align: center;
-    font-size: 2rem;
+    font-size: 16px;
+    font-weight: 700;
   }
   .pricing-intro {
-    text-align: center;
     margin-top: 15px;
   }
   .pricing-card-wrapper {
     display: flex;
     gap: 20px;
     margin-top: 30px;
+    justify-content: center;
   }
   .pricing-card-swiper {
     overflow: unset;
@@ -54,7 +56,6 @@ const PricingComponentBlock = styled.div`
     padding: 20px;
   }
   .pricing-contact {
-    text-align: center;
     margin-top: 30px;
     color: ${palette.antd_blue_01};
     pre {
@@ -62,16 +63,15 @@ const PricingComponentBlock = styled.div`
     }
   }
   .pricing-refund-policy-anchor {
-    text-align: center;
     margin-top: 20px;
     color: ${palette.gray_700};
     font-size: 14px;
     text-decoration: underline;
   }
   @media (max-width: ${responsive.medium}) {
-    padding: 20px;
-    .pricing-title {
-      font-size: 1.5rem;
+    padding: 20px 16px;
+    .pricing-card-wrapper {
+      width: 100%;
     }
   }
   @media (max-width: 650px) {
@@ -142,8 +142,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro: '무제한 베이직 플랜으로\n학습효율을 높여보세요!',
       price: 5900,
       endDate: '이용기간: 무제한',
-      // beforeDiscountPrice: 7900,
-      // discountDate: '10.07',
       benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })

@@ -8,15 +8,15 @@ import { makeMoneyString } from '@lib/utils/utils';
 import Portal from '@components/common/portal/Portal';
 import PaymentNoticeModal from '@components/common/modal/PaymentNoticeModal';
 import useToggle from '@lib/hooks/useToggle';
-import {
-  useLazyGetRoleCount,
-  useLazyGetRolesCount,
-} from '@lib/graphql/hook/useUser';
+import { useLazyGetRolesCount } from '@lib/graphql/hook/useUser';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 
 const PricingCardBlock = styled.div`
+  font-size: 14px;
   .pricing-card-title {
     margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
   }
   .pricing-card-intro {
     font-size: 14px;
@@ -76,7 +76,7 @@ const PricingCardBlock = styled.div`
     gap: 15px;
   }
   .pricing-card-benefit-list-item-content {
-    font-size: 15px;
+    font-size: 14px;
   }
   .pricing-card-benefit-list-item-icon {
     color: ${palette.antd_blue_01};

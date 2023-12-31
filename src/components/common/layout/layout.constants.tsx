@@ -28,7 +28,7 @@ export const navItems = [
     label: '내 암기장',
   },
   {
-    key: '/store',
+    key: '/pricing',
     icon: <GoldOutlined />,
     label: '스토어',
   },
