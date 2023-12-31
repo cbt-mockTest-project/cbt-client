@@ -1,26 +1,49 @@
 import CategoryControlbar from '@components/category/CategoryControlbar';
 import CategoryEmpty from '@components/category/CategoryEmpty';
 import CategoryHeader from '@components/category/CategoryHeader';
-import EditExamsModal from '@components/category/EditExamsModal';
-import ExamList from '@components/category/ExamList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useExamCategory from '@lib/hooks/useExamCategory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useMyAllExams from '@lib/hooks/useMyAllExams';
 import { responsive } from '@lib/utils/responsive';
-import { Select } from 'antd';
+import { Dropdown, MenuProps, Select } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import AllExamList from './AllExamList';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import CategoryMultipleSelectModeControlbar from '@components/category/CategoryMultipleSelectModeControlbar';
+import { EllipsisOutlined } from '@ant-design/icons';
+import palette from '@styles/palette';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
   position: relative;
   .edit-exams-filter-select {
     width: 150px;
+  }
+  .all-exams-setting-button-wrapper {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid ${palette.colorBorder};
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s all ease-in;
+    svg {
+      font-size: 24px;
+      color: ${palette.colorText};
+    }
+    &:hover {
+      border-color: ${palette.antd_blue_02};
+      svg {
+        color: ${palette.antd_blue_02};
+      }
+    }
   }
   @media (max-width: ${responsive.medium}) {
     padding: 20px 16px;
@@ -89,6 +112,20 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
       setExamSetting({ categoryId: 0, isMultipleSelectMode });
   }, []);
 
+  const categorySettingDropdownItems: MenuProps['items'] = [
+    {
+      key: 1,
+      label: (
+        <button
+          style={{ color: palette.colorText }}
+          onClick={() => router.push('/exam/create')}
+        >
+          시험지 추가하기
+        </button>
+      ),
+    },
+  ];
+
   return (
     <MyAllExamsComponentBlock>
       <CategoryHeader
@@ -148,6 +185,17 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
           />
         </>
       )}
+      <Dropdown
+        menu={{ items: categorySettingDropdownItems }}
+        placement="bottomRight"
+      >
+        <div
+          className="all-exams-setting-button-wrapper"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <EllipsisOutlined />
+        </div>
+      </Dropdown>
     </MyAllExamsComponentBlock>
   );
 };
