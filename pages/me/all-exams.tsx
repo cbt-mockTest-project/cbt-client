@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import MyAllExamsComponent from '@components/me/allExams/AllExamsComponent';
+import withAuth from '@lib/hocs/withAuth';
 
 interface MyAllExamsProps {}
 
@@ -17,4 +18,4 @@ const MyAllExams: NextPage<MyAllExamsProps> = () => {
   );
 };
 
-export default MyAllExams;
+export default withAuth(MyAllExams);
