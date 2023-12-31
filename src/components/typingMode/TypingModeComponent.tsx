@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
 
 const TypingModeComponentBlock = styled.div`
-  background-color: ${palette.colorBg};
+  background-color: ${palette.colorContainerBgGrey};
   .swiper-slide {
     min-height: calc(100vh - 57px);
   }

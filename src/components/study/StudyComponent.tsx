@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
 import StudyHeader from './StudyHeader';
-import { HashLoader } from 'react-spinners';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
 
 const StudyComponentBlock = styled.div`

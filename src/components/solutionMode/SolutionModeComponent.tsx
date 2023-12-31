@@ -1,19 +1,16 @@
 import { Button } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
+import { MockExamQuestion } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
-
 import palette from '@styles/palette';
-
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
-import StudyHeader from '@components/study/StudyHeader';
 
 const SolutionModeComponentBlock = styled.div`
-  background-color: ${palette.colorBg};
+  background-color: ${palette.colorContainerBgGrey};
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;

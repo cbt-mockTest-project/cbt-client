@@ -2,6 +2,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import { Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -14,6 +15,10 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: ${palette.colorEmphasisText};
+  }
+  .category-basic-card {
+    border-color: ${palette.colorEmphasisText};
   }
   .category-header-wrapper {
     display: flex;
@@ -62,7 +67,7 @@ const CategoryFolderIncludingAllExams: React.FC<
   const user = meQuery.me.user;
   return (
     <CategoryFolderIncludingAllExamsBlock href="/me/all-exams">
-      <BasicCard className="category-basic-card" hoverEffect>
+      <BasicCard className="category-basic-card" hoverEffect type="primary">
         <div className="category-wrapper">
           <div className="category-header-wrapper">
             <span className="category-name">전체 시험지</span>

@@ -11,7 +11,7 @@ import CardModeItem from './CardModeItem';
 import StudyEnd from '@components/study/StudyEnd';
 
 const CardModeComponentBlock = styled.div`
-  background-color: ${palette.colorBg};
+  background-color: ${palette.colorContainerBgGrey};
   .swiper-slide {
     min-height: calc(100vh - 57px);
   }
