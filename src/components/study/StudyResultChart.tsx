@@ -73,11 +73,11 @@ const StudyResultChart: React.FC<StudyResultChartProps> = ({ scoreCounts }) => {
         display: true,
         position: 'bottom',
         labels: {
-          color: '#fff',
+          color: 'black',
         },
       },
       datalabels: {
-        color: '#fff',
+        color: 'black',
       },
       title: {
         display: true,
