@@ -79,7 +79,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           className="card-front"
           onClick={() => setIsFlipped((prev) => !prev)}
         >
-          <BasicCard className="card-basic-wrapper">
+          <BasicCard className="card-basic-wrapper" type="primary">
             <div className="card-container">
               <StudyQuestionBox
                 className="study-question-box"
@@ -94,7 +94,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           className="card-back"
           onClick={() => setIsFlipped((prev) => !prev)}
         >
-          <BasicCard className="card-basic-wrapper">
+          <BasicCard className="card-basic-wrapper" type="primary">
             <div className="card-container">
               <StudyAnswerBox
                 className="study-answer-box"
