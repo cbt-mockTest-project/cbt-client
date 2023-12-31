@@ -7,7 +7,6 @@ import { STUDY_STATE_ICON } from './study';
 import { QuestionState } from 'types';
 import palette from '@styles/palette';
 import SwiperCore from 'swiper';
-import { useRouter } from 'next/router';
 
 const StudyScoreModalBlock = styled(Modal)`
   .study-score-item-list {
@@ -30,7 +29,7 @@ const StudyScoreModalBlock = styled(Modal)`
     border-radius: 5px;
     transition: background-color 0.3s;
     &:hover {
-      background-color: ${palette.gray_900};
+      background-color: ${palette.colorBorderLight};
     }
     svg {
       position: relative;
