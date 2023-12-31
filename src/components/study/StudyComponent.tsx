@@ -55,6 +55,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
       setQuestionsQueryInput(input);
       fetchQuestions(input);
     }
+    setFetchQuestionsLoading(false);
   }, [router.isReady]);
 
   useEffect(() => {
