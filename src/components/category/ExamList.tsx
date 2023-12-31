@@ -18,7 +18,10 @@ interface ExamListProps {
 
 const ExamList: React.FC<ExamListProps> = ({ handleExamSelect }) => {
   const { category } = useExamCategory();
-  const { examSetting } = useExamSetting({ category });
+  const { examSetting } = useExamSetting({
+    categoryId: category.id,
+    exams: category.mockExam,
+  });
   return (
     <ExamListBlock>
       {category?.mockExam.map((exam) => (

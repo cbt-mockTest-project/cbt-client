@@ -5,65 +5,63 @@ import {
 } from '@modules/redux/store/configureStore';
 import { ExamSettingType } from 'customTypes';
 import useExamSettingHistory from './useExamSettingHistory';
-import { MockExamCategory } from 'types';
+import { MockExam, MockExamCategory } from 'types';
 
 interface UseExamSettingProps {
-  category: MockExamCategory | null;
+  categoryId: number;
+  exams: MockExam[];
 }
 
-const useExamSetting = ({ category }: UseExamSettingProps) => {
+const useExamSetting = ({ categoryId, exams }: UseExamSettingProps) => {
   const examSetting = useAppSelector((state) => state.examSetting.examSetting);
   const dispatch = useAppDispatch();
 
   const { setExamSettingHistory } = useExamSettingHistory();
 
   const handleAllExamsSelect = () => {
-    if (!category) return;
-    if (category.mockExam.length === examSetting.examIds?.length) {
-      setExamSetting({ categoryId: category.id, examIds: [] });
+    if (exams.length === examSetting.examIds?.length) {
+      setExamSetting({ categoryId, examIds: [] });
       setExamSettingHistory({
-        categoryId: category.id,
+        categoryId,
         examIds: [],
       });
     } else {
-      const examIds = category.mockExam.map((exam) => exam.id);
-      setExamSetting({ categoryId: category.id, examIds });
+      const examIds = exams.map((exam) => exam.id);
+      setExamSetting({ categoryId, examIds });
       setExamSettingHistory({
-        categoryId: category.id,
+        categoryId,
         examIds: examIds,
       });
     }
   };
 
   const handleExamSelect = (examId: number) => {
-    if (!category) return;
     if (examSetting.examIds.includes(examId)) {
       const newSelectedExamIds = examSetting.examIds.filter(
         (id) => id !== examId
       );
-      setExamSetting({ categoryId: category.id, examIds: newSelectedExamIds });
+      setExamSetting({ categoryId, examIds: newSelectedExamIds });
       setExamSettingHistory({
-        categoryId: category.id,
+        categoryId,
         examIds: newSelectedExamIds,
       });
     } else {
       const newSelectedExamIds = [...examSetting.examIds, examId];
-      setExamSetting({ categoryId: category.id, examIds: newSelectedExamIds });
+      setExamSetting({ categoryId, examIds: newSelectedExamIds });
       setExamSettingHistory({
-        categoryId: category.id,
+        categoryId,
         examIds: newSelectedExamIds,
       });
     }
   };
 
   const handleChangeMultipleSelectMode = () => {
-    if (!category) return;
     setExamSetting({
-      categoryId: category.id,
+      categoryId,
       isMultipleSelectMode: !examSetting.isMultipleSelectMode,
     });
     setExamSettingHistory({
-      categoryId: category.id,
+      categoryId,
       isMultipleSelectMode: !examSetting.isMultipleSelectMode,
     });
   };

@@ -37,10 +37,8 @@ const useExamCategory = () => {
   const [deleteCategory] = useDeleteExamCategory();
   const [toggleExamBookmark] = useToggleExamBookmark();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
-
   const dispatch = useAppDispatch();
   const category = useAppSelector((state) => state.examCategory.category);
-  const { handleExamSelect } = useExamSetting({ category });
   const myExams = useAppSelector((state) => state.examCategory.myExams);
   const originalMyExams = useAppSelector(
     (state) => state.examCategory.originalMyExams
@@ -54,6 +52,10 @@ const useExamCategory = () => {
     if (category?.source === ExamSource.MoudCbt) return StorageType.MODU;
     return StorageType.MY;
   }, [category]);
+  const { handleExamSelect } = useExamSetting({
+    categoryId: category.id,
+    exams: category.mockExam,
+  });
 
   const fetchCategory = async (
     input: ReadMockExamCategoryByCategoryIdInput,
@@ -235,6 +237,7 @@ const useExamCategory = () => {
           return exam;
         });
         setExamCategory(newCategory);
+
         if (res.data.toggleExamBookmark.isBookmarked)
           return message.success('북마크 되었습니다.');
         else return message.success('북마크가 해제되었습니다.');
@@ -276,6 +279,7 @@ const useExamCategory = () => {
     handleFilterMyExams,
     editCategoryLoading,
     originalCategory,
+    originalMyExams,
   };
 };
 

@@ -14,6 +14,11 @@ const CategoryControlbarBlock = styled.div`
     margin-top: 20px;
     max-width: 500px;
   }
+  .category-controlbar-filter-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 17px;
+  }
 `;
 
 interface CategoryControlbarProps {
@@ -22,11 +27,13 @@ interface CategoryControlbarProps {
     onChangeSwitch: () => void;
   };
   textInput: { onChangeText: (v: string) => void };
+  additionalFilterComponent?: React.ReactNode;
 }
 
 const CategoryControlbar: React.FC<CategoryControlbarProps> = ({
   switch: { checked, onChangeSwitch },
   textInput: { onChangeText },
+  additionalFilterComponent = null,
 }) => {
   return (
     <CategoryControlbarBlock>
@@ -34,7 +41,8 @@ const CategoryControlbar: React.FC<CategoryControlbarProps> = ({
         <Switch checked={checked} onChange={onChangeSwitch} />
         <div>다중 선택 모드</div>
       </div>
-      <div>
+      <div className="category-controlbar-filter-wrapper">
+        {additionalFilterComponent}
         <TextInput
           className="category-exam-filter-input"
           onChange={(e) => onChangeText(e.target.value)}

@@ -1,21 +1,11 @@
-import { EllipsisOutlined, FolderOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import {
-  Button,
-  Checkbox,
-  Dropdown,
-  Input,
-  MenuProps,
-  Modal,
-  Switch,
-  message,
-} from 'antd';
+import { Dropdown, MenuProps, Modal, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
 import ExamList from './ExamList';
-import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
@@ -23,24 +13,14 @@ import CategoryEmpty from './CategoryEmpty';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
-import TextInput from '@components/common/input/TextInput';
 import { useRouter } from 'next/router';
 import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
+import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
   position: relative;
-
-  .category-study-button {
-    margin-top: 20px;
-  }
-  .category-exam-all-checkbox-wrapper {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 17px;
-  }
 
   .category-all-checkbox-and-study-button-wrapper {
     display: flex;
@@ -100,12 +80,10 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     handleAllExamsSelect,
     handleExamSelect,
     handleChangeMultipleSelectMode,
-  } = useExamSetting({ category });
+  } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
-  const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
-    useState(false);
 
   const { getExamSettingHistory } = useExamSettingHistory();
 
@@ -194,33 +172,20 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             }}
           />
           {examSetting.isMultipleSelectMode && (
-            <div className="category-all-checkbox-and-study-button-wrapper">
-              <div className="category-exam-all-checkbox-wrapper">
-                <Checkbox
-                  checked={
-                    category?.mockExam.length === examSetting.examIds.length
-                  }
-                  onClick={handleAllExamsSelect}
-                />
-                <span>전체 선택</span>
-              </div>
-              <Button
-                className="category-study-button"
-                type="primary"
-                disabled={examSetting.examIds.length === 0}
-                onClick={() => setExamMultipleSelectModalOpen(true)}
-              >
-                다중 학습하기
-              </Button>
-            </div>
+            <CategoryMultipleSelectModeControlbar
+              checkbox={{
+                categoryAllChecked:
+                  category?.mockExam.length === examSetting.examIds.length,
+                handleAllExamsSelect,
+              }}
+              button={{
+                isButtonDisabled: examSetting.examIds.length === 0,
+              }}
+              categoryId={category.id}
+              examIds={examSetting.examIds}
+            />
           )}
           <ExamList handleExamSelect={handleExamSelect} />
-          <ExamMultipleSelectModal
-            categoryId={category.id}
-            examIds={examSetting.examIds}
-            open={examMutipleSelectModalOpen}
-            onCancel={() => setExamMultipleSelectModalOpen(false)}
-          />
         </>
       ) : (
         <CategoryEmpty
