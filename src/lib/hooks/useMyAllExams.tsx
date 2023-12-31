@@ -40,16 +40,19 @@ const useMyAllExams = () => {
     return isBookmarked ? originalBookmarkedExams : originalMyExams;
   }, [isBookmarked, originalMyExams, originalBookmarkedExams]);
 
-  const fetchMyExams = async () => {
+  const fetchMyExams = async (forceUpdate: boolean = false) => {
     try {
-      if (isBookmarked && bookmarkedExams.length > 0) return;
-      if (!isBookmarked && myExams.length > 0) return;
+      if (!forceUpdate) {
+        if (isBookmarked && bookmarkedExams.length > 0) return;
+        if (!isBookmarked && myExams.length > 0) return;
+      }
       const res = await getMyExams({
         variables: {
           input: {
             isBookmarked,
           },
         },
+        fetchPolicy: 'network-only',
       });
       if (res.data?.getMyExams.ok) {
         setExams(res.data.getMyExams.exams as MockExam[]);

@@ -104,13 +104,14 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
   }, [meQuery, examType]);
 
   useEffect(() => {
+    fetchMyExams(true);
     const examSetting = getExamSettingHistory(0);
     if (!examSetting) return;
     const { examIds, isMultipleSelectMode } = examSetting;
     if (examIds) setExamSetting({ categoryId: 0, examIds });
     if (isMultipleSelectMode)
       setExamSetting({ categoryId: 0, isMultipleSelectMode });
-  }, []);
+  }, [router.pathname]);
 
   const categorySettingDropdownItems: MenuProps['items'] = [
     {
