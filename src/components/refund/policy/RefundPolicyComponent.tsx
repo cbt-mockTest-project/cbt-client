@@ -1,3 +1,4 @@
+import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import React from 'react';
 import styled from 'styled-components';
@@ -35,6 +36,7 @@ const RefundPolicyComponent: React.FC<RefundPolicyComponentProps> = () => {
 export default RefundPolicyComponent;
 
 const RefundPolicyComponentBlock = styled.div`
+  padding: 20px 30px 30px 30px;
   .refund-policy-content-wrapper {
     padding: 10px;
   }
@@ -57,5 +59,8 @@ const RefundPolicyComponentBlock = styled.div`
   }
   .refund-policy-contact-anchor {
     color: ${palette.blue_500};
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding: 20px 16px;
   }
 `;
