@@ -1,10 +1,9 @@
 import {
-  CrownOutlined,
   UserOutlined,
   FolderOutlined,
   GoldOutlined,
-  UsergroupAddOutlined,
   CloudOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -12,16 +11,7 @@ export const navItems = [
     icon: <CloudOutlined />,
     label: '모두 암기장',
   },
-  // {
-  //   key: '/premium-storage',
-  //   icon: <CrownOutlined />,
-  //   label: '프리미엄 암기장',
-  // },
-  // {
-  //   key: '/user-storage',
-  //   icon: <UsergroupAddOutlined />,
-  //   label: '유저 암기장',
-  // },
+
   {
     key: '/me/storage',
     icon: <FolderOutlined />,
@@ -36,5 +26,10 @@ export const navItems = [
     key: '/me',
     icon: <UserOutlined />,
     label: '내 정보',
+  },
+  {
+    key: '/me/history',
+    icon: <HistoryOutlined />,
+    label: '기록',
   },
 ];
