@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import MyProfileComponent from '@components/me/profile/MyProfileComponent';
+import withAuth from '@lib/hocs/withAuth';
 
 interface MyProfileProps {}
 
@@ -17,4 +18,4 @@ const MyProfile: NextPage<MyProfileProps> = () => {
   );
 };
 
-export default MyProfile;
+export default withAuth(MyProfile);
