@@ -2756,6 +2756,7 @@ export type ReadQuestionCardOutput = {
 };
 
 export type ReadQuestionsByExamIdsInput = {
+  bookmarked?: InputMaybe<Scalars['Boolean']>;
   ids?: InputMaybe<Array<Scalars['Float']>>;
   limit?: InputMaybe<Scalars['Float']>;
   order?: InputMaybe<Scalars['String']>;
