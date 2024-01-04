@@ -40,7 +40,7 @@ const SolutionModeComponentBlock = styled.div`
 interface SolutionModeComponentProps {}
 
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({}) => {
-  const { questions } = useQuestions();
+  const { questions, saveBookmark, saveQuestionState } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
 
   return (
@@ -66,6 +66,8 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({}) => {
           {questions!.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
+              saveBookmark={saveBookmark}
+              saveQuestionState={saveQuestionState}
               question={question as MockExamQuestion}
               isAnswerAllHidden={isAnswerAllHidden}
               index={index}

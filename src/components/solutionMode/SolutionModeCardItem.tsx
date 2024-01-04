@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditorStyle from '@styles/editorStyle';
-import { ReadQuestionsByExamIdsOutput } from 'types';
+import {
+  MockExamQuestion,
+  QuestionState,
+  ReadQuestionsByExamIdsOutput,
+} from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
@@ -23,6 +27,11 @@ const SolutionModeCardItemBlock = styled.div`
 interface SolutionModeCardItemProps
   extends React.HTMLAttributes<HTMLDivElement> {
   question: ReadQuestionsByExamIdsOutput['questions'][0];
+  saveBookmark: (question: MockExamQuestion) => Promise<void>;
+  saveQuestionState: (
+    question: MockExamQuestion,
+    state: QuestionState
+  ) => Promise<void>;
   index: number;
   isAnswerAllHidden: boolean;
 }
@@ -31,8 +40,9 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   question,
   index,
   isAnswerAllHidden,
+  saveBookmark,
+  saveQuestionState,
 }) => {
-  const { saveBookmark, saveQuestionState } = useQuestions();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
 
   useEffect(() => {
