@@ -1,3 +1,4 @@
+import { WatchQueryFetchPolicy } from '@apollo/client';
 import { loginModal } from '@lib/constants';
 import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
 import { useCreateQuestionFeedBack } from '@lib/graphql/hook/useFeedBack';
@@ -67,13 +68,15 @@ const useQuestions = () => {
   const [resetQuestionStateMutation] = useResetQuestionState();
 
   const fetchQuestions = async (
-    questionsQueryInput: ReadQuestionsByExamIdsInput
+    questionsQueryInput: ReadQuestionsByExamIdsInput,
+    fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
   ) => {
     try {
       const res = await readQuestionsQuery({
         variables: {
           input: questionsQueryInput,
         },
+        fetchPolicy,
       });
 
       if (res.data?.readQuestionsByExamIds.questions) {
@@ -90,7 +93,10 @@ const useQuestions = () => {
 
   const saveBookmark = async (question: MockExamQuestion) => {
     try {
-      if (!meQuery?.me.user) return dispatch(coreActions.openModal(loginModal));
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
       const newQuestion = {
         ...question,
         isBookmarked: !question.isBookmarked,
@@ -114,7 +120,10 @@ const useQuestions = () => {
     state: QuestionState
   ) => {
     try {
-      if (!meQuery?.me.user) return dispatch(coreActions.openModal(loginModal));
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
       const newQuestion = {
         ...question,
         myQuestionState: state,
