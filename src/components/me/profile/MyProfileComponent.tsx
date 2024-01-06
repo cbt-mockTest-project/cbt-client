@@ -28,7 +28,7 @@ export default MyProfileComponent;
 const tabItems: TabsProps['items'] = [
   {
     key: '1',
-    label: '회원 정보',
+    label: '내 정보',
     children: <MyProfileTab />,
   },
   {

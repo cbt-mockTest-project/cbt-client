@@ -1,4 +1,6 @@
+import { useLogoutMutation } from '@lib/graphql/hook/useUser';
 import useMyInfo from '@lib/hooks/useMyInfo';
+import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Input, InputRef, Upload, UploadProps, message } from 'antd';
 import Image from 'next/image';
@@ -60,11 +62,19 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
     handleUpdateProfileImg,
   } = useMyInfo();
   const nicknameInputRef = React.useRef<InputRef>(null);
+  const [logoutMutation] = useLogoutMutation();
   const checkPasswordInputRef = React.useRef<InputRef>(null);
   const updatePasswordInputRef = React.useRef<InputRef>(null);
   const [isCheckedPassword, setIsCheckedPassword] = useState(true);
   const [uploading, setUploading] = useState(false);
-
+  const handleLogout = async () => {
+    try {
+      await logoutMutation();
+      location.reload();
+    } catch (e) {
+      handleError(e);
+    }
+  };
   const uploadProps: UploadProps = {
     name: 'file',
     accept: '.png, .jpg, .jpeg',
@@ -181,6 +191,7 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
           </div>
         </div>
       </div>
+      <Button onClick={handleLogout}>로그아웃</Button>
     </MyProfileTabBlock>
   );
 };

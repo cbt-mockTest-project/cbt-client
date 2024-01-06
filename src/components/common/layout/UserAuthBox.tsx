@@ -1,10 +1,10 @@
-import { UserOutlined } from '@ant-design/icons';
+import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { loginModal } from '@lib/constants';
 import { useLogoutMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, Dropdown } from 'antd';
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
@@ -43,17 +43,10 @@ interface UserAuthBoxProps {
 const UserAuthBox: React.FC<UserAuthBoxProps> = ({ className }) => {
   const { data } = useMeQuery();
   const dispatch = useAppDispatch();
-  const [logoutMutation] = useLogoutMutation();
+
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const user = data?.me.user;
-  const handleLogout = async () => {
-    try {
-      await logoutMutation();
-      location.reload();
-    } catch (e) {
-      console.log(e);
-    }
-  };
+
   return (
     <UserAuthBoxBlock className={className}>
       {!user && <Button onClick={openLoginModal}>로그인</Button>}
@@ -69,7 +62,6 @@ const UserAuthBox: React.FC<UserAuthBoxProps> = ({ className }) => {
             />
             <span>{user.nickname}</span>
           </div>
-          <Button onClick={handleLogout}>로그아웃</Button>
         </div>
       )}
     </UserAuthBoxBlock>
