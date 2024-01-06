@@ -11,6 +11,7 @@ import { MockExamCategory } from 'types';
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
   .category-name {
+    font-size: 14px;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -29,12 +30,15 @@ const CategoryFolderListItemBlock = styled(Link)`
   }
   .category-user-info {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 3px;
     margin-top: 20px;
   }
   .category-user-name {
-    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
     font-weight: bold;
   }
   .category-user-label {
@@ -55,20 +59,29 @@ const CategoryFolderListItemBlock = styled(Link)`
 
 interface CategoryFolderListItemProps {
   category: MockExamCategory;
+  hasTag?: boolean;
+  className?: string;
 }
 
 const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   category,
+  hasTag = true,
+  className = '',
 }) => {
   return (
-    <CategoryFolderListItemBlock href={`/category/${category.id}`}>
+    <CategoryFolderListItemBlock
+      href={`/category/${category.id}`}
+      className={className}
+    >
       <BasicCard hoverEffect type="primary">
         <div className="category-wrapper">
           <div className="category-header-wrapper">
             <span className="category-name">{category.name}</span>
-            <Tag color={category.isPublic ? 'blue' : 'default'}>
-              {category.isPublic ? '공개' : '비공개'}
-            </Tag>
+            {hasTag && (
+              <Tag color={category.isPublic ? 'blue' : 'default'}>
+                {category.isPublic ? '공개' : '비공개'}
+              </Tag>
+            )}
           </div>
           <div className="category-user-info">
             <Image
@@ -77,11 +90,10 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 category.user.profileImg || '/png/profile/profile_default.png'
               }
               alt="프로필이미지"
-              width={20}
-              height={20}
+              width={18}
+              height={18}
             />
             <span className="category-user-name">{category.user.nickname}</span>
-            <span className="category-user-label">의 암기장</span>
           </div>
         </div>
       </BasicCard>
