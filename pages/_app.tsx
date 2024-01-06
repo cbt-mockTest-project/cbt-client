@@ -26,9 +26,11 @@ import MainLayout from '@components/common/layout/MainLayout';
 import {
   EXAM_CREATE_PAGE,
   EXAM_SOLUTION_PAGE,
+  PRICING_PAGE,
   STUDY_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
+import PricingPage from './pricing';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
@@ -38,10 +40,13 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     STUDY_PAGE,
     EXAM_CREATE_PAGE,
   ];
+  const papgesWithoutBodyBorder: string[] = [PRICING_PAGE];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
+  const hasBodyBorder = !papgesWithoutBodyBorder.includes(
+    String(Component.displayName)
+  );
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
   const localStorage = new LocalStorage();
-
   useEffect(() => {
     const excludePath = ['/exam/randomselect', '/exam/solution'];
     if (!someIncludes(excludePath, router.asPath)) {
@@ -197,7 +202,7 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           <CoreContainer />
           <AppInner />
           {hasLayout ? (
-            <MainLayout>
+            <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
               <Component {...pageProps} />
             </MainLayout>
           ) : (

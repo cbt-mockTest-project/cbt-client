@@ -1,12 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Sidebar from './Sidebar';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import MobileHeader from './MobileHeader';
 import Footer from './Footer';
 
-const MainLayoutBlock = styled.div`
+const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
   overflow-y: auto;
   color: ${palette.colorText};
   .main-layout-wrapper {
@@ -25,8 +25,12 @@ const MainLayoutBlock = styled.div`
   }
   .main-layout-body-wrapper {
     max-width: 1200px;
-    border: 1px solid ${palette.colorBorderLight};
-    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
+    ${(props) =>
+      props.type === 'default' &&
+      css`
+        border: 1px solid ${palette.colorBorderLight};
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
+      `}
     min-height: 750px;
     border-radius: 5px;
     background-color: ${palette.colorContainerBg};
@@ -50,15 +54,17 @@ interface MainLayoutProps {
   children: React.ReactNode;
   title?: string;
   className?: string;
+  type?: 'default' | 'clean';
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   className = '',
   title = '모두CBT',
+  type = 'default',
 }) => {
   return (
-    <MainLayoutBlock className={className}>
+    <MainLayoutBlock className={className} type={type}>
       <MobileHeader title={title} />
       <div className="main-layout-wrapper">
         <Sidebar />
