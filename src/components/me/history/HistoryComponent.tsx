@@ -4,8 +4,8 @@ import React from 'react';
 import styled from 'styled-components';
 import BookmarkTab from './BookmarkTab';
 import ScoreTab from './ScoreTab';
-import ExamHistoryTab from './ExamHistoryTab';
 import { responsive } from '@lib/utils/responsive';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const HistoryComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -17,9 +17,10 @@ const HistoryComponentBlock = styled.div`
 interface HistoryComponentProps {}
 
 const HistoryComponent: React.FC<HistoryComponentProps> = () => {
+  const { resetQuestions } = useQuestions();
   return (
     <HistoryComponentBlock>
-      <Tabs items={tabItems} />
+      <Tabs items={tabItems} onChange={resetQuestions} />
     </HistoryComponentBlock>
   );
 };
