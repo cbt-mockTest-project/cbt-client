@@ -2,6 +2,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import { Empty } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -127,6 +128,12 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
               />
             </SwiperSlide>
           ))}
+          {categories.length === 0 && (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description="아직 폴더가 없습니다."
+            />
+          )}
         </ul>
       </Swiper>
       {categories.length > 5 && (
