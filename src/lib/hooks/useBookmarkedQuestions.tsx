@@ -1,9 +1,15 @@
-import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/hook/useQuestionBookmark';
+import {
+  useReadExamTitleAndIdOfBookmarkedQuestion,
+  useResetMyQuestionBookmark,
+} from '@lib/graphql/hook/useQuestionBookmark';
 import { handleError } from '@lib/utils/utils';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { useMemo } from 'react';
+import useQuestions from './useQuestions';
 
 const useBookmarkedQuestions = () => {
+  const { resetQuestions } = useQuestions();
+  const [resetBookmark] = useResetMyQuestionBookmark();
   const { data: readExamTitlesQuery, loading: getExamTitlesLoading } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
 
@@ -26,8 +32,11 @@ const useBookmarkedQuestions = () => {
       cancelText: '취소',
       onOk: async () => {
         try {
-          window.location.reload();
+          await resetBookmark();
+          resetQuestions();
+          message.success('저장된 문제가 삭제되었습니다.');
         } catch (e) {
+          message.error('저장된 문제 삭제에 실패했습니다.');
           handleError(e);
         }
       },
