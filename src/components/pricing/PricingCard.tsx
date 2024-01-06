@@ -166,7 +166,6 @@ const PricingCard: React.FC<PricingCardProps> = ({
   } = useToggle(false);
   useEffect(() => {
     if (roleIds && roleIds.length > 0) {
-      console.log('들어오니');
       getRoleCount({ variables: { input: { roleIds } } });
     }
   }, []);
