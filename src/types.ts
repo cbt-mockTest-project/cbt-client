@@ -831,6 +831,7 @@ export type GetExamCategoriesInput = {
   categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
+  isPublicOnly?: InputMaybe<Scalars['Boolean']>;
   limit?: InputMaybe<Scalars['Float']>;
 };
 
