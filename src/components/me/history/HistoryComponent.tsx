@@ -37,9 +37,4 @@ const tabItems: TabsProps['items'] = [
     label: '점수',
     children: <ScoreTab />,
   },
-  {
-    key: '3',
-    label: '시험',
-    children: <ExamHistoryTab />,
-  },
 ];
