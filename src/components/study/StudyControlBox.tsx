@@ -102,7 +102,6 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   swiper,
   additionalControlButton,
 }) => {
-  const router = useRouter();
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
