@@ -832,7 +832,9 @@ export type GetExamCategoriesInput = {
   examSource?: InputMaybe<ExamSource>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isPublicOnly?: InputMaybe<Scalars['Boolean']>;
+  keyword?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
 };
 
 export type GetExamCategoriesOutput = {
