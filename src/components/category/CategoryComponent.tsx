@@ -1,4 +1,4 @@
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Dropdown, MenuProps, Modal, message } from 'antd';
@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
+import { StarOutline } from '@mui/icons-material';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -27,7 +28,35 @@ const CategoryComponentBlock = styled.div`
     align-items: center;
     gap: 17px;
   }
-
+  .category-bookmark-button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s all ease-in;
+    svg {
+      transition: 0.2s all ease-in;
+      font-size: 24px;
+      color: ${palette.colorBorder};
+    }
+    &:hover {
+      border-color: ${palette.yellow_500};
+      svg {
+        color: ${palette.yellow_500};
+      }
+    }
+  }
+  .category-bookmark-button.active {
+    border-color: ${palette.yellow_500};
+    svg {
+      color: ${palette.yellow_500};
+    }
+  }
   .category-setting-button-wrapper {
     position: absolute;
     top: 30px;
@@ -73,6 +102,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     fetchCategory,
     handleDeleteCategory,
     storageType,
+    handleToggleCategoryBookmark,
   } = useExamCategory();
   const {
     examSetting,
@@ -194,7 +224,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           }}
         />
       )}
-      {meQuery?.me.user?.id === category.user.id && (
+      {meQuery?.me.user?.id === category.user.id ? (
         <Dropdown
           menu={{ items: categorySettingDropdownItems }}
           placement="bottomRight"
@@ -206,6 +236,15 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             <EllipsisOutlined />
           </div>
         </Dropdown>
+      ) : (
+        <button
+          onClick={() => handleToggleCategoryBookmark(category.id)}
+          className={`category-bookmark-button ${
+            category.isBookmarked ? 'active' : ''
+          }`}
+        >
+          <StarFilled />
+        </button>
       )}
       {saveCategoryModalOpen && (
         <SaveCategoryModal

@@ -27,9 +27,11 @@ import useExamSetting from './useExamSetting';
 import { cloneDeep, debounce, isEqual } from 'lodash';
 import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
+import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 
 const useExamCategory = () => {
   const router = useRouter();
+  const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [readCategory] = useLazyReadCategoryById();
   const [getMyExams] = useLazyGetMyExams();
   const [addExamToCategory] = useAddExamToCategory();
@@ -100,6 +102,31 @@ const useExamCategory = () => {
       }
     } catch (e) {
       handleError(e);
+    }
+  };
+
+  const handleToggleCategoryBookmark = async (categoryId: number) => {
+    try {
+      const res = await toggleCategoryBookmark({
+        variables: {
+          input: {
+            categoryId,
+          },
+        },
+      });
+      if (res.data.toggleExamCategorieBookmark.ok) {
+        const newCategory = cloneDeep(category);
+        if (!newCategory) return;
+        newCategory.isBookmarked = !newCategory.isBookmarked;
+        setExamCategory(newCategory);
+        if (res.data.toggleExamCategorieBookmark.isBookmarked)
+          return message.success('북마크 되었습니다.');
+        else return message.success('북마크가 해제되었습니다.');
+      }
+      message.error(res.data?.toggleExamCategorieBookmark.error);
+    } catch (e) {
+      handleError(e);
+      message.error('북마크 설정에 실패했습니다.');
     }
   };
 
@@ -275,6 +302,7 @@ const useExamCategory = () => {
     handleAddExamToCategory,
     handleRemoveExamFromCategory,
     handleToggleExamBookmark,
+    handleToggleCategoryBookmark,
     handleFilterExams,
     handleFilterMyExams,
     editCategoryLoading,

@@ -1089,6 +1089,7 @@ export type MockExamCategory = {
   examViewer?: Maybe<Array<ExamViewer>>;
   hasAccess?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
+  isBookmarked?: Maybe<Scalars['Boolean']>;
   isPublic: Scalars['Boolean'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
@@ -1109,6 +1110,7 @@ export type MockExamCategoryInputType = {
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   hasAccess?: InputMaybe<Scalars['Boolean']>;
+  isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isPublic?: InputMaybe<Scalars['Boolean']>;
   mockExam: Array<MockExamInputType>;
   name: Scalars['String'];
