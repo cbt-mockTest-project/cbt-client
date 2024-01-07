@@ -54,9 +54,10 @@ const useExamCategory = () => {
     if (category?.source === ExamSource.MoudCbt) return StorageType.MODU;
     return StorageType.MY;
   }, [category]);
+
   const { handleExamSelect } = useExamSetting({
-    categoryId: category.id,
-    exams: category.mockExam,
+    categoryId: category?.id,
+    exams: category?.mockExam,
   });
 
   const fetchCategory = async (
