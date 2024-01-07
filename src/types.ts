@@ -13,6 +13,16 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AcceptExamCategoryInvitationInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type AcceptExamCategoryInvitationOutput = {
+  __typename?: 'AcceptExamCategoryInvitationOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type AddExamToCategoryInput = {
   categoryId: Scalars['Float'];
   examId: Scalars['Float'];
@@ -109,6 +119,17 @@ export type CreateAttendanceInput = {
 export type CreateAttendanceOutput = {
   __typename?: 'CreateAttendanceOutput';
   attendance?: Maybe<Attendance>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateExamCategoryInvitationInput = {
+  categoryId: Scalars['Float'];
+  userIdForInvitation: Scalars['Float'];
+};
+
+export type CreateExamCategoryInvitationOutput = {
+  __typename?: 'CreateExamCategoryInvitationOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -369,6 +390,27 @@ export type DeleteAttendanceInput = {
 
 export type DeleteAttendanceOutput = {
   __typename?: 'DeleteAttendanceOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteExamCategoryBookmarkInput = {
+  categoryId: Scalars['Float'];
+  userId: Scalars['Float'];
+};
+
+export type DeleteExamCategoryBookmarkOutput = {
+  __typename?: 'DeleteExamCategoryBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteExamCategoryInvitationInput = {
+  invitationId: Scalars['Float'];
+};
+
+export type DeleteExamCategoryInvitationOutput = {
+  __typename?: 'DeleteExamCategoryInvitationOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -842,6 +884,24 @@ export type GetExamCategoriesOutput = {
   categories?: Maybe<Array<MockExamCategory>>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type GetExamCategoryInvitationsOutput = {
+  __typename?: 'GetExamCategoryInvitationsOutput';
+  error?: Maybe<Scalars['String']>;
+  invitations?: Maybe<Array<ExamCategoryInvitation>>;
+  ok: Scalars['Boolean'];
+};
+
+export type GetExamCategorySubscribersInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type GetExamCategorySubscribersOutput = {
+  __typename?: 'GetExamCategorySubscribersOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  users?: Maybe<Array<User>>;
 };
 
 export type GetExamCategoryViewrsInput = {
@@ -1377,6 +1437,7 @@ export type MockExamVideoType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptExamCategoryInvitation: AcceptExamCategoryInvitationOutput;
   addExamToCategory: AddExamToCategoryOutput;
   changeClientRole: CoreOutput;
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
@@ -1386,6 +1447,7 @@ export type Mutation = {
   checkUserRole: CheckUserRoleOutput;
   createAttendance: CreateAttendanceOutput;
   createDiscountCode: Scalars['Boolean'];
+  createExamCategoryInvitation: CreateExamCategoryInvitationOutput;
   createExamCategoryViewer: CreateExamCategoryViewerOutput;
   createFeedback: CreateFeedbackOutput;
   createFreeTrialRole: CreateFreeTrialRoleOutput;
@@ -1410,6 +1472,8 @@ export type Mutation = {
   createVisitHistory: CreateVisitHistoryOutput;
   deleteAllNoticesOfMe: CoreOutput;
   deleteAttendance: DeleteAttendanceOutput;
+  deleteExamCategoryBookmark: DeleteExamCategoryBookmarkOutput;
+  deleteExamCategoryInvitation: DeleteExamCategoryInvitationOutput;
   deleteExamCategoryViewer: DeleteExamCategoryViewerOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
@@ -1470,6 +1534,11 @@ export type Mutation = {
 };
 
 
+export type MutationAcceptExamCategoryInvitationArgs = {
+  input: AcceptExamCategoryInvitationInput;
+};
+
+
 export type MutationAddExamToCategoryArgs = {
   input: AddExamToCategoryInput;
 };
@@ -1507,6 +1576,11 @@ export type MutationCheckUserRoleArgs = {
 
 export type MutationCreateAttendanceArgs = {
   input: CreateAttendanceInput;
+};
+
+
+export type MutationCreateExamCategoryInvitationArgs = {
+  input: CreateExamCategoryInvitationInput;
 };
 
 
@@ -1607,6 +1681,16 @@ export type MutationCreateVideoArgs = {
 
 export type MutationDeleteAttendanceArgs = {
   input: DeleteAttendanceInput;
+};
+
+
+export type MutationDeleteExamCategoryBookmarkArgs = {
+  input: DeleteExamCategoryBookmarkInput;
+};
+
+
+export type MutationDeleteExamCategoryInvitationArgs = {
+  input: DeleteExamCategoryInvitationInput;
 };
 
 
@@ -2129,6 +2213,8 @@ export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
   getExamCategories: GetExamCategoriesOutput;
+  getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
+  getExamCategorySubscribers: GetExamCategorySubscribersOutput;
   getExamCategoryViewers: GetExamCategoryViewrsOutput;
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
@@ -2197,6 +2283,11 @@ export type QueryFindMyExamHistoryArgs = {
 
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
+};
+
+
+export type QueryGetExamCategorySubscribersArgs = {
+  input: GetExamCategorySubscribersInput;
 };
 
 

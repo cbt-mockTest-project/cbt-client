@@ -10,6 +10,20 @@ export type ToggleExamCategorieBookmarkMutationVariables = Types.Exact<{
 
 export type ToggleExamCategorieBookmarkMutation = { __typename?: 'Mutation', toggleExamCategorieBookmark: { __typename?: 'ToggleExamCategoryBookmarkOutput', error?: string | null, isBookmarked?: boolean | null, ok: boolean } };
 
+export type GetExamCategorySubscribersQueryVariables = Types.Exact<{
+  input: Types.GetExamCategorySubscribersInput;
+}>;
+
+
+export type GetExamCategorySubscribersQuery = { __typename?: 'Query', getExamCategorySubscribers: { __typename?: 'GetExamCategorySubscribersOutput', error?: string | null, ok: boolean, users?: Array<{ __typename?: 'User', email: string, nickname: string, id: number }> | null } };
+
+export type DeleteExamCategoryBookmarkMutationVariables = Types.Exact<{
+  input: Types.DeleteExamCategoryBookmarkInput;
+}>;
+
+
+export type DeleteExamCategoryBookmarkMutation = { __typename?: 'Mutation', deleteExamCategoryBookmark: { __typename?: 'DeleteExamCategoryBookmarkOutput', error?: string | null, ok: boolean } };
+
 
 export const ToggleExamCategorieBookmarkDocument = gql`
     mutation ToggleExamCategorieBookmark($input: ToggleExamCategoryBookmarkInput!) {
@@ -23,4 +37,33 @@ export const ToggleExamCategorieBookmarkDocument = gql`
 
 export function useToggleExamCategorieBookmarkMutation() {
   return Urql.useMutation<ToggleExamCategorieBookmarkMutation, ToggleExamCategorieBookmarkMutationVariables>(ToggleExamCategorieBookmarkDocument);
+};
+export const GetExamCategorySubscribersDocument = gql`
+    query GetExamCategorySubscribers($input: GetExamCategorySubscribersInput!) {
+  getExamCategorySubscribers(input: $input) {
+    error
+    ok
+    users {
+      email
+      nickname
+      id
+    }
+  }
+}
+    `;
+
+export function useGetExamCategorySubscribersQuery(options: Omit<Urql.UseQueryArgs<GetExamCategorySubscribersQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamCategorySubscribersQuery, GetExamCategorySubscribersQueryVariables>({ query: GetExamCategorySubscribersDocument, ...options });
+};
+export const DeleteExamCategoryBookmarkDocument = gql`
+    mutation DeleteExamCategoryBookmark($input: DeleteExamCategoryBookmarkInput!) {
+  deleteExamCategoryBookmark(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteExamCategoryBookmarkMutation() {
+  return Urql.useMutation<DeleteExamCategoryBookmarkMutation, DeleteExamCategoryBookmarkMutationVariables>(DeleteExamCategoryBookmarkDocument);
 };
