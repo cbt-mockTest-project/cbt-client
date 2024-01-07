@@ -204,6 +204,11 @@ export const useLazyGetMyExamCategories = () =>
     GET_MY_EXAM_CATEGORIES
   );
 
+export const useGetMyCategories = () =>
+  useQuery<GetMyExamCategoriesQuery, GetMyExamCategoriesQueryVariables>(
+    GET_MY_EXAM_CATEGORIES
+  );
+
 export const useSaveExam = () =>
   useMutation<SaveExamMutation, SaveExamMutationVariables>(SAVE_EXAM);
 

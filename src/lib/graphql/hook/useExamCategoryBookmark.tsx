@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   DELETE_EXAM_CATEGORY_BOOKMARK,
   GET_EXAM_CATEROGY_SUBSCRIBERS,
@@ -24,6 +24,14 @@ export const useLazyGetCategorySubscribers = () =>
     GetExamCategorySubscribersQuery,
     GetExamCategorySubscribersQueryVariables
   >(GET_EXAM_CATEROGY_SUBSCRIBERS);
+
+export const useGetCategorySubscribers = (categoryId: number) =>
+  useQuery<
+    GetExamCategorySubscribersQuery,
+    GetExamCategorySubscribersQueryVariables
+  >(GET_EXAM_CATEROGY_SUBSCRIBERS, {
+    variables: { input: { categoryId } },
+  });
 
 export const useDeleteExamCategoryBookmark = () =>
   useMutation<

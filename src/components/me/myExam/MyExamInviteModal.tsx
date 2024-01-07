@@ -150,7 +150,7 @@ const MyExamInviteModal: React.FC<MyExamInviteModalProps> = (props) => {
           disabled={!!!selectedCategory}
         />
         <List
-          header={<div>초대된 사람 목록</div>}
+          header="폴더를 구독하고 있는 유저 목록"
           dataSource={invitedViewers}
           style={{ maxHeight: '400px', overflowY: 'scroll' }}
           bordered

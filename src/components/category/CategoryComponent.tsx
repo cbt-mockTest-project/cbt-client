@@ -18,6 +18,7 @@ import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { StarOutline } from '@mui/icons-material';
+import CategoryInviteModal from './CategoryInviteModal';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -112,6 +113,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
+  const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
 
   const { getExamSettingHistory } = useExamSettingHistory();
@@ -152,6 +154,17 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onClick={() => setEditExamsModalOpen(true)}
         >
           시험지 추가하기
+        </button>
+      ),
+    },
+    {
+      key: 4,
+      label: (
+        <button
+          style={{ color: palette.colorText }}
+          onClick={() => setInviteUserModalOpen(true)}
+        >
+          유저 초대하기
         </button>
       ),
     },
@@ -264,6 +277,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         <EditExamsModal
           open={editExamsModalOpen}
           onCancel={() => setEditExamsModalOpen(false)}
+        />
+      )}
+      {inviteUserModalOpen && (
+        <CategoryInviteModal
+          open={inviteUserModalOpen}
+          categoryId={category.id}
+          onCancel={() => setInviteUserModalOpen(false)}
         />
       )}
     </CategoryComponentBlock>

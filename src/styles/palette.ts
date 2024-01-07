@@ -42,7 +42,7 @@ const palette = {
   colorContainerBg: 'white',
   colorContainerBgGrey: '#f0f3f3',
   colorText: '#1f1f1f',
-  colorSubText: '#697b8c',
+  colorSubText: '#a3a6ae',
   colorEmphasisText: '#2465c0',
 };
 

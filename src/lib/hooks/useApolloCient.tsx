@@ -1,4 +1,8 @@
-import { NormalizedCacheObject } from '@apollo/client';
+import {
+  DataProxy,
+  NormalizedCacheObject,
+  OperationVariables,
+} from '@apollo/client';
 import { initializeApollo } from '@modules/apollo';
 import { useMemo } from 'react';
 
@@ -12,16 +16,16 @@ const useApolloClient = (
   );
 
   const updateCache = <T,>(
-    query: any,
+    query: DataProxy.Query<OperationVariables, T>,
     updateFunction: (previousData: T) => T
   ): void => {
-    const currentData = client.readQuery<T>({ query });
+    const currentData = client.readQuery<T>(query);
     if (!currentData) return;
 
     const newData = updateFunction(currentData);
-
     client.writeQuery<T>({
-      query,
+      query: query.query,
+      variables: query.variables,
       data: newData,
     });
   };

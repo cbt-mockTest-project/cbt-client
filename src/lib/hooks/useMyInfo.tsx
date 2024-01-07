@@ -36,7 +36,7 @@ const useMyInfo = () => {
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
 
-      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+      updateCache<MeQuery>({ query: ME_QUERY }, (prev) => ({
         ...prev,
         me: {
           ...prev.me,
@@ -67,7 +67,7 @@ const useMyInfo = () => {
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
 
-      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+      updateCache<MeQuery>({ query: ME_QUERY }, (prev) => ({
         ...prev,
         me: {
           ...prev.me,
@@ -94,7 +94,7 @@ const useMyInfo = () => {
       if (!res.data?.editProfile.ok)
         return message.error(res.data?.editProfile.error);
 
-      updateCache<MeQuery>(ME_QUERY, (prev) => ({
+      updateCache<MeQuery>({ query: ME_QUERY }, (prev) => ({
         ...prev,
         me: {
           ...prev.me,
