@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+import ExamCreateSavedTime from './ExamCreateSavedTime';
 
 const ExamCreateHeaderBlock = styled.div`
   top: 0;
@@ -18,6 +19,7 @@ const ExamCreateHeaderBlock = styled.div`
       font-size: 22px;
     }
   }
+
   .exam-create-save-button {
     position: absolute;
     right: 20px;
@@ -44,6 +46,7 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
           <LeftOutlined />
         </div>
         <div>{title}</div>
+
         <Button
           type="primary"
           className="exam-create-save-button"
@@ -52,6 +55,7 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
         >
           저장
         </Button>
+        <ExamCreateSavedTime />
       </HeaderLayout>
     </ExamCreateHeaderBlock>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import palette from '@styles/palette';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { responsive } from '@lib/utils/responsive';
 
 const blinkAnimation = keyframes`
   50% {
@@ -13,14 +14,23 @@ const ExamCreateSavedTimeBlock = styled.div`
   font-size: 12px;
   color: ${palette.colorSubText};
   transition: all 0.3s;
+  position: absolute;
+  right: 100px;
   &.blink {
     animation: ${blinkAnimation} 0.3s forwards;
   }
+  @media (max-width: ${responsive.lsmall}) {
+    display: none;
+  }
 `;
 
-interface ExamCreateSavedTimeProps {}
+interface ExamCreateSavedTimeProps {
+  className?: string;
+}
 
-const ExamCreateSavedTime: React.FC<ExamCreateSavedTimeProps> = () => {
+const ExamCreateSavedTime: React.FC<ExamCreateSavedTimeProps> = ({
+  className = 'exam-create-saved-time',
+}) => {
   const savedTime = useAppSelector((state) => state.examCreate.savedTime);
   const [isBlinking, setBlinking] = useState(false);
   const savedTimeRef = useRef(savedTime);
@@ -36,7 +46,9 @@ const ExamCreateSavedTime: React.FC<ExamCreateSavedTimeProps> = () => {
   if (!savedTime) return null;
 
   return (
-    <ExamCreateSavedTimeBlock className={isBlinking ? 'blink' : ''}>
+    <ExamCreateSavedTimeBlock
+      className={className + ' ' + isBlinking ? 'blink' : ''}
+    >
       {savedTime} 저장됨
     </ExamCreateSavedTimeBlock>
   );
