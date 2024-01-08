@@ -893,6 +893,19 @@ export type GetExamCategoryInvitationsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetExamCategoryLearningProgressInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type GetExamCategoryLearningProgressOutput = {
+  __typename?: 'GetExamCategoryLearningProgressOutput';
+  error?: Maybe<Scalars['String']>;
+  highScoreCount?: Maybe<Scalars['Float']>;
+  lowScoreCount?: Maybe<Scalars['Float']>;
+  ok: Scalars['Boolean'];
+  totalQuestionCount?: Maybe<Scalars['Float']>;
+};
+
 export type GetExamCategorySubscribersInput = {
   categoryId: Scalars['Float'];
 };
@@ -2214,6 +2227,7 @@ export type Query = {
   findMyExamHistory: FindMyExamHistoryOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
+  getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
   getExamCategorySubscribers: GetExamCategorySubscribersOutput;
   getExamCategoryViewers: GetExamCategoryViewrsOutput;
   getExamTitleWithFeedback: GetExamTitleWithFeedbackOutput;
@@ -2283,6 +2297,11 @@ export type QueryFindMyExamHistoryArgs = {
 
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
+};
+
+
+export type QueryGetExamCategoryLearningProgressArgs = {
+  input: GetExamCategoryLearningProgressInput;
 };
 
 

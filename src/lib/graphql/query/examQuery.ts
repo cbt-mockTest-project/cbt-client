@@ -408,3 +408,17 @@ export const SAVE_EXAM = gql`
     }
   }
 `;
+
+export const GET_EXAM_CATEGORY_LEARNING_PROGRESS = gql`
+  query GetExamCategoryLearningProgress(
+    $input: GetExamCategoryLearningProgressInput!
+  ) {
+    getExamCategoryLearningProgress(input: $input) {
+      error
+      ok
+      lowScoreCount
+      highScoreCount
+      totalQuestionCount
+    }
+  }
+`;

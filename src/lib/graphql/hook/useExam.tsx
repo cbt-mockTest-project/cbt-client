@@ -14,6 +14,7 @@ import {
   EDIT_MOCK_EXAM,
   FIND_MY_EXAM_HISTORY_QUERY,
   GET_EXAM_CATEGORIES,
+  GET_EXAM_CATEGORY_LEARNING_PROGRESS,
   GET_MY_EXAMS,
   GET_MY_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES,
@@ -45,6 +46,8 @@ import {
   FindMyExamHistoryQueryVariables,
   GetExamCategoriesQuery,
   GetExamCategoriesQueryVariables,
+  GetExamCategoryLearningProgressQuery,
+  GetExamCategoryLearningProgressQueryVariables,
   GetMyExamCategoriesQuery,
   GetMyExamCategoriesQueryVariables,
   GetMyExamsQuery,
@@ -214,3 +217,9 @@ export const useSaveExam = () =>
 
 export const useLazyReadMockExam = () =>
   useLazyQuery<ReadMockExamQuery, ReadMockExamQueryVariables>(READ_MOCK_EXAM);
+
+export const useLazyGetExamCategoryLearningProgress = () =>
+  useLazyQuery<
+    GetExamCategoryLearningProgressQuery,
+    GetExamCategoryLearningProgressQueryVariables
+  >(GET_EXAM_CATEGORY_LEARNING_PROGRESS);

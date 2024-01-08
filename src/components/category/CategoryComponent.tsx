@@ -1,8 +1,8 @@
 import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Dropdown, MenuProps, Modal, Progress, message } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
 import ExamList from './ExamList';
@@ -19,6 +19,8 @@ import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { StarOutline } from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
+import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
+import CategoryLearningProgress from './CategoryLearningProgress';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -96,6 +98,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 }) => {
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
+
   const {
     handleFilterExams,
     category,
@@ -197,11 +200,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   return (
     <CategoryComponentBlock>
+      <CategoryLearningProgress categoryId={categoryQueryInput.id} />
       <CategoryHeader
         userName={category.user.nickname}
         categoryName={category.name}
         categoryDescription={category.description}
       />
+
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
           <CategoryControlbar

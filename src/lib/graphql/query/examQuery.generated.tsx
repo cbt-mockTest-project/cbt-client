@@ -193,6 +193,13 @@ export type SaveExamMutationVariables = Types.Exact<{
 
 export type SaveExamMutation = { __typename?: 'Mutation', saveExam: { __typename?: 'SaveExamOutput', error?: string | null, ok: boolean, examId?: number | null } };
 
+export type GetExamCategoryLearningProgressQueryVariables = Types.Exact<{
+  input: Types.GetExamCategoryLearningProgressInput;
+}>;
+
+
+export type GetExamCategoryLearningProgressQuery = { __typename?: 'Query', getExamCategoryLearningProgress: { __typename?: 'GetExamCategoryLearningProgressOutput', error?: string | null, ok: boolean, lowScoreCount?: number | null, highScoreCount?: number | null, totalQuestionCount?: number | null } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -680,4 +687,19 @@ export const SaveExamDocument = gql`
 
 export function useSaveExamMutation() {
   return Urql.useMutation<SaveExamMutation, SaveExamMutationVariables>(SaveExamDocument);
+};
+export const GetExamCategoryLearningProgressDocument = gql`
+    query GetExamCategoryLearningProgress($input: GetExamCategoryLearningProgressInput!) {
+  getExamCategoryLearningProgress(input: $input) {
+    error
+    ok
+    lowScoreCount
+    highScoreCount
+    totalQuestionCount
+  }
+}
+    `;
+
+export function useGetExamCategoryLearningProgressQuery(options: Omit<Urql.UseQueryArgs<GetExamCategoryLearningProgressQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamCategoryLearningProgressQuery, GetExamCategoryLearningProgressQueryVariables>({ query: GetExamCategoryLearningProgressDocument, ...options });
 };
