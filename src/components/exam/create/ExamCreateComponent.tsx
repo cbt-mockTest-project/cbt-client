@@ -119,11 +119,11 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     }
   }, [router.query.examId]);
 
-  useEffect(() => {
-    watch(() => {
-      debouncedSaveExam(getValues());
-    });
-  }, []);
+  // useEffect(() => {
+  //   watch(() => {
+  //     debouncedSaveExam(getValues());
+  //   });
+  // }, []);
   return (
     <FormProvider {...methods}>
       <ExamCreateComponentBlock>
@@ -144,7 +144,6 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
                 placeholder="시험지 제목을 입력해주세요."
                 className="exam-create-title-input"
               />
-              <ExamCreateSavedTime />
             </div>
 
             <ExamCreateCardList defaultQuestions={defaultForm.questions} />
