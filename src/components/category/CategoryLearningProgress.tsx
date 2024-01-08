@@ -27,6 +27,7 @@ const CategoryLearningProgressBlock = styled.div`
     color: ${palette.colorSubText} !important;
   }
   .category-learning-progress-help-icon-tooltip {
+    margin-left: 40px;
     .ant-tooltip-content {
       .ant-tooltip-inner {
         font-size: 12px !important;
