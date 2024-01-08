@@ -1,4 +1,6 @@
 import {
+  OperationVariables,
+  QueryOptions,
   useLazyQuery,
   useMutation,
   useQuery,
@@ -39,6 +41,8 @@ import {
   SearchQuestionsByKeywordQueryVariables,
 } from '../query/questionQuery.generated';
 import {
+  Exact,
+  ReadMockExamQuestionInput,
   ReadQuestionCardInput,
   ReadQuestionsByExamIdsInput,
   SearchQuestionsByKeywordInput,
@@ -60,9 +64,14 @@ export const useReadQuestionsByExamId = (id: number) =>
     variables: { input: { id } },
   });
 
-export const useReadQuestion = () =>
+export const useReadQuestion = (input: ReadMockExamQuestionInput) =>
   useQuery<ReadMockExamQuestionQuery, ReadMockExamQuestionQueryVariables>(
-    READ_QUESTION
+    READ_QUESTION,
+    {
+      variables: {
+        input,
+      },
+    }
   );
 
 export const useLazyReadQuestion = (fetchPolicy: WatchQueryFetchPolicy) =>

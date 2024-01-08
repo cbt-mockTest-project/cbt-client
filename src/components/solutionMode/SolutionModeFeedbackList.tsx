@@ -3,6 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackListItem from './SolutionModeFeedbackListItem';
+import {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from '@lib/hooks/useQuestionFeedback';
 
 const SolutionModeFeedbackListBlock = styled.div`
   display: flex;
@@ -11,10 +17,20 @@ const SolutionModeFeedbackListBlock = styled.div`
 
 interface SolutionModeFeedbackListProps {
   question: MockExamQuestion;
+  editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
+  addFeedback: (editFeedbackInput: AddFeedbackInput) => Promise<void>;
+  deleteFeedback: (deleteFeedbackInput: DeleteFeedbackInput) => Promise<void>;
+  updateFeedbackRecommendation: (
+    updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
+  ) => Promise<void>;
 }
 
 const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
   question,
+  editFeedback,
+  addFeedback,
+  deleteFeedback,
+  updateFeedbackRecommendation,
 }) => {
   return (
     <SolutionModeFeedbackListBlock>
@@ -22,6 +38,10 @@ const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
         <>
           {index === 0 && <Divider style={{ margin: '12px 0' }} />}
           <SolutionModeFeedbackListItem
+            deleteFeedback={deleteFeedback}
+            updateFeedbackRecommendation={updateFeedbackRecommendation}
+            addFeedback={addFeedback}
+            editFeedback={editFeedback}
             key={feedback.id}
             feedback={feedback}
             question={question}

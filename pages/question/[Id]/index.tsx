@@ -6,47 +6,40 @@ import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
 import { removeHtmlTag } from '@lib/utils/utils';
+import { OperationVariables, QueryOptions } from '@apollo/client';
+import { ReadMockExamQuestionInput } from 'types';
+import { QUESTION_PAGE } from '@lib/constants/displayName';
 
 interface QuestionProps {
-  questionQuery: ReadMockExamQuestionQuery;
+  title: string;
+  description: string;
+  questionQueryInput: ReadMockExamQuestionInput;
 }
 
-const Question: NextPage<QuestionProps> = ({ questionQuery }) => {
-  const title = removeHtmlTag(
-    (questionQuery.readMockExamQuestion.mockExamQusetion?.question || '').slice(
-      0,
-      50
-    )
-  );
-
+const Question: NextPage<QuestionProps> = ({
+  questionQueryInput,
+  title,
+  description,
+}) => {
   return (
     <>
       <WithHead
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
-        description={removeHtmlTag(
-          questionQuery.readMockExamQuestion.mockExamQusetion?.question || ''
-        )}
+        description={description}
       />
-      <QuestionComponent questionQuery={questionQuery} />
+      <QuestionComponent questionQueryInput={questionQueryInput} />
     </>
   );
 };
 
+Question.displayName = QUESTION_PAGE;
+
 export default Question;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
-  const apolloClient = initializeApollo({}, '');
   let paths: { params: { Id: string } }[] = [];
   try {
-    // const res = await apolloClient.query<ReadAllQuestionsQuery>({
-    //   query: READ_ALL_QUESTIONS,
-    // });
-    // if (res.data.readAllQuestions.questions) {
-    //   paths = res.data.readAllQuestions.questions.map((el) => ({
-    //     params: { Id: String(el.id) },
-    //   }));
-    // }
     return { paths, fallback: 'blocking' };
   } catch (err) {
     return {
@@ -64,17 +57,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
     };
   }
   const apolloClient = initializeApollo({}, '');
+  const questionQueryInput: ReadMockExamQuestionInput = {
+    questionId: Number(context.params?.Id),
+  };
   const res = await apolloClient.query<ReadMockExamQuestionQuery>({
     query: READ_QUESTION,
     variables: {
-      input: {
-        questionId: Number(context.params?.Id),
-      },
+      input: questionQueryInput,
     },
   });
   const questionQuery = res ? res.data : null;
+  const title = removeHtmlTag(
+    (questionQuery.readMockExamQuestion.mockExamQusetion?.question || '').slice(
+      0,
+      50
+    )
+  );
+  const description = removeHtmlTag(
+    questionQuery.readMockExamQuestion.mockExamQusetion?.question || ''
+  );
   return addApolloState(apolloClient, {
-    props: { questionQuery },
+    props: { title, description, questionQueryInput },
     revalidate: 43200,
   });
 };

@@ -4,10 +4,8 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import useQuestions from '@lib/hooks/useQuestions';
 import palette from '@styles/palette';
-import { Button } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SwiperCore from 'swiper';
 import { MockExamQuestion } from 'types';
 
 const CardModeItemBlock = styled.div`
@@ -70,7 +68,14 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   number,
   swiper,
 }) => {
-  const { saveBookmark, saveQuestionState } = useQuestions();
+  const {
+    saveBookmark,
+    saveQuestionState,
+    editFeedback,
+    addFeedback,
+    deleteFeedback,
+    updateFeedbackRecommendation,
+  } = useQuestions();
   const [isFlipped, setIsFlipped] = useState(false);
   return (
     <CardModeItemBlock>
@@ -97,6 +102,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           <BasicCard className="card-basic-wrapper" type="primary">
             <div className="card-container">
               <StudyAnswerBox
+                addFeedback={addFeedback}
+                editFeedback={editFeedback}
+                deleteFeedback={deleteFeedback}
+                updateFeedbackRecommendation={updateFeedbackRecommendation}
                 className="study-answer-box"
                 question={question}
               />
@@ -108,6 +117,8 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
       <StudyControlBox
         className="study-control-box"
         question={question}
+        editFeedback={editFeedback}
+        addFeedback={addFeedback}
         saveQuestionState={saveQuestionState}
         swiper={swiper}
       />

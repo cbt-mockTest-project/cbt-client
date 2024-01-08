@@ -44,7 +44,12 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   saveQuestionState,
 }) => {
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
-
+  const {
+    editFeedback,
+    addFeedback,
+    deleteFeedback,
+    updateFeedbackRecommendation,
+  } = useQuestions();
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);
@@ -58,10 +63,19 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             questionNumber={index + 1}
             question={question}
           />
-          <StudyAnswerBox isAnswerHidden={isAnswerHidden} question={question} />
+          <StudyAnswerBox
+            deleteFeedback={deleteFeedback}
+            updateFeedbackRecommendation={updateFeedbackRecommendation}
+            isAnswerHidden={isAnswerHidden}
+            question={question}
+            editFeedback={editFeedback}
+            addFeedback={addFeedback}
+          />
         </div>
       </BasicCard>
       <StudyControlBox
+        addFeedback={addFeedback}
+        editFeedback={editFeedback}
         saveQuestionState={saveQuestionState}
         question={question}
         answerHiddenOption={{

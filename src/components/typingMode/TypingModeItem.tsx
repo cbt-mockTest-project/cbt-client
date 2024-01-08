@@ -28,7 +28,14 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   swiper,
 }) => {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-  const { saveBookmark, saveQuestionState } = useQuestions();
+  const {
+    saveBookmark,
+    saveQuestionState,
+    editFeedback,
+    addFeedback,
+    deleteFeedback,
+    updateFeedbackRecommendation,
+  } = useQuestions();
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
@@ -45,6 +52,8 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       />
 
       <StudyControlBox
+        editFeedback={editFeedback}
+        addFeedback={addFeedback}
         className="study-control-box"
         question={question}
         saveQuestionState={saveQuestionState}
@@ -65,7 +74,13 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             exit={{ opacity: 0, translateY: -10 }}
           >
             <BasicCard>
-              <StudyAnswerBox question={question} />
+              <StudyAnswerBox
+                question={question}
+                deleteFeedback={deleteFeedback}
+                updateFeedbackRecommendation={updateFeedbackRecommendation}
+                editFeedback={editFeedback}
+                addFeedback={addFeedback}
+              />
             </BasicCard>
           </motion.div>
         )}

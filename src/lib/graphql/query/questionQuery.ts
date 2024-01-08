@@ -120,7 +120,6 @@ export const READ_QUESTION = gql`
       ok
     }
   }
-  ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
 export const EDIT_QUESTION = gql`

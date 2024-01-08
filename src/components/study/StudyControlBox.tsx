@@ -13,9 +13,11 @@ import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useAuthModal from '@lib/hooks/useAuthModal';
 import StudyScoreModal from './StudyScoreModal';
-import SwiperCore from 'swiper';
 import { responsive } from '@lib/utils/responsive';
-import { useRouter } from 'next/router';
+import {
+  AddFeedbackInput,
+  EditFeedbackInput,
+} from '@lib/hooks/useQuestionFeedback';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -85,6 +87,9 @@ const StudyControlBoxBlock = styled.div`
 interface StudyControlBoxProps {
   className?: string;
   question: MockExamQuestion;
+  hasScoreTable?: boolean;
+  editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
+  addFeedback: (addFeedbackInput: AddFeedbackInput) => Promise<void>;
   saveQuestionState: (question: MockExamQuestion, state: QuestionState) => void;
   answerHiddenOption?: {
     isAnswerHidden: boolean;
@@ -99,8 +104,11 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   question,
   saveQuestionState,
   answerHiddenOption,
+  editFeedback,
+  addFeedback,
   swiper,
   additionalControlButton,
+  hasScoreTable = true,
 }) => {
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
@@ -163,7 +171,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           </button>
         </Popover>
         {additionalControlButton && additionalControlButton}
-        <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
+        {hasScoreTable && (
+          <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
+        )}
         {swiper && (
           <div className="study-swiper-button-wrapper">
             <button
@@ -188,6 +198,8 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
 
       {isQuestionFeedbackModalOpen && (
         <QuestionFeedbackModal
+          addFeedback={addFeedback}
+          editFeedback={editFeedback}
           question={question}
           open={isQuestionFeedbackModalOpen}
           onCancel={() => setIsQuestionFeedbackModalOpen(false)}
@@ -197,7 +209,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           }번 문제`}
         />
       )}
-      {isStudyScoreModalOpen && (
+      {isStudyScoreModalOpen && hasScoreTable && (
         <StudyScoreModal
           onClickItem={(index) => {
             if (swiper) {

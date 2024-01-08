@@ -21,6 +21,12 @@ import {
 import QuestionFeedbackModal from './QuestionFeedbackModal';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useQuestions from '@lib/hooks/useQuestions';
+import {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from '@lib/hooks/useQuestionFeedback';
 const SolutionModeFeedbackListItemBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -130,15 +136,32 @@ const SolutionModeFeedbackListItemBlock = styled.div`
 interface SolutionModeFeedbackListItemProps {
   feedback: MockExamQuestionFeedback;
   question: MockExamQuestion;
+  editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
+  addFeedback: (addFeedbackInput: AddFeedbackInput) => Promise<void>;
+  deleteFeedback: (
+    deleteFeedbackInput: Omit<DeleteFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  updateFeedbackRecommendation: (
+    updateFeedbackRecommendationInput: Omit<
+      UpdateFeedbackRecommendationInput,
+      'setQuestion'
+    >
+  ) => Promise<void>;
 }
 
 const SolutionModeFeedbackListItem: React.FC<
   SolutionModeFeedbackListItemProps
-> = ({ feedback, question }) => {
+> = ({
+  feedback,
+  question,
+  editFeedback,
+  addFeedback,
+  deleteFeedback,
+  updateFeedbackRecommendation,
+}) => {
   const { data: meQuery } = useMeQuery();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
-  const { deleteFeedback, updateFeedbackRecommendation } = useQuestions();
 
   const controlDropdownItems: MenuProps['items'] = [
     {
@@ -255,6 +278,8 @@ const SolutionModeFeedbackListItem: React.FC<
           title={`${String(question.mockExam?.title)}\n${
             question.number
           }번 문제`}
+          addFeedback={addFeedback}
+          editFeedback={editFeedback}
         />
       )}
     </SolutionModeFeedbackListItemBlock>

@@ -6,6 +6,10 @@ import { checkboxOption } from 'customTypes';
 import { MockExamQuestion, QuestionFeedbackType } from 'types';
 import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
 import useQuestions from '@lib/hooks/useQuestions';
+import {
+  AddFeedbackInput,
+  EditFeedbackInput,
+} from '@lib/hooks/useQuestionFeedback';
 
 export const feedbackOptions: checkboxOption[] = [
   { label: '공개', value: QuestionFeedbackType.Public },
@@ -17,26 +21,42 @@ interface QuestionFeedbackModalProps extends Omit<ModalProps, 'children'> {
   question: MockExamQuestion;
   feedbackId?: number;
   onClose: () => void;
+  editFeedback: (
+    editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  addFeedback: (
+    editFeedbackInput: Omit<AddFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
 }
 
 const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
-  const { feedbackId = 0, onClose, question, title, ...modalProps } = props;
-  const { editFeedback, addFeedback, addFeedbackLoading, editFeedbackLoading } =
-    useQuestions();
+  const {
+    addFeedback,
+    editFeedback,
+    feedbackId = 0,
+    onClose,
+    question,
+    title,
+    ...modalProps
+  } = props;
+  const [updateFeedbackLoading, setUpdateFeedbackLoading] = useState(false);
 
   const [selectedType, setSelectedType] = useState<QuestionFeedbackType>(
     QuestionFeedbackType.Public
   );
   const [content, setContent] = useState('');
   const handleAddQuestionFeedback = async () => {
+    setUpdateFeedbackLoading(true);
     await addFeedback({
       content,
       selectedType,
       question,
     });
     onClose();
+    setUpdateFeedbackLoading(false);
   };
   const handleEditQuestionFeedback = async () => {
+    setUpdateFeedbackLoading(true);
     await editFeedback({
       content,
       selectedType,
@@ -44,6 +64,7 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
       feedbackId,
     });
     onClose();
+    setUpdateFeedbackLoading(false);
   };
 
   return (
@@ -52,7 +73,7 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
       onOk={feedbackId ? handleEditQuestionFeedback : handleAddQuestionFeedback}
       okText={feedbackId ? '수정하기' : '등록하기'}
       cancelText="닫기"
-      okButtonProps={{ loading: addFeedbackLoading || editFeedbackLoading }}
+      okButtonProps={{ loading: updateFeedbackLoading }}
     >
       <div className="add-answer-modal-inner">
         <label className="content-label">오류신고 및 답안추가</label>

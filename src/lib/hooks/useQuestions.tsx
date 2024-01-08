@@ -16,10 +16,6 @@ import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
   MockExamQuestion,
-  MockExamQuestionFeedback,
-  MyRecommedationStatus,
-  QuestionFeedbackRecommendationType,
-  QuestionFeedbackType,
   QuestionState,
   ReadQuestionsByExamIdsInput,
 } from 'types';

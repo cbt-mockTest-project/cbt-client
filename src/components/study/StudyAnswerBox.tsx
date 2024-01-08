@@ -5,6 +5,12 @@ import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
 import { Image } from 'antd';
 import palette from '@styles/palette';
+import {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from '@lib/hooks/useQuestionFeedback';
 
 const StudyAnswerBoxBlock = styled.div`
   .study-answer-box-question-card-answer-label {
@@ -39,11 +45,21 @@ interface StudyAnswerBoxProps {
   isAnswerHidden?: boolean;
   question: MockExamQuestion;
   className?: string;
+  editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
+  addFeedback: (editFeedbackInput: AddFeedbackInput) => Promise<void>;
+  deleteFeedback: (deleteFeedbackInput: DeleteFeedbackInput) => Promise<void>;
+  updateFeedbackRecommendation: (
+    updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
+  ) => Promise<void>;
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   isAnswerHidden = false,
   question,
+  editFeedback,
+  addFeedback,
+  deleteFeedback,
+  updateFeedbackRecommendation,
   className = '',
 }) => {
   return (
@@ -57,7 +73,13 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
         <div className="study-answer-box-question-card-answer">
           {parse(question.solution || '')}
         </div>
-        <SolutionModeFeedbackList question={question} />
+        <SolutionModeFeedbackList
+          question={question}
+          editFeedback={editFeedback}
+          addFeedback={addFeedback}
+          deleteFeedback={deleteFeedback}
+          updateFeedbackRecommendation={updateFeedbackRecommendation}
+        />
         {question.solution_img && question.solution_img.length > 0 && (
           <Image
             className="study-answer-box-box-image"

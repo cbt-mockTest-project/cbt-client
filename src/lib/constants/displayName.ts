@@ -3,3 +3,4 @@ export const STUDY_PAGE = 'STUDY_PAGE';
 export const EXAM_CREATE_PAGE = 'EXAM_CREATE_PAGE';
 export const PRICING_PAGE = 'PRICING_PAGE';
 export const MAIN_PAGE = 'MAIN_PAGE';
+export const QUESTION_PAGE = 'QUESTION_PAGE';
