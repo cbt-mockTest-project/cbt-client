@@ -1,16 +1,10 @@
 import { WatchQueryFetchPolicy } from '@apollo/client';
 import { loginModal } from '@lib/constants';
 import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
-import { useCreateQuestionFeedBack } from '@lib/graphql/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
-import {
-  useDeleteQuestionFeedback,
-  useEditQuestionFeedback,
-  useUpdateQuestionFeedbackRecommendation,
-} from '@lib/graphql/hook/useQuestionFeedback';
+
 import {
   useChangeQuestionState,
-  useResetAllQuestionState,
   useResetQuestionState,
 } from '@lib/graphql/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -19,7 +13,6 @@ import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
-import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import {
   MockExamQuestion,
@@ -30,26 +23,12 @@ import {
   QuestionState,
   ReadQuestionsByExamIdsInput,
 } from 'types';
-
-export interface QuestionAndFeedback {
-  question: MockExamQuestion;
-  feedback: MockExamQuestionFeedback;
-}
-
-export interface AddFeedbackInput {
-  question: MockExamQuestion;
-  selectedType: QuestionFeedbackType;
-  content: string;
-}
-
-export interface EditFeedbackInput extends AddFeedbackInput {
-  feedbackId: number;
-}
-
-export interface UpdateFeedbackRecommendationInput extends QuestionAndFeedback {
-  type: QuestionFeedbackRecommendationType;
-  myRecommendationStatus: MyRecommedationStatus;
-}
+import useQuestionFeedback, {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from './useQuestionFeedback';
 
 const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
@@ -57,15 +36,15 @@ const useQuestions = () => {
   const questions = useAppSelector((state) => state.mockExam.questions);
   const [readQuestionsQuery] = useLazyReadQuestionsByExamIds();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
-  const [deleteFeedbackMutaion] = useDeleteQuestionFeedback();
-  const [editFeedbackMutaion, { loading: editFeedbackLoading }] =
-    useEditQuestionFeedback();
-  const [addQuestionFeedbackMutation, { loading: addFeedbackLoading }] =
-    useCreateQuestionFeedBack();
-  const [updateFeedbackRecommendationMutaion] =
-    useUpdateQuestionFeedbackRecommendation();
   const [changeQuestionState] = useChangeQuestionState();
   const [resetQuestionStateMutation] = useResetQuestionState();
+
+  const {
+    handleAddFeedback,
+    handleDeleteFeedback,
+    handleEditFeedback,
+    handleUpdateFeedbackRecommendation,
+  } = useQuestionFeedback();
 
   const fetchQuestions = async (
     questionsQueryInput: ReadQuestionsByExamIdsInput,
@@ -170,183 +149,48 @@ const useQuestions = () => {
   const deleteFeedback = async ({
     question,
     feedback,
-  }: QuestionAndFeedback) => {
-    try {
-      if (!meQuery?.me.user) return dispatch(coreActions.openModal(loginModal));
-      const res = await deleteFeedbackMutaion({
-        variables: {
-          input: {
-            id: feedback.id,
-          },
-        },
-      });
-      if (res.data?.deleteMockExamQuestionFeedback.ok) {
-        const newQuestion: MockExamQuestion = {
-          ...question,
-          mockExamQuestionFeedback: question.mockExamQuestionFeedback.filter(
-            (el) => el.id !== feedback.id
-          ),
-        };
-        dispatch(mockExamActions.setQuestion(newQuestion));
-        return message.success('삭제 완료');
-      } else message.error(res.data?.deleteMockExamQuestionFeedback.error);
-    } catch {
-      message.error('삭제 실패');
-    }
+  }: Omit<DeleteFeedbackInput, 'setQuestion'>) => {
+    handleDeleteFeedback({
+      question,
+      feedback,
+      setQuestion: (question) =>
+        dispatch(mockExamActions.setQuestion(question)),
+    });
   };
   const updateFeedbackRecommendation = async ({
     type,
     myRecommendationStatus,
     question,
     feedback,
-  }: UpdateFeedbackRecommendationInput) => {
-    try {
-      if (!meQuery?.me.user) return dispatch(coreActions.openModal(loginModal));
-      const newQuestion = {
-        ...question,
-        mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (item) => {
-            if (item.id === feedback.id) {
-              let newReccomendationCount = cloneDeep(item.recommendationCount);
-              let newMyRecommedationStatus = cloneDeep(
-                item.myRecommedationStatus
-              );
-              if (myRecommendationStatus.isGood) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good -= 1;
-                  newMyRecommedationStatus.isGood = false;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.good -= 1;
-                  newReccomendationCount.bad += 1;
-                  newMyRecommedationStatus.isGood = false;
-                  newMyRecommedationStatus.isBad = true;
-                }
-              }
-              if (myRecommendationStatus.isBad) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good += 1;
-                  newReccomendationCount.bad -= 1;
-                  newMyRecommedationStatus.isGood = true;
-                  newMyRecommedationStatus.isBad = false;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.bad -= 1;
-                  newMyRecommedationStatus.isBad = false;
-                }
-              }
-              if (
-                !myRecommendationStatus.isGood &&
-                !myRecommendationStatus.isBad
-              ) {
-                if (type === QuestionFeedbackRecommendationType.Good) {
-                  newReccomendationCount.good += 1;
-                  newMyRecommedationStatus.isGood = true;
-                }
-                if (type === QuestionFeedbackRecommendationType.Bad) {
-                  newReccomendationCount.bad += 1;
-                  newMyRecommedationStatus.isBad = true;
-                }
-              }
-              return {
-                ...item,
-                myRecommedationStatus: newMyRecommedationStatus,
-                recommendationCount: newReccomendationCount,
-              };
-            }
-            return item;
-          }
-        ),
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      updateFeedbackRecommendationMutaion({
-        variables: {
-          input: {
-            feedbackId: feedback.id,
-            type,
-          },
-        },
-      });
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('오류가 발생했습니다. 다시 시도해주세요.');
-    }
+  }: Omit<UpdateFeedbackRecommendationInput, 'setQuestion'>) => {
+    handleUpdateFeedbackRecommendation({
+      type,
+      myRecommendationStatus,
+      question,
+      feedback,
+      setQuestion: (question) =>
+        dispatch(mockExamActions.setQuestion(question)),
+    });
   };
 
-  const addFeedback = async (addFeedbackInput: AddFeedbackInput) => {
-    const { question, selectedType, content } = addFeedbackInput;
-    try {
-      const res = await addQuestionFeedbackMutation({
-        variables: {
-          input: {
-            questionId: question.id,
-            type: selectedType,
-            content,
-          },
-        },
-      });
-      if (!res.data?.createMockExamQuestionFeedback.ok) {
-        message.error('피드백 등록에 실패했습니다.');
-        return;
-      }
-      if (res.data?.createMockExamQuestionFeedback.feedback) {
-        const newFeedback = res.data?.createMockExamQuestionFeedback
-          .feedback as MockExamQuestionFeedback;
-        const mockExamQuestionFeedback = [...question.mockExamQuestionFeedback];
-        if (newFeedback.type === QuestionFeedbackType.Private) {
-          mockExamQuestionFeedback.unshift(newFeedback);
-        } else {
-          mockExamQuestionFeedback.push(newFeedback);
-        }
-        const newQuestion = {
-          ...question,
-          mockExamQuestionFeedback,
-        };
-        dispatch(mockExamActions.setQuestion(newQuestion as MockExamQuestion));
-        message.success('피드백이 등록되었습니다.');
-      }
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('피드백 등록에 실패했습니다.');
-    }
+  const addFeedback = async (
+    addFeedbackInput: Omit<AddFeedbackInput, 'setQuestion'>
+  ) => {
+    handleAddFeedback({
+      ...addFeedbackInput,
+      setQuestion: (question) =>
+        dispatch(mockExamActions.setQuestion(question)),
+    });
   };
-  const editFeedback = async (editFeedbackInput: EditFeedbackInput) => {
-    const { question, selectedType, content, feedbackId } = editFeedbackInput;
-    try {
-      const res = await editFeedbackMutaion({
-        variables: {
-          input: {
-            id: feedbackId,
-            content,
-            type: selectedType,
-          },
-        },
-      });
-      if (!res.data?.editMockExamQuestionFeedback.ok) {
-        message.error('피드백 수정에 실패했습니다.');
-        return;
-      }
-      const newQuestion: MockExamQuestion = {
-        ...question,
-        mockExamQuestionFeedback: question.mockExamQuestionFeedback.map(
-          (el) => {
-            if (el.id === feedbackId) {
-              return {
-                ...el,
-                content,
-                type: selectedType,
-              };
-            }
-            return el;
-          }
-        ),
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      message.success('피드백이 수정되었습니다.');
-    } catch {
-      dispatch(mockExamActions.setQuestion(question));
-      message.error('피드백 수정에 실패했습니다.');
-    }
+
+  const editFeedback = async (
+    editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
+  ) => {
+    handleEditFeedback({
+      ...editFeedbackInput,
+      setQuestion: (question) =>
+        dispatch(mockExamActions.setQuestion(question)),
+    });
   };
 
   const resetQuestions = () => {
@@ -360,9 +204,7 @@ const useQuestions = () => {
     saveQuestionState,
     deleteFeedback,
     addFeedback,
-    addFeedbackLoading,
     editFeedback,
-    editFeedbackLoading,
     updateFeedbackRecommendation,
     resetQuestionState,
     resetQuestions,
