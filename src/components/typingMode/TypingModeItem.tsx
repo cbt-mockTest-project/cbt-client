@@ -71,7 +71,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             className="typing-mode-answer-box"
             initial={{ opacity: 0, translateY: -10 }}
             animate={{ opacity: 1, translateY: 0 }}
-            exit={{ opacity: 0, translateY: -10 }}
+            exit={{ opacity: 0, translateY: 0 }}
           >
             <BasicCard>
               <StudyAnswerBox
