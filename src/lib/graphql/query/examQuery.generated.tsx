@@ -205,6 +205,11 @@ export type GetExamCategoryLearningProgressQueryVariables = Types.Exact<{
 
 export type GetExamCategoryLearningProgressQuery = { __typename?: 'Query', getExamCategoryLearningProgress: { __typename?: 'GetExamCategoryLearningProgressOutput', error?: string | null, ok: boolean, lowScoreCount?: number | null, highScoreCount?: number | null, totalQuestionCount?: number | null } };
 
+export type GetMyAllExamCategoriesLearningProgressQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetMyAllExamCategoriesLearningProgressQuery = { __typename?: 'Query', getMyAllExamCategoriesLearningProgress: { __typename?: 'GetMyAllExamCategoriesLearningProgressOutput', error?: string | null, highScoreCount?: number | null, lowScoreCount?: number | null, ok: boolean, totalQuestionCount?: number | null } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -720,4 +725,19 @@ export const GetExamCategoryLearningProgressDocument = gql`
 
 export function useGetExamCategoryLearningProgressQuery(options: Omit<Urql.UseQueryArgs<GetExamCategoryLearningProgressQueryVariables>, 'query'>) {
   return Urql.useQuery<GetExamCategoryLearningProgressQuery, GetExamCategoryLearningProgressQueryVariables>({ query: GetExamCategoryLearningProgressDocument, ...options });
+};
+export const GetMyAllExamCategoriesLearningProgressDocument = gql`
+    query GetMyAllExamCategoriesLearningProgress {
+  getMyAllExamCategoriesLearningProgress {
+    error
+    highScoreCount
+    lowScoreCount
+    ok
+    totalQuestionCount
+  }
+}
+    `;
+
+export function useGetMyAllExamCategoriesLearningProgressQuery(options?: Omit<Urql.UseQueryArgs<GetMyAllExamCategoriesLearningProgressQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetMyAllExamCategoriesLearningProgressQuery, GetMyAllExamCategoriesLearningProgressQueryVariables>({ query: GetMyAllExamCategoriesLearningProgressDocument, ...options });
 };

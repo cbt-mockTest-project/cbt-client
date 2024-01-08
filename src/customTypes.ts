@@ -114,3 +114,10 @@ export interface CreateQuestionForm {
   solution_img?: MockExamQuestionImageInputType[];
   orderId: string;
 }
+
+export interface CategoryLearingProgressType {
+  learningProgress: number;
+  highScoreCount: number;
+  lowScoreCount: number;
+  totalQuestionCount: number;
+}

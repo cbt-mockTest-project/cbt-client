@@ -7,13 +7,15 @@ import useMyAllExams from '@lib/hooks/useMyAllExams';
 import { responsive } from '@lib/utils/responsive';
 import { Dropdown, MenuProps, Select } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import AllExamList from './AllExamList';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import CategoryMultipleSelectModeControlbar from '@components/category/CategoryMultipleSelectModeControlbar';
 import { EllipsisOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
+import { useLazyGetMyAllExamCategoriesLearningProgress } from '@lib/graphql/hook/useExam';
+import CategoryLearningProgress from '@components/category/CategoryLearningProgress';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
@@ -58,6 +60,29 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
   const router = useRouter();
   const { fetchMyExams, exams, originalExams, handleFilterExams } =
     useMyAllExams();
+
+  const [
+    getExamCategoryLearningProgress,
+    { data: categoryLearningProgressResponse },
+  ] = useLazyGetMyAllExamCategoriesLearningProgress();
+
+  const categoryLearningProgress = useMemo(() => {
+    if (!categoryLearningProgressResponse) return null;
+    const {
+      getMyAllExamCategoriesLearningProgress: {
+        highScoreCount,
+        lowScoreCount,
+        totalQuestionCount,
+      },
+    } = categoryLearningProgressResponse;
+    return {
+      learningProgress: Math.round((highScoreCount / totalQuestionCount) * 100),
+      highScoreCount,
+      lowScoreCount,
+      totalQuestionCount,
+    };
+  }, [categoryLearningProgressResponse]);
+
   const {
     examSetting,
     handleChangeMultipleSelectMode,
@@ -100,6 +125,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
 
   useEffect(() => {
     if (!meQuery.me.user) return;
+    getExamCategoryLearningProgress();
     fetchMyExams();
   }, [meQuery, examType]);
 
@@ -129,6 +155,9 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
 
   return (
     <MyAllExamsComponentBlock>
+      <CategoryLearningProgress
+        categoryLearningProgress={categoryLearningProgress}
+      />
       <CategoryHeader
         userName={meQuery.me.user.nickname}
         categoryName="내 전체 시험지"

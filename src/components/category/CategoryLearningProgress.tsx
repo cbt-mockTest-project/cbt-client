@@ -6,6 +6,7 @@ import palette from '@styles/palette';
 import { Button, Progress, Tooltip } from 'antd';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
+import { CategoryLearingProgressType } from 'customTypes';
 
 const CategoryLearningProgressBlock = styled.div`
   display: flex;
@@ -27,7 +28,6 @@ const CategoryLearningProgressBlock = styled.div`
     color: ${palette.colorSubText} !important;
   }
   .category-learning-progress-help-icon-tooltip {
-    margin-left: 40px;
     .ant-tooltip-content {
       .ant-tooltip-inner {
         font-size: 12px !important;
@@ -52,48 +52,12 @@ const CategoryLearningProgressBlock = styled.div`
 `;
 
 interface CategoryLearningProgressProps {
-  categoryId: number;
+  categoryLearningProgress?: CategoryLearingProgressType;
 }
 
 const CategoryLearningProgress: React.FC<CategoryLearningProgressProps> = ({
-  categoryId,
+  categoryLearningProgress,
 }) => {
-  const { data: meQuery } = useMeQuery();
-  const [
-    getExamCategoryLearningProgress,
-    { data: categoryLearningProgressResponse },
-  ] = useLazyGetExamCategoryLearningProgress();
-
-  const categoryLearningProgress = useMemo(() => {
-    if (!categoryLearningProgressResponse) return null;
-    const {
-      getExamCategoryLearningProgress: {
-        highScoreCount,
-        lowScoreCount,
-        totalQuestionCount,
-      },
-    } = categoryLearningProgressResponse;
-    return {
-      learningProgress: Math.round((highScoreCount / totalQuestionCount) * 100),
-      highScoreCount,
-      lowScoreCount,
-      totalQuestionCount,
-    };
-  }, [categoryLearningProgressResponse]);
-
-  useEffect(() => {
-    if (!meQuery) return;
-    if (meQuery.me.user) {
-      getExamCategoryLearningProgress({
-        variables: {
-          input: {
-            categoryId,
-          },
-        },
-      });
-    }
-  }, [meQuery]);
-
   return (
     <CategoryLearningProgressBlock>
       <div className="category-learning-progress-label">학습률</div>
@@ -102,11 +66,6 @@ const CategoryLearningProgress: React.FC<CategoryLearningProgressProps> = ({
           categoryLearningProgress
             ? categoryLearningProgress.learningProgress
             : 0
-        }
-        format={(percent) =>
-          categoryLearningProgress
-            ? `${percent}% (${categoryLearningProgress?.highScoreCount}/${categoryLearningProgress?.totalQuestionCount})`
-            : `${percent}%`
         }
       />
       {categoryLearningProgress && (

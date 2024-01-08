@@ -15,6 +15,7 @@ import {
   FIND_MY_EXAM_HISTORY_QUERY,
   GET_EXAM_CATEGORIES,
   GET_EXAM_CATEGORY_LEARNING_PROGRESS,
+  GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS,
   GET_MY_EXAMS,
   GET_MY_EXAM_CATEGORIES,
   READ_EXAM_CATEGORIES,
@@ -48,6 +49,8 @@ import {
   GetExamCategoriesQueryVariables,
   GetExamCategoryLearningProgressQuery,
   GetExamCategoryLearningProgressQueryVariables,
+  GetMyAllExamCategoriesLearningProgressQuery,
+  GetMyAllExamCategoriesLearningProgressQueryVariables,
   GetMyExamCategoriesQuery,
   GetMyExamCategoriesQueryVariables,
   GetMyExamsQuery,
@@ -223,3 +226,9 @@ export const useLazyGetExamCategoryLearningProgress = () =>
     GetExamCategoryLearningProgressQuery,
     GetExamCategoryLearningProgressQueryVariables
   >(GET_EXAM_CATEGORY_LEARNING_PROGRESS);
+
+export const useLazyGetMyAllExamCategoriesLearningProgress = () =>
+  useLazyQuery<
+    GetMyAllExamCategoriesLearningProgressQuery,
+    GetMyAllExamCategoriesLearningProgressQueryVariables
+  >(GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS);

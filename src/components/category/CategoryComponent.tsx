@@ -88,7 +88,6 @@ const CategoryComponentBlock = styled.div`
     padding: 20px 16px;
   }
 `;
-
 interface CategoryComponentProps {
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
 }
@@ -98,7 +97,10 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 }) => {
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
-
+  const [
+    getExamCategoryLearningProgress,
+    { data: categoryLearningProgressResponse },
+  ] = useLazyGetExamCategoryLearningProgress();
   const {
     handleFilterExams,
     category,
@@ -120,6 +122,23 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
 
   const { getExamSettingHistory } = useExamSettingHistory();
+
+  const categoryLearningProgress = useMemo(() => {
+    if (!categoryLearningProgressResponse) return null;
+    const {
+      getExamCategoryLearningProgress: {
+        highScoreCount,
+        lowScoreCount,
+        totalQuestionCount,
+      },
+    } = categoryLearningProgressResponse;
+    return {
+      learningProgress: Math.round((highScoreCount / totalQuestionCount) * 100),
+      highScoreCount,
+      lowScoreCount,
+      totalQuestionCount,
+    };
+  }, [categoryLearningProgressResponse]);
 
   const categorySettingDropdownItems: MenuProps['items'] = [
     {
@@ -176,6 +195,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
+      getExamCategoryLearningProgress({
+        variables: {
+          input: {
+            categoryId: categoryQueryInput.id,
+          },
+        },
+      });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');
@@ -200,7 +226,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   return (
     <CategoryComponentBlock>
-      <CategoryLearningProgress categoryId={categoryQueryInput.id} />
+      <CategoryLearningProgress
+        categoryLearningProgress={categoryLearningProgress}
+      />
       <CategoryHeader
         userName={category.user.nickname}
         categoryName={category.name}

@@ -432,3 +432,15 @@ export const GET_EXAM_CATEGORY_LEARNING_PROGRESS = gql`
     }
   }
 `;
+
+export const GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS = gql`
+  query GetMyAllExamCategoriesLearningProgress {
+    getMyAllExamCategoriesLearningProgress {
+      error
+      highScoreCount
+      lowScoreCount
+      ok
+      totalQuestionCount
+    }
+  }
+`;

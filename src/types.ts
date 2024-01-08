@@ -973,6 +973,15 @@ export type GetInvitedExamsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetMyAllExamCategoriesLearningProgressOutput = {
+  __typename?: 'GetMyAllExamCategoriesLearningProgressOutput';
+  error?: Maybe<Scalars['String']>;
+  highScoreCount?: Maybe<Scalars['Float']>;
+  lowScoreCount?: Maybe<Scalars['Float']>;
+  ok: Scalars['Boolean'];
+  totalQuestionCount?: Maybe<Scalars['Float']>;
+};
+
 export type GetMyBlogPostRankInput = {
   blogName: Scalars['String'];
   keyword: Scalars['String'];
@@ -2234,6 +2243,7 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
+  getMyAllExamCategoriesLearningProgress: GetMyAllExamCategoriesLearningProgressOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyBookmarkedExamCategories: GetMyBookmarkedExamCategoriesOutput;
   getMyBookmarkedExams: GetMyBookmarkedExamsOutput;

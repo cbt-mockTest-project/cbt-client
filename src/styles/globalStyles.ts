@@ -137,11 +137,13 @@ const Globalstyles = createGlobalStyle`
       display: none; /* Chrome, Safari, Opera*/
     }
   }
+
   .ant-tooltip-inner {
         font-size: 12px !important;
         max-width: 300px !important;
         white-space: pre-wrap !important;
       }
+
   /* .ant-modal-content {
     background: #1F1F1F !important;
     color : rgba(255, 255, 255, 0.85) !important;;
