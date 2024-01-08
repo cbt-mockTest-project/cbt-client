@@ -95,7 +95,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         slidesPerView={5}
         spaceBetween={10}
         breakpoints={{
-          320: {
+          0: {
             slidesPerView: 'auto',
             spaceBetween: 5,
           },
