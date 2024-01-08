@@ -3,10 +3,12 @@ import WithHead from '@components/common/head/WithHead';
 import {
   READ_EXAM_CATEGORY_BY_ID,
   READ_EXAM_CATEGORY_IDS,
+  READ_EXAM_CATEGORY_NAMES,
 } from '@lib/graphql/query/examQuery';
 import {
   ReadMockExamCategoryByCategoryIdQuery,
   ReadMockExamCategoryIdsQuery,
+  ReadMockExamCategoryNamesQuery,
 } from '@lib/graphql/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
@@ -39,14 +41,14 @@ export default CategoryPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const apolloClient = initializeApollo({}, '');
-  let paths: { params: { id: string } }[] = [];
+  let paths: { params: { name: string } }[] = [];
   try {
-    const res = await apolloClient.query<ReadMockExamCategoryIdsQuery>({
-      query: READ_EXAM_CATEGORY_IDS,
+    const res = await apolloClient.query<ReadMockExamCategoryNamesQuery>({
+      query: READ_EXAM_CATEGORY_NAMES,
     });
-    if (res.data.readMockExamCategoryIds.ids) {
-      paths = res.data.readMockExamCategoryIds.ids.map((el) => ({
-        params: { id: String(el) },
+    if (res.data.readMockExamCategoryNames.names) {
+      paths = res.data.readMockExamCategoryNames.names.map((el) => ({
+        params: { name: String(el) },
       }));
     }
     return { paths, fallback: 'blocking' };
@@ -62,15 +64,15 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
     try {
       const apolloClient = initializeApollo({}, '');
-      const categoryId = context.params?.id;
-      if (!categoryId) {
+      const categoryName = context.params?.name;
+      if (!categoryName || typeof categoryName !== 'string') {
         return {
           notFound: true,
           revalidate: 1,
         };
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
-        id: Number(categoryId),
+        name: categoryName,
       };
       const res =
         await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>({

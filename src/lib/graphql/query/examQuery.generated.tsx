@@ -139,6 +139,11 @@ export type ReadMockExamCategoryIdsQueryVariables = Types.Exact<{ [key: string]:
 
 export type ReadMockExamCategoryIdsQuery = { __typename?: 'Query', readMockExamCategoryIds: { __typename?: 'ReadMockExamCategoryIdsOutput', error?: string | null, ids?: Array<number> | null, ok: boolean } };
 
+export type ReadMockExamCategoryNamesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ReadMockExamCategoryNamesQuery = { __typename?: 'Query', readMockExamCategoryNames: { __typename?: 'ReadMockExamCategoryNamesOutput', error?: string | null, names?: Array<string> | null, ok: boolean } };
+
 export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamCategoryByCategoryIdInput;
 }>;
@@ -513,6 +518,19 @@ export const ReadMockExamCategoryIdsDocument = gql`
 
 export function useReadMockExamCategoryIdsQuery(options?: Omit<Urql.UseQueryArgs<ReadMockExamCategoryIdsQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamCategoryIdsQuery, ReadMockExamCategoryIdsQueryVariables>({ query: ReadMockExamCategoryIdsDocument, ...options });
+};
+export const ReadMockExamCategoryNamesDocument = gql`
+    query ReadMockExamCategoryNames {
+  readMockExamCategoryNames {
+    error
+    names
+    ok
+  }
+}
+    `;
+
+export function useReadMockExamCategoryNamesQuery(options?: Omit<Urql.UseQueryArgs<ReadMockExamCategoryNamesQueryVariables>, 'query'>) {
+  return Urql.useQuery<ReadMockExamCategoryNamesQuery, ReadMockExamCategoryNamesQueryVariables>({ query: ReadMockExamCategoryNamesDocument, ...options });
 };
 export const ReadMockExamCategoryByCategoryIdDocument = gql`
     query ReadMockExamCategoryByCategoryId($input: ReadMockExamCategoryByCategoryIdInput!) {

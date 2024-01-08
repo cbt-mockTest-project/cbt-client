@@ -2260,6 +2260,7 @@ export type Query = {
   readMockExamCategoryByCategoryId: ReadMockExamCategoryByCategoryIdOutput;
   readMockExamCategoryByExamId: ReadMockExamCategoryByExamIdOutput;
   readMockExamCategoryIds: ReadMockExamCategoryIdsOutput;
+  readMockExamCategoryNames: ReadMockExamCategoryNamesOutput;
   readMockExamQuestion: ReadMockExamQuestionOutput;
   readMockExamQuestionBookmark: ReadMockExamQuestionBookmarkOutput;
   readMockExamQuestionCommentLikesByQuestinId: ReadMockExamQuestionCommentLikesByQuestinIdOutput;
@@ -2627,7 +2628,8 @@ export type ReadMockExamCategoriesOutput = {
 };
 
 export type ReadMockExamCategoryByCategoryIdInput = {
-  id: Scalars['Float'];
+  id?: InputMaybe<Scalars['Float']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadMockExamCategoryByCategoryIdOutput = {
@@ -2652,6 +2654,13 @@ export type ReadMockExamCategoryIdsOutput = {
   __typename?: 'ReadMockExamCategoryIdsOutput';
   error?: Maybe<Scalars['String']>;
   ids?: Maybe<Array<Scalars['Float']>>;
+  ok: Scalars['Boolean'];
+};
+
+export type ReadMockExamCategoryNamesOutput = {
+  __typename?: 'ReadMockExamCategoryNamesOutput';
+  error?: Maybe<Scalars['String']>;
+  names?: Maybe<Array<Scalars['String']>>;
   ok: Scalars['Boolean'];
 };
 

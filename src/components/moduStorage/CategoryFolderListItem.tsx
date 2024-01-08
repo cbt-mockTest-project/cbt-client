@@ -70,7 +70,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
 }) => {
   return (
     <CategoryFolderListItemBlock
-      href={`/category/${category.id}`}
+      href={`/category/${category.name}`}
       className={className}
     >
       <BasicCard hoverEffect type="primary">

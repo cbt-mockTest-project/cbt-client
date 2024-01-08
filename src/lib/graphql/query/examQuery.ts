@@ -257,6 +257,16 @@ export const READ_EXAM_CATEGORY_IDS = gql`
   }
 `;
 
+export const READ_EXAM_CATEGORY_NAMES = gql`
+  query ReadMockExamCategoryNames {
+    readMockExamCategoryNames {
+      error
+      names
+      ok
+    }
+  }
+`;
+
 export const READ_EXAM_CATEGORY_BY_ID = gql`
   query ReadMockExamCategoryByCategoryId(
     $input: ReadMockExamCategoryByCategoryIdInput!
