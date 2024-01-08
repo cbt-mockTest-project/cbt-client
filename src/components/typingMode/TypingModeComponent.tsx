@@ -9,6 +9,7 @@ import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const TypingModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -23,11 +24,7 @@ const TypingModeComponentBlock = styled.div`
     margin: 0 auto;
     cursor: grab;
   }
-  .typing-mode-swiper-navigation-wrapper {
-    position: absolute;
-    width: 100%;
-    top: 50%;
-  }
+
   .swiper-button-prev {
     left: -40px;
   }
@@ -48,8 +45,41 @@ const TypingModeComponentBlock = styled.div`
   .study-control-box {
     margin-top: 10px;
   }
+  .typing-mode-navigation-prev,
+  .typing-mode-navigation-next {
+    position: absolute;
+    top: 15%;
+    padding: 5px;
+    margin: 0;
+    border: 2px solid ${palette.colorBorder};
+    color: ${palette.colorSubText};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      color: ${palette.antd_blue_02};
+      border-color: ${palette.antd_blue_02};
+    }
+    svg {
+      font-size: 30px;
+    }
+  }
+  .typing-mode-navigation-prev {
+    left: -30px;
+  }
+  .typing-mode-navigation-next {
+    right: -30px;
+  }
+  .swiper-button-disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+
   @media (max-width: ${responsive.large}) {
-    .typing-mode-swiper-navigation-wrapper {
+    .typing-mode-navigation-prev,
+    .typing-mode-navigation-next {
       display: none;
     }
   }
@@ -92,6 +122,10 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
               query: { ...router.query, qIndex: swiper.activeIndex },
             });
           }}
+          navigation={{
+            prevEl: '.typing-mode-navigation-prev',
+            nextEl: '.typing-mode-navigation-next',
+          }}
         >
           {swiper &&
             questions.map((question, index) => (
@@ -109,6 +143,12 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             </SwiperSlide>
           )}
         </Swiper>
+        <button className="typing-mode-navigation-prev">
+          <LeftOutlined />
+        </button>
+        <button className="typing-mode-navigation-next">
+          <RightOutlined />
+        </button>
       </div>
     </TypingModeComponentBlock>
   );

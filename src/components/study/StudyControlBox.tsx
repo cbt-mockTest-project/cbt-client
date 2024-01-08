@@ -63,7 +63,7 @@ const StudyControlBoxBlock = styled.div`
     }
   }
   .study-swiper-button-wrapper {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     margin-left: auto;
@@ -76,6 +76,11 @@ const StudyControlBoxBlock = styled.div`
   .study-question-card-answer {
     word-break: break-all;
     white-space: pre-wrap;
+  }
+  @media (max-width: ${responsive.large}) {
+    .study-swiper-button-wrapper {
+      display: flex;
+    }
   }
   @media (max-width: ${responsive.medium}) {
     .study-swiper-button-wrapper {

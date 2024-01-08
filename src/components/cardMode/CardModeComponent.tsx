@@ -9,6 +9,7 @@ import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import CardModeItem from './CardModeItem';
 import StudyEnd from '@components/study/StudyEnd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const CardModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -22,6 +23,44 @@ const CardModeComponentBlock = styled.div`
     min-height: calc(100vh - 57px);
     margin: 0 auto;
     cursor: grab;
+  }
+  .card-mode-navigation-prev,
+  .card-mode-navigation-next {
+    position: absolute;
+    top: 15%;
+    padding: 5px;
+    margin: 0;
+    border: 2px solid ${palette.colorBorder};
+    color: ${palette.colorSubText};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      color: ${palette.antd_blue_02};
+      border-color: ${palette.antd_blue_02};
+    }
+    svg {
+      font-size: 30px;
+    }
+  }
+  .card-mode-navigation-prev {
+    left: -30px;
+  }
+  .card-mode-navigation-next {
+    right: -30px;
+  }
+  .swiper-button-disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: ${responsive.large}) {
+    .typing-mode-navigation-prev,
+    .typing-mode-navigation-next {
+      display: none;
+    }
   }
 
   @media (max-width: ${responsive.medium}) {
@@ -53,6 +92,10 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
               query: { ...router.query, qIndex: swiper.activeIndex },
             });
           }}
+          navigation={{
+            prevEl: '.card-mode-navigation-prev',
+            nextEl: '.card-mode-navigation-next',
+          }}
         >
           {swiper &&
             questions.map((question, index) => (
@@ -70,6 +113,12 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
             </SwiperSlide>
           )}
         </Swiper>
+        <button className="card-mode-navigation-prev">
+          <LeftOutlined />
+        </button>
+        <button className="card-mode-navigation-next">
+          <RightOutlined />
+        </button>
       </div>
     </CardModeComponentBlock>
   );
