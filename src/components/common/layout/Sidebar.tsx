@@ -17,6 +17,7 @@ const SidebarBlock = styled.div`
   min-height: 100vh;
   position: fixed;
   top: 0;
+  z-index: 100;
   .sider-logo-image-wrapper {
     position: relative;
     height: 40px;
