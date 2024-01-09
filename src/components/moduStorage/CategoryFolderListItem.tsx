@@ -10,46 +10,56 @@ import { MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
-  .category-name {
-    font-size: 14px;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .category-header-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-  }
   .category-wrapper {
     display: flex;
     flex-direction: column;
     gap: 5px;
-  }
-  .category-user-info {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    margin-top: 20px;
-  }
-  .category-user-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
-    font-weight: bold;
-  }
-  .category-user-label {
-    font-size: 12px;
-    font-weight: bold;
-    color: ${palette.colorSubText};
-  }
-  .category-user-profile-image {
-    border-radius: 50%;
-    background-color: ${palette.gray_200};
-    margin-right: 5px;
+    .category-header-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+
+      .category-name {
+        font-size: 14px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .category-footer-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      .category-user-info {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .category-user-name {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .category-user-profile-image {
+        border-radius: 50%;
+        background-color: ${palette.gray_200};
+        margin-right: 5px;
+      }
+      .category-exam-count {
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 10px;
+        color: ${palette.colorSubText};
+      }
+    }
   }
 
   @media (max-width: ${responsive.medium}) {
@@ -83,17 +93,22 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
               </Tag>
             )}
           </div>
-          <div className="category-user-info">
-            <Image
-              className="category-user-profile-image"
-              src={
-                category.user.profileImg || '/png/profile/profile_default.png'
-              }
-              alt="프로필이미지"
-              width={18}
-              height={18}
-            />
-            <span className="category-user-name">{category.user.nickname}</span>
+          <div className="category-footer-wrapper">
+            <div className="category-user-info">
+              <Image
+                className="category-user-profile-image"
+                src={
+                  category.user.profileImg || '/png/profile/profile_default.png'
+                }
+                alt="프로필이미지"
+                width={18}
+                height={18}
+              />
+              <span className="category-user-name">
+                {category.user.nickname.repeat(100)}
+              </span>
+            </div>
+            <div className="category-exam-count">{`${category.mockExam.length} 세트`}</div>
           </div>
         </div>
       </BasicCard>

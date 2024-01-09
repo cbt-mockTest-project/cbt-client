@@ -317,6 +317,9 @@ export const GET_EXAM_CATEGORIES = gql`
           id
           nickname
         }
+        mockExam {
+          id
+        }
       }
     }
   }
