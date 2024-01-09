@@ -11,10 +11,14 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
-interface ExamSolutionPageProps {}
+interface ExamSolutionPageProps {
+  questionsQueryInput: ReadQuestionsByExamIdsInput;
+}
 
-const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({}) => {
-  return <SolutionModeComponent />;
+const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
+  questionsQueryInput,
+}) => {
+  return <SolutionModeComponent questionsQueryInput={questionsQueryInput} />;
 };
 
 ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;

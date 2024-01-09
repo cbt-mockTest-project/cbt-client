@@ -1,14 +1,13 @@
 import { Button } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { MockExamQuestion } from 'types';
+import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
-import { SyncOutlined } from '@ant-design/icons';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -40,12 +39,28 @@ const SolutionModeComponentBlock = styled.div`
   }
 `;
 
-interface SolutionModeComponentProps {}
+interface SolutionModeComponentProps {
+  questionsQueryInput?: ReadQuestionsByExamIdsInput;
+}
 
-const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({}) => {
-  const { questions, saveBookmark, saveQuestionState, shuffleQuestions } =
-    useQuestions();
+const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
+  questionsQueryInput,
+}) => {
+  const {
+    questions,
+    saveBookmark,
+    saveQuestionState,
+    shuffleQuestions,
+    fetchQuestions,
+  } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
+
+  useEffect(() => {
+    // staticProps로 받은 questionsQueryInput이 있으면 해당 문제들을 fetch
+    if (questionsQueryInput) {
+      fetchQuestions(questionsQueryInput, 'network-only');
+    }
+  }, []);
 
   return (
     <SolutionModeComponentBlock>
