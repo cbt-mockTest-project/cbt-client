@@ -20,6 +20,18 @@ const CategoryInviteModalBlock = styled(Modal)`
     font-size: 12px;
     color: ${palette.colorSubText};
   }
+  .category-invite-modal-list-item-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    .category-invite-modal-list-item-user-info {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
   .ant-list-header {
     padding: 12px 11px;
   }
@@ -77,8 +89,8 @@ const CategoryInviteModal: React.FC<CategoryInviteModalProps> = (props) => {
           bordered
           renderItem={(user) => (
             <List.Item key={user.id}>
-              <div className="my-exam-invite-list-item-wrapper">
-                <div>{user.nickname}</div>
+              <div className="category-invite-modal-list-item-wrapper">
+                <div className="category-invite-modal-list-item-user-info">{`${user.nickname}(${user.email})`}</div>
                 <Button
                   onClick={() => handleDeleteCategorySubscriber(user.id)}
                   type="text"
