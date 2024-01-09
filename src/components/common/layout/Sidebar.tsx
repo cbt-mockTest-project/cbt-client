@@ -44,11 +44,6 @@ const SidebarBlock = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     display: none;
-    .side-nav-list {
-      .ant-menu-item {
-        height: 34px;
-      }
-    }
   }
 `;
 
