@@ -308,6 +308,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       )}
       {editExamsModalOpen && (
         <EditExamsModal
+          categoryId={category.id}
           open={editExamsModalOpen}
           onCancel={() => setEditExamsModalOpen(false)}
         />

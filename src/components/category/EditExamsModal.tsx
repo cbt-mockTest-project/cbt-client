@@ -38,15 +38,16 @@ const EditExamsModalBlock = styled(Modal)`
   }
 `;
 
-interface EditExamsModalProps extends Omit<ModalProps, 'children'> {}
+interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
+  categoryId: number;
+}
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
   const router = useRouter();
   const { fetchMyExams, myExams, handleFilterMyExams } = useExamCategory();
   const { data: meQuery } = useMeQuery();
   const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');
-  const { ...modalProps } = props;
-  const categoryId = router.query.id;
+  const { categoryId, ...modalProps } = props;
 
   useEffect(() => {
     if (!meQuery?.me.user) return;
@@ -54,7 +55,6 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       isBookmarked: examType === 'bookmarked',
     });
   }, [meQuery, examType]);
-  if (!categoryId) return null;
   return (
     <EditExamsModalBlock {...modalProps} footer={false}>
       <p className="edit-exams-modal-title">시험지 추가</p>

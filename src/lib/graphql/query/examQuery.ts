@@ -337,6 +337,9 @@ export const GET_MY_EXAMS = gql`
         slug
         title
         isBookmarked
+        mockExamQuestion {
+          id
+        }
         user {
           profileImg
           id

@@ -164,7 +164,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
         <div className="exam-list-item-top-wrapper">
           <div className="exam-list-item-title">{exam.title}</div>
-          {category?.user.id === meQuery?.me.user?.id ? (
+          {exam.user.id === meQuery?.me.user?.id ? (
             <Dropdown
               menu={{
                 items: examSettingDropdownItems,
