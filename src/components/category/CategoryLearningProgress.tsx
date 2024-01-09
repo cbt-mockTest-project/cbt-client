@@ -12,7 +12,7 @@ const CategoryLearningProgressBlock = styled.div`
   display: flex;
   align-items: flex-end;
   margin-bottom: 10px;
-  .ant-progress.ant-progress-status-normal {
+  .ant-progress {
     margin-bottom: 0;
     margin-right: 0;
     width: 300px;
@@ -45,7 +45,7 @@ const CategoryLearningProgressBlock = styled.div`
     }
   }
   @media (max-width: ${responsive.small}) {
-    .ant-progress.ant-progress-status-normal {
+    .ant-progress {
       width: 200px;
     }
   }

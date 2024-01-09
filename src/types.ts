@@ -584,6 +584,7 @@ export type EditMockExamCategoryInput = {
 };
 
 export type EditMockExamInput = {
+  approved?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   status?: InputMaybe<ExamStatus>;
   title?: InputMaybe<Scalars['String']>;

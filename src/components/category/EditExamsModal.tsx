@@ -43,7 +43,6 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
-  const router = useRouter();
   const { fetchMyExams, myExams, handleFilterMyExams } = useExamCategory();
   const { data: meQuery } = useMeQuery();
   const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');

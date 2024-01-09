@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ExamCreateHeader from './ExamCreateHeader';
 import palette from '@styles/palette';
@@ -12,8 +12,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { isEqual, pick } from 'lodash';
 import { useLazyReadMockExam } from '@lib/graphql/hook/useExam';
 import { useRouter } from 'next/router';
-import ExamCreateSavedTime from './ExamCreateSavedTime';
 import useSaveExamHandler from './useSaveExamHandler';
+import { SettingOutlined } from '@ant-design/icons';
+import ExamSettingModal from './ExamSettingModal';
 
 const ExamCreateComponentBlock = styled.div`
   background-color: ${palette.colorContainerBg};
@@ -32,6 +33,16 @@ const ExamCreateComponentBlock = styled.div`
     justify-content: space-between;
     align-items: flex-end;
   }
+  .exam-create-setting-modal-toggle-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    font-size: 20px;
+    &:hover {
+      color: ${palette.antd_blue_02};
+    }
+  }
 
   @media (max-width: ${responsive.medium}) {
     .exam-create-body {
@@ -44,8 +55,15 @@ interface ExamCreateComponentProps {}
 
 const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
   const router = useRouter();
-  const { handleSaveExam, debouncedSaveExam } = useSaveExamHandler();
+  const { handleSaveExam, handleDeleteExam, debouncedSaveExam } =
+    useSaveExamHandler();
+  const [isExamApproved, setIsExamApproved] = useState(false);
+  const [isExamSettingModalOpen, setIsExamSettingModalOpen] = useState(false);
   const [readExam] = useLazyReadMockExam();
+  const examId = useMemo(() => {
+    if (!router.query.examId) return null;
+    return Number(router.query.examId);
+  }, [router.query.examId]);
   const [defaultForm, setDefaultForm] = useState<CreateExamForm>({
     title: '',
     uuid: uuidv4(),
@@ -80,9 +98,9 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
           return message.error(res.data.readMockExam.error);
         }
 
-        const { title, mockExamQuestion, uuid } =
+        const { title, mockExamQuestion, uuid, approved } =
           res.data.readMockExam.mockExam;
-
+        setIsExamApproved(approved);
         const newQuestions: CreateQuestionForm[] = mockExamQuestion.map((v) => {
           const newQuestion = {
             ...v,
@@ -144,11 +162,30 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
                 placeholder="시험지 제목을 입력해주세요."
                 className="exam-create-title-input"
               />
+              {examId && (
+                <button
+                  className="exam-create-setting-modal-toggle-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsExamSettingModalOpen(true);
+                  }}
+                >
+                  <SettingOutlined />
+                </button>
+              )}
             </div>
 
             <ExamCreateCardList defaultQuestions={defaultForm.questions} />
           </div>
         </form>
+        <ExamSettingModal
+          handleDeleteExam={handleDeleteExam}
+          examId={examId}
+          open={isExamSettingModalOpen}
+          isApproved={isExamApproved}
+          setIsApproved={setIsExamApproved}
+          onCancel={() => setIsExamSettingModalOpen(false)}
+        />
       </ExamCreateComponentBlock>
     </FormProvider>
   );

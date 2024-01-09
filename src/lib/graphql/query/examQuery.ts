@@ -397,6 +397,7 @@ export const READ_MOCK_EXAM = gql`
         id
         title
         uuid
+        approved
         mockExamQuestion {
           id
           orderId
