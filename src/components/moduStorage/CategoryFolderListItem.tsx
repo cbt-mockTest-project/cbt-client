@@ -4,6 +4,7 @@ import palette from '@styles/palette';
 import { Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
@@ -39,6 +40,9 @@ const CategoryFolderListItemBlock = styled(Link)`
         align-items: center;
         max-width: 70%;
         gap: 3px;
+        &:hover {
+          text-decoration: underline;
+        }
       }
       .category-user-name {
         overflow: hidden;
@@ -79,6 +83,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   hasTag = true,
   className = '',
 }) => {
+  const router = useRouter();
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category.name}`}
@@ -98,7 +103,13 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
             )}
           </div>
           <div className="category-footer-wrapper">
-            <div className="category-user-info">
+            <button
+              className="category-user-info"
+              onClick={(e) => {
+                router.push(`/user/${category.user.id}`);
+                e.preventDefault();
+              }}
+            >
               <Image
                 className="category-user-profile-image"
                 src={
@@ -109,7 +120,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 height={18}
               />
               <div className="category-user-name">{category.user.nickname}</div>
-            </div>
+            </button>
             <div className="category-exam-count">
               {category.mockExam.length} 세트
             </div>

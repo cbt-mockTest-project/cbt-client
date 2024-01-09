@@ -16,6 +16,7 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useLazyGetMyAllExamCategoriesLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from '@components/category/CategoryLearningProgress';
+import { User } from 'types';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
@@ -159,7 +160,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
         categoryLearningProgress={categoryLearningProgress}
       />
       <CategoryHeader
-        userName={meQuery.me.user.nickname}
+        user={meQuery.me.user as User}
         categoryName="내 전체 시험지"
         categoryDescription="내가 만든 시험지들을 모두 볼 수 있습니다."
       />

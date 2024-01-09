@@ -230,7 +230,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         categoryLearningProgress={categoryLearningProgress}
       />
       <CategoryHeader
-        userName={category.user.nickname}
+        user={category.user}
         categoryName={category.name}
         categoryDescription={category.description}
       />
