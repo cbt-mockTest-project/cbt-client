@@ -2,11 +2,9 @@ import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import SideNavList from './SideNavList';
-import UserAuthBox from './UserAuthBox';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { MobileOutlined } from '@ant-design/icons';
 
 const SidebarBlock = styled.div`
   max-width: 200px;
@@ -46,6 +44,11 @@ const SidebarBlock = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     display: none;
+    .side-nav-list {
+      .ant-menu-item {
+        height: 34px;
+      }
+    }
   }
 `;
 
@@ -62,7 +65,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </Link>
       </div>
       <SideNavList />
-      <UserAuthBox className="side-user-auth-box" />
     </SidebarBlock>
   );
 };

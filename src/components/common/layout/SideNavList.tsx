@@ -1,13 +1,22 @@
 import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { navItems } from './layout.constants';
+import { navBottomItems, navItems } from './layout.constants';
 import { useRouter } from 'next/router';
 import { Menu } from 'antd';
-import { responsive } from '@lib/utils/responsive';
+import CustomNavDivider from './CustomNavDivider';
+import UserAuthBox from './UserAuthBox';
 import AppDownloadInfoModal from './AppDownloadInfoModal';
+import { responsive } from '@lib/utils/responsive';
+import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
+import OpenChatModal from './OpenChatModal';
 
 const SideNavListBlock = styled.ul`
+  .side-nav-list {
+    .ant-menu-item {
+      height: 36px;
+    }
+  }
   @media (max-width: ${responsive.medium}) {
     .side-nav-list {
       .ant-menu-item {
@@ -22,15 +31,13 @@ interface SideNavListProps {}
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
+  const [isKakaoOpenChatModalOpen, setIsKakaoOpenChatModalOpen] =
+    useState(false);
   return (
     <SideNavListBlock>
       <Menu
         className="side-nav-list"
         onClick={(e) => {
-          if (e.key === 'app-download') {
-            setIsAppDownloadModalOpen(true);
-            return;
-          }
           if (e.key.toString() === router.pathname) return;
           router.push(e.key.toString());
         }}
@@ -39,13 +46,34 @@ const SideNavList: React.FC<SideNavListProps> = () => {
         mode="inline"
         items={navItems}
       />
-
-      {
-        <AppDownloadInfoModal
-          open={isAppDownloadModalOpen}
-          onCancel={() => setIsAppDownloadModalOpen(false)}
-        />
-      }
+      <CustomNavDivider />
+      <UserAuthBox className="side-user-auth-box" />
+      <CustomNavDivider />
+      <Menu
+        className="side-nav-list"
+        onClick={(e) => {
+          if (e.key === 'app-download') {
+            setIsAppDownloadModalOpen(true);
+            return;
+          }
+          if (e.key === 'open-chat') {
+            setIsKakaoOpenChatModalOpen(true);
+            return;
+          }
+        }}
+        style={{ backgroundColor: palette.colorContainerBg }}
+        mode="inline"
+        items={navBottomItems}
+        selectedKeys={[]}
+      />
+      <AppDownloadInfoModal
+        open={isAppDownloadModalOpen}
+        onCancel={() => setIsAppDownloadModalOpen(false)}
+      />
+      <OpenChatModal
+        open={isKakaoOpenChatModalOpen}
+        onCancel={() => setIsKakaoOpenChatModalOpen(false)}
+      />
     </SideNavListBlock>
   );
 };

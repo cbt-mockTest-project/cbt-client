@@ -11,7 +11,7 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { OPEN_CHAT_MODAL_STATE } from '@lib/constants';
 
 interface KakaoOpenChatModalContentProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
@@ -20,7 +20,7 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
   const storage = new LocalStorage();
   const handleStopWatching = () => {
     storage.set(OPEN_CHAT_MODAL_STATE, true);
-    onClose();
+    onClose?.();
   };
   return (
     <KakaoOpenChatModalContentContainer>
@@ -65,7 +65,7 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
       >
         <div className="kakao-open-chat-modal-safe-room-link-box">
           <StarIcon />
-          <span>졸업자들을 위한방</span>
+          <span>정보공유방</span>
         </div>
       </a>
       <a
@@ -79,28 +79,6 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
           <span>직8딴 구매자 톡방(방장: 저자)</span>
         </div>
       </a>
-      {/* <a
-        href="https://open.kakao.com/o/gjk524Xe"
-        target="_blank"
-        rel="noreferrer"
-        className="kakao-open-chat-modal-safe-room-link"
-      >
-        <div className="kakao-open-chat-modal-safe-room-link-box">
-          <ElectricBoltIcon />
-          <span>전기기사 실기방</span>
-        </div>
-      </a>
-      <a
-        href="https://open.kakao.com/o/gddJX4Xe"
-        target="_blank"
-        rel="noreferrer"
-        className="kakao-open-chat-modal-safe-room-link"
-      >
-        <div className="kakao-open-chat-modal-safe-room-link-box">
-          <ComputerIcon />
-          <span>정보처리기사 실기방</span>
-        </div>
-      </a> */}
       <Button onClick={handleStopWatching} type="primary">
         이미 참여했어요!
       </Button>
@@ -119,6 +97,7 @@ const KakaoOpenChatModalContentContainer = styled.div`
     display: flex;
     align-items: center;
     font-size: 0.8rem;
+    color: ${palette.colorText};
     border: 1px solid ${palette.gray_400};
     border-style: dotted;
     padding: 10px 0;

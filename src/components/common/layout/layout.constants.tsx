@@ -5,6 +5,7 @@ import {
   CloudOutlined,
   HistoryOutlined,
   MobileOutlined,
+  WechatOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -33,9 +34,17 @@ export const navItems = [
     icon: <UserOutlined />,
     label: '내 정보',
   },
+];
+
+export const navBottomItems = [
   {
     key: 'app-download',
     icon: <MobileOutlined />,
     label: '앱 설치',
+  },
+  {
+    key: 'open-chat',
+    icon: <WechatOutlined />,
+    label: '오픈 채팅',
   },
 ];
