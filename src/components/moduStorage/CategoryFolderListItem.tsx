@@ -34,18 +34,21 @@ const CategoryFolderListItemBlock = styled(Link)`
       justify-content: space-between;
       align-items: center;
       margin-top: 20px;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
       .category-user-info {
         display: flex;
         align-items: center;
         gap: 3px;
       }
       .category-user-name {
-        max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: 12px;
         font-weight: bold;
+        max-width: 200px;
       }
 
       .category-user-profile-image {
