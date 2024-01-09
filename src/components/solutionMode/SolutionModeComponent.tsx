@@ -5,12 +5,10 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { MockExamQuestion } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
-import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 
 const SolutionModeComponentBlock = styled.div`
-  background-color: ${palette.colorContainerBgGrey};
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;
@@ -19,7 +17,7 @@ const SolutionModeComponentBlock = styled.div`
   .solution-mode-solution-card-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 50px;
   }
   .solution-mode-all-hide-toggle-button {
     margin-bottom: 15px;

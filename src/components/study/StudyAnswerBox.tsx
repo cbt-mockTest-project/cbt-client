@@ -13,9 +13,9 @@ import {
 } from '@lib/hooks/useQuestionFeedback';
 
 const StudyAnswerBoxBlock = styled.div`
+  position: relative;
   .study-answer-box-question-card-answer-label {
     font-weight: bold;
-    margin-bottom: 5px;
     color: ${palette.colorSubText};
   }
   .study-answer-box-question-card-answer {
@@ -64,7 +64,6 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
 }) => {
   return (
     <StudyAnswerBoxBlock className={className}>
-      <p className="study-answer-box-question-card-answer-label">정답</p>
       <div
         className={`study-answer-box-question-card-anwswer-wrapper ${
           isAnswerHidden ? 'hidden' : ''

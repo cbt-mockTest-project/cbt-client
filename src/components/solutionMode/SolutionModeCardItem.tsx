@@ -11,6 +11,7 @@ import useQuestions from '@lib/hooks/useQuestions';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
+import palette from '@styles/palette';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -21,6 +22,9 @@ const SolutionModeCardItemBlock = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+  }
+  .solution-mode-question-card {
+    background-color: ${palette.colorContainerBgGrey};
   }
 `;
 
@@ -63,6 +67,10 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             questionNumber={index + 1}
             question={question}
           />
+        </div>
+      </BasicCard>
+      <BasicCard className="solution-mode-solution-card" type="primary">
+        <div className="solution-mode-question-content-wrapper">
           <StudyAnswerBox
             deleteFeedback={deleteFeedback}
             updateFeedbackRecommendation={updateFeedbackRecommendation}
