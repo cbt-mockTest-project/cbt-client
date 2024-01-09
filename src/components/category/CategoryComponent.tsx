@@ -195,13 +195,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
-      getExamCategoryLearningProgress({
-        variables: {
-          input: {
-            categoryId: categoryQueryInput.id,
-          },
-        },
-      });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');
@@ -209,6 +202,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         }
       });
       if (!category) return;
+      getExamCategoryLearningProgress({
+        variables: {
+          input: {
+            categoryId: category.id,
+          },
+        },
+      });
       const examSetting = getExamSettingHistory(category.id);
       if (!examSetting) return;
       const { examIds, isMultipleSelectMode } = examSetting;
