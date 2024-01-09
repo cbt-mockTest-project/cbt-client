@@ -2,6 +2,7 @@ import {
   useCreateExamCategory,
   useLazyGetExamCategories,
 } from '@lib/graphql/hook/useExam';
+import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { storageActions } from '@modules/redux/slices/storage';
@@ -11,15 +12,18 @@ import {
 } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { StorageType } from 'customTypes';
-import { debounce, isEqual } from 'lodash';
+import { cloneDeep, debounce, isEqual } from 'lodash';
 import {
   CreateMockExamCategoryInput,
   GetExamCategoriesInput,
   MockExamCategory,
 } from 'types';
+import useAuth from './useAuth';
 
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
+  const { handleCheckLogin } = useAuth();
+  const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [getExamCategories, { data: getExamCategoriesQuery, refetch }] =
     useLazyGetExamCategories();
 
@@ -75,6 +79,42 @@ const useStorage = (type: StorageType) => {
       setCategories(
         res.data?.getExamCategories.categories as MockExamCategory[]
       );
+    }
+  };
+
+  const handleToggleCategoryBookmark = async (categoryId: number) => {
+    try {
+      if (!handleCheckLogin()) return;
+      const res = await toggleCategoryBookmark({
+        variables: {
+          input: {
+            categoryId,
+          },
+        },
+      });
+      if (res.data.toggleExamCategorieBookmark.ok) {
+        const newCategories = cloneDeep(categories);
+        if (!newCategories) return;
+        const targetIndex = newCategories.findIndex(
+          (category) => category.id === categoryId
+        );
+        if (targetIndex === -1) return;
+        newCategories[targetIndex].isBookmarked =
+          !newCategories[targetIndex].isBookmarked;
+        setCategories(newCategories);
+
+        if (res.data.toggleExamCategorieBookmark.isBookmarked) {
+          message.success('북마크 되었습니다.');
+          return;
+        } else {
+          message.success('북마크가 해제되었습니다.');
+          return;
+        }
+      }
+      message.error(res.data?.toggleExamCategorieBookmark.error);
+    } catch (e) {
+      handleError(e);
+      message.error('북마크 설정에 실패했습니다.');
     }
   };
 
@@ -194,6 +234,7 @@ const useStorage = (type: StorageType) => {
     handleCreateCategory,
     createCategoryLoading,
     handleFilterCategories,
+    handleToggleCategoryBookmark,
     fetchCategories,
     refetchCategories,
   };

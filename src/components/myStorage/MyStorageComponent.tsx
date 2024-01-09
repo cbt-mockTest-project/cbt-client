@@ -39,7 +39,8 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   );
   const [isInvitationManageModal, setIsInvitationManageModal] =
     React.useState<boolean>(false);
-  const { categories, handleFilterCategories } = useStorage(storageType);
+  const { categories, handleFilterCategories, handleToggleCategoryBookmark } =
+    useStorage(storageType);
   return (
     <MyStorageComponentBlock>
       <Tooltip title="초대받은 암기장 목록을 관리합니다.">
@@ -73,6 +74,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
       />
       <CategoryFolderList
         categories={categories}
+        handleToggleBookmark={handleToggleCategoryBookmark}
         hasAllExamFolder={storageType === StorageType.MY}
       />
       {isInvitationManageModal && (

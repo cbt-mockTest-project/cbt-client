@@ -20,9 +20,12 @@ interface ModuStorageComponentProps {}
 const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
   const { placeholder } = useSaveCategoryModal(StorageType.MODU);
-  const { categories, fetchCategories, handleFilterCategories } = useStorage(
-    StorageType.MODU
-  );
+  const {
+    categories,
+    fetchCategories,
+    handleFilterCategories,
+    handleToggleCategoryBookmark,
+  } = useStorage(StorageType.MODU);
 
   useEffect(() => {
     if (meQuery?.me.user?.role === UserRole.Admin) {
@@ -39,7 +42,10 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
           handleFilterCategories(e.target.value);
         }}
       />
-      <CategoryFolderList categories={categories} />
+      <CategoryFolderList
+        categories={categories}
+        handleToggleBookmark={handleToggleCategoryBookmark}
+      />
       {placeholder}
     </ModuStorageComponentBlock>
   );
