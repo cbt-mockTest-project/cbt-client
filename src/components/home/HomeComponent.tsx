@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import HomeSearchedFolderList from './HomeSearchedFolderList';
 import { MockExamCategory, MockExamQuestion } from 'types';
 import HomeSearchedQuestionList from './HomeSearchedQuestionList';
-import { useSearchQuestions } from '@lib/graphql/hook/useExamQuestion';
+import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -55,18 +55,23 @@ interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
-  const [getExamCategories, { data: searchedCategoriesResponse }] =
-    useLazyGetExamCategories();
-  const [searchQuestions, { data: searchedQuestionsResponse }] =
-    useSearchQuestions();
+  const {
+    searchQuestions,
+    searchedQuestions,
+    handleSaveBookmark,
+    searchQuestionsLoading,
+  } = useSearchQuestions();
+  const [
+    getExamCategories,
+    { data: searchedCategoriesResponse, loading: getExamCategoriesLoading },
+  ] = useLazyGetExamCategories();
+
   const [searchType, setSearchType] = React.useState<'folder' | 'question'>(
     'folder'
   );
   const searchInputRef = React.useRef<InputRef>(null);
   const searchedCategories =
     searchedCategoriesResponse?.getExamCategories.categories || [];
-  const searchedQuestions =
-    searchedQuestionsResponse?.searchQuestionsByKeyword.questions || [];
 
   const keyword = useMemo(() => {
     if (searchType === 'folder') return router.query.f_keyword;
@@ -160,11 +165,14 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             <HomeSearchedFolderList
               keyword={keyword}
               categories={searchedCategories as MockExamCategory[]}
+              loading={getExamCategoriesLoading}
             />
           ) : searchType === 'question' ? (
             <HomeSearchedQuestionList
               keyword={keyword}
               questions={searchedQuestions as MockExamQuestion[]}
+              handleSaveBookmark={handleSaveBookmark}
+              loading={searchQuestionsLoading}
             />
           ) : (
             <></>

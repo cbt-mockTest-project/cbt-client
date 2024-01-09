@@ -40,13 +40,7 @@ import {
   SearchQuestionsByKeywordQuery,
   SearchQuestionsByKeywordQueryVariables,
 } from '../query/questionQuery.generated';
-import {
-  Exact,
-  ReadMockExamQuestionInput,
-  ReadQuestionCardInput,
-  ReadQuestionsByExamIdsInput,
-  SearchQuestionsByKeywordInput,
-} from 'types';
+import { ReadMockExamQuestionInput, ReadQuestionsByExamIdsInput } from 'types';
 
 export const useLazyReadQuestionsByExamId = (
   fetchPolicy: WatchQueryFetchPolicy
@@ -124,7 +118,7 @@ export const useDeleteQuestion = () =>
     DeleteMockExamQuestionMutationVariables
   >(DELETE_QUESTION);
 
-export const useSearchQuestions = () =>
+export const useLzaySearchQuestions = () =>
   useLazyQuery<
     SearchQuestionsByKeywordQuery,
     SearchQuestionsByKeywordQueryVariables

@@ -42,9 +42,10 @@ const StudyQuestionBoxBlock = styled.div`
 
 interface StudyQuestionBoxProps {
   saveBookmark: (question: MockExamQuestion) => void;
-  questionNumber: number;
+  questionNumber?: number;
   question: MockExamQuestion;
   className?: string;
+  title?: string;
 }
 
 const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
@@ -52,13 +53,16 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   question,
   questionNumber,
   className = '',
+  title,
 }) => {
   const router = useRouter();
   const isMultipleSelectMode = !!router.query.examIds;
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">
-        <p className="study-question-box-number">{questionNumber}번</p>
+        {questionNumber && (
+          <p className="study-question-box-number">{questionNumber}번</p>
+        )}
         <Bookmark
           onClick={() => saveBookmark(question)}
           role="button"
@@ -70,6 +74,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             {question.mockExam?.title}
           </div>
         )}
+        {title && <div className="study-question-exam-title">{title}</div>}
       </div>
       <div className="study-question-box-question">
         {parse(question.question || '')}

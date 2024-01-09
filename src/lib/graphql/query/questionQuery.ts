@@ -209,6 +209,12 @@ export const SEARCH_QEUSTIONS = gql`
         question
         solution
         number
+        isBookmarked
+        user {
+          id
+          nickname
+          profileImg
+        }
         question_img {
           url
         }
