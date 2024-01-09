@@ -142,6 +142,15 @@ const useQuestions = () => {
     }
   };
 
+  const shuffleQuestions = () => {
+    const mixedQuestions = [...questions];
+    dispatch(
+      mockExamActions.setQuestions(
+        mixedQuestions.sort(() => Math.random() - 0.5)
+      )
+    );
+  };
+
   const deleteFeedback = async ({
     question,
     feedback,
@@ -204,6 +213,7 @@ const useQuestions = () => {
     updateFeedbackRecommendation,
     resetQuestionState,
     resetQuestions,
+    shuffleQuestions,
   };
 };
 
