@@ -40,26 +40,26 @@ const CategoryFolderListItemBlock = styled(Link)`
         max-width: 70%;
         gap: 3px;
       }
-    }
-    .category-user-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 12px;
-      font-weight: bold;
-    }
+      .category-user-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        font-weight: bold;
+      }
 
-    .category-user-profile-image {
-      border-radius: 50%;
-      background-color: ${palette.gray_200};
-      margin-right: 5px;
-    }
+      .category-user-profile-image {
+        border-radius: 50%;
+        background-color: ${palette.gray_200};
+        margin-right: 5px;
+      }
 
-    .category-exam-count {
-      font-size: 12px;
-      font-weight: bold;
-      margin-right: 10px;
-      color: ${palette.colorSubText};
+      .category-exam-count {
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 10px;
+        color: ${palette.colorSubText};
+      }
     }
   }
 
@@ -110,7 +110,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
               />
               <div className="category-user-name">{category.user.nickname}</div>
             </div>
-            <div className="category-exam-count" color="green">
+            <div className="category-exam-count">
               {category.mockExam.length} 세트
             </div>
           </div>

@@ -13,6 +13,7 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
   .category-name {
     width: 100%;
     overflow: hidden;
+    font-size: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: ${palette.colorEmphasisText};
@@ -31,25 +32,37 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
     flex-direction: column;
     gap: 5px;
   }
-  .category-user-info {
+  .category-footer-wrapper {
     display: flex;
-    align-items: flex-end;
-    gap: 3px;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
-  }
-  .category-user-name {
-    font-size: 14px;
-    font-weight: bold;
-  }
-  .category-user-label {
-    font-size: 12px;
-    font-weight: bold;
-    color: ${palette.colorSubText};
-  }
-  .category-user-profile-image {
-    border-radius: 50%;
-    background-color: ${palette.gray_200};
-    margin-right: 5px;
+    .category-user-info {
+      display: flex;
+      align-items: center;
+      max-width: 70%;
+      gap: 3px;
+    }
+    .category-user-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .category-user-profile-image {
+      border-radius: 50%;
+      background-color: ${palette.gray_200};
+      margin-right: 5px;
+    }
+
+    .category-exam-count {
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 10px;
+      color: ${palette.colorSubText};
+    }
   }
 
   @media (max-width: ${responsive.medium}) {
@@ -57,11 +70,13 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
   }
 `;
 
-interface CategoryFolderIncludingAllExamsProps {}
+interface CategoryFolderIncludingAllExamsProps {
+  examCount?: number;
+}
 
 const CategoryFolderIncludingAllExams: React.FC<
   CategoryFolderIncludingAllExamsProps
-> = () => {
+> = ({ examCount }) => {
   const { data: meQuery } = useMeQuery();
   if (!meQuery?.me.user) return null;
   const user = meQuery.me.user;
@@ -72,16 +87,18 @@ const CategoryFolderIncludingAllExams: React.FC<
           <div className="category-header-wrapper">
             <span className="category-name">전체 시험지</span>
           </div>
-          <div className="category-user-info">
-            <Image
-              className="category-user-profile-image"
-              src={user.profileImg || '/png/profile/profile_default.png'}
-              alt="프로필이미지"
-              width={20}
-              height={20}
-            />
-            <span className="category-user-name">{user.nickname}</span>
-            <span className="category-user-label">의 암기장</span>
+          <div className="category-footer-wrapper">
+            <div className="category-user-info">
+              <Image
+                className="category-user-profile-image"
+                src={user.profileImg || '/png/profile/profile_default.png'}
+                alt="프로필이미지"
+                width={20}
+                height={20}
+              />
+              <div className="category-user-name">{user.nickname}</div>
+            </div>
+            <div className="category-exam-count">{examCount} 세트</div>
           </div>
         </div>
       </BasicCard>
