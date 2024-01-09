@@ -19,6 +19,11 @@ export const navItems = [
     label: '내 암기장',
   },
   {
+    key: '/me/history',
+    icon: <HistoryOutlined />,
+    label: '기록',
+  },
+  {
     key: '/pricing',
     icon: <GoldOutlined />,
     label: '스토어',
@@ -27,11 +32,6 @@ export const navItems = [
     key: '/me',
     icon: <UserOutlined />,
     label: '내 정보',
-  },
-  {
-    key: '/me/history',
-    icon: <HistoryOutlined />,
-    label: '기록',
   },
   {
     key: 'app-download',
