@@ -12,6 +12,8 @@ import HomeSearchedFolderList from './HomeSearchedFolderList';
 import { MockExamCategory, MockExamQuestion } from 'types';
 import HomeSearchedQuestionList from './HomeSearchedQuestionList';
 import useSearchQuestions from '@lib/hooks/useSearchQuestions';
+import useHomeCategories from '@lib/hooks/useHomeCategories';
+import useAuth from '@lib/hooks/useAuth';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -55,35 +57,40 @@ interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const {
     searchQuestions,
     searchedQuestions,
     handleSaveBookmark,
     searchQuestionsLoading,
   } = useSearchQuestions();
-  const [
-    getExamCategories,
-    { data: searchedCategoriesResponse, loading: getExamCategoriesLoading },
-  ] = useLazyGetExamCategories();
+
+  const {
+    fetchCategories,
+    searchedCategories,
+    fetchCategoriesLoading,
+    moduStorageCategories,
+    userStorageCategories,
+    refetchHomeCategories,
+    handleToggleCategoryBookmark,
+  } = useHomeCategories();
 
   const [searchType, setSearchType] = React.useState<'folder' | 'question'>(
     'folder'
   );
   const searchInputRef = React.useRef<InputRef>(null);
-  const searchedCategories =
-    searchedCategoriesResponse?.getExamCategories.categories || [];
 
   const keyword = useMemo(() => {
     if (searchType === 'folder') return router.query.f_keyword;
     if (searchType === 'question') return router.query.q_keyword;
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
-  const moduStorageCategories = useAppSelector(
-    (state) => state.home.moduStorageCategories
-  );
-  const userStorageCategories = useAppSelector(
-    (state) => state.home.userStorageCategories
-  );
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (router.query.type) return;
+    refetchHomeCategories();
+  }, [isLoggedIn, router.query]);
+
   useEffect(() => {
     if (typeof keyword !== 'string' || !keyword) return;
     if (searchType === 'question') {
@@ -97,18 +104,15 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       return;
     }
     if (searchType === 'folder') {
-      getExamCategories({
-        variables: {
-          input: {
-            limit: 30,
-            isPublicOnly: true,
-            keyword,
-          },
-        },
+      fetchCategories({
+        limit: 30,
+        isPublicOnly: true,
+        keyword,
       });
       return;
     }
   }, [keyword]);
+
   const handleSearch = (value: string) => {
     router.push({
       pathname: '/',
@@ -165,7 +169,14 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             <HomeSearchedFolderList
               keyword={keyword}
               categories={searchedCategories as MockExamCategory[]}
-              loading={getExamCategoriesLoading}
+              loading={fetchCategoriesLoading}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({
+                  categoryId: id,
+                  type: 'search',
+                  input: { keyword, limit: 30, isPublicOnly: true },
+                });
+              }}
             />
           ) : searchType === 'question' ? (
             <HomeSearchedQuestionList
@@ -184,6 +195,9 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="실기 시험을 효율적으로 준비해보세요."
               link="/modu-storage"
               categories={moduStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
+              }}
               unikeyKey="modu-storage"
             />
             <HomeFolderList
@@ -191,6 +205,9 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
               link="/user-storage"
               categories={userStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'user' });
+              }}
               unikeyKey="user-storage"
             />
           </>

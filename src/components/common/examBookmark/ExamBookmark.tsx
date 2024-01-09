@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const ExamBookmarkBlock = styled.button<{ isBookmarked: boolean }>`
   svg {
-    font-size: 30px;
+    font-size: 26px;
   }
   color: ${(props) =>
     props.isBookmarked ? palette.yellow_500 : palette.colorSubText};

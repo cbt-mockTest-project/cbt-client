@@ -156,7 +156,7 @@ export type GetExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number }> }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', isBookmarked?: boolean | null, id: number, name: string, isPublic: boolean, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number }> }> | null } };
 
 export type GetMyExamsQueryVariables = Types.Exact<{
   input: Types.GetMyExamsInput;
@@ -583,6 +583,7 @@ export const GetExamCategoriesDocument = gql`
     ok
     error
     categories {
+      isBookmarked
       id
       name
       isPublic

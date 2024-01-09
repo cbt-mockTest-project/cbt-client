@@ -8,16 +8,23 @@ interface HomeSearchedFolderListProps {
   keyword: string;
   categories: MockExamCategory[];
   loading?: boolean;
+  handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
 
 const HomeSearchedFolderList: React.FC<HomeSearchedFolderListProps> = ({
   keyword,
   categories,
   loading,
+  handleToggleBookmark,
 }) => {
   return (
     <HomeSearchedListTemplate keyword={keyword}>
-      {!loading && <CategoryFolderList categories={categories} />}
+      {!loading && (
+        <CategoryFolderList
+          categories={categories}
+          handleToggleBookmark={handleToggleBookmark}
+        />
+      )}
       {loading && <HomeSearchLoader />}
     </HomeSearchedListTemplate>
   );

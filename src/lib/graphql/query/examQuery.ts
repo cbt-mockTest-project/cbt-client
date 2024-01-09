@@ -312,6 +312,7 @@ export const GET_EXAM_CATEGORIES = gql`
       ok
       error
       categories {
+        isBookmarked
         id
         name
         isPublic

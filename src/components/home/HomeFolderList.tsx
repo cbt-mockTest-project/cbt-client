@@ -71,6 +71,7 @@ interface HomeFolderListProps {
   categories: MockExamCategory[];
   link: string;
   unikeyKey: string;
+  handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
@@ -79,6 +80,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   subTitle,
   link,
   unikeyKey,
+  handleToggleBookmark,
 }) => {
   return (
     <HomeFolderListBlock>
@@ -122,9 +124,9 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
               className="home-folder-list-swiper-slide"
             >
               <CategoryFolderListItem
+                handleToggleBookmark={handleToggleBookmark}
                 className="home-folder-item"
                 category={category}
-                hasTag={false}
               />
             </SwiperSlide>
           ))}

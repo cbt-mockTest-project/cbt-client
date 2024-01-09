@@ -44,7 +44,7 @@ const HomeSearchedListTemplate: React.FC<HomeSearchedListTemplateProps> = ({
         <div className="home-searched-list-template-title">{`"${keyword}" 에 대한 검색결과`}</div>
         <Clear
           className="home-searched-list-template-clear-button"
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/', undefined, { shallow: true })}
         />
       </div>
       {children}

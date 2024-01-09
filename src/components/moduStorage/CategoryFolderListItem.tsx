@@ -1,4 +1,6 @@
 import BasicCard from '@components/common/card/BasicCard';
+import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Tag } from 'antd';
@@ -27,6 +29,10 @@ const CategoryFolderListItemBlock = styled(Link)`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .category-header-bookmar-or-tag {
+        height: 26px;
       }
     }
 
@@ -74,16 +80,18 @@ const CategoryFolderListItemBlock = styled(Link)`
 
 interface CategoryFolderListItemProps {
   category: MockExamCategory;
-  hasTag?: boolean;
+  handleToggleBookmark: (categoryId: number) => Promise<void>;
   className?: string;
 }
 
 const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   category,
-  hasTag = true,
+  handleToggleBookmark,
   className = '',
 }) => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
+  const user = meQuery?.me.user;
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category.name}`}
@@ -93,14 +101,25 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
         <div className="category-wrapper">
           <div className="category-header-wrapper">
             <span className="category-name">{category.name}</span>
-            {hasTag && (
-              <Tag
-                className="category-private-public-tag"
-                color={category.isPublic ? 'blue' : 'default'}
-              >
-                {category.isPublic ? '공개' : '비공개'}
-              </Tag>
-            )}
+            <div className="category-header-bookmar-or-tag">
+              {user?.id !== category.user.id && (
+                <ExamBookmark
+                  isBookmarked={category.isBookmarked}
+                  handleToggleBookmark={(e) => {
+                    e.preventDefault();
+                    handleToggleBookmark(category.id);
+                  }}
+                />
+              )}
+              {user?.id === category.user.id && (
+                <Tag
+                  className="category-private-public-tag"
+                  color={category.isPublic ? 'blue' : 'default'}
+                >
+                  {category.isPublic ? '공개' : '비공개'}
+                </Tag>
+              )}
+            </div>
           </div>
           <div className="category-footer-wrapper">
             <button

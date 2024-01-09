@@ -13,10 +13,12 @@ const CategoryFolderListBlock = styled.ul`
 interface CategoryFolderListProps {
   categories: MockExamCategory[] | null;
   hasAllExamFolder?: boolean;
+  handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
 
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
+  handleToggleBookmark,
   hasAllExamFolder = false,
 }) => {
   const examCount = categories?.reduce(
@@ -29,7 +31,11 @@ const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
         <CategoryFolderIncludingAllExams examCount={examCount} />
       )}
       {categories?.map((category) => (
-        <CategoryFolderListItem key={category.id} category={category} />
+        <CategoryFolderListItem
+          key={category.id}
+          category={category}
+          handleToggleBookmark={handleToggleBookmark}
+        />
       ))}
     </CategoryFolderListBlock>
   );
