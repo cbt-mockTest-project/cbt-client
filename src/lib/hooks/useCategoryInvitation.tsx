@@ -11,18 +11,10 @@ import { useCreateCategoryInvitation } from '@lib/graphql/hook/useExamCategoryIn
 import { useLazyGetUser } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { message } from 'antd';
-import { MockExamCategory, User } from 'types';
+import { User } from 'types';
 import useApolloClient from './useApolloCient';
-import {
-  DELETE_EXAM_CATEGORY_BOOKMARK,
-  GET_EXAM_CATEROGY_SUBSCRIBERS,
-} from '@lib/graphql/query/examCategoryBookmark';
-import {
-  DeleteExamCategoryBookmarkMutation,
-  GetExamCategorySubscribersQuery,
-} from '@lib/graphql/query/examCategoryBookmark.generated';
-import { GET_MY_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
-import { GetMyExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
+import { GET_EXAM_CATEROGY_SUBSCRIBERS } from '@lib/graphql/query/examCategoryBookmark';
+import { GetExamCategorySubscribersQuery } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { useRef } from 'react';
 
 export interface SearchAndInviteUserParams {

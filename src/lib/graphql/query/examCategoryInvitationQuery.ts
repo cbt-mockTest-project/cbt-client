@@ -17,10 +17,15 @@ export const GET_CATEGORY_INVITATION = gql`
       error
       invitations {
         id
-        user {
+        category {
           id
-          email
-          nickname
+          name
+          user {
+            id
+            email
+            nickname
+            profileImg
+          }
         }
       }
       ok

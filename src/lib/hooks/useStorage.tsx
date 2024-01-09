@@ -20,7 +20,7 @@ import {
 
 const useStorage = (type: StorageType) => {
   const dispatch = useAppDispatch();
-  const [getExamCategories, { data: getExamCategoriesQuery }] =
+  const [getExamCategories, { data: getExamCategoriesQuery, refetch }] =
     useLazyGetExamCategories();
 
   const { data: meQuery } = useMeQuery();
@@ -53,6 +53,20 @@ const useStorage = (type: StorageType) => {
         input,
       },
       fetchPolicy: getExamCategoriesQuery ? 'cache-first' : 'network-only',
+    });
+    if (
+      res.data?.getExamCategories.categories &&
+      !isEqual(categories, res.data.getExamCategories.categories)
+    ) {
+      setCategories(
+        res.data?.getExamCategories.categories as MockExamCategory[]
+      );
+    }
+  };
+
+  const refetchCategories = async (input: GetExamCategoriesInput) => {
+    const res = await refetch({
+      input,
     });
     if (
       res.data?.getExamCategories.categories &&
@@ -181,6 +195,7 @@ const useStorage = (type: StorageType) => {
     createCategoryLoading,
     handleFilterCategories,
     fetchCategories,
+    refetchCategories,
   };
 };
 

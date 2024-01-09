@@ -13,7 +13,7 @@ export type CreateExamCategoryInvitationMutation = { __typename?: 'Mutation', cr
 export type GetExamCategoryInvitationsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetExamCategoryInvitationsQuery = { __typename?: 'Query', getExamCategoryInvitations: { __typename?: 'GetExamCategoryInvitationsOutput', error?: string | null, ok: boolean, invitations?: Array<{ __typename?: 'ExamCategoryInvitation', id: number, user: { __typename?: 'User', id: number, email: string, nickname: string } }> | null } };
+export type GetExamCategoryInvitationsQuery = { __typename?: 'Query', getExamCategoryInvitations: { __typename?: 'GetExamCategoryInvitationsOutput', error?: string | null, ok: boolean, invitations?: Array<{ __typename?: 'ExamCategoryInvitation', id: number, category: { __typename?: 'MockExamCategory', id: number, name: string, user: { __typename?: 'User', id: number, email: string, nickname: string, profileImg: string } } }> | null } };
 
 export type DeleteExamCategoryInvitationMutationVariables = Types.Exact<{
   input: Types.DeleteExamCategoryInvitationInput;
@@ -48,10 +48,15 @@ export const GetExamCategoryInvitationsDocument = gql`
     error
     invitations {
       id
-      user {
+      category {
         id
-        email
-        nickname
+        name
+        user {
+          id
+          email
+          nickname
+          profileImg
+        }
       }
     }
     ok
