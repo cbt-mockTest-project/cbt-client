@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import MobileDrawer from './MobileDrawer';
+import Link from 'next/link';
 
 const MobileHeaderBlock = styled.div`
   display: none;
@@ -36,7 +37,9 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ title }) => {
   const [menuState, setMenuState] = useState(false);
   return (
     <MobileHeaderBlock>
-      <p className="mobile-header-title">{title}</p>
+      <Link href="/">
+        <p className="mobile-header-title">{title}</p>
+      </Link>
       <button className="mobile-menu-button" onClick={() => setMenuState(true)}>
         <MenuIcon />
       </button>
