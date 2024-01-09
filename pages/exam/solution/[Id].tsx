@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
@@ -5,6 +6,7 @@ import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
+import { convertExamTitle } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
@@ -15,14 +17,20 @@ import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;
   questions: MockExamQuestion[];
+  title: string;
 }
 
 const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   questionsQueryInput,
   questions,
+  title,
 }) => {
   return (
     <>
+      <WithHead
+        title={`${convertExamTitle(title)} 해설 | 모두CBT`}
+        pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
+      />
       <StudyHeader questions={questions} />
       <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
     </>
@@ -93,8 +101,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       store.dispatch(
         mockExamActions.setQuestions(questions as MockExamQuestion[])
       );
+      const title = questions[0].mockExam.title;
       return addApolloState(apolloClient, {
-        props: { questionsQueryInput, questions },
+        props: { questionsQueryInput, questions, title },
         revalidate: 43200,
       });
     } catch {
