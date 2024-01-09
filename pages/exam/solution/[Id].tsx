@@ -1,4 +1,5 @@
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
+import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
@@ -13,12 +14,19 @@ import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;
+  questions: MockExamQuestion[];
 }
 
 const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   questionsQueryInput,
+  questions,
 }) => {
-  return <SolutionModeComponent questionsQueryInput={questionsQueryInput} />;
+  return (
+    <>
+      <StudyHeader questions={questions} />
+      <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
+    </>
+  );
 };
 
 ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;
@@ -79,12 +87,14 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           notFound: true,
         };
       }
-      const questions = res?.data.readQuestionsByExamIds.questions;
+      const questions =
+        res?.data.readQuestionsByExamIds.questions ||
+        ([] as MockExamQuestion[]);
       store.dispatch(
         mockExamActions.setQuestions(questions as MockExamQuestion[])
       );
       return addApolloState(apolloClient, {
-        props: { questionsQueryInput },
+        props: { questionsQueryInput, questions },
         revalidate: 43200,
       });
     } catch {
