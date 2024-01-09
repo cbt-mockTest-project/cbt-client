@@ -203,7 +203,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
               {exam.user.nickname}
             </span>
           </div>
-          <Tag color="green">{exam.mockExamQuestion.length} 문제</Tag>
+          <Tag className="exam-list-item-question-count-tag" color="green">
+            {exam.mockExamQuestion.length} 문제
+          </Tag>
         </div>
       </BasicCard>
       {isExamSelectModalOpen && (

@@ -34,34 +34,32 @@ const CategoryFolderListItemBlock = styled(Link)`
       justify-content: space-between;
       align-items: center;
       margin-top: 20px;
-      width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
       .category-user-info {
         display: flex;
         align-items: center;
+        max-width: 70%;
         gap: 3px;
       }
-      .category-user-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 12px;
-        font-weight: bold;
-        max-width: 200px;
-      }
+    }
+    .category-user-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: bold;
+    }
 
-      .category-user-profile-image {
-        border-radius: 50%;
-        background-color: ${palette.gray_200};
-        margin-right: 5px;
-      }
-      .category-exam-count {
-        font-size: 12px;
-        font-weight: bold;
-        margin-right: 10px;
-        color: ${palette.colorSubText};
-      }
+    .category-user-profile-image {
+      border-radius: 50%;
+      background-color: ${palette.gray_200};
+      margin-right: 5px;
+    }
+
+    .category-exam-count {
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 10px;
+      color: ${palette.colorSubText};
     }
   }
 
@@ -91,7 +89,10 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
           <div className="category-header-wrapper">
             <span className="category-name">{category.name}</span>
             {hasTag && (
-              <Tag color={category.isPublic ? 'blue' : 'default'}>
+              <Tag
+                className="category-private-public-tag"
+                color={category.isPublic ? 'blue' : 'default'}
+              >
                 {category.isPublic ? '공개' : '비공개'}
               </Tag>
             )}
@@ -107,11 +108,11 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 width={18}
                 height={18}
               />
-              <span className="category-user-name">
-                {category.user.nickname.repeat(100)}
-              </span>
+              <div className="category-user-name">{category.user.nickname}</div>
             </div>
-            <div className="category-exam-count">{`${category.mockExam.length} 세트`}</div>
+            <div className="category-exam-count" color="green">
+              {category.mockExam.length} 세트
+            </div>
           </div>
         </div>
       </BasicCard>

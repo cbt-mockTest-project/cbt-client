@@ -54,11 +54,6 @@ const HomeFolderListBlock = styled.div`
   .home-folder-list-next-button {
     right: -20px;
   }
-  .home-folder-item {
-    .category-user-name {
-      max-width: 100px !important;
-    }
-  }
   @media (max-width: ${responsive.lsmall}) {
     .home-folder-list-swiper-slide {
       width: 200px;
