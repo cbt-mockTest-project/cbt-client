@@ -28,9 +28,11 @@ import { cloneDeep, debounce, isEqual } from 'lodash';
 import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
+import useAuth from './useAuth';
 
 const useExamCategory = () => {
   const router = useRouter();
+  const { handleCheckLogin } = useAuth();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [readCategory] = useLazyReadCategoryById();
   const [getMyExams] = useLazyGetMyExams();
@@ -108,6 +110,7 @@ const useExamCategory = () => {
 
   const handleToggleCategoryBookmark = async (categoryId: number) => {
     try {
+      if (!handleCheckLogin()) return;
       const res = await toggleCategoryBookmark({
         variables: {
           input: {
@@ -248,6 +251,7 @@ const useExamCategory = () => {
 
   const handleToggleExamBookmark = async (examId: number) => {
     try {
+      if (!handleCheckLogin()) return;
       const res = await toggleExamBookmark({
         variables: {
           input: {
