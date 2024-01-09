@@ -4,6 +4,7 @@ import {
   GoldOutlined,
   CloudOutlined,
   HistoryOutlined,
+  MobileOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -31,5 +32,10 @@ export const navItems = [
     key: '/me/history',
     icon: <HistoryOutlined />,
     label: '기록',
+  },
+  {
+    key: 'app-download',
+    icon: <MobileOutlined />,
+    label: '앱 설치',
   },
 ];

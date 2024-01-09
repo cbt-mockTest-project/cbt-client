@@ -1,10 +1,11 @@
 import palette from '@styles/palette';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { navItems } from './layout.constants';
 import { useRouter } from 'next/router';
 import { Menu } from 'antd';
 import { responsive } from '@lib/utils/responsive';
+import AppDownloadInfoModal from './AppDownloadInfoModal';
 
 const SideNavListBlock = styled.ul`
   @media (max-width: ${responsive.medium}) {
@@ -20,12 +21,16 @@ interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
-
+  const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
   return (
     <SideNavListBlock>
       <Menu
         className="side-nav-list"
         onClick={(e) => {
+          if (e.key === 'app-download') {
+            setIsAppDownloadModalOpen(true);
+            return;
+          }
           if (e.key.toString() === router.pathname) return;
           router.push(e.key.toString());
         }}
@@ -34,6 +39,13 @@ const SideNavList: React.FC<SideNavListProps> = () => {
         mode="inline"
         items={navItems}
       />
+
+      {
+        <AppDownloadInfoModal
+          open={isAppDownloadModalOpen}
+          onCancel={() => setIsAppDownloadModalOpen(false)}
+        />
+      }
     </SideNavListBlock>
   );
 };

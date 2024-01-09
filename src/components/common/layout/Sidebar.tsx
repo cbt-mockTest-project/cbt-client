@@ -6,6 +6,7 @@ import UserAuthBox from './UserAuthBox';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
+import { MobileOutlined } from '@ant-design/icons';
 
 const SidebarBlock = styled.div`
   max-width: 200px;
@@ -21,13 +22,26 @@ const SidebarBlock = styled.div`
     height: 40px;
     margin-left: 16px;
     margin-top: 10px;
-    aspect-ratio: 600 /200;
+    aspect-ratio: 600 / 200;
   }
   .side-user-auth-box {
     margin-top: 15px;
   }
   .ant-menu {
     border: none !important;
+  }
+  .sider-app-download-info-button {
+    position: absolute;
+    bottom: 20px;
+    padding: 0px 10px 0px 24px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    svg {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
   }
   @media (max-width: ${responsive.medium}) {
     display: none;
