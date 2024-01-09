@@ -84,7 +84,7 @@ const HomeSearchedQuestionListItem: React.FC<
           title={question.mockExam.title}
         />
       </BasicCard>
-      <BasicCard>
+      <BasicCard type="primary">
         <div>{parse(question.solution) || ''}</div>
         {question.solution_img && question.solution_img?.length > 0 && (
           <AntImage
