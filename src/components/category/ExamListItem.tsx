@@ -5,7 +5,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Checkbox, Dropdown, MenuProps, Modal } from 'antd';
+import { Checkbox, Dropdown, MenuProps, Modal, Tag } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import Image from 'next/image';
 import React, { useState } from 'react';
@@ -28,17 +28,7 @@ const ExamListItemBlock = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-  .exam-list-item-bottom-wrapper {
-    margin-top: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-  }
-  .exam-list-item-user-profile-image {
-    border-radius: 50%;
-    background-color: ${palette.gray_200};
-  }
+
   .exam-list-item-bookmark-button {
     color: ${palette.colorText};
   }
@@ -47,6 +37,7 @@ const ExamListItemBlock = styled.div`
   }
   .exam-list-item-control-option-wrapper {
     border-radius: 50%;
+    flex-shrink: 0;
     width: 30px;
     height: 30px;
     border: 1px solid ${palette.colorBorder};
@@ -60,6 +51,39 @@ const ExamListItemBlock = styled.div`
       }
     }
   }
+  .exam-list-item-title {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .exam-list-item-bottom-wrapper {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    .exam-list-item-user-profile-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .exam-list-item-user-profile-image {
+      border-radius: 50%;
+      background-color: ${palette.gray_200};
+    }
+    .exam-list-item-user-name {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ant-tag {
+      margin: 0;
+    }
+  }
+
   @media (max-width: ${responsive.medium}) {
     width: 100%;
   }
@@ -139,7 +163,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       )}
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
         <div className="exam-list-item-top-wrapper">
-          <span>{exam.title}</span>
+          <div className="exam-list-item-title">{exam.title}</div>
           {category?.user.id === meQuery?.me.user?.id ? (
             <Dropdown
               menu={{
@@ -165,15 +189,21 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
             />
           )}
         </div>
+
         <div className="exam-list-item-bottom-wrapper">
-          <Image
-            className="exam-list-item-user-profile-image"
-            src={exam.user.profileImg || '/png/profile/profile_default.png'}
-            alt="프로필이미지"
-            width={20}
-            height={20}
-          />
-          <span className="exam-list-item-user-name">{exam.user.nickname}</span>
+          <div className="exam-list-item-user-profile-wrapper">
+            <Image
+              className="exam-list-item-user-profile-image"
+              src={exam.user.profileImg || '/png/profile/profile_default.png'}
+              alt="프로필이미지"
+              width={20}
+              height={20}
+            />
+            <span className="exam-list-item-user-name">
+              {exam.user.nickname}
+            </span>
+          </div>
+          <Tag color="green">{exam.mockExamQuestion.length} 문제</Tag>
         </div>
       </BasicCard>
       {isExamSelectModalOpen && (

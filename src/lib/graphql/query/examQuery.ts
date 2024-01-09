@@ -284,6 +284,9 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           slug
           title
           id
+          mockExamQuestion {
+            id
+          }
           user {
             profileImg
             id
