@@ -61,7 +61,9 @@ const HomeSearchedQuestionListItem: React.FC<
         <div className="home-searched-question-list-item-user-info-wrapper">
           <div className="home-searched-question-list-item-user-info-image-wrapper">
             <Image
-              src={question.user.profileImg || ''}
+              src={
+                question.user.profileImg || '/png/profile/profile_default.png'
+              }
               alt="user-profile-image"
               width={25}
               height={25}
