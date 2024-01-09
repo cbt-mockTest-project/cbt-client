@@ -54,6 +54,11 @@ const HomeFolderListBlock = styled.div`
   .home-folder-list-next-button {
     right: -20px;
   }
+  a.home-folder-title {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   @media (max-width: ${responsive.lsmall}) {
     .home-folder-list-swiper-slide {
       width: 200px;
@@ -69,7 +74,7 @@ interface HomeFolderListProps {
   title: string;
   subTitle: string;
   categories: MockExamCategory[];
-  link: string;
+  link?: string;
   unikeyKey: string;
   handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
@@ -84,12 +89,18 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
 }) => {
   return (
     <HomeFolderListBlock>
-      <Link className="home-folder-title" href={link}>
-        <span>{title}</span>
-        <span>
-          <RightOutlined />
-        </span>
-      </Link>
+      {link ? (
+        <Link className="home-folder-title" href={link}>
+          <span>{title}</span>
+          <span>
+            <RightOutlined />
+          </span>
+        </Link>
+      ) : (
+        <div className="home-folder-title">
+          <span>{title}</span>
+        </div>
+      )}
       <div className="home-folder-sub-title">
         <span>{subTitle}</span>
       </div>
