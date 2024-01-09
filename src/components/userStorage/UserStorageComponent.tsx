@@ -15,7 +15,12 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
   const { categories } = useStorage(StorageType.USER);
   return (
     <UserStorageComponentBlock>
-      {categories.length > 0 && <CategoryFolderList categories={categories} />}
+      {categories.length > 0 && (
+        <CategoryFolderList
+          categories={categories}
+          handleToggleBookmark={async () => {}}
+        />
+      )}
       {categories.length <= 0 && <Empty description="암기장이 비어있습니다." />}
       {placeholder}
     </UserStorageComponentBlock>

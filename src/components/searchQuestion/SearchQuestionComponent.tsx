@@ -1,4 +1,3 @@
-import { useSearchQuestions } from '@lib/graphql/hook/useExamQuestion';
 import useInput from '@lib/hooks/useInput';
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';
@@ -10,6 +9,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
+import { useLzaySearchQuestions } from '@lib/graphql/hook/useExamQuestion';
 
 const SearchQuestionComponentBlock = styled.div`
   display: flex;
@@ -64,7 +64,7 @@ const SearchQuestionComponent: React.FC<SearchQuestionComponentProps> = () => {
   const [
     searchQuestions,
     { loading: searchLoading, data: searchedQuestionsQuery },
-  ] = useSearchQuestions();
+  ] = useLzaySearchQuestions();
   const onSearch = async () => {
     if (searchValue.length < 2) return;
     try {
