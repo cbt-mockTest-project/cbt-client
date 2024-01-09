@@ -30,8 +30,8 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
     <>
       <WithHead
         title={category.name + ' | 모두CBT'}
+        pageHeadingTitle={`${category.name} 페이지`}
         description={category.description}
-        pageHeadingTitle="모두CBT 카테고리 페이지"
       />
       <CategoryComponent categoryQueryInput={categoryQueryInput} />
     </>

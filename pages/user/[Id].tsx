@@ -34,7 +34,7 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
     <>
       <WithHead
         title={`${user.nickname} | 모두CBT`}
-        pageHeadingTitle="모두CBT 유저 페이지"
+        pageHeadingTitle={`${user.nickname}님의 페이지`}
       />
       <StorageLayout
         storageType={StorageType.USER}
