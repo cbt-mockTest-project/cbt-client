@@ -12,12 +12,18 @@ const StudyQuestionBoxBlock = styled.div`
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    .study-question-box-number-and-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
   }
   .study-question-box-bookmark {
     height: 24px;
   }
   .study-question-box-number {
+    font-size: 14px !important;
     font-weight: bold;
     width: fit-content;
     flex-shrink: 0;
@@ -35,7 +41,7 @@ const StudyQuestionBoxBlock = styled.div`
     border-radius: 5px;
   }
   .study-question-exam-title {
-    font-size: 14px;
+    font-size: 12px;
     color: ${palette.colorSubText};
   }
 `;
@@ -60,21 +66,24 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">
-        {questionNumber && (
-          <p className="study-question-box-number">{questionNumber}번</p>
-        )}
+        <div className="study-question-box-number-and-title">
+          {questionNumber && (
+            <p className="study-question-box-number">{questionNumber}번</p>
+          )}
+
+          {isMultipleSelectMode && (
+            <div className="study-question-exam-title">
+              {question.mockExam?.title}
+            </div>
+          )}
+          {title && <div className="study-question-exam-title">{title}</div>}
+        </div>
         <Bookmark
           onClick={() => saveBookmark(question)}
           role="button"
           active={!!question.isBookmarked}
           className="study-question-box-bookmark"
         />
-        {isMultipleSelectMode && (
-          <div className="study-question-exam-title">
-            {question.mockExam?.title}
-          </div>
-        )}
-        {title && <div className="study-question-exam-title">{title}</div>}
       </div>
       <div className="study-question-box-question">
         {parse(question.question || '')}

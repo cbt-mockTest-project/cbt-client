@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import palette from '@styles/palette';
+import { BookmarkOutlined } from '@mui/icons-material';
 
 interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
   active: boolean;
@@ -14,9 +13,9 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   return (
     <BookmarkBlock {...divProps}>
       {active ? (
-        <StarIcon className="star-icon active" />
+        <BookmarkOutlined className="star-icon active" />
       ) : (
-        <StarBorderOutlinedIcon className="star-icon" />
+        <BookmarkOutlined className="star-icon" />
       )}
     </BookmarkBlock>
   );
@@ -27,6 +26,7 @@ const BookmarkBlock = styled.div`
   position: relative;
   cursor: pointer;
   .star-icon {
+    transition: color 0.2s linear;
     color: ${palette.gray_700};
   }
   .star-icon.active {

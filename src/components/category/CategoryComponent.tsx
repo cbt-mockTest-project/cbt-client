@@ -17,7 +17,11 @@ import { useRouter } from 'next/router';
 import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
-import { StarOutline } from '@mui/icons-material';
+import {
+  BookmarkOutlined,
+  BookmarksOutlined,
+  StarOutline,
+} from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from './CategoryLearningProgress';
@@ -33,7 +37,7 @@ const CategoryComponentBlock = styled.div`
   }
   .category-bookmark-button {
     position: absolute;
-    top: 30px;
+    top: 20px;
     right: 30px;
     cursor: pointer;
     width: 35px;
@@ -44,18 +48,11 @@ const CategoryComponentBlock = styled.div`
     transition: 0.2s all ease-in;
     svg {
       transition: 0.2s all ease-in;
-      font-size: 24px;
+      font-size: 36px;
       color: ${palette.colorBorder};
-    }
-    &:hover {
-      border-color: ${palette.yellow_500};
-      svg {
-        color: ${palette.yellow_500};
-      }
     }
   }
   .category-bookmark-button.active {
-    border-color: ${palette.yellow_500};
     svg {
       color: ${palette.yellow_500};
     }
@@ -289,7 +286,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             category.isBookmarked ? 'active' : ''
           }`}
         >
-          <StarFilled />
+          <BookmarkOutlined />
         </button>
       )}
       {saveCategoryModalOpen && (
