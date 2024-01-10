@@ -30,6 +30,11 @@ const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const questions = useAppSelector((state) => state.mockExam.questions);
+  const questionsWithLowScore = useAppSelector((state) =>
+    state.mockExam.questions.filter(
+      (question) => question.myQuestionState === QuestionState.Row
+    )
+  );
   const [readQuestionsQuery] = useLazyReadQuestionsByExamIds();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
   const [changeQuestionState] = useChangeQuestionState();
@@ -202,6 +207,13 @@ const useQuestions = () => {
     dispatch(mockExamActions.setQuestions([]));
   };
 
+  const filterQuestions = (states: [QuestionState]) => {
+    const newQuestions = questions.filter((question) =>
+      states.includes(question.myQuestionState)
+    );
+    dispatch(mockExamActions.setQuestions(newQuestions));
+  };
+
   return {
     questions,
     saveBookmark,
@@ -214,6 +226,8 @@ const useQuestions = () => {
     resetQuestionState,
     resetQuestions,
     shuffleQuestions,
+    filterQuestions,
+    questionsWithLowScore,
   };
 };
 

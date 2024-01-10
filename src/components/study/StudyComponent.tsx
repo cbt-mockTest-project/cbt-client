@@ -18,11 +18,12 @@ interface StudyComponentProps {}
 
 const StudyComponent: React.FC<StudyComponentProps> = () => {
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { fetchQuestions, resetQuestions, questions } = useQuestions();
+  const { fetchQuestions, resetQuestions, questions, questionsWithLowScore } =
+    useQuestions();
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();
-  const mode = router.query.mode as ExamMode;
+  const mode = router.query.mode as ExamMode | 'end';
 
   useEffect(() => {
     setFetchQuestionsLoading(true);
@@ -75,6 +76,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         <TypingModeComponent />
       )}
       {mode === ExamMode.CARD && questionsQueryInput && <CardModeComponent />}
+      {mode === 'end' && <SolutionModeComponent />}
     </StudyComponentBlock>
   );
 };
