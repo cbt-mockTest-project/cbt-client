@@ -316,6 +316,7 @@ export const GET_EXAM_CATEGORIES = gql`
         id
         name
         isPublic
+        source
         user {
           profileImg
           id

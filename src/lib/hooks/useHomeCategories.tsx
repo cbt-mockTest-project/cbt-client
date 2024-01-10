@@ -23,7 +23,7 @@ export interface handleToggleCategoryBookmarkProps {
 const useHomeCategories = () => {
   const { handleCheckLogin } = useAuth();
   const dispatch = useAppDispatch();
-  const { updateCache } = useApolloClient();
+  const { updateCache, client } = useApolloClient();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [
     getExamCategories,
@@ -57,31 +57,29 @@ const useHomeCategories = () => {
 
   const refetchHomeCategories = async () => {
     try {
-      const [moduCategoriesResponse, userCategoriesResponse] =
-        await Promise.all([
-          refetch({
-            input: {
-              examSource: ExamSource.MoudCbt,
-              limit: 30,
-              isPublicOnly: true,
+      const getCategories = (input: GetExamCategoriesInput) =>
+        client
+          .query<GetExamCategoriesQuery>({
+            query: GET_EXAM_CATEGORIES,
+            variables: {
+              input,
             },
-          }),
-          refetch({
-            input: {
-              examSource: ExamSource.User,
-              limit: 30,
-              isPublicOnly: true,
-            },
-          }),
-        ]);
-      setModuStorageCategories(
-        moduCategoriesResponse.data.getExamCategories
-          .categories as MockExamCategory[]
-      );
-      setUserStorageCategories(
-        userCategoriesResponse.data.getExamCategories
-          .categories as MockExamCategory[]
-      );
+          })
+          .then((res) => res.data.getExamCategories.categories || []);
+      const [moduCategories, userCategories] = await Promise.all([
+        getCategories({
+          examSource: ExamSource.MoudCbt,
+          limit: 30,
+          isPublicOnly: true,
+        }),
+        getCategories({
+          examSource: ExamSource.User,
+          limit: 30,
+          isPublicOnly: true,
+        }),
+      ]);
+      setModuStorageCategories(moduCategories as MockExamCategory[]);
+      setUserStorageCategories(userCategories as MockExamCategory[]);
     } catch (error) {
       handleError(error);
     }
