@@ -2,6 +2,7 @@ import { Button, Checkbox } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
+import useAuth from '@lib/hooks/useAuth';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
   display: flex;
@@ -38,6 +39,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
   categoryId,
   examIds,
 }) => {
+  const { handleCheckLogin } = useAuth();
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
     useState(false);
   return (
@@ -50,7 +52,10 @@ const CategoryMultipleSelectModeControlbar: React.FC<
         className="category-study-button"
         type="primary"
         disabled={isButtonDisabled}
-        onClick={() => setExamMultipleSelectModalOpen(true)}
+        onClick={() => {
+          if (!handleCheckLogin()) return;
+          setExamMultipleSelectModalOpen(true);
+        }}
       >
         다중 학습하기
       </Button>
