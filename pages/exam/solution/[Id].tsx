@@ -95,18 +95,18 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           notFound: true,
         };
       }
-      const questions =
-        res?.data.readQuestionsByExamIds.questions ||
-        ([] as MockExamQuestion[]);
+      const questions = (res?.data.readQuestionsByExamIds.questions ||
+        []) as MockExamQuestion[];
       store.dispatch(
         mockExamActions.setQuestions(questions as MockExamQuestion[])
       );
-      const title = questions[0].mockExam.title;
+      const title = questions[0]?.mockExam.title || '';
       return addApolloState(apolloClient, {
         props: { questionsQueryInput, questions, title },
         revalidate: 43200,
       });
-    } catch {
+    } catch (e) {
+      console.log(e);
       return {
         notFound: true,
       };
