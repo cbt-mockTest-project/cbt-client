@@ -17,6 +17,7 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
     text-overflow: ellipsis;
     white-space: nowrap;
     color: ${palette.colorEmphasisText};
+    height: 42px;
   }
   .category-basic-card {
     border-color: ${palette.colorEmphasisText};

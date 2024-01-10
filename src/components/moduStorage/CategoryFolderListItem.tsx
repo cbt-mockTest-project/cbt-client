@@ -34,8 +34,11 @@ const CategoryFolderListItemBlock = styled(Link)`
         height: 42px;
       }
 
-      .category-header-bookmar-or-tag {
+      .category-header-bookmark-or-tag {
         height: 40px;
+        .ant-tag {
+          margin: 0;
+        }
       }
     }
 
@@ -103,7 +106,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
         <div className="category-wrapper">
           <div className="category-header-wrapper">
             <span className="category-name">{category.name}</span>
-            <div className="category-header-bookmar-or-tag">
+            <div className="category-header-bookmark-or-tag">
               {user?.id !== category.user.id && (
                 <ExamBookmark
                   isBookmarked={category.isBookmarked}
