@@ -4,8 +4,9 @@ import AuthContent from './AuthContent';
 
 const AuthComponentBlock = styled.div`
   max-width: 330px;
+
+  padding-top: 30px;
   margin: 0 auto;
-  margin-top: 100px;
 `;
 
 interface AuthComponentProps {}

@@ -42,18 +42,14 @@ const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
   @media (max-width: ${responsive.medium}) {
     flex-direction: column;
     height: 100vh;
-    .main-layout-body {
-      margin-left: 0px;
-      padding: 0px;
-      min-height: calc(100 * 1vh - 60px);
-    }
-  }
-  @media (max-width: ${responsive.lsmall}) {
-    .main-layout-body {
-      margin-left: 0px;
-      padding: 0px;
-      min-height: calc(100 * 1vh - 60px);
+    .main-layout-body-wrapper {
+      min-height: calc(100 * 1vh - 116px);
       margin-bottom: 56px;
+    }
+    .main-layout-body {
+      margin-left: 0px;
+      padding: 0px;
+      min-height: calc(100 * 1vh - 116px);
     }
   }
 `;

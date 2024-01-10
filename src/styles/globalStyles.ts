@@ -43,7 +43,7 @@ const Globalstyles = createGlobalStyle`
   body {
     /* background-color: ${palette.colorBg}; */
     overflow-x: hidden !important;
-    overflow-y : scroll ;
+    overflow-y : auto;
   }
   menu, ol, ul {
     list-style: none;
