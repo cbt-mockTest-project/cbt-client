@@ -70,12 +70,12 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
             {isAnswerAllHidden ? (
               <div className="solution-mode-control-button-inner">
                 <VisibilityOffIcon />
-                <span>정답 모두 보이기</span>
+                <span>전체</span>
               </div>
             ) : (
               <div className="solution-mode-control-button-inner">
                 <RemoveRedEyeIcon />
-                <span>정답 모두 가리기</span>
+                <span>전체</span>
               </div>
             )}
           </Button>
