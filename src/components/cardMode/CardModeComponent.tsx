@@ -57,8 +57,8 @@ const CardModeComponentBlock = styled.div`
   }
 
   @media (max-width: ${responsive.large}) {
-    .typing-mode-navigation-prev,
-    .typing-mode-navigation-next {
+    .card-mode-navigation-prev,
+    .card-mode-navigation-next {
       display: none;
     }
   }

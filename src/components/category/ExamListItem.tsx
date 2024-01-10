@@ -53,9 +53,11 @@ const ExamListItemBlock = styled.div`
   }
   .exam-list-item-title {
     max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 15px;
   }
   .exam-list-item-bottom-wrapper {
