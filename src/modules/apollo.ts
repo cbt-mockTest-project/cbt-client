@@ -45,15 +45,16 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   }
 });
 
-const wsLink = !isServer()
-  ? new WebSocketLink({
-      // if you instantiate in the server, the error will be thrown
-      uri: `${process.env.NEXT_PUBLIC_API_SOCKET_URL}`,
-      options: {
-        reconnect: true,
-      },
-    })
-  : null;
+const wsLink = null;
+// const wsLink = !isServer()
+//   ? new WebSocketLink({
+//       // if you instantiate in the server, the error will be thrown
+//       uri: `${process.env.NEXT_PUBLIC_API_SOCKET_URL}`,
+//       options: {
+//         reconnect: true,
+//       },
+//     })
+//   : null;
 
 const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_API_URL,
