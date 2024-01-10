@@ -37,7 +37,9 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         ids: [Number(examId)],
       };
       setQuestionsQueryInput(input);
-      fetchQuestions(input);
+      fetchQuestions(input).finally(() => {
+        setFetchQuestionsLoading(false);
+      });
     }
     // 다중 문제 풀이
     else {
@@ -53,9 +55,10 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         input.states = states.split(',') as QuestionState[];
 
       setQuestionsQueryInput(input);
-      fetchQuestions(input);
+      fetchQuestions(input).finally(() => {
+        setFetchQuestionsLoading(false);
+      });
     }
-    setFetchQuestionsLoading(false);
   }, [router.isReady]);
 
   useEffect(() => {

@@ -119,53 +119,54 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   };
 
   const pricingCardData: PricingCardProps[] = [
-    {
-      title: '무료 체험 - 1일',
-      intro: '모두CBT 베이직 플랜을 체험해보세요!',
-      price: 0,
-      endDate: '이용기간: 1일',
-      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-      onConfirm: handleFreeTrial,
-      confirmLabel: '무료체험 시작하기',
-      disabledLabel: '무료체험 이용완료',
-      confirmDisabled: meQuery?.me.user
-        ? meQuery.me.user.usedFreeTrial ||
-          checkRole({
-            roleIds: [1, 2, 3],
-            meQuery,
-          })
-        : false,
-      roleIds: [3],
-    },
+    // {
+    //   title: '무료 체험 - 1일',
+    //   intro: '모두CBT 베이직 플랜을 체험해보세요!',
+    //   price: 0,
+    //   endDate: '이용기간: 1일',
+    //   benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+    //   onConfirm: handleFreeTrial,
+    //   confirmLabel: '무료체험 시작하기',
+    //   disabledLabel: '무료체험 이용완료',
+    //   confirmDisabled: meQuery?.me.user
+    //     ? meQuery.me.user.usedFreeTrial ||
+    //       checkRole({
+    //         roleIds: [1, 2, 3],
+    //         meQuery,
+    //       })
+    //     : false,
+    //   roleIds: [3],
+    // },
     {
       title: '베이직 플랜',
       intro: '무제한 베이직 플랜으로\n학습효율을 높여보세요!',
       price: 5900,
       endDate: '이용기간: 무제한',
-      benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
+      benefits: ['광고제거'],
+      // benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
         : false,
       onConfirm: handleBasicPlanPayment,
       roleIds: [1],
     },
-    {
-      title: '직8딴 플랜',
-      endDate: '이용기간: ~ 2023-12-11 까지',
-      intro:
-        '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
-      price: 15000,
-      priceAltText: '10,000 ~ ',
-      benefits: [
-        '직8딴 풀이모드 및 해설모드 제공',
-        '직8딴 랜덤모의고사 제공',
-        '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
-        '광고제거',
-      ],
-      confirmDisabled: false,
-      onConfirm: openEhsMasterPayModal,
-      roleIds: [4, 5, 6, 7],
-    },
+    // {
+    //   title: '직8딴 플랜',
+    //   endDate: '이용기간: ~ 2023-12-11 까지',
+    //   intro:
+    //     '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
+    //   price: 15000,
+    //   priceAltText: '10,000 ~ ',
+    //   benefits: [
+    //     '직8딴 풀이모드 및 해설모드 제공',
+    //     '직8딴 랜덤모의고사 제공',
+    //     '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
+    //     '광고제거',
+    //   ],
+    //   confirmDisabled: false,
+    //   onConfirm: openEhsMasterPayModal,
+    //   roleIds: [4, 5, 6, 7],
+    // },
   ];
 
   return (
