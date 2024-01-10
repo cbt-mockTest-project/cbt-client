@@ -72,13 +72,6 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
         <div className="study-answer-box-question-card-answer">
           {parse(question.solution || '')}
         </div>
-        <SolutionModeFeedbackList
-          question={question}
-          editFeedback={editFeedback}
-          addFeedback={addFeedback}
-          deleteFeedback={deleteFeedback}
-          updateFeedbackRecommendation={updateFeedbackRecommendation}
-        />
         {question.solution_img && question.solution_img.length > 0 && (
           <Image
             className="study-answer-box-box-image"
@@ -86,6 +79,13 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
             alt="문제이미지"
           />
         )}
+        <SolutionModeFeedbackList
+          question={question}
+          editFeedback={editFeedback}
+          addFeedback={addFeedback}
+          deleteFeedback={deleteFeedback}
+          updateFeedbackRecommendation={updateFeedbackRecommendation}
+        />
       </div>
     </StudyAnswerBoxBlock>
   );
