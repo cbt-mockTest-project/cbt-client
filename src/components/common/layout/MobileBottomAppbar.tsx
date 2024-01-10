@@ -1,7 +1,7 @@
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+import HistoryIcon from '@mui/icons-material/History';
 import FolderIcon from '@mui/icons-material/Folder';
 import HomeIcon from '@mui/icons-material/Home';
 import { responsive } from '@lib/utils/responsive';
@@ -42,7 +42,7 @@ const MobileBottomAppbar: React.FC<MobileBottomAppbarProps> = () => {
         <BottomNavigationAction
           value={'/me/history'}
           label="기록"
-          icon={<BookmarkAddedIcon />}
+          icon={<HistoryIcon />}
         />
       </BottomNavigation>
     </MobileBottomAppbarBlock>
