@@ -24,14 +24,14 @@ const CategoryFolderListItemBlock = styled(Link)`
       gap: 5px;
 
       .category-name {
-        font-size: 15px;
+        font-size: 14px;
         width: 100%;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        height: 40px;
+        height: 42px;
       }
 
       .category-header-bookmar-or-tag {
