@@ -94,13 +94,19 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
       <div className="study-question-box-question">
         {parse(question.question || '')}
       </div>
-      {question.question_img && question.question_img?.length > 0 && (
-        <Image
-          className="study-question-box-image"
-          src={question.question_img[0].url}
-          alt="문제이미지"
-        />
-      )}
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {question.question_img && question.question_img?.length > 0 && (
+          <Image
+            className="study-question-box-image"
+            src={question.question_img[0].url}
+            alt="문제이미지"
+          />
+        )}
+      </div>
     </StudyQuestionBoxBlock>
   );
 };
