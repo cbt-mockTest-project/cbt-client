@@ -1,6 +1,7 @@
-import { LeftOutlined } from '@ant-design/icons';
+import { HomeOutlined, LeftOutlined } from '@ant-design/icons';
 import HeaderLayout from '@components/common/header/HeaderLayout';
 import { responsive } from '@lib/utils/responsive';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
@@ -20,6 +21,10 @@ const StudyHeaderBlock = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 80%;
+  }
+  .study-header-home-link {
+    position: absolute;
+    right: 20px;
   }
   svg {
     font-size: 22px;
@@ -58,6 +63,9 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({ questions }) => {
           <LeftOutlined />
         </div>
         <div className="study-header-title">{title}</div>
+        <Link className="study-header-home-link" href="/">
+          <HomeOutlined />
+        </Link>
       </HeaderLayout>
     </StudyHeaderBlock>
   );
