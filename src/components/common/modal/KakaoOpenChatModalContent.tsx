@@ -14,14 +14,9 @@ interface KakaoOpenChatModalContentProps {
   onClose?: () => void;
 }
 
-const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
-  onClose,
-}) => {
-  const storage = new LocalStorage();
-  const handleStopWatching = () => {
-    storage.set(OPEN_CHAT_MODAL_STATE, true);
-    onClose?.();
-  };
+const KakaoOpenChatModalContent: React.FC<
+  KakaoOpenChatModalContentProps
+> = () => {
   return (
     <KakaoOpenChatModalContentContainer>
       <a
@@ -79,9 +74,6 @@ const KakaoOpenChatModalContent: React.FC<KakaoOpenChatModalContentProps> = ({
           <span>직8딴 구매자 톡방(방장: 저자)</span>
         </div>
       </a>
-      <Button onClick={handleStopWatching} type="primary">
-        이미 참여했어요!
-      </Button>
     </KakaoOpenChatModalContentContainer>
   );
 };
