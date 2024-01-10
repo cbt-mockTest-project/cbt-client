@@ -20,7 +20,10 @@ const StudyQuestionBoxBlock = styled.div`
     }
   }
   .study-question-box-bookmark {
-    height: 24px;
+    height: 30px;
+    svg {
+      font-size: 30px;
+    }
   }
   .study-question-box-number {
     font-size: 14px !important;
@@ -79,7 +82,10 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
         <Bookmark
-          onClick={() => saveBookmark(question)}
+          onClick={(e) => {
+            e.stopPropagation();
+            saveBookmark(question);
+          }}
           role="button"
           active={!!question.isBookmarked}
           className="study-question-box-bookmark"
