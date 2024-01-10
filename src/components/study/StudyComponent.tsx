@@ -11,7 +11,7 @@ import StudyHeader from './StudyHeader';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
 
 const StudyComponentBlock = styled.div`
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 interface StudyComponentProps {}
