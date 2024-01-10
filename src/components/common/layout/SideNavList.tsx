@@ -10,6 +10,7 @@ import AppDownloadInfoModal from './AppDownloadInfoModal';
 import { responsive } from '@lib/utils/responsive';
 import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
 import OpenChatModal from './OpenChatModal';
+import useAuth from '@lib/hooks/useAuth';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
@@ -30,6 +31,7 @@ interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
   const [isKakaoOpenChatModalOpen, setIsKakaoOpenChatModalOpen] =
     useState(false);
@@ -47,8 +49,7 @@ const SideNavList: React.FC<SideNavListProps> = () => {
         items={navItems}
       />
       <CustomNavDivider />
-      <UserAuthBox className="side-user-auth-box" />
-      <CustomNavDivider />
+
       <Menu
         className="side-nav-list"
         onClick={(e) => {
@@ -66,6 +67,9 @@ const SideNavList: React.FC<SideNavListProps> = () => {
         items={navBottomItems}
         selectedKeys={[]}
       />
+      <CustomNavDivider />
+
+      <UserAuthBox className="side-user-auth-box" />
       <AppDownloadInfoModal
         open={isAppDownloadModalOpen}
         onCancel={() => setIsAppDownloadModalOpen(false)}
