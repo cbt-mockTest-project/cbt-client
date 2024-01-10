@@ -23,9 +23,7 @@ const PostPage: NextPage<PostPageProps> = ({ postQueryOnStaticProps }) => {
         title={`${pageTitle} | 모두CBT`}
         pageHeadingTitle={`${pageTitle} | 커뮤니티`}
       />
-      <Layout>
-        <PostDetailComponent postQueryOnStaticProps={postQueryOnStaticProps} />
-      </Layout>
+      <PostDetailComponent postQueryOnStaticProps={postQueryOnStaticProps} />
     </>
   );
 };

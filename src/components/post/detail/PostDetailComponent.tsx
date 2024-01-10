@@ -156,8 +156,7 @@ export default PostDetailComponent;
 const PostDetailComponentBlock = styled.div`
   width: 100%;
   max-width: 800px;
-  margin-left: auto;
-  margin-bottom: 50px;
+  margin: 0 auto;
   .post-detail-top-section {
     display: flex;
     flex-direction: column;
@@ -167,7 +166,6 @@ const PostDetailComponentBlock = styled.div`
   }
   .post-detail-wrapper {
     margin-top: 30px;
-    border: 1px solid ${palette.gray_200};
     padding: 20px 10px;
   }
 
