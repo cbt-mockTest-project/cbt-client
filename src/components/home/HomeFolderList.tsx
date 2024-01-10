@@ -144,7 +144,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
           {categories.length === 0 && (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="아직 폴더가 없습니다."
+              description="아직 암기장이 없습니다."
             />
           )}
         </ul>
