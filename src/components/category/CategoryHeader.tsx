@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { User } from 'types';
 
 const CategoryHeaderBlock = styled.div`
+  width: fit-content;
   .category-creator-info {
     display: flex;
     gap: 5px;
@@ -41,6 +42,7 @@ const CategoryHeaderBlock = styled.div`
   .category-description {
     margin-top: 10px;
     font-size: 14px;
+    white-space: pre-wrap;
   }
 `;
 
