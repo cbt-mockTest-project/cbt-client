@@ -25,9 +25,7 @@ const DataDetailPage: NextPage<DataDetailPageProps> = ({}) => {
         title={`${post?.title} | 모두CBT`}
         pageHeadingTitle={`${post?.title} | 자료실`}
       />
-      <Layout>
-        <DataDetailComponent />
-      </Layout>
+      <DataDetailComponent />
     </>
   );
 };

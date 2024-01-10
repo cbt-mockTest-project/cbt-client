@@ -10,9 +10,7 @@ const DataPage: NextPage<DataPageProps> = () => {
   return (
     <>
       <WithHead title="자료실 | 모두CBT" pageHeadingTitle="자료실페이지" />
-      <Layout>
-        <DataComponent />
-      </Layout>
+      <DataComponent />
     </>
   );
 };
