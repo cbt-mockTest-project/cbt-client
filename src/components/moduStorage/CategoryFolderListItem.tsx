@@ -24,15 +24,18 @@ const CategoryFolderListItemBlock = styled(Link)`
       gap: 5px;
 
       .category-name {
-        font-size: 14px;
+        font-size: 15px;
         width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        height: 40px;
       }
 
       .category-header-bookmar-or-tag {
-        height: 26px;
+        height: 40px;
       }
     }
 
@@ -67,7 +70,6 @@ const CategoryFolderListItemBlock = styled(Link)`
       .category-exam-count {
         font-size: 12px;
         font-weight: bold;
-        margin-right: 10px;
         color: ${palette.colorSubText};
       }
     }

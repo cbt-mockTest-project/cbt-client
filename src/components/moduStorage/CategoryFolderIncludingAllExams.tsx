@@ -60,7 +60,6 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
     .category-exam-count {
       font-size: 12px;
       font-weight: bold;
-      margin-right: 10px;
       color: ${palette.colorSubText};
     }
   }

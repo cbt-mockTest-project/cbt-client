@@ -56,8 +56,7 @@ const ExamListItemBlock = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
   }
   .exam-list-item-bottom-wrapper {
     margin-top: 15px;
