@@ -5,9 +5,11 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import MobileHeader from './MobileHeader';
 import Footer from './Footer';
+import MobileBottomAppbar from './MobileBottomAppbar';
 
 const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
   overflow-y: auto;
+  overflow-x: hidden;
   color: ${palette.colorText};
   .main-layout-wrapper {
     display: flex;
@@ -39,13 +41,19 @@ const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
   }
   @media (max-width: ${responsive.medium}) {
     flex-direction: column;
+    height: 100vh;
     .main-layout-body {
       margin-left: 0px;
       padding: 0px;
       min-height: calc(100 * 1vh - 60px);
     }
-    .main-layout-body-wrapper {
+  }
+  @media (max-width: ${responsive.lsmall}) {
+    .main-layout-body {
+      margin-left: 0px;
+      padding: 0px;
       min-height: calc(100 * 1vh - 60px);
+      margin-bottom: 56px;
     }
   }
 `;
@@ -73,6 +81,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           <Footer className="layout-pc-footer" />
         </div>
       </div>
+      <MobileBottomAppbar />
     </MainLayoutBlock>
   );
 };
