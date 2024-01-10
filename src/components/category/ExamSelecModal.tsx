@@ -19,9 +19,11 @@ interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
 
 const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
+  const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
   const { examId, ...modalProps } = props;
   const handleStartExam = () => {
+    setMoveLoading(true);
     if (mode === ExamMode.SOLUTION)
       return router.push(`/exam/solution/${examId}`);
     router.push({
@@ -53,6 +55,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
           size="large"
           type="primary"
           onClick={handleStartExam}
+          loading={moveLoading}
         >
           학습 시작하기
         </Button>
