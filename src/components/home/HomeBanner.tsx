@@ -1,9 +1,11 @@
+import OpenChatModal from '@components/common/layout/OpenChatModal';
 import { responsive } from '@lib/utils/responsive';
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import InquiryModal from './InquiryModal';
 
 const HomeBannerBlock = styled.div`
   .home-banner-image-swiper {
@@ -42,19 +44,49 @@ const HomeBannerBlock = styled.div`
 interface HomeBannerProps {}
 
 const HomeBanner: React.FC<HomeBannerProps> = () => {
+  const [isOpenChatModalOpen, setIsOpenChatModalOpen] = React.useState(false);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false);
   const banners = [
     {
       img: {
         pc: '/png/banner/ehs-banner-pc01.png',
         mobile: '/png/banner/ehs-banner-mobile01.png',
       },
-      link: 'https://ehs-master.com',
+      key: 'https://ehs-master.com',
+    },
+    {
+      img: {
+        pc: '/png/banner/ad-banner-pc01.png',
+        mobile: '/png/banner/ad-banner-mobile01.png',
+      },
+      key: 'ad',
+    },
+
+    {
+      img: {
+        pc: '/png/banner/main-banner-pc04.png',
+        mobile: '/png/banner/main-banner-mobile04.png',
+      },
+      key: 'open-chat',
     },
   ];
+  const handleBannerClick = (key: string) => {
+    if (key.startsWith('http')) {
+      window.open(key, '_blank', 'noopener noreferrer');
+      return;
+    }
+    if (key === 'open-chat') {
+      setIsOpenChatModalOpen(true);
+      return;
+    }
+    if (key === 'ad') {
+      setIsInquiryModalOpen(true);
+      return;
+    }
+  };
   return (
     <HomeBannerBlock>
       <Swiper
-        spaceBetween={30}
         autoplay={{
           delay: 1500,
           disableOnInteraction: false,
@@ -68,6 +100,7 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
           <SwiperSlide
             key={banner.img.pc}
             className="home-banner-image-swiper-slide"
+            onClick={() => handleBannerClick(banner.key)}
           >
             <div className="home-banner-image-wrapper visible-on-pc">
               <Image src={banner.img.pc} alt="배너" fill />
@@ -78,6 +111,18 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+      {isOpenChatModalOpen && (
+        <OpenChatModal
+          open={isOpenChatModalOpen}
+          onCancel={() => setIsOpenChatModalOpen(false)}
+        />
+      )}
+      {isInquiryModalOpen && (
+        <InquiryModal
+          open={isInquiryModalOpen}
+          onCancel={() => setIsInquiryModalOpen(false)}
+        />
+      )}
     </HomeBannerBlock>
   );
 };
