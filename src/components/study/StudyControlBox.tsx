@@ -1,5 +1,5 @@
 import BasicCard from '@components/common/card/BasicCard';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -18,6 +18,8 @@ import {
   AddFeedbackInput,
   EditFeedbackInput,
 } from '@lib/hooks/useQuestionFeedback';
+import { useRouter } from 'next/router';
+import { ExamMode } from 'customTypes';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -77,6 +79,9 @@ const StudyControlBoxBlock = styled.div`
     word-break: break-all;
     white-space: pre-wrap;
   }
+  .study-control-finish-button {
+    margin-left: auto;
+  }
   @media (max-width: ${responsive.large}) {
     .study-swiper-button-wrapper {
       display: flex;
@@ -115,6 +120,12 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   additionalControlButton,
   hasScoreTable = true,
 }) => {
+  const router = useRouter();
+  const mode = router.query.mode as ExamMode;
+  const hasFinishButton = useMemo(
+    () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
+    [mode]
+  );
   const { data } = useMeQuery();
   const { openAuthModal } = useAuthModal();
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
@@ -177,7 +188,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
         </Popover>
         {additionalControlButton && additionalControlButton}
         {hasScoreTable && (
-          <Button onClick={() => setIsStudyScoreModalOpen(true)}>점수표</Button>
+          <Button onClick={() => setIsStudyScoreModalOpen(true)}>현황</Button>
         )}
         {swiper && (
           <div className="study-swiper-button-wrapper">
@@ -198,6 +209,17 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               <RightOutlined />
             </button>
           </div>
+        )}
+        {swiper && hasFinishButton && (
+          <Button
+            className="study-control-finish-button"
+            type="primary"
+            onClick={() => {
+              swiper.slideTo(swiper.slides.length - 1, 0);
+            }}
+          >
+            종료
+          </Button>
         )}
       </BasicCard>
 
