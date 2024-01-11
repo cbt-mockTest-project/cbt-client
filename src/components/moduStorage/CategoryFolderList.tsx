@@ -22,7 +22,7 @@ const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   hasAllExamFolder = false,
 }) => {
   const examCount = categories?.reduce(
-    (acc, cur) => acc + cur.mockExam.length,
+    (acc, cur) => acc + cur.mockExam?.length || 0,
     0
   );
   return (
