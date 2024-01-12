@@ -61,6 +61,10 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             setIsKakaoOpenChatModalOpen(true);
             return;
           }
+          if (e.key === '/pricing') {
+            router.push(e.key);
+            return;
+          }
         }}
         style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"

@@ -6,6 +6,7 @@ import {
   HistoryOutlined,
   MobileOutlined,
   WechatOutlined,
+  ClearOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -46,5 +47,10 @@ export const navBottomItems = [
     key: 'open-chat',
     icon: <WechatOutlined />,
     label: '오픈 채팅',
+  },
+  {
+    key: '/pricing',
+    icon: <ClearOutlined />,
+    label: '광고 제거',
   },
 ];
