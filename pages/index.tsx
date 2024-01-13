@@ -1,3 +1,4 @@
+import WithHead from '@components/common/head/WithHead';
 import HomeComponent from '@components/home/HomeComponent';
 import { MAIN_PAGE } from '@lib/constants/displayName';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
@@ -12,7 +13,15 @@ import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
 interface Props {}
 
 const IndexPage: React.FC<Props> = () => {
-  return <HomeComponent />;
+  return (
+    <>
+      <WithHead
+        title="모두CBT | 암기장 공유 서비스"
+        pageHeadingTitle="모두CBT 서비스 메인페이지"
+      />
+      <HomeComponent />
+    </>
+  );
 };
 
 IndexPage.displayName = MAIN_PAGE;
