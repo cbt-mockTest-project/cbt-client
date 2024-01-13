@@ -64,12 +64,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
     try {
       const apolloClient = initializeApollo({}, '');
-      const categoryName = context.params?.name;
+      const categoryName = encodeURIComponent(context.params?.name as string);
       if (!categoryName || typeof categoryName !== 'string') {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
+        return;
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
         name: categoryName,
