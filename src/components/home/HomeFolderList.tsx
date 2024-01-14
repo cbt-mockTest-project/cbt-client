@@ -4,11 +4,12 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Empty } from 'antd';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MockExamCategory } from 'types';
+import HomeCategorySearchModal from './HomeCategorySearchModal';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -75,6 +76,7 @@ interface HomeFolderListProps {
   subTitle: string;
   categories: MockExamCategory[];
   link?: string;
+  trigger?: string;
   unikeyKey: string;
   handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
@@ -84,9 +86,17 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   title,
   subTitle,
   link,
+  trigger,
   unikeyKey,
   handleToggleBookmark,
 }) => {
+  const [isCategorySearchModalOpen, setIsCategorySearchModalOpen] =
+    useState(false);
+  const handleMoreViewTrigger = (trigger: string) => {
+    if (trigger === 'user-storage') {
+      setIsCategorySearchModalOpen(true);
+    }
+  };
   return (
     <HomeFolderListBlock>
       {link ? (
@@ -96,6 +106,16 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
             <RightOutlined />
           </span>
         </Link>
+      ) : trigger ? (
+        <button
+          className="home-folder-title"
+          onClick={() => handleMoreViewTrigger(trigger)}
+        >
+          <span>{title}</span>
+          <span>
+            <RightOutlined />
+          </span>
+        </button>
       ) : (
         <div className="home-folder-title">
           <span>{title}</span>
@@ -158,6 +178,12 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
             <RightOutlined />
           </button>
         </>
+      )}
+      {isCategorySearchModalOpen && (
+        <HomeCategorySearchModal
+          open={isCategorySearchModalOpen}
+          onCancel={() => setIsCategorySearchModalOpen(false)}
+        />
       )}
     </HomeFolderListBlock>
   );
