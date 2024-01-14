@@ -31,6 +31,7 @@ const CopyRightComponent: React.FC<CopyRightComponentProps> = () => {
 export default CopyRightComponent;
 
 const CopyRightComponentContainer = styled.div`
+  padding: 30px 40px;
   h2 {
     font-size: 1.5rem;
   }

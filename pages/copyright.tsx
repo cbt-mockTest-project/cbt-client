@@ -6,11 +6,7 @@ import styled from 'styled-components';
 interface CopyrightPageProps {}
 
 const CopyrightPage: React.FC<CopyrightPageProps> = () => {
-  return (
-    <Layout>
-      <CopyRightComponent />
-    </Layout>
-  );
+  return <CopyRightComponent />;
 };
 
 export default CopyrightPage;
