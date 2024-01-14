@@ -64,8 +64,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
     try {
       const apolloClient = initializeApollo({}, '');
-      const categoryName = encodeURIComponent(context.params?.name as string);
+      const categoryName = context.params?.name;
       if (!categoryName || typeof categoryName !== 'string') {
+        console.log('categoryName is undefined');
         return;
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
@@ -78,6 +79,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             input: categoryQueryInput,
           },
         });
+      console.log(res.data.readMockExamCategoryByCategoryId.error);
       if (!res.data.readMockExamCategoryByCategoryId.ok) {
         return {
           notFound: true,
@@ -95,6 +97,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         revalidate: 43200,
       });
     } catch (e) {
+      console.log(e);
       return {
         notFound: true,
         revalidate: 1,
