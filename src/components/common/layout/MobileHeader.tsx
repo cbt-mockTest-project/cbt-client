@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MenuIcon from '@mui/icons-material/Menu';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import MobileDrawer from './MobileDrawer';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const MobileHeaderBlock = styled.div`
   display: none;
@@ -34,7 +35,12 @@ interface MobileHeaderProps {
 }
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({ title }) => {
+  const router = useRouter();
   const [menuState, setMenuState] = useState(false);
+  useEffect(() => {
+    if (!menuState) return;
+    setMenuState(false);
+  }, [router.pathname]);
   return (
     <MobileHeaderBlock>
       <Link href="/">
