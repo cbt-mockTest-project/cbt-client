@@ -255,3 +255,7 @@ export const reomveImgTag = (htmlString: string) => {
   // 변경된 HTML을 문자열로 반환
   return doc.body.innerHTML;
 };
+
+export const replaceSpaceToHyphen = (string: string) => {
+  return string.replace(/\s/g, '-');
+};
