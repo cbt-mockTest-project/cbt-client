@@ -25,6 +25,7 @@ import {
 import CategoryInviteModal from './CategoryInviteModal';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from './CategoryLearningProgress';
+import SelectExamTypeModal from './SelectExamTypeModal';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -113,7 +114,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     handleAllExamsSelect,
     handleChangeMultipleSelectMode,
   } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
-
+  const [isSelectExamTypeModalOpen, setIsSelectExamTypeModalOpen] =
+    useState(false);
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
@@ -188,6 +190,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
+
+  const onClickCreateExamButton = () => {
+    setEditExamsModalOpen(false);
+    setIsSelectExamTypeModalOpen(true);
+  };
 
   useEffect(() => {
     if (!meQuery) return;
@@ -305,9 +312,19 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       )}
       {editExamsModalOpen && (
         <EditExamsModal
+          onClickCreateExamButton={onClickCreateExamButton}
           categoryId={category.id}
           open={editExamsModalOpen}
           onCancel={() => setEditExamsModalOpen(false)}
+        />
+      )}
+      {isSelectExamTypeModalOpen && (
+        <SelectExamTypeModal
+          categoryId={category.id}
+          open={isSelectExamTypeModalOpen}
+          onCancel={() => {
+            setIsSelectExamTypeModalOpen(false);
+          }}
         />
       )}
       {inviteUserModalOpen && (
