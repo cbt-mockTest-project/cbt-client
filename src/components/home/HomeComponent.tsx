@@ -15,6 +15,7 @@ import useAuth from '@lib/hooks/useAuth';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
+
   .home-wrapper {
     margin-top: 20px;
     display: flex;
@@ -30,9 +31,20 @@ const HomeComponentBlock = styled.div`
       width: 100%;
       gap: 10px;
       align-items: center;
-      .home-folder-search-input {
-        max-width: 500px;
-        text-align: center;
+      .home-folder-search-form {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .home-folder-search-input {
+          max-width: 500px;
+          text-align: center;
+        }
+        .home-folder-search-button {
+          svg {
+            font-size: 18px;
+          }
+        }
       }
     }
   }
@@ -139,28 +151,35 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             <Radio.Button value="folder">암기장 검색</Radio.Button>
             <Radio.Button value="question">문제 검색</Radio.Button>
           </Radio.Group>
-          <Input
-            ref={searchInputRef}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter')
-                handleSearch(searchInputRef.current.input.value);
+          <form
+            className="home-folder-search-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearch(searchInputRef.current.input.value);
             }}
-            className="home-folder-search-input"
-            placeholder={
-              searchType === 'folder'
-                ? '학습하고 싶은 암기장을 검색해보세요.'
-                : searchType === 'question'
-                ? '문제를 검색해보세요. (2글자 이상)'
-                : ''
-            }
-            suffix={
-              <SearchOutlined
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleSearch(searchInputRef.current.input.value)}
-              />
-            }
-            size="large"
-          />
+          >
+            <Input
+              ref={searchInputRef}
+              className="home-folder-search-input"
+              placeholder={
+                searchType === 'folder'
+                  ? '학습하고 싶은 암기장을 검색해보세요.'
+                  : searchType === 'question'
+                  ? '문제를 검색해보세요. (2글자 이상)'
+                  : ''
+              }
+              suffix={
+                <button className="home-folder-search-button" type="submit">
+                  <SearchOutlined
+                    onClick={() =>
+                      handleSearch(searchInputRef.current.input.value)
+                    }
+                  />
+                </button>
+              }
+              size="large"
+            />
+          </form>
         </div>
         {typeof keyword === 'string' && keyword ? (
           searchType === 'folder' ? (
@@ -201,7 +220,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             <HomeFolderList
               title="유저가 만든 공개 암기장 📂"
               subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
-              // link="/user-storage"
+              trigger="user-storage"
               categories={userStorageCategories}
               handleToggleBookmark={async (id) => {
                 handleToggleCategoryBookmark({ categoryId: id, type: 'user' });

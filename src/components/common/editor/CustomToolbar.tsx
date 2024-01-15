@@ -1,5 +1,5 @@
 // import { colors } from "@/styles/colors";
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import styled, { css } from 'styled-components';
 import { ItalicOutlined, BoldOutlined } from '@ant-design/icons';
@@ -52,17 +52,20 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
   staticPosition,
   reactQuillRef,
 }) => {
+  const toolBarRef = useRef<HTMLDivElement>(null);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
-  const toggleBold = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  const toggleBold = (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e?.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
     quill.format('bold', !format.bold);
   };
-  const toggleItalic = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  const toggleItalic = (
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e?.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
@@ -74,26 +77,54 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
     quill.format('color', value.toHexString());
   };
   const toggleScriptSub = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
     quill.format('script', format.script === 'sub' ? false : 'sub');
   };
   const toggleScriptSuper = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!reactQuillRef.current) return;
     const quill = reactQuillRef.current.getEditor();
     const format = quill.getFormat();
     quill.format('script', format.script === 'super' ? false : 'super');
   };
+
+  useEffect(() => {
+    if (!position || !toolBarRef.current) return;
+    const handleKeydown = (e: KeyboardEvent) => {
+      const preventEvent = (e: KeyboardEvent) => {
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        e.preventDefault();
+      };
+      if (e.altKey && e.key === 'b') {
+        preventEvent(e);
+        toggleBold();
+      }
+      if (e.altKey && e.key === 'ArrowDown') {
+        preventEvent(e);
+        toggleScriptSub();
+      }
+      if (e.altKey && e.key === 'ArrowUp') {
+        preventEvent(e);
+        toggleScriptSuper();
+      }
+    };
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, [position, toolBarRef]);
   return (
     <CustomToolbarBlock
       id="toolbar"
+      ref={toolBarRef}
       position={colorPickerOpen ? staticPosition : position}
       display={!!(position || colorPickerOpen) ? 'flex' : 'none'}
     >

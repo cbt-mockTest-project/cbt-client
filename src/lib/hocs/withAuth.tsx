@@ -1,26 +1,12 @@
-import { useRouter } from 'next/router';
-import { useEffect, ComponentType, PropsWithChildren } from 'react';
+import { ComponentType, PropsWithChildren } from 'react';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { UserRole } from 'types';
+import AuthComponent from '@components/auth/AuthComponent';
 
-function withAuth<T>(
-  WrappedComponent: ComponentType<T>,
-  userRole: UserRole = UserRole.Client,
-  redirectPath: string = '/auth'
-) {
+function withAuth<T>(WrappedComponent: ComponentType<T>) {
   const WithAuthComponent: ComponentType<PropsWithChildren<T>> = (props) => {
-    const router = useRouter();
     const { data: meQuery } = useMeQuery();
-    useEffect(() => {
-      if (!meQuery) return;
-      if (userRole === UserRole.Client) {
-        if (!meQuery.me.user) {
-          router.push(redirectPath);
-        }
-      }
-    }, [meQuery]);
-
     if (!meQuery) return null;
+    if (!meQuery.me.user) return <AuthComponent />;
     return <WrappedComponent {...props} />;
   };
 

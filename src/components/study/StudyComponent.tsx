@@ -18,8 +18,7 @@ interface StudyComponentProps {}
 
 const StudyComponent: React.FC<StudyComponentProps> = () => {
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { fetchQuestions, resetQuestions, questions, questionsWithLowScore } =
-    useQuestions();
+  const { fetchQuestions, resetQuestions, questions } = useQuestions();
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();

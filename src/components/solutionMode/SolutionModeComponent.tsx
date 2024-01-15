@@ -1,13 +1,15 @@
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import LoopIcon from '@mui/icons-material/Loop';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
+import SelectStudyModeModal from './SelectStudyModeModal';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -54,7 +56,8 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     fetchQuestions,
   } = useQuestions();
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
-
+  const [isSelectStudyModeModalOpen, setIsSelectStudyModeModalOpen] =
+    useState(false);
   useEffect(() => {
     // staticProps로 받은 questionsQueryInput이 있으면 해당 문제들을 fetch
     if (questionsQueryInput) {
@@ -66,25 +69,43 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     <SolutionModeComponentBlock>
       <div className="solution-mode-body">
         <div className="solution-mode-control-button-wrapper">
-          <Button onClick={() => setIsAnswerAllHidden(!isAnswerAllHidden)}>
-            {isAnswerAllHidden ? (
+          <Tooltip
+            title={
+              isAnswerAllHidden
+                ? '정답을 모두 보이게 합니다. '
+                : '정답을 모두 가립니다.'
+            }
+          >
+            <Button onClick={() => setIsAnswerAllHidden(!isAnswerAllHidden)}>
+              {isAnswerAllHidden ? (
+                <div className="solution-mode-control-button-inner">
+                  <VisibilityOffIcon />
+                  <span>전체</span>
+                </div>
+              ) : (
+                <div className="solution-mode-control-button-inner">
+                  <RemoveRedEyeIcon />
+                  <span>전체</span>
+                </div>
+              )}
+            </Button>
+          </Tooltip>
+          <Tooltip title="문제 순서를 섞습니다.">
+            <Button onClick={shuffleQuestions}>
               <div className="solution-mode-control-button-inner">
-                <VisibilityOffIcon />
-                <span>전체</span>
+                <ShuffleIcon />
+                섞기
               </div>
-            ) : (
+            </Button>
+          </Tooltip>
+          <Tooltip title="학습 형태를 변경합니다.">
+            <Button onClick={() => setIsSelectStudyModeModalOpen(true)}>
               <div className="solution-mode-control-button-inner">
-                <RemoveRedEyeIcon />
-                <span>전체</span>
+                <LoopIcon />
+                형태
               </div>
-            )}
-          </Button>
-          <Button onClick={shuffleQuestions}>
-            <div className="solution-mode-control-button-inner">
-              <ShuffleIcon />
-              섞기
-            </div>
-          </Button>
+            </Button>
+          </Tooltip>
         </div>
         <ul className="solution-mode-solution-card-list">
           {questions!.map((question, index) => (
@@ -99,6 +120,12 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           ))}
         </ul>
       </div>
+      {isSelectStudyModeModalOpen && (
+        <SelectStudyModeModal
+          open={isSelectStudyModeModalOpen}
+          onCancel={() => setIsSelectStudyModeModalOpen(false)}
+        />
+      )}
     </SolutionModeComponentBlock>
   );
 };
