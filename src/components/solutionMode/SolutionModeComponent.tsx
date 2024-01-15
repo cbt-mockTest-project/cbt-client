@@ -10,6 +10,7 @@ import SolutionModeCardItem from './SolutionModeCardItem';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
+import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -125,6 +126,9 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           open={isSelectStudyModeModalOpen}
           onCancel={() => setIsSelectStudyModeModalOpen(false)}
         />
+      )}
+      {questionsQueryInput.ids && (
+        <StudyPaymentGuard examIds={questionsQueryInput.ids} />
       )}
     </SolutionModeComponentBlock>
   );
