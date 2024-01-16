@@ -1,5 +1,5 @@
 import { Button, Tooltip } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
@@ -11,6 +11,7 @@ import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
+import { useRouter } from 'next/router';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -56,9 +57,18 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     shuffleQuestions,
     fetchQuestions,
   } = useQuestions();
+  const router = useRouter();
+  const examIdsQuery = router.query.examIds;
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
   const [isSelectStudyModeModalOpen, setIsSelectStudyModeModalOpen] =
     useState(false);
+  const examIds = useMemo(() => {
+    if (questionsQueryInput) return questionsQueryInput.ids;
+    if (typeof examIdsQuery === 'string') {
+      return examIdsQuery.split(',').map((id) => parseInt(id));
+    }
+    return null;
+  }, [questionsQueryInput, examIdsQuery]);
   useEffect(() => {
     // staticProps로 받은 questionsQueryInput이 있으면 해당 문제들을 fetch
     if (questionsQueryInput) {
@@ -127,9 +137,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           onCancel={() => setIsSelectStudyModeModalOpen(false)}
         />
       )}
-      {questionsQueryInput.ids && (
-        <StudyPaymentGuard examIds={questionsQueryInput.ids} />
-      )}
+      {examIds && <StudyPaymentGuard examIds={examIds} />}
     </SolutionModeComponentBlock>
   );
 };
