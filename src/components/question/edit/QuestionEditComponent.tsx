@@ -50,12 +50,11 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
             ? [{ ...newSolutionImage[0], thumbUrl: newSolutionImage[0].url }]
             : []
         );
-        newQuestionImage.length >= 1 &&
-          setQuestionImage(
-            newQuestionImage.length >= 1
-              ? [{ ...newQuestionImage[0], thumbUrl: newQuestionImage[0].url }]
-              : []
-          );
+        setQuestionImage(
+          newQuestionImage.length >= 1
+            ? [{ ...newQuestionImage[0], thumbUrl: newQuestionImage[0].url }]
+            : []
+        );
       }
     })();
   }, [router.query.Id]);
@@ -95,7 +94,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
       });
       if (res.data?.editMockExamQuestion.ok) {
         message.success('문제가 수정됐습니다.');
-        router.push(`/preview/question/${router.query.Id}`);
+        router.push(`/question/${router.query.Id}`);
         return;
       }
 
@@ -108,6 +107,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
     }
   };
   if (!readQuestionQuery || !questionImage || !solutionImage) return null;
+
   const { mockExamQusetion } = readQuestionQuery.readMockExamQuestion;
   return (
     <QuestionEditComponentContainer onSubmit={handleSubmit(requestSumbit)}>
