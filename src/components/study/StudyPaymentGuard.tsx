@@ -1,3 +1,4 @@
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useRoleCheck from '@lib/hooks/useRoleCheck';
 import { Button } from 'antd';
 import Link from 'next/link';
@@ -36,6 +37,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
   examId,
   examIds,
 }) => {
+  const { data: meQuery } = useMeQuery();
   const { handleCheckExamAccess } = useRoleCheck();
   const [hasAccess, setHasAccess] = useState(true);
   const [time, setTime] = useState(60);
@@ -56,6 +58,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
 
   useEffect(() => {
     if (!examIds && !examId) return;
+    if (!meQuery) return;
     if (examIds) {
       const ids = Array.isArray(examIds)
         ? examIds
@@ -71,7 +74,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
         setHasAccess(false);
       }
     }
-  }, [examIds, examId]);
+  }, [examIds, examId, meQuery]);
 
   useEffect(() => {
     if (hasAccess) return;
