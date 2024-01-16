@@ -1,11 +1,10 @@
-import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
-import ImageDragger from '@components/exam/write/ImageDragger';
+import ExamCreateEditor from '@components/exam/create/ExamCreateEditor';
 import {
   useEditQuestion,
   useLazyReadQuestion,
 } from '@lib/graphql/hook/useExamQuestion';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
+import EditorStyle from '@styles/editorStyle';
 import { Button, message, UploadFile } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -25,8 +24,12 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
   const [readQuestion, { data: readQuestionQuery }] =
     useLazyReadQuestion('cache-and-network');
   const [editQuestion, { loading: editQuestionLoading }] = useEditQuestion();
-  const [solutionImage, setSolutionImage] = useState<UploadFile<any>[]>([]);
-  const [questionImage, setQuestionImage] = useState<UploadFile<any>[]>([]);
+  const [solutionImage, setSolutionImage] = useState<UploadFile<any>[] | null>(
+    null
+  );
+  const [questionImage, setQuestionImage] = useState<UploadFile<any>[] | null>(
+    null
+  );
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
 
   useEffect(() => {
@@ -42,14 +45,17 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
           mockExamQusetion.solution_img as MockExamQuestionImageInputType[];
         const newQuestionImage =
           mockExamQusetion.question_img as MockExamQuestionImageInputType[];
-        newSolutionImage.length >= 1 &&
-          setSolutionImage([
-            { ...newSolutionImage[0], thumbUrl: newSolutionImage[0].url },
-          ]);
+        setSolutionImage(
+          newSolutionImage.length >= 1
+            ? [{ ...newSolutionImage[0], thumbUrl: newSolutionImage[0].url }]
+            : []
+        );
         newQuestionImage.length >= 1 &&
-          setQuestionImage([
-            { ...newQuestionImage[0], thumbUrl: newQuestionImage[0].url },
-          ]);
+          setQuestionImage(
+            newQuestionImage.length >= 1
+              ? [{ ...newQuestionImage[0], thumbUrl: newQuestionImage[0].url }]
+              : []
+          );
       }
     })();
   }, [router.query.Id]);
@@ -63,7 +69,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
               {
                 url: solutionImage[0].url as string,
                 uid: solutionImage[0].url as string,
-                name: solutionImage[0].name as string,
+                name: solutionImage[0].url as string,
               },
             ]
           : [];
@@ -73,7 +79,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
               {
                 url: questionImage[0].url as string,
                 uid: questionImage[0].url as string,
-                name: questionImage[0].name as string,
+                name: questionImage[0].url as string,
               },
             ]
           : [];
@@ -92,56 +98,62 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
         router.push(`/preview/question/${router.query.Id}`);
         return;
       }
-      setEditButtonDisabled(false);
+
       return message.error(res.data?.editMockExamQuestion.error);
     } catch (e) {
+      message.error('문제 수정에 실패했습니다.');
       handleError(e);
+    } finally {
+      setEditButtonDisabled(false);
     }
   };
-  if (!readQuestionQuery) return null;
+  if (!readQuestionQuery || !questionImage || !solutionImage) return null;
   const { mockExamQusetion } = readQuestionQuery.readMockExamQuestion;
   return (
     <QuestionEditComponentContainer onSubmit={handleSubmit(requestSumbit)}>
       <h2>
         {`${mockExamQusetion.mockExam?.title} - ${mockExamQusetion.number}번 문제`}
       </h2>
-      <div className="question-edit-block-wrapper">
-        <div className="question-edit-block">
-          <CreateQuestionEditor
-            placeholder="문제를 입력해주세요."
-            content={watch('question') || ''}
-            setContent={(value) => {
-              setValue('question', value);
-            }}
-          />
-
-          <ImageDragger
-            images={questionImage}
-            setImages={setQuestionImage}
-            text="문제와 관련된 사진을 등록해주세요."
-            hint="사진은 한개만 등록 가능합니다."
-          />
-        </div>
-        <div className="question-edit-block">
-          <CreateQuestionEditor
-            placeholder="해설을 입력해주세요."
-            content={watch('solution') || ''}
-            setContent={(value) => {
-              setValue('solution', value);
-            }}
-          />
-
-          <ImageDragger
-            images={solutionImage}
-            setImages={setSolutionImage}
-            text="해설과 관련된 사진을 등록해주세요."
-            hint="사진은 한개만 등록 가능합니다."
-          />
-        </div>
+      <div className="question-edit-editor-wrapper">
+        <ExamCreateEditor
+          onChangeImage={(value) => {
+            setQuestionImage([
+              {
+                uid: value,
+                name: value,
+                url: value,
+                thumbUrl: value,
+              },
+            ]);
+          }}
+          onChangeText={(value) => setValue('question', value)}
+          key={'question'}
+          defaultValue={watch('question') || ''}
+          defaultImgUrl={(questionImage && questionImage[0]?.url) || ''}
+          editorPlaceholder="문제를 입력해주세요."
+        />
+        <ExamCreateEditor
+          onChangeImage={(value) => {
+            setSolutionImage([
+              {
+                uid: value,
+                name: value,
+                url: value,
+                thumbUrl: value,
+              },
+            ]);
+          }}
+          onChangeText={(value) => setValue('solution', value)}
+          key={'solution'}
+          defaultValue={watch('solution') || ''}
+          defaultImgUrl={(solutionImage && solutionImage[0]?.url) || ''}
+          editorPlaceholder="해설을 입력해주세요."
+        />
       </div>
+
       <Button
-        className="question-edit-submit-button"
         type="primary"
+        size="large"
         htmlType="submit"
         loading={editQuestionLoading}
         disabled={editButtonDisabled}
@@ -158,24 +170,10 @@ const QuestionEditComponentContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  .question-edit-block-wrapper {
-    display: flex;
-    width: 100%;
-    gap: 15px;
-  }
-  .question-edit-submit-button {
-    margin-top: 30px;
-    height: 50px;
-  }
-
-  .question-edit-block {
-    width: 100%;
+  ${EditorStyle}
+  .question-edit-editor-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    textArea {
-      min-height: 150px;
-      max-height: 350px;
-    }
+    gap: 20px;
   }
 `;
