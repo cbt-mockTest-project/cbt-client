@@ -5,7 +5,6 @@ import { Dropdown, MenuProps, Modal, Progress, message } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
-import ExamList from './ExamList';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
@@ -17,14 +16,11 @@ import { useRouter } from 'next/router';
 import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
-import {
-  BookmarkOutlined,
-  BookmarksOutlined,
-  StarOutline,
-} from '@mui/icons-material';
+import { BookmarkOutlined } from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from './CategoryLearningProgress';
+import ExamList from './ExamList';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;

@@ -210,6 +210,13 @@ export type GetMyAllExamCategoriesLearningProgressQueryVariables = Types.Exact<{
 
 export type GetMyAllExamCategoriesLearningProgressQuery = { __typename?: 'Query', getMyAllExamCategoriesLearningProgress: { __typename?: 'GetMyAllExamCategoriesLearningProgressOutput', error?: string | null, highScoreCount?: number | null, lowScoreCount?: number | null, ok: boolean, totalQuestionCount?: number | null } };
 
+export type MoveExamOrderMutationVariables = Types.Exact<{
+  input: Types.MoveExamOrderInput;
+}>;
+
+
+export type MoveExamOrderMutation = { __typename?: 'Mutation', moveExamOrder: { __typename?: 'MoveExamOrderOutput', error?: string | null, ok: boolean } };
+
 
 export const ReadAllMockExamCategoriesDocument = gql`
     query ReadAllMockExamCategories($input: ReadAllMockExamCategoriesInput) {
@@ -752,4 +759,16 @@ export const GetMyAllExamCategoriesLearningProgressDocument = gql`
 
 export function useGetMyAllExamCategoriesLearningProgressQuery(options?: Omit<Urql.UseQueryArgs<GetMyAllExamCategoriesLearningProgressQueryVariables>, 'query'>) {
   return Urql.useQuery<GetMyAllExamCategoriesLearningProgressQuery, GetMyAllExamCategoriesLearningProgressQueryVariables>({ query: GetMyAllExamCategoriesLearningProgressDocument, ...options });
+};
+export const MoveExamOrderDocument = gql`
+    mutation MoveExamOrder($input: MoveExamOrderInput!) {
+  moveExamOrder(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useMoveExamOrderMutation() {
+  return Urql.useMutation<MoveExamOrderMutation, MoveExamOrderMutationVariables>(MoveExamOrderDocument);
 };
