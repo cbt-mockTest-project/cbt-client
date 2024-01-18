@@ -1,21 +1,22 @@
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EditOutlined, EllipsisOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamCategory from '@lib/hooks/useExamCategory';
-import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Checkbox, Dropdown, MenuProps, Modal, Tag } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { MockExam } from 'types';
 import ExamSelecModal from './ExamSelecModal';
 import { useRouter } from 'next/router';
+import useAuth from '@lib/hooks/useAuth';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 
 const ExamListItemBlock = styled.div`
-  width: calc(50% - 10px);
+  width: 100%;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -27,6 +28,41 @@ const ExamListItemBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .exam-list-item-title-and-edit-button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .exam-list-item-title {
+        max-width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 15px;
+      }
+      .exam-list-item-title-edit-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+        top: 1px;
+        svg {
+          font-size: 18px;
+          color: ${palette.colorText};
+        }
+        &:hover {
+          background-color: ${palette.gray_100};
+          svg {
+            color: ${palette.antd_blue_02};
+          }
+        }
+      }
+    }
   }
 
   .exam-list-item-bookmark-button {
@@ -51,15 +87,7 @@ const ExamListItemBlock = styled.div`
       }
     }
   }
-  .exam-list-item-title {
-    max-width: 100%;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 15px;
-  }
+
   .exam-list-item-bottom-wrapper {
     margin-top: 15px;
     display: flex;
@@ -85,8 +113,9 @@ const ExamListItemBlock = styled.div`
     }
   }
 
-  @media (max-width: ${responsive.medium}) {
-    width: 100%;
+  .exam-list-item-drag-handle {
+    margin-bottom: auto;
+    cursor: grab;
   }
 `;
 
@@ -94,18 +123,28 @@ interface ExamListItemProps {
   exam: MockExam;
   examSetting: ExamSettingType;
   handleExamSelect: (examId: number) => void;
+  dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
   exam,
   examSetting,
   handleExamSelect,
+  dragHandleProps,
 }) => {
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
     useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
-  const { data: meQuery } = useMeQuery();
+  const { user } = useAuth();
+  const isMyExam = useMemo(
+    () => user && exam.user.id === user.id,
+    [exam, user]
+  );
+  const isMyCategory = useMemo(
+    () => user && category.user.id === user.id,
+    [category, user]
+  );
   const categoryId = router.query.id;
 
   const handleRemoveExam = () => {
@@ -154,6 +193,26 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       ),
     },
   ];
+
+  const UserProfile = () => (
+    <div className="exam-list-item-user-profile-wrapper">
+      <Image
+        className="exam-list-item-user-profile-image"
+        src={exam.user.profileImg || '/png/profile/profile_default.png'}
+        alt="프로필이미지"
+        width={20}
+        height={20}
+      />
+      <span className="exam-list-item-user-name">{exam.user.nickname}</span>
+    </div>
+  );
+
+  const ExamCountTag = () => (
+    <Tag className="exam-list-item-question-count-tag" color="green">
+      {exam.mockExamQuestion.length} 문제
+    </Tag>
+  );
+
   return (
     <ExamListItemBlock>
       {examSetting.isMultipleSelectMode && (
@@ -164,51 +223,47 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       )}
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
         <div className="exam-list-item-top-wrapper">
-          <div className="exam-list-item-title">{exam.title}</div>
-          {exam.user.id === meQuery?.me.user?.id ? (
-            <Dropdown
-              menu={{
-                items: examSettingDropdownItems,
-              }}
-            >
-              <div
-                className="exam-list-item-control-option-wrapper"
-                onClick={(e) => {
-                  e.stopPropagation();
+          <div className="exam-list-item-title-and-edit-button">
+            <div className="exam-list-item-title">{exam.title}</div>
+          </div>
+          <div>
+            {isMyExam ? (
+              <Dropdown
+                menu={{
+                  items: examSettingDropdownItems,
                 }}
               >
-                <EllipsisOutlined />
-              </div>
-            </Dropdown>
-          ) : (
-            <ExamBookmark
-              handleToggleBookmark={(e) => {
-                e.stopPropagation();
-                handleToggleExamBookmark(exam.id);
-              }}
-              isBookmarked={exam.isBookmarked || false}
-            />
-          )}
+                <div
+                  className="exam-list-item-control-option-wrapper"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <EllipsisOutlined />
+                </div>
+              </Dropdown>
+            ) : (
+              <ExamBookmark
+                handleToggleBookmark={(e) => {
+                  e.stopPropagation();
+                  handleToggleExamBookmark(exam.id);
+                }}
+                isBookmarked={exam.isBookmarked || false}
+              />
+            )}
+          </div>
         </div>
 
         <div className="exam-list-item-bottom-wrapper">
-          <div className="exam-list-item-user-profile-wrapper">
-            <Image
-              className="exam-list-item-user-profile-image"
-              src={exam.user.profileImg || '/png/profile/profile_default.png'}
-              alt="프로필이미지"
-              width={20}
-              height={20}
-            />
-            <span className="exam-list-item-user-name">
-              {exam.user.nickname}
-            </span>
-          </div>
-          <Tag className="exam-list-item-question-count-tag" color="green">
-            {exam.mockExamQuestion.length} 문제
-          </Tag>
+          <UserProfile />
+          <ExamCountTag />
         </div>
       </BasicCard>
+      {isMyCategory && (
+        <div {...dragHandleProps}>
+          <DragIndicatorIcon className="exam-list-item-drag-handle" />
+        </div>
+      )}
       {isExamSelectModalOpen && (
         <ExamSelecModal
           examId={exam.id}

@@ -456,3 +456,12 @@ export const GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS = gql`
     }
   }
 `;
+
+export const MOVE_EXAM_ORDER = gql`
+  mutation MoveExamOrder($input: MoveExamOrderInput!) {
+    moveExamOrder(input: $input) {
+      error
+      ok
+    }
+  }
+`;

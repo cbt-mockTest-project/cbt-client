@@ -18,6 +18,7 @@ import {
   GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS,
   GET_MY_EXAMS,
   GET_MY_EXAM_CATEGORIES,
+  MOVE_EXAM_ORDER,
   READ_EXAM_CATEGORIES,
   READ_EXAM_CATEGORY_BY_EXAM_ID,
   READ_EXAM_CATEGORY_BY_ID,
@@ -55,6 +56,8 @@ import {
   GetMyExamCategoriesQueryVariables,
   GetMyExamsQuery,
   GetMyExamsQueryVariables,
+  MoveExamOrderMutation,
+  MoveExamOrderMutationVariables,
   ReadMockExamCategoriesQuery,
   ReadMockExamCategoriesQueryVariables,
   ReadMockExamCategoryByCategoryIdQuery,
@@ -232,3 +235,8 @@ export const useLazyGetMyAllExamCategoriesLearningProgress = () =>
     GetMyAllExamCategoriesLearningProgressQuery,
     GetMyAllExamCategoriesLearningProgressQueryVariables
   >(GET_MY_ALL_EXAM_CATEGORIES_LEARNING_PROGRESS);
+
+export const useMoveExamOrder = () =>
+  useMutation<MoveExamOrderMutation, MoveExamOrderMutationVariables>(
+    MOVE_EXAM_ORDER
+  );

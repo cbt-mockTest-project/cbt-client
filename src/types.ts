@@ -1169,6 +1169,7 @@ export type MockExamCategory = {
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
   examCategoryInvitations: Array<ExamCategoryInvitation>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examOrderIds: Array<Scalars['Float']>;
   examViewer?: Maybe<Array<ExamViewer>>;
   hasAccess?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
@@ -1191,6 +1192,7 @@ export type MockExamCategoryInputType = {
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
+  examOrderIds?: InputMaybe<Array<Scalars['Float']>>;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -1458,6 +1460,18 @@ export type MockExamVideoType = {
   url: Scalars['String'];
 };
 
+export type MoveExamOrderInput = {
+  categoryId: Scalars['Float'];
+  endIdx: Scalars['Float'];
+  startIdx: Scalars['Float'];
+};
+
+export type MoveExamOrderOutput = {
+  __typename?: 'MoveExamOrderOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   acceptExamCategoryInvitation: AcceptExamCategoryInvitationOutput;
@@ -1527,6 +1541,7 @@ export type Mutation = {
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
   logout: CoreOutput;
+  moveExamOrder: MoveExamOrderOutput;
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
   removeExamFromCategory: RemoveExamFromCategoryOutput;
@@ -1854,6 +1869,11 @@ export type MutationEmailVerificationArgs = {
 
 export type MutationLoginArgs = {
   input: LoginInput;
+};
+
+
+export type MutationMoveExamOrderArgs = {
+  input: MoveExamOrderInput;
 };
 
 
