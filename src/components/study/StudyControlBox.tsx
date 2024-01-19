@@ -84,7 +84,7 @@ const StudyControlBoxBlock = styled.div`
   }
   @media (max-width: ${responsive.large}) {
     .study-swiper-button-wrapper {
-      display: flex;
+      display: none;
     }
   }
   @media (max-width: ${responsive.medium}) {
