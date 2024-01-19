@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Virtual } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import CardModeItem from './CardModeItem';
 import StudyEnd from '@components/study/StudyEnd';
@@ -82,7 +82,13 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
         <Swiper
           className="swiper-container"
           spaceBetween={20}
-          modules={[Navigation]}
+          modules={[Navigation, Virtual]}
+          virtual={{
+            slides: questions,
+            cache: true,
+            addSlidesBefore: 1,
+            addSlidesAfter: 1,
+          }}
           onSwiper={(swiper) => {
             setSwiper(swiper);
           }}
