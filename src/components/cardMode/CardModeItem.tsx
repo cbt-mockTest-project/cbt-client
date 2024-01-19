@@ -7,10 +7,11 @@ import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
+import CardModeControlBox from './CardModeControlBox';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     overflow-y: auto;
     ::-webkit-scrollbar {
       width: 5px; /* 스크롤 바의 너비 */
@@ -35,7 +36,7 @@ const CardModeItemBlock = styled.div`
   }
 
   .card {
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     transform-style: preserve-3d;
     transition: transform 0.8s; /* 플립 애니메이션 속도 */
   }
@@ -48,7 +49,7 @@ const CardModeItemBlock = styled.div`
   .card-back {
     position: absolute;
     width: 100%;
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     backface-visibility: hidden; /* 카드의 뒷면 숨김 */
   }
 
@@ -121,6 +122,11 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
         addFeedback={addFeedback}
         saveQuestionState={saveQuestionState}
         swiper={swiper}
+      />
+      <CardModeControlBox
+        swiper={swiper}
+        isFlipped={isFlipped}
+        flipCard={() => setIsFlipped((el) => !el)}
       />
     </CardModeItemBlock>
   );
