@@ -57,9 +57,6 @@ const StudyControlBoxBlock = styled.div`
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease-in-out;
-    &:hover {
-      color: ${palette.antd_blue_02};
-    }
     svg {
       font-size: 20px;
     }
