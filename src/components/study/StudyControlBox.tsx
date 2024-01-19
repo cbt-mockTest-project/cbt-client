@@ -215,7 +215,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
             className="study-control-finish-button"
             type="primary"
             onClick={() => {
-              swiper.slideTo(swiper.slides.length - 1, 0);
+              swiper.slideTo(swiper.virtual.slides.length - 1, 0);
             }}
           >
             종료
