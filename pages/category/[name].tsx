@@ -15,6 +15,7 @@ import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
+import { resetServerContext } from 'react-beautiful-dnd';
 import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
 interface CategoryPageProps {
@@ -79,7 +80,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             input: categoryQueryInput,
           },
         });
-      console.log(res.data.readMockExamCategoryByCategoryId.error);
       if (!res.data.readMockExamCategoryByCategoryId.ok) {
         return {
           notFound: true,
@@ -92,6 +92,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           category: category as MockExamCategory,
         })
       );
+      resetServerContext();
       return addApolloState(apolloClient, {
         props: { categoryQueryInput, category },
         revalidate: 43200,

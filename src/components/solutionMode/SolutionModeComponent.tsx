@@ -1,5 +1,5 @@
 import { Button, Tooltip } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
@@ -10,6 +10,9 @@ import SolutionModeCardItem from './SolutionModeCardItem';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
+import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
+import { useRouter } from 'next/router';
+import SolutionModeCardItemList from './SolutionModeCardItemList';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -17,11 +20,7 @@ const SolutionModeComponentBlock = styled.div`
     margin: 0 auto;
     padding: 20px;
   }
-  .solution-mode-solution-card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-  }
+
   .solution-mode-control-button-wrapper {
     margin-bottom: 15px;
     display: flex;
@@ -48,16 +47,20 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const {
-    questions,
-    saveBookmark,
-    saveQuestionState,
-    shuffleQuestions,
-    fetchQuestions,
-  } = useQuestions();
+  const { questions, shuffleQuestions, fetchQuestions } = useQuestions();
+
+  const router = useRouter();
+  const examIdsQuery = router.query.examIds;
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
   const [isSelectStudyModeModalOpen, setIsSelectStudyModeModalOpen] =
     useState(false);
+  const examIds = useMemo(() => {
+    if (questionsQueryInput) return questionsQueryInput.ids;
+    if (typeof examIdsQuery === 'string') {
+      return examIdsQuery.split(',').map((id) => parseInt(id));
+    }
+    return null;
+  }, [questionsQueryInput, examIdsQuery]);
   useEffect(() => {
     // staticProps로 받은 questionsQueryInput이 있으면 해당 문제들을 fetch
     if (questionsQueryInput) {
@@ -108,16 +111,10 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           </Tooltip>
         </div>
         <ul className="solution-mode-solution-card-list">
-          {questions!.map((question, index) => (
-            <SolutionModeCardItem
-              key={question.id}
-              saveBookmark={saveBookmark}
-              saveQuestionState={saveQuestionState}
-              question={question as MockExamQuestion}
-              isAnswerAllHidden={isAnswerAllHidden}
-              index={index}
-            />
-          ))}
+          <SolutionModeCardItemList
+            defaultQuestions={questions}
+            isAnswerAllHidden={isAnswerAllHidden}
+          />
         </ul>
       </div>
       {isSelectStudyModeModalOpen && (
@@ -126,6 +123,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           onCancel={() => setIsSelectStudyModeModalOpen(false)}
         />
       )}
+      {examIds && <StudyPaymentGuard examIds={examIds} />}
     </SolutionModeComponentBlock>
   );
 };

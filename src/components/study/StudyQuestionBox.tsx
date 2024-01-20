@@ -1,11 +1,12 @@
 import Bookmark from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { Image } from 'antd';
+import { Button, Image } from 'antd';
 import { MockExamQuestion } from 'types';
 import palette from '@styles/palette';
 import { useRouter } from 'next/router';
+import useAuth from '@lib/hooks/useAuth';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -47,6 +48,9 @@ const StudyQuestionBoxBlock = styled.div`
     font-size: 12px;
     color: ${palette.colorSubText};
   }
+  .study-question-edit-button {
+    margin-left: auto;
+  }
 `;
 
 interface StudyQuestionBoxProps {
@@ -65,12 +69,17 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   title,
 }) => {
   const router = useRouter();
+  const { user } = useAuth();
+  const isMyQuestion = useMemo(() => {
+    if (!user) return false;
+    return user.id === question.user.id;
+  }, [user, question]);
   const isMultipleSelectMode = !!router.query.examIds;
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">
         <div className="study-question-box-number-and-title">
-          {questionNumber && (
+          {questionNumber > 0 && (
             <p className="study-question-box-number">{questionNumber}번</p>
           )}
 
@@ -81,6 +90,19 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           )}
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
+        {isMyQuestion && (
+          <a
+            href={`/question/${question.id}/edit`}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="study-question-edit-button"
+          >
+            <Button type="dashed" size="small">
+              수정
+            </Button>
+          </a>
+        )}
+
         <Bookmark
           onClick={(e) => {
             e.stopPropagation();
@@ -99,13 +121,15 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           e.stopPropagation();
         }}
       >
-        {question.question_img && question.question_img?.length > 0 && (
-          <Image
-            className="study-question-box-image"
-            src={question.question_img[0].url}
-            alt="문제이미지"
-          />
-        )}
+        {question.question_img &&
+          question.question_img?.length > 0 &&
+          question.question_img[0].url && (
+            <Image
+              className="study-question-box-image"
+              src={question.question_img[0].url}
+              alt="문제이미지"
+            />
+          )}
       </div>
     </StudyQuestionBoxBlock>
   );

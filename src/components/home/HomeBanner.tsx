@@ -49,8 +49,8 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: '/png/banner/ehs-banner-pc01.png',
-        mobile: '/png/banner/ehs-banner-mobile01.png',
+        pc: '/png/banner/ehs-banner-pc02.png',
+        mobile: '/png/banner/ehs-banner-mobile02.png',
       },
       key: 'https://ehs-master.com',
     },

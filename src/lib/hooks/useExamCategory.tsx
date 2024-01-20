@@ -11,6 +11,7 @@ import {
   useEditCategory,
   useLazyGetMyExams,
   useLazyReadCategoryById,
+  useMoveExamOrder,
   useRemoveExamFromCategory,
 } from '../graphql/hook/useExam';
 import {
@@ -29,9 +30,11 @@ import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 import useAuth from './useAuth';
+import { DropResult } from 'react-beautiful-dnd';
 
 const useExamCategory = () => {
   const router = useRouter();
+  const [moveExamOrder] = useMoveExamOrder();
   const { handleCheckLogin } = useAuth();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [readCategory] = useLazyReadCategoryById();
@@ -280,6 +283,39 @@ const useExamCategory = () => {
     }
   };
 
+  const handleMoveExamOrder = async (result: DropResult) => {
+    try {
+      const { destination, source } = result;
+      if (!destination) return;
+      if (destination.index === source.index) return;
+      const newExamList = [...category.mockExam];
+      const [removed] = newExamList.splice(source.index, 1);
+      newExamList.splice(destination.index, 0, removed);
+      setExamCategory({
+        ...category,
+        mockExam: newExamList,
+      });
+      const res = await moveExamOrder({
+        variables: {
+          input: {
+            categoryId: category.id,
+            startIdx: source.index,
+            endIdx: destination.index,
+          },
+        },
+      });
+      if (!res.data?.moveExamOrder.ok) {
+        message.error(res.data.moveExamOrder.error);
+        setExamCategory(category);
+        return;
+      }
+    } catch (e) {
+      handleError(e);
+      message.error('순서 변경에 실패했습니다.');
+      setExamCategory(category);
+    }
+  };
+
   const setExamCategory = (
     category: MockExamCategory,
     shouldUpdateOriginal: boolean = true
@@ -297,6 +333,7 @@ const useExamCategory = () => {
 
   return {
     fetchCategory,
+    handleMoveExamOrder,
     fetchMyExams,
     setExamCategory,
     category,

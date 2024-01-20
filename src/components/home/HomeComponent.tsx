@@ -85,9 +85,10 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     handleToggleCategoryBookmark,
   } = useHomeCategories();
 
-  const [searchType, setSearchType] = React.useState<'folder' | 'question'>(
-    'folder'
-  );
+  const searchType = useMemo(() => {
+    if (router.query.type) return router.query.type;
+    return 'folder';
+  }, [router.query.type]);
   const searchInputRef = React.useRef<InputRef>(null);
 
   const keyword = useMemo(() => {
@@ -146,7 +147,13 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         <div className="home-folder-search-input-and-radio">
           <Radio.Group
             defaultValue="folder"
-            onChange={(e) => setSearchType(e.target.value)}
+            value={searchType}
+            onChange={(e) =>
+              router.replace({
+                pathname: router.pathname,
+                query: { ...router.query, type: e.target.value },
+              })
+            }
           >
             <Radio.Button value="folder">암기장 검색</Radio.Button>
             <Radio.Button value="question">문제 검색</Radio.Button>

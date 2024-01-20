@@ -25,15 +25,19 @@ import useQuestionFeedback, {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from './useQuestionFeedback';
+import { useMemo } from 'react';
 
 const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const questions = useAppSelector((state) => state.mockExam.questions);
-  const questionsWithLowScore = useAppSelector((state) =>
-    state.mockExam.questions.filter(
-      (question) => question.myQuestionState === QuestionState.Row
-    )
+
+  const questionsWithLowScore = useMemo(
+    () =>
+      questions.filter(
+        (question) => question.myQuestionState === QuestionState.Row
+      ),
+    [questions]
   );
   const [readQuestionsQuery] = useLazyReadQuestionsByExamIds();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
@@ -213,9 +217,13 @@ const useQuestions = () => {
     );
     dispatch(mockExamActions.setQuestions(newQuestions));
   };
+  const setQuestions = (questions: MockExamQuestion[]) => {
+    dispatch(mockExamActions.setQuestions(questions));
+  };
 
   return {
     questions,
+    setQuestions,
     saveBookmark,
     fetchQuestions,
     saveQuestionState,

@@ -57,9 +57,6 @@ const StudyControlBoxBlock = styled.div`
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease-in-out;
-    &:hover {
-      color: ${palette.antd_blue_02};
-    }
     svg {
       font-size: 20px;
     }
@@ -84,7 +81,7 @@ const StudyControlBoxBlock = styled.div`
   }
   @media (max-width: ${responsive.large}) {
     .study-swiper-button-wrapper {
-      display: flex;
+      display: none;
     }
   }
   @media (max-width: ${responsive.medium}) {
@@ -215,7 +212,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
             className="study-control-finish-button"
             type="primary"
             onClick={() => {
-              swiper.slideTo(swiper.slides.length - 1, 0);
+              swiper.slideTo(swiper.virtual.slides.length - 1, 0);
             }}
           >
             종료

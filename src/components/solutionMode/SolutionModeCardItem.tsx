@@ -12,6 +12,8 @@ import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import palette from '@styles/palette';
+import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
+import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -30,40 +32,43 @@ const SolutionModeCardItemBlock = styled.div`
 
 interface SolutionModeCardItemProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  question: ReadQuestionsByExamIdsOutput['questions'][0];
-  saveBookmark: (question: MockExamQuestion) => Promise<void>;
-  saveQuestionState: (
-    question: MockExamQuestion,
-    state: QuestionState
-  ) => Promise<void>;
+  defaultQuestion: ReadQuestionsByExamIdsOutput['questions'][0];
   index: number;
   isAnswerAllHidden: boolean;
 }
 
 const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
-  question,
+  defaultQuestion,
   index,
   isAnswerAllHidden,
-  saveBookmark,
-  saveQuestionState,
 }) => {
-  const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const {
-    editFeedback,
-    addFeedback,
-    deleteFeedback,
-    updateFeedbackRecommendation,
-  } = useQuestions();
+    question,
+    setQuestion,
+    handleSaveQuestionState,
+    handleSaveBookmark,
+    handleAddFeedback,
+    handleDeleteFeedback,
+    handleEditFeedback,
+    handleUpdateFeedbackRecommendation,
+  } = useHandleQuestion({
+    defaultQuestion,
+  });
+  const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);
+
+  useEffect(() => {
+    setQuestion(defaultQuestion);
+  }, [defaultQuestion]);
 
   return (
     <SolutionModeCardItemBlock id={`question-${index}`}>
       <BasicCard className="solution-mode-question-card" type="primary">
         <div className="solution-mode-question-content-wrapper">
           <StudyQuestionBox
-            saveBookmark={saveBookmark}
+            saveBookmark={handleSaveBookmark}
             questionNumber={index + 1}
             question={question}
           />
@@ -72,19 +77,19 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
       <BasicCard className="solution-mode-solution-card" type="primary">
         <div className="solution-mode-question-content-wrapper">
           <StudyAnswerBox
-            deleteFeedback={deleteFeedback}
-            updateFeedbackRecommendation={updateFeedbackRecommendation}
+            deleteFeedback={handleDeleteFeedback}
+            updateFeedbackRecommendation={handleUpdateFeedbackRecommendation}
             isAnswerHidden={isAnswerHidden}
             question={question}
-            editFeedback={editFeedback}
-            addFeedback={addFeedback}
+            editFeedback={handleEditFeedback}
+            addFeedback={handleAddFeedback}
           />
         </div>
       </BasicCard>
       <StudyControlBox
-        addFeedback={addFeedback}
-        editFeedback={editFeedback}
-        saveQuestionState={saveQuestionState}
+        addFeedback={handleAddFeedback}
+        editFeedback={handleEditFeedback}
+        saveQuestionState={handleSaveQuestionState}
         question={question}
         answerHiddenOption={{
           isAnswerHidden,

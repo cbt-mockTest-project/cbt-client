@@ -1,15 +1,14 @@
-import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useQuestion from '@lib/hooks/useQuestion';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { MockExamQuestion, ReadMockExamQuestionInput } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import palette from '@styles/palette';
+import { Button } from 'antd';
+import useAuth from '@lib/hooks/useAuth';
+import Link from 'next/link';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -18,7 +17,7 @@ interface QuestionComponentProps {
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQueryInput,
 }) => {
-  const { data: meQuery } = useMeQuery();
+  const { isLoggedIn, user } = useAuth();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const {
     refetchQuestion,
@@ -30,20 +29,32 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
   } = useQuestion(questionQueryInput);
-  useEffect(() => {
-    if (!meQuery?.me.user || !questionQueryInput.questionId) return;
-    refetchQuestion({
-      input: questionQueryInput,
-    });
-  }, [questionQueryInput, meQuery]);
 
   const question = questionQuery?.readMockExamQuestion
     .mockExamQusetion as MockExamQuestion;
+
+  const isMyQuestion = question.user.id == user?.id;
+
+  useEffect(() => {
+    if (!isLoggedIn || !questionQueryInput.questionId) return;
+    refetchQuestion({
+      input: questionQueryInput,
+    });
+  }, [questionQueryInput, isLoggedIn]);
+
   if (!question) return null;
+
   return (
     <QuestionComponentBlock>
-      <BasicCard className="solution-mode-question-card" type="primary">
-        <div className="solution-mode-question-content-wrapper">
+      {isMyQuestion && (
+        <Link href={`/question/${question.id}/edit`}>
+          <Button type="primary" className="question-detail-edit-button">
+            수정
+          </Button>
+        </Link>
+      )}
+      <BasicCard className="question-detail-card" type="primary">
+        <div className="question-detail-content-wrapper">
           <StudyQuestionBox
             saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
@@ -78,4 +89,7 @@ export default QuestionComponent;
 
 const QuestionComponentBlock = styled.div`
   background-color: inherit;
+  .question-detail-edit-button {
+    margin-bottom: 10px;
+  }
 `;

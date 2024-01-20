@@ -7,10 +7,12 @@ import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
+import CardModeControlBox from './CardModeControlBox';
+import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     overflow-y: auto;
     ::-webkit-scrollbar {
       width: 5px; /* 스크롤 바의 너비 */
@@ -35,7 +37,7 @@ const CardModeItemBlock = styled.div`
   }
 
   .card {
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     transform-style: preserve-3d;
     transition: transform 0.8s; /* 플립 애니메이션 속도 */
   }
@@ -48,7 +50,7 @@ const CardModeItemBlock = styled.div`
   .card-back {
     position: absolute;
     width: 100%;
-    height: calc(100vh - 157px);
+    height: calc(100vh - 210px);
     backface-visibility: hidden; /* 카드의 뒷면 숨김 */
   }
 
@@ -64,18 +66,19 @@ interface CardModeItemProps {
 }
 
 const CardModeItem: React.FC<CardModeItemProps> = ({
-  question,
+  question: defaultQuestion,
   number,
   swiper,
 }) => {
   const {
-    saveBookmark,
-    saveQuestionState,
-    editFeedback,
-    addFeedback,
-    deleteFeedback,
-    updateFeedbackRecommendation,
-  } = useQuestions();
+    question,
+    handleAddFeedback,
+    handleDeleteFeedback,
+    handleEditFeedback,
+    handleUpdateFeedbackRecommendation,
+    handleSaveBookmark,
+    handleSaveQuestionState,
+  } = useHandleQuestion({ defaultQuestion });
   const [isFlipped, setIsFlipped] = useState(false);
   return (
     <CardModeItemBlock>
@@ -89,7 +92,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
               <StudyQuestionBox
                 className="study-question-box"
                 question={question}
-                saveBookmark={saveBookmark}
+                saveBookmark={handleSaveBookmark}
                 questionNumber={number}
               />
             </div>
@@ -102,10 +105,12 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           <BasicCard className="card-basic-wrapper" type="primary">
             <div className="card-container">
               <StudyAnswerBox
-                addFeedback={addFeedback}
-                editFeedback={editFeedback}
-                deleteFeedback={deleteFeedback}
-                updateFeedbackRecommendation={updateFeedbackRecommendation}
+                addFeedback={handleAddFeedback}
+                editFeedback={handleEditFeedback}
+                deleteFeedback={handleDeleteFeedback}
+                updateFeedbackRecommendation={
+                  handleUpdateFeedbackRecommendation
+                }
                 className="study-answer-box"
                 question={question}
               />
@@ -117,10 +122,15 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
       <StudyControlBox
         className="study-control-box"
         question={question}
-        editFeedback={editFeedback}
-        addFeedback={addFeedback}
-        saveQuestionState={saveQuestionState}
+        editFeedback={handleEditFeedback}
+        addFeedback={handleAddFeedback}
+        saveQuestionState={handleSaveQuestionState}
         swiper={swiper}
+      />
+      <CardModeControlBox
+        swiper={swiper}
+        isFlipped={isFlipped}
+        flipCard={() => setIsFlipped((el) => !el)}
       />
     </CardModeItemBlock>
   );

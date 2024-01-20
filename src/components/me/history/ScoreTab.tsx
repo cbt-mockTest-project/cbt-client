@@ -54,13 +54,7 @@ interface ScoreTabProps {}
 
 const ScoreTab: React.FC<ScoreTabProps> = () => {
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const {
-    questions,
-    saveBookmark,
-    saveQuestionState,
-    fetchQuestions,
-    resetQuestions,
-  } = useQuestions();
+  const { questions, fetchQuestions, resetQuestions } = useQuestions();
   const { examTitles, getExamTitlesLoading, resetQuestionScores } =
     useQuestionScores();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
@@ -137,11 +131,9 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
           questions.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              question={question}
+              defaultQuestion={question}
               index={index}
               isAnswerAllHidden={false}
-              saveBookmark={saveBookmark}
-              saveQuestionState={saveQuestionState}
             />
           ))}
         {!fetchQuestionsLoading && questions.length === 0 && (

@@ -1,18 +1,15 @@
 import Layout from '@components/common/layout/Layout';
 import QuestionEditComponent from '@components/question/edit/QuestionEditComponent';
+import { QUESTION_EDIT_PAGE } from '@lib/constants/displayName';
 import React from 'react';
 import styled from 'styled-components';
 
 interface QuestionEditPageProps {}
 
 const QuestionEditPage: React.FC<QuestionEditPageProps> = () => {
-  return (
-    <Layout>
-      <QuestionEditComponent />
-    </Layout>
-  );
+  return <QuestionEditComponent />;
 };
 
-export default QuestionEditPage;
+QuestionEditPage.displayName = QUESTION_EDIT_PAGE;
 
-const QuestionEditPageContainer = styled.div``;
+export default QuestionEditPage;

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import TypingModeItem from './TypingModeItem';
 import SwiperCore from 'swiper';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Virtual } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -112,7 +112,13 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
         <Swiper
           className="swiper-container"
           spaceBetween={20}
-          modules={[Navigation]}
+          modules={[Navigation, Virtual]}
+          virtual={{
+            slides: questions,
+            cache: true,
+            addSlidesBefore: 1,
+            addSlidesAfter: 1,
+          }}
           onSwiper={(swiper) => {
             setSwiper(swiper);
           }}
@@ -131,6 +137,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             questions.map((question, index) => (
               <SwiperSlide key={question.id}>
                 <TypingModeItem
+                  key={question.id}
                   question={question}
                   number={index + 1}
                   swiper={swiper}

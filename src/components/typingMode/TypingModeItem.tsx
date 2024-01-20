@@ -1,8 +1,11 @@
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
+import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import useQuestions from '@lib/hooks/useQuestions';
+import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Input } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,6 +17,43 @@ const TypingModeItemBlock = styled.div`
   .typing-mode-textarea {
     border-color: ${palette.colorBorder};
   }
+  .typing-mode-answer-button-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .typing-mode-swiper-button-wrapper {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      margin-left: auto;
+      gap: 10px;
+      margin-right: 10px;
+      margin-top: 10px;
+      .typing-mode-control-button {
+        padding: 5px;
+        border: 2px solid ${palette.colorBorder};
+        color: ${palette.colorText};
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          color: ${palette.antd_blue_02};
+        }
+        svg {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  @media (max-width: ${responsive.large}) {
+    .typing-mode-answer-button-wrapper {
+      .typing-mode-swiper-button-wrapper {
+        display: flex;
+      }
+    }
+  }
 `;
 
 interface TypingModeItemProps {
@@ -23,25 +63,26 @@ interface TypingModeItemProps {
 }
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({
-  question,
+  question: defaultQuestion,
   number,
   swiper,
 }) => {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const {
-    saveBookmark,
-    saveQuestionState,
-    editFeedback,
-    addFeedback,
-    deleteFeedback,
-    updateFeedbackRecommendation,
-  } = useQuestions();
+    question,
+    handleAddFeedback,
+    handleDeleteFeedback,
+    handleEditFeedback,
+    handleUpdateFeedbackRecommendation,
+    handleSaveBookmark,
+    handleSaveQuestionState,
+  } = useHandleQuestion({ defaultQuestion });
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
         <StudyQuestionBox
           question={question}
-          saveBookmark={saveBookmark}
+          saveBookmark={handleSaveBookmark}
           questionNumber={number}
         />
       </BasicCard>
@@ -52,19 +93,39 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       />
 
       <StudyControlBox
-        editFeedback={editFeedback}
-        addFeedback={addFeedback}
-        className="study-control-box"
+        editFeedback={handleEditFeedback}
+        addFeedback={handleAddFeedback}
+        className="typing-mode-control-box"
         question={question}
-        saveQuestionState={saveQuestionState}
+        saveQuestionState={handleSaveQuestionState}
         swiper={swiper}
       />
-      <Button
-        className="typing-mode-answer-visible-toggle-button"
-        onClick={() => setIsAnswerVisible((prev) => !prev)}
-      >
-        {isAnswerVisible ? '정답 가리기' : '정답 보기'}
-      </Button>
+      <div className="typing-mode-answer-button-wrapper">
+        <Button
+          className="typing-mode-answer-visible-toggle-button"
+          onClick={() => setIsAnswerVisible((prev) => !prev)}
+        >
+          {isAnswerVisible ? '정답 가리기' : '정답 보기'}
+        </Button>
+        <div className="typing-mode-swiper-button-wrapper">
+          <button
+            className="typing-mode-control-button"
+            onClick={() => {
+              swiper.slidePrev();
+            }}
+          >
+            <LeftOutlined />
+          </button>
+          <button
+            className="typing-mode-control-button"
+            onClick={() => {
+              swiper.slideNext();
+            }}
+          >
+            <RightOutlined />
+          </button>
+        </div>
+      </div>
       <AnimatePresence>
         {isAnswerVisible && (
           <motion.div
@@ -76,10 +137,12 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             <BasicCard>
               <StudyAnswerBox
                 question={question}
-                deleteFeedback={deleteFeedback}
-                updateFeedbackRecommendation={updateFeedbackRecommendation}
-                editFeedback={editFeedback}
-                addFeedback={addFeedback}
+                deleteFeedback={handleDeleteFeedback}
+                updateFeedbackRecommendation={
+                  handleUpdateFeedbackRecommendation
+                }
+                editFeedback={handleEditFeedback}
+                addFeedback={handleAddFeedback}
               />
             </BasicCard>
           </motion.div>

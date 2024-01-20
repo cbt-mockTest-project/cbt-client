@@ -7,6 +7,7 @@ import {
   MobileOutlined,
   WechatOutlined,
   ClearOutlined,
+  CrownOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -14,7 +15,11 @@ export const navItems = [
     icon: <CloudOutlined />,
     label: '모두 암기장',
   },
-
+  {
+    key: '/ehs-storage',
+    icon: <CrownOutlined />,
+    label: '직8딴 암기장',
+  },
   {
     key: '/me/storage',
     icon: <FolderOutlined />,

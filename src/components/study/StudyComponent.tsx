@@ -4,11 +4,13 @@ import TypingModeComponent from '@components/typingMode/TypingModeComponent';
 import useQuestions from '@lib/hooks/useQuestions';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
 import StudyHeader from './StudyHeader';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
+import useRoleCheck from '@lib/hooks/useRoleCheck';
+import StudyPaymentGuard from './StudyPaymentGuard';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
@@ -22,13 +24,11 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();
-  const mode = router.query.mode as ExamMode | 'end';
-
+  const { order, states, limit, examIds, mode, examId } = router.query;
   useEffect(() => {
     setFetchQuestionsLoading(true);
     if (!router.isReady) return;
 
-    const { order, states, limit, examIds, mode, examId } = router.query;
     // 단일 문제 풀이
     if (examId) {
       const input: ReadQuestionsByExamIdsInput = {
@@ -79,6 +79,10 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
       )}
       {mode === ExamMode.CARD && questionsQueryInput && <CardModeComponent />}
       {mode === 'end' && <SolutionModeComponent />}
+      <StudyPaymentGuard
+        {...(examId ? { examId: String(examId) } : {})}
+        {...(examIds ? { examIds: String(examIds) } : {})}
+      />
     </StudyComponentBlock>
   );
 };
