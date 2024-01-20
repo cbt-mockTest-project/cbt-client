@@ -1,6 +1,6 @@
 import { Tabs } from 'antd';
 import { TabsProps } from 'antd/lib';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import BookmarkTab from './BookmarkTab';
 import ScoreTab from './ScoreTab';
@@ -18,6 +18,9 @@ interface HistoryComponentProps {}
 
 const HistoryComponent: React.FC<HistoryComponentProps> = () => {
   const { resetQuestions } = useQuestions();
+  useEffect(() => {
+    resetQuestions();
+  }, []);
   return (
     <HistoryComponentBlock>
       <Tabs items={tabItems} onChange={resetQuestions} />

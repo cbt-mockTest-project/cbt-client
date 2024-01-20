@@ -32,8 +32,7 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
   const { examTitles, getExamTitlesLoading, resetQuestionBookmarks } =
     useBookmarkedQuestions();
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { questions, saveBookmark, saveQuestionState, fetchQuestions } =
-    useQuestions();
+  const { questions, fetchQuestions } = useQuestions();
   return (
     <BookmarkTabBlock>
       <Button
@@ -65,11 +64,9 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
           questions.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              question={question}
+              defaultQuestion={question}
               index={index}
               isAnswerAllHidden={false}
-              saveBookmark={saveBookmark}
-              saveQuestionState={saveQuestionState}
             />
           ))}
         {!fetchQuestionsLoading && questions.length === 0 && (

@@ -50,13 +50,7 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const {
-    questions,
-    saveBookmark,
-    saveQuestionState,
-    shuffleQuestions,
-    fetchQuestions,
-  } = useQuestions();
+  const { questions, shuffleQuestions, fetchQuestions } = useQuestions();
   const router = useRouter();
   const examIdsQuery = router.query.examIds;
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
@@ -122,9 +116,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           {questions!.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              saveBookmark={saveBookmark}
-              saveQuestionState={saveQuestionState}
-              question={question as MockExamQuestion}
+              defaultQuestion={question as MockExamQuestion}
               isAnswerAllHidden={isAnswerAllHidden}
               index={index}
             />
