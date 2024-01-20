@@ -23,21 +23,24 @@ import {
   useUpdateQuestionFeedbackRecommendation,
 } from '@lib/graphql/hook/useQuestionFeedback';
 import { cloneDeep } from 'lodash';
+import { useDispatch } from 'react-redux';
+import { mockExamActions } from '@modules/redux/slices/mockExam';
 
 interface UseHandleQuestionProps {
   defaultQuestion: MockExamQuestion;
 }
 
 const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
+  const dispatch = useDispatch();
+  const [question, setQuestion] = useState(defaultQuestion);
   const [changeQuestionState] = useChangeQuestionState();
   const [addQuestionFeedbackMutation] = useCreateQuestionFeedBack();
   const [deleteFeedbackMutaion] = useDeleteQuestionFeedback();
   const [editFeedbackMutaion] = useEditQuestionFeedback();
   const [updateFeedbackRecommendationMutaion] =
     useUpdateQuestionFeedbackRecommendation();
-  const { user, handleCheckLogin } = useAuth();
+  const { handleCheckLogin } = useAuth();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
-  const [question, setQuestion] = useState(defaultQuestion);
   const handleSaveQuestionState = async (
     question: MockExamQuestion,
     state: QuestionState
@@ -48,6 +51,12 @@ const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
         ...question,
         myQuestionState: state,
       }));
+      dispatch(
+        mockExamActions.setQuestionForScore({
+          ...question,
+          myQuestionState: state,
+        })
+      );
       await changeQuestionState({
         variables: {
           input: {
@@ -57,6 +66,7 @@ const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
         },
       });
     } catch (e) {
+      dispatch(mockExamActions.setQuestionForScore(question));
       setQuestion(() => question);
       console.log(e);
     }
@@ -271,6 +281,7 @@ const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
 
   return {
     question,
+    setQuestion,
     handleSaveQuestionState,
     handleSaveBookmark,
     handleAddFeedback,

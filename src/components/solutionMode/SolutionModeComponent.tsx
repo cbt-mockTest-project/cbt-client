@@ -12,6 +12,7 @@ import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
+import SolutionModeCardItemList from './SolutionModeCardItemList';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -19,11 +20,7 @@ const SolutionModeComponentBlock = styled.div`
     margin: 0 auto;
     padding: 20px;
   }
-  .solution-mode-solution-card-list {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-  }
+
   .solution-mode-control-button-wrapper {
     margin-bottom: 15px;
     display: flex;
@@ -51,6 +48,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
   const { questions, shuffleQuestions, fetchQuestions } = useQuestions();
+
   const router = useRouter();
   const examIdsQuery = router.query.examIds;
   const [isAnswerAllHidden, setIsAnswerAllHidden] = useState(false);
@@ -113,14 +111,10 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           </Tooltip>
         </div>
         <ul className="solution-mode-solution-card-list">
-          {questions!.map((question, index) => (
-            <SolutionModeCardItem
-              key={question.id}
-              defaultQuestion={question as MockExamQuestion}
-              isAnswerAllHidden={isAnswerAllHidden}
-              index={index}
-            />
-          ))}
+          <SolutionModeCardItemList
+            defaultQuestions={questions}
+            isAnswerAllHidden={isAnswerAllHidden}
+          />
         </ul>
       </div>
       {isSelectStudyModeModalOpen && (

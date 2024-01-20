@@ -44,6 +44,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
 }) => {
   const {
     question,
+    setQuestion,
     handleSaveQuestionState,
     handleSaveBookmark,
     handleAddFeedback,
@@ -57,6 +58,11 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);
+
+  useEffect(() => {
+    console.log(defaultQuestion);
+    setQuestion(defaultQuestion);
+  }, [defaultQuestion]);
 
   return (
     <SolutionModeCardItemBlock id={`question-${index}`}>

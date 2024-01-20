@@ -7,6 +7,8 @@ import { STUDY_STATE_ICON } from './study';
 import { QuestionState } from 'types';
 import palette from '@styles/palette';
 import SwiperCore from 'swiper';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 
 const StudyScoreModalBlock = styled(Modal)`
   .study-score-item-list {
@@ -60,13 +62,12 @@ interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
   const { onClickItem, ...modalProps } = props;
-  const { questions, resetQuestionState } = useQuestions();
-
+  const { questionsForScore, handleResetQuestionState } = useQuestionsScore();
   const handleResetScore = async () => {
     Modal.confirm({
       title: '점수 초기화',
       content: '점수를 초기화 하시겠습니까?',
-      onOk: resetQuestionState,
+      onOk: handleResetQuestionState,
     });
   };
   return (
@@ -76,7 +77,7 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
         <Button onClick={handleResetScore}>점수 초기화</Button>
       </div>
       <div className="study-score-item-list">
-        {questions.map((question, index) => (
+        {questionsForScore.map((question, index) => (
           <div
             key={question.id}
             onClick={() => {
