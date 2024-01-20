@@ -6,7 +6,6 @@ import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import StudyResultCard from './StudyResultCard';
 import palette from '@styles/palette';
-import Swiper from 'swiper';
 import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 
 const StudyEndBlock = styled.div`
@@ -45,7 +44,7 @@ const StudyEndBlock = styled.div`
 `;
 
 interface StudyEndProps {
-  swiper: Swiper;
+  swiper: any;
 }
 
 const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
