@@ -137,6 +137,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             questions.map((question, index) => (
               <SwiperSlide key={question.id}>
                 <TypingModeItem
+                  key={question.id}
                   question={question}
                   number={index + 1}
                   swiper={swiper}

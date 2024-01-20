@@ -107,6 +107,7 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
             questions.map((question, index) => (
               <SwiperSlide key={question.id}>
                 <CardModeItem
+                  key={question.id}
                   question={question}
                   number={index + 1}
                   swiper={swiper}
