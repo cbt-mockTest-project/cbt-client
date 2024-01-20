@@ -77,13 +77,15 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
             e.stopPropagation();
           }}
         >
-          {question.solution_img && question.solution_img.length > 0 && (
-            <Image
-              className="study-answer-box-box-image"
-              src={question.solution_img[0].url}
-              alt="문제이미지"
-            />
-          )}
+          {question.solution_img &&
+            question.solution_img.length > 0 &&
+            question.solution_img[0].url && (
+              <Image
+                className="study-answer-box-box-image"
+                src={question.solution_img[0].url}
+                alt="문제이미지"
+              />
+            )}
         </div>
         <SolutionModeFeedbackList
           question={question}
