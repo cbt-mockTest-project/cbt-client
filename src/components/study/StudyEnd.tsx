@@ -1,11 +1,13 @@
 import useQuestions from '@lib/hooks/useQuestions';
 import { Button, message } from 'antd';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import StudyResultCard from './StudyResultCard';
 import palette from '@styles/palette';
+import Swiper from 'swiper';
+import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -43,12 +45,14 @@ const StudyEndBlock = styled.div`
 `;
 
 interface StudyEndProps {
-  swiper: any;
+  swiper: Swiper;
 }
 
 const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
   const router = useRouter();
-  const { questions, filterQuestions } = useQuestions();
+
+  const { questions, filterQuestions, setQuestions } = useQuestions();
+  const { questionsForScore } = useQuestionsScore();
   const highScoreLength = useMemo(
     () =>
       questions.filter(
@@ -93,6 +97,11 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
       message.error('다시 시도해주세요.');
     }
   };
+  useEffect(() => {
+    if (swiper.activeIndex === swiper.virtual.slides.length - 1) {
+      setQuestions(questionsForScore);
+    }
+  }, [swiper.activeIndex]);
   return (
     <StudyEndBlock>
       <div className="study-end-header">

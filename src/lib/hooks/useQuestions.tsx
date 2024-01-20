@@ -217,10 +217,13 @@ const useQuestions = () => {
     );
     dispatch(mockExamActions.setQuestions(newQuestions));
   };
+  const setQuestions = (questions: MockExamQuestion[]) => {
+    dispatch(mockExamActions.setQuestions(questions));
+  };
 
   return {
     questions,
-    // questionsForScore,
+    setQuestions,
     saveBookmark,
     fetchQuestions,
     saveQuestionState,

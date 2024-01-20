@@ -3,6 +3,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
+import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -62,25 +63,26 @@ interface TypingModeItemProps {
 }
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({
-  question,
+  question: defaultQuestion,
   number,
   swiper,
 }) => {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const {
-    saveBookmark,
-    saveQuestionState,
-    editFeedback,
-    addFeedback,
-    deleteFeedback,
-    updateFeedbackRecommendation,
-  } = useQuestions();
+    question,
+    handleAddFeedback,
+    handleDeleteFeedback,
+    handleEditFeedback,
+    handleUpdateFeedbackRecommendation,
+    handleSaveBookmark,
+    handleSaveQuestionState,
+  } = useHandleQuestion({ defaultQuestion });
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
         <StudyQuestionBox
           question={question}
-          saveBookmark={saveBookmark}
+          saveBookmark={handleSaveBookmark}
           questionNumber={number}
         />
       </BasicCard>
@@ -91,11 +93,11 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       />
 
       <StudyControlBox
-        editFeedback={editFeedback}
-        addFeedback={addFeedback}
+        editFeedback={handleEditFeedback}
+        addFeedback={handleAddFeedback}
         className="typing-mode-control-box"
         question={question}
-        saveQuestionState={saveQuestionState}
+        saveQuestionState={handleSaveQuestionState}
         swiper={swiper}
       />
       <div className="typing-mode-answer-button-wrapper">
@@ -135,10 +137,12 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             <BasicCard>
               <StudyAnswerBox
                 question={question}
-                deleteFeedback={deleteFeedback}
-                updateFeedbackRecommendation={updateFeedbackRecommendation}
-                editFeedback={editFeedback}
-                addFeedback={addFeedback}
+                deleteFeedback={handleDeleteFeedback}
+                updateFeedbackRecommendation={
+                  handleUpdateFeedbackRecommendation
+                }
+                editFeedback={handleEditFeedback}
+                addFeedback={handleAddFeedback}
               />
             </BasicCard>
           </motion.div>

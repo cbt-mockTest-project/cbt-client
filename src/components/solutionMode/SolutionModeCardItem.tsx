@@ -60,7 +60,6 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   }, [isAnswerAllHidden]);
 
   useEffect(() => {
-    console.log(defaultQuestion);
     setQuestion(defaultQuestion);
   }, [defaultQuestion]);
 
