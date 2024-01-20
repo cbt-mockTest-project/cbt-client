@@ -1,28 +1,44 @@
 import useQuestions from '@lib/hooks/useQuestions';
-import { Button, Result, message } from 'antd';
+import { Button, message } from 'antd';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import SwiperCore from 'swiper';
 import { MockExamQuestion, QuestionState } from 'types';
-import StudyResultChart from './StudyResultChart';
 import { useRouter } from 'next/router';
+import StudyResultCard from './StudyResultCard';
+import palette from '@styles/palette';
 
 const StudyEndBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  .study-end-header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px 0;
+    .study-end-header-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .study-end-header-desc {
+      font-size: 16px;
+      color: ${palette.colorSubText};
+    }
+  }
+  .study-end-result-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .study-end-result-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
   .study-end-button-wrapper {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    .study-end-button-top-wrapper {
-      display: flex;
-      gap: 5px;
-    }
-    .study-end-finish-button {
-      width: 205.65px;
-    }
   }
 `;
 
@@ -79,31 +95,31 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
   };
   return (
     <StudyEndBlock>
-      <Result
-        icon={<StudyResultChart scoreCounts={scoreCounts} />}
-        title="학습이 종료되었습니다."
-        extra={
-          <div className="study-end-button-wrapper">
-            <div className="study-end-button-top-wrapper">
-              <Button
-                onClick={() => {
-                  swiper.slideTo(0, 0);
-                }}
-              >
-                다시 풀기
-              </Button>
-              <Button onClick={handleRetryExam}>틀린문제 보기</Button>
-            </div>
-            <Button
-              className="study-end-finish-button"
-              type="primary"
-              onClick={router.back}
-            >
-              종료하기
-            </Button>
-          </div>
-        }
-      />
+      <div className="study-end-header">
+        <div className="study-end-header-title">학습이 종료되었습니다.</div>
+        <div className="study-end-header-desc">학습 결과를 확인해 보세요.</div>
+      </div>
+      <div className="study-end-result-wrapper">
+        <div className="study-end-result-title">학습 결과</div>
+        <StudyResultCard scoreCounts={scoreCounts} />
+      </div>
+      <div className="study-end-button-wrapper">
+        <Button
+          onClick={() => {
+            swiper.slideTo(0, 0);
+          }}
+        >
+          다시 풀기
+        </Button>
+        <Button onClick={handleRetryExam}>틀린문제 보기</Button>
+        <Button
+          className="study-end-finish-button"
+          type="primary"
+          onClick={router.back}
+        >
+          종료하기
+        </Button>
+      </div>
     </StudyEndBlock>
   );
 };
