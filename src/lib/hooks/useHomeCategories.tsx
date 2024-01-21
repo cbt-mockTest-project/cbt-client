@@ -42,6 +42,9 @@ const useHomeCategories = () => {
   const userStorageCategories = useAppSelector(
     (state) => state.home.userStorageCategories
   );
+  const ehsStorageCategories = useAppSelector(
+    (state) => state.home.ehsStorageCategories
+  );
 
   const fetchCategories = async (input: GetExamCategoriesInput) => {
     try {
@@ -180,6 +183,7 @@ const useHomeCategories = () => {
     fetchCategoriesLoading,
     moduStorageCategories,
     userStorageCategories,
+    ehsStorageCategories,
     handleToggleCategoryBookmark,
   };
 };
