@@ -158,9 +158,8 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       price: 16000,
       // priceAltText: '16,000 ',
       benefits: [
-        '직8딴 풀이모드 및 해설모드 제공',
-        '직8딴 랜덤모의고사 제공',
-        '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
+        '직8딴 암기장 학습시스템 제공',
+        '구매자 전용 오픈톡방을 통한 저자의 즉각 질문답변 대응',
         '광고제거',
       ],
       confirmDisabled: false,
