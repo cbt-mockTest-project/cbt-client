@@ -64,11 +64,33 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     if (!router.query.examId) return null;
     return Number(router.query.examId);
   }, [router.query.examId]);
+
   const [defaultForm, setDefaultForm] = useState<CreateExamForm>({
     title: '',
     uuid: uuidv4(),
     questions: [
       {
+        objectiveData: {
+          answer: 1,
+          content: [
+            {
+              content: '',
+              url: '',
+            },
+            {
+              content: '',
+              url: '',
+            },
+            {
+              content: '',
+              url: '',
+            },
+            {
+              content: '',
+              url: '',
+            },
+          ],
+        },
         orderId: uuidv4(),
         question_img: [],
         solution_img: [],
@@ -83,7 +105,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     },
   });
 
-  const { handleSubmit, setValue, getValues, watch } = methods;
+  const { handleSubmit, setValue, getValues } = methods;
 
   useEffect(() => {
     if (router.query.examId) {
@@ -137,11 +159,6 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     }
   }, [router.query.examId]);
 
-  // useEffect(() => {
-  //   watch(() => {
-  //     debouncedSaveExam(getValues());
-  //   });
-  // }, []);
   return (
     <FormProvider {...methods}>
       <ExamCreateComponentBlock>

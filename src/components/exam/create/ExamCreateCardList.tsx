@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import ExamCreateCardItem from './ExamCreateCardItem';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
-import useSaveExamHandler from './useSaveExamHandler';
+import { useRouter } from 'next/router';
+import ExamCreateObjectiveCardItem from './ExamCreateObjectiveCardItem';
 
 const ExamCreateCardListBlock = styled.div`
   margin-top: 30px;
@@ -21,6 +22,8 @@ interface ExamCreateCardListProps {
 const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
   defaultQuestions,
 }) => {
+  const router = useRouter();
+  const examType = router.query.examType as 'subjective' | 'objective';
   const { setValue, getValues } = useFormContext<CreateExamForm>();
   const [questions, setQuestions] = useState<CreateQuestionForm[]>([]);
   const onDragEnd = (result: DropResult) => {
@@ -60,13 +63,23 @@ const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
                     ...provided.draggableProps.style,
                   }}
                 >
-                  <ExamCreateCardItem
-                    index={index}
-                    key={JSON.stringify(defaultQuestions)}
-                    question={question}
-                    setQuestions={setQuestions}
-                    dragHandleProps={provided.dragHandleProps}
-                  />
+                  {examType === 'subjective' ? (
+                    <ExamCreateCardItem
+                      index={index}
+                      key={JSON.stringify(defaultQuestions)}
+                      question={question}
+                      setQuestions={setQuestions}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  ) : (
+                    <ExamCreateObjectiveCardItem
+                      index={index}
+                      key={JSON.stringify(defaultQuestions)}
+                      question={question}
+                      setQuestions={setQuestions}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  )}
                 </div>
               )}
             </Draggable>

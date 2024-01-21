@@ -4,6 +4,7 @@ import {
   MockExamQuestionComment,
   MockExamQuestionFeedback,
   MockExamQuestionImageInputType,
+  ObjectiveData,
 } from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/query/questionQuery.generated';
@@ -112,6 +113,7 @@ export interface CreateQuestionForm {
   solution?: string;
   question_img?: MockExamQuestionImageInputType[];
   solution_img?: MockExamQuestionImageInputType[];
+  objectiveData?: ObjectiveData;
   orderId: string;
 }
 
