@@ -41,18 +41,25 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
-      const [moduCategories, userCategories] = await Promise.all([
-        getCategories({
-          examSource: ExamSource.MoudCbt,
-          limit: 30,
-          isPublicOnly: true,
-        }),
-        getCategories({
-          examSource: ExamSource.User,
-          limit: 30,
-          isPublicOnly: true,
-        }),
-      ]);
+      const [moduCategories, userCategories, ehsCategories] = await Promise.all(
+        [
+          getCategories({
+            examSource: ExamSource.MoudCbt,
+            limit: 30,
+            isPublicOnly: true,
+          }),
+          getCategories({
+            examSource: ExamSource.User,
+            limit: 30,
+            isPublicOnly: true,
+          }),
+          getCategories({
+            examSource: ExamSource.EhsMaster,
+            limit: 30,
+            // isPublicOnly: true,
+          }),
+        ]
+      );
       store.dispatch(
         homeActions.setModuStorageCategories({
           categories: moduCategories as MockExamCategory[],
@@ -63,6 +70,12 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           categories: userCategories as MockExamCategory[],
         })
       );
+      store.dispatch(
+        homeActions.setEhsStorageCategories({
+          categories: ehsCategories as MockExamCategory[],
+        })
+      );
+
       return addApolloState(apolloClient, {
         revalidate: 43200,
       });

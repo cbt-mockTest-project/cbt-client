@@ -4,13 +4,13 @@ import { MockExam, MockExamCategory, MockExamQuestion } from 'types';
 
 export interface HomeState {
   moduStorageCategories: MockExamCategory[] | null;
-  premiumStorageCategories: MockExamCategory[] | null;
+  ehsStorageCategories: MockExamCategory[] | null;
   userStorageCategories: MockExamCategory[] | null;
 }
 
 const storageState: HomeState = {
   moduStorageCategories: null,
-  premiumStorageCategories: null,
+  ehsStorageCategories: null,
   userStorageCategories: null,
 };
 
@@ -25,12 +25,12 @@ const homeSlice = createSlice({
       const { categories } = action.payload;
       state.moduStorageCategories = categories;
     },
-    setPremiumStorageCategories: (
+    setEhsStorageCategories: (
       state,
       action: PayloadAction<SetStorageCategoriesPayload>
     ) => {
       const { categories } = action.payload;
-      state.premiumStorageCategories = categories;
+      state.ehsStorageCategories = categories;
     },
     setUserStorageCategories: (
       state,

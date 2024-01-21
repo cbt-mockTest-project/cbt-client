@@ -82,6 +82,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     moduStorageCategories,
     userStorageCategories,
     refetchHomeCategories,
+    ehsStorageCategories,
     handleToggleCategoryBookmark,
   } = useHomeCategories();
 
@@ -219,6 +220,16 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="실기 시험을 효율적으로 준비해보세요."
               link="/modu-storage"
               categories={moduStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
+              }}
+              unikeyKey="modu-storage"
+            />
+            <HomeFolderList
+              title="직8딴 시리즈 👑"
+              subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
+              link="/ehs-storage"
+              categories={ehsStorageCategories}
               handleToggleBookmark={async (id) => {
                 handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
               }}

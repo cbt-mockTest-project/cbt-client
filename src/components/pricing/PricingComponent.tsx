@@ -150,23 +150,23 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       onConfirm: handleBasicPlanPayment,
       roleIds: [1],
     },
-    // {
-    //   title: '직8딴 플랜',
-    //   endDate: '이용기간: ~ 2023-12-11 까지',
-    //   intro:
-    //     '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
-    //   price: 15000,
-    //   priceAltText: '10,000 ~ ',
-    //   benefits: [
-    //     '직8딴 풀이모드 및 해설모드 제공',
-    //     '직8딴 랜덤모의고사 제공',
-    //     '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
-    //     '광고제거',
-    //   ],
-    //   confirmDisabled: false,
-    //   onConfirm: openEhsMasterPayModal,
-    //   roleIds: [4, 5, 6, 7],
-    // },
+    {
+      title: '직8딴 플랜',
+      endDate: '이용기간: ~ 2024-12-25 까지',
+      intro:
+        '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
+      price: 16000,
+      // priceAltText: '16,000 ',
+      benefits: [
+        '직8딴 풀이모드 및 해설모드 제공',
+        '직8딴 랜덤모의고사 제공',
+        '구매자 전용 오픈톡방을 통한 12기사 저자의 즉각 질문답변 대응',
+        '광고제거',
+      ],
+      confirmDisabled: false,
+      onConfirm: openEhsMasterPayModal,
+      roleIds: [4, 5, 6, 7],
+    },
   ];
 
   return (
