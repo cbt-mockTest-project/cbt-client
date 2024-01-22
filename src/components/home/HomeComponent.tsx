@@ -226,7 +226,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               unikeyKey="modu-storage"
             />
             <HomeFolderList
-              title="직8딴 시리즈 👑"
+              title="직8딴 시리즈(기출문제 중복소거) 📒"
               subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
               link="/ehs-storage"
               categories={ehsStorageCategories}
