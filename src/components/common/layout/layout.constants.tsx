@@ -8,6 +8,7 @@ import {
   WechatOutlined,
   ClearOutlined,
   CrownOutlined,
+  MoneyCollectOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -57,5 +58,13 @@ export const navBottomItems = [
     key: '/pricing',
     icon: <ClearOutlined />,
     label: '광고 제거',
+  },
+];
+
+export const navSellerItems = [
+  {
+    key: '/me/seller',
+    icon: <MoneyCollectOutlined />,
+    label: '판매 정보',
   },
 ];

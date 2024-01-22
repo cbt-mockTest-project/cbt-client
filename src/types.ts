@@ -1278,6 +1278,7 @@ export type MockExamQuestion = {
   multipleChoice: Array<MockExamQuestionMultipleChoice>;
   myQuestionState?: Maybe<QuestionState>;
   number: Scalars['Float'];
+  objectiveData?: Maybe<ObjectiveData>;
   orderId: Scalars['String'];
   question?: Maybe<Scalars['String']>;
   question_img?: Maybe<Array<MockExamImageType>>;
@@ -1397,6 +1398,7 @@ export type MockExamQuestionInputType = {
   multipleChoice: Array<MockExamQuestionMultipleChoiceInputType>;
   myQuestionState?: InputMaybe<QuestionState>;
   number: Scalars['Float'];
+  objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
   orderId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
@@ -1427,6 +1429,16 @@ export type MockExamQuestionMultipleChoiceOptionInputType = {
   content: Scalars['String'];
   image?: InputMaybe<Scalars['String']>;
   number: Scalars['Float'];
+};
+
+export type MockExamQuestionObjectiveContentInputType = {
+  content: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type MockExamQuestionObjectiveInputType = {
+  answer: Scalars['Float'];
+  content: Array<MockExamQuestionObjectiveContentInputType>;
 };
 
 export type MockExamQuestionState = {
@@ -2032,6 +2044,18 @@ export type NoticeInputType = {
   user: UserInputType;
 };
 
+export type ObjectiveContent = {
+  __typename?: 'ObjectiveContent';
+  content: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type ObjectiveData = {
+  __typename?: 'ObjectiveData';
+  answer: Scalars['Float'];
+  content: Array<ObjectiveContent>;
+};
+
 export type PartialMockExamQuestionInput = {
   approved?: InputMaybe<Scalars['Boolean']>;
   commentCount?: InputMaybe<Scalars['Float']>;
@@ -2046,6 +2070,7 @@ export type PartialMockExamQuestionInput = {
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
+  objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
   orderId: Scalars['String'];
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
@@ -3397,7 +3422,8 @@ export enum UserRole {
   ClientBasic = 'CLIENT_BASIC',
   ClientSafePremium = 'CLIENT_SAFE_PREMIUM',
   Partner = 'PARTNER',
-  PaymentTest = 'PAYMENT_TEST'
+  PaymentTest = 'PAYMENT_TEST',
+  Seller = 'SELLER'
 }
 
 export type UserRoleInputType = {
