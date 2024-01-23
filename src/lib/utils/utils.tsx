@@ -257,3 +257,27 @@ export const reomveImgTag = (htmlString: string) => {
 export const replaceSpaceToHyphen = (string: string) => {
   return string.replace(/\s/g, '-');
 };
+
+export const linkify = (text: string) => {
+  const urlRegex =
+    /(\bhttps?:\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+  return text.split(urlRegex).map((part, index) => {
+    if (urlRegex.test(part)) {
+      return (
+        <a
+          href={part}
+          key={index}
+          style={{
+            color: '#2595ff',
+            textDecoration: 'underline',
+          }}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
