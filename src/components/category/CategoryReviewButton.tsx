@@ -49,9 +49,7 @@ const CategoryReviewButton: React.FC<CategoryReviewButtonProps> = ({
       >
         <StarRounded
           role="button"
-          className={`category-review-button-icon ${
-            myEvaluation ? 'active' : ''
-          }`}
+          className="category-review-button-icon active"
         />
         <div className="category-review-score">{`${scoreAverage} (리뷰: ${scoreCount})`}</div>
       </CategoryReviewButtonBlock>
