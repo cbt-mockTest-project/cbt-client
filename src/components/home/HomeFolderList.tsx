@@ -4,12 +4,13 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Empty } from 'antd';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MockExamCategory } from 'types';
 import HomeCategorySearchModal from './HomeCategorySearchModal';
+import { useRouter } from 'next/router';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -90,13 +91,20 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   unikeyKey,
   handleToggleBookmark,
 }) => {
-  const [isCategorySearchModalOpen, setIsCategorySearchModalOpen] =
-    useState(false);
+  const router = useRouter();
+  const isCategorySearchModalOpen = useMemo(
+    () => router.query.tab === 'user-storage',
+    [router.query.tab]
+  );
   const handleMoreViewTrigger = (trigger: string) => {
     if (trigger === 'user-storage') {
-      setIsCategorySearchModalOpen(true);
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, tab: 'user-storage' },
+      });
     }
   };
+
   return (
     <HomeFolderListBlock>
       {link ? (
@@ -182,7 +190,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       {isCategorySearchModalOpen && (
         <HomeCategorySearchModal
           open={isCategorySearchModalOpen}
-          onCancel={() => setIsCategorySearchModalOpen(false)}
+          onCancel={() => router.back()}
         />
       )}
     </HomeFolderListBlock>
