@@ -74,7 +74,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     )
   );
   const description = removeHtmlTag(
-    questionQuery.readMockExamQuestion.mockExamQusetion?.question || ''
+    questionQuery.readMockExamQuestion.mockExamQusetion?.question +
+      questionQuery.readMockExamQuestion.mockExamQusetion.solution || ''
   );
   return addApolloState(apolloClient, {
     props: { title, description, questionQueryInput },

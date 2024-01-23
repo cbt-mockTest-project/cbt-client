@@ -9,6 +9,7 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import { Button } from 'antd';
 import useAuth from '@lib/hooks/useAuth';
 import Link from 'next/link';
+import palette from '@styles/palette';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -46,20 +47,22 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   return (
     <QuestionComponentBlock>
-      {isMyQuestion && (
-        <Link href={`/question/${question.id}/edit`}>
-          <Button type="primary" className="question-detail-edit-button">
-            수정
-          </Button>
+      <div className="question-detail-top-button-wrapper">
+        <Link href={`/exam/solution/${question.mockExam.id}`}>
+          <Button>{`관련 시험지로 이동 >`}</Button>
         </Link>
-      )}
-      <BasicCard className="question-detail-card" type="primary">
+      </div>
+      <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox
             saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}
           />
+        </div>
+      </BasicCard>
+      <BasicCard className="question-detail-answer-card" type="primary">
+        <div className="question-detail-content-wrapper">
           <StudyAnswerBox
             question={question}
             isAnswerHidden={isAnswerHidden}
@@ -89,7 +92,18 @@ export default QuestionComponent;
 
 const QuestionComponentBlock = styled.div`
   background-color: inherit;
-  .question-detail-edit-button {
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  .question-detail-question-card {
+    background-color: rgb(240, 243, 243);
+  }
+  .question-detail-top-button-wrapper {
+    justify-content: space-between;
+
+    display: flex;
+    margin-top: 10px;
+    gap: 10px;
   }
 `;
