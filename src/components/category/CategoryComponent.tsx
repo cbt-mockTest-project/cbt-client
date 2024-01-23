@@ -21,6 +21,7 @@ import CategoryInviteModal from './CategoryInviteModal';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from './CategoryLearningProgress';
 import ExamList from './ExamList';
+import CategoryReviewButton from './CategoryReviewButton';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -222,6 +223,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryLearningProgress
         categoryLearningProgress={categoryLearningProgress}
       />
+      <CategoryReviewButton categoryId={category.id} />
       <CategoryHeader
         user={category.user}
         categoryName={category.name}
