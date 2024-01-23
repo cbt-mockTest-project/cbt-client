@@ -6,15 +6,13 @@ import {
 } from '@lib/graphql/hook/useCategoryEvaluation';
 import { useMemo } from 'react';
 import useAuth from './useAuth';
-import useApolloClient from './useApolloCient';
 import { GetCategoryEvaluationQuery } from '@lib/graphql/query/categoryEvaluationQuery.generated';
 import { GET_CATEGORY_EVALUATION_QUERY } from '@lib/graphql/query/categoryEvaluationQuery';
 import { message } from 'antd';
 import { cloneDeep } from 'lodash';
 
 const useCategoryEvaluation = (categoryId: number) => {
-  const { user } = useAuth();
-  const { updateCache } = useApolloClient();
+  const { user, handleCheckLogin } = useAuth();
   const { data } = useGetCategoryEvaluation({
     categoryId,
   });
@@ -42,6 +40,7 @@ const useCategoryEvaluation = (categoryId: number) => {
     feedback: string = ''
   ) => {
     try {
+      if (!handleCheckLogin()) return;
       const { data } = await createCategoryEvaluation({
         variables: {
           input: {
