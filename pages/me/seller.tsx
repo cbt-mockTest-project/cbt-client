@@ -19,4 +19,4 @@ const SellerPage: NextPage<SellerPageProps> = () => {
   );
 };
 
-export default withAuth(SellerPage, [UserRole.Seller]);
+export default withAuth(SellerPage, [UserRole.Seller, UserRole.Admin]);

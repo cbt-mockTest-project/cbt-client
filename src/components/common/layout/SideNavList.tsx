@@ -74,7 +74,7 @@ const SideNavList: React.FC<SideNavListProps> = () => {
       />
       <CustomNavDivider />
       <UserAuthBox className="side-user-auth-box" />
-      {isLoggedIn && user.role === UserRole.Seller && (
+      {isLoggedIn && [UserRole.Seller, UserRole.Admin].includes(user.role) && (
         <>
           <CustomNavDivider />
           <Menu

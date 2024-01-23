@@ -6,7 +6,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type GetBuyersQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBuyersQuery = { __typename?: 'Query', getBuyers: { __typename?: 'GetBuyersOutput', ok: boolean, error?: string | null, userAndRoles?: Array<{ __typename?: 'UserAndRole', price: number, created_at: any, role: { __typename?: 'Role', name: string }, user?: { __typename?: 'User', nickname: string, email: string } | null }> | null } };
+export type GetBuyersQuery = { __typename?: 'Query', getBuyers: { __typename?: 'GetBuyersOutput', ok: boolean, error?: string | null, userAndRoles?: Array<{ __typename?: 'UserAndRole', id: number, price: number, created_at: any, role: { __typename?: 'Role', name: string }, user?: { __typename?: 'User', nickname: string, email: string } | null }> | null } };
 
 
 export const GetBuyersDocument = gql`
@@ -15,6 +15,7 @@ export const GetBuyersDocument = gql`
     ok
     error
     userAndRoles {
+      id
       price
       created_at
       role {

@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_BUYERS } from '../query/sellerQuery';
 import {
   GetBuyersQuery,
@@ -7,3 +7,6 @@ import {
 
 export const useLazyGetBuyers = () =>
   useLazyQuery<GetBuyersQuery, GetBuyersQueryVariables>(GET_BUYERS);
+
+export const useGetBuyers = () =>
+  useQuery<GetBuyersQuery, GetBuyersQueryVariables>(GET_BUYERS);

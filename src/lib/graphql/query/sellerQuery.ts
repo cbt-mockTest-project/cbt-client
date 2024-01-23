@@ -6,6 +6,7 @@ export const GET_BUYERS = gql`
       ok
       error
       userAndRoles {
+        id
         price
         created_at
         role {
