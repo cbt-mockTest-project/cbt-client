@@ -870,6 +870,13 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetBuyersOutput = {
+  __typename?: 'GetBuyersOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  userAndRoles?: Maybe<Array<UserAndRole>>;
+};
+
 export type GetExamCategoriesInput = {
   categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
@@ -1180,6 +1187,7 @@ export type MockExamCategory = {
   order: Scalars['Float'];
   partner?: Maybe<Partner>;
   roles: Array<Role>;
+  seller?: Maybe<Seller>;
   source: ExamSource;
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
@@ -1202,6 +1210,7 @@ export type MockExamCategoryInputType = {
   order: Scalars['Float'];
   partner?: InputMaybe<PartnerInputType>;
   roles: Array<RoleInputType>;
+  seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
   type: MockExamCategoryTypes;
   user: UserInputType;
@@ -2280,6 +2289,7 @@ export enum PostOrderType {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getBuyers: GetBuyersOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
   getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
@@ -3031,6 +3041,7 @@ export type Role = {
   id: Scalars['Float'];
   mockExamCategories: Array<MockExamCategory>;
   name: Scalars['String'];
+  seller?: Maybe<Seller>;
   updated_at: Scalars['DateTime'];
   userRoles: Array<UserAndRole>;
 };
@@ -3038,6 +3049,7 @@ export type Role = {
 export type RoleInputType = {
   mockExamCategories: Array<MockExamCategoryInputType>;
   name: Scalars['String'];
+  seller?: InputMaybe<SellerInputType>;
   userRoles: Array<UserRoleInputType>;
 };
 
@@ -3116,6 +3128,22 @@ export type SearchUserOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   users?: Maybe<Array<User>>;
+};
+
+export type Seller = {
+  __typename?: 'Seller';
+  created_at: Scalars['DateTime'];
+  examCategories: Array<MockExamCategory>;
+  id: Scalars['Float'];
+  roles: Array<Role>;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type SellerInputType = {
+  examCategories: Array<MockExamCategoryInputType>;
+  roles: Array<RoleInputType>;
+  user: UserInputType;
 };
 
 export type SendFindPasswordMailInput = {
@@ -3346,6 +3374,7 @@ export type User = {
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
+  seller?: Maybe<Seller>;
   todos: Array<Todo>;
   updated_at: Scalars['DateTime'];
   usedFreeTrial: Scalars['Boolean'];
@@ -3357,9 +3386,10 @@ export type UserAndRole = {
   __typename?: 'UserAndRole';
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
+  price: Scalars['Float'];
   role: Role;
   updated_at: Scalars['DateTime'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 export type UserInputType = {
@@ -3399,6 +3429,7 @@ export type UserInputType = {
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
   role: UserRole;
+  seller?: InputMaybe<SellerInputType>;
   todos: Array<TodoInputType>;
   usedFreeTrial: Scalars['Boolean'];
   userRoles: Array<UserRoleInputType>;
@@ -3427,8 +3458,9 @@ export enum UserRole {
 }
 
 export type UserRoleInputType = {
+  price?: InputMaybe<Scalars['Float']>;
   role: RoleInputType;
-  user: UserInputType;
+  user?: InputMaybe<UserInputType>;
 };
 
 export type ViewPostInput = {
