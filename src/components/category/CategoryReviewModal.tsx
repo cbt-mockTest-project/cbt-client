@@ -21,6 +21,12 @@ const CategoryReviewModalBlock = styled(Modal)`
   .category-review-modal-inner {
     .ant-table-wrapper {
       word-break: break-all;
+      .ant-table-content {
+        font-size: 13px;
+        svg {
+          font-size: 20px;
+        }
+      }
     }
     .category-review-modal-evaluation-register-wrapper {
       display: flex;
@@ -98,7 +104,17 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
   const evaluationDatas = categoryEvaluations.map((categoryEvaluation) => {
     return {
       key: categoryEvaluation.id,
-      nickname: categoryEvaluation.user.nickname,
+      nickname: (
+        <div
+          style={{
+            fontSize: '12px',
+          }}
+        >
+          {categoryEvaluation.user.nickname.slice(0, 1) +
+            '*' +
+            categoryEvaluation.user.nickname.at(-1)}
+        </div>
+      ),
       score: (
         <div
           style={{
@@ -109,7 +125,7 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
           }}
         >
           <StarRounded color="primary" style={{ color: palette.yellow_500 }} />
-          <span>x {categoryEvaluation.score}</span>
+          <span>x{categoryEvaluation.score}</span>
         </div>
       ),
       review: categoryEvaluation.feedback,
@@ -120,13 +136,13 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
       title: '닉네임',
       dataIndex: 'nickname',
       key: 'nickname',
-      width: 150,
+      width: 170,
     },
     {
       title: '평점',
       dataIndex: 'score',
       key: 'score',
-      width: 100,
+      width: 95,
     },
     {
       title: '리뷰',
