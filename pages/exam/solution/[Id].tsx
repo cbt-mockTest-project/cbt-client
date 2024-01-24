@@ -109,7 +109,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         ''
       );
 
-      console.log(removeHtmlTag(description));
       return addApolloState(apolloClient, {
         props: {
           questionsQueryInput,

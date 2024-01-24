@@ -28,13 +28,14 @@ const ExamCreateHeaderBlock = styled.div`
 
 interface ExamCreateHeaderProps {
   title?: string;
+  saveExamLoading: boolean;
 }
 
 const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
   title = '시험지 만들기',
+  saveExamLoading,
 }) => {
   const router = useRouter();
-  const { formState } = useFormContext();
   return (
     <ExamCreateHeaderBlock>
       <HeaderLayout>
@@ -51,7 +52,7 @@ const ExamCreateHeader: React.FC<ExamCreateHeaderProps> = ({
           type="primary"
           className="exam-create-save-button"
           htmlType="submit"
-          loading={formState.isSubmitting}
+          loading={saveExamLoading}
         >
           저장
         </Button>
