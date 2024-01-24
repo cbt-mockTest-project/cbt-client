@@ -241,7 +241,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
-          {examSetting.isMultipleSelectMode && (
+          {examSetting.isMultipleSelectMode ? (
             <CategoryMultipleSelectModeControlbar
               checkbox={{
                 categoryAllChecked:
@@ -254,6 +254,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
               categoryId={category.id}
               examIds={examSetting.examIds}
             />
+          ) : (
+            <div style={{ height: '52px' }} />
           )}
           <ExamList />
         </>

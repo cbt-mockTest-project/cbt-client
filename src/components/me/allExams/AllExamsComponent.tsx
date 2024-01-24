@@ -184,7 +184,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
               />
             }
           />
-          {examSetting.isMultipleSelectMode && (
+          {examSetting.isMultipleSelectMode ? (
             <CategoryMultipleSelectModeControlbar
               checkbox={{
                 categoryAllChecked: exams.length === examSetting.examIds.length,
@@ -196,6 +196,8 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
               categoryId={0}
               examIds={examSetting.examIds}
             />
+          ) : (
+            <div style={{ height: '52px' }} />
           )}
           <AllExamList examType={examType} />
         </>
