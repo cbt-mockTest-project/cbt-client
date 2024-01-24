@@ -82,7 +82,12 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
         <Swiper
           className="swiper-container"
           spaceBetween={20}
-          modules={[Navigation]}
+          modules={[Navigation, Virtual]}
+          virtual={{
+            slides: questions,
+            addSlidesBefore: 1,
+            addSlidesAfter: 1,
+          }}
           onSwiper={(swiper) => {
             setSwiper(swiper);
           }}
