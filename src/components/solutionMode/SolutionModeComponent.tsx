@@ -5,7 +5,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import LoopIcon from '@mui/icons-material/Loop';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { ReadQuestionsByExamIdsInput } from 'types';
+import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
@@ -41,6 +41,7 @@ const SolutionModeComponentBlock = styled.div`
 
 interface SolutionModeComponentProps {
   questionsQueryInput?: ReadQuestionsByExamIdsInput;
+  serverQuestions: MockExamQuestion[];
 }
 
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({

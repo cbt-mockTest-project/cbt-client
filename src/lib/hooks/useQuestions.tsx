@@ -31,6 +31,9 @@ const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const questions = useAppSelector((state) => state.mockExam.questions);
+  const tempQuestions = useAppSelector(
+    (state) => state.mockExam.tempQuestionsForSolution
+  );
 
   const questionsWithLowScore = useMemo(
     () =>
@@ -222,7 +225,7 @@ const useQuestions = () => {
   };
 
   return {
-    questions,
+    questions: questions.length > 0 ? questions : tempQuestions,
     setQuestions,
     saveBookmark,
     fetchQuestions,

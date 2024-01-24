@@ -11,6 +11,8 @@ import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useEffect, useLayoutEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
@@ -26,6 +28,8 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   title,
   description,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <WithHead
@@ -100,7 +104,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const questions = (res?.data.readQuestionsByExamIds.questions ||
         []) as MockExamQuestion[];
       store.dispatch(
-        mockExamActions.setQuestions(questions as MockExamQuestion[])
+        mockExamActions.setTempQuestionsForSolution(
+          questions as MockExamQuestion[]
+        )
       );
       const title = questions[0]?.mockExam.title || '';
       const description = questions.reduce(
