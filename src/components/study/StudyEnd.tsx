@@ -97,7 +97,8 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
     }
   };
   useEffect(() => {
-    if (swiper.activeIndex === swiper.virtual.slides.length - 1) {
+    // if (swiper.activeIndex === swiper.virtual.slides.length - 1) {
+    if (swiper.activeIndex === swiper.slides.length - 1) {
       setQuestions(questionsForScore);
     }
   }, [swiper.activeIndex]);
