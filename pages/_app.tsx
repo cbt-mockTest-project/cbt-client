@@ -1,8 +1,3 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import type { AppProps } from 'next/app';
 import Globalstyles from '@styles/globalStyles';
 import { ApolloProvider } from '@apollo/client';
@@ -13,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, message, theme } from 'antd';
+import { ConfigProvider, message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';

@@ -1,3 +1,6 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { responsive } from '@lib/utils/responsive';
 import React, { useState } from 'react';
 import styled from 'styled-components';

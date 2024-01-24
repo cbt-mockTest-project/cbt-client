@@ -1,10 +1,13 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Empty } from 'antd';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';

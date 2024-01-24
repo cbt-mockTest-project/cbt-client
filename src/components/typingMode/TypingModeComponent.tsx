@@ -1,3 +1,6 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -5,7 +8,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import TypingModeItem from './TypingModeItem';
-import SwiperCore from 'swiper';
 import { Navigation, Virtual } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';

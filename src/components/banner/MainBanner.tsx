@@ -1,7 +1,9 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Autoplay, Pagination } from 'swiper';
 import { responsive } from '@lib/utils/responsive';
 import { isIOS } from 'react-device-detect';
 import Portal from '@components/common/portal/Portal';

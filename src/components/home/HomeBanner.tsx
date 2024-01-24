@@ -1,3 +1,6 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import OpenChatModal from '@components/common/layout/OpenChatModal';
 import { responsive } from '@lib/utils/responsive';
 import Image from 'next/image';
