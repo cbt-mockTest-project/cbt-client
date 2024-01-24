@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EditorStyle from '@styles/editorStyle';
-import {
-  MockExamQuestion,
-  QuestionState,
-  ReadQuestionsByExamIdsOutput,
-} from 'types';
+import { ReadQuestionsByExamIdsOutput } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
-import useQuestions from '@lib/hooks/useQuestions';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import palette from '@styles/palette';
-import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 
 const SolutionModeCardItemBlock = styled.div`

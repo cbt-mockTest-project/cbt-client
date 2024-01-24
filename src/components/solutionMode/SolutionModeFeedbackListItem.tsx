@@ -20,7 +20,6 @@ import {
 
 import QuestionFeedbackModal from './QuestionFeedbackModal';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useQuestions from '@lib/hooks/useQuestions';
 import {
   AddFeedbackInput,
   DeleteFeedbackInput,

@@ -61,6 +61,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   }, [router.isReady]);
 
   useEffect(() => {
+    resetQuestions();
     return () => {
       resetQuestions();
     };

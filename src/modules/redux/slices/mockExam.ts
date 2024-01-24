@@ -17,9 +17,6 @@ const mockExamSlice = createSlice({
   name: 'mockExam',
   initialState: mockExamState,
   reducers: {
-    setMockExam: (state, action: PayloadAction<MockExam>) => {
-      state.mockExam = action.payload;
-    },
     setQuestions: (state, action: PayloadAction<MockExamQuestion[]>) => {
       if (state.questionsForScore.length === 0) {
         state.questionsForScore = action.payload;

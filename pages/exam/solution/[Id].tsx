@@ -11,7 +11,6 @@ import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import React from 'react';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
