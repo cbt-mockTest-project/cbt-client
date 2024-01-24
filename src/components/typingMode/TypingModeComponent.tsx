@@ -115,8 +115,10 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
     if (questions.length === 0) return;
     const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
     if (!inProgressAnswers) return;
-    const answers = Object.values(inProgressAnswers).filter((el) => el !== '');
-    if (answers.length === 0) return;
+    const validAnswers = Object.keys(inProgressAnswers).filter((key) =>
+      questions.find((question) => question.id === Number(key))
+    );
+    if (validAnswers.length === 0) return;
     Modal.confirm({
       title: '이전에 작성한 답안이 남아 있습니다.',
       content: '작성중인 답안을 삭제하시겠습니까?',
