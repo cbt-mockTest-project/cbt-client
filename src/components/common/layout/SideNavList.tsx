@@ -12,6 +12,7 @@ import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
 import OpenChatModal from './OpenChatModal';
 import useAuth from '@lib/hooks/useAuth';
 import { UserRole } from 'types';
+import BugReportModal from './BugReportModal';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
@@ -32,8 +33,9 @@ interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, handleCheckLogin } = useAuth();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isKakaoOpenChatModalOpen, setIsKakaoOpenChatModalOpen] =
     useState(false);
   return (
@@ -66,6 +68,10 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             router.push(e.key);
             return;
           }
+          if (e.key === 'report') {
+            if (!handleCheckLogin()) return;
+            setIsReportModalOpen(true);
+          }
         }}
         style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
@@ -92,14 +98,24 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           />
         </>
       )}
-      <AppDownloadInfoModal
-        open={isAppDownloadModalOpen}
-        onCancel={() => setIsAppDownloadModalOpen(false)}
-      />
-      <OpenChatModal
-        open={isKakaoOpenChatModalOpen}
-        onCancel={() => setIsKakaoOpenChatModalOpen(false)}
-      />
+      {isAppDownloadModalOpen && (
+        <AppDownloadInfoModal
+          open={isAppDownloadModalOpen}
+          onCancel={() => setIsAppDownloadModalOpen(false)}
+        />
+      )}
+      {isKakaoOpenChatModalOpen && (
+        <OpenChatModal
+          open={isKakaoOpenChatModalOpen}
+          onCancel={() => setIsKakaoOpenChatModalOpen(false)}
+        />
+      )}
+      {isReportModalOpen && (
+        <BugReportModal
+          open={isReportModalOpen}
+          onCancel={() => setIsReportModalOpen(false)}
+        />
+      )}
     </SideNavListBlock>
   );
 };

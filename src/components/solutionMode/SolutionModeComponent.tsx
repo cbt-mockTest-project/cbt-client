@@ -41,7 +41,6 @@ const SolutionModeComponentBlock = styled.div`
 
 interface SolutionModeComponentProps {
   questionsQueryInput?: ReadQuestionsByExamIdsInput;
-  serverQuestions: MockExamQuestion[];
 }
 
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({

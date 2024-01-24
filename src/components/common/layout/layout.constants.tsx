@@ -9,6 +9,7 @@ import {
   ClearOutlined,
   CrownOutlined,
   MoneyCollectOutlined,
+  AlertOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -58,6 +59,11 @@ export const navBottomItems = [
     key: '/pricing',
     icon: <ClearOutlined />,
     label: '광고 제거',
+  },
+  {
+    key: 'report',
+    icon: <AlertOutlined />,
+    label: '버그 신고',
   },
 ];
 
