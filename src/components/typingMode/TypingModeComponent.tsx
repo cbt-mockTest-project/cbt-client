@@ -114,7 +114,10 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
   }, [swiper, questionIndex]);
 
   useEffect(() => {
+    if (!swiper) return;
     if (questions.length === 0) return;
+    // 마지막 페이지에서 작동x
+    if (swiper?.activeIndex === swiper?.virtual.slides.length - 1) return;
     const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
     if (!inProgressAnswers) return;
     const validAnswers = Object.keys(inProgressAnswers).filter((key) =>
@@ -134,7 +137,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
         }, 100);
       },
     });
-  }, [questions]);
+  }, [questions, swiper]);
 
   return (
     <TypingModeComponentBlock>
