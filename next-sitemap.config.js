@@ -38,9 +38,11 @@ module.exports = {
     const res = await axios.post('https://api.moducbt.com/graphql', {
       operationName : null,
       variables : {},
-      query : "{\n  readAllQuestions {\n    ok\n    questions {\n      id\n    }\n  }\n}\n"
+      query : "{\n  readAllQuestions {\n    ok\n    questions {\n      id\n      question\n   }\n  }\n}\n"
     })
-    const questionIds = await Promise.all(res.data.data.readAllQuestions.questions.map(async (question) => await config.transform(config, `/question/${question.id}`)))
+    const questionIds = await Promise.all(res.data.data.readAllQuestions.questions
+      .filter((question) => question.question)
+      .map(async (question) => await config.transform(config, `/question/${question.id}`)))
     return questionIds;
   },
   robotsTxtOptions: {
