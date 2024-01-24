@@ -10,6 +10,9 @@ import { Navigation, Virtual } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
+import { Modal } from 'antd';
 
 const TypingModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -94,9 +97,11 @@ const TypingModeComponentBlock = styled.div`
 interface TypingModeComponentProps {}
 
 const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
-  const { questions, fetchQuestions } = useQuestions();
+  const { questions } = useQuestions();
+  const localStorage = new LocalStorage();
   const [swiper, setSwiper] = useState<any | null>(null);
   const router = useRouter();
+  const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
 
@@ -105,6 +110,27 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
       swiper.slideTo(questionIndex, 9);
     }
   }, [swiper, questionIndex]);
+
+  useEffect(() => {
+    if (questions.length === 0) return;
+    const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
+    if (!inProgressAnswers) return;
+    const answers = Object.values(inProgressAnswers).filter((el) => el !== '');
+    if (answers.length === 0) return;
+    Modal.confirm({
+      title: '이전에 작성한 답안이 남아 있습니다.',
+      content: '작성중인 답안을 삭제하시겠습니까?',
+      okText: '네',
+      cancelText: '아니오',
+      onOk() {
+        localStorage.remove(IN_PROGRESS_ANSWERS);
+        setClearPrevAnswers(true);
+        setTimeout(() => {
+          setClearPrevAnswers(false);
+        }, 100);
+      },
+    });
+  }, [questions]);
 
   return (
     <TypingModeComponentBlock>
@@ -136,6 +162,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             questions.map((question, index) => (
               <SwiperSlide key={question.id}>
                 <TypingModeItem
+                  clearTextAreaTrigger={clearPrevAnswers}
                   key={question.id}
                   question={question}
                   number={index + 1}
