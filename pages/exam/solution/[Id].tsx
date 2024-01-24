@@ -28,8 +28,6 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   title,
   description,
 }) => {
-  const dispatch = useDispatch();
-
   return (
     <>
       <WithHead
