@@ -212,6 +212,7 @@ const useQuestions = () => {
 
   const resetQuestions = () => {
     dispatch(mockExamActions.setQuestions([]));
+    dispatch(mockExamActions.setTempQuestionsForSolution([]));
   };
 
   const filterQuestions = (states: [QuestionState]) => {
