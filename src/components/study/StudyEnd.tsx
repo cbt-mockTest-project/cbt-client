@@ -7,6 +7,9 @@ import { useRouter } from 'next/router';
 import StudyResultCard from './StudyResultCard';
 import palette from '@styles/palette';
 import useQuestionsScore from '@lib/hooks/useQuestionsScore';
+import ClearIcon from '@mui/icons-material/Clear';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -41,6 +44,13 @@ const StudyEndBlock = styled.div`
     display: flex;
     gap: 10px;
   }
+  .study-end-retry-button-content {
+    display: flex;
+    align-items: center;
+    svg {
+      font-size: 20px;
+    }
+  }
 `;
 
 interface StudyEndProps {
@@ -68,19 +78,30 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
       ).length,
     [questions]
   );
+  const middleScoreLength = useMemo(
+    () =>
+      questions.filter(
+        (question: MockExamQuestion) =>
+          question.myQuestionState === QuestionState.Middle
+      ).length,
+    [questions]
+  );
   const scoreCounts = useMemo(
     () => ({
       highScoreLength,
       lowScoreLength,
-      coreScoreLength: questions.length - highScoreLength - lowScoreLength,
+      middleScoreLength,
+      coreScoreLength:
+        questions.length - highScoreLength - lowScoreLength - middleScoreLength,
     }),
-    [highScoreLength, lowScoreLength, questions.length]
+    [highScoreLength, middleScoreLength, lowScoreLength, questions.length]
   );
   const handleRetryExam = async () => {
     try {
       const hasQuestionWithLowScore = questions.some(
         (question: MockExamQuestion) =>
-          question.myQuestionState === QuestionState.Row
+          question.myQuestionState === QuestionState.Row ||
+          question.myQuestionState === QuestionState.Middle
       );
       if (!hasQuestionWithLowScore)
         return message.error('틀린 문제가 없습니다.');
@@ -91,7 +112,7 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
           mode: 'end',
         },
       });
-      filterQuestions([QuestionState.Row]);
+      filterQuestions([QuestionState.Row, QuestionState.Middle]);
     } catch {
       message.error('다시 시도해주세요.');
     }
@@ -119,7 +140,11 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
         >
           다시 풀기
         </Button>
-        <Button onClick={handleRetryExam}>틀린문제 보기</Button>
+        <Button onClick={handleRetryExam}>
+          <div className="study-end-retry-button-content">
+            <ChangeHistoryIcon />, <ClearIcon /> &nbsp; 문제 보기
+          </div>
+        </Button>
         <Button
           className="study-end-finish-button"
           type="primary"

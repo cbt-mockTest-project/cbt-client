@@ -215,7 +215,7 @@ const useQuestions = () => {
     dispatch(mockExamActions.setTempQuestionsForSolution([]));
   };
 
-  const filterQuestions = (states: [QuestionState]) => {
+  const filterQuestions = (states: QuestionState[]) => {
     const newQuestions = questions.filter((question) =>
       states.includes(question.myQuestionState)
     );

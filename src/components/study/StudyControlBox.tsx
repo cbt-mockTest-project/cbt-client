@@ -3,11 +3,12 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
 import { EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Popover } from 'antd';
+import { Button, Divider, Popover } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -44,8 +45,23 @@ const StudyControlBoxBlock = styled.div`
   }
   .study-control-box {
     display: flex;
-    gap: 10px;
     padding: 10px 20px;
+    justify-content: space-between;
+    .study-control-box-score-button-wrapper {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .study-control-box-progress-button-wrapper {
+      display: flex;
+      gap: 5px;
+    }
+    .study-control-box-divider {
+      margin: auto 10px;
+      font-size: 30px;
+      border-style: dashed;
+      border-color: ${palette.colorBorder};
+    }
   }
   .study-control-button {
     padding: 5px;
@@ -123,18 +139,10 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
     [mode]
   );
-  const { data } = useMeQuery();
-  const { openAuthModal } = useAuthModal();
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
-  const handleOpenFeedbackModal = () => {
-    if (!data?.me.ok) {
-      openAuthModal();
-      return;
-    }
-    setIsQuestionFeedbackModalOpen(true);
-  };
+
   const handleSaveQuestionState = (state: QuestionState) => {
     const newState =
       question.myQuestionState !== state ? state : QuestionState.Core;
@@ -143,81 +151,66 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   return (
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
-        <button
-          className={`study-control-button ${
-            question.myQuestionState === QuestionState.High ? 'active' : ''
-          }`}
-          onClick={() => handleSaveQuestionState(QuestionState.High)}
-        >
-          <PanoramaFishEyeIcon />
-        </button>
-        <button
-          className={`study-control-button ${
-            question.myQuestionState === QuestionState.Row ? 'active' : ''
-          }`}
-          onClick={() => handleSaveQuestionState(QuestionState.Row)}
-        >
-          <ClearIcon />
-        </button>
-        {answerHiddenOption && (
+        <div className="study-control-box-score-button-wrapper">
           <button
-            className="study-control-button"
-            onClick={() =>
-              answerHiddenOption.setIsAnswerHidden(
-                !answerHiddenOption.isAnswerHidden
-              )
-            }
+            className={`study-control-button ${
+              question.myQuestionState === QuestionState.High ? 'active' : ''
+            }`}
+            onClick={() => handleSaveQuestionState(QuestionState.High)}
           >
-            {answerHiddenOption.isAnswerHidden ? (
-              <RemoveRedEyeIcon />
-            ) : (
-              <VisibilityOffIcon />
-            )}
+            <PanoramaFishEyeIcon />
           </button>
-        )}
-        <Popover content="답안 추가">
           <button
-            className="study-control-button"
-            onClick={handleOpenFeedbackModal}
+            className={`study-control-button ${
+              question.myQuestionState === QuestionState.Middle ? 'active' : ''
+            }`}
+            onClick={() => handleSaveQuestionState(QuestionState.Middle)}
           >
-            {<EditOutlined />}
+            <ChangeHistoryIcon />
           </button>
-        </Popover>
-        {additionalControlButton && additionalControlButton}
-        {hasScoreTable && (
-          <Button onClick={() => setIsStudyScoreModalOpen(true)}>현황</Button>
-        )}
-        {swiper && (
-          <div className="study-swiper-button-wrapper">
+          <button
+            className={`study-control-button ${
+              question.myQuestionState === QuestionState.Row ? 'active' : ''
+            }`}
+            onClick={() => handleSaveQuestionState(QuestionState.Row)}
+          >
+            <ClearIcon />
+          </button>
+        </div>
+        <Divider className="study-control-box-divider" type="vertical" />
+        <div className="study-control-box-progress-button-wrapper">
+          {answerHiddenOption && (
             <button
               className="study-control-button"
+              onClick={() =>
+                answerHiddenOption.setIsAnswerHidden(
+                  !answerHiddenOption.isAnswerHidden
+                )
+              }
+            >
+              {answerHiddenOption.isAnswerHidden ? (
+                <RemoveRedEyeIcon />
+              ) : (
+                <VisibilityOffIcon />
+              )}
+            </button>
+          )}
+          {additionalControlButton && additionalControlButton}
+          {hasScoreTable && (
+            <Button onClick={() => setIsStudyScoreModalOpen(true)}>현황</Button>
+          )}
+          {swiper && hasFinishButton && (
+            <Button
+              className="study-control-finish-button"
+              type="primary"
               onClick={() => {
-                swiper.slidePrev();
+                swiper.slideTo(swiper.virtual.slides.length - 1, 0);
               }}
             >
-              <LeftOutlined />
-            </button>
-            <button
-              className="study-control-button"
-              onClick={() => {
-                swiper.slideNext();
-              }}
-            >
-              <RightOutlined />
-            </button>
-          </div>
-        )}
-        {swiper && hasFinishButton && (
-          <Button
-            className="study-control-finish-button"
-            type="primary"
-            onClick={() => {
-              swiper.slideTo(swiper.virtual.slides.length - 1, 0);
-            }}
-          >
-            종료
-          </Button>
-        )}
+              종료
+            </Button>
+          )}
+        </div>
       </BasicCard>
 
       {isQuestionFeedbackModalOpen && (
