@@ -36,6 +36,10 @@ const StudyQuestionBoxBlock = styled.div`
   .study-question-box-question {
     word-break: break-all;
     white-space: pre-wrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   .study-question-box-image {
     width: 100%;
