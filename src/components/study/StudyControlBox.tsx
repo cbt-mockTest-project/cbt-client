@@ -204,7 +204,13 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               className="study-control-finish-button"
               type="primary"
               onClick={() => {
-                swiper.slideTo(swiper.virtual.slides.length - 1, 0);
+                delete router.query.qIndex;
+                router.push({
+                  query: {
+                    ...router.query,
+                    tab: 'end',
+                  },
+                });
               }}
             >
               종료

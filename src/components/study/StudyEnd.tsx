@@ -10,6 +10,7 @@ import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
+import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -51,40 +52,65 @@ const StudyEndBlock = styled.div`
       font-size: 20px;
     }
   }
+  .study-end-wrong-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 10px;
+    .study-end-wrong-question-title {
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+
+      svg {
+        font-size: 20px;
+      }
+    }
+    .study-end-wrong-question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .solution-mode-question-card {
+        background-color: white;
+      }
+      .study-control-box {
+        margin: 0;
+      }
+    }
+  }
 `;
 
-interface StudyEndProps {
-  swiper: any;
-}
+interface StudyEndProps {}
 
-const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
+const StudyEnd: React.FC<StudyEndProps> = () => {
   const router = useRouter();
 
-  const { questions, filterQuestions, setQuestions } = useQuestions();
+  const { setQuestions } = useQuestions();
   const { questionsForScore } = useQuestionsScore();
   const highScoreLength = useMemo(
     () =>
-      questions.filter(
+      questionsForScore.filter(
         (question: MockExamQuestion) =>
           question.myQuestionState === QuestionState.High
       ).length,
-    [questions]
+    [questionsForScore]
   );
   const lowScoreLength = useMemo(
     () =>
-      questions.filter(
+      questionsForScore.filter(
         (question: MockExamQuestion) =>
           question.myQuestionState === QuestionState.Row
       ).length,
-    [questions]
+    [questionsForScore]
   );
   const middleScoreLength = useMemo(
     () =>
-      questions.filter(
+      questionsForScore.filter(
         (question: MockExamQuestion) =>
           question.myQuestionState === QuestionState.Middle
       ).length,
-    [questions]
+    [questionsForScore]
   );
   const scoreCounts = useMemo(
     () => ({
@@ -92,36 +118,25 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
       lowScoreLength,
       middleScoreLength,
       coreScoreLength:
-        questions.length - highScoreLength - lowScoreLength - middleScoreLength,
+        questionsForScore.length -
+        highScoreLength -
+        lowScoreLength -
+        middleScoreLength,
     }),
-    [highScoreLength, middleScoreLength, lowScoreLength, questions.length]
+    [
+      highScoreLength,
+      middleScoreLength,
+      lowScoreLength,
+      questionsForScore.length,
+    ]
   );
-  const handleRetryExam = async () => {
-    try {
-      const hasQuestionWithLowScore = questions.some(
-        (question: MockExamQuestion) =>
-          question.myQuestionState === QuestionState.Row ||
-          question.myQuestionState === QuestionState.Middle
-      );
-      if (!hasQuestionWithLowScore)
-        return message.error('틀린 문제가 없습니다.');
-      await router.replace({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          mode: 'end',
-        },
-      });
-      filterQuestions([QuestionState.Row, QuestionState.Middle]);
-    } catch {
-      message.error('다시 시도해주세요.');
-    }
-  };
+
   useEffect(() => {
-    if (swiper.activeIndex === swiper.virtual.slides.length - 1) {
+    if (router.query.tab === 'end') {
       setQuestions(questionsForScore);
     }
-  }, [swiper.activeIndex]);
+  }, [router.query.tab]);
+
   return (
     <StudyEndBlock>
       <div className="study-end-header">
@@ -135,15 +150,17 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
       <div className="study-end-button-wrapper">
         <Button
           onClick={() => {
-            swiper.slideTo(0, 0);
+            setQuestions(questionsForScore);
+            delete router.query.tab;
+            router.push({
+              query: {
+                ...router.query,
+                qIndex: 0,
+              },
+            });
           }}
         >
           다시 풀기
-        </Button>
-        <Button onClick={handleRetryExam}>
-          <div className="study-end-retry-button-content">
-            <ChangeHistoryIcon />, <ClearIcon /> &nbsp; 문제 보기
-          </div>
         </Button>
         <Button
           className="study-end-finish-button"
@@ -152,6 +169,27 @@ const StudyEnd: React.FC<StudyEndProps> = ({ swiper }) => {
         >
           종료하기
         </Button>
+      </div>
+      <div className="study-end-wrong-wrapper">
+        <div className="study-end-wrong-question-title">
+          <ChangeHistoryIcon />, <ClearIcon /> &nbsp; 문제
+        </div>
+        <div className="study-end-wrong-question-list">
+          {questionsForScore
+            .filter(
+              (question: MockExamQuestion) =>
+                question.myQuestionState === QuestionState.Row ||
+                question.myQuestionState === QuestionState.Middle
+            )
+            .map((question, index) => (
+              <SolutionModeCardItem
+                key={question.id}
+                defaultQuestion={question}
+                index={index}
+                isAnswerAllHidden={false}
+              />
+            ))}
+        </div>
       </div>
     </StudyEndBlock>
   );

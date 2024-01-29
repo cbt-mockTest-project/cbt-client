@@ -1,8 +1,10 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
+import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
+import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -45,6 +47,23 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
   flipCard,
   isFlipped,
 }) => {
+  const { questions } = useQuestions();
+  const router = useRouter();
+  const qIndex =
+    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
+  const handleFinalClick = () => {
+    Modal.confirm({
+      title: '학습을 종료하시겠습니까?',
+      okText: '종료',
+      cancelText: '취소',
+      onOk: () => {
+        router.replace({
+          pathname: router.pathname,
+          query: { ...router.query, tab: 'end' },
+        });
+      },
+    });
+  };
   return (
     <CardModeControlBoxBlock>
       <BasicCard type="primary">
@@ -65,6 +84,10 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           <button
             className="card-mode-control-button"
             onClick={() => {
+              if (qIndex + 1 === questions.length) {
+                handleFinalClick();
+                return;
+              }
               swiper.slideNext();
             }}
           >

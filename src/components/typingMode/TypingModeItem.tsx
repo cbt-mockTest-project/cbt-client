@@ -5,10 +5,11 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import useQuestions from '@lib/hooks/useQuestions';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Input } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { TextAreaRef } from 'antd/es/input/TextArea';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -72,6 +73,22 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   clearTextAreaTrigger,
 }) => {
   const router = useRouter();
+  const { questions } = useQuestions();
+  const qIndex =
+    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
+  const handleFinalClick = () => {
+    Modal.confirm({
+      title: '학습을 종료하시겠습니까?',
+      okText: '종료',
+      cancelText: '취소',
+      onOk: () => {
+        router.replace({
+          pathname: router.pathname,
+          query: { ...router.query, tab: 'end' },
+        });
+      },
+    });
+  };
   const questionIndex = Number(router.query.questionIndex);
   const localStorage = new LocalStorage();
   const [answer, setAnswer] = useState('');
@@ -153,6 +170,10 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           <button
             className="typing-mode-control-button"
             onClick={() => {
+              if (qIndex + 1 === questions.length) {
+                handleFinalClick();
+                return;
+              }
               swiper.slideNext();
             }}
           >
