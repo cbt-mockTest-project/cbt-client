@@ -9,6 +9,7 @@ import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import { handleError } from '@lib/utils/utils';
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
 import HistoryLoader from './HistoryLoader';
+import { useRouter } from 'next/router';
 
 const ScoreTabBlock = styled.div`
   display: flex;
@@ -53,6 +54,7 @@ const ScoreTabBlock = styled.div`
 interface ScoreTabProps {}
 
 const ScoreTab: React.FC<ScoreTabProps> = () => {
+  const router = useRouter();
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
   const { questions, fetchQuestions, resetQuestions } = useQuestions();
   const { examTitles, getExamTitlesLoading, resetQuestionScores } =
@@ -104,6 +106,7 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
         className="score-tab-exam-title-select"
         options={examTitles}
         placeholder="시험을 선택해주세요"
+        key={(router.query.tab as string) || 'history'}
         onChange={(value) => {
           setCheckedStates([]);
           setSelectedExamId(value);
@@ -126,7 +129,7 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
           onChange={handleStateCheck}
         />
       </div>
-      <ul className="bookmark-tab-question-list">
+      <ul className="score-tab-question-list">
         {!fetchQuestionsLoading &&
           questions.map((question, index) => (
             <SolutionModeCardItem

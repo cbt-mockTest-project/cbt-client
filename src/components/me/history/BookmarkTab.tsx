@@ -4,10 +4,11 @@ import useBookmarkedQuestions from '@lib/hooks/useBookmarkedQuestions';
 import useQuestions from '@lib/hooks/useQuestions';
 import palette from '@styles/palette';
 import { Button, Empty, Select } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import styled from 'styled-components';
 import HistoryLoader from './HistoryLoader';
+import { useRouter } from 'next/router';
 
 const BookmarkTabBlock = styled.div`
   display: flex;
@@ -29,10 +30,12 @@ const BookmarkTabBlock = styled.div`
 interface BookmarkTabProps {}
 
 const BookmarkTab: React.FC<BookmarkTabProps> = () => {
+  const router = useRouter();
   const { examTitles, getExamTitlesLoading, resetQuestionBookmarks } =
     useBookmarkedQuestions();
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
   const { questions, fetchQuestions } = useQuestions();
+
   return (
     <BookmarkTabBlock>
       <Button
@@ -43,6 +46,7 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
         저장 초기화
       </Button>
       <Select
+        key={(router.query.tab as string) || 'bookmark'}
         className="bookmark-tab-exam-title-select"
         options={examTitles}
         placeholder="시험을 선택해주세요"
