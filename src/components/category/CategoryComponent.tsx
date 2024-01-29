@@ -22,6 +22,8 @@ import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExa
 import CategoryLearningProgress from './CategoryLearningProgress';
 import ExamList from './ExamList';
 import CategoryReviewButton from './CategoryReviewButton';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -90,6 +92,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   categoryQueryInput,
 }) => {
   const router = useRouter();
+  const localStorage = new LocalStorage();
   const { data: meQuery } = useMeQuery();
   const [
     getExamCategoryLearningProgress,
@@ -215,6 +218,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       router.push('/');
     }
   }, [meQuery]);
+
+  useEffect(() => {
+    if (!router.asPath) return;
+    localStorage.set(LAST_VISITED_CATEGORY, router.asPath);
+  }, [router.asPath]);
 
   if (!category) return null;
 

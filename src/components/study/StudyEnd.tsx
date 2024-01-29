@@ -11,6 +11,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -85,7 +87,7 @@ interface StudyEndProps {}
 
 const StudyEnd: React.FC<StudyEndProps> = () => {
   const router = useRouter();
-
+  const localStorage = new LocalStorage();
   const { setQuestions } = useQuestions();
   const { questionsForScore } = useQuestionsScore();
   const highScoreLength = useMemo(
@@ -137,6 +139,14 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
     }
   }, [router.query.tab]);
 
+  const handleEndExam = () => {
+    const lastVisitedCategory = localStorage.get(LAST_VISITED_CATEGORY);
+    if (lastVisitedCategory) {
+      router.push(lastVisitedCategory);
+    } else {
+      router.push('/');
+    }
+  };
   return (
     <StudyEndBlock>
       <div className="study-end-header">
@@ -165,7 +175,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
         <Button
           className="study-end-finish-button"
           type="primary"
-          onClick={router.back}
+          onClick={handleEndExam}
         >
           종료하기
         </Button>
