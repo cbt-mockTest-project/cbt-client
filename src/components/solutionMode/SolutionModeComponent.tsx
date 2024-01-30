@@ -5,7 +5,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import LoopIcon from '@mui/icons-material/Loop';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
+import { ReadQuestionsByExamIdsInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
@@ -46,7 +46,13 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const { questions, shuffleQuestions, fetchQuestions } = useQuestions();
+  const {
+    questions: clientSideQuestions,
+    serverSideQuestions,
+    shuffleQuestions,
+    fetchQuestions,
+    setServerSideQuestions,
+  } = useQuestions();
 
   const router = useRouter();
   const examIdsQuery = router.query.examIds;
@@ -60,10 +66,12 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     }
     return null;
   }, [questionsQueryInput, examIdsQuery]);
+
   useEffect(() => {
-    // staticProps로 받은 questionsQueryInput이 있으면 해당 문제들을 fetch
     if (questionsQueryInput) {
-      fetchQuestions(questionsQueryInput, 'network-only');
+      fetchQuestions(questionsQueryInput, 'network-only').then(() => {
+        setServerSideQuestions(null);
+      });
     }
   }, []);
 
@@ -111,7 +119,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
         </div>
         <ul className="solution-mode-solution-card-list">
           <SolutionModeCardItemList
-            defaultQuestions={questions}
+            defaultQuestions={serverSideQuestions || clientSideQuestions}
             isAnswerAllHidden={isAnswerAllHidden}
           />
         </ul>

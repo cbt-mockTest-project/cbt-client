@@ -3,7 +3,7 @@ import { MockExam, MockExamQuestion } from 'types';
 
 export interface MockExamState {
   questions: MockExamQuestion[];
-  tempQuestionsForSolution: MockExamQuestion[];
+  serverSideQuestions: MockExamQuestion[] | null;
   questionsForScore: MockExamQuestion[];
   mockExam: MockExam | null;
 }
@@ -11,7 +11,7 @@ export interface MockExamState {
 const mockExamState: MockExamState = {
   questions: [],
   questionsForScore: [],
-  tempQuestionsForSolution: [],
+  serverSideQuestions: null,
   mockExam: null,
 };
 
@@ -33,11 +33,11 @@ const mockExamSlice = createSlice({
         return question;
       });
     },
-    setTempQuestionsForSolution: (
+    setServerSideQuestions: (
       state,
       action: PayloadAction<MockExamQuestion[]>
     ) => {
-      state.tempQuestionsForSolution = action.payload;
+      state.serverSideQuestions = action.payload;
     },
     setQuestionsForScore: (
       state,

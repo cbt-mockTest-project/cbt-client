@@ -31,8 +31,8 @@ const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const questions = useAppSelector((state) => state.mockExam.questions);
-  const tempQuestions = useAppSelector(
-    (state) => state.mockExam.tempQuestionsForSolution
+  const serverSideQuestions = useAppSelector(
+    (state) => state.mockExam.serverSideQuestions
   );
 
   const questionsWithLowScore = useMemo(
@@ -212,7 +212,7 @@ const useQuestions = () => {
 
   const resetQuestions = () => {
     dispatch(mockExamActions.setQuestions([]));
-    dispatch(mockExamActions.setTempQuestionsForSolution([]));
+    dispatch(mockExamActions.setServerSideQuestions([]));
   };
 
   const filterQuestions = (states: QuestionState[]) => {
@@ -225,8 +225,14 @@ const useQuestions = () => {
     dispatch(mockExamActions.setQuestions(questions));
   };
 
+  const setServerSideQuestions = (questions: MockExamQuestion[]) => {
+    dispatch(mockExamActions.setServerSideQuestions(questions));
+  };
+
   return {
-    questions: questions.length > 0 ? questions : tempQuestions,
+    questions: questions,
+    serverSideQuestions,
+    setServerSideQuestions,
     setQuestions,
     saveBookmark,
     fetchQuestions,
