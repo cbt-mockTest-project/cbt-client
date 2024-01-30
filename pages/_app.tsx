@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, message } from 'antd';
+import { ConfigProvider, Modal, message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -27,10 +27,14 @@ import {
   STUDY_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import { IS_FIRST_VISIT } from '@lib/constants/sessionStorage';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
-
+  const sessionStorage = new SessionStorage();
+  const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
     STUDY_PAGE,
@@ -46,7 +50,25 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     String(Component.displayName)
   );
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
-  const localStorage = new LocalStorage();
+  useEffect(() => {
+    const isFirstVisit = sessionStorage.get(IS_FIRST_VISIT);
+    if (isFirstVisit) return;
+    sessionStorage.set(IS_FIRST_VISIT, 'ok');
+    const isLastVisitCategory = localStorage.get(LAST_VISITED_CATEGORY);
+    if (LAST_VISITED_CATEGORY) {
+      Modal.confirm({
+        title: '이전에 학습하던 암기장으로 이동하시겠습니까?',
+        okText: '이동하기',
+        cancelText: '취소',
+        onOk: () => {
+          router.push(isLastVisitCategory);
+        },
+        onCancel: () => {
+          localStorage.remove(LAST_VISITED_CATEGORY);
+        },
+      });
+    }
+  }, []);
   useEffect(() => {
     const excludePath = ['/exam/randomselect', '/exam/solution'];
     if (!someIncludes(excludePath, router.asPath)) {
