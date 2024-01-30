@@ -80,6 +80,9 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           onClick={(e) => {
             e.stopPropagation();
           }}
+          style={{
+            width: 'fit-content',
+          }}
         >
           {question.solution_img &&
             question.solution_img.length > 0 &&
