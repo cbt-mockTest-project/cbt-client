@@ -31,6 +31,13 @@ export type UpdateCategoryEvaluationMutationVariables = Types.Exact<{
 
 export type UpdateCategoryEvaluationMutation = { __typename?: 'Mutation', updateCategoryEvaluation: { __typename?: 'UpdateCategoryEvaluationOutput', error?: string | null, ok: boolean } };
 
+export type CheckIfCategoryEvaluatedMutationVariables = Types.Exact<{
+  input: Types.CheckIfCategoryEvaluatedInput;
+}>;
+
+
+export type CheckIfCategoryEvaluatedMutation = { __typename?: 'Mutation', checkIfCategoryEvaluated: { __typename?: 'CheckIfCategoryEvaluatedOutput', error?: string | null, isEvaluated?: boolean | null, ok: boolean } };
+
 
 export const GetCategoryEvaluationDocument = gql`
     query GetCategoryEvaluation($input: GetCategoryEvaluationInput!) {
@@ -100,4 +107,17 @@ export const UpdateCategoryEvaluationDocument = gql`
 
 export function useUpdateCategoryEvaluationMutation() {
   return Urql.useMutation<UpdateCategoryEvaluationMutation, UpdateCategoryEvaluationMutationVariables>(UpdateCategoryEvaluationDocument);
+};
+export const CheckIfCategoryEvaluatedDocument = gql`
+    mutation CheckIfCategoryEvaluated($input: CheckIfCategoryEvaluatedInput!) {
+  checkIfCategoryEvaluated(input: $input) {
+    error
+    isEvaluated
+    ok
+  }
+}
+    `;
+
+export function useCheckIfCategoryEvaluatedMutation() {
+  return Urql.useMutation<CheckIfCategoryEvaluatedMutation, CheckIfCategoryEvaluatedMutationVariables>(CheckIfCategoryEvaluatedDocument);
 };

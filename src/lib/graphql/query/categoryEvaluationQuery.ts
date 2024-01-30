@@ -56,3 +56,13 @@ export const UPDATE_CATEGORY_EVALUATION = gql`
     }
   }
 `;
+
+export const CHECK_IF_CATEGORY_EVALUATED = gql`
+  mutation CheckIfCategoryEvaluated($input: CheckIfCategoryEvaluatedInput!) {
+    checkIfCategoryEvaluated(input: $input) {
+      error
+      isEvaluated
+      ok
+    }
+  }
+`;

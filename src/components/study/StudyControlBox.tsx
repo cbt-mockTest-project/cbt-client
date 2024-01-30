@@ -205,7 +205,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               type="primary"
               onClick={() => {
                 delete router.query.qIndex;
-                router.push({
+                router.replace({
                   query: {
                     ...router.query,
                     tab: 'end',

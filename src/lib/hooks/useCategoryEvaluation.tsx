@@ -78,7 +78,7 @@ const useCategoryEvaluation = (categoryId: number) => {
       if (data.createCategoryEvaluation.error) {
         return message.error(data.createCategoryEvaluation.error);
       }
-      message.success('등록되었습니다.');
+      message.success('소중한 리뷰 감사합니다.');
     } catch (e) {
       message.error('등록에 실패했습니다.');
     }

@@ -1,6 +1,6 @@
 import useQuestions from '@lib/hooks/useQuestions';
-import { Button, message } from 'antd';
-import React, { useEffect, useMemo } from 'react';
+import { Button } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
@@ -9,10 +9,12 @@ import palette from '@styles/palette';
 import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import { useCheckIfCategoryEvaluated } from '@lib/graphql/hook/useCategoryEvaluation';
+import useAuth from '@lib/hooks/useAuth';
+import StudyEndCategoryReviewModal from './StudyEndCategoryReviewModal';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -90,32 +92,34 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
   const localStorage = new LocalStorage();
   const { setQuestions } = useQuestions();
   const { questionsForScore } = useQuestionsScore();
-  const highScoreLength = useMemo(
-    () =>
-      questionsForScore.filter(
-        (question: MockExamQuestion) =>
-          question.myQuestionState === QuestionState.High
-      ).length,
-    [questionsForScore]
-  );
-  const lowScoreLength = useMemo(
-    () =>
-      questionsForScore.filter(
-        (question: MockExamQuestion) =>
-          question.myQuestionState === QuestionState.Row
-      ).length,
-    [questionsForScore]
-  );
-  const middleScoreLength = useMemo(
-    () =>
-      questionsForScore.filter(
-        (question: MockExamQuestion) =>
-          question.myQuestionState === QuestionState.Middle
-      ).length,
-    [questionsForScore]
-  );
-  const scoreCounts = useMemo(
-    () => ({
+  const { isLoggedIn } = useAuth();
+  const [checkIfCategoryEvaluated] = useCheckIfCategoryEvaluated();
+  const [isCategoryReviewModalOpen, setIsCategoryReviewModalOpen] =
+    useState(false);
+  const categoryId = typeof router.query.categoryId
+    ? Number(router.query.categoryId)
+    : null;
+  const countQuestionsByScoreState = useCallback(() => {
+    let highScoreLength = 0;
+    let lowScoreLength = 0;
+    let middleScoreLength = 0;
+
+    questionsForScore.forEach((question: MockExamQuestion) => {
+      switch (question.myQuestionState) {
+        case QuestionState.High:
+          highScoreLength++;
+          break;
+        case QuestionState.Row: // Assuming "Row" was a typo and should be "Low"
+          lowScoreLength++;
+          break;
+        case QuestionState.Middle:
+          middleScoreLength++;
+          break;
+        // No default case needed since we cover all cases
+      }
+    });
+
+    return {
       highScoreLength,
       lowScoreLength,
       middleScoreLength,
@@ -124,20 +128,36 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
         highScoreLength -
         lowScoreLength -
         middleScoreLength,
-    }),
-    [
-      highScoreLength,
-      middleScoreLength,
-      lowScoreLength,
-      questionsForScore.length,
-    ]
-  );
+    };
+  }, [questionsForScore]);
 
+  const scoreCounts = useMemo(countQuestionsByScoreState, [
+    countQuestionsByScoreState,
+  ]);
   useEffect(() => {
     if (router.query.tab === 'end') {
       setQuestions(questionsForScore);
     }
   }, [router.query.tab]);
+
+  useEffect(() => {
+    if (categoryId && isLoggedIn) {
+      checkIfCategoryEvaluated({
+        variables: {
+          input: {
+            categoryId,
+          },
+        },
+      }).then((res) => {
+        const checkIfCategoryEvaluatedResponse =
+          res.data?.checkIfCategoryEvaluated;
+        if (!checkIfCategoryEvaluatedResponse.ok) return;
+        if (!checkIfCategoryEvaluatedResponse.isEvaluated) {
+          setIsCategoryReviewModalOpen(true);
+        }
+      });
+    }
+  }, [categoryId]);
 
   const handleEndExam = () => {
     const lastVisitedCategory = localStorage.get(LAST_VISITED_CATEGORY);
@@ -201,6 +221,13 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
             ))}
         </div>
       </div>
+      {categoryId && (
+        <StudyEndCategoryReviewModal
+          categoryId={categoryId}
+          open={isCategoryReviewModalOpen}
+          onCancel={() => setIsCategoryReviewModalOpen(false)}
+        />
+      )}
     </StudyEndBlock>
   );
 };

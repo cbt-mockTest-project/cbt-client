@@ -105,6 +105,17 @@ export type CheckDiscountCodeOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CheckIfCategoryEvaluatedInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type CheckIfCategoryEvaluatedOutput = {
+  __typename?: 'CheckIfCategoryEvaluatedOutput';
+  error?: Maybe<Scalars['String']>;
+  isEvaluated?: Maybe<Scalars['Boolean']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CheckPasswordInput = {
   password: Scalars['String'];
 };
@@ -1559,6 +1570,7 @@ export type Mutation = {
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
   checkDiscountCode: CheckDiscountCodeOutput;
+  checkIfCategoryEvaluated: CheckIfCategoryEvaluatedOutput;
   checkPassword: CheckPasswordOutput;
   checkUserRole: CheckUserRoleOutput;
   createAttendance: CreateAttendanceOutput;
@@ -1681,6 +1693,11 @@ export type MutationChangePasswordAfterVerifyingArgs = {
 
 export type MutationCheckDiscountCodeArgs = {
   input: CheckDiscountCodeInput;
+};
+
+
+export type MutationCheckIfCategoryEvaluatedArgs = {
+  input: CheckIfCategoryEvaluatedInput;
 };
 
 
@@ -3472,6 +3489,7 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   role: UserRole;
   seller?: Maybe<Seller>;
+  solvedProblemCount?: Maybe<Scalars['Float']>;
   todos: Array<Todo>;
   updated_at: Scalars['DateTime'];
   usedFreeTrial: Scalars['Boolean'];
@@ -3528,6 +3546,7 @@ export type UserInputType = {
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
+  solvedProblemCount?: InputMaybe<Scalars['Float']>;
   todos: Array<TodoInputType>;
   usedFreeTrial: Scalars['Boolean'];
   userRoles: Array<UserRoleInputType>;
