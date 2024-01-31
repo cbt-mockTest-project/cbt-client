@@ -1238,7 +1238,7 @@ export type MockExamBookmarkInputType = {
 export type MockExamCategory = {
   __typename?: 'MockExamCategory';
   approved: Scalars['Boolean'];
-  categoryEvaluations: Array<CategoryEvaluation>;
+  categoryEvaluations?: Maybe<Array<CategoryEvaluation>>;
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
@@ -1264,7 +1264,7 @@ export type MockExamCategory = {
 
 export type MockExamCategoryInputType = {
   approved?: InputMaybe<Scalars['Boolean']>;
-  categoryEvaluations: Array<CategoryEvaluationInputType>;
+  categoryEvaluations?: InputMaybe<Array<CategoryEvaluationInputType>>;
   description?: InputMaybe<Scalars['String']>;
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;

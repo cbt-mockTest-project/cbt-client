@@ -1,3 +1,4 @@
+import { HeartTwoTone } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -41,12 +42,20 @@ const CategoryFolderListItemBlock = styled(Link)`
         }
       }
     }
+    .category-middle-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 5px;
+      color: ${palette.colorSubText};
+      font-size: 13px;
+    }
 
     .category-footer-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 0px;
       .category-user-info {
         display: flex;
         align-items: center;
@@ -125,6 +134,10 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 </Tag>
               )}
             </div>
+          </div>
+          <div className="category-middle-wrapper">
+            <HeartTwoTone twoToneColor="#eb2f96" />
+            {category.categoryEvaluations.length}
           </div>
           <div className="category-footer-wrapper">
             <button
