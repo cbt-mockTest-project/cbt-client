@@ -164,8 +164,9 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             modules={[Navigation, Virtual]}
             virtual={{
               slides: questions,
-              addSlidesBefore: 1,
-              addSlidesAfter: 1,
+              addSlidesBefore: 3,
+              addSlidesAfter: 3,
+              cache: true,
             }}
             onSwiper={(swiper) => {
               setSwiper(swiper);
