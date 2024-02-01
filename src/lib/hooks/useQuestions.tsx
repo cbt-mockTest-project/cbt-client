@@ -212,7 +212,6 @@ const useQuestions = () => {
 
   const resetQuestions = () => {
     dispatch(mockExamActions.setQuestions([]));
-    dispatch(mockExamActions.setServerSideQuestions([]));
   };
 
   const filterQuestions = (states: QuestionState[]) => {
@@ -230,7 +229,7 @@ const useQuestions = () => {
   };
 
   return {
-    questions: questions,
+    questions,
     serverSideQuestions,
     setServerSideQuestions,
     setQuestions,

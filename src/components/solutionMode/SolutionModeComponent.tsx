@@ -75,6 +75,11 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (clientSideQuestions && serverSideQuestions) {
+      setServerSideQuestions(null);
+    }
+  }, [clientSideQuestions]);
   return (
     <SolutionModeComponentBlock>
       <div className="solution-mode-body">
