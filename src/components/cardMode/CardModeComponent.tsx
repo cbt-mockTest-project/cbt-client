@@ -121,10 +121,6 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
                 query: { ...router.query, qIndex: swiper.activeIndex },
               });
             }}
-            navigation={{
-              prevEl: '.card-mode-navigation-prev',
-              nextEl: '.card-mode-navigation-next',
-            }}
           >
             {swiper &&
               questions.map((question, index) => (
@@ -142,10 +138,24 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
         {router.query.tab === 'end' && <StudyEnd />}
         {router.query.tab !== 'end' && (
           <>
-            <button className="card-mode-navigation-prev">
+            <button
+              className="card-mode-navigation-prev"
+              onClick={() => {
+                swiper.slidePrev({
+                  animation: false,
+                });
+              }}
+            >
               <LeftOutlined />
             </button>
-            <button className="card-mode-navigation-next">
+            <button
+              className="card-mode-navigation-next"
+              onClick={() => {
+                swiper.slideNext({
+                  animation: false,
+                });
+              }}
+            >
               <RightOutlined />
             </button>
             {qIndex + 1 === questions.length && (

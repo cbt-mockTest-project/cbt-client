@@ -71,7 +71,9 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           <button
             className="card-mode-control-button"
             onClick={() => {
-              swiper.slidePrev();
+              swiper.slidePrev({
+                animation: false,
+              });
             }}
           >
             <LeftOutlined />
@@ -88,7 +90,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
                 handleFinalClick();
                 return;
               }
-              swiper.slideNext();
+              swiper.slideNext({ animation: false });
             }}
           >
             <RightOutlined />

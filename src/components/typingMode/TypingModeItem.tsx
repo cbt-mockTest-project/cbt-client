@@ -162,7 +162,9 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           <button
             className="typing-mode-control-button"
             onClick={() => {
-              swiper.slidePrev();
+              swiper.slidePrev({
+                animation: false,
+              });
             }}
           >
             <LeftOutlined />
@@ -174,7 +176,9 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
                 handleFinalClick();
                 return;
               }
-              swiper.slideNext();
+              swiper.slideNext({
+                animation: false,
+              });
             }}
           >
             <RightOutlined />

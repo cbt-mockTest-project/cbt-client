@@ -177,10 +177,6 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
                 query: { ...router.query, qIndex: swiper.activeIndex },
               });
             }}
-            navigation={{
-              prevEl: '.typing-mode-navigation-prev',
-              nextEl: '.typing-mode-navigation-next',
-            }}
           >
             {swiper &&
               questions.map((question, index) => (
@@ -200,10 +196,24 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
 
         {router.query.tab !== 'end' && (
           <>
-            <button className={`typing-mode-navigation-prev`}>
+            <button
+              className={`typing-mode-navigation-prev`}
+              onClick={() => {
+                swiper.slidePrev({
+                  animation: false,
+                });
+              }}
+            >
               <LeftOutlined />
             </button>
-            <button className={`typing-mode-navigation-next`}>
+            <button
+              className={`typing-mode-navigation-next`}
+              onClick={() => {
+                swiper.slideNext({
+                  animation: false,
+                });
+              }}
+            >
               <RightOutlined />
             </button>
             {questionIndex + 1 === questions.length && (
