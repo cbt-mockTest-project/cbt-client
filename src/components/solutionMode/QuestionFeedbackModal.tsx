@@ -68,32 +68,36 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
   };
 
   return (
-    <QuestionFeedbackModalBlock
-      {...modalProps}
-      onOk={feedbackId ? handleEditQuestionFeedback : handleAddQuestionFeedback}
-      okText={feedbackId ? '수정하기' : '등록하기'}
-      cancelText="닫기"
-      okButtonProps={{ loading: updateFeedbackLoading }}
-    >
-      <div className="add-answer-modal-inner">
-        <label className="content-label">오류신고 및 답안추가</label>
-        <pre className="content-title">{title}</pre>
-        <Radio.Group
-          className="content-feedback-type-checkbox-group"
-          value={selectedType}
-          onChange={(e) => {
-            setSelectedType(e.target.value);
-          }}
-          options={feedbackOptions}
-        />
-        <CreateQuestionEditor
-          content={content}
-          setContent={setContent}
-          placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
-          className="content-feedback-editor"
-        />
-      </div>
-    </QuestionFeedbackModalBlock>
+    <div onClick={(e) => e.stopPropagation()}>
+      <QuestionFeedbackModalBlock
+        {...modalProps}
+        onOk={
+          feedbackId ? handleEditQuestionFeedback : handleAddQuestionFeedback
+        }
+        okText={feedbackId ? '수정하기' : '등록하기'}
+        cancelText="닫기"
+        okButtonProps={{ loading: updateFeedbackLoading }}
+      >
+        <div className="add-answer-modal-inner">
+          <label className="content-label">오류신고 및 답안추가</label>
+          <pre className="content-title">{title}</pre>
+          <Radio.Group
+            className="content-feedback-type-checkbox-group"
+            value={selectedType}
+            onChange={(e) => {
+              setSelectedType(e.target.value);
+            }}
+            options={feedbackOptions}
+          />
+          <CreateQuestionEditor
+            content={content}
+            setContent={setContent}
+            placeholder={`1.암기팁 또는 추가적인 답안을 공유해주세요.\n2.문제 오류가 있다면 공유해주세요.\n3.함께 풍성한 답안을 만들어 봅시다.`}
+            className="content-feedback-editor"
+          />
+        </div>
+      </QuestionFeedbackModalBlock>
+    </div>
   );
 };
 

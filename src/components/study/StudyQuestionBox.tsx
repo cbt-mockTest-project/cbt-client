@@ -1,6 +1,6 @@
 import Bookmark from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Image, Popover } from 'antd';
 import { MockExamQuestion } from 'types';
@@ -80,6 +80,7 @@ interface StudyQuestionBoxProps {
   question: MockExamQuestion;
   className?: string;
   title?: string;
+  onChangeIsFeedbackModalOpen?: (value: boolean) => void;
 }
 
 const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
@@ -88,6 +89,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   questionNumber,
   className = '',
   title,
+  onChangeIsFeedbackModalOpen,
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
@@ -107,6 +109,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
     setIsFeedbackModalOpen(true);
   };
 
+  useEffect(() => {
+    if (onChangeIsFeedbackModalOpen) {
+      onChangeIsFeedbackModalOpen(isFeedbackModalOpen);
+    }
+  }, [onChangeIsFeedbackModalOpen]);
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">

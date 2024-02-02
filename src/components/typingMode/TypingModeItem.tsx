@@ -97,6 +97,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   const {
     question,
+    setQuestion,
     handleAddFeedback,
     handleDeleteFeedback,
     handleEditFeedback,
@@ -128,6 +129,10 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       setAnswer('');
     }
   }, [clearTextAreaTrigger]);
+
+  useEffect(() => {
+    setQuestion(defaultQuestion);
+  }, [defaultQuestion]);
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
