@@ -1,5 +1,6 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -51,30 +52,14 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
   const router = useRouter();
   const qIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
-  const handleFinalClick = () => {
-    Modal.confirm({
-      title: '학습을 종료하시겠습니까?',
-      okText: '종료',
-      cancelText: '취소',
-      onOk: () => {
-        router.replace({
-          pathname: router.pathname,
-          query: { ...router.query, tab: 'end' },
-        });
-      },
-    });
-  };
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   return (
     <CardModeControlBoxBlock>
       <BasicCard type="primary">
         <div className="card-mode-control-button-wrapper">
           <button
             className="card-mode-control-button"
-            onClick={() => {
-              swiper.slidePrev({
-                animation: false,
-              });
-            }}
+            onClick={() => handleSlidePrev(swiper)}
           >
             <LeftOutlined />
           </button>
@@ -85,13 +70,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           </Button>
           <button
             className="card-mode-control-button"
-            onClick={() => {
-              if (qIndex + 1 === questions.length) {
-                handleFinalClick();
-                return;
-              }
-              swiper.slideNext({ animation: false });
-            }}
+            onClick={() => handleSlideNext(questions.length, swiper)}
           >
             <RightOutlined />
           </button>

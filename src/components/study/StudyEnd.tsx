@@ -15,6 +15,8 @@ import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 import { useCheckIfCategoryEvaluated } from '@lib/graphql/hook/useCategoryEvaluation';
 import useAuth from '@lib/hooks/useAuth';
 import StudyEndCategoryReviewModal from './StudyEndCategoryReviewModal';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
+import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -91,6 +93,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
   const router = useRouter();
   const localStorage = new LocalStorage();
   const { setQuestions } = useQuestions();
+  const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
   const { questionsForScore } = useQuestionsScore();
   const { isLoggedIn } = useAuth();
   const [checkIfCategoryEvaluated] = useCheckIfCategoryEvaluated();
@@ -139,6 +142,14 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       setQuestions(questionsForScore);
     }
   }, [router.query.tab]);
+
+  useEffect(() => {
+    if (router.query.tab === 'end') {
+      if (router.query.examId || router.query.examIds) {
+        updateQuestionIndexInfo(0);
+      }
+    }
+  }, [router.query.examId, router.query.examIds, router.query.tab]);
 
   useEffect(() => {
     if (categoryId && isLoggedIn) {

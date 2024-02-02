@@ -1,18 +1,19 @@
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Navigation, Virtual } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import CardModeItem from './CardModeItem';
 import StudyEnd from '@components/study/StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 
 const CardModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -83,21 +84,24 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
   const { questions } = useQuestions();
   const [swiper, setSwiper] = useState<any>(null);
   const router = useRouter();
-  const qIndex =
-    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
-  const handleFinalClick = () => {
-    Modal.confirm({
-      title: '학습을 종료하시겠습니까?',
-      okText: '종료',
-      cancelText: '취소',
-      onOk: () => {
-        router.replace({
-          pathname: router.pathname,
-          query: { ...router.query, tab: 'end' },
-        });
-      },
-    });
-  };
+  const examIds = useMemo(
+    () => router.query.examIds || [router.query.examId],
+    [router.query.examIds, router.query.examId]
+  );
+  const order = router.query.order as string;
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
+  const { findQuestionIndexInfo, updateQuestionIndexInfo } =
+    useCurrentQuestionIndex();
+
+  useEffect(() => {
+    // 다중선택모드일경우 리턴
+    if (examIds.length > 1 || order) return;
+    const currentQuestionInfo = findQuestionIndexInfo();
+    if (swiper && currentQuestionInfo) {
+      swiper.slideTo(currentQuestionInfo.questionIndex, 0);
+    }
+  }, [examIds, swiper, order]);
+
   return (
     <CardModeComponentBlock>
       <div className="card-mode-body">
@@ -105,21 +109,12 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
           <Swiper
             className="swiper-container"
             spaceBetween={20}
-            modules={[Navigation, Virtual]}
-            virtual={{
-              slides: questions,
-              addSlidesBefore: 3,
-              addSlidesAfter: 3,
-              cache: true,
-            }}
+            modules={[Navigation]}
             onSwiper={(swiper) => {
               setSwiper(swiper);
             }}
             onSlideChange={(swiper) => {
-              router.replace({
-                pathname: router.pathname,
-                query: { ...router.query, qIndex: swiper.activeIndex },
-              });
+              updateQuestionIndexInfo(swiper.activeIndex);
             }}
           >
             {swiper &&
@@ -140,33 +135,16 @@ const CardModeComponent: React.FC<CardModeComponentProps> = () => {
           <>
             <button
               className="card-mode-navigation-prev"
-              onClick={() => {
-                swiper.slidePrev({
-                  animation: false,
-                });
-              }}
+              onClick={() => handleSlidePrev(swiper)}
             >
               <LeftOutlined />
             </button>
             <button
               className="card-mode-navigation-next"
-              onClick={() => {
-                swiper.slideNext({
-                  animation: false,
-                });
-              }}
+              onClick={() => handleSlideNext(questions.length, swiper)}
             >
               <RightOutlined />
             </button>
-            {qIndex + 1 === questions.length && (
-              <button
-                className="card-mode-navigation-final"
-                disabled={false}
-                onClick={handleFinalClick}
-              >
-                <RightOutlined />
-              </button>
-            )}
           </>
         )}
       </div>

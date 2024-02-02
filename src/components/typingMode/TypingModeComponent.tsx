@@ -8,13 +8,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import TypingModeItem from './TypingModeItem';
-import { Navigation, Virtual } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import { Modal } from 'antd';
+import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 
 const TypingModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -107,14 +109,25 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
   const [swiper, setSwiper] = useState<any | null>(null);
   const router = useRouter();
   const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
+  const examIds = useMemo(
+    () => router.query.examIds || [router.query.examId],
+    [router.query.examIds, router.query.examId]
+  );
+  const order = router.query.order as string;
+  const { findQuestionIndexInfo, updateQuestionIndexInfo } =
+    useCurrentQuestionIndex();
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
 
   useEffect(() => {
-    if (swiper && !swiper.destroyed) {
-      swiper.slideTo(questionIndex, 9);
+    // 다중선택모드일경우 리턴
+    if (examIds.length > 1 || order) return;
+    const currentQuestionInfo = findQuestionIndexInfo();
+    if (swiper && currentQuestionInfo) {
+      swiper.slideTo(currentQuestionInfo.questionIndex, 0);
     }
-  }, [swiper, questionIndex]);
+  }, [examIds, swiper, order]);
 
   useEffect(() => {
     if (!swiper) return;
@@ -140,20 +153,6 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
     });
   }, [questions, swiper]);
 
-  const handleFinalClick = () => {
-    Modal.confirm({
-      title: '학습을 종료하시겠습니까?',
-      okText: '종료',
-      cancelText: '취소',
-      onOk: () => {
-        router.replace({
-          pathname: router.pathname,
-          query: { ...router.query, tab: 'end' },
-        });
-      },
-    });
-  };
-
   return (
     <TypingModeComponentBlock>
       <div className="typing-mode-body">
@@ -161,21 +160,12 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
           <Swiper
             className="swiper-container"
             spaceBetween={20}
-            modules={[Navigation, Virtual]}
-            virtual={{
-              slides: questions,
-              addSlidesBefore: 3,
-              addSlidesAfter: 3,
-              cache: true,
-            }}
+            modules={[Navigation]}
             onSwiper={(swiper) => {
               setSwiper(swiper);
             }}
             onSlideChange={(swiper) => {
-              router.replace({
-                pathname: router.pathname,
-                query: { ...router.query, qIndex: swiper.activeIndex },
-              });
+              updateQuestionIndexInfo(swiper.activeIndex);
             }}
           >
             {swiper &&
@@ -199,9 +189,7 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             <button
               className={`typing-mode-navigation-prev`}
               onClick={() => {
-                swiper.slidePrev({
-                  animation: false,
-                });
+                handleSlidePrev(swiper);
               }}
             >
               <LeftOutlined />
@@ -209,22 +197,11 @@ const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
             <button
               className={`typing-mode-navigation-next`}
               onClick={() => {
-                swiper.slideNext({
-                  animation: false,
-                });
+                handleSlideNext(questions.length, swiper);
               }}
             >
               <RightOutlined />
             </button>
-            {questionIndex + 1 === questions.length && (
-              <button
-                className="typing-mode-navigation-final"
-                disabled={false}
-                onClick={handleFinalClick}
-              >
-                <RightOutlined />
-              </button>
-            )}
           </>
         )}
       </div>

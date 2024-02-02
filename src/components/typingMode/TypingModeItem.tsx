@@ -5,6 +5,7 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
@@ -93,6 +94,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   const localStorage = new LocalStorage();
   const [answer, setAnswer] = useState('');
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   const {
     question,
     handleAddFeedback,
@@ -161,25 +163,13 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         <div className="typing-mode-swiper-button-wrapper">
           <button
             className="typing-mode-control-button"
-            onClick={() => {
-              swiper.slidePrev({
-                animation: false,
-              });
-            }}
+            onClick={() => handleSlidePrev(swiper)}
           >
             <LeftOutlined />
           </button>
           <button
             className="typing-mode-control-button"
-            onClick={() => {
-              if (qIndex + 1 === questions.length) {
-                handleFinalClick();
-                return;
-              }
-              swiper.slideNext({
-                animation: false,
-              });
-            }}
+            onClick={() => handleSlideNext(questions.length, swiper)}
           >
             <RightOutlined />
           </button>
