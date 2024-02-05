@@ -159,7 +159,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro:
         '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
       price: 16000,
-      // priceAltText: '16,000 ',
+      priceAltText: '16,000 ~',
       benefits: [
         '직8딴 암기장 학습시스템 제공',
         '구매자 전용 오픈톡방을 통한 저자의 즉각 질문답변 대응',
