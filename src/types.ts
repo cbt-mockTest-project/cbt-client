@@ -945,6 +945,7 @@ export type GetCategoryEvaluationOutput = {
 };
 
 export type GetExamCategoriesInput = {
+  categoryIds?: InputMaybe<Array<Scalars['Float']>>;
   categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -1640,6 +1641,7 @@ export type Mutation = {
   removeExamFromCategory: RemoveExamFromCategoryOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
+  resetRecentlyStudiedCategory: CoreOutput;
   restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
@@ -1662,6 +1664,7 @@ export type Mutation = {
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
+  upsertRecentlyStudiedCategory: UpsertRecentlyStudiedCategoryOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -2098,6 +2101,11 @@ export type MutationUpdateQuestionCardArgs = {
 
 export type MutationUpdateQuestionCardCategoryArgs = {
   input: UpdateQuestionCardCategoryInput;
+};
+
+
+export type MutationUpsertRecentlyStudiedCategoryArgs = {
+  input: UpsertRecentlyStudiedCategoryInput;
 };
 
 
@@ -3447,6 +3455,16 @@ export type UpdateQuestionCardOutput = {
   questionCard?: Maybe<QuestionCard>;
 };
 
+export type UpsertRecentlyStudiedCategoryInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type UpsertRecentlyStudiedCategoryOutput = {
+  __typename?: 'UpsertRecentlyStudiedCategoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type User = {
   __typename?: 'User';
   LoginType: LoginType;
@@ -3487,6 +3505,7 @@ export type User = {
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
+  recentlyStudiedCategory: Array<Scalars['Float']>;
   role: UserRole;
   seller?: Maybe<Seller>;
   solvedProblemCount?: Maybe<Scalars['Float']>;
@@ -3544,6 +3563,7 @@ export type UserInputType = {
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
+  recentlyStudiedCategory?: InputMaybe<Array<Scalars['Float']>>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
   solvedProblemCount?: InputMaybe<Scalars['Float']>;

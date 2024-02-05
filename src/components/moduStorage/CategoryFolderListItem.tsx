@@ -1,6 +1,7 @@
 import { HeartTwoTone } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
+import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -14,6 +15,10 @@ import { MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
+  .category-folder-list-item-pc-skeletion,
+  .category-folder-list-item-mobile-skeletion {
+    border-radius: 6px;
+  }
   .category-wrapper {
     display: flex;
     flex-direction: column;
@@ -93,13 +98,15 @@ const CategoryFolderListItemBlock = styled(Link)`
 `;
 
 interface CategoryFolderListItemProps {
-  category: MockExamCategory;
-  handleToggleBookmark: (categoryId: number) => Promise<void>;
+  category?: MockExamCategory;
+  isLoading?: boolean;
+  handleToggleBookmark?: (categoryId: number) => Promise<void>;
   className?: string;
 }
 
 const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   category,
+  isLoading,
   handleToggleBookmark,
   className = '',
 }) => {
@@ -108,62 +115,62 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   const user = meQuery?.me.user;
   return (
     <CategoryFolderListItemBlock
-      href={`/category/${category.name}`}
+      href={`/category/${category?.name}`}
       className={className}
     >
-      <BasicCard hoverEffect type="primary">
-        <div className="category-wrapper">
-          <div className="category-header-wrapper">
-            <span className="category-name">{category.name}</span>
-            <div className="category-header-bookmark-or-tag">
-              {user?.id !== category.user.id && (
-                <ExamBookmark
-                  isBookmarked={category.isBookmarked}
-                  handleToggleBookmark={(e) => {
-                    e.preventDefault();
-                    handleToggleBookmark(category.id);
-                  }}
+      {category && !isLoading && (
+        <BasicCard hoverEffect type="primary">
+          <div className="category-wrapper">
+            <div className="category-header-wrapper">
+              <span className="category-name">{category.name}</span>
+              {user?.id !== category.user.id && handleToggleBookmark && (
+                <div className="category-header-bookmark-or-tag">
+                  <ExamBookmark
+                    isBookmarked={category.isBookmarked}
+                    handleToggleBookmark={(e) => {
+                      e.preventDefault();
+                      handleToggleBookmark(category.id);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="category-middle-wrapper">
+              <HeartTwoTone twoToneColor="#eb2f96" />
+              {category.categoryEvaluations.length}
+            </div>
+            <div className="category-footer-wrapper">
+              <button
+                className="category-user-info"
+                onClick={(e) => {
+                  router.push(`/user/${category.user.id}`);
+                  e.preventDefault();
+                }}
+              >
+                <Image
+                  className="category-user-profile-image"
+                  src={
+                    category.user.profileImg ||
+                    '/png/profile/profile_default.png'
+                  }
+                  alt="프로필이미지"
+                  width={18}
+                  height={18}
                 />
-              )}
-              {user?.id === category.user.id && (
-                <Tag
-                  className="category-private-public-tag"
-                  color={category.isPublic ? 'blue' : 'default'}
-                >
-                  {category.isPublic ? '공개' : '비공개'}
-                </Tag>
-              )}
+                <div className="category-user-name">
+                  {category.user.nickname}
+                </div>
+              </button>
+              <div className="category-exam-count">
+                {category.mockExam.length} 세트
+              </div>
             </div>
           </div>
-          <div className="category-middle-wrapper">
-            <HeartTwoTone twoToneColor="#eb2f96" />
-            {category.categoryEvaluations.length}
-          </div>
-          <div className="category-footer-wrapper">
-            <button
-              className="category-user-info"
-              onClick={(e) => {
-                router.push(`/user/${category.user.id}`);
-                e.preventDefault();
-              }}
-            >
-              <Image
-                className="category-user-profile-image"
-                src={
-                  category.user.profileImg || '/png/profile/profile_default.png'
-                }
-                alt="프로필이미지"
-                width={18}
-                height={18}
-              />
-              <div className="category-user-name">{category.user.nickname}</div>
-            </button>
-            <div className="category-exam-count">
-              {category.mockExam.length} 세트
-            </div>
-          </div>
-        </div>
-      </BasicCard>
+        </BasicCard>
+      )}
+      {isLoading && (
+        <SkeletonBox width="100%" height="111px" borderRadius="6px" />
+      )}
     </CategoryFolderListItemBlock>
   );
 };

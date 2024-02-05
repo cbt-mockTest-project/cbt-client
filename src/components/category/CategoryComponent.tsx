@@ -9,7 +9,10 @@ import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
+import {
+  useMeQuery,
+  useUpsertRecentlyStudiedCategory,
+} from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import { useRouter } from 'next/router';
@@ -93,6 +96,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 }) => {
   const router = useRouter();
   const localStorage = new LocalStorage();
+  const [upsertRecentlyStudiedCategory] = useUpsertRecentlyStudiedCategory();
   const { data: meQuery } = useMeQuery();
   const [
     getExamCategoryLearningProgress,
@@ -192,6 +196,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
+      upsertRecentlyStudiedCategory({
+        variables: {
+          input: {
+            categoryId: category.id,
+          },
+        },
+      });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');

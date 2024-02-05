@@ -58,6 +58,7 @@ export const ME_QUERY = gql`
         id
         role
         email
+        recentlyStudiedCategory
         userRoles {
           role {
             name
@@ -244,6 +245,25 @@ export const GET_USER = gql`
         profileImg
         nickname
       }
+    }
+  }
+`;
+
+export const UPSERT_RECENTLY_STUDIED_CATEGORY = gql`
+  mutation UpsertRecentlyStudiedCategory(
+    $input: UpsertRecentlyStudiedCategoryInput!
+  ) {
+    upsertRecentlyStudiedCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+export const RESET_RECENTLY_STUDIED_CATEGORY = gql`
+  mutation ResetRecentlyStudiedCategory {
+    resetRecentlyStudiedCategory {
+      error
+      ok
     }
   }
 `;

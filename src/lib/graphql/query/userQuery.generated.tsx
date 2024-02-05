@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: Array<number>, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -149,6 +149,18 @@ export type UserProfileQueryVariables = Types.Exact<{
 
 export type UserProfileQuery = { __typename?: 'Query', userProfile: { __typename?: 'UserProfileOutput', error?: string | null, ok: boolean, user?: { __typename?: 'User', id: number, profileImg: string, nickname: string } | null } };
 
+export type UpsertRecentlyStudiedCategoryMutationVariables = Types.Exact<{
+  input: Types.UpsertRecentlyStudiedCategoryInput;
+}>;
+
+
+export type UpsertRecentlyStudiedCategoryMutation = { __typename?: 'Mutation', upsertRecentlyStudiedCategory: { __typename?: 'UpsertRecentlyStudiedCategoryOutput', error?: string | null, ok: boolean } };
+
+export type ResetRecentlyStudiedCategoryMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type ResetRecentlyStudiedCategoryMutation = { __typename?: 'Mutation', resetRecentlyStudiedCategory: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -223,6 +235,7 @@ export const MeDocument = gql`
       id
       role
       email
+      recentlyStudiedCategory
       userRoles {
         role {
           name
@@ -462,4 +475,28 @@ export const UserProfileDocument = gql`
 
 export function useUserProfileQuery(options: Omit<Urql.UseQueryArgs<UserProfileQueryVariables>, 'query'>) {
   return Urql.useQuery<UserProfileQuery, UserProfileQueryVariables>({ query: UserProfileDocument, ...options });
+};
+export const UpsertRecentlyStudiedCategoryDocument = gql`
+    mutation UpsertRecentlyStudiedCategory($input: UpsertRecentlyStudiedCategoryInput!) {
+  upsertRecentlyStudiedCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpsertRecentlyStudiedCategoryMutation() {
+  return Urql.useMutation<UpsertRecentlyStudiedCategoryMutation, UpsertRecentlyStudiedCategoryMutationVariables>(UpsertRecentlyStudiedCategoryDocument);
+};
+export const ResetRecentlyStudiedCategoryDocument = gql`
+    mutation ResetRecentlyStudiedCategory {
+  resetRecentlyStudiedCategory {
+    error
+    ok
+  }
+}
+    `;
+
+export function useResetRecentlyStudiedCategoryMutation() {
+  return Urql.useMutation<ResetRecentlyStudiedCategoryMutation, ResetRecentlyStudiedCategoryMutationVariables>(ResetRecentlyStudiedCategoryDocument);
 };

@@ -1,6 +1,5 @@
 import { useLazyGetExamCategories } from '@lib/graphql/hook/useExam';
 import { handleError } from '@lib/utils/utils';
-import { storageActions } from '@modules/redux/slices/storage';
 import {
   useAppDispatch,
   useAppSelector,
@@ -11,27 +10,26 @@ import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 import { cloneDeep } from 'lodash';
-import { message } from 'antd';
+import { Modal, message } from 'antd';
 import useAuth from './useAuth';
+import { homeActions } from '@modules/redux/slices/home';
+import { useResetRecentlyStudiedCategory } from '@lib/graphql/hook/useUser';
 
 export interface handleToggleCategoryBookmarkProps {
   categoryId: number;
-  type: 'search' | 'modu' | 'user';
+  type: 'search' | 'modu' | 'user' | 'ehs' | 'recentlyStudied';
   input?: GetExamCategoriesInput;
 }
 
 const useHomeCategories = () => {
-  const { handleCheckLogin } = useAuth();
+  const { handleCheckLogin, user, isLoggedIn } = useAuth();
   const dispatch = useAppDispatch();
   const { updateCache, client } = useApolloClient();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
+  const [resetRecentlyStudiedCategory] = useResetRecentlyStudiedCategory();
   const [
     getExamCategories,
-    {
-      data: searchedCategoriesResponse,
-      loading: fetchCategoriesLoading,
-      refetch,
-    },
+    { data: searchedCategoriesResponse, loading: fetchCategoriesLoading },
   ] = useLazyGetExamCategories();
   const searchedCategories =
     searchedCategoriesResponse?.getExamCategories.categories ||
@@ -44,6 +42,9 @@ const useHomeCategories = () => {
   );
   const ehsStorageCategories = useAppSelector(
     (state) => state.home.ehsStorageCategories
+  );
+  const recentlyStudiedCategories = useAppSelector(
+    (state) => state.home.recentlyStudiedCategories
   );
 
   const fetchCategories = async (input: GetExamCategoriesInput) => {
@@ -69,7 +70,12 @@ const useHomeCategories = () => {
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
-      const [moduCategories, userCategories] = await Promise.all([
+      const [
+        moduCategories,
+        userCategories,
+        ehsCategories,
+        recentlyStudiedCategories,
+      ] = await Promise.all([
         getCategories({
           examSource: ExamSource.MoudCbt,
           limit: 30,
@@ -80,9 +86,23 @@ const useHomeCategories = () => {
           limit: 30,
           isPublicOnly: true,
         }),
+        getCategories({
+          examSource: ExamSource.EhsMaster,
+          limit: 30,
+          isPublicOnly: true,
+        }),
+        getCategories({
+          limit: 30,
+          isPublicOnly: false,
+          categoryIds: isLoggedIn ? user.recentlyStudiedCategory : [],
+        }),
       ]);
       setModuStorageCategories(moduCategories as MockExamCategory[]);
       setUserStorageCategories(userCategories as MockExamCategory[]);
+      setEhsStorageCategories(ehsCategories as MockExamCategory[]);
+      setRecentlyStudiedCategories(
+        recentlyStudiedCategories as MockExamCategory[]
+      );
     } catch (error) {
       handleError(error);
     }
@@ -136,6 +156,28 @@ const useHomeCategories = () => {
             !newCategories[targetIndex].isBookmarked;
           setSearchedCategories(newCategories as MockExamCategory[], input);
         }
+        if (type === 'ehs') {
+          const newCategories = cloneDeep(ehsStorageCategories);
+          if (!newCategories) return;
+          const targetIndex = newCategories.findIndex(
+            (category) => category.id === categoryId
+          );
+          if (targetIndex === -1) return;
+          newCategories[targetIndex].isBookmarked =
+            !newCategories[targetIndex].isBookmarked;
+          setEhsStorageCategories(newCategories);
+        }
+        if (type === 'recentlyStudied') {
+          const newCategories = cloneDeep(recentlyStudiedCategories);
+          if (!newCategories) return;
+          const targetIndex = newCategories.findIndex(
+            (category) => category.id === categoryId
+          );
+          if (targetIndex === -1) return;
+          newCategories[targetIndex].isBookmarked =
+            !newCategories[targetIndex].isBookmarked;
+          setRecentlyStudiedCategories(newCategories);
+        }
         if (res.data.toggleExamCategorieBookmark.isBookmarked)
           return message.success('북마크 되었습니다.');
         else return message.success('북마크가 해제되었습니다.');
@@ -147,11 +189,27 @@ const useHomeCategories = () => {
     }
   };
 
+  const handleResetRecentlyStudiedCategories = () => {
+    Modal.confirm({
+      title: '최근 학습한 암기장 기록을 초기화 하시겠습니까?',
+      onOk: async () => {
+        try {
+          await resetRecentlyStudiedCategory();
+          setRecentlyStudiedCategories([]);
+          message.success('초기화 되었습니다.');
+        } catch (e) {
+          handleError(e);
+          message.error('초기화에 실패했습니다.');
+        }
+      },
+    });
+  };
+
   const setModuStorageCategories = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setModuStorageCategories({ categories }));
+    dispatch(homeActions.setModuStorageCategories({ categories }));
 
   const setUserStorageCategories = (categories: MockExamCategory[]) =>
-    dispatch(storageActions.setUserStorageCategories({ categories }));
+    dispatch(homeActions.setUserStorageCategories({ categories }));
 
   const setSearchedCategories = (
     categories: MockExamCategory[],
@@ -176,6 +234,12 @@ const useHomeCategories = () => {
     );
   };
 
+  const setEhsStorageCategories = (categories: MockExamCategory[]) =>
+    dispatch(homeActions.setEhsStorageCategories({ categories }));
+
+  const setRecentlyStudiedCategories = (categories: MockExamCategory[]) =>
+    dispatch(homeActions.setRecentlyStudiedCategories({ categories }));
+
   return {
     searchedCategories,
     fetchCategories,
@@ -184,7 +248,9 @@ const useHomeCategories = () => {
     moduStorageCategories,
     userStorageCategories,
     ehsStorageCategories,
+    recentlyStudiedCategories,
     handleToggleCategoryBookmark,
+    handleResetRecentlyStudiedCategories,
   };
 };
 

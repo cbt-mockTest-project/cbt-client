@@ -4,12 +4,11 @@ import TypingModeComponent from '@components/typingMode/TypingModeComponent';
 import useQuestions from '@lib/hooks/useQuestions';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
 import StudyHeader from './StudyHeader';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
-import useRoleCheck from '@lib/hooks/useRoleCheck';
 import StudyPaymentGuard from './StudyPaymentGuard';
 
 const StudyComponentBlock = styled.div`
