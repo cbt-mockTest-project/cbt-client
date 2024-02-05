@@ -107,12 +107,10 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     storageType,
     handleToggleCategoryBookmark,
   } = useExamCategory();
-  const {
-    examSetting,
-    setExamSetting,
-    handleAllExamsSelect,
-    handleChangeMultipleSelectMode,
-  } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
+  const { examSetting, setExamSetting, handleAllExamsSelect } = useExamSetting({
+    categoryId: category.id,
+    exams: category.mockExam,
+  });
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
@@ -208,10 +206,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       });
       const examSetting = getExamSettingHistory(category.id);
       if (!examSetting) return;
-      const { examIds, isMultipleSelectMode } = examSetting;
+      const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId: category.id, examIds });
-      if (isMultipleSelectMode)
-        setExamSetting({ categoryId: category.id, isMultipleSelectMode });
     }
     if (!meQuery.me.user && category && !category.isPublic) {
       message.error('접근 권한이 없습니다.');
@@ -241,30 +237,22 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
           <CategoryControlbar
-            switch={{
-              checked: examSetting.isMultipleSelectMode,
-              onChangeSwitch: handleChangeMultipleSelectMode,
-            }}
             textInput={{
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
-          {examSetting.isMultipleSelectMode ? (
-            <CategoryMultipleSelectModeControlbar
-              checkbox={{
-                categoryAllChecked:
-                  category?.mockExam.length === examSetting.examIds.length,
-                handleAllExamsSelect,
-              }}
-              button={{
-                isButtonDisabled: examSetting.examIds.length === 0,
-              }}
-              categoryId={category.id}
-              examIds={examSetting.examIds}
-            />
-          ) : (
-            <div style={{ height: '52px' }} />
-          )}
+          <CategoryMultipleSelectModeControlbar
+            checkbox={{
+              categoryAllChecked:
+                category?.mockExam.length === examSetting.examIds.length,
+              handleAllExamsSelect,
+            }}
+            button={{
+              isButtonDisabled: examSetting.examIds.length === 0,
+            }}
+            categoryId={category.id}
+            examIds={examSetting.examIds}
+          />
           <ExamList />
         </>
       ) : (

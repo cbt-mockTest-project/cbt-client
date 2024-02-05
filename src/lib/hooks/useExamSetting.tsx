@@ -55,17 +55,6 @@ const useExamSetting = ({ categoryId, exams }: UseExamSettingProps) => {
     }
   };
 
-  const handleChangeMultipleSelectMode = () => {
-    setExamSetting({
-      categoryId,
-      isMultipleSelectMode: !examSetting.isMultipleSelectMode,
-    });
-    setExamSettingHistory({
-      categoryId,
-      isMultipleSelectMode: !examSetting.isMultipleSelectMode,
-    });
-  };
-
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
 
@@ -74,7 +63,6 @@ const useExamSetting = ({ categoryId, exams }: UseExamSettingProps) => {
     examSetting,
     handleAllExamsSelect,
     handleExamSelect,
-    handleChangeMultipleSelectMode,
   };
 };
 
