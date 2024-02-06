@@ -1,3 +1,6 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import OpenChatModal from '@components/common/layout/OpenChatModal';
 import { responsive } from '@lib/utils/responsive';
 import Image from 'next/image';
@@ -49,19 +52,18 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
+        pc: '/png/banner/seller-banner-pc01.png',
+        mobile: '/png/banner/seller-banner-mobile01.png',
+      },
+      key: 'https://spotless-possum-447.notion.site/102036fe33c04569856df709c871085c?pvs=4',
+    },
+    {
+      img: {
         pc: '/png/banner/ehs-banner-pc02.png',
         mobile: '/png/banner/ehs-banner-mobile02.png',
       },
       key: 'https://ehs-master.com',
     },
-    {
-      img: {
-        pc: '/png/banner/ad-banner-pc01.png',
-        mobile: '/png/banner/ad-banner-mobile01.png',
-      },
-      key: 'ad',
-    },
-
     {
       img: {
         pc: '/png/banner/main-banner-pc04.png',

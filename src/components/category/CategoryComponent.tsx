@@ -9,7 +9,10 @@ import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
+import {
+  useMeQuery,
+  useUpsertRecentlyStudiedCategory,
+} from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import { useRouter } from 'next/router';
@@ -22,6 +25,9 @@ import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExa
 import CategoryLearningProgress from './CategoryLearningProgress';
 import SelectExamTypeModal from './SelectExamTypeModal';
 import ExamList from './ExamList';
+import CategoryReviewButton from './CategoryReviewButton';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -90,6 +96,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   categoryQueryInput,
 }) => {
   const router = useRouter();
+  const localStorage = new LocalStorage();
+  const [upsertRecentlyStudiedCategory] = useUpsertRecentlyStudiedCategory();
   const { data: meQuery } = useMeQuery();
   const [
     getExamCategoryLearningProgress,
@@ -104,14 +112,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     storageType,
     handleToggleCategoryBookmark,
   } = useExamCategory();
-  const {
-    examSetting,
-    setExamSetting,
-    handleAllExamsSelect,
-    handleChangeMultipleSelectMode,
-  } = useExamSetting({ categoryId: category.id, exams: category.mockExam });
-  const [isSelectExamTypeModalOpen, setIsSelectExamTypeModalOpen] =
-    useState(false);
+  const { examSetting, setExamSetting, handleAllExamsSelect } = useExamSetting({
+    categoryId: category.id,
+    exams: category.mockExam,
+  });
+
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
@@ -195,6 +200,13 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
+      upsertRecentlyStudiedCategory({
+        variables: {
+          input: {
+            categoryId: category.id,
+          },
+        },
+      });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');
@@ -211,16 +223,19 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       });
       const examSetting = getExamSettingHistory(category.id);
       if (!examSetting) return;
-      const { examIds, isMultipleSelectMode } = examSetting;
+      const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId: category.id, examIds });
-      if (isMultipleSelectMode)
-        setExamSetting({ categoryId: category.id, isMultipleSelectMode });
     }
     if (!meQuery.me.user && category && !category.isPublic) {
       message.error('접근 권한이 없습니다.');
       router.push('/');
     }
   }, [meQuery]);
+
+  useEffect(() => {
+    if (!router.asPath) return;
+    localStorage.set(LAST_VISITED_CATEGORY, router.asPath);
+  }, [router.asPath]);
 
   if (!category) return null;
 
@@ -229,6 +244,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryLearningProgress
         categoryLearningProgress={categoryLearningProgress}
       />
+      <CategoryReviewButton categoryId={category.id} />
       <CategoryHeader
         user={category.user}
         categoryName={category.name}
@@ -238,28 +254,22 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
           <CategoryControlbar
-            switch={{
-              checked: examSetting.isMultipleSelectMode,
-              onChangeSwitch: handleChangeMultipleSelectMode,
-            }}
             textInput={{
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
-          {examSetting.isMultipleSelectMode && (
-            <CategoryMultipleSelectModeControlbar
-              checkbox={{
-                categoryAllChecked:
-                  category?.mockExam.length === examSetting.examIds.length,
-                handleAllExamsSelect,
-              }}
-              button={{
-                isButtonDisabled: examSetting.examIds.length === 0,
-              }}
-              categoryId={category.id}
-              examIds={examSetting.examIds}
-            />
-          )}
+          <CategoryMultipleSelectModeControlbar
+            checkbox={{
+              categoryAllChecked:
+                category?.mockExam.length === examSetting.examIds.length,
+              handleAllExamsSelect,
+            }}
+            button={{
+              isButtonDisabled: examSetting.examIds.length === 0,
+            }}
+            categoryId={category.id}
+            examIds={examSetting.examIds}
+          />
           <ExamList />
         </>
       ) : (

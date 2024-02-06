@@ -1,8 +1,11 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
+import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
+import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -45,15 +48,18 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
   flipCard,
   isFlipped,
 }) => {
+  const { questions } = useQuestions();
+  const router = useRouter();
+  const qIndex =
+    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   return (
     <CardModeControlBoxBlock>
       <BasicCard type="primary">
         <div className="card-mode-control-button-wrapper">
           <button
             className="card-mode-control-button"
-            onClick={() => {
-              swiper.slidePrev();
-            }}
+            onClick={() => handleSlidePrev(swiper)}
           >
             <LeftOutlined />
           </button>
@@ -64,9 +70,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           </Button>
           <button
             className="card-mode-control-button"
-            onClick={() => {
-              swiper.slideNext();
-            }}
+            onClick={() => handleSlideNext(questions.length, swiper)}
           >
             <RightOutlined />
           </button>

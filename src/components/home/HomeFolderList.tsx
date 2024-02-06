@@ -1,15 +1,19 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Empty } from 'antd';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { MockExamCategory } from 'types';
 import HomeCategorySearchModal from './HomeCategorySearchModal';
+import { useRouter } from 'next/router';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -55,6 +59,10 @@ const HomeFolderListBlock = styled.div`
   .home-folder-list-next-button {
     right: -20px;
   }
+  .home-folder-list-empty {
+    margin: 15px 8px;
+    height: 81px;
+  }
   a.home-folder-title {
     &:hover {
       text-decoration: underline;
@@ -78,7 +86,9 @@ interface HomeFolderListProps {
   link?: string;
   trigger?: string;
   unikeyKey: string;
-  handleToggleBookmark: (categoryId: number) => Promise<void>;
+  handleToggleBookmark?: (categoryId: number) => Promise<void>;
+  headerButton?: React.ReactNode;
+  emptyDescription?: string;
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
@@ -88,15 +98,23 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   link,
   trigger,
   unikeyKey,
-  handleToggleBookmark,
+  headerButton,
+  emptyDescription = '아직 암기장이 없습니다.',
 }) => {
-  const [isCategorySearchModalOpen, setIsCategorySearchModalOpen] =
-    useState(false);
+  const router = useRouter();
+  const isCategorySearchModalOpen = useMemo(
+    () => router.query.tab === 'user-storage',
+    [router.query.tab]
+  );
   const handleMoreViewTrigger = (trigger: string) => {
     if (trigger === 'user-storage') {
-      setIsCategorySearchModalOpen(true);
+      router.push({
+        pathname: router.pathname,
+        query: { ...router.query, tab: 'user-storage' },
+      });
     }
   };
+
   return (
     <HomeFolderListBlock>
       {link ? (
@@ -119,6 +137,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       ) : (
         <div className="home-folder-title">
           <span>{title}</span>
+          {headerButton}
         </div>
       )}
       <div className="home-folder-sub-title">
@@ -149,27 +168,33 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         modules={[Navigation]}
       >
         <ul className="home-folder">
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <SwiperSlide
               key={category.id}
               className="home-folder-list-swiper-slide"
             >
               <CategoryFolderListItem
-                handleToggleBookmark={handleToggleBookmark}
                 className="home-folder-item"
                 category={category}
               />
             </SwiperSlide>
           ))}
-          {categories.length === 0 && (
+          {!categories &&
+            [1, 2, 3, 4, 5].map((i) => (
+              <SwiperSlide key={i} className="home-folder-list-swiper-slide">
+                <CategoryFolderListItem isLoading />
+              </SwiperSlide>
+            ))}
+          {categories && categories.length === 0 && (
             <Empty
+              className="home-folder-list-empty"
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description="아직 암기장이 없습니다."
+              description={emptyDescription}
             />
           )}
         </ul>
       </Swiper>
-      {categories.length > 5 && (
+      {categories && categories.length > 5 && (
         <>
           <button className={`home-folder-list-prev-button ${unikeyKey}`}>
             <LeftOutlined />
@@ -182,7 +207,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       {isCategorySearchModalOpen && (
         <HomeCategorySearchModal
           open={isCategorySearchModalOpen}
-          onCancel={() => setIsCategorySearchModalOpen(false)}
+          onCancel={() => router.back()}
         />
       )}
     </HomeFolderListBlock>

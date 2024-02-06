@@ -1,15 +1,22 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import TypingModeItem from './TypingModeItem';
-import SwiperCore from 'swiper';
-import { Navigation, Virtual } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import StudyEnd from '@components/study/StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
+import { Modal } from 'antd';
+import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 
 const TypingModeComponentBlock = styled.div`
   background-color: ${palette.colorContainerBgGrey};
@@ -46,7 +53,8 @@ const TypingModeComponentBlock = styled.div`
     margin-top: 10px;
   }
   .typing-mode-navigation-prev,
-  .typing-mode-navigation-next {
+  .typing-mode-navigation-next,
+  .typing-mode-navigation-final {
     position: absolute;
     top: 15%;
     padding: 5px;
@@ -69,7 +77,8 @@ const TypingModeComponentBlock = styled.div`
   .typing-mode-navigation-prev {
     left: -30px;
   }
-  .typing-mode-navigation-next {
+  .typing-mode-navigation-next,
+  .typing-mode-navigation-final {
     right: -30px;
   }
   .swiper-button-disabled {
@@ -79,7 +88,8 @@ const TypingModeComponentBlock = styled.div`
 
   @media (max-width: ${responsive.large}) {
     .typing-mode-navigation-prev,
-    .typing-mode-navigation-next {
+    .typing-mode-navigation-next,
+    .typing-mode-navigation-final {
       display: none;
     }
   }
@@ -94,68 +104,106 @@ const TypingModeComponentBlock = styled.div`
 interface TypingModeComponentProps {}
 
 const TypingModeComponent: React.FC<TypingModeComponentProps> = ({}) => {
-  const { questions, fetchQuestions } = useQuestions();
+  const { questions } = useQuestions();
+  const localStorage = new LocalStorage();
   const [swiper, setSwiper] = useState<any | null>(null);
   const router = useRouter();
+  const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
+  const examIds = useMemo(
+    () => router.query.examIds || [router.query.examId],
+    [router.query.examIds, router.query.examId]
+  );
+  const order = router.query.order as string;
+  const { findQuestionIndexInfo, updateQuestionIndexInfo } =
+    useCurrentQuestionIndex();
   const questionIndex =
     typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
 
   useEffect(() => {
-    if (swiper && !swiper.destroyed) {
-      swiper.slideTo(questionIndex, 9);
+    // 다중선택모드일경우 리턴
+    if (examIds.length > 1 || order) return;
+    const currentQuestionInfo = findQuestionIndexInfo();
+    if (swiper && currentQuestionInfo) {
+      swiper.slideTo(currentQuestionInfo.questionIndex, 0);
     }
-  }, [swiper, questionIndex]);
+  }, [examIds, swiper, order]);
+
+  useEffect(() => {
+    if (!swiper) return;
+    if (questions.length === 0) return;
+    const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
+    if (!inProgressAnswers) return;
+    const validAnswers = Object.keys(inProgressAnswers).filter((key) =>
+      questions.find((question) => question.id === Number(key))
+    );
+    if (validAnswers.length === 0) return;
+    Modal.confirm({
+      title: '이전에 작성한 답안이 남아 있습니다.',
+      content: '작성중인 답안을 삭제하시겠습니까?',
+      okText: '네',
+      cancelText: '아니오',
+      onOk() {
+        localStorage.remove(IN_PROGRESS_ANSWERS);
+        setClearPrevAnswers(true);
+        setTimeout(() => {
+          setClearPrevAnswers(false);
+        }, 100);
+      },
+    });
+  }, [questions, swiper]);
 
   return (
     <TypingModeComponentBlock>
       <div className="typing-mode-body">
-        <Swiper
-          className="swiper-container"
-          spaceBetween={20}
-          modules={[Navigation, Virtual]}
-          virtual={{
-            slides: questions,
-            cache: true,
-            addSlidesBefore: 1,
-            addSlidesAfter: 1,
-          }}
-          onSwiper={(swiper) => {
-            setSwiper(swiper);
-          }}
-          onSlideChange={(swiper) => {
-            router.replace({
-              pathname: router.pathname,
-              query: { ...router.query, qIndex: swiper.activeIndex },
-            });
-          }}
-          navigation={{
-            prevEl: '.typing-mode-navigation-prev',
-            nextEl: '.typing-mode-navigation-next',
-          }}
-        >
-          {swiper &&
-            questions.map((question, index) => (
-              <SwiperSlide key={question.id}>
-                <TypingModeItem
-                  key={question.id}
-                  question={question}
-                  number={index + 1}
-                  swiper={swiper}
-                />
-              </SwiperSlide>
-            ))}
-          {questions.length >= 1 && swiper && (
-            <SwiperSlide key={-1}>
-              <StudyEnd swiper={swiper} />
-            </SwiperSlide>
-          )}
-        </Swiper>
-        <button className="typing-mode-navigation-prev">
-          <LeftOutlined />
-        </button>
-        <button className="typing-mode-navigation-next">
-          <RightOutlined />
-        </button>
+        {router.query.tab !== 'end' && (
+          <Swiper
+            className="swiper-container"
+            spaceBetween={20}
+            modules={[Navigation]}
+            onSwiper={(swiper) => {
+              setSwiper(swiper);
+            }}
+            onSlideChange={(swiper) => {
+              updateQuestionIndexInfo(swiper.activeIndex);
+            }}
+          >
+            {swiper &&
+              questions.map((question, index) => (
+                <SwiperSlide key={question.id}>
+                  <TypingModeItem
+                    clearTextAreaTrigger={clearPrevAnswers}
+                    key={question.id}
+                    question={question}
+                    number={index + 1}
+                    swiper={swiper}
+                  />
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        )}
+        {router.query.tab === 'end' && <StudyEnd />}
+
+        {router.query.tab !== 'end' && (
+          <>
+            <button
+              className={`typing-mode-navigation-prev`}
+              onClick={() => {
+                handleSlidePrev(swiper);
+              }}
+            >
+              <LeftOutlined />
+            </button>
+            <button
+              className={`typing-mode-navigation-next`}
+              onClick={() => {
+                handleSlideNext(questions.length, swiper);
+              }}
+            >
+              <RightOutlined />
+            </button>
+          </>
+        )}
       </div>
     </TypingModeComponentBlock>
   );

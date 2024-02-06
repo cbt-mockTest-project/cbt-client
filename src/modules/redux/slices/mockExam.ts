@@ -3,6 +3,7 @@ import { MockExam, MockExamQuestion } from 'types';
 
 export interface MockExamState {
   questions: MockExamQuestion[];
+  serverSideQuestions: MockExamQuestion[] | null;
   questionsForScore: MockExamQuestion[];
   mockExam: MockExam | null;
 }
@@ -10,6 +11,7 @@ export interface MockExamState {
 const mockExamState: MockExamState = {
   questions: [],
   questionsForScore: [],
+  serverSideQuestions: null,
   mockExam: null,
 };
 
@@ -17,9 +19,6 @@ const mockExamSlice = createSlice({
   name: 'mockExam',
   initialState: mockExamState,
   reducers: {
-    setMockExam: (state, action: PayloadAction<MockExam>) => {
-      state.mockExam = action.payload;
-    },
     setQuestions: (state, action: PayloadAction<MockExamQuestion[]>) => {
       if (state.questionsForScore.length === 0) {
         state.questionsForScore = action.payload;
@@ -33,6 +32,12 @@ const mockExamSlice = createSlice({
         }
         return question;
       });
+    },
+    setServerSideQuestions: (
+      state,
+      action: PayloadAction<MockExamQuestion[]>
+    ) => {
+      state.serverSideQuestions = action.payload;
     },
     setQuestionsForScore: (
       state,

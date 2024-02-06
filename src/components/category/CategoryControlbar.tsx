@@ -22,25 +22,20 @@ const CategoryControlbarBlock = styled.div`
 `;
 
 interface CategoryControlbarProps {
-  switch: {
-    checked: boolean;
-    onChangeSwitch: () => void;
-  };
   textInput: { onChangeText: (v: string) => void };
   additionalFilterComponent?: React.ReactNode;
 }
 
 const CategoryControlbar: React.FC<CategoryControlbarProps> = ({
-  switch: { checked, onChangeSwitch },
   textInput: { onChangeText },
   additionalFilterComponent = null,
 }) => {
   return (
     <CategoryControlbarBlock>
-      <div className="category-multiple-select-toggle-switch-wrapper">
+      {/* <div className="category-multiple-select-toggle-switch-wrapper">
         <Switch checked={checked} onChange={onChangeSwitch} />
         <div>다중 선택 모드</div>
-      </div>
+      </div> */}
       <div className="category-controlbar-filter-wrapper">
         {additionalFilterComponent}
         <TextInput

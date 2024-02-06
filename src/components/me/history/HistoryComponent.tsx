@@ -6,6 +6,7 @@ import BookmarkTab from './BookmarkTab';
 import ScoreTab from './ScoreTab';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
+import { useRouter } from 'next/router';
 
 const HistoryComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -18,12 +19,18 @@ interface HistoryComponentProps {}
 
 const HistoryComponent: React.FC<HistoryComponentProps> = () => {
   const { resetQuestions } = useQuestions();
+  const router = useRouter();
   useEffect(() => {
     resetQuestions();
   }, []);
+
+  const onChangeTabs = (key: string) => {
+    router.replace({ query: { tab: key } });
+    resetQuestions();
+  };
   return (
     <HistoryComponentBlock>
-      <Tabs items={tabItems} onChange={resetQuestions} />
+      <Tabs items={tabItems} onChange={onChangeTabs} />
     </HistoryComponentBlock>
   );
 };
@@ -32,13 +39,13 @@ export default HistoryComponent;
 
 const tabItems: TabsProps['items'] = [
   {
-    key: '1',
+    key: 'bookmark',
     label: '저장',
     children: <BookmarkTab />,
   },
   {
-    key: '2',
-    label: '점수',
+    key: 'history',
+    label: '오답노트',
     children: <ScoreTab />,
   },
 ];

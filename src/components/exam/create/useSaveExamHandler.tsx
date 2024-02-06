@@ -15,9 +15,9 @@ const useSaveExamHandler = () => {
   const router = useRouter();
   const [deleteExam] = useDeleteExam();
   const savedTime = useAppSelector((state) => state.examCreate.savedTime);
-  const [saveExam] = useSaveExam();
+  const [saveExam, { loading: saveExamLoading }] = useSaveExam();
   const categoryId = router.query.categoryId;
-
+  const examId = router.query.examId;
   const handleSaveExam = async (
     data: CreateExamForm,
     hasSuccessMessage: boolean = false
@@ -34,7 +34,9 @@ const useSaveExamHandler = () => {
             uuid: data.uuid,
             questionOrderIds,
             questions: data.questions,
-            ...(categoryId ? { categoryId: Number(categoryId) } : {}),
+            ...(!examId && categoryId
+              ? { categoryId: Number(categoryId) }
+              : {}),
           },
         },
       });
@@ -94,6 +96,7 @@ const useSaveExamHandler = () => {
     handleSaveExam,
     handleDeleteExam,
     savedTime,
+    saveExamLoading,
   };
 };
 

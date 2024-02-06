@@ -6,30 +6,32 @@ import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
-import { convertExamTitle } from '@lib/utils/utils';
+import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import React from 'react';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;
   questions: MockExamQuestion[];
   title: string;
+  description: string;
 }
 
 const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   questionsQueryInput,
   questions,
   title,
+  description,
 }) => {
   return (
     <>
       <WithHead
         title={`${convertExamTitle(title)} 해설 | 모두CBT`}
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
+        description={description}
       />
       <StudyHeader questions={questions} />
       <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
@@ -98,15 +100,24 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const questions = (res?.data.readQuestionsByExamIds.questions ||
         []) as MockExamQuestion[];
       store.dispatch(
-        mockExamActions.setQuestions(questions as MockExamQuestion[])
+        mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
       );
       const title = questions[0]?.mockExam.title || '';
+      const description = questions.reduce(
+        (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
+        ''
+      );
+
       return addApolloState(apolloClient, {
-        props: { questionsQueryInput, questions, title },
+        props: {
+          questionsQueryInput,
+          questions,
+          title,
+          description: removeHtmlTag(description),
+        },
         revalidate: 43200,
       });
     } catch (e) {
-      console.log(e);
       return {
         notFound: true,
       };

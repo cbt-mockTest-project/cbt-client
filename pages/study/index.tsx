@@ -13,12 +13,18 @@ const StudyPage: React.FC<Props> = () => {
   const router = useRouter();
   const examTitle = questions?.[0]?.mockExam?.title || '모두CBT';
   const mode = router.query.mode as string;
+  const order = router.query.order as string;
+  const examIds = router.query.examIds as string;
   const title = useMemo(() => {
-    if (!mode || !examTitle) return '학습페이지';
-    if (mode === ExamMode.CARD) return `${examTitle}-카드모드`;
-    if (mode === ExamMode.TYPYING) return `${examTitle}-타이핑모드`;
-    if (mode === ExamMode.SOLUTION) return `${examTitle}-해설모드`;
-    return '학습페이지';
+    let title = '학습페이지';
+    if (mode === ExamMode.CARD) title = `${examTitle}-카드모드`;
+    if (mode === ExamMode.TYPYING) title = `${examTitle}-타이핑모드`;
+    if (mode === ExamMode.SOLUTION) title = `${examTitle}-해설모드`;
+    if (order === 'random') title = title + '-랜덤';
+    if (order === 'normal') title = title + '-순서대로';
+    if (examIds) title = title + '-다중선택모드';
+    if (!examIds) title = title + '-단일선택모드';
+    return title;
   }, [mode, examTitle]);
   return (
     <>

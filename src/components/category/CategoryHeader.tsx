@@ -1,4 +1,5 @@
 import { FolderOutlined } from '@ant-design/icons';
+import { linkify } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -77,7 +78,7 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
         <FolderOutlined />
         <span className="category-name">{categoryName}</span>
       </div>
-      <div className="category-description">{categoryDescription}</div>
+      <div className="category-description">{linkify(categoryDescription)}</div>
     </CategoryHeaderBlock>
   );
 };

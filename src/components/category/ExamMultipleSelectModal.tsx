@@ -87,6 +87,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     router.push({
       pathname: '/study',
       query: {
+        ...(categoryId ? { categoryId } : {}),
         order: isRandom ? 'random' : 'normal',
         states: questionStates.join(','),
         limit: limit ? limit.toString() : '',

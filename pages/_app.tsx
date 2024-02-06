@@ -1,8 +1,3 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import type { AppProps } from 'next/app';
 import Globalstyles from '@styles/globalStyles';
 import { ApolloProvider } from '@apollo/client';
@@ -13,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, message, theme } from 'antd';
+import { ConfigProvider, Modal, message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -32,10 +27,14 @@ import {
   STUDY_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import { IS_FIRST_VISIT } from '@lib/constants/sessionStorage';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
-
+  const sessionStorage = new SessionStorage();
+  const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
     STUDY_PAGE,
@@ -51,7 +50,6 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     String(Component.displayName)
   );
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
-  const localStorage = new LocalStorage();
   useEffect(() => {
     const excludePath = ['/exam/randomselect', '/exam/solution'];
     if (!someIncludes(excludePath, router.asPath)) {

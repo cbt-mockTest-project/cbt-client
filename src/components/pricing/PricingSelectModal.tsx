@@ -72,12 +72,13 @@ interface PricingSelectModalProps extends Omit<ModalProps, 'children'> {
   price: number;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }
-const 만원과목리스트 = [6, 7];
-const 만육천원과목리스트 = [4, 5];
+const 만팔천원과목리스트 = [5];
+const 만육천원과목리스트 = [4];
 
 // value 는 roleId 와 동일하게 간다.
 const categoryOptions = [
   { label: '산업안전기사', value: 4 },
+  { label: '산업안전산업기사', value: 5 },
   // { label: '건설안전기사', value: 5 },
   // { label: '위험물산업기사', value: 6 },
   // { label: '대기환경기사', value: 7 },
@@ -153,8 +154,8 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
           size="large"
           options={categoryOptions}
           onChange={(value, option) => {
-            if (만원과목리스트.includes(value)) {
-              setPrice(10000);
+            if (만팔천원과목리스트.includes(value)) {
+              setPrice(18000);
             }
             if (만육천원과목리스트.includes(value)) {
               setPrice(16000);

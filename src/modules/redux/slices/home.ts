@@ -6,12 +6,14 @@ export interface HomeState {
   moduStorageCategories: MockExamCategory[] | null;
   ehsStorageCategories: MockExamCategory[] | null;
   userStorageCategories: MockExamCategory[] | null;
+  recentlyStudiedCategories: MockExamCategory[] | null;
 }
 
 const storageState: HomeState = {
   moduStorageCategories: null,
   ehsStorageCategories: null,
   userStorageCategories: null,
+  recentlyStudiedCategories: null,
 };
 
 const homeSlice = createSlice({
@@ -38,6 +40,13 @@ const homeSlice = createSlice({
     ) => {
       const { categories } = action.payload;
       state.userStorageCategories = categories;
+    },
+    setRecentlyStudiedCategories: (
+      state,
+      action: PayloadAction<SetStorageCategoriesPayload>
+    ) => {
+      const { categories } = action.payload;
+      state.recentlyStudiedCategories = categories;
     },
   },
 });

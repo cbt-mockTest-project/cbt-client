@@ -145,7 +145,6 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     () => user && category.user.id === user.id,
     [category, user]
   );
-  const categoryId = router.query.id;
 
   const handleRemoveExam = () => {
     Modal.confirm({
@@ -182,7 +181,6 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
             router.push({
               pathname: '/exam/create',
               query: {
-                ...(categoryId && { categoryId }),
                 examId: exam.id,
               },
             });
@@ -215,12 +213,10 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 
   return (
     <ExamListItemBlock>
-      {examSetting.isMultipleSelectMode && (
-        <Checkbox
-          checked={examSetting.examIds.includes(exam.id)}
-          onClick={() => handleExamSelect(exam.id)}
-        />
-      )}
+      <Checkbox
+        checked={examSetting.examIds.includes(exam.id)}
+        onClick={() => handleExamSelect(exam.id)}
+      />
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
         <div className="exam-list-item-top-wrapper">
           <div className="exam-list-item-title-and-edit-button">
@@ -269,6 +265,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           examId={exam.id}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
+          categoryId={Number(category.id)}
         />
       )}
     </ExamListItemBlock>

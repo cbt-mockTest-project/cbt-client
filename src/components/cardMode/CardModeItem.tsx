@@ -4,7 +4,7 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import useQuestions from '@lib/hooks/useQuestions';
 import palette from '@styles/palette';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 import CardModeControlBox from './CardModeControlBox';
@@ -72,6 +72,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
 }) => {
   const {
     question,
+    setQuestion,
     handleAddFeedback,
     handleDeleteFeedback,
     handleEditFeedback,
@@ -80,6 +81,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
     handleSaveQuestionState,
   } = useHandleQuestion({ defaultQuestion });
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    setQuestion(defaultQuestion);
+  }, [defaultQuestion]);
   return (
     <CardModeItemBlock>
       <div className={`card ${isFlipped ? 'is-flipped' : ''}`}>

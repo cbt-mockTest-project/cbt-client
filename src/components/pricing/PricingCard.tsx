@@ -203,7 +203,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
               <span className="pricing-card-price-label">원</span>
             )}
           </div>
-          {typeof roleCountQuery?.getRolesCount.count === 'number' ? (
+          {/* {typeof roleCountQuery?.getRolesCount.count === 'number' ? (
             <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRolesCount.count}명 이용중!! `}</div>
           ) : (
             <SkeletonBox
@@ -211,7 +211,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
               width="110px"
               height="20px"
             />
-          )}
+          )} */}
           <Button
             className="pricing-button"
             type="primary"

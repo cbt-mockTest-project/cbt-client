@@ -55,7 +55,7 @@ interface ExamCreateComponentProps {}
 
 const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
   const router = useRouter();
-  const { handleSaveExam, handleDeleteExam, debouncedSaveExam } =
+  const { handleSaveExam, handleDeleteExam, saveExamLoading } =
     useSaveExamHandler();
   const [isExamApproved, setIsExamApproved] = useState(false);
   const [isExamSettingModalOpen, setIsExamSettingModalOpen] = useState(false);
@@ -169,7 +169,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
           })}
           id="exam-create-form"
         >
-          <ExamCreateHeader />
+          <ExamCreateHeader saveExamLoading={saveExamLoading} />
           <div className="exam-create-body">
             <div className="exam-create-input-and-time">
               <TextInput

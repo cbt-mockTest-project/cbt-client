@@ -15,13 +15,14 @@ const ExamSelecModalBlock = styled(Modal)`
 
 interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
   examId: number;
+  categoryId?: number;
 }
 
 const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { examId, ...modalProps } = props;
+  const { categoryId, examId, ...modalProps } = props;
   const handleStartExam = () => {
     setMoveLoading(true);
     if (mode === ExamMode.SOLUTION)
@@ -31,6 +32,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
       query: {
         mode,
         examId,
+        ...(categoryId ? { categoryId } : {}),
       },
     });
   };
@@ -57,7 +59,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
           onClick={handleStartExam}
           loading={moveLoading}
         >
-          학습 시작하기
+          학습하기
         </Button>
       </div>
     </ExamSelecModalBlock>

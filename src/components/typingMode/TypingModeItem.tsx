@@ -3,15 +3,19 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
+import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
+import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Input } from 'antd';
+import { Button, Input, Modal } from 'antd';
+import { TextAreaRef } from 'antd/es/input/TextArea';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import SwiperCore from 'swiper';
 import { MockExamQuestion } from 'types';
 const TypingModeItemBlock = styled.div`
   .typing-mode-textarea {
@@ -58,6 +62,7 @@ const TypingModeItemBlock = styled.div`
 
 interface TypingModeItemProps {
   question: MockExamQuestion;
+  clearTextAreaTrigger: boolean;
   number: number;
   swiper: any;
 }
@@ -66,10 +71,33 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   question: defaultQuestion,
   number,
   swiper,
+  clearTextAreaTrigger,
 }) => {
+  const router = useRouter();
+  const { questions } = useQuestions();
+  const qIndex =
+    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
+  const handleFinalClick = () => {
+    Modal.confirm({
+      title: '학습을 종료하시겠습니까?',
+      okText: '종료',
+      cancelText: '취소',
+      onOk: () => {
+        router.replace({
+          pathname: router.pathname,
+          query: { ...router.query, tab: 'end' },
+        });
+      },
+    });
+  };
+  const questionIndex = Number(router.query.questionIndex);
+  const localStorage = new LocalStorage();
+  const [answer, setAnswer] = useState('');
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   const {
     question,
+    setQuestion,
     handleAddFeedback,
     handleDeleteFeedback,
     handleEditFeedback,
@@ -77,6 +105,34 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
     handleSaveBookmark,
     handleSaveQuestionState,
   } = useHandleQuestion({ defaultQuestion });
+  const onChangeAnswer = (value: string) => {
+    const prevAnswer = localStorage.get(IN_PROGRESS_ANSWERS);
+    const newAnswer = {
+      ...prevAnswer,
+      [question.id]: value,
+    };
+    if (value === '') {
+      delete newAnswer[question.id];
+    }
+    localStorage.set(IN_PROGRESS_ANSWERS, newAnswer);
+    setAnswer(value);
+  };
+
+  useEffect(() => {
+    if (!answer) {
+      setAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
+    }
+  }, [questionIndex]);
+
+  useEffect(() => {
+    if (clearTextAreaTrigger) {
+      setAnswer('');
+    }
+  }, [clearTextAreaTrigger]);
+
+  useEffect(() => {
+    setQuestion(defaultQuestion);
+  }, [defaultQuestion]);
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
@@ -87,9 +143,11 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         />
       </BasicCard>
       <Input.TextArea
+        value={answer}
         className="typing-mode-textarea"
         placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         autoSize={{ minRows: 3, maxRows: 8 }}
+        onChange={(e) => onChangeAnswer(e.target.value)}
       />
 
       <StudyControlBox
@@ -110,17 +168,13 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         <div className="typing-mode-swiper-button-wrapper">
           <button
             className="typing-mode-control-button"
-            onClick={() => {
-              swiper.slidePrev();
-            }}
+            onClick={() => handleSlidePrev(swiper)}
           >
             <LeftOutlined />
           </button>
           <button
             className="typing-mode-control-button"
-            onClick={() => {
-              swiper.slideNext();
-            }}
+            onClick={() => handleSlideNext(questions.length, swiper)}
           >
             <RightOutlined />
           </button>

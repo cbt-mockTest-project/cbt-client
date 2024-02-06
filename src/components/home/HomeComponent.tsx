@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import HomeBanner from './HomeBanner';
-import { Input, InputRef, Radio } from 'antd';
+import { Button, Input, InputRef, Radio } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import HomeFolderList from './HomeFolderList';
@@ -82,8 +82,10 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     moduStorageCategories,
     userStorageCategories,
     refetchHomeCategories,
+    recentlyStudiedCategories,
     ehsStorageCategories,
     handleToggleCategoryBookmark,
+    handleResetRecentlyStudiedCategories,
   } = useHomeCategories();
 
   const searchType = useMemo(() => {
@@ -98,7 +100,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    // if (!isLoggedIn) return;
     if (router.query.type) return;
     refetchHomeCategories();
   }, [isLoggedIn, router.query]);
@@ -216,6 +218,28 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         ) : (
           <>
             <HomeFolderList
+              title="최근 학습한 암기장 📚"
+              subTitle="최근에 학습한 암기장을 다시 확인해보세요."
+              categories={recentlyStudiedCategories}
+              headerButton={
+                <Button
+                  onClick={handleResetRecentlyStudiedCategories}
+                  type="dashed"
+                  size="small"
+                >
+                  초기화
+                </Button>
+              }
+              // handleToggleBookmark={async (id) => {
+              //   handleToggleCategoryBookmark({
+              //     categoryId: id,
+              //     type: 'modu',
+              //   });
+              // }}
+              unikeyKey="recently-studied"
+              emptyDescription="최근에 학습한 암기장이 없습니다."
+            />
+            <HomeFolderList
               title="국가고시 실기시험 준비하기 👀"
               subTitle="실기 시험을 효율적으로 준비해보세요."
               link="/modu-storage"
@@ -226,7 +250,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               unikeyKey="modu-storage"
             />
             <HomeFolderList
-              title="직8딴 시리즈 👑"
+              title="직8딴 시리즈(기출문제 중복소거) 📒"
               subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
               link="/ehs-storage"
               categories={ehsStorageCategories}

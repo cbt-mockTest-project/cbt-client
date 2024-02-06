@@ -21,6 +21,10 @@ const StudyAnswerBoxBlock = styled.div`
   .study-answer-box-question-card-answer {
     word-break: break-all;
     white-space: pre-wrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   .study-answer-box-question-card-answer-wrapper {
     transition: opacity 0.2s ease-in-out;
@@ -75,6 +79,9 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
         <div
           onClick={(e) => {
             e.stopPropagation();
+          }}
+          style={{
+            width: 'fit-content',
           }}
         >
           {question.solution_img &&

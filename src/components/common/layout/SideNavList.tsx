@@ -1,7 +1,7 @@
 import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { navBottomItems, navItems } from './layout.constants';
+import { navBottomItems, navItems, navSellerItems } from './layout.constants';
 import { useRouter } from 'next/router';
 import { Menu } from 'antd';
 import CustomNavDivider from './CustomNavDivider';
@@ -11,6 +11,8 @@ import { responsive } from '@lib/utils/responsive';
 import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
 import OpenChatModal from './OpenChatModal';
 import useAuth from '@lib/hooks/useAuth';
+import { UserRole } from 'types';
+import BugReportModal from './BugReportModal';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
@@ -31,8 +33,9 @@ interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user, handleCheckLogin } = useAuth();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isKakaoOpenChatModalOpen, setIsKakaoOpenChatModalOpen] =
     useState(false);
   return (
@@ -65,6 +68,10 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             router.push(e.key);
             return;
           }
+          if (e.key === 'report') {
+            if (!handleCheckLogin()) return;
+            setIsReportModalOpen(true);
+          }
         }}
         style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
@@ -72,16 +79,43 @@ const SideNavList: React.FC<SideNavListProps> = () => {
         selectedKeys={[]}
       />
       <CustomNavDivider />
-
       <UserAuthBox className="side-user-auth-box" />
-      <AppDownloadInfoModal
-        open={isAppDownloadModalOpen}
-        onCancel={() => setIsAppDownloadModalOpen(false)}
-      />
-      <OpenChatModal
-        open={isKakaoOpenChatModalOpen}
-        onCancel={() => setIsKakaoOpenChatModalOpen(false)}
-      />
+      {isLoggedIn && [UserRole.Seller, UserRole.Admin].includes(user.role) && (
+        <>
+          <CustomNavDivider />
+          <Menu
+            className="side-nav-list"
+            onClick={(e) => {
+              if (e.key === '/me/seller') {
+                router.push(e.key);
+                return;
+              }
+            }}
+            style={{ backgroundColor: palette.colorContainerBg }}
+            mode="inline"
+            items={navSellerItems}
+            selectedKeys={[]}
+          />
+        </>
+      )}
+      {isAppDownloadModalOpen && (
+        <AppDownloadInfoModal
+          open={isAppDownloadModalOpen}
+          onCancel={() => setIsAppDownloadModalOpen(false)}
+        />
+      )}
+      {isKakaoOpenChatModalOpen && (
+        <OpenChatModal
+          open={isKakaoOpenChatModalOpen}
+          onCancel={() => setIsKakaoOpenChatModalOpen(false)}
+        />
+      )}
+      {isReportModalOpen && (
+        <BugReportModal
+          open={isReportModalOpen}
+          onCancel={() => setIsReportModalOpen(false)}
+        />
+      )}
     </SideNavListBlock>
   );
 };

@@ -1,7 +1,7 @@
 import useQuestions from '@lib/hooks/useQuestions';
 import { Button, Modal } from 'antd';
 import { ModalProps } from 'antd/lib';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { STUDY_STATE_ICON } from './study';
 import { QuestionState } from 'types';
@@ -48,6 +48,11 @@ const StudyScoreModalBlock = styled(Modal)`
       color: ${palette.red_500};
     }
   }
+  .study-score-item.middle {
+    svg {
+      color: ${palette.yellow_500};
+    }
+  }
   .study-score-header {
     display: flex;
     gap: 10px;
@@ -85,7 +90,11 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
               onClickItem(index);
             }}
             className={`study-score-item ${
-              question.myQuestionState === QuestionState.High ? 'high' : 'low'
+              question.myQuestionState === QuestionState.High
+                ? 'high'
+                : question.myQuestionState === QuestionState.Middle
+                ? 'middle'
+                : 'low'
             }`}
             role="button"
           >

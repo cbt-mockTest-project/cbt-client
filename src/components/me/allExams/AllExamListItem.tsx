@@ -105,12 +105,10 @@ const AllExamListItem: React.FC<AllExamListItemProps> = ({
   ];
   return (
     <AllExamListItemBlock>
-      {examSetting.isMultipleSelectMode && (
-        <Checkbox
-          checked={examSetting.examIds.includes(exam.id)}
-          onClick={() => handleExamSelect(exam.id)}
-        />
-      )}
+      <Checkbox
+        checked={examSetting.examIds.includes(exam.id)}
+        onClick={() => handleExamSelect(exam.id)}
+      />
       <BasicCard onClick={() => setIsExamSelectModalOpen(true)} hoverEffect>
         <div className="exam-list-item-top-wrapper">
           <span>{exam.title}</span>
