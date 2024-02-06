@@ -17,15 +17,8 @@ const examSettingSlice = createSlice({
   initialState: examSettingState,
   reducers: {
     setExamSetting(state, action: PayloadAction<Partial<ExamSettingType>>) {
-      const {
-        categoryId,
-        mode,
-        isRandom,
-        questionStates,
-        limit,
-        examIds,
-        isMultipleSelectMode,
-      } = action.payload;
+      const { categoryId, mode, isRandom, questionStates, limit, examIds } =
+        action.payload;
       if (typeof categoryId === 'number')
         state.examSetting.categoryId = categoryId;
       if (mode) state.examSetting.mode = mode;
@@ -33,8 +26,6 @@ const examSettingSlice = createSlice({
       if (questionStates) state.examSetting.questionStates = questionStates;
       if (limit) state.examSetting.limit = limit;
       if (examIds) state.examSetting.examIds = examIds;
-      if (typeof isMultipleSelectMode === 'boolean')
-        state.examSetting.isMultipleSelectMode = isMultipleSelectMode;
     },
   },
 });

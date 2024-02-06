@@ -2,7 +2,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { responsive } from '@lib/utils/responsive';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,6 +17,7 @@ import useToggle from '@lib/hooks/useToggle';
 import PricingSelectModal from './PricingSelectModal';
 import usePayment from './usePayment';
 import { Pagination } from 'swiper/modules';
+import { useRouter } from 'next/router';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -85,28 +86,13 @@ const PricingComponentBlock = styled.div`
 interface PricingComponentProps {}
 
 const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
-  const dispatch = useAppDispatch();
-  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
-  const [createFreeTrial] = useCreateFreeTrial();
+  const router = useRouter();
+  const [swiper, setSwiper] = useState<any>(null);
   const { handlePayment } = usePayment();
   const [price, setPrice] = useState(0);
-  const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
+  const { data: meQuery } = useMeQuery();
   const { value: selectModalState, onToggle: toggleSelectModal } =
     useToggle(false);
-
-  const handleFreeTrial = async () => {
-    if (!meQuery?.me.user) {
-      openLoginModal();
-      return;
-    }
-    const res = await createFreeTrial();
-    if (res.data?.createFreeTrialRole.ok) {
-      message.success('무료체험이 시작되었습니다.');
-      refetchMeQuery();
-      return;
-    }
-    message.error(res.data?.createFreeTrialRole.error);
-  };
 
   const handleBasicPlanPayment = () =>
     handlePayment({
@@ -122,24 +108,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   };
 
   const pricingCardData: PricingCardProps[] = [
-    // {
-    //   title: '무료 체험 - 1일',
-    //   intro: '모두CBT 베이직 플랜을 체험해보세요!',
-    //   price: 0,
-    //   endDate: '이용기간: 1일',
-    //   benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-    //   onConfirm: handleFreeTrial,
-    //   confirmLabel: '무료체험 시작하기',
-    //   disabledLabel: '무료체험 이용완료',
-    //   confirmDisabled: meQuery?.me.user
-    //     ? meQuery.me.user.usedFreeTrial ||
-    //       checkRole({
-    //         roleIds: [1, 2, 3],
-    //         meQuery,
-    //       })
-    //     : false,
-    //   roleIds: [3],
-    // },
     {
       title: '베이직 플랜',
       intro: '무제한 베이직 플랜으로\n학습효율을 높여보세요!',
@@ -159,7 +127,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro:
         '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
       price: 16000,
-      // priceAltText: '16,000 ',
+      priceAltText: '16,000 ~',
       benefits: [
         '직8딴 암기장 학습시스템 제공',
         '구매자 전용 오픈톡방을 통한 저자의 즉각 질문답변 대응',
@@ -170,6 +138,13 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       roleIds: [4, 5, 6, 7],
     },
   ];
+
+  useEffect(() => {
+    if (!swiper) return;
+    if (router.query.tab === 'ehs_master') {
+      swiper.slideTo(1, 0);
+    }
+  }, [router.query.tab, swiper]);
 
   return (
     <PricingComponentBlock>
@@ -182,6 +157,9 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
           slidesPerView={1}
           threshold={10}
           spaceBetween={20}
+          onSwiper={(swiper) => {
+            setSwiper(swiper);
+          }}
           breakpoints={{
             650: {
               modules: [],

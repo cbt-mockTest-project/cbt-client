@@ -84,12 +84,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
     };
   }, [categoryLearningProgressResponse]);
 
-  const {
-    examSetting,
-    handleChangeMultipleSelectMode,
-    handleAllExamsSelect,
-    setExamSetting,
-  } = useExamSetting({
+  const { examSetting, handleAllExamsSelect, setExamSetting } = useExamSetting({
     categoryId: 0,
     exams,
   });
@@ -134,10 +129,8 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
     fetchMyExams(true);
     const examSetting = getExamSettingHistory(0);
     if (!examSetting) return;
-    const { examIds, isMultipleSelectMode } = examSetting;
+    const { examIds } = examSetting;
     if (examIds) setExamSetting({ categoryId: 0, examIds });
-    if (isMultipleSelectMode)
-      setExamSetting({ categoryId: 0, isMultipleSelectMode });
   }, [router.pathname]);
 
   const categorySettingDropdownItems: MenuProps['items'] = [
@@ -168,10 +161,6 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
       {originalExams && originalExams.length >= 1 ? (
         <>
           <CategoryControlbar
-            switch={{
-              checked: examSetting.isMultipleSelectMode,
-              onChangeSwitch: handleChangeMultipleSelectMode,
-            }}
             textInput={{
               onChangeText: handleFilterExams,
             }}
@@ -184,21 +173,18 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
               />
             }
           />
-          {examSetting.isMultipleSelectMode ? (
-            <CategoryMultipleSelectModeControlbar
-              checkbox={{
-                categoryAllChecked: exams.length === examSetting.examIds.length,
-                handleAllExamsSelect,
-              }}
-              button={{
-                isButtonDisabled: examSetting.examIds.length === 0,
-              }}
-              categoryId={0}
-              examIds={examSetting.examIds}
-            />
-          ) : (
-            <div style={{ height: '52px' }} />
-          )}
+          <CategoryMultipleSelectModeControlbar
+            checkbox={{
+              categoryAllChecked: exams.length === examSetting.examIds.length,
+              handleAllExamsSelect,
+            }}
+            button={{
+              isButtonDisabled: examSetting.examIds.length === 0,
+            }}
+            categoryId={0}
+            examIds={examSetting.examIds}
+          />
+
           <AllExamList examType={examType} />
         </>
       ) : (

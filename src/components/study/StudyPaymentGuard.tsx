@@ -99,7 +99,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
         <Link href="/">
           <Button>홈으로</Button>
         </Link>
-        <Link href="/pricing">
+        <Link href="/pricing?tab=ehs_master">
           <Button type="primary">구매하기</Button>
         </Link>
       </div>
