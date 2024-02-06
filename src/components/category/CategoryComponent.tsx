@@ -117,6 +117,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     exams: category.mockExam,
   });
 
+  const [isSelectExamTypeModalOpen, setIsSelectExamTypeModalOpen] =
+    useState(false);
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
