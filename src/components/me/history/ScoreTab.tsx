@@ -9,6 +9,7 @@ import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import { handleError } from '@lib/utils/utils';
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
 import HistoryLoader from './HistoryLoader';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import { useRouter } from 'next/router';
 
 const ScoreTabBlock = styled.div`
@@ -154,6 +155,10 @@ const ScoreCheckboxOptions = [
   {
     label: <PanoramaFishEyeIcon />,
     value: QuestionState.High,
+  },
+  {
+    label: <ChangeHistoryIcon />,
+    value: QuestionState.Middle,
   },
   {
     label: <ClearIcon />,

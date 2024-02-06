@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
+import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import palette from '@styles/palette';
 import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
@@ -63,13 +64,14 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     }
   };
   const hadleScoreAllChange = () => {
-    if (questionStates.length === 3) {
+    if (questionStates.length === 4) {
       setQuestionStates([]);
     } else {
       setQuestionStates([
         QuestionState.High,
         QuestionState.Row,
         QuestionState.Core,
+        QuestionState.Middle,
       ]);
     }
   };
@@ -144,7 +146,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           <label className="exam-multiple-select-label">* 점수별 필터링</label>
           <div>
             <Checkbox
-              checked={questionStates.length === 3}
+              checked={questionStates.length === 4}
               onClick={hadleScoreAllChange}
             >
               전체
@@ -154,6 +156,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
               onClick={() => handleQuestionStateChange(QuestionState.High)}
             >
               <PanoramaFishEyeIcon className="exam-multiple-select-score-icon" />
+            </Checkbox>
+            <Checkbox
+              checked={questionStates.includes(QuestionState.Middle)}
+              onClick={() => handleQuestionStateChange(QuestionState.Middle)}
+            >
+              <ChangeHistoryIcon className="exam-multiple-select-score-icon" />
             </Checkbox>
             <Checkbox
               checked={questionStates.includes(QuestionState.Row)}
