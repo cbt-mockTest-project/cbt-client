@@ -235,6 +235,13 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
       error
       ok
       questions {
+        objectiveData {
+          content {
+            content
+            url
+          }
+          answer
+        }
         mockExam {
           id
           title

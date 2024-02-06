@@ -133,13 +133,21 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
               ? [pick(v.solution_img[0], ['url', 'name', 'uid'])]
               : [],
           };
-          return pick(newQuestion, [
-            'orderId',
-            'question',
-            'question_img',
-            'solution',
-            'solution_img',
-          ]);
+          return {
+            ...pick(newQuestion, [
+              'orderId',
+              'question',
+              'question_img',
+              'solution',
+              'solution_img',
+            ]),
+            objectiveData: {
+              answer: newQuestion.objectiveData.answer,
+              content: newQuestion.objectiveData.content.map((v) =>
+                pick(v, ['content', 'url'])
+              ),
+            },
+          };
         });
         if (
           isEqual(getValues('questions'), newQuestions) &&

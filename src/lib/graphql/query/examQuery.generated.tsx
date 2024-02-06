@@ -189,7 +189,7 @@ export type ReadMockExamQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuery = { __typename?: 'Query', readMockExam: { __typename?: 'ReadMockExamOutput', error?: string | null, ok: boolean, mockExam: { __typename?: 'MockExam', id: number, title: string, uuid: string, approved: boolean, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number, orderId: string, question?: string | null, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string, name: string }> | null }> } } };
+export type ReadMockExamQuery = { __typename?: 'Query', readMockExam: { __typename?: 'ReadMockExamOutput', error?: string | null, ok: boolean, mockExam: { __typename?: 'MockExam', id: number, title: string, uuid: string, approved: boolean, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number, orderId: string, question?: string | null, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string, name: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null }> } } };
 
 export type SaveExamMutationVariables = Types.Exact<{
   input: Types.SaveExamInput;
@@ -711,6 +711,13 @@ export const ReadMockExamDocument = gql`
         }
         question
         solution
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
+        }
       }
     }
   }

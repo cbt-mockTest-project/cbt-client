@@ -21,23 +21,21 @@ import MainLayout from '@components/common/layout/MainLayout';
 import {
   EXAM_CREATE_PAGE,
   EXAM_SOLUTION_PAGE,
+  MCQ_STUDY_PAGE,
   PRICING_PAGE,
   QUESTION_EDIT_PAGE,
   QUESTION_PAGE,
   STUDY_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
-import { SessionStorage } from '@lib/utils/sessionStorage';
-import { IS_FIRST_VISIT } from '@lib/constants/sessionStorage';
-import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
-  const sessionStorage = new SessionStorage();
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
     STUDY_PAGE,
+    MCQ_STUDY_PAGE,
     EXAM_CREATE_PAGE,
   ];
   const papgesWithoutBodyBorder: string[] = [
