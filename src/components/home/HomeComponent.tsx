@@ -152,10 +152,14 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             defaultValue="folder"
             value={searchType}
             onChange={(e) =>
-              router.replace({
-                pathname: router.pathname,
-                query: { ...router.query, type: e.target.value },
-              })
+              router.replace(
+                {
+                  pathname: router.pathname,
+                  query: { ...router.query, type: e.target.value },
+                },
+                undefined,
+                { shallow: true }
+              )
             }
           >
             <Radio.Button value="folder">암기장 검색</Radio.Button>
