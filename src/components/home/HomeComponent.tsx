@@ -221,12 +221,12 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           )
         ) : (
           <>
-            {isLoggedIn && (
-              <HomeFolderList
-                title="최근 학습한 암기장 📚"
-                subTitle="최근에 학습한 암기장을 다시 확인해보세요."
-                categories={recentlyStudiedCategories}
-                headerButton={
+            <HomeFolderList
+              title="최근 학습한 암기장 📚"
+              subTitle="최근에 학습한 암기장을 다시 확인해보세요."
+              categories={recentlyStudiedCategories}
+              headerButton={
+                isLoggedIn && (
                   <Button
                     onClick={handleResetRecentlyStudiedCategories}
                     type="dashed"
@@ -234,11 +234,11 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
                   >
                     초기화
                   </Button>
-                }
-                unikeyKey="recently-studied"
-                emptyDescription="최근에 학습한 암기장이 없습니다."
-              />
-            )}
+                )
+              }
+              unikeyKey="recently-studied"
+              emptyDescription="최근에 학습한 암기장이 없습니다."
+            />
             <HomeFolderList
               title="국가고시 실기시험 준비하기 👀"
               subTitle="실기 시험을 효율적으로 준비해보세요."
