@@ -147,7 +147,65 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     <HomeComponentBlock>
       <HomeBanner />
       <div className="home-wrapper">
-        <div className="home-folder-search-input-and-radio">
+        {typeof keyword === 'string' && keyword ? (
+          searchType === 'folder' ? (
+            <HomeSearchedFolderList
+              keyword={keyword}
+              categories={searchedCategories as MockExamCategory[]}
+              loading={fetchCategoriesLoading}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({
+                  categoryId: id,
+                  type: 'search',
+                  input: { keyword, limit: 30, isPublicOnly: true },
+                });
+              }}
+            />
+          ) : searchType === 'question' ? (
+            <HomeSearchedQuestionList
+              keyword={keyword}
+              questions={searchedQuestions as MockExamQuestion[]}
+              handleSaveBookmark={handleSaveBookmark}
+              loading={searchQuestionsLoading}
+            />
+          ) : (
+            <></>
+          )
+        ) : (
+          <>
+            <HomeFolderList
+              title="국가고시 실기시험 준비하기 👀"
+              subTitle="실기 시험을 효율적으로 준비해보세요."
+              link="/modu-storage"
+              categories={moduStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
+              }}
+              unikeyKey="modu-storage"
+            />
+            <HomeFolderList
+              title="직8딴 시리즈(기출문제 중복소거) 📒"
+              subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
+              link="/ehs-storage"
+              categories={ehsStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
+              }}
+              unikeyKey="modu-storage"
+            />
+            <HomeFolderList
+              title="유저가 만든 공개 암기장 📂"
+              subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
+              trigger="user-storage"
+              categories={userStorageCategories}
+              handleToggleBookmark={async (id) => {
+                handleToggleCategoryBookmark({ categoryId: id, type: 'user' });
+              }}
+              unikeyKey="user-storage"
+            />
+          </>
+        )}
+        {/* <div className="home-folder-search-input-and-radio">
           <Radio.Group
             defaultValue="folder"
             value={searchType}
@@ -194,83 +252,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               size="large"
             />
           </form>
-        </div>
-        {typeof keyword === 'string' && keyword ? (
-          searchType === 'folder' ? (
-            <HomeSearchedFolderList
-              keyword={keyword}
-              categories={searchedCategories as MockExamCategory[]}
-              loading={fetchCategoriesLoading}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({
-                  categoryId: id,
-                  type: 'search',
-                  input: { keyword, limit: 30, isPublicOnly: true },
-                });
-              }}
-            />
-          ) : searchType === 'question' ? (
-            <HomeSearchedQuestionList
-              keyword={keyword}
-              questions={searchedQuestions as MockExamQuestion[]}
-              handleSaveBookmark={handleSaveBookmark}
-              loading={searchQuestionsLoading}
-            />
-          ) : (
-            <></>
-          )
-        ) : (
-          <>
-            <HomeFolderList
-              title="최근 학습한 암기장 📚"
-              subTitle="최근에 학습한 암기장을 다시 확인해보세요."
-              categories={recentlyStudiedCategories}
-              headerButton={
-                isLoggedIn && (
-                  <Button
-                    onClick={handleResetRecentlyStudiedCategories}
-                    type="dashed"
-                    size="small"
-                  >
-                    초기화
-                  </Button>
-                )
-              }
-              unikeyKey="recently-studied"
-              emptyDescription="최근에 학습한 암기장이 없습니다."
-            />
-            <HomeFolderList
-              title="국가고시 실기시험 준비하기 👀"
-              subTitle="실기 시험을 효율적으로 준비해보세요."
-              link="/modu-storage"
-              categories={moduStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
-              }}
-              unikeyKey="modu-storage"
-            />
-            <HomeFolderList
-              title="직8딴 시리즈(기출문제 중복소거) 📒"
-              subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
-              link="/ehs-storage"
-              categories={ehsStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
-              }}
-              unikeyKey="modu-storage"
-            />
-            <HomeFolderList
-              title="유저가 만든 공개 암기장 📂"
-              subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
-              trigger="user-storage"
-              categories={userStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'user' });
-              }}
-              unikeyKey="user-storage"
-            />
-          </>
-        )}
+        </div> */}
       </div>
     </HomeComponentBlock>
   );

@@ -1,18 +1,34 @@
 import WithHead from '@components/common/head/WithHead';
 import HomeComponent from '@components/home/HomeComponent';
 import { MAIN_PAGE } from '@lib/constants/displayName';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import { IS_FIRST_VISIT } from '@lib/constants/sessionStorage';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { SessionStorage } from '@lib/utils/sessionStorage';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { homeActions } from '@modules/redux/slices/home';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticProps } from 'next';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
 
 interface Props {}
 
 const IndexPage: React.FC<Props> = () => {
+  const sesionStorage = new SessionStorage();
+  const localStorage = new LocalStorage();
+  const router = useRouter();
+  useEffect(() => {
+    if (!sesionStorage.get(IS_FIRST_VISIT)) {
+      sesionStorage.set(IS_FIRST_VISIT, 'true');
+      if (localStorage.get(LAST_VISITED_CATEGORY)) {
+        router.push(localStorage.get(LAST_VISITED_CATEGORY));
+      }
+    }
+  }, []);
   return (
     <>
       <WithHead

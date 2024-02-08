@@ -27,13 +27,9 @@ import {
   STUDY_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
-import { SessionStorage } from '@lib/utils/sessionStorage';
-import { IS_FIRST_VISIT } from '@lib/constants/sessionStorage';
-import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
-  const sessionStorage = new SessionStorage();
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
