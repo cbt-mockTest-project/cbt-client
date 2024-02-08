@@ -71,6 +71,10 @@ const HomeFolderListBlock = styled.div`
     gap: 10px;
     overflow-x: auto;
     scrollbar-width: none;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+      display: none;
+    }
     .home-folder-item {
       width: 220px;
       flex-shrink: 0;
