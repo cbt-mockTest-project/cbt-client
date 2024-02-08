@@ -127,7 +127,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
 
   const handleSearch = (value: string) => {
     router.push({
-      pathname: '/',
       query: {
         ...router.query,
         ...(value

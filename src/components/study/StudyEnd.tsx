@@ -175,7 +175,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
     if (lastVisitedCategory) {
       router.push(lastVisitedCategory);
     } else {
-      router.push('/');
+      router.push('/main');
     }
   };
   return (

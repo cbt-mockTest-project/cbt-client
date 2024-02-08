@@ -31,7 +31,6 @@ const HomeCategorySearchModal: React.FC<HomeCategorySearchModalProps> = (
   const { ...modalProps } = props;
   const handleSearch = (value: string) => {
     router.push({
-      pathname: '/',
       query: {
         ...router.query,
         ...(value

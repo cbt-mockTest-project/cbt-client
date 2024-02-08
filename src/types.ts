@@ -882,6 +882,11 @@ export type ExamTitleAndIdByQuestionComment = {
   title: Scalars['String'];
 };
 
+export enum ExamType {
+  Objective = 'OBJECTIVE',
+  Subjective = 'SUBJECTIVE'
+}
+
 export type ExamViewer = {
   __typename?: 'ExamViewer';
   created_at: Scalars['DateTime'];
@@ -1246,6 +1251,7 @@ export type MockExamCategory = {
   examCategoryInvitations: Array<ExamCategoryInvitation>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examOrderIds: Array<Scalars['Float']>;
+  examType: ExamType;
   examViewer?: Maybe<Array<ExamViewer>>;
   hasAccess?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
@@ -1271,6 +1277,7 @@ export type MockExamCategoryInputType = {
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
   examOrderIds?: InputMaybe<Array<Scalars['Float']>>;
+  examType: ExamType;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -1641,7 +1648,6 @@ export type Mutation = {
   removeExamFromCategory: RemoveExamFromCategoryOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
-  resetRecentlyStudiedCategory: CoreOutput;
   restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
@@ -1664,7 +1670,7 @@ export type Mutation = {
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
-  upsertRecentlyStudiedCategory: UpsertRecentlyStudiedCategoryOutput;
+  updateRecentlyStudiedCategory: UpdateRecentlyStudiedCategoryOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -2104,8 +2110,8 @@ export type MutationUpdateQuestionCardCategoryArgs = {
 };
 
 
-export type MutationUpsertRecentlyStudiedCategoryArgs = {
-  input: UpsertRecentlyStudiedCategoryInput;
+export type MutationUpdateRecentlyStudiedCategoryArgs = {
+  input: UpdateRecentlyStudiedCategoryInput;
 };
 
 
@@ -2723,9 +2729,9 @@ export enum QuestionState {
 }
 
 export type ReadAllMockExamCategoriesInput = {
+  examType?: InputMaybe<ExamType>;
   partnerId?: InputMaybe<Scalars['Float']>;
   source?: InputMaybe<ExamSource>;
-  type?: InputMaybe<MockExamCategoryTypes>;
 };
 
 export type ReadAllMockExamCategoriesOutput = {
@@ -3455,12 +3461,12 @@ export type UpdateQuestionCardOutput = {
   questionCard?: Maybe<QuestionCard>;
 };
 
-export type UpsertRecentlyStudiedCategoryInput = {
-  categoryId: Scalars['Float'];
+export type UpdateRecentlyStudiedCategoryInput = {
+  categoryName: Scalars['String'];
 };
 
-export type UpsertRecentlyStudiedCategoryOutput = {
-  __typename?: 'UpsertRecentlyStudiedCategoryOutput';
+export type UpdateRecentlyStudiedCategoryOutput = {
+  __typename?: 'UpdateRecentlyStudiedCategoryOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -3505,7 +3511,7 @@ export type User = {
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
-  recentlyStudiedCategory: Array<Scalars['Float']>;
+  recentlyStudiedCategory: Scalars['String'];
   role: UserRole;
   seller?: Maybe<Seller>;
   solvedProblemCount?: Maybe<Scalars['Float']>;
@@ -3563,7 +3569,7 @@ export type UserInputType = {
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
-  recentlyStudiedCategory?: InputMaybe<Array<Scalars['Float']>>;
+  recentlyStudiedCategory?: InputMaybe<Scalars['String']>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
   solvedProblemCount?: InputMaybe<Scalars['Float']>;

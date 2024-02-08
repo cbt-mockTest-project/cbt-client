@@ -249,19 +249,11 @@ export const GET_USER = gql`
   }
 `;
 
-export const UPSERT_RECENTLY_STUDIED_CATEGORY = gql`
-  mutation UpsertRecentlyStudiedCategory(
-    $input: UpsertRecentlyStudiedCategoryInput!
+export const UPDATE_RECENTLY_STUDIED_CATEGORY = gql`
+  mutation UpdateRecentlyStudiedCategory(
+    $input: UpdateRecentlyStudiedCategoryInput!
   ) {
-    upsertRecentlyStudiedCategory(input: $input) {
-      error
-      ok
-    }
-  }
-`;
-export const RESET_RECENTLY_STUDIED_CATEGORY = gql`
-  mutation ResetRecentlyStudiedCategory {
-    resetRecentlyStudiedCategory {
+    updateRecentlyStudiedCategory(input: $input) {
       error
       ok
     }

@@ -47,7 +47,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
     const timer = setInterval(() => {
       setTime((prev) => {
         if (prev === 0) {
-          router.push('/');
+          router.push('/main');
           return;
         }
         return prev - 1;
