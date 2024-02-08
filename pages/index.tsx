@@ -49,7 +49,7 @@ export default IndexPage;
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps((store) => async (context) => {
     try {
-      const token = context.req.cookies['jwt-token'];
+      const token = context.req ? context.req.cookies['jwt-token'] : '';
       const cookie = `jwt-token=${token || ''}`;
       const apolloClient = initializeApollo({}, cookie);
       const getUserInfo = () =>
