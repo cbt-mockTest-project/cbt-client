@@ -1,7 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 import { circleIcon } from '@lib/constants';
-import * as Sentry from '@sentry/nextjs';
 import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { QuestionState, User } from '../../types';
@@ -9,6 +8,8 @@ import { clearIcon, triangleIcon } from '../constants/index';
 import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { cloneDeep } from 'lodash';
 import { addHours, format } from 'date-fns';
+import { initializeApollo } from '@modules/apollo';
+import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -27,23 +28,17 @@ export const convertStateToIcon = (
   }
 };
 
-interface PushErrorLogToSentryArgs {
-  level: Sentry.SeverityLevel;
-  message: string;
-}
-
-export const pushErrorLogToSentry = ({
-  message,
-  level,
-}: PushErrorLogToSentryArgs) => {
-  if (process.env.NODE_ENV === 'production') {
-    Sentry.captureMessage(message, level);
-  } else {
-    console.log(message);
-  }
-};
-
 export const handleError = async (error: any) => {
+  const apolloClient = initializeApollo({}, '');
+  const sendErrorToTelegram = (message: string) =>
+    apolloClient.mutate({
+      mutation: PUSH_TO_TELEGRAM,
+      variables: {
+        input: {
+          message,
+        },
+      },
+    });
   if (error?.message === 'Forbidden resource') {
     return message.error({ content: '로그인이 필요합니다' });
   }
@@ -67,8 +62,7 @@ export const handleError = async (error: any) => {
     typeof window !== 'undefined' ? window.navigator.userAgent : ''
   }\nIP:${clientIp}
       `;
-  // sendErrorToTelegram(telegramMessage);
-  pushErrorLogToSentry({ message: telegramMessage, level: 'error' });
+  sendErrorToTelegram(telegramMessage);
 };
 
 interface CheckUrlArgs {
