@@ -57,6 +57,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
+
       const [moduCategories, userCategories, ehsCategories] = await Promise.all(
         [
           getCategories({

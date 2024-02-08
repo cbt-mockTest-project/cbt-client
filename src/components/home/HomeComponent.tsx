@@ -82,10 +82,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     moduStorageCategories,
     userStorageCategories,
     refetchHomeCategories,
-    recentlyStudiedCategories,
     ehsStorageCategories,
     handleToggleCategoryBookmark,
-    handleResetRecentlyStudiedCategories,
   } = useHomeCategories();
 
   const searchType = useMemo(() => {
@@ -205,54 +203,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
             />
           </>
         )}
-        {/* <div className="home-folder-search-input-and-radio">
-          <Radio.Group
-            defaultValue="folder"
-            value={searchType}
-            onChange={(e) =>
-              router.replace(
-                {
-                  pathname: router.pathname,
-                  query: { ...router.query, type: e.target.value },
-                },
-                undefined,
-                { shallow: true }
-              )
-            }
-          >
-            <Radio.Button value="folder">암기장 검색</Radio.Button>
-            <Radio.Button value="question">문제 검색</Radio.Button>
-          </Radio.Group>
-          <form
-            className="home-folder-search-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch(searchInputRef.current.input.value);
-            }}
-          >
-            <Input
-              ref={searchInputRef}
-              className="home-folder-search-input"
-              placeholder={
-                searchType === 'folder'
-                  ? '학습하고 싶은 암기장을 검색해보세요.'
-                  : searchType === 'question'
-                  ? '문제를 검색해보세요. (2글자 이상)'
-                  : ''
-              }
-              suffix={
-                <button className="home-folder-search-button" type="submit">
-                  <SearchOutlined
-                    onClick={() =>
-                      handleSearch(searchInputRef.current.input.value)
-                    }
-                  />
-                </button>
-              }
-              size="large"
-            />
-          </form>
-        </div> */}
       </div>
     </HomeComponentBlock>
   );

@@ -1,16 +1,17 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Empty } from 'antd';
+import { Button, Empty } from 'antd';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import React, {
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styled from 'styled-components';
-import { Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { MockExamCategory } from 'types';
 import HomeCategorySearchModal from './HomeCategorySearchModal';
 import { useRouter } from 'next/router';
@@ -40,24 +41,21 @@ const HomeFolderListBlock = styled.div`
     width: 40px;
     height: 40px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border-radius: 50%;
-    border: 1px solid ${palette.gray_300};
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: 25px;
-    background-color: white;
+    bottom: 35px;
     z-index: 10;
     svg {
       font-size: 20px;
     }
   }
   .home-folder-list-prev-button {
-    left: -20px;
+    left: -25px;
   }
   .home-folder-list-next-button {
-    right: -20px;
+    right: -25px;
   }
   .home-folder-list-empty {
     margin: 15px 8px;
@@ -68,10 +66,19 @@ const HomeFolderListBlock = styled.div`
       text-decoration: underline;
     }
   }
-  @media (max-width: ${responsive.lsmall}) {
-    .home-folder-list-swiper-slide {
-      width: 200px;
+  .home-folder-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    .home-folder-item {
+      width: 220px;
+      flex-shrink: 0;
+      display: inline-block;
     }
+  }
+
+  @media (max-width: ${responsive.lsmall}) {
     .home-folder-list-prev-button,
     .home-folder-list-next-button {
       display: none;
@@ -101,6 +108,9 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   headerButton,
   emptyDescription = '아직 암기장이 없습니다.',
 }) => {
+  const folderListRef = useRef<HTMLUListElement | null>(null);
+  const [listScrollLeft, setListScrollLeft] = useState(0);
+  const deferredListScrollLeft = useDeferredValue(listScrollLeft);
   const router = useRouter();
   const isCategorySearchModalOpen = useMemo(
     () => router.query.tab === 'user-storage',
@@ -114,6 +124,36 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       });
     }
   };
+
+  const handleListScroll = (direction: 'prev' | 'next') => {
+    if (folderListRef.current) {
+      const scrollLeft = folderListRef.current.scrollLeft;
+      const newScrollLeft =
+        direction === 'prev' ? scrollLeft - 500 : scrollLeft + 500;
+      folderListRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!folderListRef.current) return;
+    const list = folderListRef.current;
+    const handleScroll = () => {
+      setListScrollLeft(list.scrollLeft);
+    };
+    list.addEventListener('scroll', handleScroll);
+    return () => {
+      list.removeEventListener('scroll', handleScroll);
+    };
+  }, [folderListRef]);
+
+  useEffect(() => {
+    console.log('deferredListScrollLeft', deferredListScrollLeft);
+    console.log('asda', folderListRef.current.clientWidth);
+    console.log('listScrollLeft', folderListRef.current?.scrollWidth);
+  }, [deferredListScrollLeft]);
 
   return (
     <HomeFolderListBlock>
@@ -143,65 +183,52 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       <div className="home-folder-sub-title">
         <span>{subTitle}</span>
       </div>
-      <Swiper
-        slidesPerView={5}
-        spaceBetween={10}
-        breakpoints={{
-          0: {
-            slidesPerView: 'auto',
-            spaceBetween: 5,
-          },
-          768: {
-            slidesPerView: 4,
-            spaceBetween: 5,
-          },
-          1024: {
-            slidesPerView: 5,
-            spaceBetween: 10,
-          },
-        }}
-        className="home-folder-list-swiper"
-        navigation={{
-          prevEl: `.home-folder-list-prev-button.${unikeyKey}`,
-          nextEl: `.home-folder-list-next-button.${unikeyKey}`,
-        }}
-        modules={[Navigation]}
-      >
-        <ul className="home-folder">
-          {categories?.map((category) => (
-            <SwiperSlide
-              key={category.id}
-              className="home-folder-list-swiper-slide"
-            >
-              <CategoryFolderListItem
-                className="home-folder-item"
-                category={category}
-              />
-            </SwiperSlide>
-          ))}
-          {!categories &&
-            [1, 2, 3, 4, 5].map((i) => (
-              <SwiperSlide key={i} className="home-folder-list-swiper-slide">
-                <CategoryFolderListItem isLoading />
-              </SwiperSlide>
-            ))}
-          {categories && categories.length === 0 && (
-            <Empty
-              className="home-folder-list-empty"
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={emptyDescription}
+
+      <ul className="home-folder-list" ref={folderListRef}>
+        {categories?.map((category) => (
+          <CategoryFolderListItem
+            key={category.id}
+            className="home-folder-item"
+            category={category}
+          />
+        ))}
+        {!categories &&
+          [1, 2, 3, 4, 5].map((i) => (
+            <CategoryFolderListItem
+              className="home-folder-item"
+              key={i}
+              isLoading
             />
-          )}
-        </ul>
-      </Swiper>
+          ))}
+        {categories && categories.length === 0 && (
+          <Empty
+            className="home-folder-list-empty"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={emptyDescription}
+          />
+        )}
+      </ul>
       {categories && categories.length > 5 && (
         <>
-          <button className={`home-folder-list-prev-button ${unikeyKey}`}>
-            <LeftOutlined />
-          </button>
-          <button className={`home-folder-list-next-button ${unikeyKey}`}>
-            <RightOutlined />
-          </button>
+          {deferredListScrollLeft ? (
+            <Button
+              onClick={() => handleListScroll('prev')}
+              shape="circle"
+              className={`home-folder-list-prev-button ${unikeyKey}`}
+            >
+              <LeftOutlined />
+            </Button>
+          ) : null}
+          {deferredListScrollLeft + folderListRef.current?.clientWidth <
+          folderListRef.current?.scrollWidth ? (
+            <Button
+              onClick={() => handleListScroll('next')}
+              shape="circle"
+              className={`home-folder-list-next-button ${unikeyKey}`}
+            >
+              <RightOutlined />
+            </Button>
+          ) : null}
         </>
       )}
       {isCategorySearchModalOpen && (
