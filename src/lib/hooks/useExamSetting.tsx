@@ -5,7 +5,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { ExamSettingType } from 'customTypes';
 import useExamSettingHistory from './useExamSettingHistory';
-import { MockExam, MockExamCategory } from 'types';
+import { MockExam } from 'types';
 
 interface UseExamSettingProps {
   categoryId: number;
