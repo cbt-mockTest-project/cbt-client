@@ -153,12 +153,6 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
     };
   }, [folderListRef]);
 
-  useEffect(() => {
-    console.log('deferredListScrollLeft', deferredListScrollLeft);
-    console.log('asda', folderListRef.current.clientWidth);
-    console.log('listScrollLeft', folderListRef.current?.scrollWidth);
-  }, [deferredListScrollLeft]);
-
   return (
     <HomeFolderListBlock>
       {link ? (
