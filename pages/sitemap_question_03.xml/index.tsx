@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .map((question) => question.id);
 
   const fields = questionIds.map((id) => ({
-    loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/${id}`,
+    loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${id}`,
     lastmod: new Date().toISOString(),
     Changefreq: 'daily',
     priority: 0.7,
