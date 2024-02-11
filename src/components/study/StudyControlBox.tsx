@@ -197,7 +197,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           )}
           {additionalControlButton && additionalControlButton}
           {hasScoreTable && (
-            <Button onClick={() => setIsStudyScoreModalOpen(true)}>현황</Button>
+            <Button onClick={() => setIsStudyScoreModalOpen(true)}>
+              이동 & 점수
+            </Button>
           )}
           {swiper && hasFinishButton && (
             <Button
