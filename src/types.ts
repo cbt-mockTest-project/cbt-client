@@ -2546,6 +2546,11 @@ export type QueryReadAllMockExamCategoriesArgs = {
 };
 
 
+export type QueryReadAllQuestionsArgs = {
+  input: ReadAllQuestionsInput;
+};
+
+
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
@@ -2766,6 +2771,11 @@ export type ReadAllMockExamsOutput = {
   error?: Maybe<Scalars['String']>;
   mockExams: Array<MockExam>;
   ok: Scalars['Boolean'];
+};
+
+export type ReadAllQuestionsInput = {
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
 };
 
 export type ReadAllQuestionsOutput = {

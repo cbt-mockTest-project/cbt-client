@@ -7,3 +7,9 @@ Host: https://moducbt.com
 
 # Sitemaps
 Sitemap: https://moducbt.com/sitemap.xml
+Sitemap: https://moducbt.com/sitemap_question_01.xml
+Sitemap: https://moducbt.com/sitemap_question_02.xml
+Sitemap: https://moducbt.com/sitemap_question_03.xml
+Sitemap: https://moducbt.com/sitemap_question_04.xml
+Sitemap: https://moducbt.com/sitemap_category.xml
+Sitemap: https://moducbt.com/sitemap_exam.xml
