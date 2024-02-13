@@ -80,12 +80,20 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
     }
   };
   const handleAllStateCheck = () => {
-    if (checkedStates.length === 2) {
+    if (checkedStates.length === 3) {
       setCheckedStates([]);
       handleFetchQuestions([]);
     } else {
-      setCheckedStates([QuestionState.High, QuestionState.Row]);
-      handleFetchQuestions([QuestionState.High, QuestionState.Row]);
+      setCheckedStates([
+        QuestionState.High,
+        QuestionState.Row,
+        QuestionState.Middle,
+      ]);
+      handleFetchQuestions([
+        QuestionState.High,
+        QuestionState.Row,
+        QuestionState.Middle,
+      ]);
     }
   };
 
@@ -118,7 +126,7 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
       <div className="score-tab-question-state-checkbox-wrapper">
         <Checkbox
           className="score-tab-question-state-checkbox"
-          checked={checkedStates.length === 2}
+          checked={checkedStates.length === 3}
           onChange={handleAllStateCheck}
         >
           전체
