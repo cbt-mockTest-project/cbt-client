@@ -1,4 +1,4 @@
-import { getServerSideSitemap } from 'next-sitemap';
+import { ISitemapField, getServerSideSitemap } from 'next-sitemap';
 import { GetServerSideProps } from 'next';
 import { initializeApollo } from '@modules/apollo';
 import { ReadMockExamCategoryNamesQuery } from '@lib/graphql/query/examQuery.generated';
@@ -13,11 +13,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const fields = categoryNames.map((name) => ({
     loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/category/${name}`,
     lastmod: new Date().toISOString(),
-    Changefreq: 'daily',
+    changefreq: 'daily',
     priority: 0.7,
   }));
 
-  return getServerSideSitemap(ctx, fields);
+  return getServerSideSitemap(ctx, fields as ISitemapField[]);
 };
 
 export default function Sitemap() {}
