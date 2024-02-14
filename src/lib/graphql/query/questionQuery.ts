@@ -51,12 +51,13 @@ export const READ_QUESTIONS_BY_ID = gql`
 `;
 
 export const READ_ALL_QUESTIONS = gql`
-  query ReadAllQuestions {
-    readAllQuestions {
+  query ReadAllQuestions($input: ReadAllQuestionsInput!) {
+    readAllQuestions(input: $input) {
       error
       ok
       questions {
         id
+        question
         question_img {
           url
           name

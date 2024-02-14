@@ -33,7 +33,11 @@ const MobileBottomAppbar: React.FC<MobileBottomAppbarProps> = () => {
           router.push(newValue);
         }}
       >
-        <BottomNavigationAction value={'/'} label="홈" icon={<HomeIcon />} />
+        <BottomNavigationAction
+          value={'/main'}
+          label="홈"
+          icon={<HomeIcon />}
+        />
         <BottomNavigationAction
           value={'/me/storage'}
           label="내 암기장"

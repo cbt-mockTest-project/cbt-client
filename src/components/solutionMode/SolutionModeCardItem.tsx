@@ -29,12 +29,14 @@ interface SolutionModeCardItemProps
   defaultQuestion: ReadQuestionsByExamIdsOutput['questions'][0];
   index: number;
   isAnswerAllHidden: boolean;
+  hasScoreTable?: boolean;
 }
 
 const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   defaultQuestion,
   index,
   isAnswerAllHidden,
+  hasScoreTable = true,
 }) => {
   const {
     question,
@@ -89,6 +91,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
           isAnswerHidden,
           setIsAnswerHidden,
         }}
+        hasScoreTable={hasScoreTable}
       />
     </SolutionModeCardItemBlock>
   );

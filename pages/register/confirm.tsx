@@ -1,6 +1,5 @@
 import WithHead from '@components/common/head/WithHead';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
-import Layout from '@components/common/layout/Layout';
 import { useSendVerificationMailMutation } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';

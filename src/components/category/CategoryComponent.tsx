@@ -11,7 +11,7 @@ import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
 import {
   useMeQuery,
-  useUpsertRecentlyStudiedCategory,
+  useUpdateRecentlyStudiedCategory,
 } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
@@ -97,8 +97,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 }) => {
   const router = useRouter();
   const localStorage = new LocalStorage();
-  const [upsertRecentlyStudiedCategory] = useUpsertRecentlyStudiedCategory();
   const { data: meQuery } = useMeQuery();
+  const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
   const [
     getExamCategoryLearningProgress,
     { data: categoryLearningProgressResponse },
@@ -202,17 +202,17 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
-      upsertRecentlyStudiedCategory({
+      updateRecentlyStudiedCategory({
         variables: {
           input: {
-            categoryId: category.id,
+            categoryName: categoryQueryInput.name,
           },
         },
       });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');
-          router.push('/');
+          router.push('/main');
         }
       });
       if (!category) return;
@@ -230,7 +230,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     }
     if (!meQuery.me.user && category && !category.isPublic) {
       message.error('접근 권한이 없습니다.');
-      router.push('/');
+      router.push('/main');
     }
   }, [meQuery]);
 

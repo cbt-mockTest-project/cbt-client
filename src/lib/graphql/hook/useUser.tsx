@@ -17,12 +17,11 @@ import {
   LOGOUT_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
-  RESET_RECENTLY_STUDIED_CATEGORY,
   SEARCH_USER,
   SEND_FIND_PASSWORD_MAIL_MUTATION,
   SEND_VERIFICATION_MAIL_MUTATION,
   UPDATE_ADBLOCK_PERMISSION,
-  UPSERT_RECENTLY_STUDIED_CATEGORY,
+  UPDATE_RECENTLY_STUDIED_CATEGORY,
 } from '../query/userQuery';
 import {
   ChangeClientRoleMutation,
@@ -59,8 +58,6 @@ import {
   MeQueryVariables,
   RegisterMutation,
   RegisterMutationVariables,
-  ResetRecentlyStudiedCategoryMutation,
-  ResetRecentlyStudiedCategoryMutationVariables,
   SearchUserQuery,
   SearchUserQueryVariables,
   SendFindPasswordMailMutation,
@@ -69,8 +66,8 @@ import {
   SendVerificationMailMutationVariables,
   UpdateAdBlockPermissionMutation,
   UpdateAdBlockPermissionMutationVariables,
-  UpsertRecentlyStudiedCategoryMutation,
-  UpsertRecentlyStudiedCategoryMutationVariables,
+  UpdateRecentlyStudiedCategoryMutation,
+  UpdateRecentlyStudiedCategoryMutationVariables,
 } from '../query/userQuery.generated';
 
 export const useRegisterMutation = () =>
@@ -178,14 +175,8 @@ export const useLazyGetUser = () =>
     GetUserByNicknameOrEmailQueryVariables
   >(GET_USER_BY_NICKNAME_OR_EMAIL);
 
-export const useUpsertRecentlyStudiedCategory = () =>
+export const useUpdateRecentlyStudiedCategory = () =>
   useMutation<
-    UpsertRecentlyStudiedCategoryMutation,
-    UpsertRecentlyStudiedCategoryMutationVariables
-  >(UPSERT_RECENTLY_STUDIED_CATEGORY);
-
-export const useResetRecentlyStudiedCategory = () =>
-  useMutation<
-    ResetRecentlyStudiedCategoryMutation,
-    ResetRecentlyStudiedCategoryMutationVariables
-  >(RESET_RECENTLY_STUDIED_CATEGORY);
+    UpdateRecentlyStudiedCategoryMutation,
+    UpdateRecentlyStudiedCategoryMutationVariables
+  >(UPDATE_RECENTLY_STUDIED_CATEGORY);

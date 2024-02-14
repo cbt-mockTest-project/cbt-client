@@ -1,4 +1,3 @@
-import Layout from '@components/common/layout/Layout';
 import { READ_POST, READ_POSTS } from '@lib/graphql/query/postQuery';
 import {
   ReadPostQuery,

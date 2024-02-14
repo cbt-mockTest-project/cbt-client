@@ -13,7 +13,6 @@ import { cloneDeep } from 'lodash';
 import { Modal, message } from 'antd';
 import useAuth from './useAuth';
 import { homeActions } from '@modules/redux/slices/home';
-import { useResetRecentlyStudiedCategory } from '@lib/graphql/hook/useUser';
 
 export interface handleToggleCategoryBookmarkProps {
   categoryId: number;
@@ -26,7 +25,6 @@ const useHomeCategories = () => {
   const dispatch = useAppDispatch();
   const { updateCache, client } = useApolloClient();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
-  const [resetRecentlyStudiedCategory] = useResetRecentlyStudiedCategory();
   const [
     getExamCategories,
     { data: searchedCategoriesResponse, loading: fetchCategoriesLoading },
@@ -42,9 +40,6 @@ const useHomeCategories = () => {
   );
   const ehsStorageCategories = useAppSelector(
     (state) => state.home.ehsStorageCategories
-  );
-  const recentlyStudiedCategories = useAppSelector(
-    (state) => state.home.recentlyStudiedCategories
   );
 
   const fetchCategories = async (input: GetExamCategoriesInput) => {
@@ -70,39 +65,28 @@ const useHomeCategories = () => {
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
-      const [
-        moduCategories,
-        userCategories,
-        ehsCategories,
-        recentlyStudiedCategories,
-      ] = await Promise.all([
-        getCategories({
-          examSource: ExamSource.MoudCbt,
-          limit: 30,
-          isPublicOnly: true,
-        }),
-        getCategories({
-          examSource: ExamSource.User,
-          limit: 30,
-          isPublicOnly: true,
-        }),
-        getCategories({
-          examSource: ExamSource.EhsMaster,
-          limit: 30,
-          isPublicOnly: true,
-        }),
-        getCategories({
-          limit: 30,
-          isPublicOnly: false,
-          categoryIds: isLoggedIn ? user.recentlyStudiedCategory : [],
-        }),
-      ]);
+      const [moduCategories, userCategories, ehsCategories] = await Promise.all(
+        [
+          getCategories({
+            examSource: ExamSource.MoudCbt,
+            limit: 30,
+            isPublicOnly: true,
+          }),
+          getCategories({
+            examSource: ExamSource.User,
+            limit: 30,
+            isPublicOnly: true,
+          }),
+          getCategories({
+            examSource: ExamSource.EhsMaster,
+            limit: 30,
+            isPublicOnly: true,
+          }),
+        ]
+      );
       setModuStorageCategories(moduCategories as MockExamCategory[]);
       setUserStorageCategories(userCategories as MockExamCategory[]);
       setEhsStorageCategories(ehsCategories as MockExamCategory[]);
-      setRecentlyStudiedCategories(
-        recentlyStudiedCategories as MockExamCategory[]
-      );
     } catch (error) {
       handleError(error);
     }
@@ -167,17 +151,6 @@ const useHomeCategories = () => {
             !newCategories[targetIndex].isBookmarked;
           setEhsStorageCategories(newCategories);
         }
-        if (type === 'recentlyStudied') {
-          const newCategories = cloneDeep(recentlyStudiedCategories);
-          if (!newCategories) return;
-          const targetIndex = newCategories.findIndex(
-            (category) => category.id === categoryId
-          );
-          if (targetIndex === -1) return;
-          newCategories[targetIndex].isBookmarked =
-            !newCategories[targetIndex].isBookmarked;
-          setRecentlyStudiedCategories(newCategories);
-        }
         if (res.data.toggleExamCategorieBookmark.isBookmarked)
           return message.success('북마크 되었습니다.');
         else return message.success('북마크가 해제되었습니다.');
@@ -187,22 +160,6 @@ const useHomeCategories = () => {
       handleError(e);
       message.error('북마크 설정에 실패했습니다.');
     }
-  };
-
-  const handleResetRecentlyStudiedCategories = () => {
-    Modal.confirm({
-      title: '최근 학습한 암기장 기록을 초기화 하시겠습니까?',
-      onOk: async () => {
-        try {
-          await resetRecentlyStudiedCategory();
-          setRecentlyStudiedCategories([]);
-          message.success('초기화 되었습니다.');
-        } catch (e) {
-          handleError(e);
-          message.error('초기화에 실패했습니다.');
-        }
-      },
-    });
   };
 
   const setModuStorageCategories = (categories: MockExamCategory[]) =>
@@ -248,9 +205,7 @@ const useHomeCategories = () => {
     moduStorageCategories,
     userStorageCategories,
     ehsStorageCategories,
-    recentlyStudiedCategories,
     handleToggleCategoryBookmark,
-    handleResetRecentlyStudiedCategories,
   };
 };
 

@@ -21,6 +21,18 @@ const AllExamListItemBlock = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  .exam-list-item-checkbox {
+    height: 85px;
+    text-align: center;
+    .ant-checkbox-inner {
+      width: 25px;
+      height: 25px;
+    }
+    .ant-checkbox-inner::after {
+      width: 10px;
+      height: 14px;
+    }
+  }
   .exam-list-item-link {
     width: 100%;
     height: 100%;
@@ -106,6 +118,7 @@ const AllExamListItem: React.FC<AllExamListItemProps> = ({
   return (
     <AllExamListItemBlock>
       <Checkbox
+        className="exam-list-item-checkbox"
         checked={examSetting.examIds.includes(exam.id)}
         onClick={() => handleExamSelect(exam.id)}
       />

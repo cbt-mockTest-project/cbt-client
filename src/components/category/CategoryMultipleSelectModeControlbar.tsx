@@ -8,6 +8,17 @@ const CategoryMultipleSelectModeControlbarBlock = styled.div`
   display: flex;
   align-items: center;
   gap: 17px;
+  .category-exam-all-checkbox {
+    text-align: center;
+    .ant-checkbox-inner {
+      width: 25px;
+      height: 25px;
+    }
+    .ant-checkbox-inner::after {
+      width: 10px;
+      height: 14px;
+    }
+  }
   .category-study-button {
     margin-top: 20px;
   }
@@ -45,7 +56,11 @@ const CategoryMultipleSelectModeControlbar: React.FC<
   return (
     <CategoryMultipleSelectModeControlbarBlock>
       <div className="category-exam-all-checkbox-wrapper">
-        <Checkbox checked={categoryAllChecked} onClick={handleAllExamsSelect} />
+        <Checkbox
+          className="category-exam-all-checkbox"
+          checked={categoryAllChecked}
+          onClick={handleAllExamsSelect}
+        />
         <span>전체 선택</span>
       </div>
       <Button

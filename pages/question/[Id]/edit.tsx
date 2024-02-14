@@ -1,4 +1,3 @@
-import Layout from '@components/common/layout/Layout';
 import QuestionEditComponent from '@components/question/edit/QuestionEditComponent';
 import { QUESTION_EDIT_PAGE } from '@lib/constants/displayName';
 import React from 'react';

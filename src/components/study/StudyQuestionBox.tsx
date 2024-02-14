@@ -93,13 +93,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
-  const router = useRouter();
   const { user, handleCheckLogin } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
     return user.id === question.user.id;
   }, [user, question]);
-  const isMultipleSelectMode = !!router.query.examIds;
 
   const handleOpenFeedbackModal: React.MouseEventHandler<HTMLDivElement> = (
     e
@@ -121,12 +119,9 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {questionNumber > 0 && (
             <p className="study-question-box-number">{questionNumber}번</p>
           )}
-
-          {isMultipleSelectMode && (
-            <div className="study-question-exam-title">
-              {question.mockExam?.title}
-            </div>
-          )}
+          <div className="study-question-exam-title">
+            {question.mockExam?.title}
+          </div>
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
         <div className="study-question-box-header-rignt-button-wrapper">

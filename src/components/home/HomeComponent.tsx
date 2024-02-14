@@ -82,10 +82,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     moduStorageCategories,
     userStorageCategories,
     refetchHomeCategories,
-    recentlyStudiedCategories,
     ehsStorageCategories,
     handleToggleCategoryBookmark,
-    handleResetRecentlyStudiedCategories,
   } = useHomeCategories();
 
   const searchType = useMemo(() => {
@@ -129,7 +127,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
 
   const handleSearch = (value: string) => {
     router.push({
-      pathname: '/',
       query: {
         ...router.query,
         ...(value
@@ -147,50 +144,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     <HomeComponentBlock>
       <HomeBanner />
       <div className="home-wrapper">
-        <div className="home-folder-search-input-and-radio">
-          <Radio.Group
-            defaultValue="folder"
-            value={searchType}
-            onChange={(e) =>
-              router.replace({
-                pathname: router.pathname,
-                query: { ...router.query, type: e.target.value },
-              })
-            }
-          >
-            <Radio.Button value="folder">암기장 검색</Radio.Button>
-            <Radio.Button value="question">문제 검색</Radio.Button>
-          </Radio.Group>
-          <form
-            className="home-folder-search-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch(searchInputRef.current.input.value);
-            }}
-          >
-            <Input
-              ref={searchInputRef}
-              className="home-folder-search-input"
-              placeholder={
-                searchType === 'folder'
-                  ? '학습하고 싶은 암기장을 검색해보세요.'
-                  : searchType === 'question'
-                  ? '문제를 검색해보세요. (2글자 이상)'
-                  : ''
-              }
-              suffix={
-                <button className="home-folder-search-button" type="submit">
-                  <SearchOutlined
-                    onClick={() =>
-                      handleSearch(searchInputRef.current.input.value)
-                    }
-                  />
-                </button>
-              }
-              size="large"
-            />
-          </form>
-        </div>
         {typeof keyword === 'string' && keyword ? (
           searchType === 'folder' ? (
             <HomeSearchedFolderList
@@ -217,28 +170,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           )
         ) : (
           <>
-            <HomeFolderList
-              title="최근 학습한 암기장 📚"
-              subTitle="최근에 학습한 암기장을 다시 확인해보세요."
-              categories={recentlyStudiedCategories}
-              headerButton={
-                <Button
-                  onClick={handleResetRecentlyStudiedCategories}
-                  type="dashed"
-                  size="small"
-                >
-                  초기화
-                </Button>
-              }
-              // handleToggleBookmark={async (id) => {
-              //   handleToggleCategoryBookmark({
-              //     categoryId: id,
-              //     type: 'modu',
-              //   });
-              // }}
-              unikeyKey="recently-studied"
-              emptyDescription="최근에 학습한 암기장이 없습니다."
-            />
             <HomeFolderList
               title="국가고시 실기시험 준비하기 👀"
               subTitle="실기 시험을 효율적으로 준비해보세요."

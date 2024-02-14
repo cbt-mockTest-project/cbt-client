@@ -17,7 +17,6 @@ const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 20px;
   }
 
   .solution-mode-control-button-wrapper {
@@ -110,14 +109,6 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
               <div className="solution-mode-control-button-inner">
                 <ShuffleIcon />
                 섞기
-              </div>
-            </Button>
-          </Tooltip>
-          <Tooltip title="학습 형태를 변경합니다.">
-            <Button onClick={() => setIsSelectStudyModeModalOpen(true)}>
-              <div className="solution-mode-control-button-inner">
-                <LoopIcon />
-                형태
               </div>
             </Button>
           </Tooltip>

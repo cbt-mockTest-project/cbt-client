@@ -13,10 +13,12 @@ export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
 
 export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, title: string, author: string, isPremium: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, label?: string | null, id: number, number: number, approved: boolean, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExam?: { __typename?: 'MockExam', title: string } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, created_at: any, updated_at: any, user: { __typename?: 'User', nickname: string, id: number }, recommendationCount: { __typename?: 'RecommendationCount', good: number, bad: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean } }>, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> }> } };
 
-export type ReadAllQuestionsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type ReadAllQuestionsQueryVariables = Types.Exact<{
+  input: Types.ReadAllQuestionsInput;
+}>;
 
 
-export type ReadAllQuestionsQuery = { __typename?: 'Query', readAllQuestions: { __typename?: 'ReadAllQuestionsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null }> | null } };
+export type ReadAllQuestionsQuery = { __typename?: 'Query', readAllQuestions: { __typename?: 'ReadAllQuestionsOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string, name: string }> | null }> | null } };
 
 export type ReadMockExamQuestionQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionInput;
@@ -126,12 +128,13 @@ export function useReadMockExamQuestionsByMockExamIdQuery(options: Omit<Urql.Use
   return Urql.useQuery<ReadMockExamQuestionsByMockExamIdQuery, ReadMockExamQuestionsByMockExamIdQueryVariables>({ query: ReadMockExamQuestionsByMockExamIdDocument, ...options });
 };
 export const ReadAllQuestionsDocument = gql`
-    query ReadAllQuestions {
-  readAllQuestions {
+    query ReadAllQuestions($input: ReadAllQuestionsInput!) {
+  readAllQuestions(input: $input) {
     error
     ok
     questions {
       id
+      question
       question_img {
         url
         name
@@ -145,7 +148,7 @@ export const ReadAllQuestionsDocument = gql`
 }
     `;
 
-export function useReadAllQuestionsQuery(options?: Omit<Urql.UseQueryArgs<ReadAllQuestionsQueryVariables>, 'query'>) {
+export function useReadAllQuestionsQuery(options: Omit<Urql.UseQueryArgs<ReadAllQuestionsQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadAllQuestionsQuery, ReadAllQuestionsQueryVariables>({ query: ReadAllQuestionsDocument, ...options });
 };
 export const ReadMockExamQuestionDocument = gql`

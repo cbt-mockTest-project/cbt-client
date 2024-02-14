@@ -22,30 +22,33 @@ module.exports = {
     '/manage',
     '/pricing',
     '/question/*/q_image',
-    '/question/*/s_image'
+    '/question/*/s_image',
+    '/exam/*',
+    '/category/*',
+    '/sitemap_*',
+    '/post/*',
+    '/study*',
+    '/main'
   ],
   // ...other options
   transform: async (config, path) => {
     return {
-      loc: path, // => this will be exported as http(s)://<config.siteUrl>/<path>
+      loc: path,
       changefreq: config.changefreq,
       priority: config.priority,
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       alternateRefs: config.alternateRefs ?? [],
     };
   },
-  additionalPaths : async (config) => {
-    const res = await axios.post('https://api.moducbt.com/graphql', {
-      operationName : null,
-      variables : {},
-      query : "{\n  readAllQuestions {\n    ok\n    questions {\n      id\n      question\n   }\n  }\n}\n"
-    })
-    const questionIds = await Promise.all(res.data.data.readAllQuestions.questions
-      .filter((question) => question.question)
-      .map(async (question) => await config.transform(config, `/question/${question.id}`)))
-    return questionIds;
-  },
   robotsTxtOptions: {
+    additionalSitemaps :[
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_01.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_02.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_03.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_04.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_category.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_exam.xml`,
+    ],
     policies: [
       {
         userAgent: '*',

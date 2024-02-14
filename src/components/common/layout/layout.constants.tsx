@@ -15,7 +15,7 @@ export const navItems = [
   {
     key: '/modu-storage',
     icon: <CloudOutlined />,
-    label: '모두 암기장',
+    label: '국가고시 암기장',
   },
   {
     key: '/ehs-storage',
