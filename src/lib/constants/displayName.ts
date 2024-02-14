@@ -1,5 +1,6 @@
 export const EXAM_SOLUTION_PAGE = 'EXAM_SOLUTION_PAGE';
 export const STUDY_PAGE = 'STUDY_PAGE';
+export const MCQ_STUDY_PAGE = 'MCQ_STUDY_PAGE';
 export const EXAM_CREATE_PAGE = 'EXAM_CREATE_PAGE';
 export const PRICING_PAGE = 'PRICING_PAGE';
 export const MAIN_PAGE = 'MAIN_PAGE';

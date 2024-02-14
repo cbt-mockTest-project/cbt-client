@@ -211,7 +211,7 @@ const ExamCreateObjectiveCardItemEditor: React.FC<
   };
   return (
     <ExamCreateObjectiveCardItemEditorBlock>
-      {question.objectiveData.content.map((v, i) => (
+      {question.objectiveData?.content.map((v, i) => (
         <div
           key={question.orderId + v.content + i + v.url}
           className="exam-create-objective-card-item-editor-wrapper"
@@ -256,11 +256,11 @@ const ExamCreateObjectiveCardItemEditor: React.FC<
       <div className="exam-create-objective-card-item-editor-answer-wrapper">
         <div>정답을 선택해주세요.</div>
         <Radio.Group
-          defaultValue={question.objectiveData.answer}
+          defaultValue={question.objectiveData?.answer}
           onChange={(e) => handleSelectAnswer(e.target.value)}
         >
           {Array.from(
-            { length: question.objectiveData.content.length },
+            { length: question.objectiveData?.content.length },
             (_, i) => i + 1
           ).map((v) => (
             <Radio key={v} value={v}>
