@@ -2,13 +2,18 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
-import useQuestions from '@lib/hooks/useQuestions';
 import palette from '@styles/palette';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import CardModeControlBox from './CardModeControlBox';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from '@lib/hooks/useQuestionFeedback';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
@@ -61,30 +66,43 @@ const CardModeItemBlock = styled.div`
 
 interface CardModeItemProps {
   question: MockExamQuestion;
+  handleAddFeedback: (
+    addFeedbackInput: Omit<AddFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  handleDeleteFeedback: ({
+    question,
+    feedback,
+  }: Omit<DeleteFeedbackInput, 'setQuestion'>) => Promise<void>;
+  handleEditFeedback: (
+    editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  handleUpdateFeedbackRecommendation: ({
+    type,
+    myRecommendationStatus,
+    question,
+    feedback,
+  }: Omit<UpdateFeedbackRecommendationInput, 'setQuestion'>) => Promise<void>;
+  handleSaveBookmark: (question: MockExamQuestion) => Promise<void>;
+  handleSaveQuestionState: (
+    question: MockExamQuestion,
+    state: QuestionState
+  ) => Promise<void>;
   number: number;
   swiper: any;
 }
 
 const CardModeItem: React.FC<CardModeItemProps> = ({
-  question: defaultQuestion,
+  question,
+  handleAddFeedback,
+  handleDeleteFeedback,
+  handleEditFeedback,
+  handleUpdateFeedbackRecommendation,
+  handleSaveBookmark,
+  handleSaveQuestionState,
   number,
   swiper,
 }) => {
-  const {
-    question,
-    setQuestion,
-    handleAddFeedback,
-    handleDeleteFeedback,
-    handleEditFeedback,
-    handleUpdateFeedbackRecommendation,
-    handleSaveBookmark,
-    handleSaveQuestionState,
-  } = useHandleQuestion({ defaultQuestion });
   const [isFlipped, setIsFlipped] = useState(false);
-
-  useEffect(() => {
-    setQuestion(defaultQuestion);
-  }, [defaultQuestion]);
   return (
     <CardModeItemBlock>
       <div className={`card ${isFlipped ? 'is-flipped' : ''}`}>
