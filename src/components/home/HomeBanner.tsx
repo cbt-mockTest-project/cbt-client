@@ -59,8 +59,8 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
     },
     {
       img: {
-        pc: '/png/banner/ehs-banner-pc02.png',
-        mobile: '/png/banner/ehs-banner-mobile02.png',
+        pc: '/png/banner/ehs-banner-pc03.png',
+        mobile: '/png/banner/ehs-banner-mobile03.png',
       },
       key: 'https://ehs-master.com',
     },
