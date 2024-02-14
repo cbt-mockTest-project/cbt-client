@@ -126,9 +126,8 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
               setMode(e.target.value);
             }}
           >
-            <Radio.Button value={ExamMode.SOLUTION}>해설</Radio.Button>
-            <Radio.Button value={ExamMode.TYPYING}>타이핑</Radio.Button>
-            <Radio.Button value={ExamMode.CARD}>카드</Radio.Button>
+            <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
+            <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
           </Radio.Group>
         </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">

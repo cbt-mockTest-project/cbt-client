@@ -48,9 +48,8 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
             setMode(e.target.value);
           }}
         >
-          <Radio.Button value={ExamMode.SOLUTION}>해설</Radio.Button>
-          <Radio.Button value={ExamMode.TYPYING}>타이핑</Radio.Button>
-          <Radio.Button value={ExamMode.CARD}>카드</Radio.Button>
+          <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
+          <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
         </Radio.Group>
         <Button
           className="exam-select-start-button"

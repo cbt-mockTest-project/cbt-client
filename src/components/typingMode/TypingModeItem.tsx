@@ -5,21 +5,38 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import {
+  AddFeedbackInput,
+  DeleteFeedbackInput,
+  EditFeedbackInput,
+  UpdateFeedbackRecommendationInput,
+} from '@lib/hooks/useQuestionFeedback';
 import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Input, Modal } from 'antd';
-import { TextAreaRef } from 'antd/es/input/TextArea';
+import { Button, Input } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 const TypingModeItemBlock = styled.div`
   .typing-mode-textarea {
+    margin-top: 10px;
+    font-size: 16px;
+    padding: 10px 20px;
     border-color: ${palette.colorBorder};
+  }
+  .typing-mode-answer-visible-toggle-button {
+    margin-top: 10px;
+  }
+  .typing-mode-answer-box {
+    margin-top: 10px;
+  }
+  .study-control-box {
+    margin-top: 10px;
   }
   .typing-mode-answer-button-wrapper {
     display: flex;
@@ -62,49 +79,49 @@ const TypingModeItemBlock = styled.div`
 
 interface TypingModeItemProps {
   question: MockExamQuestion;
+  handleAddFeedback: (
+    addFeedbackInput: Omit<AddFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  handleDeleteFeedback: ({
+    question,
+    feedback,
+  }: Omit<DeleteFeedbackInput, 'setQuestion'>) => Promise<void>;
+  handleEditFeedback: (
+    editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
+  ) => Promise<void>;
+  handleUpdateFeedbackRecommendation: ({
+    type,
+    myRecommendationStatus,
+    question,
+    feedback,
+  }: Omit<UpdateFeedbackRecommendationInput, 'setQuestion'>) => Promise<void>;
+  handleSaveBookmark: (question: MockExamQuestion) => Promise<void>;
+  handleSaveQuestionState: (
+    question: MockExamQuestion,
+    state: QuestionState
+  ) => Promise<void>;
   clearTextAreaTrigger: boolean;
   number: number;
   swiper: any;
 }
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({
-  question: defaultQuestion,
+  question,
+  handleAddFeedback,
+  handleDeleteFeedback,
+  handleEditFeedback,
+  handleUpdateFeedbackRecommendation,
+  handleSaveBookmark,
+  handleSaveQuestionState,
   number,
   swiper,
   clearTextAreaTrigger,
 }) => {
-  const router = useRouter();
   const { questions } = useQuestions();
-  const qIndex =
-    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
-  const handleFinalClick = () => {
-    Modal.confirm({
-      title: '학습을 종료하시겠습니까?',
-      okText: '종료',
-      cancelText: '취소',
-      onOk: () => {
-        router.replace({
-          pathname: router.pathname,
-          query: { ...router.query, tab: 'end' },
-        });
-      },
-    });
-  };
-  const questionIndex = Number(router.query.questionIndex);
   const localStorage = new LocalStorage();
   const [answer, setAnswer] = useState('');
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
-  const {
-    question,
-    setQuestion,
-    handleAddFeedback,
-    handleDeleteFeedback,
-    handleEditFeedback,
-    handleUpdateFeedbackRecommendation,
-    handleSaveBookmark,
-    handleSaveQuestionState,
-  } = useHandleQuestion({ defaultQuestion });
   const onChangeAnswer = (value: string) => {
     const prevAnswer = localStorage.get(IN_PROGRESS_ANSWERS);
     const newAnswer = {
@@ -122,7 +139,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
     if (!answer) {
       setAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
     }
-  }, [questionIndex]);
+  }, []);
 
   useEffect(() => {
     if (clearTextAreaTrigger) {
@@ -130,9 +147,6 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
     }
   }, [clearTextAreaTrigger]);
 
-  useEffect(() => {
-    setQuestion(defaultQuestion);
-  }, [defaultQuestion]);
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">

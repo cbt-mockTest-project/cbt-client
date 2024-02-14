@@ -228,6 +228,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
                 defaultQuestion={question}
                 index={index}
                 isAnswerAllHidden={false}
+                hasScoreTable={false}
               />
             ))}
         </div>

@@ -1,18 +1,30 @@
-import CardModeComponent from '@components/cardMode/CardModeComponent';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
-import TypingModeComponent from '@components/typingMode/TypingModeComponent';
 import useQuestions from '@lib/hooks/useQuestions';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
-import StudyHeader from './StudyHeader';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
 import StudyPaymentGuard from './StudyPaymentGuard';
+import StudyHeaderV2 from './StudyHeaderV2';
+import palette from '@styles/palette';
+import { responsive } from '@lib/utils/responsive';
+import StudyModeWrapper from './StudyModeWrapper';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
+  .study-component-wrapper {
+    padding: 10px 20px;
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (max-width: ${responsive.medium}) {
+    .study-component-wrapper {
+      padding: 10px;
+    }
+  }
 `;
 
 interface StudyComponentProps {}
@@ -70,19 +82,17 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   if (fetchQuestionsLoading) return <FullPageLoader />;
   return (
     <StudyComponentBlock>
-      <StudyHeader questions={questions} />
-      {mode === ExamMode.SOLUTION && questionsQueryInput && (
-        <SolutionModeComponent />
-      )}
-      {mode === ExamMode.TYPYING && questionsQueryInput && (
-        <TypingModeComponent />
-      )}
-      {mode === ExamMode.CARD && questionsQueryInput && <CardModeComponent />}
-      {mode === 'end' && <SolutionModeComponent />}
-      <StudyPaymentGuard
-        {...(examId ? { examId: String(examId) } : {})}
-        {...(examIds ? { examIds: String(examIds) } : {})}
-      />
+      <div className="study-component-wrapper">
+        {router.query.tab !== 'end' && <StudyHeaderV2 />}
+        {mode === ExamMode.SOLUTION && questionsQueryInput && (
+          <SolutionModeComponent />
+        )}
+        {['typing', 'card'].includes(mode as string) && <StudyModeWrapper />}
+        <StudyPaymentGuard
+          {...(examId ? { examId: String(examId) } : {})}
+          {...(examIds ? { examIds: String(examIds) } : {})}
+        />
+      </div>
     </StudyComponentBlock>
   );
 };
