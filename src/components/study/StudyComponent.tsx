@@ -11,6 +11,7 @@ import StudyHeaderV2 from './StudyHeaderV2';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import StudyModeWrapper from './StudyModeWrapper';
+import CoupangDisplayAd from '@components/common/ad/CoupangDisplayAdModal';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
@@ -80,6 +81,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
 
   if (!questionsQueryInput || !mode) return null;
   if (fetchQuestionsLoading) return <FullPageLoader />;
+
   return (
     <StudyComponentBlock>
       <div className="study-component-wrapper">

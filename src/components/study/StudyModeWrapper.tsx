@@ -1,8 +1,6 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import CardModeItem from '@components/cardMode/CardModeItem';
-import TypingModeItem from '@components/typingMode/TypingModeItem';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 import useQuestions from '@lib/hooks/useQuestions';
@@ -19,6 +17,12 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { LocalStorage } from '@lib/utils/localStorage';
 import StudyModeItemWrapper from './StudyModeItemWrapper';
+import { getCookie } from 'cookies-next';
+import { COUPANG_AD_COOKIE } from '@lib/constants/cookie';
+import CoupangDisplayAdModal from '@components/common/ad/CoupangDisplayAdModal';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { isUndefined } from 'lodash';
+import { checkRole } from '@lib/utils/utils';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -78,6 +82,8 @@ interface StudyModeWrapperProps {}
 
 const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const localStorage = new LocalStorage();
+  const { data: meQuery } = useMeQuery();
+  const [isCoupangAdModalOpen, setIsCoupangAdModalOpen] = useState(false);
   const router = useRouter();
   const { questions } = useQuestions();
   const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
@@ -136,6 +142,15 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             setSwiper(swiper);
           }}
           onSlideChange={(swiper) => {
+            const coupangAdCookie = getCookie(COUPANG_AD_COOKIE);
+            if (
+              !coupangAdCookie &&
+              !isUndefined(meQuery) &&
+              !checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery }) &&
+              Math.random() < 0.5
+            ) {
+              setIsCoupangAdModalOpen(true);
+            }
             updateQuestionIndexInfo(swiper.activeIndex);
           }}
         >
@@ -193,6 +208,14 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             <RightOutlined />
           </button>
         </>
+      )}
+      {isCoupangAdModalOpen && (
+        <CoupangDisplayAdModal
+          open={isCoupangAdModalOpen}
+          onCancel={() => {
+            setIsCoupangAdModalOpen(false);
+          }}
+        />
       )}
     </StudyModeWrapperBlock>
   );
