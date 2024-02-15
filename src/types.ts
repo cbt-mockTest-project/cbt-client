@@ -3524,6 +3524,7 @@ export type User = {
   recentlyStudiedCategory: Scalars['String'];
   role: UserRole;
   seller?: Maybe<Seller>;
+  solveLimit?: Maybe<Scalars['Float']>;
   solvedProblemCount?: Maybe<Scalars['Float']>;
   todos: Array<Todo>;
   updated_at: Scalars['DateTime'];
@@ -3582,6 +3583,7 @@ export type UserInputType = {
   recentlyStudiedCategory?: InputMaybe<Scalars['String']>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
+  solveLimit?: InputMaybe<Scalars['Float']>;
   solvedProblemCount?: InputMaybe<Scalars['Float']>;
   todos: Array<TodoInputType>;
   usedFreeTrial: Scalars['Boolean'];

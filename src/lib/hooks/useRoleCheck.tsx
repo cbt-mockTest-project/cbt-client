@@ -37,6 +37,7 @@ const useRoleCheck = () => {
       return handleRoleCheck([7]);
     return true;
   };
+
   return {
     handleRoleCheck,
     handleCheckExamAccess,

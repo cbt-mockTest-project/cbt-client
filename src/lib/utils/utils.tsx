@@ -10,6 +10,13 @@ import { cloneDeep } from 'lodash';
 import { addHours, format } from 'date-fns';
 import { initializeApollo } from '@modules/apollo';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
+import {
+  EHS_AIR_EXAM_IDS,
+  EHS_CONSTRUCTION_EXAM_IDS,
+  EHS_DANGEROUS_EXAM_IDS,
+  EHS_SAFE_EXAM_IDS,
+  EHS_SAFE_INDUSTRIAL_EXAM_IDS,
+} from '@lib/constants/ehsMaster';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -274,4 +281,14 @@ export const linkify = (text: string) => {
     }
     return part;
   });
+};
+
+export const checkIsEhsMasterExam = (examId: number) => {
+  return [
+    ...EHS_AIR_EXAM_IDS,
+    ...EHS_CONSTRUCTION_EXAM_IDS,
+    ...EHS_DANGEROUS_EXAM_IDS,
+    ...EHS_SAFE_EXAM_IDS,
+    ...EHS_SAFE_INDUSTRIAL_EXAM_IDS,
+  ].includes(examId);
 };

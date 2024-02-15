@@ -97,7 +97,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const handleBasicPlanPayment = () =>
     handlePayment({
       orderName: '모두CBT 베이직 플랜',
-      price: 5900,
+      price: 12000,
       roleId: 1,
       checkRoleIds: [1, 2],
     });
@@ -110,10 +110,10 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const pricingCardData: PricingCardProps[] = [
     {
       title: '베이직 플랜',
-      intro: '무제한 베이직 플랜으로\n학습효율을 높여보세요!',
-      price: 5900,
-      endDate: '이용기간: 무제한',
-      benefits: ['광고제거'],
+      intro: '베이직 플랜으로\n학습효율을 높여보세요!',
+      price: 12000,
+      endDate: '이용기간: 3개월',
+      benefits: ['광고제거', '무제한 문제풀이'],
       // benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })

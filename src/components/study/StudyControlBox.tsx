@@ -7,8 +7,7 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { EditOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Divider, Popover } from 'antd';
+import { Button, Divider, Modal } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -21,6 +20,8 @@ import {
 } from '@lib/hooks/useQuestionFeedback';
 import { useRouter } from 'next/router';
 import { ExamMode } from 'customTypes';
+import StudySolveLimitInfoModal from './StudySolveLimitInfoModal';
+import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -134,16 +135,26 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   hasScoreTable = true,
 }) => {
   const router = useRouter();
+  const { data: meQuery } = useMeQuery();
   const mode = router.query.mode as ExamMode;
   const hasFinishButton = useMemo(
     () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
     [mode]
   );
+  const [isSolveLimitModalOpen, setIsSolveLimitModal] = useState(false);
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
 
   const handleSaveQuestionState = (state: QuestionState) => {
+    if (meQuery?.me.user) {
+      const isEhsExam = checkIsEhsMasterExam(question.mockExam.id);
+      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+      if (meQuery.me.user.solveLimit <= 0 && !isBasicPlanUser && !isEhsExam) {
+        setIsSolveLimitModal(true);
+        return;
+      }
+    }
     const newState =
       question.myQuestionState !== state ? state : QuestionState.Core;
     saveQuestionState(question, newState);
@@ -207,10 +218,15 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               type="primary"
               onClick={() => {
                 delete router.query.qIndex;
-                router.replace({
-                  query: {
-                    ...router.query,
-                    tab: 'end',
+                Modal.confirm({
+                  title: '학습을 종료하시겠습니까?',
+                  okText: '종료',
+                  cancelText: '취소',
+                  onOk: () => {
+                    router.replace({
+                      pathname: router.pathname,
+                      query: { ...router.query, tab: 'end' },
+                    });
                   },
                 });
               }}
@@ -251,6 +267,12 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           }}
           open={isStudyScoreModalOpen}
           onCancel={() => setIsStudyScoreModalOpen(false)}
+        />
+      )}
+      {isSolveLimitModalOpen && (
+        <StudySolveLimitInfoModal
+          open={isSolveLimitModalOpen}
+          onCancel={() => setIsSolveLimitModal(false)}
         />
       )}
     </StudyControlBoxBlock>

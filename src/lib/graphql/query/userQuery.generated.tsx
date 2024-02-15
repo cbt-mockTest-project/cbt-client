@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', solveLimit?: number | null, profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, userRoles: Array<{ __typename?: 'UserAndRole', role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -224,6 +224,7 @@ export const MeDocument = gql`
   me {
     ok
     user {
+      solveLimit
       profileImg
       usedFreeTrial
       nickname

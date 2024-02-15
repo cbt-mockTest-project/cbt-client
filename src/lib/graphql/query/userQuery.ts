@@ -52,6 +52,7 @@ export const ME_QUERY = gql`
     me {
       ok
       user {
+        solveLimit
         profileImg
         usedFreeTrial
         nickname
