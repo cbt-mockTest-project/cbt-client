@@ -1,30 +1,45 @@
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
+import { checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import React from 'react';
+import { isUndefined } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-interface CoupangAdProps {
+interface CoupangDynamicBannerProps {
   type?: 'basic' | 'footer';
 }
 
-const CoupangAd: React.FC<CoupangAdProps> = ({ type = 'footer' }) => {
+const CoupangDynamicBanner: React.FC<CoupangDynamicBannerProps> = ({
+  type = 'footer',
+}) => {
+  const { data: meQuery } = useMeQuery();
+  const [isAdVisible, setIsAdVisible] = useState(false);
+  useEffect(() => {
+    if (isUndefined(meQuery)) return;
+    if (!checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery })) {
+      setIsAdVisible(true);
+    }
+  }, [meQuery]);
+  if (!isAdVisible) return null;
   return (
-    <CoupangAdContainer type={type}>
+    <CoupangDynamicBannerContainer type={type}>
       <iframe
         src="https://ads-partners.coupang.com/widgets.html?id=620466&template=carousel&trackingCode=AF8104485&subId=&width=1024&height=180"
         width="1024"
         height="180"
         referrerPolicy="unsafe-url"
       />
-    </CoupangAdContainer>
+    </CoupangDynamicBannerContainer>
   );
 };
 
-export default CoupangAd;
+export default CoupangDynamicBanner;
 
-interface CoupangAdContainerProps extends Pick<CoupangAdProps, 'type'> {}
+interface CoupangDynamicBannerContainerProps
+  extends Pick<CoupangDynamicBannerProps, 'type'> {}
 
-const CoupangAdContainer = styled.div<CoupangAdContainerProps>`
+const CoupangDynamicBannerContainer = styled.div<CoupangDynamicBannerContainerProps>`
   position: relative;
   text-align: center;
   width: 100%;

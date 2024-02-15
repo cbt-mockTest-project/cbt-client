@@ -27,6 +27,7 @@ import ExamList from './ExamList';
 import CategoryReviewButton from './CategoryReviewButton';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import CoupangDynamicBanner from '@components/common/ad/CoupangDynamicBanner';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -244,6 +245,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         categoryName={category.name}
         categoryDescription={category.description}
       />
+      <CoupangDynamicBanner type="basic" />
 
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>
