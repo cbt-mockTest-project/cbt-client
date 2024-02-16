@@ -61,6 +61,8 @@ export const ME_QUERY = gql`
         email
         recentlyStudiedCategory
         userRoles {
+          created_at
+
           role {
             name
             id
