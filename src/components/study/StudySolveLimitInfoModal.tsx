@@ -102,7 +102,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               type="primary"
               onClick={handleBasicPlanPayment}
             >
-              결제하기
+              구매하기
             </Button>
             <div className="study-solve-limit-info-modal-benefit-title">
               혜택

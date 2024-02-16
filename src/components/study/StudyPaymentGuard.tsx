@@ -1,10 +1,16 @@
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useRoleCheck from '@lib/hooks/useRoleCheck';
-import { Button } from 'antd';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { responsive } from '@lib/utils/responsive';
+import { Clear, DoneAll } from '@mui/icons-material';
+import palette from '@styles/palette';
+import { Button, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import StudyPaymentSelect from './StudyPaymentSelect';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { useRouter } from 'next/router';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import { LeftOutlined } from '@ant-design/icons';
 
 const StudyPaymentGuardBlock = styled.div`
   position: fixed;
@@ -12,19 +18,65 @@ const StudyPaymentGuardBlock = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.85);
   z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  flex-direction: column;
-  .study-payment-guard-button-wrapper {
+
+  .study-payment-guard-inner {
+    position: absolute;
+    border-radius: 10px;
+    min-width: 435px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    background-color: white;
     display: flex;
-    gap: 10px;
-    width: 100%;
+    flex-direction: column;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    gap: 20px;
+
+    .study-payment-guard-header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .study-payment-exit-button,
+      .study-payment-back-button {
+        cursor: pointer;
+      }
+    }
+    .study-payment-guard-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .study-payment-guard-period {
+      font-size: 14px;
+      font-weight: bold;
+      color: ${palette.colorSubText};
+    }
+    .study-payment-guard-pay-button {
+      width: 160px;
+    }
+    .study-payment-guard-benefit {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .study-payment-guard-benefit-list {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+    .study-payment-guard-benefit-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  @media (max-width: ${responsive.medium}) {
+    .study-payment-guard-inner {
+      min-width: 300px;
+    }
   }
 `;
 
@@ -37,24 +89,12 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
   examId,
   examIds,
 }) => {
+  const router = useRouter();
   const { data: meQuery } = useMeQuery();
+  const localStorage = new LocalStorage();
+  const [isPaymentSelectTab, setIsPaymentSelectTab] = useState<boolean>(false);
   const { handleCheckExamAccess } = useRoleCheck();
   const [hasAccess, setHasAccess] = useState(true);
-  const [time, setTime] = useState(60);
-  const router = useRouter();
-  useEffect(() => {
-    if (hasAccess) return;
-    const timer = setInterval(() => {
-      setTime((prev) => {
-        if (prev === 0) {
-          router.push('/main');
-          return;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [hasAccess]);
 
   useEffect(() => {
     if (!examIds && !examId) return;
@@ -67,41 +107,91 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
             .map((id) => Number(id));
       if (!handleCheckExamAccess(ids)) {
         setHasAccess(false);
+      } else {
+        setHasAccess(true);
       }
     }
     if (examId) {
       if (!handleCheckExamAccess([Number(examId)])) {
         setHasAccess(false);
+      } else {
+        setHasAccess(true);
       }
     }
   }, [examIds, examId, meQuery]);
-
-  useEffect(() => {
-    if (hasAccess) return;
-    const interval = setInterval(() => {
-      const element = document.querySelector('.study-payment-guard');
-      if (!element && !hasAccess) {
-        alert('비정상적인 접근입니다.');
-        router.reload();
-      }
-    }, 3000); // 3초마다 체크
-
-    return () => clearInterval(interval);
-  }, [hasAccess]);
 
   if (hasAccess) return null;
 
   return (
     <StudyPaymentGuardBlock className="study-payment-guard">
-      <div>직8딴 플랜 구매 후 이용가능합니다. </div>
-      <div>{time}초 후 홈화면으로 이동합니다.</div>
-      <div className="study-payment-guard-button-wrapper">
-        <Link href="/">
-          <Button>홈으로</Button>
-        </Link>
-        <Link href="/pricing?tab=ehs_master">
-          <Button type="primary">구매하기</Button>
-        </Link>
+      <div className="study-payment-guard-inner">
+        <div className="study-payment-guard-header">
+          <div
+            className="study-payment-back-button"
+            onClick={() => {
+              if (!isPaymentSelectTab) return;
+              setIsPaymentSelectTab(false);
+            }}
+          >
+            {isPaymentSelectTab && <LeftOutlined />}
+          </div>
+          <div
+            role="button"
+            className="study-payment-exit-button"
+            onClick={() => {
+              Modal.confirm({
+                title: '페이지를 나가시겠습니까?',
+                onOk() {
+                  const lastVisitedCategory = localStorage.get(
+                    LAST_VISITED_CATEGORY
+                  );
+                  if (lastVisitedCategory) {
+                    router.push(lastVisitedCategory);
+                  } else {
+                    router.push('/main');
+                  }
+                },
+              });
+            }}
+          >
+            <Clear />
+          </div>
+        </div>
+        {isPaymentSelectTab ? (
+          <StudyPaymentSelect />
+        ) : (
+          <>
+            <div className="study-payment-guard-title">
+              직8딴 플랜 구매 후 이용가능합니다. 😊
+            </div>
+            <div className="study-payment-guard-period">
+              이용기간: ~ 2024-12-25
+            </div>
+            <Button
+              className="study-payment-guard-pay-button"
+              type="primary"
+              size="large"
+              onClick={() => setIsPaymentSelectTab(true)}
+            >
+              구매하기
+            </Button>
+            <div className="study-payment-guard-benefit">
+              <div className="study-payment-guard-benefit-title">혜택</div>
+              <div className="study-payment-guard-benefit-list">
+                <DoneAll />
+                <span>직8딴 학습시스템 제공</span>
+              </div>
+              <div className="study-payment-guard-benefit-list">
+                <DoneAll />
+                <span>구매자 전용 톡방을 통한 저자의 즉각 질문답변 대응</span>
+              </div>
+              <div className="study-payment-guard-benefit-list">
+                <DoneAll />
+                <span>광고제거</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </StudyPaymentGuardBlock>
   );
