@@ -54,7 +54,7 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
           setFetchQuestionsLoading(true);
           await fetchQuestions(
             {
-              ids: [Number(value)],
+              ids: value > 0 ? [Number(value)] : [],
               bookmarked: true,
             },
             'no-cache'

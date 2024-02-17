@@ -64,11 +64,11 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
   const [selectedExamId, setSelectedExamId] = useState<number | null>(null);
   const handleFetchQuestions = async (states: QuestionState[]) => {
     try {
-      if (!selectedExamId) return;
+      if (typeof selectedExamId !== 'number') return;
       setFetchQuestionsLoading(true);
       await fetchQuestions(
         {
-          ids: [selectedExamId],
+          ids: selectedExamId > 0 ? [selectedExamId] : [],
           states,
         },
         'no-cache'

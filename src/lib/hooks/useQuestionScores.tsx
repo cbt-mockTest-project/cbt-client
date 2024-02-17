@@ -16,12 +16,18 @@ const useQuestionScores = () => {
 
   const examTitles = useMemo(() => {
     if (!readExamTitlesQuery?.readExamTitleAndIdByQuestionState.ok) return [];
-    return readExamTitlesQuery.readExamTitleAndIdByQuestionState.titleAndId.map(
-      (el) => ({
-        value: Number(el.id),
-        label: String(el.title),
-      })
-    );
+    return [
+      {
+        value: 0,
+        label: '전체',
+      },
+      ...readExamTitlesQuery.readExamTitleAndIdByQuestionState.titleAndId.map(
+        (el) => ({
+          value: Number(el.id),
+          label: String(el.title),
+        })
+      ),
+    ];
   }, [readExamTitlesQuery]);
 
   const resetQuestionScores = async () => {
