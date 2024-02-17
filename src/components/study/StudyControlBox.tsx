@@ -162,7 +162,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     const newState =
       question.myQuestionState !== state ? state : QuestionState.Core;
     saveQuestionState(question, newState);
-    if (!user.hasSolvedBefore) {
+    if (user && !user.hasSolvedBefore) {
       setIsSolvedInfoModalOpen(true);
       handleUpdateUserCache({ hasSolvedBefore: true });
     }
