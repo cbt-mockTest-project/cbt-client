@@ -87,7 +87,6 @@ const StudyPaymentSelect: React.FC<StudyPaymentSelectProps> = ({}) => {
       checkRoleIds: [roleId],
       discountCode,
     });
-    alert('결제가 완료되었습니다.');
   };
 
   const handleApplyDiscount = async () => {
