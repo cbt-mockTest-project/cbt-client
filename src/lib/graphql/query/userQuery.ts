@@ -52,6 +52,8 @@ export const ME_QUERY = gql`
     me {
       ok
       user {
+        hasBookmarkedBefore
+        hasSolvedBefore
         solveLimit
         profileImg
         usedFreeTrial

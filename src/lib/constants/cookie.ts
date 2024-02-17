@@ -5,3 +5,5 @@ export const postViewCookie: string = 'postViewCookie';
 export const MTV: string = 'MTV';
 
 export const COUPANG_AD_COOKIE: string = 'COUPANG_AD_COOKIE';
+
+export const FIRST_BOOKMARK: string = 'FIRST_BOOKMARK';

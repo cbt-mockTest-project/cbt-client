@@ -14,14 +14,24 @@ const useBookmarkedQuestions = () => {
     useReadExamTitleAndIdOfBookmarkedQuestion();
 
   const examTitles = useMemo(() => {
-    if (!readExamTitlesQuery?.readExamTitleAndIdOfBookmarkedQuestion.ok)
+    if (
+      !readExamTitlesQuery?.readExamTitleAndIdOfBookmarkedQuestion.ok ||
+      readExamTitlesQuery?.readExamTitleAndIdOfBookmarkedQuestion.titleAndId
+        .length === 0
+    )
       return [];
-    return readExamTitlesQuery.readExamTitleAndIdOfBookmarkedQuestion.titleAndId.map(
-      (el) => ({
-        value: Number(el.id),
-        label: String(el.title),
-      })
-    );
+    return [
+      {
+        value: 0,
+        label: '전체',
+      },
+      ...readExamTitlesQuery.readExamTitleAndIdOfBookmarkedQuestion.titleAndId.map(
+        (el) => ({
+          value: Number(el.id),
+          label: String(el.title),
+        })
+      ),
+    ];
   }, [readExamTitlesQuery]);
 
   const resetQuestionBookmarks = async () => {

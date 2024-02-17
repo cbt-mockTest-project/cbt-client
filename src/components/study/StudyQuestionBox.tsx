@@ -5,11 +5,11 @@ import styled from 'styled-components';
 import { Button, Image, Popover } from 'antd';
 import { MockExamQuestion } from 'types';
 import palette from '@styles/palette';
-import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
-import { AlertOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
+import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -91,9 +91,10 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   title,
   onChangeIsFeedbackModalOpen,
 }) => {
+  const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
-  const { user, handleCheckLogin } = useAuth();
+  const { user, handleCheckLogin, handleUpdateUserCache } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
     return user.id === question.user.id;
@@ -105,6 +106,15 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
     e.stopPropagation();
     if (!handleCheckLogin()) return;
     setIsFeedbackModalOpen(true);
+  };
+
+  const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    saveBookmark(question);
+    if (!user.hasBookmarkedBefore) {
+      setIsBookmarkInfoModalOpen(true);
+      handleUpdateUserCache({ hasBookmarkedBefore: true });
+    }
   };
 
   useEffect(() => {
@@ -146,10 +156,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             </div>
           </Popover>
           <Bookmark
-            onClick={(e) => {
-              e.stopPropagation();
-              saveBookmark(question);
-            }}
+            onClick={onClickBookmark}
             role="button"
             active={!!question.isBookmarked}
             className="study-question-box-bookmark"
@@ -185,6 +192,12 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           title={`${String(question.mockExam?.title)}\n${
             question.number
           }번 문제`}
+        />
+      )}
+      {isBookmarkInfoModalOpen && (
+        <StudyBookmarkInfoModal
+          open={isBookmarkInfoModalOpen}
+          onCancel={() => setIsBookmarkInfoModalOpen(false)}
         />
       )}
     </StudyQuestionBoxBlock>

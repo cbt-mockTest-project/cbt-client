@@ -22,6 +22,8 @@ import { useRouter } from 'next/router';
 import { ExamMode } from 'customTypes';
 import StudySolveLimitInfoModal from './StudySolveLimitInfoModal';
 import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
+import useAuth from '@lib/hooks/useAuth';
+import StudySolvedInfoModal from './StudySolvedInfoModal';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -136,11 +138,13 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
 }) => {
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
+  const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
   const hasFinishButton = useMemo(
     () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
     [mode]
   );
+  const [isSolvedInfoModalOpen, setIsSolvedInfoModalOpen] = useState(false);
   const [isSolveLimitModalOpen, setIsSolveLimitModal] = useState(false);
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
@@ -158,6 +162,10 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     const newState =
       question.myQuestionState !== state ? state : QuestionState.Core;
     saveQuestionState(question, newState);
+    if (!user.hasSolvedBefore) {
+      setIsSolvedInfoModalOpen(true);
+      handleUpdateUserCache({ hasSolvedBefore: true });
+    }
   };
   return (
     <StudyControlBoxBlock className={className}>
@@ -273,6 +281,12 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
         <StudySolveLimitInfoModal
           open={isSolveLimitModalOpen}
           onCancel={() => setIsSolveLimitModal(false)}
+        />
+      )}
+      {isSolvedInfoModalOpen && (
+        <StudySolvedInfoModal
+          open={isSolvedInfoModalOpen}
+          onCancel={() => setIsSolvedInfoModalOpen(false)}
         />
       )}
     </StudyControlBoxBlock>

@@ -773,6 +773,8 @@ export type EditPostOutput = {
 };
 
 export type EditProfileInput = {
+  hasBookmarkedBefore?: InputMaybe<Scalars['Boolean']>;
+  hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   profileImg?: InputMaybe<Scalars['String']>;
@@ -3498,6 +3500,8 @@ export type User = {
   examViewer?: Maybe<Array<ExamViewer>>;
   feedback: Array<Feedback>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
+  hasBookmarkedBefore?: Maybe<Scalars['Boolean']>;
+  hasSolvedBefore?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isAllowAdblock: Scalars['Boolean'];
   lastLogInIp: Scalars['String'];
@@ -3558,6 +3562,8 @@ export type UserInputType = {
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   feedback: Array<FeedbackInputType>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendationInputType>;
+  hasBookmarkedBefore?: InputMaybe<Scalars['Boolean']>;
+  hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   isAllowAdblock: Scalars['Boolean'];
   lastLogInIp?: InputMaybe<Scalars['String']>;
   mockExam: Array<MockExamInputType>;
