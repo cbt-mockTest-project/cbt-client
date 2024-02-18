@@ -774,6 +774,7 @@ export type EditPostOutput = {
 
 export type EditProfileInput = {
   hasBookmarkedBefore?: InputMaybe<Scalars['Boolean']>;
+  hasReachedPaymentReminder?: InputMaybe<Scalars['Boolean']>;
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
@@ -3501,6 +3502,7 @@ export type User = {
   feedback: Array<Feedback>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendation>;
   hasBookmarkedBefore?: Maybe<Scalars['Boolean']>;
+  hasReachedPaymentReminder?: Maybe<Scalars['Boolean']>;
   hasSolvedBefore?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isAllowAdblock: Scalars['Boolean'];
@@ -3563,6 +3565,7 @@ export type UserInputType = {
   feedback: Array<FeedbackInputType>;
   feedbackRecommendation: Array<MockExamQuestionFeedbackRecommendationInputType>;
   hasBookmarkedBefore?: InputMaybe<Scalars['Boolean']>;
+  hasReachedPaymentReminder?: InputMaybe<Scalars['Boolean']>;
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   isAllowAdblock: Scalars['Boolean'];
   lastLogInIp?: InputMaybe<Scalars['String']>;

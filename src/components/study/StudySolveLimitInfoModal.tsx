@@ -1,10 +1,12 @@
 import palette from '@styles/palette';
 import { Button, Modal, ModalProps } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 import { DoneAll } from '@mui/icons-material';
 import usePayment from '@components/pricing/usePayment';
+import useAuth from '@lib/hooks/useAuth';
+import { useEditProfileMutation } from '@lib/graphql/hook/useUser';
 
 const StudySolveLimitInfoModalBlock = styled(Modal)`
   .study-solve-limit-info-modal {
@@ -66,6 +68,8 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
 ) => {
   const { ...modalProps } = props;
   const [isPricingTabOpen, setIsPricingTabOpen] = useState(false);
+  const { user } = useAuth();
+  const [editProfileMutation] = useEditProfileMutation();
   const { handlePayment } = usePayment();
   const handleBasicPlanPayment = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -78,6 +82,16 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
     });
     modalProps.onCancel(e);
   };
+  useEffect(() => {
+    if (!user) return;
+    editProfileMutation({
+      variables: {
+        input: {
+          hasReachedPaymentReminder: true,
+        },
+      },
+    });
+  }, [user]);
   return (
     <StudySolveLimitInfoModalBlock {...modalProps} footer={null}>
       <div className="study-solve-limit-info-modal">
