@@ -137,6 +137,7 @@ const useStorage = (type: StorageType) => {
         const category = {
           ...res.data?.createMockExamCategory.category,
           mockExam: [],
+          categoryEvaluations: [],
           user: meQuery.me.user,
         } as MockExamCategory;
         setCategories([category, ...(categories || [])]);
