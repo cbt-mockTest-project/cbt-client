@@ -144,6 +144,9 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           }}
           touchRatio={isMobile ? 1 : 0}
           onSlideChange={(swiper) => {
+            router.replace({
+              query: { ...router.query, activeIndex: swiper.activeIndex + 1 },
+            });
             // const coupangAdCookie = getCookie(COUPANG_AD_COOKIE);
             // if (
             //   !coupangAdCookie &&

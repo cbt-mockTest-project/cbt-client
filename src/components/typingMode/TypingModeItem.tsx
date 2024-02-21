@@ -4,7 +4,6 @@ import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
-import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import {
   AddFeedbackInput,
   DeleteFeedbackInput,
@@ -117,6 +116,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   swiper,
   clearTextAreaTrigger,
 }) => {
+  const router = useRouter();
   const { questions } = useQuestions();
   const localStorage = new LocalStorage();
   const [answer, setAnswer] = useState('');
@@ -147,6 +147,23 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
     }
   }, [clearTextAreaTrigger]);
 
+  useEffect(() => {
+    if (Number(router.query.activeIndex) === number) {
+      const textAreaEl = document.querySelector(
+        `.typing-mode-textarea.n${number}`
+      );
+      if (textAreaEl) {
+        (textAreaEl as HTMLTextAreaElement).focus();
+      }
+    }
+    if (!router.query.activeIndex) {
+      const textAreaEl = document.querySelector(`.typing-mode-textarea.n1`);
+      if (textAreaEl) {
+        (textAreaEl as HTMLTextAreaElement).focus();
+      }
+    }
+  }, [router.query.activeIndex]);
+
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
@@ -158,7 +175,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       </BasicCard>
       <Input.TextArea
         value={answer}
-        className="typing-mode-textarea"
+        className={`typing-mode-textarea n${number}`}
         placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         autoSize={{ minRows: 3, maxRows: 8 }}
         onChange={(e) => onChangeAnswer(e.target.value)}
