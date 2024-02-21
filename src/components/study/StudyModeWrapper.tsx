@@ -98,7 +98,9 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   );
   const { findQuestionIndexInfo, updateQuestionIndexInfo } =
     useCurrentQuestionIndex();
-
+  const activeIndex = router.query.activeIndex
+    ? Number(router.query.activeIndex) - 1
+    : 0;
   useEffect(() => {
     if (examIds.length > 1 || order) return;
     const currentQuestionInfo = findQuestionIndexInfo();
@@ -132,11 +134,34 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
     });
   }, [questions, swiper, mode]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' && e.shiftKey) {
+        handleSlideNext(questions.length, swiper);
+      }
+      if (e.key === 'ArrowLeft' && e.ctrlKey) {
+        handleSlidePrev(swiper);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+    if (router.query.activeIndex) {
+      updateQuestionIndexInfo(Number(router.query.activeIndex) - 1);
+    } else {
+      updateQuestionIndexInfo(0);
+    }
+  }, [router.query.activeIndex]);
+
   return (
     <StudyModeWrapperBlock>
-      {router.query.tab !== 'end' && (
+      {isMobile && router.query.tab !== 'end' && (
         <Swiper
-          className="swiper-container"
           spaceBetween={20}
           modules={[Navigation]}
           onSwiper={(swiper) => {
@@ -147,15 +172,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             router.replace({
               query: { ...router.query, activeIndex: swiper.activeIndex + 1 },
             });
-            // const coupangAdCookie = getCookie(COUPANG_AD_COOKIE);
-            // if (
-            //   !coupangAdCookie &&
-            //   !isUndefined(meQuery) &&
-            //   !checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery }) &&
-            //   Math.random() < 0.5
-            // ) {
-            //   setIsCoupangAdModalOpen(true);
-            // }
             updateQuestionIndexInfo(swiper.activeIndex);
           }}
         >
@@ -176,26 +192,20 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                   number={index + 1}
                   swiper={swiper}
                 />
-                {/* {mode === 'card' && (
-                  <CardModeItem
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )}
-                {mode === 'typing' && (
-                  <TypingModeItem
-                    clearTextAreaTrigger={clearPrevAnswers}
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )} */}
               </SwiperSlide>
             ))}
         </Swiper>
+      )}
+      {!isMobile && questions[activeIndex] && (
+        <div className="study-mode-body">
+          <StudyModeItemWrapper
+            clearTextAreaTrigger={clearPrevAnswers}
+            key={questions[activeIndex].id}
+            question={questions[activeIndex]}
+            number={activeIndex + 1}
+            swiper={swiper}
+          />
+        </div>
       )}
       {router.query.tab === 'end' && <StudyEnd />}
       {router.query.tab !== 'end' && (
@@ -214,14 +224,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           </button>
         </>
       )}
-      {/* {isCoupangAdModalOpen && (
-        <CoupangDisplayAdModal
-          open={isCoupangAdModalOpen}
-          onCancel={() => {
-            setIsCoupangAdModalOpen(false);
-          }}
-        />
-      )} */}
     </StudyModeWrapperBlock>
   );
 };

@@ -30,6 +30,14 @@ const useCurrentQuestionIndex = () => {
     return false;
   };
 
+  const checkIsFirstQuestion = () => {
+    const currentQuestionInfo = findQuestionIndexInfo();
+    if (currentQuestionInfo?.questionIndex === 0) {
+      return true;
+    }
+    return false;
+  };
+
   const updateQuestionIndexInfo = (questionIndex: number) => {
     const currentQuestionInfo = findQuestionIndexInfo();
     const questionIndexInfo = {
@@ -61,6 +69,7 @@ const useCurrentQuestionIndex = () => {
     findQuestionIndexInfo,
     checkIsLastQuestion,
     updateQuestionIndexInfo,
+    checkIsFirstQuestion,
   };
 };
 
