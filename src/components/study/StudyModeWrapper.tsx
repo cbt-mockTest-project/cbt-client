@@ -23,6 +23,7 @@ import CoupangDisplayAdModal from '@components/common/ad/CoupangDisplayAdModal';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
 import { checkRole } from '@lib/utils/utils';
+import { isMobile } from 'react-device-detect';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -141,6 +142,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           onSwiper={(swiper) => {
             setSwiper(swiper);
           }}
+          touchRatio={isMobile ? 1 : 0}
           onSlideChange={(swiper) => {
             // const coupangAdCookie = getCookie(COUPANG_AD_COOKIE);
             // if (
