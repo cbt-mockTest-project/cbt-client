@@ -53,7 +53,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     useExamSettingHistory();
   const router = useRouter();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
-  const [isRandom, setIsRandom] = useState<boolean>(false);
+  const [isRandom, setIsRandom] = useState<boolean>(true);
   const [questionStates, setQuestionStates] = useState<QuestionState[]>([]);
   const [limit, setLimit] = useState<number | null>(14);
   const handleQuestionStateChange = (score: QuestionState) => {
