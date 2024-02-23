@@ -83,12 +83,11 @@ interface StudyModeWrapperProps {}
 
 const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const localStorage = new LocalStorage();
-  const { data: meQuery } = useMeQuery();
-  // const [isCoupangAdModalOpen, setIsCoupangAdModalOpen] = useState(false);
   const router = useRouter();
   const { questions } = useQuestions();
   const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
+
   const [swiper, setSwiper] = useState<any>(null);
   const mode = router.query.mode as string;
   const order = router.query.order as string;
@@ -132,6 +131,53 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
     });
   }, [questions, swiper, mode]);
 
+  useEffect(() => {
+    if (!swiper) return;
+    const activeElement = document.activeElement as HTMLElement;
+    activeElement.blur();
+    const cardModeKeydown = (e: KeyboardEvent) => {
+      const activeSlide = document.querySelector('.swiper-slide-active');
+      if (e.key === 'ArrowRight' && e.shiftKey) {
+        swiper.slideNext({ animation: false });
+      }
+      if (e.key === 'ArrowLeft' && e.shiftKey) {
+        swiper.slidePrev({ animation: false });
+      }
+      if (e.shiftKey && e.code === 'KeyA') {
+        const highButton = activeSlide.querySelector(
+          '.study-control-button.high'
+        ) as HTMLButtonElement;
+        if (highButton) highButton.click();
+      }
+      if (e.shiftKey && e.code === 'KeyS') {
+        const middleButton = activeSlide.querySelector(
+          '.study-control-button.middle'
+        ) as HTMLButtonElement;
+        if (middleButton) middleButton.click();
+      }
+      if (e.shiftKey && e.code === 'KeyD') {
+        const lowButton = activeSlide.querySelector(
+          '.study-control-button.low'
+        ) as HTMLButtonElement;
+        if (lowButton) lowButton.click();
+      }
+      if (e.key === ' ' && e.shiftKey) {
+        const cardModeToggleAnswerButton = activeSlide.querySelector(
+          '.card-mode-control-show-answer-button'
+        ) as HTMLButtonElement;
+        if (cardModeToggleAnswerButton) cardModeToggleAnswerButton.click();
+        const typingModeToggleAnswerButton = activeSlide.querySelector(
+          '.typing-mode-answer-visible-toggle-button'
+        ) as HTMLButtonElement;
+        if (typingModeToggleAnswerButton) typingModeToggleAnswerButton.click();
+      }
+    };
+    window.addEventListener('keydown', cardModeKeydown);
+    return () => {
+      window.removeEventListener('keydown', cardModeKeydown);
+    };
+  }, [mode, swiper]);
+
   return (
     <StudyModeWrapperBlock>
       {router.query.tab !== 'end' && (
@@ -147,15 +193,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             router.replace({
               query: { ...router.query, activeIndex: swiper.activeIndex + 1 },
             });
-            // const coupangAdCookie = getCookie(COUPANG_AD_COOKIE);
-            // if (
-            //   !coupangAdCookie &&
-            //   !isUndefined(meQuery) &&
-            //   !checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery }) &&
-            //   Math.random() < 0.5
-            // ) {
-            //   setIsCoupangAdModalOpen(true);
-            // }
             updateQuestionIndexInfo(swiper.activeIndex);
           }}
         >
@@ -176,23 +213,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                   number={index + 1}
                   swiper={swiper}
                 />
-                {/* {mode === 'card' && (
-                  <CardModeItem
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )}
-                {mode === 'typing' && (
-                  <TypingModeItem
-                    clearTextAreaTrigger={clearPrevAnswers}
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )} */}
               </SwiperSlide>
             ))}
         </Swiper>
@@ -214,14 +234,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           </button>
         </>
       )}
-      {/* {isCoupangAdModalOpen && (
-        <CoupangDisplayAdModal
-          open={isCoupangAdModalOpen}
-          onCancel={() => {
-            setIsCoupangAdModalOpen(false);
-          }}
-        />
-      )} */}
     </StudyModeWrapperBlock>
   );
 };

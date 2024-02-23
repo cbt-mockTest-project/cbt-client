@@ -15,7 +15,7 @@ import useQuestions from '@lib/hooks/useQuestions';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Input } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -192,25 +192,31 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         swiper={swiper}
       />
       <div className="typing-mode-answer-button-wrapper">
-        <Button
-          className="typing-mode-answer-visible-toggle-button"
-          onClick={() => setIsAnswerVisible((prev) => !prev)}
-        >
-          {isAnswerVisible ? '정답 가리기' : '정답 보기'}
-        </Button>
+        <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
+          <Button
+            className="typing-mode-answer-visible-toggle-button"
+            onClick={() => setIsAnswerVisible((prev) => !prev)}
+          >
+            {isAnswerVisible ? '정답 가리기' : '정답 보기'}
+          </Button>
+        </Tooltip>
         <div className="typing-mode-swiper-button-wrapper">
-          <button
-            className="typing-mode-control-button"
-            onClick={() => handleSlidePrev(swiper)}
-          >
-            <LeftOutlined />
-          </button>
-          <button
-            className="typing-mode-control-button"
-            onClick={() => handleSlideNext(questions.length, swiper)}
-          >
-            <RightOutlined />
-          </button>
+          <Tooltip title={isMobile ? '' : 'shift + <-'}>
+            <button
+              className="typing-mode-control-button"
+              onClick={() => handleSlidePrev(swiper)}
+            >
+              <LeftOutlined />
+            </button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + ->'}>
+            <button
+              className="typing-mode-control-button"
+              onClick={() => handleSlideNext(questions.length, swiper)}
+            >
+              <RightOutlined />
+            </button>
+          </Tooltip>
         </div>
       </div>
       <AnimatePresence>

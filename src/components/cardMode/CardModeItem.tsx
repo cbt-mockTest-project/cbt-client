@@ -7,13 +7,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 import CardModeControlBox from './CardModeControlBox';
-import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import {
   AddFeedbackInput,
   DeleteFeedbackInput,
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
+import { useRouter } from 'next/router';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
@@ -102,7 +102,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   number,
   swiper,
 }) => {
+  const router = useRouter();
+  const activeIndex = Number(router.query.activeIndex);
   const [isFlipped, setIsFlipped] = useState(false);
+
   return (
     <CardModeItemBlock>
       <div className={`card ${isFlipped ? 'is-flipped' : ''}`}>

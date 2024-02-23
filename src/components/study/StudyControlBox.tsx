@@ -7,11 +7,10 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { Button, Divider, Modal } from 'antd';
+import { Button, Divider, Modal, Tooltip } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useAuthModal from '@lib/hooks/useAuthModal';
 import StudyScoreModal from './StudyScoreModal';
 import { responsive } from '@lib/utils/responsive';
 import {
@@ -24,6 +23,7 @@ import StudySolveLimitInfoModal from './StudySolveLimitInfoModal';
 import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
 import useAuth from '@lib/hooks/useAuth';
 import StudySolvedInfoModal from './StudySolvedInfoModal';
+import { isMobile } from 'react-device-detect';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -171,30 +171,38 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
         <div className="study-control-box-score-button-wrapper">
-          <button
-            className={`study-control-button ${
-              question.myQuestionState === QuestionState.High ? 'active' : ''
-            }`}
-            onClick={() => handleSaveQuestionState(QuestionState.High)}
-          >
-            <PanoramaFishEyeIcon />
-          </button>
-          <button
-            className={`study-control-button ${
-              question.myQuestionState === QuestionState.Middle ? 'active' : ''
-            }`}
-            onClick={() => handleSaveQuestionState(QuestionState.Middle)}
-          >
-            <ChangeHistoryIcon />
-          </button>
-          <button
-            className={`study-control-button ${
-              question.myQuestionState === QuestionState.Row ? 'active' : ''
-            }`}
-            onClick={() => handleSaveQuestionState(QuestionState.Row)}
-          >
-            <ClearIcon />
-          </button>
+          <Tooltip title={isMobile ? '' : 'shift + a'}>
+            <button
+              className={`study-control-button ${
+                question.myQuestionState === QuestionState.High ? 'active' : ''
+              } high`}
+              onClick={() => handleSaveQuestionState(QuestionState.High)}
+            >
+              <PanoramaFishEyeIcon />
+            </button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + s'}>
+            <button
+              className={`study-control-button ${
+                question.myQuestionState === QuestionState.Middle
+                  ? 'active'
+                  : ''
+              } middle`}
+              onClick={() => handleSaveQuestionState(QuestionState.Middle)}
+            >
+              <ChangeHistoryIcon />
+            </button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + d'}>
+            <button
+              className={`study-control-button ${
+                question.myQuestionState === QuestionState.Row ? 'active' : ''
+              } low`}
+              onClick={() => handleSaveQuestionState(QuestionState.Row)}
+            >
+              <ClearIcon />
+            </button>
+          </Tooltip>
         </div>
         <Divider className="study-control-box-divider" type="vertical" />
         <div className="study-control-box-progress-button-wrapper">
