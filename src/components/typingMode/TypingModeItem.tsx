@@ -19,6 +19,7 @@ import { Button, Input } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 const TypingModeItemBlock = styled.div`
@@ -148,6 +149,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   }, [clearTextAreaTrigger]);
 
   useEffect(() => {
+    if (isMobile) return;
     if (Number(router.query.activeIndex) === number) {
       const textAreaEl = document.querySelector(
         `.typing-mode-textarea.n${number}`
