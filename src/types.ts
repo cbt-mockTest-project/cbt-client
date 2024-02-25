@@ -779,6 +779,7 @@ export type EditProfileInput = {
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
   profileImg?: InputMaybe<Scalars['String']>;
+  randomExamLimit?: InputMaybe<Scalars['Float']>;
 };
 
 export type EditProfileOutput = {
@@ -3527,6 +3528,7 @@ export type User = {
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
+  randomExamLimit?: Maybe<Scalars['Float']>;
   recentlyStudiedCategory: Scalars['String'];
   role: UserRole;
   seller?: Maybe<Seller>;
@@ -3589,6 +3591,7 @@ export type UserInputType = {
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
+  randomExamLimit?: InputMaybe<Scalars['Float']>;
   recentlyStudiedCategory?: InputMaybe<Scalars['String']>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;

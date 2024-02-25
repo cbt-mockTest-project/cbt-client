@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', hasBookmarkedBefore?: boolean | null, hasSolvedBefore?: boolean | null, solveLimit?: number | null, profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, userRoles: Array<{ __typename?: 'UserAndRole', created_at: any, role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', hasBookmarkedBefore?: boolean | null, randomExamLimit?: number | null, hasSolvedBefore?: boolean | null, solveLimit?: number | null, profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, userRoles: Array<{ __typename?: 'UserAndRole', created_at: any, role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -225,6 +225,7 @@ export const MeDocument = gql`
     ok
     user {
       hasBookmarkedBefore
+      randomExamLimit
       hasSolvedBefore
       solveLimit
       profileImg

@@ -9,6 +9,8 @@ import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
+import { useEditProfileMutation } from '@lib/graphql/hook/useUser';
+import useAuth from '@lib/hooks/useAuth';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -48,6 +50,8 @@ interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
+  const { user } = useAuth();
+  const [editProfileMutation] = useEditProfileMutation();
   const { categoryId, examIds, ...modalProps } = props;
   const { getExamSettingHistory, setExamSettingHistory } =
     useExamSettingHistory();
@@ -77,6 +81,16 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   };
 
   const handleStart = () => {
+    if (user) {
+      editProfileMutation({
+        variables: {
+          input: {
+            randomExamLimit: user.randomExamLimit - 1,
+          },
+        },
+      });
+    }
+
     const currentExamSettings: ExamSettingType = {
       categoryId,
       mode,
@@ -189,6 +203,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
         <Button
           className="exam-start-button"
           type="primary"
+          size="large"
           onClick={handleStart}
         >
           학습하기
