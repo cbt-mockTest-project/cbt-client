@@ -85,7 +85,9 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const localStorage = new LocalStorage();
   const router = useRouter();
   const { questions } = useQuestions();
-  const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
+  const [hasDefaultAnswers, setHasDefaultAnswers] = useState<boolean | null>(
+    null
+  );
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
 
   const [swiper, setSwiper] = useState<any>(null);
@@ -123,10 +125,10 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       cancelText: '아니오',
       onOk() {
         localStorage.remove(IN_PROGRESS_ANSWERS);
-        setClearPrevAnswers(true);
-        setTimeout(() => {
-          setClearPrevAnswers(false);
-        }, 100);
+        setHasDefaultAnswers(false);
+      },
+      onCancel() {
+        setHasDefaultAnswers(true);
       },
     });
   }, [questions, swiper, mode]);
@@ -210,7 +212,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                 }`}
               >
                 <StudyModeItemWrapper
-                  clearTextAreaTrigger={clearPrevAnswers}
+                  hasDefaultAnswers={hasDefaultAnswers}
                   key={question.id}
                   question={question}
                   number={index + 1}

@@ -10,7 +10,7 @@ const StudyModeItemWrapperBlock = styled.div``;
 
 interface StudyModeItemWrapperProps {
   question: MockExamQuestion;
-  clearTextAreaTrigger: boolean;
+  hasDefaultAnswers: boolean | null;
   number: number;
   swiper: any;
 }
@@ -19,6 +19,7 @@ const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
   question: defaultQuestion,
   number,
   swiper,
+  hasDefaultAnswers,
 }) => {
   const router = useRouter();
   const mode = router.query.mode as 'card' | 'typing';
@@ -57,6 +58,7 @@ const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
       {mode === 'typing' && (
         <TypingModeItem
           question={question}
+          hasDefaultAnswers={hasDefaultAnswers}
           handleAddFeedback={handleAddFeedback}
           handleDeleteFeedback={handleDeleteFeedback}
           handleEditFeedback={handleEditFeedback}
