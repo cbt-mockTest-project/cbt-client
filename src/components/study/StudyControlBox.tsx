@@ -112,6 +112,7 @@ const StudyControlBoxBlock = styled.div`
 
 interface StudyControlBoxProps {
   className?: string;
+  hasHelpButtonText?: boolean;
   question: MockExamQuestion;
   hasScoreTable?: boolean;
   editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
@@ -128,6 +129,7 @@ interface StudyControlBoxProps {
 const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   className = '',
   question,
+  hasHelpButtonText = true,
   saveQuestionState,
   answerHiddenOption,
   editFeedback,
@@ -171,7 +173,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
         <div className="study-control-box-score-button-wrapper">
-          <Tooltip title={isMobile ? '' : 'shift + a'}>
+          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + a'}>
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.High ? 'active' : ''
@@ -181,7 +183,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               <PanoramaFishEyeIcon />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile ? '' : 'shift + s'}>
+          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + s'}>
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.Middle
@@ -193,7 +195,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               <ChangeHistoryIcon />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile ? '' : 'shift + d'}>
+          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + d'}>
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.Row ? 'active' : ''

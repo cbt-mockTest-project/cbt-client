@@ -83,6 +83,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
         </div>
       </BasicCard>
       <StudyControlBox
+        hasHelpButtonText={false}
         addFeedback={handleAddFeedback}
         editFeedback={handleEditFeedback}
         saveQuestionState={handleSaveQuestionState}
