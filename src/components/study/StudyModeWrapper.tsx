@@ -4,7 +4,7 @@ import 'swiper/css/pagination';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 import useQuestions from '@lib/hooks/useQuestions';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -225,18 +225,22 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       {router.query.tab === 'end' && <StudyEnd />}
       {router.query.tab !== 'end' && (
         <>
-          <button
-            className="study-mode-navigation-prev"
-            onClick={() => handleSlidePrev(swiper)}
-          >
-            <LeftOutlined />
-          </button>
-          <button
-            className="study-mode-navigation-next"
-            onClick={() => handleSlideNext(questions.length, swiper)}
-          >
-            <RightOutlined />
-          </button>
+          <Tooltip title="shift + <-">
+            <button
+              className="study-mode-navigation-prev"
+              onClick={() => handleSlidePrev(swiper)}
+            >
+              <LeftOutlined />
+            </button>
+          </Tooltip>
+          <Tooltip title="shift + ->">
+            <button
+              className="study-mode-navigation-next"
+              onClick={() => handleSlideNext(questions.length, swiper)}
+            >
+              <RightOutlined />
+            </button>
+          </Tooltip>
         </>
       )}
     </StudyModeWrapperBlock>

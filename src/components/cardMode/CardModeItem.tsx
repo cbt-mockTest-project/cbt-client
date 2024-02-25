@@ -151,6 +151,10 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
         editFeedback={handleEditFeedback}
         addFeedback={handleAddFeedback}
         saveQuestionState={handleSaveQuestionState}
+        answerToggleOption={{
+          isAnswerHidden: !isFlipped,
+          setIsAnswerHidden: setIsFlipped,
+        }}
         swiper={swiper}
       />
       <CardModeControlBox

@@ -7,7 +7,7 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { Button, Divider, Modal, Tooltip } from 'antd';
+import { Button, Modal, Tooltip } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -99,6 +99,9 @@ const StudyControlBoxBlock = styled.div`
     margin-left: auto;
   }
   @media (max-width: ${responsive.large}) {
+    .study-control-answer-toggle-button {
+      display: none;
+    }
     .study-swiper-button-wrapper {
       display: none;
     }
@@ -118,6 +121,10 @@ interface StudyControlBoxProps {
   editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
   addFeedback: (addFeedbackInput: AddFeedbackInput) => Promise<void>;
   saveQuestionState: (question: MockExamQuestion, state: QuestionState) => void;
+  answerToggleOption?: {
+    isAnswerHidden: boolean;
+    setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   answerHiddenOption?: {
     isAnswerHidden: boolean;
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
@@ -132,6 +139,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   hasHelpButtonText = true,
   saveQuestionState,
   answerHiddenOption,
+  answerToggleOption,
   editFeedback,
   addFeedback,
   swiper,
@@ -206,7 +214,18 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
             </button>
           </Tooltip>
         </div>
-        <Divider className="study-control-box-divider" type="vertical" />
+        {answerToggleOption && (
+          <Tooltip title="shift + spacebar">
+            <Button
+              className="study-control-answer-toggle-button"
+              onClick={() =>
+                answerToggleOption.setIsAnswerHidden((prev) => !prev)
+              }
+            >
+              {answerToggleOption.isAnswerHidden ? '정답보기' : '문제보기'}
+            </Button>
+          </Tooltip>
+        )}
         <div className="study-control-box-progress-button-wrapper">
           {answerHiddenOption && (
             <button
