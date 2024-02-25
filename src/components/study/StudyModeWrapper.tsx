@@ -144,18 +144,21 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         swiper.slidePrev({ animation: false });
       }
       if (e.shiftKey && e.code === 'KeyA') {
+        e.preventDefault();
         const highButton = activeSlide.querySelector(
           '.study-control-button.high'
         ) as HTMLButtonElement;
         if (highButton) highButton.click();
       }
       if (e.shiftKey && e.code === 'KeyS') {
+        e.preventDefault();
         const middleButton = activeSlide.querySelector(
           '.study-control-button.middle'
         ) as HTMLButtonElement;
         if (middleButton) middleButton.click();
       }
       if (e.shiftKey && e.code === 'KeyD') {
+        e.preventDefault();
         const lowButton = activeSlide.querySelector(
           '.study-control-button.low'
         ) as HTMLButtonElement;
