@@ -15,10 +15,11 @@ import useQuestions from '@lib/hooks/useQuestions';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Input } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 const TypingModeItemBlock = styled.div`
@@ -78,6 +79,7 @@ const TypingModeItemBlock = styled.div`
 
 interface TypingModeItemProps {
   question: MockExamQuestion;
+  hasDefaultAnswers: boolean | null;
   handleAddFeedback: (
     addFeedbackInput: Omit<AddFeedbackInput, 'setQuestion'>
   ) => Promise<void>;
@@ -106,6 +108,7 @@ interface TypingModeItemProps {
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({
   question,
+  hasDefaultAnswers,
   handleAddFeedback,
   handleDeleteFeedback,
   handleEditFeedback,
@@ -114,12 +117,11 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   handleSaveQuestionState,
   number,
   swiper,
-  clearTextAreaTrigger,
 }) => {
   const router = useRouter();
   const { questions } = useQuestions();
   const localStorage = new LocalStorage();
-  const [answer, setAnswer] = useState('');
+  const [defaultAnswer, setDefaultAnswer] = useState<string | null>(null);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   const onChangeAnswer = (value: string) => {
@@ -132,22 +134,14 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       delete newAnswer[question.id];
     }
     localStorage.set(IN_PROGRESS_ANSWERS, newAnswer);
-    setAnswer(value);
   };
 
   useEffect(() => {
-    if (!answer) {
-      setAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
-    }
+    setDefaultAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
   }, []);
 
   useEffect(() => {
-    if (clearTextAreaTrigger) {
-      setAnswer('');
-    }
-  }, [clearTextAreaTrigger]);
-
-  useEffect(() => {
+    if (isMobile) return;
     if (Number(router.query.activeIndex) === number) {
       const textAreaEl = document.querySelector(
         `.typing-mode-textarea.n${number}`
@@ -163,7 +157,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       }
     }
   }, [router.query.activeIndex]);
-
+  console.log(String(hasDefaultAnswers), defaultAnswer);
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
@@ -174,7 +168,8 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         />
       </BasicCard>
       <Input.TextArea
-        value={answer}
+        key={String(hasDefaultAnswers)}
+        defaultValue={hasDefaultAnswers ? defaultAnswer : ''}
         className={`typing-mode-textarea n${number}`}
         placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         autoSize={{ minRows: 3, maxRows: 8 }}
@@ -190,25 +185,31 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         swiper={swiper}
       />
       <div className="typing-mode-answer-button-wrapper">
-        <Button
-          className="typing-mode-answer-visible-toggle-button"
-          onClick={() => setIsAnswerVisible((prev) => !prev)}
-        >
-          {isAnswerVisible ? '정답 가리기' : '정답 보기'}
-        </Button>
+        <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
+          <Button
+            className="typing-mode-answer-visible-toggle-button"
+            onClick={() => setIsAnswerVisible((prev) => !prev)}
+          >
+            {isAnswerVisible ? '정답 가리기' : '정답 보기'}
+          </Button>
+        </Tooltip>
         <div className="typing-mode-swiper-button-wrapper">
-          <button
-            className="typing-mode-control-button"
-            onClick={() => handleSlidePrev(swiper)}
-          >
-            <LeftOutlined />
-          </button>
-          <button
-            className="typing-mode-control-button"
-            onClick={() => handleSlideNext(questions.length, swiper)}
-          >
-            <RightOutlined />
-          </button>
+          <Tooltip title={isMobile ? '' : 'shift + <-'}>
+            <button
+              className="typing-mode-control-button"
+              onClick={() => handleSlidePrev(swiper)}
+            >
+              <LeftOutlined />
+            </button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + ->'}>
+            <button
+              className="typing-mode-control-button"
+              onClick={() => handleSlideNext(questions.length, swiper)}
+            >
+              <RightOutlined />
+            </button>
+          </Tooltip>
         </div>
       </div>
       <AnimatePresence>

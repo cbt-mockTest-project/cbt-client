@@ -3,10 +3,12 @@ import BasicCard from '@components/common/card/BasicCard';
 import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
+import { Tooltip } from '@mui/material';
 import palette from '@styles/palette';
 import { Button, Modal } from 'antd';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 
 const CardModeControlBoxBlock = styled.div`
@@ -49,31 +51,35 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
   isFlipped,
 }) => {
   const { questions } = useQuestions();
-  const router = useRouter();
-  const qIndex =
-    typeof router.query.qIndex === 'string' ? Number(router.query.qIndex) : 0;
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   return (
     <CardModeControlBoxBlock>
       <BasicCard type="primary">
         <div className="card-mode-control-button-wrapper">
-          <button
-            className="card-mode-control-button"
-            onClick={() => handleSlidePrev(swiper)}
-          >
-            <LeftOutlined />
-          </button>
-          <Button>
-            <span onClick={flipCard}>
-              {isFlipped ? '문제보기' : '정답보기'}
-            </span>
-          </Button>
-          <button
-            className="card-mode-control-button"
-            onClick={() => handleSlideNext(questions.length, swiper)}
-          >
-            <RightOutlined />
-          </button>
+          <Tooltip title={isMobile ? '' : 'shift + <-'}>
+            <button
+              className="card-mode-control-button"
+              onClick={() => handleSlidePrev(swiper)}
+            >
+              <LeftOutlined />
+            </button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
+            <Button
+              className="card-mode-control-show-answer-button"
+              onClick={() => flipCard()}
+            >
+              <span>{isFlipped ? '문제보기' : '정답보기'}</span>
+            </Button>
+          </Tooltip>
+          <Tooltip title={isMobile ? '' : 'shift + ->'}>
+            <button
+              className="card-mode-control-button"
+              onClick={() => handleSlideNext(questions.length, swiper)}
+            >
+              <RightOutlined />
+            </button>
+          </Tooltip>
         </div>
       </BasicCard>
     </CardModeControlBoxBlock>

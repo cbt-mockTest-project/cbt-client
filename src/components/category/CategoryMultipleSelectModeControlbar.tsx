@@ -1,4 +1,4 @@
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
@@ -61,19 +61,23 @@ const CategoryMultipleSelectModeControlbar: React.FC<
           checked={categoryAllChecked}
           onClick={handleAllExamsSelect}
         />
-        <span>전체 선택</span>
+        <span style={{ cursor: 'pointer' }} onClick={handleAllExamsSelect}>
+          전체 선택
+        </span>
       </div>
-      <Button
-        className="category-study-button"
-        type="primary"
-        disabled={isButtonDisabled}
-        onClick={() => {
-          if (!handleCheckLogin()) return;
-          setExamMultipleSelectModalOpen(true);
-        }}
-      >
-        다중 학습하기
-      </Button>
+      <Tooltip title={isButtonDisabled ? '과목을 선택해주세요.' : ''}>
+        <Button
+          className="category-study-button"
+          type="primary"
+          disabled={isButtonDisabled}
+          onClick={() => {
+            if (!handleCheckLogin()) return;
+            setExamMultipleSelectModalOpen(true);
+          }}
+        >
+          랜덤 모의고사
+        </Button>
+      </Tooltip>
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
           categoryId={categoryId}

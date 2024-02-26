@@ -32,10 +32,6 @@ const CategoryControlbar: React.FC<CategoryControlbarProps> = ({
 }) => {
   return (
     <CategoryControlbarBlock>
-      {/* <div className="category-multiple-select-toggle-switch-wrapper">
-        <Switch checked={checked} onChange={onChangeSwitch} />
-        <div>다중 선택 모드</div>
-      </div> */}
       <div className="category-controlbar-filter-wrapper">
         {additionalFilterComponent}
         <TextInput

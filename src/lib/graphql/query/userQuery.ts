@@ -53,6 +53,7 @@ export const ME_QUERY = gql`
       ok
       user {
         hasBookmarkedBefore
+        randomExamLimit
         hasSolvedBefore
         solveLimit
         profileImg
@@ -64,7 +65,6 @@ export const ME_QUERY = gql`
         recentlyStudiedCategory
         userRoles {
           created_at
-
           role {
             name
             id

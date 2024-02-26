@@ -8,10 +8,8 @@ import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
 import FullPageLoader from '@components/common/loader/FullPageLoader';
 import StudyPaymentGuard from './StudyPaymentGuard';
 import StudyHeaderV2 from './StudyHeaderV2';
-import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import StudyModeWrapper from './StudyModeWrapper';
-import CoupangDisplayAd from '@components/common/ad/CoupangDisplayAdModal';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
