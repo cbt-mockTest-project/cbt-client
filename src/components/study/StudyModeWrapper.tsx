@@ -24,6 +24,8 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
 import { checkRole } from '@lib/utils/utils';
 import { isMobile } from 'react-device-detect';
+import GoogleAdModal from '@components/common/ad/GoogleAdModal';
+import { UserRole } from 'types';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -84,7 +86,7 @@ interface StudyModeWrapperProps {}
 const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const localStorage = new LocalStorage();
   const { data: meQuery } = useMeQuery();
-  // const [isCoupangAdModalOpen, setIsCoupangAdModalOpen] = useState(false);
+  const [isGoogleAdModalOpen, setIsGoogleAdModalOpen] = useState(false);
   const router = useRouter();
   const { questions } = useQuestions();
   const [clearPrevAnswers, setClearPrevAnswers] = useState(false);
@@ -157,6 +159,10 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             //   setIsCoupangAdModalOpen(true);
             // }
             updateQuestionIndexInfo(swiper.activeIndex);
+            if (isUndefined(meQuery)) return;
+            if (meQuery.me.user?.role === UserRole.Admin) {
+              setIsGoogleAdModalOpen(true);
+            }
           }}
         >
           {swiper &&
@@ -176,23 +182,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                   number={index + 1}
                   swiper={swiper}
                 />
-                {/* {mode === 'card' && (
-                  <CardModeItem
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )}
-                {mode === 'typing' && (
-                  <TypingModeItem
-                    clearTextAreaTrigger={clearPrevAnswers}
-                    key={question.id}
-                    question={question}
-                    number={index + 1}
-                    swiper={swiper}
-                  />
-                )} */}
               </SwiperSlide>
             ))}
         </Swiper>
@@ -214,14 +203,14 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           </button>
         </>
       )}
-      {/* {isCoupangAdModalOpen && (
-        <CoupangDisplayAdModal
-          open={isCoupangAdModalOpen}
+      {isGoogleAdModalOpen && (
+        <GoogleAdModal
+          open={isGoogleAdModalOpen}
           onCancel={() => {
-            setIsCoupangAdModalOpen(false);
+            setIsGoogleAdModalOpen(false);
           }}
         />
-      )} */}
+      )}
     </StudyModeWrapperBlock>
   );
 };

@@ -8,7 +8,7 @@ interface GoogleAdProps {
   type: 'feed' | 'display' | 'content' | 'multiflex';
 }
 
-const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
+const GoogleAd: React.FC<GoogleAdProps> = ({ className, type = 'display' }) => {
   const isProd = process.env.NODE_ENV === 'production';
   const { data: meQuery } = useMeQuery();
   const loadAds = () => {
@@ -24,7 +24,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
   useEffect(() => {
     loadAds();
   }, []);
-  if (checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery })) return null;
+  // if (checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery })) return null;
   const GoogleAdsIns: React.FC = () => {
     if (type === 'feed') {
       return (
@@ -44,7 +44,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type }) => {
           className="adsbygoogle"
           style={{ display: 'block' }}
           data-ad-client="ca-pub-9145855450425143"
-          data-ad-slot="9804306393"
+          data-ad-slot="2844801903"
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
