@@ -90,6 +90,7 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type = 'display' }) => {
             textAlign: 'center',
             padding: '16px',
             height: '130px',
+            width: '100%',
           }}
         />
       )}
@@ -99,4 +100,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type = 'display' }) => {
 
 export default React.memo(GoogleAd);
 
-const GoogleAdContainer = styled.div``;
+const GoogleAdContainer = styled.div`
+  width: 100%;
+`;

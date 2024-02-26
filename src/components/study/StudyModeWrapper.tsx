@@ -17,15 +17,11 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { LocalStorage } from '@lib/utils/localStorage';
 import StudyModeItemWrapper from './StudyModeItemWrapper';
-import { getCookie } from 'cookies-next';
-import { COUPANG_AD_COOKIE } from '@lib/constants/cookie';
-import CoupangDisplayAdModal from '@components/common/ad/CoupangDisplayAdModal';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
-import { checkRole } from '@lib/utils/utils';
 import { isMobile } from 'react-device-detect';
-import GoogleAdModal from '@components/common/ad/GoogleAdModal';
 import { UserRole } from 'types';
+import GoogleAdModal from '@components/common/ad/GoogleAdModal';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -69,9 +65,6 @@ const StudyModeWrapperBlock = styled.div`
     opacity: 0.2;
     cursor: not-allowed;
   }
-  .study-mode-typing-slide {
-  }
-
   @media (max-width: ${responsive.large}) {
     .study-mode-navigation-prev,
     .study-mode-navigation-next,
@@ -252,12 +245,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         </>
       )}
       {isGoogleAdModalOpen && (
-        <GoogleAdModal
-          open={isGoogleAdModalOpen}
-          onCancel={() => {
-            setIsGoogleAdModalOpen(false);
-          }}
-        />
+        <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
       )}
     </StudyModeWrapperBlock>
   );
