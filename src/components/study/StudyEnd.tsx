@@ -92,9 +92,8 @@ interface StudyEndProps {}
 const StudyEnd: React.FC<StudyEndProps> = () => {
   const router = useRouter();
   const localStorage = new LocalStorage();
-  const { setQuestions } = useQuestions();
+  const { questions } = useQuestions();
   const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
-  const { questionsForScore } = useQuestionsScore();
   const { isLoggedIn } = useAuth();
   const [checkIfCategoryEvaluated] = useCheckIfCategoryEvaluated();
   const [isCategoryReviewModalOpen, setIsCategoryReviewModalOpen] =
@@ -107,7 +106,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
     let lowScoreLength = 0;
     let middleScoreLength = 0;
 
-    questionsForScore.forEach((question: MockExamQuestion) => {
+    questions.forEach((question: MockExamQuestion) => {
       switch (question.myQuestionState) {
         case QuestionState.High:
           highScoreLength++;
@@ -127,21 +126,13 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       lowScoreLength,
       middleScoreLength,
       coreScoreLength:
-        questionsForScore.length -
-        highScoreLength -
-        lowScoreLength -
-        middleScoreLength,
+        questions.length - highScoreLength - lowScoreLength - middleScoreLength,
     };
-  }, [questionsForScore]);
+  }, [questions]);
 
   const scoreCounts = useMemo(countQuestionsByScoreState, [
     countQuestionsByScoreState,
   ]);
-  useEffect(() => {
-    if (router.query.tab === 'end') {
-      setQuestions(questionsForScore);
-    }
-  }, [router.query.tab]);
 
   useEffect(() => {
     if (router.query.tab === 'end') {
@@ -191,12 +182,11 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       <div className="study-end-button-wrapper">
         <Button
           onClick={() => {
-            setQuestions(questionsForScore);
             delete router.query.tab;
             router.push({
               query: {
                 ...router.query,
-                qIndex: 0,
+                activeIndex: 1,
               },
             });
           }}
@@ -216,7 +206,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
           <ChangeHistoryIcon />, <ClearIcon /> &nbsp; 문제
         </div>
         <div className="study-end-wrong-question-list">
-          {questionsForScore
+          {questions
             .filter(
               (question: MockExamQuestion) =>
                 question.myQuestionState === QuestionState.Row ||

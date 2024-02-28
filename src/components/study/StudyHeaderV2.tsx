@@ -72,4 +72,4 @@ const StudyHeaderV2: React.FC<StudyHeaderV2Props> = () => {
   );
 };
 
-export default StudyHeaderV2;
+export default React.memo(StudyHeaderV2);

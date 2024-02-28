@@ -88,7 +88,6 @@ interface CardModeItemProps {
     state: QuestionState
   ) => Promise<void>;
   number: number;
-  swiper: any;
 }
 
 const CardModeItem: React.FC<CardModeItemProps> = ({
@@ -100,7 +99,6 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   handleSaveBookmark,
   handleSaveQuestionState,
   number,
-  swiper,
 }) => {
   const router = useRouter();
   const activeIndex = Number(router.query.activeIndex);
@@ -155,10 +153,8 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           isAnswerHidden: !isFlipped,
           setIsAnswerHidden: setIsFlipped,
         }}
-        swiper={swiper}
       />
       <CardModeControlBox
-        swiper={swiper}
         isFlipped={isFlipped}
         flipCard={() => setIsFlipped((el) => !el)}
       />

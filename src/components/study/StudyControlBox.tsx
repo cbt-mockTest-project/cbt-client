@@ -24,6 +24,7 @@ import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
 import useAuth from '@lib/hooks/useAuth';
 import StudySolvedInfoModal from './StudySolvedInfoModal';
 import { isMobile } from 'react-device-detect';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -130,7 +131,6 @@ interface StudyControlBoxProps {
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
   };
   additionalControlButton?: React.ReactNode;
-  swiper?: any;
 }
 
 const StudyControlBox: React.FC<StudyControlBoxProps> = ({
@@ -142,11 +142,11 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   answerToggleOption,
   editFeedback,
   addFeedback,
-  swiper,
   additionalControlButton,
   hasScoreTable = true,
 }) => {
   const router = useRouter();
+  const { questions } = useQuestions();
   const { data: meQuery } = useMeQuery();
   const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
@@ -249,12 +249,12 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               이동 & 점수
             </Button>
           )}
-          {swiper && hasFinishButton && (
+          {hasFinishButton && (
             <Button
               className="study-control-finish-button"
               type="primary"
               onClick={() => {
-                delete router.query.qIndex;
+                delete router.query.activeIndex;
                 Modal.confirm({
                   title: '학습을 종료하시겠습니까?',
                   okText: '종료',
@@ -289,9 +289,19 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
       )}
       {isStudyScoreModalOpen && hasScoreTable && (
         <StudyScoreModal
+          questions={
+            [ExamMode.CARD, ExamMode.TYPYING].includes(mode)
+              ? questions
+              : undefined
+          }
           onClickItem={(index) => {
-            if (swiper) {
-              swiper.slideTo(index, 0);
+            if ([ExamMode.CARD, ExamMode.TYPYING].includes(mode)) {
+              router.replace({
+                query: {
+                  ...router.query,
+                  activeIndex: index + 1,
+                },
+              });
             } else {
               const a = document.getElementById(`question-${index}`);
               if (a) {

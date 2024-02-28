@@ -4,7 +4,7 @@ import { ModalProps } from 'antd/lib';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { STUDY_STATE_ICON } from './study';
-import { QuestionState } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import palette from '@styles/palette';
 import SwiperCore from 'swiper';
 import { useAppSelector } from '@modules/redux/store/configureStore';
@@ -62,11 +62,12 @@ const StudyScoreModalBlock = styled(Modal)`
 `;
 
 interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
+  questions?: MockExamQuestion[];
   onClickItem?: (index: number) => void;
 }
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
-  const { onClickItem, ...modalProps } = props;
+  const { questions, onClickItem, ...modalProps } = props;
   const { questionsForScore, handleResetQuestionState } = useQuestionsScore();
   const handleResetScore = async () => {
     Modal.confirm({
@@ -82,7 +83,7 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
         <Button onClick={handleResetScore}>점수 초기화</Button>
       </div>
       <div className="study-score-item-list">
-        {questionsForScore.map((question, index) => (
+        {(questions || questionsForScore).map((question, index) => (
           <div
             key={question.id}
             onClick={() => {

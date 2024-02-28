@@ -1,6 +1,7 @@
 import CardModeItem from '@components/cardMode/CardModeItem';
 import TypingModeItem from '@components/typingMode/TypingModeItem';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
+import useQuestions from '@lib/hooks/useQuestions';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -12,64 +13,51 @@ interface StudyModeItemWrapperProps {
   question: MockExamQuestion;
   hasDefaultAnswers: boolean | null;
   number: number;
-  swiper: any;
 }
 
 const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
-  question: defaultQuestion,
+  question,
   number,
-  swiper,
   hasDefaultAnswers,
 }) => {
   const router = useRouter();
   const mode = router.query.mode as 'card' | 'typing';
-  const {
-    question,
-    setQuestion,
-    handleAddFeedback,
-    handleDeleteFeedback,
-    handleEditFeedback,
-    handleUpdateFeedbackRecommendation,
-    handleSaveBookmark,
-    handleSaveQuestionState,
-  } = useHandleQuestion({ defaultQuestion });
 
-  useEffect(() => {
-    setQuestion(defaultQuestion);
-  }, [defaultQuestion]);
+  const {
+    addFeedback,
+    deleteFeedback,
+    editFeedback,
+    updateFeedbackRecommendation,
+    saveBookmark,
+    saveQuestionState,
+  } = useQuestions();
 
   return (
     <StudyModeItemWrapperBlock>
       {mode === 'card' && (
         <CardModeItem
           question={question}
-          handleAddFeedback={handleAddFeedback}
-          handleDeleteFeedback={handleDeleteFeedback}
-          handleEditFeedback={handleEditFeedback}
-          handleUpdateFeedbackRecommendation={
-            handleUpdateFeedbackRecommendation
-          }
-          handleSaveBookmark={handleSaveBookmark}
-          handleSaveQuestionState={handleSaveQuestionState}
+          handleAddFeedback={addFeedback}
+          handleDeleteFeedback={deleteFeedback}
+          handleEditFeedback={editFeedback}
+          handleUpdateFeedbackRecommendation={updateFeedbackRecommendation}
+          handleSaveBookmark={saveBookmark}
+          handleSaveQuestionState={saveQuestionState}
           number={number}
-          swiper={swiper}
         />
       )}
       {mode === 'typing' && (
         <TypingModeItem
           question={question}
           hasDefaultAnswers={hasDefaultAnswers}
-          handleAddFeedback={handleAddFeedback}
-          handleDeleteFeedback={handleDeleteFeedback}
-          handleEditFeedback={handleEditFeedback}
-          handleUpdateFeedbackRecommendation={
-            handleUpdateFeedbackRecommendation
-          }
-          handleSaveBookmark={handleSaveBookmark}
-          handleSaveQuestionState={handleSaveQuestionState}
+          handleAddFeedback={addFeedback}
+          handleDeleteFeedback={deleteFeedback}
+          handleEditFeedback={editFeedback}
+          handleUpdateFeedbackRecommendation={updateFeedbackRecommendation}
+          handleSaveBookmark={saveBookmark}
+          handleSaveQuestionState={saveQuestionState}
           clearTextAreaTrigger={false}
           number={number}
-          swiper={swiper}
         />
       )}
     </StudyModeItemWrapperBlock>

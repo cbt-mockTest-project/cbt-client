@@ -40,13 +40,11 @@ const CardModeControlBoxBlock = styled.div`
 `;
 
 interface CardModeControlBoxProps {
-  swiper: any;
   flipCard: () => void;
   isFlipped: boolean;
 }
 
 const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
-  swiper,
   flipCard,
   isFlipped,
 }) => {
@@ -59,7 +57,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           <Tooltip title={isMobile ? '' : 'shift + <-'}>
             <button
               className="card-mode-control-button"
-              onClick={() => handleSlidePrev(swiper)}
+              onClick={() => handleSlidePrev()}
             >
               <LeftOutlined />
             </button>
@@ -75,7 +73,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
           <Tooltip title={isMobile ? '' : 'shift + ->'}>
             <button
               className="card-mode-control-button"
-              onClick={() => handleSlideNext(questions.length, swiper)}
+              onClick={() => handleSlideNext(questions.length)}
             >
               <RightOutlined />
             </button>

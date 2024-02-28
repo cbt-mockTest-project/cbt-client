@@ -103,7 +103,6 @@ interface TypingModeItemProps {
   ) => Promise<void>;
   clearTextAreaTrigger: boolean;
   number: number;
-  swiper: any;
 }
 
 const TypingModeItem: React.FC<TypingModeItemProps> = ({
@@ -116,10 +115,9 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   handleSaveBookmark,
   handleSaveQuestionState,
   number,
-  swiper,
 }) => {
-  const router = useRouter();
   const { questions } = useQuestions();
+  const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
   const localStorage = new LocalStorage();
   const [defaultAnswer, setDefaultAnswer] = useState<string | null>(null);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
@@ -138,26 +136,15 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
 
   useEffect(() => {
     setDefaultAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
-  }, []);
+  }, [hasDefaultAnswers]);
 
   useEffect(() => {
     if (isMobile) return;
-    if (Number(router.query.activeIndex) === number) {
-      const textAreaEl = document.querySelector(
-        `.typing-mode-textarea.n${number}`
-      );
-      if (textAreaEl) {
-        (textAreaEl as HTMLTextAreaElement).focus();
-      }
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
     }
-    if (!router.query.activeIndex) {
-      const textAreaEl = document.querySelector(`.typing-mode-textarea.n1`);
-      if (textAreaEl) {
-        (textAreaEl as HTMLTextAreaElement).focus();
-      }
-    }
-  }, [router.query.activeIndex]);
-  console.log(String(hasDefaultAnswers), defaultAnswer);
+  }, [textAreaRef, defaultAnswer]);
+
   return (
     <TypingModeItemBlock>
       <BasicCard type="primary">
@@ -168,8 +155,9 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         />
       </BasicCard>
       <Input.TextArea
-        key={String(hasDefaultAnswers)}
-        defaultValue={hasDefaultAnswers ? defaultAnswer : ''}
+        ref={textAreaRef}
+        key={defaultAnswer + hasDefaultAnswers}
+        defaultValue={defaultAnswer}
         className={`typing-mode-textarea n${number}`}
         placeholder="답을 확인하기 전에 먼저 답을 작성해 보세요."
         autoSize={{ minRows: 3, maxRows: 8 }}
@@ -182,7 +170,6 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         className="typing-mode-control-box"
         question={question}
         saveQuestionState={handleSaveQuestionState}
-        swiper={swiper}
       />
       <div className="typing-mode-answer-button-wrapper">
         <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
@@ -197,7 +184,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           <Tooltip title={isMobile ? '' : 'shift + <-'}>
             <button
               className="typing-mode-control-button"
-              onClick={() => handleSlidePrev(swiper)}
+              onClick={() => handleSlidePrev()}
             >
               <LeftOutlined />
             </button>
@@ -205,7 +192,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           <Tooltip title={isMobile ? '' : 'shift + ->'}>
             <button
               className="typing-mode-control-button"
-              onClick={() => handleSlideNext(questions.length, swiper)}
+              onClick={() => handleSlideNext(questions.length)}
             >
               <RightOutlined />
             </button>

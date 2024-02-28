@@ -1,32 +1,27 @@
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
+import { AnimatePresence, motion } from 'framer-motion';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 import useQuestions from '@lib/hooks/useQuestions';
 import { Modal, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import StudyEnd from './StudyEnd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { LocalStorage } from '@lib/utils/localStorage';
-import StudyModeItemWrapper from './StudyModeItemWrapper';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { isUndefined } from 'lodash';
-import { isMobile } from 'react-device-detect';
-import { UserRole } from 'types';
 import GoogleAdModal from '@components/common/ad/GoogleAdModal';
+import StudyModeItemWrapper from './StudyModeItemWrapper';
+import StudyHeaderV2 from './StudyHeaderV2';
+import { isMobile } from 'react-device-detect';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
     min-height: calc(100vh - 57px);
   }
+
   .study-mode-body {
     min-height: calc(100vh - 57px);
     cursor: grab;
@@ -78,7 +73,7 @@ interface StudyModeWrapperProps {}
 
 const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const localStorage = new LocalStorage();
-  const { data: meQuery } = useMeQuery();
+
   const [isGoogleAdModalOpen, setIsGoogleAdModalOpen] = useState(false);
   const router = useRouter();
   const { questions } = useQuestions();
@@ -86,28 +81,23 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
     null
   );
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
-
-  const [swiper, setSwiper] = useState<any>(null);
+  const activeIndex = useMemo(() => {
+    if (router.query.activeIndex === undefined) return 1;
+    return Number(router.query.activeIndex);
+  }, [router.query.activeIndex]);
   const mode = router.query.mode as string;
-  const order = router.query.order as string;
-  const examIds = useMemo(
-    () => router.query.examIds || [router.query.examId],
-    [router.query.examIds, router.query.examId]
-  );
-  const { findQuestionIndexInfo, updateQuestionIndexInfo } =
-    useCurrentQuestionIndex();
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+  const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
 
   useEffect(() => {
-    if (examIds.length > 1 || order) return;
-    const currentQuestionInfo = findQuestionIndexInfo();
-    if (swiper && currentQuestionInfo) {
-      swiper.slideTo(currentQuestionInfo.questionIndex, 0);
-    }
-  }, [examIds, swiper, order]);
+    updateQuestionIndexInfo(activeIndex);
+  }, [activeIndex]);
 
   useEffect(() => {
     if (mode !== 'typing') return;
-    if (!swiper) return;
     if (questions.length === 0) return;
     const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
     if (!inProgressAnswers) return;
@@ -128,47 +118,48 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         setHasDefaultAnswers(true);
       },
     });
-  }, [questions, swiper, mode]);
+  }, [mode]);
 
   useEffect(() => {
-    if (!swiper) return;
     const activeElement = document.activeElement as HTMLElement;
-    activeElement.blur();
+    if (mode === 'card') {
+      activeElement.blur();
+    }
     const cardModeKeydown = (e: KeyboardEvent) => {
-      const activeSlide = document.querySelector('.swiper-slide-active');
       if (e.key === 'ArrowRight' && e.shiftKey) {
-        swiper.slideNext({ animation: false });
+        handleSlideNext(questions.length);
       }
       if (e.key === 'ArrowLeft' && e.shiftKey) {
-        swiper.slidePrev({ animation: false });
+        handleSlidePrev();
       }
       if (e.shiftKey && e.code === 'KeyA') {
         e.preventDefault();
-        const highButton = activeSlide.querySelector(
+        e.stopImmediatePropagation();
+        const highButton = document.querySelector(
           '.study-control-button.high'
         ) as HTMLButtonElement;
         if (highButton) highButton.click();
       }
       if (e.shiftKey && e.code === 'KeyS') {
         e.preventDefault();
-        const middleButton = activeSlide.querySelector(
+        const middleButton = document.querySelector(
           '.study-control-button.middle'
         ) as HTMLButtonElement;
         if (middleButton) middleButton.click();
       }
       if (e.shiftKey && e.code === 'KeyD') {
         e.preventDefault();
-        const lowButton = activeSlide.querySelector(
+        const lowButton = document.querySelector(
           '.study-control-button.low'
         ) as HTMLButtonElement;
         if (lowButton) lowButton.click();
       }
       if (e.key === ' ' && e.shiftKey) {
-        const cardModeToggleAnswerButton = activeSlide.querySelector(
+        const cardModeToggleAnswerButton = document.querySelector(
           '.card-mode-control-show-answer-button'
         ) as HTMLButtonElement;
         if (cardModeToggleAnswerButton) cardModeToggleAnswerButton.click();
-        const typingModeToggleAnswerButton = activeSlide.querySelector(
+        const typingModeToggleAnswerButton = document.querySelector(
           '.typing-mode-answer-visible-toggle-button'
         ) as HTMLButtonElement;
         if (typingModeToggleAnswerButton) typingModeToggleAnswerButton.click();
@@ -178,76 +169,59 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
     return () => {
       window.removeEventListener('keydown', cardModeKeydown);
     };
-  }, [mode, swiper]);
+  }, [mode, activeIndex]);
 
   return (
-    <StudyModeWrapperBlock>
-      {router.query.tab !== 'end' && (
-        <Swiper
-          className="swiper-container"
-          spaceBetween={20}
-          modules={[Navigation]}
-          onSwiper={(swiper) => {
-            setSwiper(swiper);
-          }}
-          touchRatio={isMobile ? 1 : 0}
-          onSlideChange={(swiper) => {
-            router.replace({
-              query: { ...router.query, activeIndex: swiper.activeIndex + 1 },
-            });
-            updateQuestionIndexInfo(swiper.activeIndex);
-            if (isUndefined(meQuery)) return;
-            if (meQuery.me.user?.role === UserRole.Admin) {
-              setIsGoogleAdModalOpen(true);
-            }
-          }}
-        >
-          {swiper &&
-            questions.map((question, index) => (
-              <SwiperSlide
-                key={question.id}
-                className={`${
-                  mode === 'card'
-                    ? 'study-mode-card-slide'
-                    : 'study-mode-typing-slide'
-                }`}
+    <AnimatePresence initial={false}>
+      <StudyModeWrapperBlock>
+        {router.query.tab !== 'end' && (
+          <motion.div
+            key={activeIndex}
+            drag={isMobile ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
+              if (swipe < -swipeConfidenceThreshold) {
+                handleSlideNext(questions.length);
+              } else if (swipe > swipeConfidenceThreshold) {
+                handleSlidePrev();
+              }
+            }}
+          >
+            <StudyModeItemWrapper
+              hasDefaultAnswers={hasDefaultAnswers}
+              question={questions[activeIndex - 1]}
+              number={activeIndex}
+            />
+          </motion.div>
+        )}
+        {router.query.tab === 'end' && <StudyEnd />}
+        {router.query.tab !== 'end' && (
+          <>
+            <Tooltip title="shift + <-">
+              <button
+                className="study-mode-navigation-prev"
+                onClick={() => handleSlidePrev()}
               >
-                <StudyModeItemWrapper
-                  hasDefaultAnswers={hasDefaultAnswers}
-                  key={question.id}
-                  question={question}
-                  number={index + 1}
-                  swiper={swiper}
-                />
-              </SwiperSlide>
-            ))}
-        </Swiper>
-      )}
-      {router.query.tab === 'end' && <StudyEnd />}
-      {router.query.tab !== 'end' && (
-        <>
-          <Tooltip title="shift + <-">
-            <button
-              className="study-mode-navigation-prev"
-              onClick={() => handleSlidePrev(swiper)}
-            >
-              <LeftOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title="shift + ->">
-            <button
-              className="study-mode-navigation-next"
-              onClick={() => handleSlideNext(questions.length, swiper)}
-            >
-              <RightOutlined />
-            </button>
-          </Tooltip>
-        </>
-      )}
-      {isGoogleAdModalOpen && (
-        <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
-      )}
-    </StudyModeWrapperBlock>
+                <LeftOutlined />
+              </button>
+            </Tooltip>
+            <Tooltip title="shift + ->">
+              <button
+                className="study-mode-navigation-next"
+                onClick={() => handleSlideNext(questions.length)}
+              >
+                <RightOutlined />
+              </button>
+            </Tooltip>
+          </>
+        )}
+        {isGoogleAdModalOpen && (
+          <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
+        )}
+      </StudyModeWrapperBlock>
+    </AnimatePresence>
   );
 };
 
