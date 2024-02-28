@@ -162,7 +162,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
 
   const handleSaveQuestionState = (state: QuestionState) => {
     if (meQuery?.me.user) {
-      const isEhsExam = checkIsEhsMasterExam(question.mockExam.id);
+      const isEhsExam = checkIsEhsMasterExam([question.mockExam.id]);
       const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
       if (meQuery.me.user.solveLimit <= 0 && !isBasicPlanUser && !isEhsExam) {
         setIsSolveLimitModal(true);

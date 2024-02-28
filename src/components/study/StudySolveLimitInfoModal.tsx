@@ -15,7 +15,8 @@ const StudySolveLimitInfoModalBlock = styled(Modal)`
     align-items: center;
   }
   .study-solve-limit-info-modal-title {
-    font-size: 18px;
+    margin-top: 20px;
+    font-size: 16px;
     font-weight: bold;
     margin-bottom: 15px;
   }
@@ -61,12 +62,17 @@ const StudySolveLimitInfoModalBlock = styled(Modal)`
   }
 `;
 
-interface StudySolveLimitInfoModalProps extends Omit<ModalProps, 'children'> {}
+interface StudySolveLimitInfoModalProps extends Omit<ModalProps, 'children'> {
+  title?: string;
+}
 
 const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
   props
 ) => {
-  const { ...modalProps } = props;
+  const {
+    title = '오늘의 문제풀이권을 모두 사용하셨습니다 😊',
+    ...modalProps
+  } = props;
   const [isPricingTabOpen, setIsPricingTabOpen] = useState(false);
   const { user } = useAuth();
   const [editProfileMutation] = useEditProfileMutation();
@@ -129,12 +135,14 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               <DoneAll />
               <span>무제한 문제풀이</span>
             </div>
+            <div className="study-solve-limit-info-modal-benefit-list">
+              <DoneAll />
+              <span>무제한 모의고사</span>
+            </div>
           </>
         ) : (
           <>
-            <div className="study-solve-limit-info-modal-title">
-              오늘의 문제풀이권을 모두 사용하셨습니다 😊
-            </div>
+            <div className="study-solve-limit-info-modal-title">{title}</div>
             <pre className="study-solve-limit-info-modal-content">{`제한 없는 학습을 원하신다면\n베이직 플랜에 가입해보세요!`}</pre>
             <Button type="primary" onClick={() => setIsPricingTabOpen(true)}>
               베이직 플랜 가입하기
