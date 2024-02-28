@@ -3,7 +3,7 @@ import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import palette from '@styles/palette';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 import CardModeControlBox from './CardModeControlBox';
@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
-    max-height: calc(100vh - 210px);
+    height: calc(100vh - 210px);
     overflow-y: auto;
     ::-webkit-scrollbar {
       width: 5px; /* 스크롤 바의 너비 */
