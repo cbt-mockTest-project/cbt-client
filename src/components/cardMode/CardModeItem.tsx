@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
-    height: calc(100vh - 210px);
+    max-height: calc(100vh - 210px);
     overflow-y: auto;
     ::-webkit-scrollbar {
       width: 5px; /* 스크롤 바의 너비 */
