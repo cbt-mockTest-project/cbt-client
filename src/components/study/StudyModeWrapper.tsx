@@ -14,7 +14,6 @@ import { responsive } from '@lib/utils/responsive';
 import { LocalStorage } from '@lib/utils/localStorage';
 import GoogleAdModal from '@components/common/ad/GoogleAdModal';
 import StudyModeItemWrapper from './StudyModeItemWrapper';
-import StudyHeaderV2 from './StudyHeaderV2';
 import { isMobile } from 'react-device-detect';
 
 const StudyModeWrapperBlock = styled.div`
@@ -30,7 +29,7 @@ const StudyModeWrapperBlock = styled.div`
   .study-mode-navigation-next,
   .study-mode-navigation-final {
     position: absolute;
-    top: 15%;
+    top: 100px;
     padding: 5px;
     margin: 0;
     border: 2px solid ${palette.colorBorder};

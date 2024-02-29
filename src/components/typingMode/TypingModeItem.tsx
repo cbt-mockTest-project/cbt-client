@@ -17,12 +17,12 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Input, Tooltip } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import { MockExamQuestion, QuestionState } from 'types';
 const TypingModeItemBlock = styled.div`
+  position: relative;
   .typing-mode-textarea {
     margin-top: 10px;
     font-size: 16px;
@@ -42,16 +42,26 @@ const TypingModeItemBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .typing-mode-swiper-button-wrapper {
+    display: none;
+  }
+  @media (max-width: ${responsive.large}) {
+    padding-bottom: 70px;
     .typing-mode-swiper-button-wrapper {
-      display: none;
-      justify-content: center;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      margin-left: auto;
-      gap: 10px;
-      margin-right: 10px;
-      margin-top: 10px;
+      position: fixed;
+      bottom: 20px;
+      padding: 0 20px;
+      width: 100%;
+      right: 0;
       .typing-mode-control-button {
+        background-color: white;
         padding: 5px;
+        width: 40px;
+        height: 40px;
         border: 2px solid ${palette.colorBorder};
         color: ${palette.colorText};
         border-radius: 50%;
@@ -65,13 +75,6 @@ const TypingModeItemBlock = styled.div`
         svg {
           font-size: 20px;
         }
-      }
-    }
-  }
-  @media (max-width: ${responsive.large}) {
-    .typing-mode-answer-button-wrapper {
-      .typing-mode-swiper-button-wrapper {
-        display: flex;
       }
     }
   }
@@ -180,24 +183,6 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             {isAnswerVisible ? '정답 가리기' : '정답 보기'}
           </Button>
         </Tooltip>
-        <div className="typing-mode-swiper-button-wrapper">
-          <Tooltip title={isMobile ? '' : 'shift + <-'}>
-            <button
-              className="typing-mode-control-button"
-              onClick={() => handleSlidePrev()}
-            >
-              <LeftOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title={isMobile ? '' : 'shift + ->'}>
-            <button
-              className="typing-mode-control-button"
-              onClick={() => handleSlideNext(questions.length)}
-            >
-              <RightOutlined />
-            </button>
-          </Tooltip>
-        </div>
       </div>
       <AnimatePresence>
         {isAnswerVisible && (
@@ -221,6 +206,24 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+      <div className="typing-mode-swiper-button-wrapper">
+        <Tooltip title={isMobile ? '' : 'shift + <-'}>
+          <button
+            className="typing-mode-control-button"
+            onClick={() => handleSlidePrev()}
+          >
+            <LeftOutlined />
+          </button>
+        </Tooltip>
+        <Tooltip title={isMobile ? '' : 'shift + ->'}>
+          <button
+            className="typing-mode-control-button"
+            onClick={() => handleSlideNext(questions.length)}
+          >
+            <RightOutlined />
+          </button>
+        </Tooltip>
+      </div>
     </TypingModeItemBlock>
   );
 };
