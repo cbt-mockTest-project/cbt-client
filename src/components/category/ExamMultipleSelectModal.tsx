@@ -9,8 +9,9 @@ import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
-import { useEditProfileMutation } from '@lib/graphql/hook/useUser';
-import useAuth from '@lib/hooks/useAuth';
+import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
+import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
+import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -50,7 +51,9 @@ interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
-  const { user } = useAuth();
+  const { data: meQuery } = useMeQuery();
+  const [isRandomExamLimitModalOpen, setIsRandomExamLimitModalOpen] =
+    useState(false);
   const [editProfileMutation] = useEditProfileMutation();
   const { categoryId, examIds, ...modalProps } = props;
   const { getExamSettingHistory, setExamSettingHistory } =
@@ -81,11 +84,21 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   };
 
   const handleStart = () => {
-    if (user) {
+    if (meQuery.me) {
+      const isEhsExam = checkIsEhsMasterExam(examIds);
+      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+      if (
+        meQuery.me.user.randomExamLimit <= 0 &&
+        !isEhsExam &&
+        !isBasicPlanUser
+      ) {
+        setIsRandomExamLimitModalOpen(true);
+        return;
+      }
       editProfileMutation({
         variables: {
           input: {
-            randomExamLimit: user.randomExamLimit - 1,
+            randomExamLimit: meQuery.me.user.randomExamLimit - 1,
           },
         },
       });
@@ -209,6 +222,13 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           학습하기
         </Button>
       </div>
+      {isRandomExamLimitModalOpen && (
+        <StudySolveLimitInfoModal
+          title="오늘의 모의고사 횟수를 모두 사용하셨습니다 😊"
+          open={isRandomExamLimitModalOpen}
+          onCancel={() => setIsRandomExamLimitModalOpen(false)}
+        />
+      )}
     </ExamMultipleSelectModalBlock>
   );
 };

@@ -283,12 +283,14 @@ export const linkify = (text: string) => {
   });
 };
 
-export const checkIsEhsMasterExam = (examId: number) => {
-  return [
-    ...EHS_AIR_EXAM_IDS,
-    ...EHS_CONSTRUCTION_EXAM_IDS,
-    ...EHS_DANGEROUS_EXAM_IDS,
-    ...EHS_SAFE_EXAM_IDS,
-    ...EHS_SAFE_INDUSTRIAL_EXAM_IDS,
-  ].includes(examId);
+export const checkIsEhsMasterExam = (examIds: number[]) => {
+  return examIds.some((examId) => {
+    return [
+      ...EHS_AIR_EXAM_IDS,
+      ...EHS_CONSTRUCTION_EXAM_IDS,
+      ...EHS_DANGEROUS_EXAM_IDS,
+      ...EHS_SAFE_EXAM_IDS,
+      ...EHS_SAFE_INDUSTRIAL_EXAM_IDS,
+    ].includes(examId);
+  });
 };

@@ -51,7 +51,9 @@ const CategoryReviewButton: React.FC<CategoryReviewButtonProps> = ({
           role="button"
           className="category-review-button-icon active"
         />
-        <div className="category-review-score">{`${scoreAverage} (리뷰: ${scoreCount})`}</div>
+        <div className="category-review-score">{`${scoreAverage.toFixed(
+          1
+        )} (리뷰: ${scoreCount})`}</div>
       </CategoryReviewButtonBlock>
       {isCategoryReviewModalOpen && (
         <CategoryReviewModal
