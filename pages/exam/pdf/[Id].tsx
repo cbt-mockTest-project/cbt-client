@@ -27,8 +27,8 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   return (
     <>
       <WithHead
-        title={`${convertExamTitle(title)} pdf | 모두CBT`}
-        pageHeadingTitle={`${convertExamTitle(title)} pdf 페이지`}
+        title={`${convertExamTitle(title)}pdf | 모두CBT`}
+        pageHeadingTitle={`${convertExamTitle(title)}pdf 페이지`}
         description={description}
       />
       <StudyHeader questions={questions} />

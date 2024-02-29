@@ -6,10 +6,14 @@ import palette from '@styles/palette';
 import { Button, Spin } from 'antd';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { handleError } from '@lib/utils/utils';
+import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
 import { Print } from '@mui/icons-material';
 import useQuestions from '@lib/hooks/useQuestions';
 import { fetchImageAsBase64 } from '@lib/apis/upload';
+import useAuth from '@lib/hooks/useAuth';
+import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
+import { useRouter } from 'next/router';
+import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -107,7 +111,13 @@ const DimmedBlock = styled.div`
 interface ExamPrintComponentProps {}
 
 const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
+  const router = useRouter();
+  const examId = Number(router.query.Id);
   const [isPageLoaded, setIsPageLoaded] = useState<boolean>(false);
+  const { handleCheckLogin, handleUpdateUserCache } = useAuth();
+  const { data: meQuery } = useMeQuery();
+  const [editProfileMutation] = useEditProfileMutation();
+  const [isPrintLimitModalOpen, setIsPrintLimitModalOpen] = useState(false);
   const [isPrintLoding, setIsPrintLoding] = useState<boolean>(false);
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [isContentLoaded, setIsContentLoaded] = useState<boolean>(false);
@@ -116,40 +126,63 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     [key: string]: string;
   }>({});
 
-  const { questions, fetchQuestions } = useQuestions();
+  const { questions } = useQuestions();
   const printAreaRef = useRef<HTMLDivElement>(null);
   const handleExportPdf = async () => {
-    setIsPrintLoding(true);
-    if (!printAreaRef.current) return;
-    const canvas = await html2canvas(printAreaRef.current, { useCORS: true });
-    const imgData = canvas.toDataURL('image/png');
+    try {
+      if (!handleCheckLogin()) return;
+      if (!meQuery.me) return;
+      const isEhsExam = checkIsEhsMasterExam([examId]);
+      if (isEhsExam) return;
+      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
 
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
+      if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
+        setIsPrintLimitModalOpen(true);
+        return;
+      }
 
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pdfWidth;
-    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      setIsPrintLoding(true);
+      if (!printAreaRef.current) return;
+      const canvas = await html2canvas(printAreaRef.current, { useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
 
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    const pageCount = Math.ceil(imgHeight / pdfHeight);
-    let currentPage = 1;
-    while (currentPage < pageCount) {
-      position = -(pdfHeight * currentPage);
-      pdf.addPage();
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pdfWidth;
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      let position = 0;
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      currentPage += 1;
+      const pageCount = Math.ceil(imgHeight / pdfHeight);
+      let currentPage = 1;
+      while (currentPage < pageCount) {
+        position = -(pdfHeight * currentPage);
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        currentPage += 1;
+      }
+      const pdfBlob = pdf.output('blob');
+      const url = URL.createObjectURL(pdfBlob);
+      window.open(url, '_blank');
+      setIsPrintLoding(false);
+      editProfileMutation({
+        variables: {
+          input: {
+            printLimit: meQuery.me.user.printLimit - 1,
+          },
+        },
+      });
+      handleUpdateUserCache({ printLimit: meQuery.me.user.printLimit - 1 });
+    } catch (e) {
+      handleError(e);
     }
-    const pdfBlob = pdf.output('blob');
-    const url = URL.createObjectURL(pdfBlob);
-    window.open(url, '_blank');
-    setIsPrintLoding(false);
   };
 
   useEffect(() => {
@@ -204,13 +237,6 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
           const blankBlock = document.createElement('div');
           blankBlock.style.height = `${heightLeft}px`;
           blankBlock.style.position = 'relative';
-          const textElement = document.createElement('span');
-          textElement.innerText = '실기시험 준비는 모두CBT';
-          textElement.style.position = 'absolute';
-          textElement.style.bottom = '10px';
-          textElement.style.right = '20px';
-          textElement.style.color = palette.antd_blue_02;
-          blankBlock.appendChild(textElement);
           newQuestionElements.push(blankBlock);
           initialHeight = element.clientHeight;
         }
@@ -249,9 +275,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
       <div ref={printAreaRef} className="exam-print-area">
         {questions.map((question, index) => (
           <div className="exam-print-question" key={question.id}>
-            <div className="exam-print-question-number">
-              {question.number}번 문제
-            </div>
+            <div className="exam-print-question-number">{index + 1}번 문제</div>
             <pre className="exam-print-question-content">
               {parse(question.question)}
             </pre>
@@ -260,7 +284,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
               <img
                 src={base64Images[question.question_img[0].url]}
                 alt="문제이미지"
-                style={{ maxWidth: '100%', maxHeight: '500px' }}
+                style={{ maxWidth: '50%', height: 'auto' }}
               />
             )}
             <div className="exam-print-solution-label">정답</div>
@@ -277,7 +301,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
                 <img
                   src={base64Images[question.solution_img[0].url]}
                   alt="정답이미지"
-                  style={{ maxWidth: '100%', maxHeight: '500px' }}
+                  style={{ maxWidth: '50%', height: 'auto' }}
                 />
               )}
             </div>
@@ -285,6 +309,13 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         ))}
       </div>
       {!isContentLoaded && <Dimmed />}
+      {isPrintLimitModalOpen && (
+        <StudySolveLimitInfoModal
+          title="출력이용권을 모두 사용하셨습니다 😊"
+          open={isPrintLimitModalOpen}
+          onCancel={() => setIsPrintLimitModalOpen(false)}
+        />
+      )}
     </ExamPrintComponentBlock>
   );
 };

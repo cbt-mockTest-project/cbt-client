@@ -54,6 +54,7 @@ export const ME_QUERY = gql`
       user {
         hasBookmarkedBefore
         randomExamLimit
+        printLimit
         hasSolvedBefore
         solveLimit
         profileImg

@@ -113,7 +113,12 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro: '베이직 플랜으로\n학습효율을 높여보세요!',
       price: 12000,
       endDate: '이용기간: 3개월',
-      benefits: ['광고제거', '무제한 문제풀이', '무제한 모의고사'],
+      benefits: [
+        '광고제거',
+        '무제한 문제풀이',
+        '무제한 모의고사',
+        '무제한 출력',
+      ],
       // benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
       confirmDisabled: meQuery?.me.user
         ? checkRole({ roleIds: [1, 2], meQuery })
