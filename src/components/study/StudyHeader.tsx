@@ -63,7 +63,7 @@ const StudyHeader: React.FC<StudyHeaderProps> = ({ questions }) => {
           <LeftOutlined />
         </div>
         <div className="study-header-title">{title}</div>
-        <Link className="study-header-home-link" href="/main">
+        <Link className="study-header-home-link" href="/">
           <HomeOutlined />
         </Link>
       </HeaderLayout>

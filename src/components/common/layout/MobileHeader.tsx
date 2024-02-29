@@ -43,7 +43,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ title }) => {
   }, [router.pathname]);
   return (
     <MobileHeaderBlock>
-      <Link href="/main">
+      <Link href="/">
         <p className="mobile-header-title">{title}</p>
       </Link>
       <button className="mobile-menu-button" onClick={() => setMenuState(true)}>

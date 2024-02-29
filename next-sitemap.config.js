@@ -28,7 +28,6 @@ module.exports = {
     '/sitemap_*',
     '/post/*',
     '/study*',
-    '/main'
   ],
   // ...other options
   transform: async (config, path) => {
