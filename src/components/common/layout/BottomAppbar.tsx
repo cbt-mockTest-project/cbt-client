@@ -54,9 +54,9 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
           return;
         }
       }
-      return router.push('/main');
+      return router.push('/');
     } catch {
-      return router.push('/main');
+      return router.push('/');
     }
   };
   return (

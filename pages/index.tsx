@@ -10,7 +10,7 @@ import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { homeActions } from '@modules/redux/slices/home';
 import wrapper from '@modules/redux/store/configureStore';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import React from 'react';
 import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
 
@@ -32,32 +32,10 @@ IndexPage.displayName = MAIN_PAGE;
 
 export default IndexPage;
 
-export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps((store) => async (context) => {
+export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
+  (store) => async () => {
     try {
-      const token = context.req ? context.req.cookies['jwt-token'] : '';
-      const cookie = `jwt-token=${token || ''}`;
-      const apolloClient = initializeApollo({}, cookie);
-      const getUserInfo = () =>
-        apolloClient
-          .query<MeQuery>({
-            query: ME_QUERY,
-          })
-          .then((res) => res.data.me);
-
-      const me = await getUserInfo();
-      if (me.user && me.user.recentlyStudiedCategory) {
-        const categoryName = encodeURIComponent(
-          me.user.recentlyStudiedCategory
-        );
-        return {
-          redirect: {
-            destination: `/category/${categoryName}`,
-            permanent: false,
-          },
-        };
-      }
-
+      const apolloClient = initializeApollo({}, '');
       const getCategories = (input: GetExamCategoriesInput) =>
         apolloClient
           .query<GetExamCategoriesQuery>({
@@ -101,8 +79,11 @@ export const getServerSideProps: GetServerSideProps =
         })
       );
 
-      return addApolloState(apolloClient, {});
+      return addApolloState(apolloClient, {
+        revalidate: 60,
+      });
     } catch (e) {
       console.log(e);
     }
-  });
+  }
+);

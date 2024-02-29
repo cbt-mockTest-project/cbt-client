@@ -148,7 +148,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
                   if (lastVisitedCategory) {
                     router.push(lastVisitedCategory);
                   } else {
-                    router.push('/main');
+                    router.push('/');
                   }
                 },
               });

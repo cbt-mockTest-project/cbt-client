@@ -205,7 +205,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess) {
           message.error('접근 권한이 없습니다.');
-          router.push('/main');
+          router.push('/');
         }
       });
       if (!category) return;
@@ -223,7 +223,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     }
     if (!meQuery.me.user && category && !category.isPublic) {
       message.error('접근 권한이 없습니다.');
-      router.push('/main');
+      router.push('/');
     }
   }, [meQuery]);
 
