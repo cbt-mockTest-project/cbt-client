@@ -99,6 +99,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       }
       const questions = (res?.data.readQuestionsByExamIds.questions ||
         []) as MockExamQuestion[];
+      store.dispatch(mockExamActions.setQuestions([]));
       store.dispatch(
         mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
       );
