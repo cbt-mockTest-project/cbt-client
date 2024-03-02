@@ -119,8 +119,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
         examIds,
       };
       setExamSettingHistory(currentExamSettings);
+      let pathname = '/study';
+      if (mode === ExamMode.PRINT) {
+        pathname = '/exams/pdf';
+      }
       router.push({
-        pathname: '/study',
+        pathname,
         query: {
           ...(categoryId ? { categoryId } : {}),
           order: isRandom ? 'random' : 'normal',
@@ -164,6 +168,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           >
             <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
             <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
+            <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
           </Radio.Group>
         </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">
@@ -228,7 +233,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           size="large"
           onClick={handleStart}
         >
-          학습하기
+          시작하기
         </Button>
       </div>
       {isRandomExamLimitModalOpen && (
