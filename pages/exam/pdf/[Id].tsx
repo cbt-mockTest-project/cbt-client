@@ -1,7 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
 import StudyHeader from '@components/study/StudyHeader';
-import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
+import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
@@ -13,13 +13,13 @@ import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
-interface ExamSolutionPageProps {
+interface ExamPdfPageProps {
   questions: MockExamQuestion[];
   title: string;
   description: string;
 }
 
-const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
+const ExamPdfPage: React.FC<ExamPdfPageProps> = ({
   questions,
   title,
   description,
@@ -37,9 +37,9 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   );
 };
 
-ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;
+ExamPdfPage.displayName = EXAM_PDF_PAGE;
 
-export default ExamSolutionPage;
+export default ExamPdfPage;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');

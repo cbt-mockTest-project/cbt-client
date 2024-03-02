@@ -20,6 +20,7 @@ import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import {
   EXAM_CREATE_PAGE,
+  EXAM_PDF_PAGE,
   EXAM_SOLUTION_PAGE,
   PRICING_PAGE,
   QUESTION_EDIT_PAGE,
@@ -33,6 +34,7 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
+    EXAM_PDF_PAGE,
     STUDY_PAGE,
     EXAM_CREATE_PAGE,
   ];
