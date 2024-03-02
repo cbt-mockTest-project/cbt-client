@@ -24,7 +24,7 @@ const useCurrentQuestionIndex = () => {
 
   const checkIsLastQuestion = (questionLength: number) => {
     const currentQuestionInfo = findQuestionIndexInfo();
-    if (currentQuestionInfo?.questionIndex + 1 === questionLength) {
+    if (currentQuestionInfo?.questionIndex === questionLength) {
       return true;
     }
     return false;
