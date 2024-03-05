@@ -153,7 +153,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         ) as HTMLButtonElement;
         if (lowButton) lowButton.click();
       }
-      if (e.key === ' ' && e.shiftKey && e.altKey) {
+      if (e.key === ' ' && e.shiftKey) {
         const cardModeToggleAnswerButton = document.querySelector(
           '.card-mode-control-show-answer-button'
         ) as HTMLButtonElement;

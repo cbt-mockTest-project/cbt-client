@@ -62,7 +62,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
               <LeftOutlined />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile ? '' : 'alt + shift + spacebar'}>
+          <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
             <Button
               className="card-mode-control-show-answer-button"
               onClick={() => flipCard()}

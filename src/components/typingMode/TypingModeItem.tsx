@@ -175,7 +175,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         saveQuestionState={handleSaveQuestionState}
       />
       <div className="typing-mode-answer-button-wrapper">
-        <Tooltip title={isMobile ? '' : 'alt + shift + spacebar'}>
+        <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
           <Button
             className="typing-mode-answer-visible-toggle-button"
             onClick={() => setIsAnswerVisible((prev) => !prev)}

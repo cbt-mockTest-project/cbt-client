@@ -221,7 +221,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           </Tooltip>
         </div>
         {answerToggleOption && (
-          <Tooltip title="alt + shift + spacebar">
+          <Tooltip title="shift + spacebar">
             <Button
               className="study-control-answer-toggle-button"
               onClick={() =>
