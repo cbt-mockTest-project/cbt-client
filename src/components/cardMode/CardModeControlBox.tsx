@@ -54,7 +54,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
     <CardModeControlBoxBlock>
       <BasicCard type="primary">
         <div className="card-mode-control-button-wrapper">
-          <Tooltip title={isMobile ? '' : 'shift + <-'}>
+          <Tooltip title={isMobile ? '' : 'alt + shift + <-'}>
             <button
               className="card-mode-control-button"
               onClick={() => handleSlidePrev()}
@@ -62,7 +62,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
               <LeftOutlined />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
+          <Tooltip title={isMobile ? '' : 'alt + shift + spacebar'}>
             <Button
               className="card-mode-control-show-answer-button"
               onClick={() => flipCard()}
@@ -70,7 +70,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
               <span>{isFlipped ? '문제보기' : '정답보기'}</span>
             </Button>
           </Tooltip>
-          <Tooltip title={isMobile ? '' : 'shift + ->'}>
+          <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
             <button
               className="card-mode-control-button"
               onClick={() => handleSlideNext(questions.length)}

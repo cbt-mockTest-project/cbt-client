@@ -175,7 +175,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         saveQuestionState={handleSaveQuestionState}
       />
       <div className="typing-mode-answer-button-wrapper">
-        <Tooltip title={isMobile ? '' : 'shift + spacebar'}>
+        <Tooltip title={isMobile ? '' : 'alt + shift + spacebar'}>
           <Button
             className="typing-mode-answer-visible-toggle-button"
             onClick={() => setIsAnswerVisible((prev) => !prev)}
@@ -207,7 +207,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         )}
       </AnimatePresence>
       <div className="typing-mode-swiper-button-wrapper">
-        <Tooltip title={isMobile ? '' : 'shift + <-'}>
+        <Tooltip title={isMobile ? '' : 'alt + shift + <-'}>
           <button
             className="typing-mode-control-button"
             onClick={() => handleSlidePrev()}
@@ -215,7 +215,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
             <LeftOutlined />
           </button>
         </Tooltip>
-        <Tooltip title={isMobile ? '' : 'shift + ->'}>
+        <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
           <button
             className="typing-mode-control-button"
             onClick={() => handleSlideNext(questions.length)}

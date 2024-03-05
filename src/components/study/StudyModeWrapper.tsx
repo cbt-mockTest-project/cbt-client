@@ -125,13 +125,13 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       activeElement.blur();
     }
     const cardModeKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' && e.shiftKey) {
+      if (e.key === 'ArrowRight' && e.shiftKey && e.altKey) {
         handleSlideNext(questions.length);
       }
-      if (e.key === 'ArrowLeft' && e.shiftKey) {
+      if (e.key === 'ArrowLeft' && e.shiftKey && e.altKey) {
         handleSlidePrev();
       }
-      if (e.shiftKey && e.code === 'KeyA') {
+      if (e.shiftKey && e.code === 'KeyA' && e.altKey) {
         e.preventDefault();
         e.stopImmediatePropagation();
         const highButton = document.querySelector(
@@ -139,21 +139,21 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         ) as HTMLButtonElement;
         if (highButton) highButton.click();
       }
-      if (e.shiftKey && e.code === 'KeyS') {
+      if (e.shiftKey && e.code === 'KeyS' && e.altKey) {
         e.preventDefault();
         const middleButton = document.querySelector(
           '.study-control-button.middle'
         ) as HTMLButtonElement;
         if (middleButton) middleButton.click();
       }
-      if (e.shiftKey && e.code === 'KeyD') {
+      if (e.shiftKey && e.code === 'KeyD' && e.altKey) {
         e.preventDefault();
         const lowButton = document.querySelector(
           '.study-control-button.low'
         ) as HTMLButtonElement;
         if (lowButton) lowButton.click();
       }
-      if (e.key === ' ' && e.shiftKey) {
+      if (e.key === ' ' && e.shiftKey && e.altKey) {
         const cardModeToggleAnswerButton = document.querySelector(
           '.card-mode-control-show-answer-button'
         ) as HTMLButtonElement;
@@ -198,7 +198,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         {router.query.tab === 'end' && <StudyEnd />}
         {router.query.tab !== 'end' && (
           <>
-            <Tooltip title="shift + <-">
+            <Tooltip title="alt + shift + <-">
               <button
                 className="study-mode-navigation-prev"
                 onClick={() => handleSlidePrev()}
@@ -206,7 +206,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                 <LeftOutlined />
               </button>
             </Tooltip>
-            <Tooltip title="shift + ->">
+            <Tooltip title="alt + shift + ->">
               <button
                 className="study-mode-navigation-next"
                 onClick={() => handleSlideNext(questions.length)}

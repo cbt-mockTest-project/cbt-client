@@ -181,7 +181,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
         <div className="study-control-box-score-button-wrapper">
-          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + a'}>
+          <Tooltip
+            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + a'}
+          >
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.High ? 'active' : ''
@@ -191,7 +193,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               <PanoramaFishEyeIcon />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + s'}>
+          <Tooltip
+            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + s'}
+          >
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.Middle
@@ -203,7 +207,9 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               <ChangeHistoryIcon />
             </button>
           </Tooltip>
-          <Tooltip title={isMobile || !hasHelpButtonText ? '' : 'shift + d'}>
+          <Tooltip
+            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + d'}
+          >
             <button
               className={`study-control-button ${
                 question.myQuestionState === QuestionState.Row ? 'active' : ''
@@ -215,7 +221,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           </Tooltip>
         </div>
         {answerToggleOption && (
-          <Tooltip title="shift + spacebar">
+          <Tooltip title="alt + shift + spacebar">
             <Button
               className="study-control-answer-toggle-button"
               onClick={() =>
