@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash';
 import { Modal, message } from 'antd';
 import useAuth from './useAuth';
 import { homeActions } from '@modules/redux/slices/home';
+import { WatchQueryFetchPolicy } from '@apollo/client';
 
 export interface handleToggleCategoryBookmarkProps {
   categoryId: number;
@@ -21,7 +22,7 @@ export interface handleToggleCategoryBookmarkProps {
 }
 
 const useHomeCategories = () => {
-  const { handleCheckLogin, user, isLoggedIn } = useAuth();
+  const { handleCheckLogin, isLoggedIn } = useAuth();
   const dispatch = useAppDispatch();
   const { updateCache, client } = useApolloClient();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
@@ -41,13 +42,20 @@ const useHomeCategories = () => {
   const ehsStorageCategories = useAppSelector(
     (state) => state.home.ehsStorageCategories
   );
+  const bookmarkedCategories = useAppSelector(
+    (state) => state.home.bookmarkedCategories
+  );
 
-  const fetchCategories = async (input: GetExamCategoriesInput) => {
+  const fetchCategories = async (
+    input: GetExamCategoriesInput,
+    fetchPolicy?: WatchQueryFetchPolicy
+  ) => {
     try {
-      await getExamCategories({
+      return await getExamCategories({
         variables: {
           input,
         },
+        fetchPolicy,
       });
     } catch (error) {
       handleError(error);
@@ -194,8 +202,8 @@ const useHomeCategories = () => {
   const setEhsStorageCategories = (categories: MockExamCategory[]) =>
     dispatch(homeActions.setEhsStorageCategories({ categories }));
 
-  const setRecentlyStudiedCategories = (categories: MockExamCategory[]) =>
-    dispatch(homeActions.setRecentlyStudiedCategories({ categories }));
+  const setBookmarkedCategories = (categories: MockExamCategory[]) =>
+    dispatch(homeActions.setBookmarkedCategories({ categories }));
 
   return {
     searchedCategories,
@@ -205,6 +213,8 @@ const useHomeCategories = () => {
     moduStorageCategories,
     userStorageCategories,
     ehsStorageCategories,
+    bookmarkedCategories,
+    setBookmarkedCategories,
     handleToggleCategoryBookmark,
   };
 };
