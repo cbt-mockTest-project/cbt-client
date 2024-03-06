@@ -125,6 +125,16 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       activeElement.blur();
     }
     const cardModeKeydown = (e: KeyboardEvent) => {
+      if (e.key === ' ' && e.shiftKey) {
+        const cardModeToggleAnswerButton = document.querySelector(
+          '.card-mode-control-show-answer-button'
+        ) as HTMLButtonElement;
+        if (cardModeToggleAnswerButton) cardModeToggleAnswerButton.click();
+        const typingModeToggleAnswerButton = document.querySelector(
+          '.typing-mode-answer-visible-toggle-button'
+        ) as HTMLButtonElement;
+        if (typingModeToggleAnswerButton) typingModeToggleAnswerButton.click();
+      }
       if (e.key === 'ArrowRight' && e.shiftKey && e.altKey) {
         handleSlideNext(questions.length);
       }
@@ -152,16 +162,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           '.study-control-button.low'
         ) as HTMLButtonElement;
         if (lowButton) lowButton.click();
-      }
-      if (e.key === ' ' && e.shiftKey) {
-        const cardModeToggleAnswerButton = document.querySelector(
-          '.card-mode-control-show-answer-button'
-        ) as HTMLButtonElement;
-        if (cardModeToggleAnswerButton) cardModeToggleAnswerButton.click();
-        const typingModeToggleAnswerButton = document.querySelector(
-          '.typing-mode-answer-visible-toggle-button'
-        ) as HTMLButtonElement;
-        if (typingModeToggleAnswerButton) typingModeToggleAnswerButton.click();
       }
     };
     window.addEventListener('keydown', cardModeKeydown);
