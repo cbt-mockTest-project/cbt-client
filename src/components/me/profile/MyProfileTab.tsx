@@ -1,4 +1,5 @@
-import { useLogoutMutation } from '@lib/graphql/hook/useUser';
+import ConfirmModal from '@components/common/modal/ConfirmModal';
+import { useDeleteUser, useLogoutMutation } from '@lib/graphql/hook/useUser';
 import useMyInfo from '@lib/hooks/useMyInfo';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
@@ -48,6 +49,13 @@ const MyProfileTabBlock = styled.div`
     flex-direction: column;
     gap: 10px;
   }
+  .my-profile-tab-withdrawal-button {
+    display: block;
+    text-align: left;
+    width: fit-content;
+    font-size: 13px;
+    color: ${palette.colorSubText};
+  }
 `;
 
 interface MyProfileTabProps {}
@@ -61,6 +69,8 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
     handleDeleteProfileImg,
     handleUpdateProfileImg,
   } = useMyInfo();
+  const [deleteUserMutation] = useDeleteUser();
+  const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
   const nicknameInputRef = React.useRef<InputRef>(null);
   const [logoutMutation] = useLogoutMutation();
   const checkPasswordInputRef = React.useRef<InputRef>(null);
@@ -75,6 +85,21 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
       handleError(e);
     }
   };
+  const requestWithdrawal = async () => {
+    try {
+      const res = await deleteUserMutation();
+      if (res.data?.deleteUser.ok) {
+        message.success({ content: '회원탈퇴 되었습니다.' });
+        await logoutMutation();
+        location.reload();
+        return;
+      }
+      return message.error({ content: res.data?.deleteUser.error });
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const uploadProps: UploadProps = {
     name: 'file',
     accept: '.png, .jpg, .jpeg',
@@ -192,6 +217,22 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
         </div>
       </div>
       <Button onClick={handleLogout}>로그아웃</Button>
+      <button
+        className="my-profile-tab-withdrawal-button"
+        onClick={() => setIsWithdrawalModalOpen(true)}
+      >
+        탈퇴하기
+      </button>
+      <ConfirmModal
+        open={isWithdrawalModalOpen}
+        confirmLabel="탈퇴하기"
+        content={
+          <pre>{`탈퇴시 데이터는 복구할 수 없습니다.\n탈퇴 하시겠습니까?`}</pre>
+        }
+        onConfirm={requestWithdrawal}
+        onClose={() => setIsWithdrawalModalOpen(false)}
+        onCancel={() => setIsWithdrawalModalOpen(false)}
+      />
     </MyProfileTabBlock>
   );
 };
