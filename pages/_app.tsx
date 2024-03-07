@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, Modal, message } from 'antd';
+import { ConfigProvider, message } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -19,7 +19,9 @@ import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import {
+  EXAMS_PDF_PAGE,
   EXAM_CREATE_PAGE,
+  EXAM_PDF_PAGE,
   EXAM_SOLUTION_PAGE,
   PRICING_PAGE,
   QUESTION_EDIT_PAGE,
@@ -33,6 +35,8 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
+    EXAM_PDF_PAGE,
+    EXAMS_PDF_PAGE,
     STUDY_PAGE,
     EXAM_CREATE_PAGE,
   ];

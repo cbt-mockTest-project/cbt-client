@@ -49,6 +49,7 @@ export enum ExamMode {
   CARD = 'card',
   SOLUTION = 'solution',
   TYPYING = 'typing',
+  PRINT = 'print',
 }
 
 export interface SetQuestionFeedbackPayload {

@@ -139,6 +139,11 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               <DoneAll />
               <span>무제한 모의고사</span>
             </div>
+
+            <div className="study-solve-limit-info-modal-benefit-list">
+              <DoneAll />
+              <span>무제한 출력</span>
+            </div>
           </>
         ) : (
           <>

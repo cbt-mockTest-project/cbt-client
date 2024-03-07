@@ -11,7 +11,8 @@ import { useRouter } from 'next/router';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
-import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
+import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
+import useAuth from '@lib/hooks/useAuth';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -51,6 +52,7 @@ interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
+  const { handleUpdateUserCache } = useAuth();
   const { data: meQuery } = useMeQuery();
   const [isRandomExamLimitModalOpen, setIsRandomExamLimitModalOpen] =
     useState(false);
@@ -84,46 +86,57 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   };
 
   const handleStart = () => {
-    if (meQuery.me) {
-      const isEhsExam = checkIsEhsMasterExam(examIds);
-      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
-      if (
-        meQuery.me.user.randomExamLimit <= 0 &&
-        !isEhsExam &&
-        !isBasicPlanUser
-      ) {
-        setIsRandomExamLimitModalOpen(true);
-        return;
-      }
-      editProfileMutation({
-        variables: {
-          input: {
-            randomExamLimit: meQuery.me.user.randomExamLimit - 1,
+    try {
+      if (meQuery.me) {
+        const isEhsExam = checkIsEhsMasterExam(examIds);
+        const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+        if (
+          meQuery.me.user.randomExamLimit <= 0 &&
+          !isEhsExam &&
+          !isBasicPlanUser
+        ) {
+          setIsRandomExamLimitModalOpen(true);
+          return;
+        }
+        editProfileMutation({
+          variables: {
+            input: {
+              randomExamLimit: meQuery.me.user.randomExamLimit - 1,
+            },
           },
+        });
+        handleUpdateUserCache({
+          randomExamLimit: meQuery.me.user.randomExamLimit - 1,
+        });
+      }
+
+      const currentExamSettings: ExamSettingType = {
+        categoryId,
+        mode,
+        isRandom,
+        questionStates,
+        limit,
+        examIds,
+      };
+      setExamSettingHistory(currentExamSettings);
+      let pathname = '/study';
+      if (mode === ExamMode.PRINT) {
+        pathname = '/exams/pdf';
+      }
+      router.push({
+        pathname,
+        query: {
+          ...(categoryId ? { categoryId } : {}),
+          order: isRandom ? 'random' : 'normal',
+          states: questionStates.join(','),
+          limit: limit ? limit.toString() : '',
+          examIds: examIds.join(','),
+          mode,
         },
       });
+    } catch (e) {
+      handleError(e);
     }
-
-    const currentExamSettings: ExamSettingType = {
-      categoryId,
-      mode,
-      isRandom,
-      questionStates,
-      limit,
-      examIds,
-    };
-    setExamSettingHistory(currentExamSettings);
-    router.push({
-      pathname: '/study',
-      query: {
-        ...(categoryId ? { categoryId } : {}),
-        order: isRandom ? 'random' : 'normal',
-        states: questionStates.join(','),
-        limit: limit ? limit.toString() : '',
-        examIds: examIds.join(','),
-        mode,
-      },
-    });
   };
 
   useEffect(() => {
@@ -155,6 +168,9 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           >
             <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
             <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
+            {!checkIsEhsMasterExam(examIds) && (
+              <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
+            )}
           </Radio.Group>
         </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">
@@ -219,7 +235,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           size="large"
           onClick={handleStart}
         >
-          학습하기
+          시작하기
         </Button>
       </div>
       {isRandomExamLimitModalOpen && (

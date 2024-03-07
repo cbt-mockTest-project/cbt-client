@@ -52,10 +52,10 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: '/png/banner/seller-banner-pc01.png',
-        mobile: '/png/banner/seller-banner-mobile01.png',
+        pc: '/png/banner/ad-banner-pc01.png',
+        mobile: '/png/banner/ad-banner-mobile01.png',
       },
-      key: 'https://spotless-possum-447.notion.site/102036fe33c04569856df709c871085c?pvs=4',
+      key: 'ad',
     },
     {
       img: {

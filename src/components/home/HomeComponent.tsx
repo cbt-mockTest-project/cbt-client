@@ -12,6 +12,7 @@ import HomeSearchedQuestionList from './HomeSearchedQuestionList';
 import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import useAuth from '@lib/hooks/useAuth';
+import { handleError } from '@lib/utils/utils';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -84,6 +85,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     refetchHomeCategories,
     ehsStorageCategories,
     handleToggleCategoryBookmark,
+    setBookmarkedCategories,
+    bookmarkedCategories,
   } = useHomeCategories();
 
   const searchType = useMemo(() => {
@@ -101,6 +104,25 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     // if (!isLoggedIn) return;
     if (router.query.type) return;
     refetchHomeCategories();
+
+    if (isLoggedIn) {
+      fetchCategories(
+        {
+          isBookmarked: true,
+        },
+        'network-only'
+      )
+        .then((res) => {
+          console.log('hi');
+          if (!res.data.getExamCategories.ok) return;
+          setBookmarkedCategories(
+            res.data.getExamCategories.categories as MockExamCategory[]
+          );
+        })
+        .catch((e) => {
+          handleError(e);
+        });
+    }
   }, [isLoggedIn, router.query]);
 
   useEffect(() => {
@@ -200,6 +222,14 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               }}
               unikeyKey="user-storage"
             />
+            {isLoggedIn && (
+              <HomeFolderList
+                title="북마크한 암기장 📌"
+                subTitle="북마크한 암기장을 모아보세요."
+                categories={bookmarkedCategories}
+                unikeyKey="bookmarked-storage"
+              />
+            )}
           </>
         )}
       </div>

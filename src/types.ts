@@ -778,6 +778,7 @@ export type EditProfileInput = {
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   nickname?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
+  printLimit?: InputMaybe<Scalars['Float']>;
   profileImg?: InputMaybe<Scalars['String']>;
   randomExamLimit?: InputMaybe<Scalars['Float']>;
 };
@@ -3524,6 +3525,7 @@ export type User = {
   postComment: Array<PostComment>;
   postData: Array<PostData>;
   postFile: Array<PostFile>;
+  printLimit?: Maybe<Scalars['Float']>;
   profileImg: Scalars['String'];
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
@@ -3587,6 +3589,7 @@ export type UserInputType = {
   postComment: Array<PostCommentInputType>;
   postData: Array<PostDataInputType>;
   postFile: Array<PostFileInputType>;
+  printLimit?: InputMaybe<Scalars['Float']>;
   profileImg?: InputMaybe<Scalars['String']>;
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;

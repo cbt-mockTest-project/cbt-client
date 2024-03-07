@@ -1,3 +1,4 @@
+import { checkIsEhsMasterExam } from '@lib/utils/utils';
 import { Button, Modal, ModalProps, Radio } from 'antd';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
@@ -25,6 +26,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const { categoryId, examId, ...modalProps } = props;
   const handleStartExam = () => {
     setMoveLoading(true);
+    if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
     if (mode === ExamMode.SOLUTION)
       return router.push(`/exam/solution/${examId}`);
     router.push({
@@ -50,6 +52,9 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
         >
           <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
           <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
+          {!checkIsEhsMasterExam([examId]) && (
+            <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
+          )}
         </Radio.Group>
         <Button
           className="exam-select-start-button"
@@ -58,7 +63,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
           onClick={handleStartExam}
           loading={moveLoading}
         >
-          학습하기
+          시작하기
         </Button>
       </div>
     </ExamSelecModalBlock>

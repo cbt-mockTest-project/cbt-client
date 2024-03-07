@@ -7,6 +7,7 @@ export interface HomeState {
   ehsStorageCategories: MockExamCategory[] | null;
   userStorageCategories: MockExamCategory[] | null;
   recentlyStudiedCategories: MockExamCategory[] | null;
+  bookmarkedCategories: MockExamCategory[] | null;
 }
 
 const storageState: HomeState = {
@@ -14,6 +15,7 @@ const storageState: HomeState = {
   ehsStorageCategories: null,
   userStorageCategories: null,
   recentlyStudiedCategories: null,
+  bookmarkedCategories: null,
 };
 
 const homeSlice = createSlice({
@@ -47,6 +49,13 @@ const homeSlice = createSlice({
     ) => {
       const { categories } = action.payload;
       state.recentlyStudiedCategories = categories;
+    },
+    setBookmarkedCategories: (
+      state,
+      action: PayloadAction<SetStorageCategoriesPayload>
+    ) => {
+      const { categories } = action.payload;
+      state.bookmarkedCategories = categories;
     },
   },
 });

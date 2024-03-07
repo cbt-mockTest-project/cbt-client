@@ -75,7 +75,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   }, []);
 
   useEffect(() => {
-    if (clientSideQuestions && serverSideQuestions) {
+    if (clientSideQuestions.length > 0 && serverSideQuestions) {
       setServerSideQuestions(null);
     }
   }, [clientSideQuestions]);

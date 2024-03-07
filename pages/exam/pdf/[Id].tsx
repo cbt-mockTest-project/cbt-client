@@ -1,7 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
-import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
+import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
 import StudyHeader from '@components/study/StudyHeader';
-import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
+import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
@@ -13,15 +13,13 @@ import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
-interface ExamSolutionPageProps {
-  questionsQueryInput: ReadQuestionsByExamIdsInput;
+interface ExamPdfPageProps {
   questions: MockExamQuestion[];
   title: string;
   description: string;
 }
 
-const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
-  questionsQueryInput,
+const ExamPdfPage: React.FC<ExamPdfPageProps> = ({
   questions,
   title,
   description,
@@ -29,19 +27,19 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   return (
     <>
       <WithHead
-        title={`${convertExamTitle(title)} 해설 | 모두CBT`}
-        pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
+        title={`${convertExamTitle(title)}pdf | 모두CBT`}
+        pageHeadingTitle={`${convertExamTitle(title)}pdf 페이지`}
         description={description}
       />
       <StudyHeader questions={questions} />
-      <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
+      <ExamPrintComponent />
     </>
   );
 };
 
-ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;
+ExamPdfPage.displayName = EXAM_PDF_PAGE;
 
-export default ExamSolutionPage;
+export default ExamPdfPage;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');
@@ -99,9 +97,8 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       }
       const questions = (res?.data.readQuestionsByExamIds.questions ||
         []) as MockExamQuestion[];
-      store.dispatch(mockExamActions.setQuestions([]));
       store.dispatch(
-        mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
+        mockExamActions.setQuestions(questions as MockExamQuestion[])
       );
       const title = questions[0]?.mockExam.title || '';
       const description = questions.reduce(
@@ -116,7 +113,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           title,
           description: removeHtmlTag(description),
         },
-        revalidate: 43200,
+        revalidate: 1,
       });
     } catch (e) {
       return {
