@@ -28,6 +28,21 @@ const StudySolveLimitInfoModalBlock = styled(Modal)`
     margin-bottom: 15px;
     color: ${palette.colorSubText};
   }
+  .study-solve-limit-info-modal-origin-price {
+    display: flex;
+    .study-solve-limit-info-modal-origin-price-tag {
+      font-size: 18px;
+      color: ${palette.colorSubText};
+      font-weight: bold;
+      text-decoration: line-through;
+    }
+    .study-solve-limit-info-modal-origin-price-date {
+      margin-top: auto;
+      font-size: 12px;
+      margin-left: 10px;
+      color: ${palette.red_500};
+    }
+  }
   .study-solve-limit-info-modal-price {
     margin-bottom: 15px;
     font-weight: bold;
@@ -109,8 +124,16 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
             <div className="study-solve-limit-info-modal-date">
               이용기간: 3개월
             </div>
+            <div className="study-solve-limit-info-modal-origin-price">
+              <div className="study-solve-limit-info-modal-origin-price-tag">
+                12,000
+              </div>
+              <div className="study-solve-limit-info-modal-origin-price-date">
+                ~ 24.03.25 까지
+              </div>
+            </div>
             <div className="study-solve-limit-info-modal-price">
-              <AttachMoneyIcon /> 12,000
+              <AttachMoneyIcon /> 9,900
               <span className="study-solve-limit-info-modal-price-tag">
                 {' '}
                 원
