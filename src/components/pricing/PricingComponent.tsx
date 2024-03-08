@@ -97,7 +97,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const handleBasicPlanPayment = () =>
     handlePayment({
       orderName: '모두CBT 베이직 플랜',
-      price: 12000,
+      price: 9900,
       roleId: 1,
       checkRoleIds: [1, 2],
     });
@@ -111,7 +111,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     {
       title: '베이직 플랜',
       intro: '베이직 플랜으로\n학습효율을 높여보세요!',
-      price: 12000,
+      price: 9900,
       endDate: '이용기간: 3개월',
       benefits: [
         '광고제거',

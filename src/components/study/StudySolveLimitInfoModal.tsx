@@ -82,7 +82,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
   ) => {
     await handlePayment({
       orderName: '모두CBT 베이직 플랜',
-      price: 12000,
+      price: 9900,
       roleId: 1,
       checkRoleIds: [1, 2],
     });
