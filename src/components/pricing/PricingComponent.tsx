@@ -113,7 +113,10 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       endDate: '이용기간: 3개월',
       intro: 'AI 문제봇을 활용하여\n효율적인 학습을 경험해보세요!',
       price: 10000,
-      benefits: ['산업안전기사, 건설안전기사 과목만 이용가능'],
+      benefits: [
+        '산업안전기사, 건설안전기사 과목만 이용가능',
+        '베이직플랜 이용자 5천원 할인',
+      ],
       confirmDisabled: false,
       confirmLabel: '대여 메뉴얼 보기',
       onConfirm: () => {
