@@ -97,7 +97,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const handleBasicPlanPayment = () =>
     handlePayment({
       orderName: '모두CBT 베이직 플랜',
-      price: 12000,
+      price: 9900,
       roleId: 1,
       checkRoleIds: [1, 2],
     });
@@ -113,7 +113,10 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       endDate: '이용기간: 3개월',
       intro: 'AI 문제봇을 활용하여\n효율적인 학습을 경험해보세요!',
       price: 10000,
-      benefits: ['산업안전기사, 건설안전기사 과목만 이용가능'],
+      benefits: [
+        '산업안전기사, 건설안전기사 과목만 이용가능',
+        '베이직플랜 이용자 5천원 할인',
+      ],
       confirmDisabled: false,
       confirmLabel: '대여 메뉴얼 보기',
       onConfirm: () => {
@@ -128,7 +131,9 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
     {
       title: '베이직 플랜',
       intro: '베이직 플랜으로\n학습효율을 높여보세요!',
-      price: 12000,
+      price: 9900,
+      beforeDiscountPrice: 12000,
+      discountDate: '24.03.25',
       endDate: '이용기간: 3개월',
       benefits: [
         '광고제거',
