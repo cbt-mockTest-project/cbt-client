@@ -1,5 +1,5 @@
+import 'swiper/css';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
-import { AnimatePresence, motion } from 'framer-motion';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 import useQuestions from '@lib/hooks/useQuestions';
 import { Modal, Tooltip } from 'antd';
@@ -14,9 +14,10 @@ import { responsive } from '@lib/utils/responsive';
 import { LocalStorage } from '@lib/utils/localStorage';
 import GoogleAdModal from '@components/common/ad/GoogleAdModal';
 import StudyModeItemWrapper from './StudyModeItemWrapper';
-import { isMobile } from 'react-device-detect';
 import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
 import useAuth from '@lib/hooks/useAuth';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { isMobile } from 'react-device-detect';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -66,6 +67,12 @@ const StudyModeWrapperBlock = styled.div`
     .study-mode-navigation-next,
     .study-mode-navigation-final {
       display: none;
+    }
+    .swiper-slide-next,
+    .swiper-slide-prev {
+      max-height: 0;
+      height: 0;
+      min-height: 0;
     }
   }
 `;
@@ -194,56 +201,69 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   }, [mode, activeIndex]);
 
   return (
-    <AnimatePresence initial={false}>
-      <StudyModeWrapperBlock>
-        {router.query.tab !== 'end' && (
-          <motion.div
-            key={activeIndex}
-            drag={isMobile ? 'x' : false}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
-            onDragEnd={(e, { offset, velocity }) => {
-              const swipe = swipePower(offset.x, velocity.x);
-              if (swipe < -swipeConfidenceThreshold) {
+    <StudyModeWrapperBlock>
+      {router.query.tab !== 'end' &&
+        (isMobile ? (
+          <Swiper
+            initialSlide={1}
+            direction="horizontal"
+            threshold={10}
+            touchRatio={0.4}
+            longSwipes={false}
+            shortSwipes={false}
+            onTouchEnd={(e) => {
+              if (e.touches.startX - e.touches.currentX > 100) {
                 handleSlideNext(questions.length);
-              } else if (swipe > swipeConfidenceThreshold) {
+              }
+              if (e.touches.startX - e.touches.currentX < -100) {
                 handleSlidePrev();
               }
+              console.log('startX', e.touches.startX);
+              console.log('endX', e.touches.currentX);
             }}
           >
-            <StudyModeItemWrapper
-              hasDefaultAnswers={hasDefaultAnswers}
-              question={questions[activeIndex - 1]}
-              number={activeIndex}
-            />
-          </motion.div>
-        )}
-        {router.query.tab === 'end' && <StudyEnd />}
-        {router.query.tab !== 'end' && (
-          <>
-            <Tooltip title="alt + shift + <-">
-              <button
-                className="study-mode-navigation-prev"
-                onClick={() => handleSlidePrev()}
-              >
-                <LeftOutlined />
-              </button>
-            </Tooltip>
-            <Tooltip title="alt + shift + ->">
-              <button
-                className="study-mode-navigation-next"
-                onClick={() => handleSlideNext(questions.length)}
-              >
-                <RightOutlined />
-              </button>
-            </Tooltip>
-          </>
-        )}
-        {isGoogleAdModalOpen && (
-          <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
-        )}
-      </StudyModeWrapperBlock>
-    </AnimatePresence>
+            <SwiperSlide />
+            <SwiperSlide>
+              <StudyModeItemWrapper
+                hasDefaultAnswers={hasDefaultAnswers}
+                question={questions[activeIndex - 1]}
+                number={activeIndex}
+              />
+            </SwiperSlide>
+            <SwiperSlide />
+          </Swiper>
+        ) : (
+          <StudyModeItemWrapper
+            hasDefaultAnswers={hasDefaultAnswers}
+            question={questions[activeIndex - 1]}
+            number={activeIndex}
+          />
+        ))}
+      {router.query.tab === 'end' && <StudyEnd />}
+      {router.query.tab !== 'end' && (
+        <>
+          <Tooltip title="alt + shift + <-">
+            <button
+              className="study-mode-navigation-prev"
+              onClick={() => handleSlidePrev()}
+            >
+              <LeftOutlined />
+            </button>
+          </Tooltip>
+          <Tooltip title="alt + shift + ->">
+            <button
+              className="study-mode-navigation-next"
+              onClick={() => handleSlideNext(questions.length)}
+            >
+              <RightOutlined />
+            </button>
+          </Tooltip>
+        </>
+      )}
+      {isGoogleAdModalOpen && (
+        <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
+      )}
+    </StudyModeWrapperBlock>
   );
 };
 
