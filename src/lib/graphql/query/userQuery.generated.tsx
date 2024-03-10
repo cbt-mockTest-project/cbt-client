@@ -39,7 +39,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: { __typename?: '
 export type MeQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', hasBookmarkedBefore?: boolean | null, randomExamLimit?: number | null, printLimit?: number | null, hasSolvedBefore?: boolean | null, solveLimit?: number | null, profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, userRoles: Array<{ __typename?: 'UserAndRole', created_at: any, role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'MeOutput', ok: boolean, error?: string | null, user?: { __typename?: 'User', hasBookmarkedBefore?: boolean | null, randomExamLimit?: number | null, printLimit?: number | null, hasSolvedBefore?: boolean | null, solveLimit?: number | null, profileImg: string, usedFreeTrial: boolean, nickname: string, id: number, role: Types.UserRole, email: string, recentlyStudiedCategory: string, recentlyStudiedExams?: { __typename?: 'RecentlyStudiedExams', examIds: Array<number>, questionIndex: number } | null, userRoles: Array<{ __typename?: 'UserAndRole', created_at: any, role: { __typename?: 'Role', name: string, id: number } }> } | null, notices?: Array<{ __typename?: 'Notice', content: string, id: number, created_at: any, confirm: boolean, link?: string | null }> | null } };
 
 export type EditProfileMutationVariables = Types.Exact<{
   input: Types.EditProfileInput;
@@ -156,6 +156,18 @@ export type UpdateRecentlyStudiedCategoryMutationVariables = Types.Exact<{
 
 export type UpdateRecentlyStudiedCategoryMutation = { __typename?: 'Mutation', updateRecentlyStudiedCategory: { __typename?: 'UpdateRecentlyStudiedCategoryOutput', error?: string | null, ok: boolean } };
 
+export type UpsertRecentlyStudiedExamsMutationVariables = Types.Exact<{
+  input: Types.UpsertRecentlyStudiedExamsInput;
+}>;
+
+
+export type UpsertRecentlyStudiedExamsMutation = { __typename?: 'Mutation', upsertRecentlyStudiedExams: { __typename?: 'UpsertRecentlyStudiedExamsOutput', error?: string | null, ok: boolean } };
+
+export type DeleteRecentlyStudiedExamsMutationVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type DeleteRecentlyStudiedExamsMutation = { __typename?: 'Mutation', deleteRecentlyStudiedExams: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -236,6 +248,10 @@ export const MeDocument = gql`
       role
       email
       recentlyStudiedCategory
+      recentlyStudiedExams {
+        examIds
+        questionIndex
+      }
       userRoles {
         created_at
         role {
@@ -488,4 +504,28 @@ export const UpdateRecentlyStudiedCategoryDocument = gql`
 
 export function useUpdateRecentlyStudiedCategoryMutation() {
   return Urql.useMutation<UpdateRecentlyStudiedCategoryMutation, UpdateRecentlyStudiedCategoryMutationVariables>(UpdateRecentlyStudiedCategoryDocument);
+};
+export const UpsertRecentlyStudiedExamsDocument = gql`
+    mutation UpsertRecentlyStudiedExams($input: UpsertRecentlyStudiedExamsInput!) {
+  upsertRecentlyStudiedExams(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useUpsertRecentlyStudiedExamsMutation() {
+  return Urql.useMutation<UpsertRecentlyStudiedExamsMutation, UpsertRecentlyStudiedExamsMutationVariables>(UpsertRecentlyStudiedExamsDocument);
+};
+export const DeleteRecentlyStudiedExamsDocument = gql`
+    mutation DeleteRecentlyStudiedExams {
+  deleteRecentlyStudiedExams {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteRecentlyStudiedExamsMutation() {
+  return Urql.useMutation<DeleteRecentlyStudiedExamsMutation, DeleteRecentlyStudiedExamsMutationVariables>(DeleteRecentlyStudiedExamsDocument);
 };

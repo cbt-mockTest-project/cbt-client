@@ -2,19 +2,21 @@ import CategoryComponent from '@components/category/CategoryComponent';
 import WithHead from '@components/common/head/WithHead';
 import {
   READ_EXAM_CATEGORY_BY_ID,
-  READ_EXAM_CATEGORY_IDS,
   READ_EXAM_CATEGORY_NAMES,
 } from '@lib/graphql/query/examQuery';
 import {
   ReadMockExamCategoryByCategoryIdQuery,
-  ReadMockExamCategoryIdsQuery,
   ReadMockExamCategoryNamesQuery,
 } from '@lib/graphql/query/examQuery.generated';
+import useAuth from '@lib/hooks/useAuth';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import wrapper from '@modules/redux/store/configureStore';
+import { Button, Space, notification } from 'antd';
+import { NotificationPlacement } from 'antd/es/notification/interface';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
@@ -27,6 +29,52 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
   categoryQueryInput,
   category,
 }) => {
+  const [api, contextHolder] = notification.useNotification();
+  const { user } = useAuth();
+  const router = useRouter();
+  const openNotification = (placement: NotificationPlacement) => {
+    if (!user) return;
+    if (!user.recentlyStudiedExams) return;
+    const key = `open${Date.now()}`;
+    const exam = category.mockExam.find(
+      (exam) => exam.id === user.recentlyStudiedExams.examIds[0]
+    );
+    api.open({
+      duration: 60,
+      message: `이어서 학습하기`,
+      description: `"${exam.title}-${user.recentlyStudiedExams.questionIndex}번 문제" 바로가기`,
+      placement,
+      key,
+      btn: (
+        <Space>
+          <Button onClick={() => api.destroy(key)}>닫기</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              router.push({
+                pathname: '/study',
+                query: {
+                  mode: 'typing',
+                  examId: user.recentlyStudiedExams.examIds[0],
+                  activeIndex: user.recentlyStudiedExams.questionIndex,
+                  categoryId: category.id,
+                },
+              });
+            }}
+          >
+            이동
+          </Button>
+        </Space>
+      ),
+    });
+  };
+
+  useEffect(() => {
+    if (user && user.recentlyStudiedExams) {
+      openNotification('bottom');
+    }
+  }, [user]);
+
   return (
     <>
       <WithHead
@@ -35,6 +83,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         description={category.description}
       />
       <CategoryComponent categoryQueryInput={categoryQueryInput} />
+      {contextHolder}
     </>
   );
 };

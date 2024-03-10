@@ -15,6 +15,8 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import GoogleAdModal from '@components/common/ad/GoogleAdModal';
 import StudyModeItemWrapper from './StudyModeItemWrapper';
 import { isMobile } from 'react-device-detect';
+import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
+import useAuth from '@lib/hooks/useAuth';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -75,16 +77,20 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
 
   const [isGoogleAdModalOpen, setIsGoogleAdModalOpen] = useState(false);
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const { questions } = useQuestions();
   const [hasDefaultAnswers, setHasDefaultAnswers] = useState<boolean | null>(
     null
   );
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
+  const [upsertRecentlyStudiedExams] = useUpsertRecentlyStudiedExams();
   const activeIndex = useMemo(() => {
     if (router.query.activeIndex === undefined) return 1;
     return Number(router.query.activeIndex);
   }, [router.query.activeIndex]);
   const mode = router.query.mode as string;
+  const examId = router.query.examId as string;
+  const tab = router.query.tab as string;
   const swipeConfidenceThreshold = 10000;
   const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity;
@@ -93,7 +99,17 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
 
   useEffect(() => {
     updateQuestionIndexInfo(activeIndex);
-  }, [activeIndex]);
+    if (isLoggedIn && typeof examId === 'string' && tab !== 'end') {
+      upsertRecentlyStudiedExams({
+        variables: {
+          input: {
+            examIds: [Number(examId)],
+            questionIndex: activeIndex,
+          },
+        },
+      });
+    }
+  }, [activeIndex, isLoggedIn, examId, tab]);
 
   useEffect(() => {
     if (mode !== 'typing') return;

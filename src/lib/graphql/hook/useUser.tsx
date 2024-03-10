@@ -6,6 +6,7 @@ import {
   CHECK_USER_ROLE,
   CREATE_FREE_TRIAL,
   CREATE_USER_ROLE,
+  DELETE_RECENTLY_STUDIED_EXAMS,
   DELETE_USER_MUTATION,
   DELETE_USER_ROLE,
   EDIT_PROFILE_MUTATION,
@@ -22,6 +23,7 @@ import {
   SEND_VERIFICATION_MAIL_MUTATION,
   UPDATE_ADBLOCK_PERMISSION,
   UPDATE_RECENTLY_STUDIED_CATEGORY,
+  UPSERT_RECENTLY_STUDIED_EXAMS,
 } from '../query/userQuery';
 import {
   ChangeClientRoleMutation,
@@ -36,6 +38,8 @@ import {
   CreateFreeTrialRoleMutationVariables,
   CreateUserRoleMutation,
   CreateUserRoleMutationVariables,
+  DeleteRecentlyStudiedExamsMutation,
+  DeleteRecentlyStudiedExamsMutationVariables,
   DeleteUserMutation,
   DeleteUserMutationVariables,
   DeleteUserRoleMutation,
@@ -68,6 +72,8 @@ import {
   UpdateAdBlockPermissionMutationVariables,
   UpdateRecentlyStudiedCategoryMutation,
   UpdateRecentlyStudiedCategoryMutationVariables,
+  UpsertRecentlyStudiedExamsMutation,
+  UpsertRecentlyStudiedExamsMutationVariables,
 } from '../query/userQuery.generated';
 
 export const useRegisterMutation = () =>
@@ -180,3 +186,15 @@ export const useUpdateRecentlyStudiedCategory = () =>
     UpdateRecentlyStudiedCategoryMutation,
     UpdateRecentlyStudiedCategoryMutationVariables
   >(UPDATE_RECENTLY_STUDIED_CATEGORY);
+
+export const useUpsertRecentlyStudiedExams = () =>
+  useMutation<
+    UpsertRecentlyStudiedExamsMutation,
+    UpsertRecentlyStudiedExamsMutationVariables
+  >(UPSERT_RECENTLY_STUDIED_EXAMS);
+
+export const useDeleteRecentlyStudiedExams = () =>
+  useMutation<
+    DeleteRecentlyStudiedExamsMutation,
+    DeleteRecentlyStudiedExamsMutationVariables
+  >(DELETE_RECENTLY_STUDIED_EXAMS);

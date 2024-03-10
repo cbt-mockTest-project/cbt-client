@@ -6,7 +6,6 @@ import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import StudyResultCard from './StudyResultCard';
 import palette from '@styles/palette';
-import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
@@ -15,8 +14,9 @@ import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 import { useCheckIfCategoryEvaluated } from '@lib/graphql/hook/useCategoryEvaluation';
 import useAuth from '@lib/hooks/useAuth';
 import StudyEndCategoryReviewModal from './StudyEndCategoryReviewModal';
-import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
+import { useDeleteRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
+import { handleError } from '@lib/utils/utils';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -94,6 +94,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
   const localStorage = new LocalStorage();
   const { questions } = useQuestions();
   const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
+  const [deleteRecentlyStudiedExams] = useDeleteRecentlyStudiedExams();
   const { isLoggedIn } = useAuth();
   const [checkIfCategoryEvaluated] = useCheckIfCategoryEvaluated();
   const [isCategoryReviewModalOpen, setIsCategoryReviewModalOpen] =
@@ -139,8 +140,15 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       if (router.query.examId || router.query.examIds) {
         updateQuestionIndexInfo(0);
       }
+      if (isLoggedIn) {
+        try {
+          deleteRecentlyStudiedExams();
+        } catch (e) {
+          handleError(e);
+        }
+      }
     }
-  }, [router.query.examId, router.query.examIds, router.query.tab]);
+  }, [router.query.examId, router.query.examIds, router.query.tab, isLoggedIn]);
 
   useEffect(() => {
     if (categoryId && isLoggedIn) {

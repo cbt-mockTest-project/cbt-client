@@ -1,7 +1,7 @@
-import { EllipsisOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, Progress, message } from 'antd';
+import { Dropdown, MenuProps, Modal, message } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput } from 'types';
@@ -27,7 +27,6 @@ import ExamList from './ExamList';
 import CategoryReviewButton from './CategoryReviewButton';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
-import CoupangDynamicBanner from '@components/common/ad/CoupangDynamicBanner';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;

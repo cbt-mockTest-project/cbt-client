@@ -93,7 +93,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     if (router.query.type) return router.query.type;
     return 'folder';
   }, [router.query.type]);
-  const searchInputRef = React.useRef<InputRef>(null);
 
   const keyword = useMemo(() => {
     if (searchType === 'folder') return router.query.f_keyword;
@@ -101,7 +100,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
   useEffect(() => {
-    // if (!isLoggedIn) return;
     if (router.query.type) return;
     refetchHomeCategories();
 
@@ -147,21 +145,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     }
   }, [keyword]);
 
-  const handleSearch = (value: string) => {
-    router.push({
-      query: {
-        ...router.query,
-        ...(value
-          ? {
-              ...(searchType === 'folder'
-                ? { f_keyword: value }
-                : { q_keyword: value }),
-              type: searchType,
-            }
-          : {}),
-      },
-    });
-  };
   return (
     <HomeComponentBlock>
       <HomeBanner />

@@ -257,7 +257,7 @@ export type CreateMockExamQuestionCommentOutput = {
 export type CreateMockExamQuestionFeedbackInput = {
   content: Scalars['String'];
   questionId: Scalars['Float'];
-  type?: InputMaybe<QuestionFeedbackType>;
+  type?: QuestionFeedbackType;
 };
 
 export type CreateMockExamQuestionFeedbackOutput = {
@@ -324,7 +324,7 @@ export type CreateOrUpdateMockExamQuestionStateOutput = {
 
 export type CreateOrUpdateTodoInput = {
   dateString: Scalars['String'];
-  todoList?: InputMaybe<Array<TodoListInputType>>;
+  todoList?: Array<TodoListInputType>;
 };
 
 export type CreateOrUpdateTodoOutput = {
@@ -473,7 +473,7 @@ export type DeleteExamCategoryInvitationOutput = {
 export type DeleteExamCategoryViewerInput = {
   categoryId: Scalars['Float'];
   examViewerId: Scalars['Float'];
-  executor?: InputMaybe<Scalars['String']>;
+  executor?: Scalars['String'];
 };
 
 export type DeleteExamCategoryViewerOutput = {
@@ -1275,18 +1275,18 @@ export type MockExamCategory = {
 };
 
 export type MockExamCategoryInputType = {
-  approved?: InputMaybe<Scalars['Boolean']>;
+  approved?: Scalars['Boolean'];
   categoryEvaluations?: InputMaybe<Array<CategoryEvaluationInputType>>;
-  description?: InputMaybe<Scalars['String']>;
+  description?: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
-  examOrderIds?: InputMaybe<Array<Scalars['Float']>>;
+  examOrderIds?: Array<Scalars['Float']>;
   examType: ExamType;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
-  isPublic?: InputMaybe<Scalars['Boolean']>;
+  isPublic?: Scalars['Boolean'];
   mockExam: Array<MockExamInputType>;
   name: Scalars['String'];
   order: Scalars['Float'];
@@ -1325,7 +1325,7 @@ export type MockExamImageType = {
 };
 
 export type MockExamInputType = {
-  approved?: InputMaybe<Scalars['Boolean']>;
+  approved?: Scalars['Boolean'];
   examBookmarks: Array<MockExamBookmarkInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
   examLikes: Array<ExamLikeInputType>;
@@ -1333,12 +1333,12 @@ export type MockExamInputType = {
   history: Array<MockExamHistoryInputType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isLiked?: InputMaybe<Scalars['Boolean']>;
-  isPremium?: InputMaybe<Scalars['Boolean']>;
+  isPremium?: Scalars['Boolean'];
   mockExamCategory: Array<MockExamCategoryInputType>;
   mockExamQuestion: Array<MockExamQuestionInputType>;
   mockExamQuestionState: Array<MockExamQuestionInputType>;
-  order?: InputMaybe<Scalars['Float']>;
-  questionOrderIds?: InputMaybe<Array<Scalars['String']>>;
+  order?: Scalars['Float'];
+  questionOrderIds?: Array<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   source: ExamSource;
   status: ExamStatus;
@@ -1411,8 +1411,8 @@ export type MockExamQuestionComment = {
 export type MockExamQuestionCommentInputType = {
   commentLike: Array<MockExamQuestionCommentLikeInputType>;
   content: Scalars['String'];
-  likeState?: InputMaybe<Scalars['Boolean']>;
-  likesCount?: InputMaybe<Scalars['Float']>;
+  likeState?: Scalars['Boolean'];
+  likesCount?: Scalars['Float'];
   question: MockExamQuestionInputType;
   user: UserInputType;
 };
@@ -1478,7 +1478,7 @@ export type MockExamQuestionImageInputType = {
 };
 
 export type MockExamQuestionInputType = {
-  approved?: InputMaybe<Scalars['Boolean']>;
+  approved?: Scalars['Boolean'];
   commentCount?: InputMaybe<Scalars['Float']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
@@ -1629,6 +1629,7 @@ export type Mutation = {
   deletePostComment: DeletePostCommentOutput;
   deleteQuestionCardCategory: DeleteQuestionCardCategoryOutput;
   deleteQuestionCards: DeleteQuestionCardsOutput;
+  deleteRecentlyStudiedExams: CoreOutput;
   deleteUser: CoreOutput;
   deleteUserRole: DeleteUserRoleOutput;
   editMockExam: EditMockExamOutput;
@@ -1676,6 +1677,7 @@ export type Mutation = {
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
   updateRecentlyStudiedCategory: UpdateRecentlyStudiedCategoryOutput;
+  upsertRecentlyStudiedExams: UpsertRecentlyStudiedExamsOutput;
   viewPost: ViewPostOutput;
 };
 
@@ -2120,6 +2122,11 @@ export type MutationUpdateRecentlyStudiedCategoryArgs = {
 };
 
 
+export type MutationUpsertRecentlyStudiedExamsArgs = {
+  input: UpsertRecentlyStudiedExamsInput;
+};
+
+
 export type MutationViewPostArgs = {
   input: ViewPostInput;
 };
@@ -2131,8 +2138,8 @@ export type MyRecommedationStatus = {
 };
 
 export type MyRecommedationStatusInputType = {
-  isBad?: InputMaybe<Scalars['Boolean']>;
-  isGood?: InputMaybe<Scalars['Boolean']>;
+  isBad?: Scalars['Boolean'];
+  isGood?: Scalars['Boolean'];
 };
 
 export type NaverBlogViewMacroInput = {
@@ -2158,7 +2165,7 @@ export type Notice = {
 };
 
 export type NoticeInputType = {
-  confirm?: InputMaybe<Scalars['Boolean']>;
+  confirm?: Scalars['Boolean'];
   content: Scalars['String'];
   link?: InputMaybe<Scalars['String']>;
   reservationTime?: InputMaybe<Scalars['DateTime']>;
@@ -2287,8 +2294,8 @@ export type PostComment = {
 export type PostCommentInputType = {
   commentLike: Array<PostCommentLikeInputType>;
   content: Scalars['String'];
-  likeState?: InputMaybe<Scalars['Boolean']>;
-  likesCount?: InputMaybe<Scalars['Float']>;
+  likeState?: Scalars['Boolean'];
+  likesCount?: Scalars['Float'];
   post: PostInputType;
   user: UserInputType;
 };
@@ -2319,10 +2326,10 @@ export type PostData = {
 };
 
 export type PostDataInput = {
-  fileName?: InputMaybe<Scalars['String']>;
-  filePage?: InputMaybe<Scalars['Float']>;
-  fileUrl?: InputMaybe<Scalars['String']>;
-  price?: InputMaybe<Scalars['Float']>;
+  fileName?: Scalars['String'];
+  filePage?: Scalars['Float'];
+  fileUrl?: Scalars['String'];
+  price?: Scalars['Float'];
 };
 
 export type PostDataInputType = {
@@ -2345,10 +2352,10 @@ export type PostFile = {
 };
 
 export type PostFileInputType = {
-  name?: InputMaybe<Scalars['String']>;
-  page?: InputMaybe<Scalars['Float']>;
+  name?: Scalars['String'];
+  page?: Scalars['Float'];
   postData: PostDataInputType;
-  url?: InputMaybe<Scalars['String']>;
+  url?: Scalars['String'];
   user: UserInputType;
 };
 
@@ -2363,19 +2370,19 @@ export type PostInfo = {
 export type PostInputType = {
   category: PostCategory;
   comment: Array<PostCommentInputType>;
-  commentLikeState?: InputMaybe<Scalars['Boolean']>;
-  commentLikesCount?: InputMaybe<Scalars['Float']>;
-  commentsCount?: InputMaybe<Scalars['Float']>;
+  commentLikeState?: Scalars['Boolean'];
+  commentLikesCount?: Scalars['Float'];
+  commentsCount?: Scalars['Float'];
   content: Scalars['String'];
   data?: InputMaybe<PostDataInputType>;
-  isHidden?: InputMaybe<Scalars['Boolean']>;
+  isHidden?: Scalars['Boolean'];
   like: Array<PostLikeInputType>;
-  likeState?: InputMaybe<Scalars['Boolean']>;
-  likesCount?: InputMaybe<Scalars['Float']>;
-  priority?: InputMaybe<Scalars['Float']>;
+  likeState?: Scalars['Boolean'];
+  likesCount?: Scalars['Float'];
+  priority?: Scalars['Float'];
   title: Scalars['String'];
   user: UserInputType;
-  view?: InputMaybe<Scalars['Float']>;
+  view?: Scalars['Float'];
 };
 
 export type PostLike = {
@@ -2766,9 +2773,9 @@ export type ReadAllMockExamQuestionOutput = {
 };
 
 export type ReadAllMockExamsInput = {
-  all?: InputMaybe<Scalars['Boolean']>;
-  category?: InputMaybe<Scalars['String']>;
-  query?: InputMaybe<Scalars['String']>;
+  all?: Scalars['Boolean'];
+  category?: Scalars['String'];
+  query?: Scalars['String'];
 };
 
 export type ReadAllMockExamsOutput = {
@@ -2812,7 +2819,7 @@ export type ReadExamTitleAndIdOfBookmarkedQuestionOutput = {
 };
 
 export type ReadMockExamCategoriesInput = {
-  source?: InputMaybe<ExamSource>;
+  source?: ExamSource;
 };
 
 export type ReadMockExamCategoriesOutput = {
@@ -3047,10 +3054,10 @@ export type ReadPostOutput = {
 };
 
 export type ReadPostsInput = {
-  all?: InputMaybe<Scalars['Boolean']>;
+  all?: Scalars['Boolean'];
   category?: InputMaybe<PostCategory>;
   limit?: InputMaybe<Scalars['Float']>;
-  order?: InputMaybe<PostOrderType>;
+  order?: PostOrderType;
   page: Scalars['Float'];
   search?: InputMaybe<Scalars['String']>;
 };
@@ -3078,7 +3085,7 @@ export type ReadQuestionsByExamIdsInput = {
   bookmarked?: InputMaybe<Scalars['Boolean']>;
   ids?: InputMaybe<Array<Scalars['Float']>>;
   limit?: InputMaybe<Scalars['Float']>;
-  order?: InputMaybe<Scalars['String']>;
+  order?: Scalars['String'];
   states?: InputMaybe<Array<QuestionState>>;
 };
 
@@ -3105,6 +3112,17 @@ export type ReadVisitHistoryOutput = {
   yesterday?: Maybe<Scalars['Float']>;
 };
 
+export type RecentlyStudiedExams = {
+  __typename?: 'RecentlyStudiedExams';
+  examIds: Array<Scalars['Float']>;
+  questionIndex: Scalars['Float'];
+};
+
+export type RecentlyStudiedExamsInputType = {
+  examIds: Array<Scalars['Float']>;
+  questionIndex: Scalars['Float'];
+};
+
 export type RecommendationCount = {
   __typename?: 'RecommendationCount';
   bad: Scalars['Float'];
@@ -3112,8 +3130,8 @@ export type RecommendationCount = {
 };
 
 export type RecommendationCountInputType = {
-  bad?: InputMaybe<Scalars['Float']>;
-  good?: InputMaybe<Scalars['Float']>;
+  bad?: Scalars['Float'];
+  good?: Scalars['Float'];
 };
 
 export type RegisterInput = {
@@ -3323,7 +3341,7 @@ export type Todo = {
 
 export type TodoInputType = {
   dateString: Scalars['String'];
-  todoList?: InputMaybe<Array<TodoListInputType>>;
+  todoList?: Array<TodoListInputType>;
   user: UserInputType;
 };
 
@@ -3486,6 +3504,17 @@ export type UpdateRecentlyStudiedCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type UpsertRecentlyStudiedExamsInput = {
+  examIds: Array<Scalars['Float']>;
+  questionIndex: Scalars['Float'];
+};
+
+export type UpsertRecentlyStudiedExamsOutput = {
+  __typename?: 'UpsertRecentlyStudiedExamsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type User = {
   __typename?: 'User';
   LoginType: LoginType;
@@ -3532,6 +3561,7 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   randomExamLimit?: Maybe<Scalars['Float']>;
   recentlyStudiedCategory: Scalars['String'];
+  recentlyStudiedExams?: Maybe<RecentlyStudiedExams>;
   role: UserRole;
   seller?: Maybe<Seller>;
   solveLimit?: Maybe<Scalars['Float']>;
@@ -3572,7 +3602,7 @@ export type UserInputType = {
   hasReachedPaymentReminder?: InputMaybe<Scalars['Boolean']>;
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   isAllowAdblock: Scalars['Boolean'];
-  lastLogInIp?: InputMaybe<Scalars['String']>;
+  lastLogInIp?: Scalars['String'];
   mockExam: Array<MockExamInputType>;
   mockExamCategory: Array<MockExamCategoryInputType>;
   mockExamHistory: Array<MockExamHistoryInputType>;
@@ -3590,12 +3620,13 @@ export type UserInputType = {
   postData: Array<PostDataInputType>;
   postFile: Array<PostFileInputType>;
   printLimit?: InputMaybe<Scalars['Float']>;
-  profileImg?: InputMaybe<Scalars['String']>;
+  profileImg?: Scalars['String'];
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
   randomExamLimit?: InputMaybe<Scalars['Float']>;
-  recentlyStudiedCategory?: InputMaybe<Scalars['String']>;
+  recentlyStudiedCategory?: Scalars['String'];
+  recentlyStudiedExams?: InputMaybe<RecentlyStudiedExamsInputType>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
   solveLimit?: InputMaybe<Scalars['Float']>;
@@ -3628,7 +3659,7 @@ export enum UserRole {
 }
 
 export type UserRoleInputType = {
-  price?: InputMaybe<Scalars['Float']>;
+  price?: Scalars['Float'];
   role: RoleInputType;
   user?: InputMaybe<UserInputType>;
 };

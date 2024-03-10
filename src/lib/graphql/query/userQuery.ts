@@ -64,6 +64,10 @@ export const ME_QUERY = gql`
         role
         email
         recentlyStudiedCategory
+        recentlyStudiedExams {
+          examIds
+          questionIndex
+        }
         userRoles {
           created_at
           role {
@@ -260,6 +264,26 @@ export const UPDATE_RECENTLY_STUDIED_CATEGORY = gql`
     $input: UpdateRecentlyStudiedCategoryInput!
   ) {
     updateRecentlyStudiedCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const UPSERT_RECENTLY_STUDIED_EXAMS = gql`
+  mutation UpsertRecentlyStudiedExams(
+    $input: UpsertRecentlyStudiedExamsInput!
+  ) {
+    upsertRecentlyStudiedExams(input: $input) {
+      error
+      ok
+    }
+  }
+`;
+
+export const DELETE_RECENTLY_STUDIED_EXAMS = gql`
+  mutation DeleteRecentlyStudiedExams {
+    deleteRecentlyStudiedExams {
       error
       ok
     }
