@@ -66,6 +66,7 @@ export const ME_QUERY = gql`
         recentlyStudiedCategory
         recentlyStudiedExams {
           examIds
+          categoryId
           questionIndex
         }
         userRoles {

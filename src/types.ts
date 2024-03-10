@@ -3114,11 +3114,13 @@ export type ReadVisitHistoryOutput = {
 
 export type RecentlyStudiedExams = {
   __typename?: 'RecentlyStudiedExams';
+  categoryId: Scalars['Float'];
   examIds: Array<Scalars['Float']>;
   questionIndex: Scalars['Float'];
 };
 
 export type RecentlyStudiedExamsInputType = {
+  categoryId: Scalars['Float'];
   examIds: Array<Scalars['Float']>;
   questionIndex: Scalars['Float'];
 };
@@ -3505,6 +3507,7 @@ export type UpdateRecentlyStudiedCategoryOutput = {
 };
 
 export type UpsertRecentlyStudiedExamsInput = {
+  categoryId: Scalars['Float'];
   examIds: Array<Scalars['Float']>;
   questionIndex: Scalars['Float'];
 };
@@ -3561,7 +3564,7 @@ export type User = {
   questionFeedback: Array<MockExamQuestionFeedback>;
   randomExamLimit?: Maybe<Scalars['Float']>;
   recentlyStudiedCategory: Scalars['String'];
-  recentlyStudiedExams?: Maybe<RecentlyStudiedExams>;
+  recentlyStudiedExams?: Maybe<Array<RecentlyStudiedExams>>;
   role: UserRole;
   seller?: Maybe<Seller>;
   solveLimit?: Maybe<Scalars['Float']>;
@@ -3626,7 +3629,7 @@ export type UserInputType = {
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
   randomExamLimit?: InputMaybe<Scalars['Float']>;
   recentlyStudiedCategory?: Scalars['String'];
-  recentlyStudiedExams?: InputMaybe<RecentlyStudiedExamsInputType>;
+  recentlyStudiedExams?: InputMaybe<Array<RecentlyStudiedExamsInputType>>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
   solveLimit?: InputMaybe<Scalars['Float']>;

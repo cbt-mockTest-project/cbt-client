@@ -99,10 +99,17 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
 
   useEffect(() => {
     updateQuestionIndexInfo(activeIndex);
-    if (isLoggedIn && typeof examId === 'string' && tab !== 'end') {
+    if (
+      isLoggedIn &&
+      typeof examId === 'string' &&
+      tab !== 'end' &&
+      router.query.categoryId &&
+      examId
+    ) {
       upsertRecentlyStudiedExams({
         variables: {
           input: {
+            categoryId: Number(router.query.categoryId),
             examIds: [Number(examId)],
             questionIndex: activeIndex,
           },

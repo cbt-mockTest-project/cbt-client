@@ -15,8 +15,8 @@ import { useCheckIfCategoryEvaluated } from '@lib/graphql/hook/useCategoryEvalua
 import useAuth from '@lib/hooks/useAuth';
 import StudyEndCategoryReviewModal from './StudyEndCategoryReviewModal';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
-import { useDeleteRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
+import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -94,7 +94,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
   const localStorage = new LocalStorage();
   const { questions } = useQuestions();
   const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
-  const [deleteRecentlyStudiedExams] = useDeleteRecentlyStudiedExams();
+  const [upsertRecentlyStudiedExams] = useUpsertRecentlyStudiedExams();
   const { isLoggedIn } = useAuth();
   const [checkIfCategoryEvaluated] = useCheckIfCategoryEvaluated();
   const [isCategoryReviewModalOpen, setIsCategoryReviewModalOpen] =
@@ -140,9 +140,17 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       if (router.query.examId || router.query.examIds) {
         updateQuestionIndexInfo(0);
       }
-      if (isLoggedIn) {
+      if (isLoggedIn && router.query.examId && router.query.categoryId) {
         try {
-          deleteRecentlyStudiedExams();
+          upsertRecentlyStudiedExams({
+            variables: {
+              input: {
+                categoryId: Number(router.query.categoryId),
+                examIds: [Number(router.query.examId)],
+                questionIndex: 0,
+              },
+            },
+          });
         } catch (e) {
           handleError(e);
         }

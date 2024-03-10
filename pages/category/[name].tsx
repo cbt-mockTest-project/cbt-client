@@ -34,16 +34,21 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
   const router = useRouter();
   const openNotification = (placement: NotificationPlacement) => {
     if (!user) return;
-    if (!user.recentlyStudiedExams) return;
+    if (!user.recentlyStudiedExams.length) return;
     const key = `open${Date.now()}`;
+
+    const recentlyStudiedExams = user.recentlyStudiedExams.filter(
+      (data) => data.categoryId === category.id
+    );
+    if (!recentlyStudiedExams.length) return;
     const exam = category.mockExam.find(
-      (exam) => exam.id === user.recentlyStudiedExams.examIds[0]
+      (el) => recentlyStudiedExams[0].examIds[0] === el.id
     );
     if (!exam) return;
     api.open({
       duration: 60,
       message: `이어서 학습하기`,
-      description: `"${exam.title}-${user.recentlyStudiedExams.questionIndex}번 문제" 바로가기`,
+      description: `"${exam.title}-${recentlyStudiedExams[0].questionIndex}번 문제" 바로가기`,
       placement,
       key,
       btn: (
@@ -56,8 +61,8 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
                 pathname: '/study',
                 query: {
                   mode: 'typing',
-                  examId: user.recentlyStudiedExams.examIds[0],
-                  activeIndex: user.recentlyStudiedExams.questionIndex,
+                  examId: recentlyStudiedExams[0].examIds[0],
+                  activeIndex: recentlyStudiedExams[0].questionIndex,
                   categoryId: category.id,
                 },
               });
