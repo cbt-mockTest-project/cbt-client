@@ -109,26 +109,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
 
   const pricingCardData: PricingCardProps[] = [
     {
-      title: 'AI 문제봇 대여',
-      endDate: '이용기간: 3개월',
-      intro: 'AI 문제봇을 활용하여\n효율적인 학습을 경험해보세요!',
-      price: 10000,
-      benefits: [
-        '산업안전기사, 건설안전기사 과목만 이용가능',
-        '베이직플랜 이용자 5천원 할인',
-      ],
-      confirmDisabled: false,
-      confirmLabel: '대여 메뉴얼 보기',
-      onConfirm: () => {
-        window.open(
-          'https://spotless-possum-447.notion.site/3fb69d17bb024649945b77d1d50fa2e7',
-          '_blank',
-          'noopener'
-        );
-      },
-      roleIds: [4, 5, 6, 7],
-    },
-    {
       title: '베이직 플랜',
       intro: '베이직 플랜으로\n학습효율을 높여보세요!',
       price: 9900,
@@ -147,6 +127,26 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         : false,
       onConfirm: handleBasicPlanPayment,
       roleIds: [1],
+    },
+    {
+      title: 'AI 문제봇 대여',
+      endDate: '이용기간: 3개월',
+      intro: 'AI 문제봇을 활용하여\n효율적인 학습을 경험해보세요!',
+      price: 10000,
+      benefits: [
+        '산업안전기사, 건설안전기사 과목만 이용가능',
+        '베이직플랜 이용자 5천원 할인',
+      ],
+      confirmDisabled: false,
+      confirmLabel: '대여 메뉴얼 보기',
+      onConfirm: () => {
+        window.open(
+          'https://spotless-possum-447.notion.site/3fb69d17bb024649945b77d1d50fa2e7',
+          '_blank',
+          'noopener'
+        );
+      },
+      roleIds: [4, 5, 6, 7],
     },
     {
       title: '직8딴 플랜',

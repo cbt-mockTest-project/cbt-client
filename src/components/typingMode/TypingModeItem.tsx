@@ -47,14 +47,17 @@ const TypingModeItemBlock = styled.div`
     display: none;
   }
   @media (max-width: ${responsive.large}) {
+    min-height: calc(100vh - 57px);
     padding-bottom: 70px;
     .typing-mode-swiper-button-wrapper {
+      box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+      background-color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: fixed;
-      bottom: 20px;
-      padding: 0 20px;
+      bottom: 0;
+      padding: 10px 20px;
       width: 100%;
       right: 0;
       .typing-mode-control-button {
