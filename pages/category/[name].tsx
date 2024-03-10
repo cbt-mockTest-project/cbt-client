@@ -39,6 +39,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
     const exam = category.mockExam.find(
       (exam) => exam.id === user.recentlyStudiedExams.examIds[0]
     );
+    if (!exam) return;
     api.open({
       duration: 60,
       message: `이어서 학습하기`,
