@@ -62,6 +62,9 @@ const StudyModeWrapperBlock = styled.div`
     opacity: 0.2;
     cursor: not-allowed;
   }
+  .typing-mode-swiper-button-wrapper {
+    display: none;
+  }
   @media (max-width: ${responsive.large}) {
     .study-mode-navigation-prev,
     .study-mode-navigation-next,
@@ -73,6 +76,38 @@ const StudyModeWrapperBlock = styled.div`
       max-height: 0;
       height: 0;
       min-height: 0;
+    }
+    .typing-mode-swiper-button-wrapper {
+      z-index: 100;
+      box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      padding: 10px 20px;
+      width: 100%;
+      right: 0;
+      .typing-mode-control-button {
+        background-color: white;
+        padding: 5px;
+        width: 40px;
+        height: 40px;
+        border: 2px solid ${palette.colorBorder};
+        color: ${palette.colorText};
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+        &:hover {
+          color: ${palette.antd_blue_02};
+        }
+        svg {
+          font-size: 20px;
+        }
+      }
     }
   }
 `;
@@ -225,12 +260,33 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             <SwiperSlide />
             <SwiperSlide>
               <StudyModeItemWrapper
+                key={activeIndex}
                 hasDefaultAnswers={hasDefaultAnswers}
                 question={questions[activeIndex - 1]}
                 number={activeIndex}
               />
             </SwiperSlide>
             <SwiperSlide />
+            {mode === 'typing' && (
+              <div className="typing-mode-swiper-button-wrapper">
+                <Tooltip title={isMobile ? '' : 'alt + shift + <-'}>
+                  <button
+                    className="typing-mode-control-button"
+                    onClick={() => handleSlidePrev()}
+                  >
+                    <LeftOutlined />
+                  </button>
+                </Tooltip>
+                <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
+                  <button
+                    className="typing-mode-control-button"
+                    onClick={() => handleSlideNext(questions.length)}
+                  >
+                    <RightOutlined />
+                  </button>
+                </Tooltip>
+              </div>
+            )}
           </Swiper>
         ) : (
           <StudyModeItemWrapper
