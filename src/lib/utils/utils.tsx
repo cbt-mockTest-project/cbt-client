@@ -56,20 +56,20 @@ export const handleError = async (error: any) => {
   ) {
     return;
   }
-  const clientIp = !isServer() ? await fetchClientIp() : 'server';
-  const telegramMessage = `[Client Error]\nMessage: ${
-    error?.response?.data ||
-    error?.response?.message ||
-    error?.message ||
-    error ||
-    ''
-  }\nCurrentPagePath: ${
-    typeof window !== 'undefined' ? window.location : ''
-  }\nUserAgent: ${
-    typeof window !== 'undefined' ? window.navigator.userAgent : ''
-  }\nIP:${clientIp}
-      `;
-  sendErrorToTelegram(telegramMessage);
+  // const clientIp = !isServer() ? await fetchClientIp() : 'server';
+  // const telegramMessage = `[Client Error]\nMessage: ${
+  //   error?.response?.data ||
+  //   error?.response?.message ||
+  //   error?.message ||
+  //   error ||
+  //   ''
+  // }\nCurrentPagePath: ${
+  //   typeof window !== 'undefined' ? window.location : ''
+  // }\nUserAgent: ${
+  //   typeof window !== 'undefined' ? window.navigator.userAgent : ''
+  // }\nIP:${clientIp}
+  //     `;
+  // sendErrorToTelegram(telegramMessage);
 };
 
 interface CheckUrlArgs {
