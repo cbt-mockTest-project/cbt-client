@@ -290,6 +290,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           </Swiper>
         ) : (
           <StudyModeItemWrapper
+            key={activeIndex}
             hasDefaultAnswers={hasDefaultAnswers}
             question={questions[activeIndex - 1]}
             number={activeIndex}
