@@ -236,6 +236,9 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
       error
       ok
       questions {
+        highScore
+        middleScore
+        lowScore
         mockExam {
           id
           title

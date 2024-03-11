@@ -79,7 +79,7 @@ export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> }> } };
+export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user: { __typename?: 'User', id: number, nickname: string } }> }> } };
 
 
 export const ReadMockExamQuestionsByMockExamIdDocument = gql`
@@ -335,6 +335,9 @@ export const ReadQuestionsByExamIdsDocument = gql`
     error
     ok
     questions {
+      highScore
+      middleScore
+      lowScore
       mockExam {
         id
         title

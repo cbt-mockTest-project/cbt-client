@@ -72,6 +72,13 @@ const StudyQuestionBoxBlock = styled.div`
   .study-question-edit-button {
     margin-left: auto;
   }
+  .study-question-box-answer-percentage {
+    position: relative;
+    bottom: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: ${palette.colorSubText};
+  }
 `;
 
 interface StudyQuestionBoxProps {
@@ -122,6 +129,13 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
       onChangeIsFeedbackModalOpen(isFeedbackModalOpen);
     }
   }, [onChangeIsFeedbackModalOpen]);
+
+  const answerPercentage = useMemo(() => {
+    const total =
+      question.highScore + question.lowScore + question.middleScore * 0.5;
+    return ((question.highScore / total) * 100).toFixed(0);
+  }, [question]);
+
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">

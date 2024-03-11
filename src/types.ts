@@ -1359,9 +1359,12 @@ export type MockExamQuestion = {
   approved: Scalars['Boolean'];
   commentCount?: Maybe<Scalars['Float']>;
   created_at: Scalars['DateTime'];
+  highScore: Scalars['Float'];
   id: Scalars['Float'];
   isBookmarked?: Maybe<Scalars['Boolean']>;
   label?: Maybe<Scalars['String']>;
+  lowScore: Scalars['Float'];
+  middleScore: Scalars['Float'];
   mockExam?: Maybe<MockExam>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
@@ -1480,8 +1483,11 @@ export type MockExamQuestionImageInputType = {
 export type MockExamQuestionInputType = {
   approved?: Scalars['Boolean'];
   commentCount?: InputMaybe<Scalars['Float']>;
+  highScore?: Scalars['Float'];
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  lowScore?: Scalars['Float'];
+  middleScore?: Scalars['Float'];
   mockExam?: InputMaybe<MockExamInputType>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmarkInputType>;
   mockExamQuestionComment: Array<MockExamQuestionCommentInputType>;
@@ -2188,9 +2194,12 @@ export type PartialMockExamQuestionInput = {
   approved?: InputMaybe<Scalars['Boolean']>;
   commentCount?: InputMaybe<Scalars['Float']>;
   created_at?: InputMaybe<Scalars['DateTime']>;
+  highScore?: InputMaybe<Scalars['Float']>;
   id?: InputMaybe<Scalars['Float']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  lowScore?: InputMaybe<Scalars['Float']>;
+  middleScore?: InputMaybe<Scalars['Float']>;
   mockExam?: InputMaybe<MockExamInputType>;
   mockExamQuestionBookmark?: InputMaybe<Array<MockExamQuestionBookmarkInputType>>;
   mockExamQuestionComment?: InputMaybe<Array<MockExamQuestionCommentInputType>>;
