@@ -104,7 +104,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   const { user, handleCheckLogin, handleUpdateUserCache } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
-    return user.id === question.user.id;
+    return user.id === question?.user.id;
   }, [user, question]);
 
   const handleOpenFeedbackModal: React.MouseEventHandler<HTMLDivElement> = (
@@ -130,11 +130,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
     }
   }, [onChangeIsFeedbackModalOpen]);
 
-  const answerPercentage = useMemo(() => {
-    const total =
-      question.highScore + question.lowScore + question.middleScore * 0.5;
-    return ((question.highScore / total) * 100).toFixed(0);
-  }, [question]);
+  // const answerPercentage = useMemo(() => {
+  //   const total =
+  //     question.highScore + question.lowScore + question.middleScore * 0.5;
+  //   return ((question.highScore / total) * 100).toFixed(0);
+  // }, [question]);
 
   return (
     <StudyQuestionBoxBlock className={className}>
@@ -144,7 +144,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             <p className="study-question-box-number">{questionNumber}번</p>
           )}
           <div className="study-question-exam-title">
-            {question.mockExam?.title}
+            {question?.mockExam?.title}
           </div>
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
@@ -172,7 +172,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           <Bookmark
             onClick={onClickBookmark}
             role="button"
-            active={!!question.isBookmarked}
+            active={!!question?.isBookmarked}
             className="study-question-box-bookmark"
           />
         </div>

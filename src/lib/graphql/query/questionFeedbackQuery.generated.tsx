@@ -20,7 +20,7 @@ export type GetFeedbacksWithFilterQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetFeedbacksWithFilterQuery = { __typename?: 'Query', getFeedbacksWithFilter: { __typename?: 'GetFeedbacksWithFilterOutput', error?: string | null, ok: boolean, feedbacks: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, created_at: any, content: string, type: Types.QuestionFeedbackType, user: { __typename?: 'User', id: number, nickname: string }, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number }, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number } }> } };
+export type GetFeedbacksWithFilterQuery = { __typename?: 'Query', getFeedbacksWithFilter: { __typename?: 'GetFeedbacksWithFilterOutput', error?: string | null, ok: boolean, feedbacks: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, created_at: any, content: string, type: Types.QuestionFeedbackType, user?: { __typename?: 'User', id: number, nickname: string } | null, mockExamQuestion: { __typename?: 'MockExamQuestion', id: number }, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number } }> } };
 
 
 export const DeleteMockExamQuestionFeedbackDocument = gql`

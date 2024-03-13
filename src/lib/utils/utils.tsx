@@ -17,6 +17,7 @@ import {
   EHS_SAFE_EXAM_IDS,
   EHS_SAFE_INDUSTRIAL_EXAM_IDS,
 } from '@lib/constants/ehsMaster';
+import { ko } from 'date-fns/locale';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -235,9 +236,7 @@ export const convertToKST = (
   formatString: string = 'yy.MM.dd HH:mm'
 ) => {
   let date = new Date(dateString);
-  let koreaTime = addHours(date, 9); // 한국은 UTC+9
-
-  return format(koreaTime, formatString);
+  return format(date, formatString, { locale: ko });
 };
 
 export const reomveImgTag = (htmlString: string) => {

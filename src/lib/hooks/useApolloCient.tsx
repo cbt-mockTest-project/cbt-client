@@ -20,7 +20,10 @@ const useApolloClient = (
     updateFunction: (previousData: T) => T
   ): void => {
     const currentData = client.readQuery<T>(query);
-    if (!currentData) return;
+    if (!currentData) {
+      console.error('No cache found');
+      return;
+    }
 
     const newData = updateFunction(currentData);
     client.writeQuery<T>({
