@@ -37,15 +37,17 @@ const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
       {question.mockExamQuestionFeedback.map((feedback, index) => (
         <>
           {index === 0 && <Divider style={{ margin: '12px 0' }} />}
-          <SolutionModeFeedbackListItem
-            deleteFeedback={deleteFeedback}
-            updateFeedbackRecommendation={updateFeedbackRecommendation}
-            addFeedback={addFeedback}
-            editFeedback={editFeedback}
-            key={feedback.id}
-            feedback={feedback}
-            question={question}
-          />
+          {feedback.user && (
+            <SolutionModeFeedbackListItem
+              deleteFeedback={deleteFeedback}
+              updateFeedbackRecommendation={updateFeedbackRecommendation}
+              addFeedback={addFeedback}
+              editFeedback={editFeedback}
+              key={feedback.id}
+              feedback={feedback}
+              question={question}
+            />
+          )}
           {index !== question.mockExamQuestionFeedback.length - 1 && (
             <Divider style={{ margin: '12px 0' }} />
           )}
