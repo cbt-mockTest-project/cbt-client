@@ -235,7 +235,7 @@ export const convertToKST = (
   dateString: string,
   formatString: string = 'yy.MM.dd HH:mm'
 ) => {
-  let date = new Date(dateString);
+  let date = new Date(new Date(dateString).getTime() + 9 * 60 * 60 * 1000);
   return format(date, formatString, { locale: ko });
 };
 
