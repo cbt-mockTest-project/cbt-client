@@ -18,6 +18,8 @@ import { isServer, someIncludes } from '@lib/utils/utils';
 import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   EXAMS_PDF_PAGE,
   EXAM_CREATE_PAGE,
@@ -27,8 +29,11 @@ import {
   QUESTION_EDIT_PAGE,
   QUESTION_PAGE,
   STUDY_PAGE,
+  TODAY_QUIZ_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
+
+export const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
@@ -44,6 +49,7 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     PRICING_PAGE,
     QUESTION_PAGE,
     QUESTION_EDIT_PAGE,
+    TODAY_QUIZ_PAGE,
   ];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
   const hasBodyBorder = !papgesWithoutBodyBorder.includes(
@@ -198,20 +204,22 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           `,
         }}
       />
-
       <ApolloProvider client={client}>
-        <ConfigProvider>
-          <Globalstyles />
-          <CoreContainer />
-          <AppInner />
-          {hasLayout ? (
-            <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+        <QueryClientProvider client={queryClient}>
+          <ConfigProvider>
+            <Globalstyles />
+            <CoreContainer />
+            <AppInner />
+            {hasLayout ? (
+              <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+                <Component {...pageProps} />
+              </MainLayout>
+            ) : (
               <Component {...pageProps} />
-            </MainLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </ConfigProvider>
+            )}
+          </ConfigProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </ApolloProvider>
     </>
   );
