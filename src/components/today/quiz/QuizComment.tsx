@@ -42,7 +42,7 @@ interface QuizCommentProps {
 const QuizComment: React.FC<QuizCommentProps> = ({ comments }) => {
   return (
     <QuizCommentBlock>
-      {[...comments, ...comments, ...comments, ...comments].map((comment) => (
+      {comments.map((comment) => (
         <div className="quiz-comment" key={comment.id}>
           <div className="quiz-comment-header">
             <div className="quiz-comment-user">
