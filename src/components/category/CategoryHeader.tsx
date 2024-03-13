@@ -43,7 +43,8 @@ const CategoryHeaderBlock = styled.div`
   .category-description {
     margin-top: 10px;
     font-size: 14px;
-    white-space: pre-wrap;
+    white-space: pre-line;
+    word-break: break-all;
   }
 `;
 
