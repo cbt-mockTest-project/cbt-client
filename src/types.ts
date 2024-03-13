@@ -1,8 +1,14 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -398,6 +404,28 @@ export type CreateQuestionCardOutput = {
   questionCard?: Maybe<QuestionCard>;
 };
 
+export type CreateQuizCommentInput = {
+  content: Scalars['String'];
+  quizId: Scalars['Float'];
+};
+
+export type CreateQuizCommentOutput = {
+  __typename?: 'CreateQuizCommentOutput';
+  comment?: Maybe<QuizComment>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateQuizInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type CreateQuizOutput = {
+  __typename?: 'CreateQuizOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateUserRoleInput = {
   roleId: Scalars['Float'];
   userId: Scalars['Float'];
@@ -592,6 +620,16 @@ export type DeleteQuestionCardsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type DeleteQuizCommentInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteQuizCommentOutput = {
+  __typename?: 'DeleteQuizCommentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeleteUserRoleInput = {
   id: Scalars['Float'];
 };
@@ -616,12 +654,12 @@ export type DiscountCode = {
 export enum DiscountCodeStatus {
   Pending = 'PENDING',
   Unused = 'UNUSED',
-  Used = 'USED'
+  Used = 'USED',
 }
 
 export enum DiscountCodeType {
   EhsMaster = 'EHS_MASTER',
-  MoudCbt = 'MOUD_CBT'
+  MoudCbt = 'MOUD_CBT',
 }
 
 export type Discountcode = {
@@ -789,6 +827,28 @@ export type EditProfileOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type EditQuizCommentInput = {
+  content: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+export type EditQuizCommentLikeInput = {
+  commentId: Scalars['Float'];
+};
+
+export type EditQuizCommentLikeOutput = {
+  __typename?: 'EditQuizCommentLikeOutput';
+  currentState: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type EditQuizCommentOutput = {
+  __typename?: 'EditQuizCommentOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type EmailVerificationInput = {
   code: Scalars['String'];
 };
@@ -862,14 +922,14 @@ export type ExamOrder = {
 export enum ExamSource {
   EhsMaster = 'EHS_MASTER',
   MoudCbt = 'MOUD_CBT',
-  User = 'USER'
+  User = 'USER',
 }
 
 export enum ExamStatus {
   Approved = 'APPROVED',
   Rejected = 'REJECTED',
   Request = 'REQUEST',
-  Unset = 'UNSET'
+  Unset = 'UNSET',
 }
 
 export type ExamTitleAndId = {
@@ -889,7 +949,7 @@ export type ExamTitleAndIdByQuestionComment = {
 
 export enum ExamType {
   Objective = 'OBJECTIVE',
-  Subjective = 'SUBJECTIVE'
+  Subjective = 'SUBJECTIVE',
 }
 
 export type ExamViewer = {
@@ -1128,6 +1188,18 @@ export type GetPartnersOutput = {
   partners?: Maybe<Array<Partner>>;
 };
 
+export type GetQuizsInput = {
+  categoryId: Scalars['Float'];
+  date: Scalars['String'];
+};
+
+export type GetQuizsOutput = {
+  __typename?: 'GetQuizsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  quizs?: Maybe<Array<Quiz>>;
+};
+
 export type GetRoleCountInput = {
   roleId: Scalars['Float'];
 };
@@ -1195,7 +1267,7 @@ export enum LoginType {
   Email = 'EMAIL',
   Google = 'GOOGLE',
   Kakao = 'KAKAO',
-  Naver = 'NAVER'
+  Naver = 'NAVER',
 }
 
 export type MeOutput = {
@@ -1224,6 +1296,7 @@ export type MockExam = {
   mockExamQuestionState: Array<MockExamQuestion>;
   order: Scalars['Float'];
   questionOrderIds: Array<Scalars['String']>;
+  quiz: Array<Quiz>;
   slug?: Maybe<Scalars['String']>;
   source: ExamSource;
   status: ExamStatus;
@@ -1266,6 +1339,7 @@ export type MockExamCategory = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: Maybe<Partner>;
+  quiz: Array<Quiz>;
   roles: Array<Role>;
   seller?: Maybe<Seller>;
   source: ExamSource;
@@ -1291,6 +1365,7 @@ export type MockExamCategoryInputType = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: InputMaybe<PartnerInputType>;
+  quiz: Array<QuizInputType>;
   roles: Array<RoleInputType>;
   seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
@@ -1300,7 +1375,7 @@ export type MockExamCategoryInputType = {
 
 export enum MockExamCategoryTypes {
   Practical = 'practical',
-  Written = 'written'
+  Written = 'written',
 }
 
 export type MockExamHistory = {
@@ -1339,6 +1414,7 @@ export type MockExamInputType = {
   mockExamQuestionState: Array<MockExamQuestionInputType>;
   order?: Scalars['Float'];
   questionOrderIds?: Array<Scalars['String']>;
+  quiz: Array<QuizInputType>;
   slug?: InputMaybe<Scalars['String']>;
   source: ExamSource;
   status: ExamStatus;
@@ -1377,6 +1453,7 @@ export type MockExamQuestion = {
   question?: Maybe<Scalars['String']>;
   question_img?: Maybe<Array<MockExamImageType>>;
   question_video?: Maybe<Array<MockExamVideoType>>;
+  quiz: Array<Quiz>;
   solution?: Maybe<Scalars['String']>;
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
@@ -1445,7 +1522,7 @@ export type MockExamQuestionFeedback = {
   recommendationCount: RecommendationCount;
   type: QuestionFeedbackType;
   updated_at: Scalars['DateTime'];
-  user: User;
+  user?: Maybe<User>;
 };
 
 export type MockExamQuestionFeedbackInputType = {
@@ -1455,7 +1532,7 @@ export type MockExamQuestionFeedbackInputType = {
   recommendation: Array<MockExamQuestionFeedbackRecommendationInputType>;
   recommendationCount: RecommendationCountInputType;
   type: QuestionFeedbackType;
-  user: UserInputType;
+  user?: InputMaybe<UserInputType>;
 };
 
 export type MockExamQuestionFeedbackRecommendation = {
@@ -1500,6 +1577,7 @@ export type MockExamQuestionInputType = {
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   question_video?: InputMaybe<Array<MockExamQuestionVideoInputType>>;
+  quiz: Array<QuizInputType>;
   solution?: InputMaybe<Scalars['String']>;
   solution_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   state: Array<MockExamQuestionStateInputType>;
@@ -1614,6 +1692,8 @@ export type Mutation = {
   createPostComment: CreatePostCommentOutput;
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
+  createQuiz: CreateQuizOutput;
+  createQuizComment: CreateQuizCommentOutput;
   createUserRole: CreateUserRoleOutput;
   createVideo: CreateVideoOutput;
   createVisit: CoreOutput;
@@ -1635,6 +1715,7 @@ export type Mutation = {
   deletePostComment: DeletePostCommentOutput;
   deleteQuestionCardCategory: DeleteQuestionCardCategoryOutput;
   deleteQuestionCards: DeleteQuestionCardsOutput;
+  deleteQuizComment: DeleteQuizCommentOutput;
   deleteRecentlyStudiedExams: CoreOutput;
   deleteUser: CoreOutput;
   deleteUserRole: DeleteUserRoleOutput;
@@ -1651,6 +1732,8 @@ export type Mutation = {
   editPostCommentLike: EditPostCommentLikeOutput;
   editPostLike: EditPostLikeOutput;
   editProfile: EditProfileOutput;
+  editQuizComment: EditQuizCommentOutput;
+  editQuizCommentLike: EditQuizCommentLikeOutput;
   emailVerification: EmailVerificationOutput;
   login: LoginOutput;
   logout: CoreOutput;
@@ -1687,451 +1770,381 @@ export type Mutation = {
   viewPost: ViewPostOutput;
 };
 
-
 export type MutationAcceptExamCategoryInvitationArgs = {
   input: AcceptExamCategoryInvitationInput;
 };
-
 
 export type MutationAddExamToCategoryArgs = {
   input: AddExamToCategoryInput;
 };
 
-
 export type MutationChangeClientRoleArgs = {
   input: ChangeClientRoleInput;
 };
-
 
 export type MutationChangeClientRoleAndCreatePaymentArgs = {
   input: ChangeClientRoleAndCreatePaymentInput;
 };
 
-
 export type MutationChangePasswordAfterVerifyingArgs = {
   input: ChangePasswordAfterVerifyingInput;
 };
-
 
 export type MutationCheckDiscountCodeArgs = {
   input: CheckDiscountCodeInput;
 };
 
-
 export type MutationCheckIfCategoryEvaluatedArgs = {
   input: CheckIfCategoryEvaluatedInput;
 };
-
 
 export type MutationCheckPasswordArgs = {
   input: CheckPasswordInput;
 };
 
-
 export type MutationCheckUserRoleArgs = {
   input: CheckUserRoleInput;
 };
-
 
 export type MutationCreateAttendanceArgs = {
   input: CreateAttendanceInput;
 };
 
-
 export type MutationCreateCategoryEvaluationArgs = {
   input: CreateCategoryEvaluationInput;
 };
-
 
 export type MutationCreateExamCategoryInvitationArgs = {
   input: CreateExamCategoryInvitationInput;
 };
 
-
 export type MutationCreateExamCategoryViewerArgs = {
   input: CreateExamCategoryViewerInput;
 };
-
 
 export type MutationCreateFeedbackArgs = {
   input: CreateFeedbackInput;
 };
 
-
 export type MutationCreateMockExamArgs = {
   input: CreateMockExamInput;
 };
-
 
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
 };
 
-
 export type MutationCreateMockExamHistoryArgs = {
   input: CreateMockExamHistoryInput;
 };
-
 
 export type MutationCreateMockExamQuestionArgs = {
   input: CreateMockExamQuestionInput;
 };
 
-
 export type MutationCreateMockExamQuestionCommentArgs = {
   input: CreateMockExamQuestionCommentInput;
 };
-
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
 
-
 export type MutationCreateMutipleChoiceArgs = {
   input: CreateMockExamQuestionMultipleChoiceInput;
 };
-
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
 };
 
-
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
-
 
 export type MutationCreateOrUpdateTodoArgs = {
   input: CreateOrUpdateTodoInput;
 };
 
-
 export type MutationCreatePaymentArgs = {
   input: CreatePaymentInput;
 };
-
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
 
-
 export type MutationCreatePostCommentArgs = {
   input: CreatePostCommentInput;
 };
-
 
 export type MutationCreateQuestionCardArgs = {
   input: CreateQuestionCardInput;
 };
 
-
 export type MutationCreateQuestionCardCategoryArgs = {
   input: CreateQuestionCardCategoryInput;
 };
 
+export type MutationCreateQuizArgs = {
+  input: CreateQuizInput;
+};
+
+export type MutationCreateQuizCommentArgs = {
+  input: CreateQuizCommentInput;
+};
 
 export type MutationCreateUserRoleArgs = {
   input: CreateUserRoleInput;
 };
 
-
 export type MutationCreateVideoArgs = {
   input: CreateVideoInput;
 };
-
 
 export type MutationDeleteAttendanceArgs = {
   input: DeleteAttendanceInput;
 };
 
-
 export type MutationDeleteCategoryEvaluationArgs = {
   input: DeleteCategoryEvaluationInput;
 };
-
 
 export type MutationDeleteExamCategoryBookmarkArgs = {
   input: DeleteExamCategoryBookmarkInput;
 };
 
-
 export type MutationDeleteExamCategoryInvitationArgs = {
   input: DeleteExamCategoryInvitationInput;
 };
-
 
 export type MutationDeleteExamCategoryViewerArgs = {
   input: DeleteExamCategoryViewerInput;
 };
 
-
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
-
 
 export type MutationDeleteMockExamCategoryArgs = {
   input: DeleteMockExamCategoryInput;
 };
 
-
 export type MutationDeleteMockExamQuestionArgs = {
   input: DeleteMockExamQuestionInput;
 };
-
 
 export type MutationDeleteMockExamQuestionCommentArgs = {
   input: DeleteMockExamQuestionCommentInput;
 };
 
-
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
-
 
 export type MutationDeleteNoticeArgs = {
   input: DeleteNoticeInput;
 };
 
-
 export type MutationDeletePaymentArgs = {
   input: DeletePaymentInput;
 };
-
 
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
 };
 
-
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
 };
-
 
 export type MutationDeleteQuestionCardCategoryArgs = {
   input: DeleteQuestionCardCategoryInput;
 };
 
-
 export type MutationDeleteQuestionCardsArgs = {
   input: DeleteQuestionCardsInput;
 };
 
+export type MutationDeleteQuizCommentArgs = {
+  input: DeleteQuizCommentInput;
+};
 
 export type MutationDeleteUserRoleArgs = {
   input: DeleteUserRoleInput;
 };
 
-
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
-
 
 export type MutationEditMockExamCategoryArgs = {
   input: EditMockExamCategoryInput;
 };
 
-
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
 };
-
 
 export type MutationEditMockExamQuestionBookmarkArgs = {
   input: EditMockExamQuestionBookmarkInput;
 };
 
-
 export type MutationEditMockExamQuestionCommentArgs = {
   input: EditMockExamQuestionCommentInput;
 };
-
 
 export type MutationEditMockExamQuestionCommentLikeArgs = {
   input: EditMockExamQuestionCommentLikeInput;
 };
 
-
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
 };
-
 
 export type MutationEditNoticeArgs = {
   input: EditNoticeInput;
 };
 
-
 export type MutationEditPostArgs = {
   input: EditPostInput;
 };
-
 
 export type MutationEditPostCommentArgs = {
   input: EditPostCommentInput;
 };
 
-
 export type MutationEditPostCommentLikeArgs = {
   input: EditPostCommentLikeInput;
 };
-
 
 export type MutationEditPostLikeArgs = {
   input: EditPostLikeInput;
 };
 
-
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
 
+export type MutationEditQuizCommentArgs = {
+  input: EditQuizCommentInput;
+};
+
+export type MutationEditQuizCommentLikeArgs = {
+  input: EditQuizCommentLikeInput;
+};
 
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
 
-
 export type MutationLoginArgs = {
   input: LoginInput;
 };
-
 
 export type MutationMoveExamOrderArgs = {
   input: MoveExamOrderInput;
 };
 
-
 export type MutationNaverBlogViewMacroArgs = {
   input: NaverBlogViewMacroInput;
 };
-
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
 
-
 export type MutationRemoveExamFromCategoryArgs = {
   input: RemoveExamFromCategoryInput;
 };
-
 
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
 
-
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
 };
-
 
 export type MutationRevalidateArgs = {
   input: RevalidateInput;
 };
 
-
 export type MutationSaveExamArgs = {
   input: SaveExamInput;
 };
-
 
 export type MutationSendFindPasswordMailArgs = {
   input: SendFindPasswordMailInput;
 };
 
-
 export type MutationSendMessageToAlramChannelOfTelegramArgs = {
   input: SendMessageToAlramChannelOfTelegramInput;
 };
-
 
 export type MutationSendMessageToTelegramArgs = {
   input: SendMessageToTelegramInput;
 };
 
-
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
-
 
 export type MutationToggleExamBookmarkArgs = {
   input: ToggleExamBookmarkInput;
 };
 
-
 export type MutationToggleExamCategorieBookmarkArgs = {
   input: ToggleExamCategoryBookmarkInput;
 };
-
 
 export type MutationUpdateAdBlockPermissionArgs = {
   input: UpdateAdblockPermissionInput;
 };
 
-
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
-
 
 export type MutationUpdateCategoryEvaluationArgs = {
   input: UpdateCategoryEvaluationInput;
 };
 
-
 export type MutationUpdateDiscountCodeArgs = {
   input: UpdateDiscountCodeInput;
 };
-
 
 export type MutationUpdateExamOrderArgs = {
   input: UpdateExamOrderInput;
 };
 
-
 export type MutationUpdateExamViewerApproveStateArgs = {
   input: UpdateExamViewerApproveStateInput;
 };
-
 
 export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
   input: UpdateMockExamQuestionFeedbackRecommendationInput;
 };
 
-
 export type MutationUpdatePaymentArgs = {
   input: UpdatePaymentInput;
 };
-
 
 export type MutationUpdateQuestionCardArgs = {
   input: UpdateQuestionCardInput;
 };
 
-
 export type MutationUpdateQuestionCardCategoryArgs = {
   input: UpdateQuestionCardCategoryInput;
 };
-
 
 export type MutationUpdateRecentlyStudiedCategoryArgs = {
   input: UpdateRecentlyStudiedCategoryInput;
 };
 
-
 export type MutationUpsertRecentlyStudiedExamsArgs = {
   input: UpsertRecentlyStudiedExamsInput;
 };
-
 
 export type MutationViewPostArgs = {
   input: ViewPostInput;
@@ -2201,9 +2214,13 @@ export type PartialMockExamQuestionInput = {
   lowScore?: InputMaybe<Scalars['Float']>;
   middleScore?: InputMaybe<Scalars['Float']>;
   mockExam?: InputMaybe<MockExamInputType>;
-  mockExamQuestionBookmark?: InputMaybe<Array<MockExamQuestionBookmarkInputType>>;
+  mockExamQuestionBookmark?: InputMaybe<
+    Array<MockExamQuestionBookmarkInputType>
+  >;
   mockExamQuestionComment?: InputMaybe<Array<MockExamQuestionCommentInputType>>;
-  mockExamQuestionFeedback?: InputMaybe<Array<MockExamQuestionFeedbackInputType>>;
+  mockExamQuestionFeedback?: InputMaybe<
+    Array<MockExamQuestionFeedbackInputType>
+  >;
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
@@ -2212,6 +2229,7 @@ export type PartialMockExamQuestionInput = {
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   question_video?: InputMaybe<Array<MockExamQuestionVideoInputType>>;
+  quiz?: InputMaybe<Array<QuizInputType>>;
   solution?: InputMaybe<Scalars['String']>;
   solution_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   state?: InputMaybe<Array<MockExamQuestionStateInputType>>;
@@ -2284,7 +2302,7 @@ export enum PostCategory {
   Notice = 'NOTICE',
   Recovery = 'RECOVERY',
   Review = 'REVIEW',
-  Suggenstion = 'SUGGENSTION'
+  Suggenstion = 'SUGGENSTION',
 }
 
 export type PostComment = {
@@ -2411,7 +2429,7 @@ export type PostLikeInputType = {
 /** Order by criteria for posts */
 export enum PostOrderType {
   CreatedAt = 'createdAt',
-  Like = 'like'
+  Like = 'like',
 }
 
 export type Query = {
@@ -2436,6 +2454,7 @@ export type Query = {
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
+  getQuizs: GetQuizsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
@@ -2486,211 +2505,173 @@ export type Query = {
   userProfile: UserProfileOutput;
 };
 
-
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
 };
-
 
 export type QueryGetCategoryEvaluationArgs = {
   input: GetCategoryEvaluationInput;
 };
 
-
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
 };
-
 
 export type QueryGetExamCategoryLearningProgressArgs = {
   input: GetExamCategoryLearningProgressInput;
 };
 
-
 export type QueryGetExamCategorySubscribersArgs = {
   input: GetExamCategorySubscribersInput;
 };
-
 
 export type QueryGetExamCategoryViewersArgs = {
   input: GetExamCategoryViewrsInput;
 };
 
-
 export type QueryGetFeedbacksByRecommendationCountArgs = {
   input: GetFeedbacksByRecommendationCountInput;
 };
-
 
 export type QueryGetFeedbacksWithFilterArgs = {
   input: GetFeedbacksWithFilterInput;
 };
 
-
 export type QueryGetMyBlogPostRankArgs = {
   input: GetMyBlogPostRankInput;
 };
-
 
 export type QueryGetMyExamsArgs = {
   input: GetMyExamsInput;
 };
 
+export type QueryGetQuizsArgs = {
+  input: GetQuizsInput;
+};
 
 export type QueryGetRoleCountArgs = {
   input: GetRoleCountInput;
 };
 
-
 export type QueryGetRolesCountArgs = {
   input: GetRolesCountInput;
 };
-
 
 export type QueryGetTodoArgs = {
   input: GetTodoInput;
 };
 
-
 export type QueryGetUserByNicknameOrEmailArgs = {
   input: GetUserByNicknameOrEmailInput;
 };
-
 
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
 
-
 export type QueryReadAllMockExamCategoriesArgs = {
   input?: InputMaybe<ReadAllMockExamCategoriesInput>;
 };
-
 
 export type QueryReadAllQuestionsArgs = {
   input: ReadAllQuestionsInput;
 };
 
-
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
-
 
 export type QueryReadMockExamCategoriesArgs = {
   input: ReadMockExamCategoriesInput;
 };
 
-
 export type QueryReadMockExamCategoryByCategoryIdArgs = {
   input: ReadMockExamCategoryByCategoryIdInput;
 };
-
 
 export type QueryReadMockExamCategoryByExamIdArgs = {
   input: ReadMockExamCategoryByExamIdInput;
 };
 
-
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
 };
-
 
 export type QueryReadMockExamQuestionBookmarkArgs = {
   input: ReadMockExamQuestionBookmarkInput;
 };
 
-
 export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
   input: ReadMockExamQuestionCommentLikesByQuestinIdInput;
 };
-
 
 export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
   input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
 
-
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
 };
-
 
 export type QueryReadMockExamQuestionsByMockExamIdArgs = {
   input: ReadMockExamQuestionsByMockExamIdInput;
 };
 
-
 export type QueryReadMockExamQuestionsByStateArgs = {
   input: ReadMockExamQuestionsByStateInput;
 };
-
 
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
 };
 
-
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
 };
-
 
 export type QueryReadMyMockExamCategoriesArgs = {
   input?: InputMaybe<ReadMyMockExamCategoriesInput>;
 };
 
-
 export type QueryReadMyQuestionCardsArgs = {
   input: ReadMyQuestionCardsInput;
 };
-
 
 export type QueryReadMyQuestionCommentsArgs = {
   input: ReadMyQuestionCommentsInput;
 };
 
-
 export type QueryReadPostArgs = {
   input: ReadPostInput;
 };
-
 
 export type QueryReadPostsArgs = {
   input: ReadPostsInput;
 };
 
-
 export type QueryReadQuestionCardArgs = {
   input: ReadQuestionCardInput;
 };
-
 
 export type QueryReadQuestionsByExamIdsArgs = {
   input: ReadQuestionsByExamIdsInput;
 };
 
-
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
-
 
 export type QuerySearchMockExamCategoriesArgs = {
   input: SearchMockExamCategoriesInput;
 };
 
-
 export type QuerySearchQuestionsByKeywordArgs = {
   input: SearchQuestionsByKeywordInput;
 };
 
-
 export type QuerySearchUserArgs = {
   input: SearchUserInput;
 };
-
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
@@ -2732,13 +2713,13 @@ export type QuestionCardInputType = {
 
 export enum QuestionFeedbackRecommendationType {
   Bad = 'BAD',
-  Good = 'GOOD'
+  Good = 'GOOD',
 }
 
 export enum QuestionFeedbackType {
   Private = 'PRIVATE',
   Public = 'PUBLIC',
-  Report = 'REPORT'
+  Report = 'REPORT',
 }
 
 export type QuestionNumber = {
@@ -2751,8 +2732,64 @@ export enum QuestionState {
   Core = 'CORE',
   High = 'HIGH',
   Middle = 'MIDDLE',
-  Row = 'ROW'
+  Row = 'ROW',
 }
+
+export type Quiz = {
+  __typename?: 'Quiz';
+  category: MockExamCategory;
+  comment: Array<QuizComment>;
+  created_at: Scalars['DateTime'];
+  date: Scalars['String'];
+  exam: MockExam;
+  id: Scalars['Float'];
+  question: MockExamQuestion;
+  updated_at: Scalars['DateTime'];
+};
+
+export type QuizComment = {
+  __typename?: 'QuizComment';
+  commentLike: Array<QuizCommentLike>;
+  content: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  likeState: Scalars['Boolean'];
+  likesCount: Scalars['Float'];
+  quiz: Quiz;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type QuizCommentInputType = {
+  commentLike: Array<QuizCommentLikeInputType>;
+  content: Scalars['String'];
+  likeState?: Scalars['Boolean'];
+  likesCount?: Scalars['Float'];
+  quiz: QuizInputType;
+  user: UserInputType;
+};
+
+export type QuizCommentLike = {
+  __typename?: 'QuizCommentLike';
+  comment: QuizComment;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type QuizCommentLikeInputType = {
+  comment: QuizCommentInputType;
+  user: UserInputType;
+};
+
+export type QuizInputType = {
+  category: MockExamCategoryInputType;
+  comment: Array<QuizCommentInputType>;
+  date: Scalars['String'];
+  exam: MockExamInputType;
+  question: MockExamQuestionInputType;
+};
 
 export type ReadAllMockExamCategoriesInput = {
   examType?: InputMaybe<ExamType>;
@@ -3571,6 +3608,8 @@ export type User = {
   questionCardCategorys: Array<QuestionCardCategory>;
   questionCards: Array<QuestionCard>;
   questionFeedback: Array<MockExamQuestionFeedback>;
+  quizComment: Array<QuizComment>;
+  quizCommentLike: Array<QuizCommentLike>;
   randomExamLimit?: Maybe<Scalars['Float']>;
   recentlyStudiedCategory: Scalars['String'];
   recentlyStudiedExams?: Maybe<Array<RecentlyStudiedExams>>;
@@ -3636,6 +3675,8 @@ export type UserInputType = {
   questionCardCategorys: Array<QuestionCardCategoryInputType>;
   questionCards: Array<QuestionCardInputType>;
   questionFeedback: Array<MockExamQuestionFeedbackInputType>;
+  quizComment: Array<QuizCommentInputType>;
+  quizCommentLike: Array<QuizCommentLikeInputType>;
   randomExamLimit?: InputMaybe<Scalars['Float']>;
   recentlyStudiedCategory?: Scalars['String'];
   recentlyStudiedExams?: InputMaybe<Array<RecentlyStudiedExamsInputType>>;
@@ -3667,7 +3708,7 @@ export enum UserRole {
   ClientSafePremium = 'CLIENT_SAFE_PREMIUM',
   Partner = 'PARTNER',
   PaymentTest = 'PAYMENT_TEST',
-  Seller = 'SELLER'
+  Seller = 'SELLER',
 }
 
 export type UserRoleInputType = {
@@ -3735,7 +3776,7 @@ export enum ZepPostCategory {
   Free = 'FREE',
   Notice = 'NOTICE',
   Project = 'PROJECT',
-  Study = 'STUDY'
+  Study = 'STUDY',
 }
 
 export type ZepStudyTime = {

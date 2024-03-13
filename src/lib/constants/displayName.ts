@@ -7,3 +7,4 @@ export const PRICING_PAGE = 'PRICING_PAGE';
 export const MAIN_PAGE = 'MAIN_PAGE';
 export const QUESTION_PAGE = 'QUESTION_PAGE';
 export const QUESTION_EDIT_PAGE = 'QUESTION_EDIT_PAGE';
+export const TODAY_QUIZ_PAGE = 'TODAY_QUIZ_PAGE';
