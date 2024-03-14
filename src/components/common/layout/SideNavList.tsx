@@ -13,6 +13,7 @@ import OpenChatModal from './OpenChatModal';
 import useAuth from '@lib/hooks/useAuth';
 import { UserRole } from 'types';
 import BugReportModal from './BugReportModal';
+import MainViewCount from '@components/main/MainViewCount';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
@@ -98,6 +99,8 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           />
         </>
       )}
+      <MainViewCount />
+
       {isAppDownloadModalOpen && (
         <AppDownloadInfoModal
           open={isAppDownloadModalOpen}

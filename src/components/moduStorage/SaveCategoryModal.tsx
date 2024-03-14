@@ -36,7 +36,7 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
 
   const { onClose, categoryId, defaultValues, ...modalProps } = props;
   const [isPublic, setIsPublic] = React.useState<boolean>(
-    defaultValues ? defaultValues.isPublic || true : true
+    defaultValues ? defaultValues.isPublic : true
   );
   const [name, setName] = React.useState<string>(
     defaultValues ? defaultValues.name : ''
