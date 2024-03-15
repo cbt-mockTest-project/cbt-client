@@ -14,14 +14,6 @@ const settings = {
   images: {
     domains: ['cbteungwangnestjs961203.s3.amazonaws.com','dxw2azlbq2ays.cloudfront.net'],
   },
-  redirects: async () => [
-    {
-      source: '/:path*',
-      has: [{ type: 'host', value: 'www.moducbt.com' }],
-      destination: 'https://moducbt.com/:path*',
-      permanent: true
-    }
-  ],
   webpack: (config) => {
     // 아래를 추가합니다.
     config.module.rules.push({
