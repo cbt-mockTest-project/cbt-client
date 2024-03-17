@@ -1,9 +1,12 @@
 import { FolderOutlined } from '@ant-design/icons';
+import useExamCategory from '@lib/hooks/useExamCategory';
 import { linkify } from '@lib/utils/utils';
 import palette from '@styles/palette';
+import { Button, Tooltip } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { User } from 'types';
 
@@ -17,6 +20,9 @@ const CategoryHeaderBlock = styled.div`
       display: flex;
       gap: 3px;
       align-items: flex-end;
+      .category-question-search-button {
+        margin-left: 10px;
+      }
     }
   }
   .category-creator-name {
@@ -59,6 +65,8 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryName,
   categoryDescription,
 }) => {
+  const { category } = useExamCategory();
+  const router = useRouter();
   return (
     <CategoryHeaderBlock>
       <Link href={`/user/${user.id}`}>
@@ -78,6 +86,21 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
       <div className="category-info">
         <FolderOutlined />
         <span className="category-name">{categoryName}</span>
+        <Button
+          className="category-question-search-button"
+          type="primary"
+          onClick={() =>
+            router.push({
+              pathname: '/search',
+              query: {
+                examIds: category.mockExam.map((exam) => exam.id).join(','),
+                categoryName,
+              },
+            })
+          }
+        >
+          문제 검색기
+        </Button>
       </div>
       <div className="category-description">{linkify(categoryDescription)}</div>
     </CategoryHeaderBlock>

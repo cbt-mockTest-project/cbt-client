@@ -8,7 +8,7 @@ export type GetQuizsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetQuizsQuery = { __typename?: 'Query', getQuizs: { __typename?: 'GetQuizsOutput', error?: string | null, ok: boolean, quizs?: Array<{ __typename?: 'Quiz', date: string, id: number, comment: Array<{ __typename?: 'QuizComment', likesCount: number, likeState: boolean, created_at: any, id: number, user: { __typename?: 'User', id: number, nickname: string } }>, question: { __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null }, category: { __typename?: 'MockExamCategory', name: string } }> | null } };
+export type GetQuizsQuery = { __typename?: 'Query', getQuizs: { __typename?: 'GetQuizsOutput', error?: string | null, ok: boolean, quizs?: Array<{ __typename?: 'Quiz', date: string, id: number, comment: Array<{ __typename?: 'QuizComment', content: string, likesCount: number, likeState: boolean, created_at: any, id: number, user: { __typename?: 'User', id: number, nickname: string } }>, question: { __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', id: number, title: string } | null }, category: { __typename?: 'MockExamCategory', name: string } }> | null } };
 
 export type EditQuizCommentMutationVariables = Types.Exact<{
   input: Types.EditQuizCommentInput;
@@ -22,7 +22,7 @@ export type CreateQuizCommentMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateQuizCommentMutation = { __typename?: 'Mutation', createQuizComment: { __typename?: 'CreateQuizCommentOutput', ok: boolean, error?: string | null, comment?: { __typename?: 'QuizComment', likesCount: number, likeState: boolean, created_at: any, id: number, user: { __typename?: 'User', id: number, nickname: string } } | null } };
+export type CreateQuizCommentMutation = { __typename?: 'Mutation', createQuizComment: { __typename?: 'CreateQuizCommentOutput', ok: boolean, error?: string | null, comment?: { __typename?: 'QuizComment', content: string, likesCount: number, likeState: boolean, created_at: any, id: number, user: { __typename?: 'User', id: number, nickname: string } } | null } };
 
 export type DeleteQuizCommentMutationVariables = Types.Exact<{
   input: Types.DeleteQuizCommentInput;
@@ -43,6 +43,7 @@ export const GetQuizsDocument = gql`
           id
           nickname
         }
+        content
         likesCount
         likeState
         created_at
@@ -98,6 +99,7 @@ export const CreateQuizCommentDocument = gql`
         id
         nickname
       }
+      content
       likesCount
       likeState
       created_at

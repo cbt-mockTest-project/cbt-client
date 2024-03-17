@@ -148,6 +148,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     if (questionStates) setQuestionStates(questionStates);
     if (limit) setLimit(limit);
   }, []);
+
   return (
     <ExamMultipleSelectModalBlock
       {...modalProps}

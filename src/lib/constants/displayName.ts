@@ -8,3 +8,4 @@ export const MAIN_PAGE = 'MAIN_PAGE';
 export const QUESTION_PAGE = 'QUESTION_PAGE';
 export const QUESTION_EDIT_PAGE = 'QUESTION_EDIT_PAGE';
 export const TODAY_QUIZ_PAGE = 'TODAY_QUIZ_PAGE';
+export const SEARCH_PAGE = 'SEARCH_PAGE';

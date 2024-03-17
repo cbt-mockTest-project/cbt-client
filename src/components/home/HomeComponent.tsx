@@ -8,8 +8,7 @@ import HomeFolderList from './HomeFolderList';
 import { useRouter } from 'next/router';
 import HomeSearchedFolderList from './HomeSearchedFolderList';
 import { MockExamCategory, MockExamQuestion } from 'types';
-import HomeSearchedQuestionList from './HomeSearchedQuestionList';
-import useSearchQuestions from '@lib/hooks/useSearchQuestions';
+
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import useAuth from '@lib/hooks/useAuth';
 import { handleError } from '@lib/utils/utils';
@@ -69,12 +68,6 @@ interface HomeComponentProps {}
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const {
-    searchQuestions,
-    searchedQuestions,
-    handleSaveBookmark,
-    searchQuestionsLoading,
-  } = useSearchQuestions();
 
   const {
     fetchCategories,
@@ -125,16 +118,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
 
   useEffect(() => {
     if (typeof keyword !== 'string' || !keyword) return;
-    if (searchType === 'question') {
-      searchQuestions({
-        variables: {
-          input: {
-            keyword,
-          },
-        },
-      });
-      return;
-    }
     if (searchType === 'folder') {
       fetchCategories({
         limit: 30,
@@ -162,13 +145,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
                   input: { keyword, limit: 30, isPublicOnly: true },
                 });
               }}
-            />
-          ) : searchType === 'question' ? (
-            <HomeSearchedQuestionList
-              keyword={keyword}
-              questions={searchedQuestions as MockExamQuestion[]}
-              handleSaveBookmark={handleSaveBookmark}
-              loading={searchQuestionsLoading}
             />
           ) : (
             <></>

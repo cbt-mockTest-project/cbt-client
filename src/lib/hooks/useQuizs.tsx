@@ -23,7 +23,6 @@ import { queryClient } from '../../../pages/_app';
 
 const useQuizs = () => {
   const router = useRouter();
-  const { handleCheckLogin } = useAuth();
   const apolloClient = initializeApollo({}, '');
   const categoryId = Number(router.query.categoryId);
   const quizQueryOptions = queryOptions({

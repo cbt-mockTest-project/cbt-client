@@ -244,7 +244,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         categoryName={category.name}
         categoryDescription={category.description}
       />
-      {/* <CoupangDynamicBanner type="basic" /> */}
 
       {originalCategory && originalCategory.mockExam.length >= 1 ? (
         <>

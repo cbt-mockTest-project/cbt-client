@@ -28,6 +28,7 @@ import {
   PRICING_PAGE,
   QUESTION_EDIT_PAGE,
   QUESTION_PAGE,
+  SEARCH_PAGE,
   STUDY_PAGE,
   TODAY_QUIZ_PAGE,
 } from '@lib/constants/displayName';
@@ -50,6 +51,7 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     QUESTION_PAGE,
     QUESTION_EDIT_PAGE,
     TODAY_QUIZ_PAGE,
+    SEARCH_PAGE,
   ];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
   const hasBodyBorder = !papgesWithoutBodyBorder.includes(

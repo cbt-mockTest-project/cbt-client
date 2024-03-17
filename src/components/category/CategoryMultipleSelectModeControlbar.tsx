@@ -78,6 +78,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
           랜덤 모의고사
         </Button>
       </Tooltip>
+
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
           categoryId={categoryId}
