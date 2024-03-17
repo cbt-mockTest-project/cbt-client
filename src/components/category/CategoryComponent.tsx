@@ -4,7 +4,7 @@ import palette from '@styles/palette';
 import { Dropdown, MenuProps, Modal, message } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ReadMockExamCategoryByCategoryIdInput } from 'types';
+import { ReadMockExamCategoryByCategoryIdInput, UserRole } from 'types';
 import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
@@ -202,7 +202,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         },
       });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
-        if (!res?.hasAccess) {
+        if (!res?.hasAccess && meQuery.me.user.role !== UserRole.Admin) {
           message.error('접근 권한이 없습니다.');
           router.push('/');
         }
@@ -220,7 +220,12 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId: category.id, examIds });
     }
-    if (!meQuery.me.user && category && !category.isPublic) {
+    if (
+      !meQuery.me.user &&
+      category &&
+      !category.isPublic &&
+      meQuery.me.user.role !== UserRole.Admin
+    ) {
       message.error('접근 권한이 없습니다.');
       router.push('/');
     }
