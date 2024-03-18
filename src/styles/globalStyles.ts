@@ -165,6 +165,9 @@ const Globalstyles = createGlobalStyle`
       color : unset ;
     }
   }
+  .katex {
+    font-size: 22px !important;
+  }
   @media (max-width: ${responsive.lsmall}) {
     * {
       -webkit-user-select: none;

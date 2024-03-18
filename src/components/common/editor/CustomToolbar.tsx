@@ -2,7 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import styled, { css } from 'styled-components';
-import { ItalicOutlined, BoldOutlined } from '@ant-design/icons';
+import {
+  ItalicOutlined,
+  BoldOutlined,
+  FunctionOutlined,
+} from '@ant-design/icons';
 import { ColorPicker } from 'antd';
 import { Color } from 'antd/es/color-picker';
 import palette from '@styles/palette';
@@ -33,6 +37,10 @@ const CustomToolbarBlock = styled.div<{
   .custom-tool-bar-button {
     color: ${palette.gray_700};
     font-size: 16px;
+  }
+  .custom-tool-bar-button.formula {
+    position: relative;
+    top: 2px;
   }
 `;
 
@@ -95,6 +103,21 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
     quill.format('script', format.script === 'super' ? false : 'super');
   };
 
+  const toggleFormula = (
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e?.preventDefault();
+    if (!reactQuillRef.current) return;
+    const quill = reactQuillRef.current.getEditor();
+    quill.focus();
+    const range = quill.getSelection();
+    if (range) {
+      const text = quill.getText(range.index, range.length);
+      quill.insertEmbed(range.index, 'formula', text);
+      quill.deleteText(range.index + 1, range.length);
+    }
+  };
+
   useEffect(() => {
     if (!position || !toolBarRef.current) return;
     const handleKeydown = (e: KeyboardEvent) => {
@@ -114,6 +137,10 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
       if (e.altKey && e.key === 'ArrowUp') {
         preventEvent(e);
         toggleScriptSuper();
+      }
+      if (e.altKey && e.ctrlKey) {
+        preventEvent(e);
+        toggleFormula();
       }
     };
     window.addEventListener('keydown', handleKeydown);
@@ -142,6 +169,12 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
         onClick={toggleScriptSuper}
       >
         x<sup>2</sup>
+      </button>
+      <button
+        className="custom-tool-bar-button formula"
+        onClick={toggleFormula}
+      >
+        <FunctionOutlined />
       </button>
       <button onClick={(e) => e.preventDefault()}>
         <ColorPicker

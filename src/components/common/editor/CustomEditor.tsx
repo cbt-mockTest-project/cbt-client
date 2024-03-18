@@ -45,6 +45,7 @@ const formats: ComponentProps<typeof ReactQuill>['formats'] = [
   'italic',
   'color',
   'script',
+  'formula',
 ];
 
 const ReactQuillWrapper = dynamic(
