@@ -241,7 +241,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
       </div>
       {isRandomExamLimitModalOpen && (
         <StudySolveLimitInfoModal
-          title="오늘의 모의고사 횟수를 모두 사용하셨습니다 😊"
+          title="모두CBT에서 효율적인 학습을 경험해보세요 😊"
           open={isRandomExamLimitModalOpen}
           onCancel={() => setIsRandomExamLimitModalOpen(false)}
         />

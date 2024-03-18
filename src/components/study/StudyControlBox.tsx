@@ -155,20 +155,19 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
     [mode]
   );
   const [isSolvedInfoModalOpen, setIsSolvedInfoModalOpen] = useState(false);
-  const [isSolveLimitModalOpen, setIsSolveLimitModal] = useState(false);
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
 
   const handleSaveQuestionState = (state: QuestionState) => {
-    if (meQuery?.me.user) {
-      const isEhsExam = checkIsEhsMasterExam([question.mockExam.id]);
-      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
-      if (meQuery.me.user.solveLimit <= 0 && !isBasicPlanUser && !isEhsExam) {
-        setIsSolveLimitModal(true);
-        return;
-      }
-    }
+    // if (meQuery?.me.user) {
+    //   const isEhsExam = checkIsEhsMasterExam([question.mockExam.id]);
+    //   const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+    //   if (meQuery.me.user.solveLimit <= 0 && !isBasicPlanUser && !isEhsExam) {
+    //     setIsSolveLimitModal(true);
+    //     return;
+    //   }
+    // }
     const newState =
       question.myQuestionState !== state ? state : QuestionState.Core;
     saveQuestionState(question, newState);
@@ -322,12 +321,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           onCancel={() => setIsStudyScoreModalOpen(false)}
         />
       )}
-      {isSolveLimitModalOpen && (
-        <StudySolveLimitInfoModal
-          open={isSolveLimitModalOpen}
-          onCancel={() => setIsSolveLimitModal(false)}
-        />
-      )}
+
       {isSolvedInfoModalOpen && (
         <StudySolvedInfoModal
           open={isSolvedInfoModalOpen}

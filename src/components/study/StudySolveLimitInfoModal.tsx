@@ -128,9 +128,6 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               <div className="study-solve-limit-info-modal-origin-price-tag">
                 12,000
               </div>
-              <div className="study-solve-limit-info-modal-origin-price-date">
-                ~ 24.03.25 까지
-              </div>
             </div>
             <div className="study-solve-limit-info-modal-price">
               <AttachMoneyIcon /> 9,900
