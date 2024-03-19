@@ -1,8 +1,12 @@
-import { Button, Checkbox, Tooltip } from 'antd';
+import { Button, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useAuth from '@lib/hooks/useAuth';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { MockExam } from 'types';
+import useExamSetting from '@lib/hooks/useExamSetting';
+import CategoryAllCheckbox from './CategoryAllCheckbox';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
   display: flex;
@@ -31,36 +35,29 @@ const CategoryMultipleSelectModeControlbarBlock = styled.div`
 `;
 
 interface CategoryMultipleSelectModeControlbarProps {
-  checkbox: {
-    categoryAllChecked: boolean;
-    handleAllExamsSelect: () => void;
-  };
-  button: {
-    isButtonDisabled: boolean;
-  };
   categoryId: number;
-  examIds: number[];
+  exams: MockExam[];
+  isMyAllExams?: boolean;
 }
 
 const CategoryMultipleSelectModeControlbar: React.FC<
   CategoryMultipleSelectModeControlbarProps
-> = ({
-  checkbox: { categoryAllChecked, handleAllExamsSelect },
-  button: { isButtonDisabled },
-  categoryId,
-  examIds,
-}) => {
+> = ({ categoryId, isMyAllExams, exams }) => {
   const { handleCheckLogin } = useAuth();
+  const { handleAllExamsSelect } = useExamSetting({
+    categoryId,
+    exams,
+  });
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
     useState(false);
+  const isButtonDisabled = useAppSelector(
+    (state) => state.examSetting.examSetting.examIds.length === 0
+  );
+
   return (
     <CategoryMultipleSelectModeControlbarBlock>
       <div className="category-exam-all-checkbox-wrapper">
-        <Checkbox
-          className="category-exam-all-checkbox"
-          checked={categoryAllChecked}
-          onClick={handleAllExamsSelect}
-        />
+        <CategoryAllCheckbox categoryId={categoryId} exams={exams} />
         <span style={{ cursor: 'pointer' }} onClick={handleAllExamsSelect}>
           전체 선택
         </span>
@@ -82,7 +79,6 @@ const CategoryMultipleSelectModeControlbar: React.FC<
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
           categoryId={categoryId}
-          examIds={examIds}
           open={examMutipleSelectModalOpen}
           onCancel={() => setExamMultipleSelectModalOpen(false)}
         />

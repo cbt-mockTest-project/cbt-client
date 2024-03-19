@@ -72,6 +72,16 @@ export interface ExamSettingType {
   isMultipleSelectMode?: boolean;
 }
 
+export interface ToggleExamAllSelectPayload {
+  examIds: number[];
+  categoryId: number;
+}
+
+export interface ToggleExamSelectPayload {
+  examId: number;
+  categoryId: number;
+}
+
 export interface StudyQuery {
   order: 'random' | 'normal';
   states: string;

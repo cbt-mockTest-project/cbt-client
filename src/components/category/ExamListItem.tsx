@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
+import ExamListItemCheckbox from './ExamListItemCheckbox';
 
 const ExamListItemBlock = styled.div`
   width: 100%;
@@ -133,15 +134,11 @@ const ExamListItemBlock = styled.div`
 
 interface ExamListItemProps {
   exam: MockExam;
-  examSetting: ExamSettingType;
-  handleExamSelect: (examId: number) => void;
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
   exam,
-  examSetting,
-  handleExamSelect,
   dragHandleProps,
 }) => {
   const router = useRouter();
@@ -225,10 +222,10 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 
   return (
     <ExamListItemBlock>
-      <Checkbox
-        className="exam-list-item-checkbox"
-        checked={examSetting.examIds.includes(exam.id)}
-        onClick={() => handleExamSelect(exam.id)}
+      <ExamListItemCheckbox
+        categoryId={category.id}
+        exams={category.mockExam}
+        examId={exam.id}
       />
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
         <div className="exam-list-item-top-wrapper">

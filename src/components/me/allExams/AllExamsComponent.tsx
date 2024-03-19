@@ -10,13 +10,16 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import AllExamList from './AllExamList';
-import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import CategoryMultipleSelectModeControlbar from '@components/category/CategoryMultipleSelectModeControlbar';
 import { EllipsisOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useLazyGetMyAllExamCategoriesLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from '@components/category/CategoryLearningProgress';
 import { User } from 'types';
+import {
+  getExamSettingHistory,
+  setExamSettingHistory,
+} from '@lib/utils/examSettingHistory';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
@@ -84,12 +87,10 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
     };
   }, [categoryLearningProgressResponse]);
 
-  const { examSetting, handleAllExamsSelect, setExamSetting } = useExamSetting({
+  const { setExamSetting } = useExamSetting({
     categoryId: 0,
     exams,
   });
-  const { getExamSettingHistory, setExamSettingHistory } =
-    useExamSettingHistory();
   const examType = router.query.bookmarked === 'true' ? 'bookmarked' : 'me';
   const handleSelectExamType = (value: string) => {
     setExamSettingHistory({
@@ -173,17 +174,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
               />
             }
           />
-          <CategoryMultipleSelectModeControlbar
-            checkbox={{
-              categoryAllChecked: exams.length === examSetting.examIds.length,
-              handleAllExamsSelect,
-            }}
-            button={{
-              isButtonDisabled: examSetting.examIds.length === 0,
-            }}
-            categoryId={0}
-            examIds={examSetting.examIds}
-          />
+          <CategoryMultipleSelectModeControlbar categoryId={0} exams={exams} />
 
           <AllExamList examType={examType} />
         </>
