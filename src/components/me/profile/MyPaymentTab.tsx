@@ -15,8 +15,6 @@ const MyPaymentTab: React.FC<MyPaymentTabProps> = () => {
   const paymentData = useMemo(() => {
     if (!paymentsQuery?.getMyPayments.payments) return [];
     return paymentsQuery?.getMyPayments.payments.map((payment) => {
-      console.log(payment.receiptUrl);
-
       return {
         key: payment.id,
         productName: payment.productName,

@@ -104,7 +104,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         'network-only'
       )
         .then((res) => {
-          console.log('hi');
           if (!res.data.getExamCategories.ok) return;
           setBookmarkedCategories(
             res.data.getExamCategories.categories as MockExamCategory[]

@@ -253,8 +253,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
               if (e.touches.startX - e.touches.currentX < -100) {
                 handleSlidePrev();
               }
-              console.log('startX', e.touches.startX);
-              console.log('endX', e.touches.currentX);
             }}
           >
             <SwiperSlide />
