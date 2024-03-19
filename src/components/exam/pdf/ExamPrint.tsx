@@ -13,7 +13,9 @@ import { fetchImageAsBase64 } from '@lib/apis/upload';
 import useAuth from '@lib/hooks/useAuth';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
+import ExcelJS from 'exceljs';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -110,6 +112,16 @@ const DimmedBlock = styled.div`
 
 interface ExamPrintComponentProps {}
 
+function transformHtmlString(htmlStr: string) {
+  const regex = /<p>(.*?)<\/p>/g;
+  const transformedStr = htmlStr.replace(regex, (match, p1) => {
+    const withoutTags = p1.replace(/<[^>]+>/g, '');
+    return withoutTags + '\n';
+  });
+
+  return transformedStr;
+}
+
 const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   const router = useRouter();
   const examId = Number(router.query.Id);
@@ -118,7 +130,8 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   const { data: meQuery } = useMeQuery();
   const [editProfileMutation] = useEditProfileMutation();
   const [isPrintLimitModalOpen, setIsPrintLimitModalOpen] = useState(false);
-  const [isPrintLoding, setIsPrintLoding] = useState<boolean>(false);
+  const [isPrintLoading, setIsPrintLoading] = useState<boolean>(false);
+  const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
   const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
   const [isContentLoaded, setIsContentLoaded] = useState<boolean>(false);
   const [prevPageHeight, setPrevPageHeight] = useState<number>(0);
@@ -141,7 +154,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         return;
       }
 
-      setIsPrintLoding(true);
+      setIsPrintLoading(true);
       if (!printAreaRef.current) return;
       const canvas = await html2canvas(printAreaRef.current, { useCORS: true });
       const imgData = canvas.toDataURL('image/png');
@@ -171,7 +184,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
       const pdfBlob = pdf.output('blob');
       const url = URL.createObjectURL(pdfBlob);
       window.open(url, '_blank');
-      setIsPrintLoding(false);
+      setIsPrintLoading(false);
       editProfileMutation({
         variables: {
           input: {
@@ -183,6 +196,70 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     } catch (e) {
       handleError(e);
     }
+  };
+
+  const handleExportExcel = async () => {
+    if (!handleCheckLogin()) return;
+    if (!meQuery.me) return;
+    const isEhsExam = checkIsEhsMasterExam([examId]);
+    if (isEhsExam) return;
+    const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+
+    if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
+      setIsPrintLimitModalOpen(true);
+      return;
+    }
+
+    setIsExcelLoading(true);
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('sheet1');
+
+    // 열 설정 조정
+    worksheet.columns = [
+      { header: '문제', key: 'question', width: 50 },
+      { header: '문제 이미지 URL', key: 'question_img_url', width: 50 }, // URL을 위한 별도의 열
+      { header: '정답', key: 'solution', width: 50 },
+      { header: '정답 이미지 URL', key: 'solution_img_url', width: 50 }, // URL을 위한 별도의 열
+    ];
+
+    questions.forEach((question, index) => {
+      const row = worksheet.addRow({
+        question: transformHtmlString(question.question),
+        question_img_url:
+          question.question_img && question.question_img.length >= 1
+            ? question.question_img[0].url
+            : '',
+        solution: transformHtmlString(question.solution),
+        solution_img_url:
+          question.solution_img && question.solution_img.length >= 1
+            ? question.solution_img[0].url
+            : '',
+      });
+
+      // 문제 이미지 URL에 하이퍼링크 적용
+      if (row.getCell('question_img_url').value) {
+        worksheet.getCell(`B${row.number}`).value = {
+          text: String(row.getCell('question_img_url').value),
+          hyperlink: String(row.getCell('question_img_url').value),
+        };
+      }
+
+      // 정답 이미지 URL에 하이퍼링크 적용
+      if (row.getCell('solution_img_url').value) {
+        worksheet.getCell(`D${row.number}`).value = {
+          text: String(row.getCell('solution_img_url').value),
+          hyperlink: String(row.getCell('solution_img_url').value),
+        };
+      }
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setIsExcelLoading(false);
   };
 
   useEffect(() => {
@@ -262,14 +339,25 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         </Button>
         <Button
           onClick={handleExportPdf}
-          loading={isPrintLoding}
+          loading={isPrintLoading}
           className="exam-print-export-button"
           size="large"
         >
           <span className="exam-print-export-button-icon">
             <Print />
           </span>
-          <span>출력하기</span>
+          <span>PDF</span>
+        </Button>
+        <Button
+          onClick={handleExportExcel}
+          loading={isExcelLoading}
+          className="exam-print-export-button"
+          size="large"
+        >
+          <span className="exam-print-export-button-icon">
+            <GridOnIcon />
+          </span>
+          <span>Excel</span>
         </Button>
       </div>
       <div ref={printAreaRef} className="exam-print-area">
