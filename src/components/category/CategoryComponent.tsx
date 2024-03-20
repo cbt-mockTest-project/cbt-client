@@ -20,14 +20,11 @@ import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { BookmarkOutlined } from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
-import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
-import CategoryLearningProgress from './CategoryLearningProgress';
 import ExamList from './ExamList';
-import CategoryReviewButton from './CategoryReviewButton';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
-import GoogleAd from '@components/common/ad/GoogleAd';
 import { getExamSettingHistory } from '@lib/utils/examSettingHistory';
+import CategoryProgressAndReview from './CategoryProgressAndReview';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -99,10 +96,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const localStorage = new LocalStorage();
   const { data: meQuery } = useMeQuery();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
-  const [
-    getExamCategoryLearningProgress,
-    { data: categoryLearningProgressResponse },
-  ] = useLazyGetExamCategoryLearningProgress();
+  console.log('몇번렌더링 !?');
+
   const {
     handleFilterExams,
     category,
@@ -120,23 +115,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
-
-  const categoryLearningProgress = useMemo(() => {
-    if (!categoryLearningProgressResponse) return null;
-    const {
-      getExamCategoryLearningProgress: {
-        highScoreCount,
-        lowScoreCount,
-        totalQuestionCount,
-      },
-    } = categoryLearningProgressResponse;
-    return {
-      learningProgress: Math.round((highScoreCount / totalQuestionCount) * 100),
-      highScoreCount,
-      lowScoreCount,
-      totalQuestionCount,
-    };
-  }, [categoryLearningProgressResponse]);
 
   const categorySettingDropdownItems: MenuProps['items'] = [
     {
@@ -207,13 +185,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         }
       });
       if (!category) return;
-      getExamCategoryLearningProgress({
-        variables: {
-          input: {
-            categoryId: category.id,
-          },
-        },
-      });
+
       const examSetting = getExamSettingHistory(category.id);
       if (!examSetting) return;
       const { examIds } = examSetting;
@@ -239,11 +211,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   return (
     <CategoryComponentBlock>
-      <CategoryLearningProgress
-        categoryLearningProgress={categoryLearningProgress}
-      />
-      <CategoryReviewButton categoryId={category.id} />
-      <GoogleAd type="display" />
+      <CategoryProgressAndReview categoryId={category.id} />
       <CategoryHeader
         user={category.user}
         categoryName={category.name}
