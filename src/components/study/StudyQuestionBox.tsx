@@ -130,12 +130,6 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
     }
   }, [onChangeIsFeedbackModalOpen]);
 
-  // const answerPercentage = useMemo(() => {
-  //   const total =
-  //     question.highScore + question.lowScore + question.middleScore * 0.5;
-  //   return ((question.highScore / total) * 100).toFixed(0);
-  // }, [question]);
-
   return (
     <StudyQuestionBoxBlock className={className}>
       <div className="study-question-box-header">
@@ -161,14 +155,16 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               </Button>
             </a>
           )}
-          <Popover content="답안 추가">
-            <div
-              className="study-question-box-header-rignt-button-edit"
-              onClick={handleOpenFeedbackModal}
-            >
-              <EditOutlined />
-            </div>
-          </Popover>
+          {[12318, 1].includes(question.user.id) && (
+            <Popover content="답안 추가">
+              <div
+                className="study-question-box-header-rignt-button-edit"
+                onClick={handleOpenFeedbackModal}
+              >
+                <EditOutlined />
+              </div>
+            </Popover>
+          )}
           <Bookmark
             onClick={onClickBookmark}
             role="button"
