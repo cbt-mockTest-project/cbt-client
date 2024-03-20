@@ -8,11 +8,15 @@ import palette from '@styles/palette';
 import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
-import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
 import useAuth from '@lib/hooks/useAuth';
+import {
+  getExamSettingHistory,
+  setExamSettingHistory,
+} from '@lib/utils/examSettingHistory';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -45,21 +49,21 @@ const ExamMultipleSelectModalBlock = styled(Modal)`
 `;
 
 interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
-  examIds: number[];
   categoryId: number;
 }
 
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
+  const examIds = useAppSelector(
+    (state) => state.examSetting.examSetting.examIds
+  );
   const { handleUpdateUserCache } = useAuth();
   const { data: meQuery } = useMeQuery();
   const [isRandomExamLimitModalOpen, setIsRandomExamLimitModalOpen] =
     useState(false);
   const [editProfileMutation] = useEditProfileMutation();
-  const { categoryId, examIds, ...modalProps } = props;
-  const { getExamSettingHistory, setExamSettingHistory } =
-    useExamSettingHistory();
+  const { categoryId, ...modalProps } = props;
   const router = useRouter();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [isRandom, setIsRandom] = useState<boolean>(true);

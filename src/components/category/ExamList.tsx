@@ -18,10 +18,6 @@ interface ExamListProps {}
 
 const ExamList: React.FC<ExamListProps> = () => {
   const { category, handleMoveExamOrder } = useExamCategory();
-  const { examSetting, handleExamSelect } = useExamSetting({
-    categoryId: category.id,
-    exams: category.mockExam,
-  });
   const { user } = useAuth();
 
   return (
@@ -49,8 +45,6 @@ const ExamList: React.FC<ExamListProps> = () => {
                     >
                       <ExamListItem
                         exam={exam}
-                        examSetting={examSetting}
-                        handleExamSelect={handleExamSelect}
                         dragHandleProps={provided.dragHandleProps}
                       />
                     </div>
@@ -64,13 +58,7 @@ const ExamList: React.FC<ExamListProps> = () => {
         {user?.id !== category.user.id &&
           category.mockExam.map((exam, index) => {
             return (
-              <ExamListItem
-                dragHandleProps={null}
-                key={exam.id}
-                exam={exam}
-                examSetting={examSetting}
-                handleExamSelect={handleExamSelect}
-              />
+              <ExamListItem dragHandleProps={null} key={exam.id} exam={exam} />
             );
           })}
       </ExamListBlock>

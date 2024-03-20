@@ -5,7 +5,6 @@ import { Dropdown, MenuProps, Modal, message } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ReadMockExamCategoryByCategoryIdInput, UserRole } from 'types';
-import useExamSettingHistory from '@lib/hooks/useExamSettingHistory';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
@@ -28,6 +27,7 @@ import CategoryReviewButton from './CategoryReviewButton';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 import GoogleAd from '@components/common/ad/GoogleAd';
+import { getExamSettingHistory } from '@lib/utils/examSettingHistory';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -112,7 +112,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     storageType,
     handleToggleCategoryBookmark,
   } = useExamCategory();
-  const { examSetting, setExamSetting, handleAllExamsSelect } = useExamSetting({
+  const { setExamSetting } = useExamSetting({
     categoryId: category.id,
     exams: category.mockExam,
   });
@@ -120,8 +120,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
-
-  const { getExamSettingHistory } = useExamSettingHistory();
 
   const categoryLearningProgress = useMemo(() => {
     if (!categoryLearningProgressResponse) return null;
@@ -260,16 +258,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             }}
           />
           <CategoryMultipleSelectModeControlbar
-            checkbox={{
-              categoryAllChecked:
-                category?.mockExam.length === examSetting.examIds.length,
-              handleAllExamsSelect,
-            }}
-            button={{
-              isButtonDisabled: examSetting.examIds.length === 0,
-            }}
             categoryId={category.id}
-            examIds={examSetting.examIds}
+            exams={category.mockExam}
           />
           <ExamList />
         </>

@@ -15,6 +15,7 @@ import ExamSelecModal from '@components/category/ExamSelecModal';
 import Image from 'next/image';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
+import ExamListItemCheckbox from '@components/category/ExamListItemCheckbox';
 
 const AllExamListItemBlock = styled.div`
   width: calc(50% - 10px);
@@ -81,16 +82,14 @@ const AllExamListItemBlock = styled.div`
 
 interface AllExamListItemProps {
   exam: MockExam;
-  examSetting: ExamSettingType;
+  exams: MockExam[];
   examType: MyExamType;
-  handleExamSelect: (examId: number) => void;
 }
 
 const AllExamListItem: React.FC<AllExamListItemProps> = ({
   examType,
-  examSetting,
-  handleExamSelect,
   exam,
+  exams,
 }) => {
   const router = useRouter();
   const { handleToggleExamBookmark } = useMyAllExams();
@@ -117,11 +116,7 @@ const AllExamListItem: React.FC<AllExamListItemProps> = ({
   ];
   return (
     <AllExamListItemBlock>
-      <Checkbox
-        className="exam-list-item-checkbox"
-        checked={examSetting.examIds.includes(exam.id)}
-        onClick={() => handleExamSelect(exam.id)}
-      />
+      <ExamListItemCheckbox categoryId={0} examId={exam.id} exams={exams} />
       <BasicCard onClick={() => setIsExamSelectModalOpen(true)} hoverEffect>
         <div className="exam-list-item-top-wrapper">
           <span>{exam.title}</span>

@@ -146,10 +146,6 @@ const PlyrPlayer: React.FC<PlyrPlayerProps> = ({
     };
   }, [sources]);
 
-  useEffect(() => {
-    console.log(savedTime.current);
-  }, [savedTime]);
-
   return (
     <PlyrPlayerBlock width={width} customButtonVisible={customButtonVisible}>
       <video ref={videoRef} autoPlay playsInline controls />

@@ -18,19 +18,14 @@ interface AllExamListProps {
 
 const AllExamList: React.FC<AllExamListProps> = ({ examType }) => {
   const { exams } = useMyAllExams();
-  const { examSetting, handleExamSelect } = useExamSetting({
-    categoryId: 0,
-    exams,
-  });
   return (
     <AllExamListBlock>
       {exams.map((exam) => (
         <AllExamListItem
           key={exam.id}
           exam={exam}
+          exams={exams}
           examType={examType}
-          examSetting={examSetting}
-          handleExamSelect={handleExamSelect}
         />
       ))}
     </AllExamListBlock>
