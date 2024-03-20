@@ -27,6 +27,7 @@ import ExamList from './ExamList';
 import CategoryReviewButton from './CategoryReviewButton';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -244,6 +245,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         categoryLearningProgress={categoryLearningProgress}
       />
       <CategoryReviewButton categoryId={category.id} />
+      <GoogleAd type="display" />
       <CategoryHeader
         user={category.user}
         categoryName={category.name}
