@@ -7,11 +7,12 @@ import { responsive } from '@lib/utils/responsive';
 import HomeFolderList from './HomeFolderList';
 import { useRouter } from 'next/router';
 import HomeSearchedFolderList from './HomeSearchedFolderList';
-import { MockExamCategory, MockExamQuestion } from 'types';
+import { ExamSource, MockExamCategory, MockExamQuestion } from 'types';
 
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import useAuth from '@lib/hooks/useAuth';
 import { handleError } from '@lib/utils/utils';
+import BookmarkedFolderList from './BookmarkedFolderList';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -68,52 +69,47 @@ interface HomeComponentProps {}
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-
   const {
     fetchCategories,
     searchedCategories,
     fetchCategoriesLoading,
     moduStorageCategories,
     userStorageCategories,
-    refetchHomeCategories,
     ehsStorageCategories,
     handleToggleCategoryBookmark,
-    setBookmarkedCategories,
-    bookmarkedCategories,
   } = useHomeCategories();
 
   const searchType = useMemo(() => {
     if (router.query.type) return router.query.type;
     return 'folder';
   }, [router.query.type]);
-
   const keyword = useMemo(() => {
     if (searchType === 'folder') return router.query.f_keyword;
     if (searchType === 'question') return router.query.q_keyword;
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
   useEffect(() => {
-    if (router.query.type) return;
-    refetchHomeCategories();
-
-    if (isLoggedIn) {
-      fetchCategories(
-        {
-          isBookmarked: true,
-        },
-        'network-only'
-      )
-        .then((res) => {
-          if (!res.data.getExamCategories.ok) return;
-          setBookmarkedCategories(
-            res.data.getExamCategories.categories as MockExamCategory[]
-          );
-        })
-        .catch((e) => {
-          handleError(e);
-        });
+    if (!moduStorageCategories.length) {
+      fetchCategories({
+        limit: 30,
+        examSource: ExamSource.MoudCbt,
+        isPublicOnly: true,
+      });
     }
-  }, [isLoggedIn, router.query]);
+    if (!userStorageCategories.length) {
+      fetchCategories({
+        limit: 30,
+        examSource: ExamSource.User,
+        isPublicOnly: true,
+      });
+    }
+    if (!ehsStorageCategories.length) {
+      fetchCategories({
+        limit: 30,
+        examSource: ExamSource.EhsMaster,
+      });
+    }
+  }, [moduStorageCategories, userStorageCategories, ehsStorageCategories]);
 
   useEffect(() => {
     if (typeof keyword !== 'string' || !keyword) return;
@@ -181,11 +177,9 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               unikeyKey="user-storage"
             />
             {isLoggedIn && (
-              <HomeFolderList
+              <BookmarkedFolderList
                 title="북마크한 암기장 📌"
                 subTitle="북마크한 암기장을 모아보세요."
-                categories={bookmarkedCategories}
-                unikeyKey="bookmarked-storage"
               />
             )}
           </>

@@ -90,7 +90,7 @@ const HomeFolderListBlock = styled.div`
   }
 `;
 
-interface HomeFolderListProps {
+export interface HomeFolderListProps {
   title: string;
   subTitle: string;
   categories: MockExamCategory[];

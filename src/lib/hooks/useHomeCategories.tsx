@@ -42,9 +42,6 @@ const useHomeCategories = () => {
   const ehsStorageCategories = useAppSelector(
     (state) => state.home.ehsStorageCategories
   );
-  const bookmarkedCategories = useAppSelector(
-    (state) => state.home.bookmarkedCategories
-  );
 
   const fetchCategories = async (
     input: GetExamCategoriesInput,
@@ -213,7 +210,6 @@ const useHomeCategories = () => {
     moduStorageCategories,
     userStorageCategories,
     ehsStorageCategories,
-    bookmarkedCategories,
     setBookmarkedCategories,
     handleToggleCategoryBookmark,
   };
