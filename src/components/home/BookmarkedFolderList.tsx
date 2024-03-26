@@ -46,6 +46,8 @@ const BookmarkedFolderList: React.FC<BookmarkedFolderListProps> = (props) => {
         });
     }
   }, [isLoggedIn, router.query]);
+
+  if (!isLoggedIn) return null;
   return (
     <BookmarkedFolderListBlock>
       <HomeFolderList

@@ -1,13 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import HomeBanner from './HomeBanner';
-import { Button, Input, InputRef, Radio } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import HomeFolderList from './HomeFolderList';
 import { useRouter } from 'next/router';
 import HomeSearchedFolderList from './HomeSearchedFolderList';
-import { ExamSource, MockExamCategory, MockExamQuestion } from 'types';
+import { ExamSource, MockExamCategory } from 'types';
 
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import useAuth from '@lib/hooks/useAuth';
@@ -68,7 +66,6 @@ interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
   const {
     fetchCategories,
     searchedCategories,
@@ -151,9 +148,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="실기 시험을 효율적으로 준비해보세요."
               link="/modu-storage"
               categories={moduStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
-              }}
               unikeyKey="modu-storage"
             />
             <HomeFolderList
@@ -161,9 +155,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
               link="/ehs-storage"
               categories={ehsStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'modu' });
-              }}
               unikeyKey="modu-storage"
             />
             <HomeFolderList
@@ -171,17 +162,12 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
               trigger="user-storage"
               categories={userStorageCategories}
-              handleToggleBookmark={async (id) => {
-                handleToggleCategoryBookmark({ categoryId: id, type: 'user' });
-              }}
               unikeyKey="user-storage"
             />
-            {isLoggedIn && (
-              <BookmarkedFolderList
-                title="북마크한 암기장 📌"
-                subTitle="북마크한 암기장을 모아보세요."
-              />
-            )}
+            <BookmarkedFolderList
+              title="북마크한 암기장 📌"
+              subTitle="북마크한 암기장을 모아보세요."
+            />
           </>
         )}
       </div>

@@ -3,6 +3,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import useAuth from '@lib/hooks/useAuth';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Tag } from 'antd';
@@ -111,8 +112,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   className = '',
 }) => {
   const router = useRouter();
-  const { data: meQuery } = useMeQuery();
-  const user = meQuery?.me.user;
+  const { handleCheckLogin, user, isLoggedIn } = useAuth();
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category?.name}`}
@@ -129,6 +129,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                     isBookmarked={category.isBookmarked}
                     handleToggleBookmark={(e) => {
                       e.preventDefault();
+                      if (!handleCheckLogin()) return;
                       handleToggleBookmark(category.id);
                     }}
                   />

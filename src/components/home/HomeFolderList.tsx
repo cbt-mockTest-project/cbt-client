@@ -97,7 +97,6 @@ export interface HomeFolderListProps {
   link?: string;
   trigger?: string;
   unikeyKey: string;
-  handleToggleBookmark?: (categoryId: number) => Promise<void>;
   headerButton?: React.ReactNode;
   emptyDescription?: string;
 }

@@ -10,8 +10,7 @@ import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 import { cloneDeep } from 'lodash';
-import { Modal, message } from 'antd';
-import useAuth from './useAuth';
+import { message } from 'antd';
 import { homeActions } from '@modules/redux/slices/home';
 import { WatchQueryFetchPolicy } from '@apollo/client';
 
@@ -22,7 +21,6 @@ export interface handleToggleCategoryBookmarkProps {
 }
 
 const useHomeCategories = () => {
-  const { handleCheckLogin, isLoggedIn } = useAuth();
   const dispatch = useAppDispatch();
   const { updateCache, client } = useApolloClient();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
@@ -103,7 +101,6 @@ const useHomeCategories = () => {
     input,
   }: handleToggleCategoryBookmarkProps) => {
     try {
-      if (!handleCheckLogin()) return;
       const res = await toggleCategoryBookmark({
         variables: {
           input: {
