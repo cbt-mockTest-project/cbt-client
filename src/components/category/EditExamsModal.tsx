@@ -9,6 +9,7 @@ import TextInput from '@components/common/input/TextInput';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const EditExamsModalBlock = styled(Modal)`
   .edit-exams-filter-select {
@@ -43,7 +44,8 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
-  const { fetchMyExams, myExams, handleFilterMyExams } = useExamCategory();
+  const { fetchMyExams, handleFilterMyExams } = useExamCategory();
+  const myExams = useAppSelector((state) => state.examCategory.myExams);
   const { data: meQuery } = useMeQuery();
   const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');
   const { categoryId, ...modalProps } = props;

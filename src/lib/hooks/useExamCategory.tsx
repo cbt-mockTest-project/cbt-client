@@ -1,6 +1,5 @@
 import {
   EditMockExamCategoryInput,
-  ExamSource,
   MockExam,
   MockExamCategory,
   ReadMockExamCategoryByCategoryIdInput,
@@ -14,23 +13,18 @@ import {
   useMoveExamOrder,
   useRemoveExamFromCategory,
 } from '../graphql/hook/useExam';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { handleError } from '@lib/utils/utils';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import { useRouter } from 'next/router';
 import { message } from 'antd';
-import { useMemo } from 'react';
-import { StorageType } from 'customTypes';
-import useExamSetting from './useExamSetting';
-import { cloneDeep, debounce, isEqual } from 'lodash';
+import { debounce } from 'lodash';
 import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
 import useAuth from './useAuth';
 import { DropResult } from 'react-beautiful-dnd';
+import { examSettingActions } from '@modules/redux/slices/examSetting';
 
 const useExamCategory = () => {
   const router = useRouter();
@@ -45,25 +39,14 @@ const useExamCategory = () => {
   const [toggleExamBookmark] = useToggleExamBookmark();
   const [editCategory, { loading: editCategoryLoading }] = useEditCategory();
   const dispatch = useAppDispatch();
-  const category = useAppSelector((state) => state.examCategory.category);
-  const myExams = useAppSelector((state) => state.examCategory.myExams);
-  const originalMyExams = useAppSelector(
-    (state) => state.examCategory.originalMyExams
-  );
-  const originalCategory = useAppSelector(
-    (state) => state.examCategory.originalCategory
-  );
 
-  const storageType = useMemo(() => {
-    if (category?.source === ExamSource.EhsMaster) return StorageType.PREMIUM;
-    if (category?.source === ExamSource.MoudCbt) return StorageType.MODU;
-    return StorageType.MY;
-  }, [category]);
+  interface HandleCategoryCommonArgs {
+    examId: number;
+    categoryId: number;
+  }
 
-  const { handleExamSelect } = useExamSetting({
-    categoryId: category?.id,
-    exams: category?.mockExam,
-  });
+  const handleExamSelect = (input: HandleCategoryCommonArgs) =>
+    dispatch(examSettingActions.toggleExamSelect(input));
 
   const fetchCategory = async (
     input: ReadMockExamCategoryByCategoryIdInput,
@@ -100,10 +83,7 @@ const useExamCategory = () => {
           },
         },
       });
-      if (
-        res.data?.getMyExams.ok &&
-        !isEqual(myExams, res.data.getMyExams.exams)
-      ) {
+      if (res.data?.getMyExams.ok) {
         setMyExams(res.data.getMyExams.exams as MockExam[]);
       }
     } catch (e) {
@@ -122,10 +102,7 @@ const useExamCategory = () => {
         },
       });
       if (res.data.toggleExamCategorieBookmark.ok) {
-        const newCategory = cloneDeep(category);
-        if (!newCategory) return;
-        newCategory.isBookmarked = !newCategory.isBookmarked;
-        setExamCategory(newCategory);
+        dispatch(examCategoryActions.toggleCategoryBookmark());
         if (res.data.toggleExamCategorieBookmark.isBookmarked)
           return message.success('북마크 되었습니다.');
         else return message.success('북마크가 해제되었습니다.');
@@ -148,8 +125,7 @@ const useExamCategory = () => {
         },
       });
       if (res.data?.editMockExamCategory.ok) {
-        const updatedCategory = { ...category, ...input } as MockExamCategory;
-        setExamCategory(updatedCategory);
+        dispatch(examCategoryActions.editCategory(input));
         message.success('폴더가 수정되었습니다.');
         successCallback?.();
         return;
@@ -161,13 +137,13 @@ const useExamCategory = () => {
     }
   };
 
-  const handleDeleteCategory = async () => {
+  const handleDeleteCategory = async (categoryId: number) => {
     try {
-      if (!category?.id) return;
+      if (!categoryId) return;
       const res = await deleteCategory({
         variables: {
           input: {
-            id: category?.id,
+            id: categoryId,
           },
         },
       });
@@ -182,24 +158,22 @@ const useExamCategory = () => {
     }
   };
 
-  const handleAddExamToCategory = async (examId: number) => {
+  const handleAddExamToCategory = async ({
+    examId,
+    categoryId,
+  }: HandleCategoryCommonArgs) => {
     try {
-      if (!category?.id) return;
+      if (!categoryId) return;
       const res = await addExamToCategory({
         variables: {
           input: {
-            categoryId: category.id,
+            categoryId,
             examId,
           },
         },
       });
       if (res.data?.addExamToCategory.ok) {
-        const newExam = myExams.find((exam) => exam.id === examId);
-        const updatedCategory = {
-          ...category,
-          mockExam: [newExam, ...category.mockExam],
-        } as MockExamCategory;
-        setExamCategory(updatedCategory);
+        dispatch(examCategoryActions.addExamToCategory(examId));
         return;
       }
       message.error(res.data?.addExamToCategory.error);
@@ -208,24 +182,26 @@ const useExamCategory = () => {
     }
   };
 
-  const handleRemoveExamFromCategory = async (examId: number) => {
+  const handleRemoveExamFromCategory = async ({
+    examId,
+    categoryId,
+  }: HandleCategoryCommonArgs) => {
     try {
-      if (!category?.id) return;
+      if (!categoryId) return;
       const res = await removeExamFromCategory({
         variables: {
           input: {
-            categoryId: category.id,
+            categoryId,
             examId,
           },
         },
       });
       if (res.data?.removeExamFromCategory.ok) {
-        handleExamSelect(examId);
-        const updatedCategory = {
-          ...category,
-          mockExam: category.mockExam.filter((exam) => exam.id !== examId),
-        } as MockExamCategory;
-        setExamCategory(updatedCategory);
+        handleExamSelect({
+          examId,
+          categoryId,
+        });
+        dispatch(examCategoryActions.removeExamFromCategory(examId));
         return;
       }
       message.error(res.data?.removeExamFromCategory.error);
@@ -235,21 +211,11 @@ const useExamCategory = () => {
   };
 
   const handleFilterExams = debounce((keyword: string) => {
-    if (!originalCategory) return;
-    const filteredCategory = {
-      ...originalCategory,
-      mockExam: originalCategory.mockExam.filter((exam) =>
-        exam.title.includes(keyword)
-      ),
-    };
-    setExamCategory(filteredCategory, false);
+    dispatch(examCategoryActions.filterExams(keyword));
   }, 300);
 
   const handleFilterMyExams = debounce((keyword: string) => {
-    const filteredExams = originalMyExams.filter((exam) =>
-      exam.title.includes(keyword)
-    );
-    setMyExams(filteredExams, false);
+    dispatch(examCategoryActions.filterMyExams(keyword));
   }, 300);
 
   const handleToggleExamBookmark = async (examId: number) => {
@@ -263,16 +229,7 @@ const useExamCategory = () => {
         },
       });
       if (res.data?.toggleExamBookmark.ok) {
-        const newCategory = cloneDeep(category);
-        if (!newCategory) return;
-        newCategory.mockExam = newCategory.mockExam.map((exam) => {
-          if (exam.id === examId) {
-            exam.isBookmarked = !exam.isBookmarked;
-          }
-          return exam;
-        });
-        setExamCategory(newCategory);
-
+        dispatch(examCategoryActions.toggleExamBookmark(examId));
         if (res.data.toggleExamBookmark.isBookmarked)
           return message.success('북마크 되었습니다.');
         else return message.success('북마크가 해제되었습니다.');
@@ -283,22 +240,22 @@ const useExamCategory = () => {
     }
   };
 
-  const handleMoveExamOrder = async (result: DropResult) => {
+  interface HandleMoveExamOrderArgs {
+    result: DropResult;
+    categoryId: number;
+  }
+
+  const handleMoveExamOrder = async ({
+    result,
+    categoryId,
+  }: HandleMoveExamOrderArgs) => {
     try {
       const { destination, source } = result;
-      if (!destination) return;
-      if (destination.index === source.index) return;
-      const newExamList = [...category.mockExam];
-      const [removed] = newExamList.splice(source.index, 1);
-      newExamList.splice(destination.index, 0, removed);
-      setExamCategory({
-        ...category,
-        mockExam: newExamList,
-      });
+      dispatch(examCategoryActions.moveExamOrder(result));
       const res = await moveExamOrder({
         variables: {
           input: {
-            categoryId: category.id,
+            categoryId,
             startIdx: source.index,
             endIdx: destination.index,
           },
@@ -306,13 +263,13 @@ const useExamCategory = () => {
       });
       if (!res.data?.moveExamOrder.ok) {
         message.error(res.data.moveExamOrder.error);
-        setExamCategory(category);
+        dispatch(examCategoryActions.moveExamOrder(result));
         return;
       }
     } catch (e) {
       handleError(e);
       message.error('순서 변경에 실패했습니다.');
-      setExamCategory(category);
+      dispatch(examCategoryActions.moveExamOrder(result));
     }
   };
 
@@ -336,9 +293,6 @@ const useExamCategory = () => {
     handleMoveExamOrder,
     fetchMyExams,
     setExamCategory,
-    category,
-    myExams,
-    storageType,
     handleDeleteCategory,
     handleEditCategory,
     handleAddExamToCategory,
@@ -348,8 +302,6 @@ const useExamCategory = () => {
     handleFilterExams,
     handleFilterMyExams,
     editCategoryLoading,
-    originalCategory,
-    originalMyExams,
   };
 };
 

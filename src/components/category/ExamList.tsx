@@ -6,6 +6,7 @@ import useExamCategory from '@lib/hooks/useExamCategory';
 import DragDropContextWrapper from '@components/common/dragDrop/DragDropContextWrapper';
 import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ExamListBlock = styled.ul`
   margin-top: 20px;
@@ -17,18 +18,25 @@ const ExamListBlock = styled.ul`
 interface ExamListProps {}
 
 const ExamList: React.FC<ExamListProps> = () => {
-  const { category, handleMoveExamOrder } = useExamCategory();
+  const { handleMoveExamOrder } = useExamCategory();
   const { user } = useAuth();
+  const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isMyCategory = useAppSelector(
+    (state) =>
+      state.examCategory.category &&
+      state.examCategory.category.user.id === user?.id
+  );
+  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
 
   return (
     <>
       <DragDropContextWrapper
         droppableId="exam-create-droppable"
-        onDragEnd={handleMoveExamOrder}
+        onDragEnd={(result) => handleMoveExamOrder({ result, categoryId })}
       >
         <ExamListBlock>
-          {user?.id === category.user.id &&
-            category.mockExam.map((exam, index) => {
+          {isMyCategory &&
+            exams.map((exam, index) => {
               return (
                 <Draggable
                   key={exam.id}
@@ -55,8 +63,8 @@ const ExamList: React.FC<ExamListProps> = () => {
         </ExamListBlock>
       </DragDropContextWrapper>
       <ExamListBlock>
-        {user?.id !== category.user.id &&
-          category.mockExam.map((exam, index) => {
+        {!isMyCategory &&
+          exams.map((exam, index) => {
             return (
               <ExamListItem dragHandleProps={null} key={exam.id} exam={exam} />
             );

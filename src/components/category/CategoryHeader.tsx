@@ -1,6 +1,7 @@
 import { FolderOutlined } from '@ant-design/icons';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { linkify } from '@lib/utils/utils';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { Button, Tooltip } from 'antd';
 import Image from 'next/image';
@@ -65,7 +66,7 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryName,
   categoryDescription,
 }) => {
-  const { category } = useExamCategory();
+  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
   const router = useRouter();
   return (
     <CategoryHeaderBlock>
@@ -93,7 +94,7 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
             router.push({
               pathname: '/search',
               query: {
-                examIds: category.mockExam.map((exam) => exam.id).join(','),
+                examIds: exams.map((exam) => exam.id).join(','),
                 categoryName,
               },
             })

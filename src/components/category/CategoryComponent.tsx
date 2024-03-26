@@ -2,22 +2,20 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Dropdown, MenuProps, Modal, message } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ReadMockExamCategoryByCategoryIdInput, UserRole } from 'types';
-import useExamSetting from '@lib/hooks/useExamSetting';
+import {
+  ExamSource,
+  ReadMockExamCategoryByCategoryIdInput,
+  UserRole,
+} from 'types';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import CategoryEmpty from './CategoryEmpty';
-import {
-  useMeQuery,
-  useUpdateRecentlyStudiedCategory,
-} from '@lib/graphql/hook/useUser';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import { useRouter } from 'next/router';
-import CategoryHeader from './CategoryHeader';
 import CategoryControlbar from './CategoryControlbar';
-import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { BookmarkOutlined } from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
 import ExamList from './ExamList';
@@ -25,6 +23,15 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 import { getExamSettingHistory } from '@lib/utils/examSettingHistory';
 import CategoryProgressAndReview from './CategoryProgressAndReview';
+import CategoryHeaderWrapper from './CategoryHeaderWrapper';
+import CategoryMultipleSelectModeControlbarWrapper from './CategoryMultipleSelectModeControlbarWrapper';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
+import { examSettingActions } from '@modules/redux/slices/examSetting';
+import { ExamSettingType, StorageType } from 'customTypes';
+import CategoryCore from './CategoryCore';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -95,22 +102,53 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const router = useRouter();
   const localStorage = new LocalStorage();
   const { data: meQuery } = useMeQuery();
-  const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
-  console.log('몇번렌더링 !?');
-
   const {
     handleFilterExams,
-    category,
-    originalCategory,
-    fetchCategory,
     handleDeleteCategory,
-    storageType,
     handleToggleCategoryBookmark,
   } = useExamCategory();
-  const { setExamSetting } = useExamSetting({
-    categoryId: category.id,
-    exams: category.mockExam,
+  const dispatch = useAppDispatch();
+  const categoryUserId = useAppSelector(
+    (state) => state.examCategory.category.user.id
+  );
+  const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isCategoryBookmarked = useAppSelector(
+    (state) => state.examCategory.category.isBookmarked
+  );
+  const categoryName = useAppSelector(
+    (state) => state.examCategory.category.name
+  );
+  const categoryDescription = useAppSelector(
+    (state) => state.examCategory.category.description
+  );
+  const isCategoryPublic = useAppSelector(
+    (state) => state.examCategory.category.isPublic
+  );
+  const isMyCategory = useAppSelector(
+    (state) => state.examCategory.category.user.id === meQuery?.me.user?.id
+  );
+  const categoryAccessDenied = useAppSelector(
+    (state) =>
+      !meQuery?.me.user &&
+      state.examCategory.category &&
+      !state.examCategory.category.isPublic &&
+      meQuery?.me.user.role !== UserRole.Admin
+  );
+  const hasOriginalCategoryExams = useAppSelector(
+    (state) =>
+      state.examCategory.originalCategory &&
+      state.examCategory.originalCategory.mockExam.length >= 1
+  );
+  const storageType = useAppSelector((state) => {
+    if (state.examCategory.category.source === ExamSource.EhsMaster)
+      return StorageType.PREMIUM;
+    if (state.examCategory.category.source === ExamSource.MoudCbt)
+      return StorageType.MODU;
+    return StorageType.MY;
   });
+
+  const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
+    dispatch(examSettingActions.setExamSetting(examSetting));
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
@@ -136,7 +174,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onClick={(e) => {
             Modal.confirm({
               title: '정말로 삭제하시겠습니까?',
-              onOk: () => handleDeleteCategory(),
+              onOk: () => handleDeleteCategory(categoryId),
             });
           }}
         >
@@ -171,32 +209,12 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
-      updateRecentlyStudiedCategory({
-        variables: {
-          input: {
-            categoryName: categoryQueryInput.name,
-          },
-        },
-      });
-      fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
-        if (!res?.hasAccess && meQuery.me.user.role !== UserRole.Admin) {
-          message.error('접근 권한이 없습니다.');
-          router.push('/');
-        }
-      });
-      if (!category) return;
-
-      const examSetting = getExamSettingHistory(category.id);
+      const examSetting = getExamSettingHistory(categoryId);
       if (!examSetting) return;
       const { examIds } = examSetting;
-      if (examIds) setExamSetting({ categoryId: category.id, examIds });
+      if (examIds) setExamSetting({ categoryId, examIds });
     }
-    if (
-      !meQuery.me.user &&
-      category &&
-      !category.isPublic &&
-      meQuery.me.user.role !== UserRole.Admin
-    ) {
+    if (categoryAccessDenied) {
       message.error('접근 권한이 없습니다.');
       router.push('/');
     }
@@ -207,39 +225,29 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     localStorage.set(LAST_VISITED_CATEGORY, router.asPath);
   }, [router.asPath]);
 
-  if (!category) return null;
-
   return (
     <CategoryComponentBlock>
-      <CategoryProgressAndReview categoryId={category.id} />
-      <CategoryHeader
-        user={category.user}
-        categoryName={category.name}
-        categoryDescription={category.description}
-      />
-
-      {originalCategory && originalCategory.mockExam.length >= 1 ? (
+      <CategoryProgressAndReview />
+      <CategoryHeaderWrapper />
+      {hasOriginalCategoryExams ? (
         <>
           <CategoryControlbar
             textInput={{
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
-          <CategoryMultipleSelectModeControlbar
-            categoryId={category.id}
-            exams={category.mockExam}
-          />
+          <CategoryMultipleSelectModeControlbarWrapper />
           <ExamList />
         </>
       ) : (
         <CategoryEmpty
-          hasButton={category.user.id === meQuery?.me.user?.id}
+          hasButton={categoryUserId === meQuery?.me.user?.id}
           handleButtonClick={() => {
             setEditExamsModalOpen(true);
           }}
         />
       )}
-      {meQuery?.me.user?.id === category.user.id ? (
+      {isMyCategory ? (
         <Dropdown
           menu={{ items: categorySettingDropdownItems }}
           placement="bottomRight"
@@ -253,9 +261,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         </Dropdown>
       ) : (
         <button
-          onClick={() => handleToggleCategoryBookmark(category.id)}
+          onClick={() => handleToggleCategoryBookmark(categoryId)}
           className={`category-bookmark-button ${
-            category.isBookmarked ? 'active' : ''
+            isCategoryBookmarked ? 'active' : ''
           }`}
         >
           <BookmarkOutlined />
@@ -267,17 +275,17 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onCancel={() => setSaveCategoryModalOpen(false)}
           onClose={() => setSaveCategoryModalOpen(false)}
           storageType={storageType}
-          categoryId={category.id}
+          categoryId={categoryId}
           defaultValues={{
-            name: category.name,
-            description: category.description,
-            isPublic: category.isPublic,
+            name: categoryName,
+            description: categoryDescription,
+            isPublic: isCategoryPublic,
           }}
         />
       )}
       {editExamsModalOpen && (
         <EditExamsModal
-          categoryId={category.id}
+          categoryId={categoryId}
           open={editExamsModalOpen}
           onCancel={() => setEditExamsModalOpen(false)}
         />
@@ -285,10 +293,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       {inviteUserModalOpen && (
         <CategoryInviteModal
           open={inviteUserModalOpen}
-          categoryId={category.id}
+          categoryId={categoryId}
           onCancel={() => setInviteUserModalOpen(false)}
         />
       )}
+      <CategoryCore categoryQueryInput={categoryQueryInput} />
     </CategoryComponentBlock>
   );
 };

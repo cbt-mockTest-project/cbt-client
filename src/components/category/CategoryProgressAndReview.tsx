@@ -4,16 +4,16 @@ import CategoryLearningProgress from './CategoryLearningProgress';
 import CategoryReviewButton from './CategoryReviewButton';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import useAuth from '@lib/hooks/useAuth';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const CategoryProgressAndReviewBlock = styled.div``;
 
-interface CategoryProgressAndReviewProps {
-  categoryId: number;
-}
+interface CategoryProgressAndReviewProps {}
 
-const CategoryProgressAndReview: React.FC<CategoryProgressAndReviewProps> = ({
-  categoryId,
-}) => {
+const CategoryProgressAndReview: React.FC<
+  CategoryProgressAndReviewProps
+> = () => {
+  const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const { user } = useAuth();
   const [
     getExamCategoryLearningProgress,

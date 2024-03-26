@@ -1,6 +1,7 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import useExamCategory from '@lib/hooks/useExamCategory';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
@@ -18,21 +19,37 @@ interface EditExamItemProps {
 }
 
 const EditExamItem: React.FC<EditExamItemProps> = ({ exam }) => {
-  const { category, handleRemoveExamFromCategory, handleAddExamToCategory } =
+  const { handleRemoveExamFromCategory, handleAddExamToCategory } =
     useExamCategory();
-  const isAdded = category?.mockExam?.find((e) => e.id === exam.id);
+  const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isAdded = useAppSelector((state) =>
+    state.examCategory.category.mockExam.find((e) => e.id === exam.id)
+  );
+
   return (
     <EditExamItemBlock>
       <p>{exam.title}</p>
       {isAdded ? (
         <Button
           type="primary"
-          onClick={() => handleRemoveExamFromCategory(exam.id)}
+          onClick={() =>
+            handleRemoveExamFromCategory({
+              examId: exam.id,
+              categoryId,
+            })
+          }
         >
           <MinusOutlined />
         </Button>
       ) : (
-        <Button onClick={() => handleAddExamToCategory(exam.id)}>
+        <Button
+          onClick={() =>
+            handleAddExamToCategory({
+              examId: exam.id,
+              categoryId,
+            })
+          }
+        >
           <PlusOutlined />
         </Button>
       )}

@@ -15,6 +15,7 @@ import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import ExamListItemCheckbox from './ExamListItemCheckbox';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ExamListItemBlock = styled.div`
   width: 100%;
@@ -142,24 +143,29 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   dragHandleProps,
 }) => {
   const router = useRouter();
-  const { handleRemoveExamFromCategory, handleToggleExamBookmark, category } =
+  const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
     useExamCategory();
+
+  const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { user } = useAuth();
   const isMyExam = useMemo(
     () => user && exam.user.id === user.id,
     [exam, user]
   );
-  const isMyCategory = useMemo(
-    () => user && category.user.id === user.id,
-    [category, user]
+  const isMyCategory = useAppSelector(
+    (state) => state.examCategory.category.user.id === user?.id
   );
 
   const handleRemoveExam = () => {
     Modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       onOk() {
-        handleRemoveExamFromCategory(exam.id);
+        handleRemoveExamFromCategory({
+          examId: exam.id,
+          categoryId,
+        });
       },
     });
   };
@@ -223,8 +229,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   return (
     <ExamListItemBlock>
       <ExamListItemCheckbox
-        categoryId={category.id}
-        exams={category.mockExam}
+        categoryId={categoryId}
+        exams={exams}
         examId={exam.id}
       />
       <BasicCard onClick={handleExamClick} hoverEffect type="primary">
@@ -275,7 +281,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           examId={exam.id}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
-          categoryId={Number(category.id)}
+          categoryId={Number(categoryId)}
         />
       )}
     </ExamListItemBlock>
