@@ -1,4 +1,9 @@
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import {
+  QueryHookOptions,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import {
   CHANGE_CLIENT_ROLE,
   CHANGE_PASSWORD_AFTER_VERIFYING_MUTATION,
@@ -75,6 +80,7 @@ import {
   UpsertRecentlyStudiedExamsMutation,
   UpsertRecentlyStudiedExamsMutationVariables,
 } from '../query/userQuery.generated';
+import { Exact } from 'types';
 
 export const useRegisterMutation = () =>
   useMutation<RegisterMutation, RegisterMutationVariables>(REGISTER_MUTATION);
@@ -93,7 +99,12 @@ export const useEmailVerification = () =>
 export const useLoginMutation = () =>
   useMutation<LoginMutation, LoginMutationVariables>(LOGIN_MUTATION);
 
-export const useMeQuery = () => useQuery<MeQuery, MeQueryVariables>(ME_QUERY);
+export const useMeQuery = (
+  options?: QueryHookOptions<MeQuery, Exact<{ [key: string]: never }>>
+) =>
+  useQuery<MeQuery, MeQueryVariables>(ME_QUERY, {
+    ...options,
+  });
 
 export const useLazyMeQuery = () =>
   useLazyQuery<MeQuery, MeQueryVariables>(ME_QUERY, {
