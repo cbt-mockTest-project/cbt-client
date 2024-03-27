@@ -1,13 +1,11 @@
 import { FolderOutlined } from '@ant-design/icons';
-import useExamCategory from '@lib/hooks/useExamCategory';
 import { linkify } from '@lib/utils/utils';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import { Button, Tooltip } from 'antd';
+import { Button } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { MockExam, User } from 'types';
 
@@ -68,6 +66,7 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryDescription,
   exams,
 }) => {
+  console.log('CategoryHeader');
   const router = useRouter();
   return (
     <CategoryHeaderBlock>

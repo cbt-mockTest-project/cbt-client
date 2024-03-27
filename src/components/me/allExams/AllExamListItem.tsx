@@ -16,6 +16,7 @@ import Image from 'next/image';
 import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import ExamListItemCheckbox from '@components/category/ExamListItemCheckbox';
+import useAuth from '@lib/hooks/useAuth';
 
 const AllExamListItemBlock = styled.div`
   width: calc(50% - 10px);
@@ -92,6 +93,7 @@ const AllExamListItem: React.FC<AllExamListItemProps> = ({
   exams,
 }) => {
   const router = useRouter();
+  const { handleCheckLogin } = useAuth();
   const { handleToggleExamBookmark } = useMyAllExams();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const examSettingDropdownItems: MenuProps['items'] = [
@@ -138,6 +140,7 @@ const AllExamListItem: React.FC<AllExamListItemProps> = ({
           ) : (
             <ExamBookmark
               handleToggleBookmark={(e) => {
+                if (!handleCheckLogin()) return;
                 e.stopPropagation();
                 handleToggleExamBookmark(exam.id);
               }}

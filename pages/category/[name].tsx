@@ -8,8 +8,6 @@ import {
   ReadMockExamCategoryByCategoryIdQuery,
   ReadMockExamCategoryNamesQuery,
 } from '@lib/graphql/query/examQuery.generated';
-import { useMeQuery } from '@lib/graphql/query/userQuery.generated';
-import useAuth from '@lib/hooks/useAuth';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import wrapper, { useAppSelector } from '@modules/redux/store/configureStore';

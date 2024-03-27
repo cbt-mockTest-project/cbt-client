@@ -145,11 +145,10 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
     useExamCategory();
-
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const exams = useAppSelector((state) => state.examCategory.category.mockExam);
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, handleCheckLogin } = useAuth();
   const isMyExam = useMemo(
     () => user && exam.user.id === user.id,
     [exam, user]
@@ -258,6 +257,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
               <ExamBookmark
                 handleToggleBookmark={(e) => {
                   e.stopPropagation();
+                  if (!handleCheckLogin()) return;
                   handleToggleExamBookmark(exam.id);
                 }}
                 isBookmarked={exam.isBookmarked || false}

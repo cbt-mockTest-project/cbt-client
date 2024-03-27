@@ -1,37 +1,23 @@
-import { EllipsisOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { MenuProps, Modal } from 'antd';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import {
-  ExamSource,
-  ReadMockExamCategoryByCategoryIdInput,
-  UserRole,
-} from 'types';
+import { ExamSource, ReadMockExamCategoryByCategoryIdInput } from 'types';
 import useExamCategory from '@lib/hooks/useExamCategory';
-import CategoryEmpty from './CategoryEmpty';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
-import { useRouter } from 'next/router';
 import CategoryControlbar from './CategoryControlbar';
-import { BookmarkOutlined } from '@mui/icons-material';
 import CategoryInviteModal from './CategoryInviteModal';
 import ExamList from './ExamList';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
-import { getExamSettingHistory } from '@lib/utils/examSettingHistory';
 import CategoryProgressAndReview from './CategoryProgressAndReview';
 import CategoryHeaderWrapper from './CategoryHeaderWrapper';
 import CategoryMultipleSelectModeControlbarWrapper from './CategoryMultipleSelectModeControlbarWrapper';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
-import { examSettingActions } from '@modules/redux/slices/examSetting';
-import { ExamSettingType, StorageType } from 'customTypes';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { StorageType } from 'customTypes';
 import CategoryCore from './CategoryCore';
+import CategoryEmptyWrapper from './CategoryEmptyWrapper';
+import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -99,22 +85,8 @@ interface CategoryComponentProps {
 const CategoryComponent: React.FC<CategoryComponentProps> = ({
   categoryQueryInput,
 }) => {
-  const router = useRouter();
-  const localStorage = new LocalStorage();
-  const { data: meQuery } = useMeQuery();
-  const {
-    handleFilterExams,
-    handleDeleteCategory,
-    handleToggleCategoryBookmark,
-  } = useExamCategory();
-  const dispatch = useAppDispatch();
-  const categoryUserId = useAppSelector(
-    (state) => state.examCategory.category.user.id
-  );
+  const { handleFilterExams, handleDeleteCategory } = useExamCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
-  const isCategoryBookmarked = useAppSelector(
-    (state) => state.examCategory.category.isBookmarked
-  );
   const categoryName = useAppSelector(
     (state) => state.examCategory.category.name
   );
@@ -123,16 +95,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   );
   const isCategoryPublic = useAppSelector(
     (state) => state.examCategory.category.isPublic
-  );
-  const isMyCategory = useAppSelector(
-    (state) => state.examCategory.category.user.id === meQuery?.me.user?.id
-  );
-  const categoryAccessDenied = useAppSelector(
-    (state) =>
-      !meQuery?.me.user &&
-      state.examCategory.category &&
-      !state.examCategory.category.isPublic &&
-      meQuery?.me.user.role !== UserRole.Admin
   );
   const hasOriginalCategoryExams = useAppSelector(
     (state) =>
@@ -146,10 +108,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       return StorageType.MODU;
     return StorageType.MY;
   });
-
-  const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
-    dispatch(examSettingActions.setExamSetting(examSetting));
-
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [saveCategoryModalOpen, setSaveCategoryModalOpen] = useState(false);
@@ -205,25 +163,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
-
-  useEffect(() => {
-    if (!meQuery) return;
-    if (meQuery.me.user) {
-      const examSetting = getExamSettingHistory(categoryId);
-      if (!examSetting) return;
-      const { examIds } = examSetting;
-      if (examIds) setExamSetting({ categoryId, examIds });
-    }
-    if (categoryAccessDenied) {
-      message.error('접근 권한이 없습니다.');
-      router.push('/');
-    }
-  }, [meQuery]);
-
-  useEffect(() => {
-    if (!router.asPath) return;
-    localStorage.set(LAST_VISITED_CATEGORY, router.asPath);
-  }, [router.asPath]);
+  console.log('CategoryComponent');
 
   return (
     <CategoryComponentBlock>
@@ -240,35 +180,15 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           <ExamList />
         </>
       ) : (
-        <CategoryEmpty
-          hasButton={categoryUserId === meQuery?.me.user?.id}
+        <CategoryEmptyWrapper
           handleButtonClick={() => {
             setEditExamsModalOpen(true);
           }}
         />
       )}
-      {isMyCategory ? (
-        <Dropdown
-          menu={{ items: categorySettingDropdownItems }}
-          placement="bottomRight"
-        >
-          <div
-            className="category-setting-button-wrapper"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <EllipsisOutlined />
-          </div>
-        </Dropdown>
-      ) : (
-        <button
-          onClick={() => handleToggleCategoryBookmark(categoryId)}
-          className={`category-bookmark-button ${
-            isCategoryBookmarked ? 'active' : ''
-          }`}
-        >
-          <BookmarkOutlined />
-        </button>
-      )}
+      <CategoryBookmarkOrEditWrapper
+        dropdownItems={categorySettingDropdownItems}
+      />
       {saveCategoryModalOpen && (
         <SaveCategoryModal
           open={saveCategoryModalOpen}
