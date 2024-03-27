@@ -18,6 +18,7 @@ import { StorageType } from 'customTypes';
 import CategoryCore from './CategoryCore';
 import CategoryEmptyWrapper from './CategoryEmptyWrapper';
 import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -176,7 +177,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
+          <GoogleAd type="display" />
           <CategoryMultipleSelectModeControlbarWrapper />
+
           <ExamList />
         </>
       ) : (

@@ -101,5 +101,6 @@ const GoogleAd: React.FC<GoogleAdProps> = ({ className, type = 'display' }) => {
 export default React.memo(GoogleAd);
 
 const GoogleAdContainer = styled.div`
+  margin: 10px 0;
   width: 100%;
 `;
