@@ -66,7 +66,9 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryName,
   categoryDescription,
 }) => {
-  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
+  const exams = useAppSelector((state) =>
+    state.examCategory.category ? state.examCategory.category.mockExam : []
+  );
   const router = useRouter();
   return (
     <CategoryHeaderBlock>
