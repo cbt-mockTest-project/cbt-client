@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import WithHead from '@components/common/head/WithHead';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import StudyHeader from '@components/study/StudyHeader';
@@ -34,6 +35,7 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         description={description}
       />
       <StudyHeader questions={questions} />
+      <GoogleAd type="display" />
       <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
     </>
   );

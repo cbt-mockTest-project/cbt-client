@@ -170,6 +170,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     <CategoryComponentBlock>
       <CategoryProgressAndReview />
       <CategoryHeaderWrapper />
+      <GoogleAd type="display" />
       {hasOriginalCategoryExams ? (
         <>
           <CategoryControlbar
@@ -177,9 +178,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
               onChangeText: (v) => handleFilterExams(v),
             }}
           />
-          <GoogleAd type="display" />
           <CategoryMultipleSelectModeControlbarWrapper />
-
           <ExamList />
         </>
       ) : (

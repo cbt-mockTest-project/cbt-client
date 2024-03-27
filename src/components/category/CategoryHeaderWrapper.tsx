@@ -11,7 +11,6 @@ const CategoryHeaderWrapper: React.FC<CategoryHeaderWrapperProps> = () => {
     (state) => state.examCategory.category.description
   );
   const exams = useAppSelector((state) => state.examCategory.category.mockExam);
-  console.log('CategoryHeaderWrapper');
   return (
     <CategoryHeader
       user={user}
