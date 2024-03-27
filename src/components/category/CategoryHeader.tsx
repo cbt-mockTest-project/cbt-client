@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { User } from 'types';
+import { MockExam, User } from 'types';
 
 const CategoryHeaderBlock = styled.div`
   width: fit-content;
@@ -59,16 +59,15 @@ interface CategoryHeaderProps {
   user: User;
   categoryName: string;
   categoryDescription: string;
+  exams: MockExam[];
 }
 
 const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   user,
   categoryName,
   categoryDescription,
+  exams,
 }) => {
-  const exams = useAppSelector((state) =>
-    state.examCategory.category ? state.examCategory.category.mockExam : []
-  );
   const router = useRouter();
   return (
     <CategoryHeaderBlock>

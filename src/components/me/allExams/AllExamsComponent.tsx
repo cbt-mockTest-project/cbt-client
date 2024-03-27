@@ -1,6 +1,5 @@
 import CategoryControlbar from '@components/category/CategoryControlbar';
 import CategoryEmpty from '@components/category/CategoryEmpty';
-import CategoryHeader from '@components/category/CategoryHeader';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import useMyAllExams from '@lib/hooks/useMyAllExams';
@@ -15,11 +14,11 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import palette from '@styles/palette';
 import { useLazyGetMyAllExamCategoriesLearningProgress } from '@lib/graphql/hook/useExam';
 import CategoryLearningProgress from '@components/category/CategoryLearningProgress';
-import { User } from 'types';
 import {
   getExamSettingHistory,
   setExamSettingHistory,
 } from '@lib/utils/examSettingHistory';
+import AllExamCategoryHeaderWrapper from './AllExamCategoryHeaderWrapper';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
@@ -153,11 +152,7 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
       <CategoryLearningProgress
         categoryLearningProgress={categoryLearningProgress}
       />
-      <CategoryHeader
-        user={meQuery.me.user as User}
-        categoryName="내 전체 시험지"
-        categoryDescription="내가 만든 시험지들을 모두 볼 수 있습니다."
-      />
+      <AllExamCategoryHeaderWrapper />
 
       {originalExams && originalExams.length >= 1 ? (
         <>

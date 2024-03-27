@@ -1,9 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import CategoryHeader from './CategoryHeader';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-
-const CategoryHeaderWrapperBlock = styled.div``;
 
 interface CategoryHeaderWrapperProps {}
 
@@ -13,11 +10,13 @@ const CategoryHeaderWrapper: React.FC<CategoryHeaderWrapperProps> = () => {
   const description = useAppSelector(
     (state) => state.examCategory.category.description
   );
+  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
   return (
     <CategoryHeader
       user={user}
       categoryName={name}
       categoryDescription={description}
+      exams={exams}
     />
   );
 };
