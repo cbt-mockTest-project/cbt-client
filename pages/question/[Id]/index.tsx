@@ -9,6 +9,7 @@ import { removeHtmlTag } from '@lib/utils/utils';
 import { OperationVariables, QueryOptions } from '@apollo/client';
 import { ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 interface QuestionProps {
   title: string;
@@ -28,6 +29,7 @@ const Question: NextPage<QuestionProps> = ({
         pageHeadingTitle={`${title} 상세 페이지`}
         description={description}
       />
+      <GoogleAd type="display" />
       <QuestionComponent questionQueryInput={questionQueryInput} />
     </>
   );
