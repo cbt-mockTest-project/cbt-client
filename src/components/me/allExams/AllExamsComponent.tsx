@@ -19,6 +19,7 @@ import {
   setExamSettingHistory,
 } from '@lib/utils/examSettingHistory';
 import AllExamCategoryHeaderWrapper from './AllExamCategoryHeaderWrapper';
+import AllExamsUtilButtonWrapper from './AllExamsUtilButtonWrapper';
 
 const MyAllExamsComponentBlock = styled.div`
   padding: 30px;
@@ -149,11 +150,11 @@ const MyAllExamsComponent: React.FC<MyAllExamsComponentProps> = () => {
 
   return (
     <MyAllExamsComponentBlock>
+      <AllExamsUtilButtonWrapper />
       <CategoryLearningProgress
         categoryLearningProgress={categoryLearningProgress}
       />
       <AllExamCategoryHeaderWrapper />
-
       {originalExams && originalExams.length >= 1 ? (
         <>
           <CategoryControlbar

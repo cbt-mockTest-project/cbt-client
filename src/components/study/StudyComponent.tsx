@@ -52,7 +52,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     }
     // 다중 문제 풀이
     else {
-      if (!order || !limit || !examIds || !mode) return;
+      if (!order || !examIds || !mode) return;
       const input: ReadQuestionsByExamIdsInput = {
         order: order as string,
         limit: Number(limit),

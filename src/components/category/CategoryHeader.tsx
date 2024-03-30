@@ -66,7 +66,6 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryDescription,
   exams,
 }) => {
-  console.log('CategoryHeader');
   const router = useRouter();
   return (
     <CategoryHeaderBlock>
@@ -87,21 +86,6 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
       <div className="category-info">
         <FolderOutlined />
         <span className="category-name">{categoryName}</span>
-        <Button
-          className="category-question-search-button"
-          type="primary"
-          onClick={() =>
-            router.push({
-              pathname: '/search',
-              query: {
-                examIds: exams.map((exam) => exam.id).join(','),
-                categoryName,
-              },
-            })
-          }
-        >
-          문제 검색기
-        </Button>
       </div>
       <div className="category-description">{linkify(categoryDescription)}</div>
     </CategoryHeaderBlock>
