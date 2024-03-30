@@ -170,7 +170,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     <CategoryComponentBlock>
       <CategoryProgressAndReview />
       <CategoryHeaderWrapper />
-      <GoogleAd type="display" />
+      <GoogleAd />
       {hasOriginalCategoryExams ? (
         <>
           <CategoryControlbar

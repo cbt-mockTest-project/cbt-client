@@ -59,7 +59,7 @@ const GoogleAdModal: React.FC<GoogleAdModalProps> = ({ onClose }) => {
           <div className="google-ad-modal-content-close" onClick={onClose}>
             <Clear />
           </div>
-          <GoogleAd type="display" />
+          <GoogleAd />
         </div>
       </div>
     </GoogleAdModalBlock>

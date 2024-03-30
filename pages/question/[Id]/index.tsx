@@ -6,7 +6,6 @@ import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
 import { removeHtmlTag } from '@lib/utils/utils';
-import { OperationVariables, QueryOptions } from '@apollo/client';
 import { ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
 import GoogleAd from '@components/common/ad/GoogleAd';
@@ -29,7 +28,7 @@ const Question: NextPage<QuestionProps> = ({
         pageHeadingTitle={`${title} 상세 페이지`}
         description={description}
       />
-      <GoogleAd type="display" />
+      <GoogleAd />
       <QuestionComponent questionQueryInput={questionQueryInput} />
     </>
   );
