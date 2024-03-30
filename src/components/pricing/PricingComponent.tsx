@@ -145,7 +145,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
           'noopener'
         );
       },
-      roleIds: [4, 5, 6, 7],
+      roleIds: [4, 5, 6, 7, 8],
     },
     {
       title: '직8딴 플랜',
@@ -161,7 +161,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       ],
       confirmDisabled: false,
       onConfirm: openEhsMasterPayModal,
-      roleIds: [4, 5, 6, 7],
+      roleIds: [4, 5, 6, 7, 8],
     },
   ];
 

@@ -17,7 +17,7 @@ const CoupangDynamicBanner: React.FC<CoupangDynamicBannerProps> = ({
   const [isAdVisible, setIsAdVisible] = useState(false);
   useEffect(() => {
     if (isUndefined(meQuery)) return;
-    if (!checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery })) {
+    if (!checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7, 8], meQuery })) {
       setIsAdVisible(true);
     }
   }, [meQuery]);

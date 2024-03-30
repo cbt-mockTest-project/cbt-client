@@ -72,16 +72,17 @@ interface PricingSelectModalProps extends Omit<ModalProps, 'children'> {
   price: number;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }
-const 만팔천원과목리스트 = [5];
+const 만팔천원과목리스트 = [5, 8];
 const 만육천원과목리스트 = [4];
-
+const 만오천원과목리스트 = [7];
+const 만사천원과목리스트 = [6];
 // value 는 roleId 와 동일하게 간다.
 const categoryOptions = [
   { label: '산업안전기사', value: 4 },
   { label: '산업안전산업기사', value: 5 },
-  // { label: '건설안전기사', value: 5 },
-  // { label: '위험물산업기사', value: 6 },
-  // { label: '대기환경기사', value: 7 },
+  { label: '위험물산업기사', value: 6 },
+  { label: '대기환경기사', value: 7 },
+  { label: '건설안전기사', value: 8 },
 ];
 
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
@@ -159,6 +160,12 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
             }
             if (만육천원과목리스트.includes(value)) {
               setPrice(16000);
+            }
+            if (만오천원과목리스트.includes(value)) {
+              setPrice(15000);
+            }
+            if (만사천원과목리스트.includes(value)) {
+              setPrice(14000);
             }
             setSelectedCategoryId(value);
             if (!Array.isArray(option)) setSelectedCategoryName(option.label);
