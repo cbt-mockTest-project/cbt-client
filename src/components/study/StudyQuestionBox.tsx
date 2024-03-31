@@ -10,6 +10,7 @@ import { EditOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
+import EditorStyle from '@styles/editorStyle';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -57,6 +58,7 @@ const StudyQuestionBoxBlock = styled.div`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    ${EditorStyle}
   }
   .study-question-box-image {
     width: 100%;

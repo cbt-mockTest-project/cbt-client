@@ -11,6 +11,7 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
+import EditorStyle from '@styles/editorStyle';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -25,6 +26,7 @@ const StudyAnswerBoxBlock = styled.div`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    ${EditorStyle};
   }
   .study-answer-box-question-card-answer-wrapper {
     transition: opacity 0.2s ease-in-out;
@@ -32,10 +34,7 @@ const StudyAnswerBoxBlock = styled.div`
   .study-answer-box-question-card-anwswer-wrapper.hidden {
     opacity: 0;
   }
-  .study-answer-box-question-card-answer {
-    word-break: break-all;
-    white-space: pre-wrap;
-  }
+
   .study-answer-box-box-image {
     width: 100%;
     max-height: 400px;
