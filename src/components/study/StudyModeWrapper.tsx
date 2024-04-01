@@ -288,12 +288,34 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             )}
           </Swiper>
         ) : (
-          <StudyModeItemWrapper
-            key={activeIndex}
-            hasDefaultAnswers={hasDefaultAnswers}
-            question={questions[activeIndex - 1]}
-            number={activeIndex}
-          />
+          <>
+            <StudyModeItemWrapper
+              key={activeIndex}
+              hasDefaultAnswers={hasDefaultAnswers}
+              question={questions[activeIndex - 1]}
+              number={activeIndex}
+            />
+            {mode === 'typing' && (
+              <div className="typing-mode-swiper-button-wrapper">
+                <Tooltip title={isMobile ? '' : 'alt + shift + <-'}>
+                  <button
+                    className="typing-mode-control-button"
+                    onClick={() => handleSlidePrev()}
+                  >
+                    <LeftOutlined />
+                  </button>
+                </Tooltip>
+                <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
+                  <button
+                    className="typing-mode-control-button"
+                    onClick={() => handleSlideNext(questions.length)}
+                  >
+                    <RightOutlined />
+                  </button>
+                </Tooltip>
+              </div>
+            )}
+          </>
         ))}
       {router.query.tab === 'end' && <StudyEnd />}
       {router.query.tab !== 'end' && (

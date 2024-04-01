@@ -207,25 +207,26 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       </ul>
       {categories && categories.length > 5 && (
         <>
-          {deferredListScrollLeft ? (
-            <Button
-              onClick={() => handleListScroll('prev')}
-              shape="circle"
-              className={`home-folder-list-prev-button ${unikeyKey}`}
-            >
-              <LeftOutlined />
-            </Button>
-          ) : null}
-          {deferredListScrollLeft + folderListRef.current?.clientWidth <
-          folderListRef.current?.scrollWidth ? (
-            <Button
-              onClick={() => handleListScroll('next')}
-              shape="circle"
-              className={`home-folder-list-next-button ${unikeyKey}`}
-            >
-              <RightOutlined />
-            </Button>
-          ) : null}
+          <Button
+            onClick={() => handleListScroll('prev')}
+            disabled={deferredListScrollLeft === 0}
+            shape="circle"
+            className={`home-folder-list-prev-button ${unikeyKey} `}
+          >
+            <LeftOutlined />
+          </Button>
+
+          <Button
+            disabled={
+              deferredListScrollLeft + folderListRef.current?.clientWidth >=
+              folderListRef.current?.scrollWidth
+            }
+            onClick={() => handleListScroll('next')}
+            shape="circle"
+            className={`home-folder-list-next-button ${unikeyKey}`}
+          >
+            <RightOutlined />
+          </Button>
         </>
       )}
       {isCategorySearchModalOpen && (
