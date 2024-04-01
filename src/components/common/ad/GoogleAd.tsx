@@ -4,16 +4,13 @@ import styled from 'styled-components';
 import GoogleAdComp from './GoogleAdComp';
 import { isUndefined } from 'lodash';
 
-interface GoogleAdProps {
-  className?: string;
-  type: 'feed' | 'display' | 'content' | 'multiflex';
-}
+interface GoogleAdProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const GoogleAd: React.FC<GoogleAdProps> = ({ className, type = 'display' }) => {
+const GoogleAd: React.FC<GoogleAdProps> = (props) => {
   const { data: meQuery } = useMeQuery();
 
   return (
-    <GoogleAdContainer className={className}>
+    <GoogleAdContainer {...props}>
       {isUndefined(meQuery) ? null : <GoogleAdComp meQuery={meQuery} />}
     </GoogleAdContainer>
   );

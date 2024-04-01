@@ -18,6 +18,7 @@ import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
 import useAuth from '@lib/hooks/useAuth';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { isMobile } from 'react-device-detect';
+import StudyModeCore from './StudyModeCore';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -318,6 +319,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       {isGoogleAdModalOpen && (
         <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
       )}
+      <StudyModeCore />
     </StudyModeWrapperBlock>
   );
 };

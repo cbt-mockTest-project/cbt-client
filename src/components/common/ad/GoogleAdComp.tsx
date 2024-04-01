@@ -11,7 +11,10 @@ interface GoogleAdCompProps {
 
 const GoogleAdComp: React.FC<GoogleAdCompProps> = ({ meQuery }) => {
   const isProd = process.env.NODE_ENV === 'production';
-  const isAdVisible = !checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7], meQuery });
+  const isAdVisible = !checkRole({
+    roleIds: [1, 2, 3, 4, 5, 6, 7, 8],
+    meQuery,
+  });
   const loadAds = () => {
     try {
       if (typeof window !== 'undefined') {

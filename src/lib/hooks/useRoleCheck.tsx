@@ -35,6 +35,8 @@ const useRoleCheck = () => {
       return handleRoleCheck([6]);
     if (currentExamIds.some((id) => EHS_AIR_EXAM_IDS.includes(id)))
       return handleRoleCheck([7]);
+    if (currentExamIds.some((id) => EHS_CONSTRUCTION_EXAM_IDS.includes(id)))
+      return handleRoleCheck([8]);
     return true;
   };
 

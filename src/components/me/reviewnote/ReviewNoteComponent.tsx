@@ -114,7 +114,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
   return (
     <ReviewNoteComponentContainer>
       <div className="review-note-google-display-ad-wrapper">
-        <GoogleAd type="display" />
+        <GoogleAd />
       </div>
       <div className="review-note-reset-button-wrapper">
         <Button type="primary" onClick={onResetQuestionStates}>
@@ -182,7 +182,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
             />
             {(index === 0 || index === 2) && (
               <div className="bookmark-page-google-feed-ad-wrapper">
-                <GoogleAd type="feed" />
+                <GoogleAd  />
               </div>
             )}
           </div>

@@ -3,9 +3,10 @@ import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 import palette from '@styles/palette';
 import { Input } from 'antd';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import SearchQuestionList from './SearchQuestionList';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const SearchComponentBlock = styled.div`
   padding: 20px;
@@ -22,7 +23,9 @@ interface SearchComponentProps {}
 const SearchComponent: React.FC<SearchComponentProps> = () => {
   const router = useRouter();
   const categoryName = router.query.categoryName as string;
+
   if (!categoryName) return null;
+
   return (
     <SearchComponentBlock>
       <div className="search-title">{`"${categoryName}" 문제 검색기`}</div>

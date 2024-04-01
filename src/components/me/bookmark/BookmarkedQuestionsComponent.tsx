@@ -83,7 +83,7 @@ const BookmarkedQuestionsComponent: React.FC<
   return (
     <BookmarkedQuestionsComponentBlock>
       <div className="bookmark-question-google-display-ad-wrapper">
-        <GoogleAd type="display" />
+        <GoogleAd />
       </div>
 
       <div className="bookmark-reset-button-wrapper">
@@ -132,7 +132,7 @@ const BookmarkedQuestionsComponent: React.FC<
             />
             {(index === 0 || index === 2) && (
               <div className="bookmark-page-google-feed-ad-wrapper">
-                <GoogleAd type="feed" />
+                <GoogleAd />
               </div>
             )}
           </div>

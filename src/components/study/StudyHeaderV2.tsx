@@ -41,12 +41,13 @@ const StudyHeaderV2: React.FC<StudyHeaderV2Props> = () => {
   const prevVisitedCategoryOrHomePath =
     localStorage.get(LAST_VISITED_CATEGORY) || '/';
   const onClickCloseButton = () => {
-    Modal.confirm({
-      title: '학습을 중단하시겠습니까?',
-      onOk: () => {
-        router.push(prevVisitedCategoryOrHomePath);
-      },
-    });
+    router.push(prevVisitedCategoryOrHomePath);
+    // Modal.confirm({
+    //   title: '학습을 중단하시겠습니까?',
+    //   onOk: () => {
+    //     router.push(prevVisitedCategoryOrHomePath);
+    //   },
+    // });
   };
   return (
     <StudyHeaderV2Block>
