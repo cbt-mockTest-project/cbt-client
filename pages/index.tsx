@@ -47,24 +47,22 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
-      const [moduCategories, userCategories, ehsCategories] = await Promise.all(
-        [
-          getCategories({
-            examSource: ExamSource.MoudCbt,
-            limit: 30,
-            isPublicOnly: true,
-          }),
-          getCategories({
-            examSource: ExamSource.User,
-            limit: 30,
-            isPublicOnly: true,
-          }),
-          getCategories({
-            examSource: ExamSource.EhsMaster,
-            limit: 30,
-          }),
-        ]
-      );
+      let [moduCategories, userCategories, ehsCategories] = await Promise.all([
+        getCategories({
+          examSource: ExamSource.MoudCbt,
+          limit: 30,
+          isPublicOnly: true,
+        }),
+        getCategories({
+          examSource: ExamSource.User,
+          limit: 30,
+          isPublicOnly: true,
+        }),
+        getCategories({
+          examSource: ExamSource.EhsMaster,
+          limit: 30,
+        }),
+      ]);
       store.dispatch(
         homeActions.setModuStorageCategories({
           categories: moduCategories as MockExamCategory[],

@@ -10,6 +10,7 @@ import {
   CrownOutlined,
   MoneyCollectOutlined,
   AlertOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -21,6 +22,11 @@ export const navItems = [
     key: '/ehs-storage',
     icon: <CrownOutlined />,
     label: '직8딴 암기장',
+  },
+  {
+    key: '/user-storage',
+    icon: <GlobalOutlined />,
+    label: '공개 암기장',
   },
   {
     key: '/me/storage',
