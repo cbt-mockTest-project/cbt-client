@@ -93,36 +93,46 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
   } = useCategoryEvaluation(categoryId);
   const [score, setScore] = useState(5);
   const [isEdit, setIsEdit] = useState(false);
-  const evaluationDatas = categoryEvaluations.map((categoryEvaluation) => {
-    return {
-      key: categoryEvaluation.id,
-      nickname: (
-        <div
-          style={{
-            fontSize: '12px',
-          }}
-        >
-          {categoryEvaluation.user.nickname.slice(0, 1) +
-            '*' +
-            categoryEvaluation.user.nickname.at(-1)}
-        </div>
-      ),
-      score: (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            position: 'relative',
-            top: '6px',
-          }}
-        >
-          <StarRounded color="primary" style={{ color: palette.yellow_500 }} />
-          <span>x{categoryEvaluation.score}</span>
-        </div>
-      ),
-      review: categoryEvaluation.feedback,
-    };
-  });
+  const evaluationDatas = [...categoryEvaluations]
+    .sort((a, b) => {
+      if (!b.feedback) return -1;
+      if (!a.feedback) return 1;
+      return b.id - a.id;
+    })
+
+    .map((categoryEvaluation) => {
+      return {
+        key: categoryEvaluation.id,
+        nickname: (
+          <div
+            style={{
+              fontSize: '12px',
+            }}
+          >
+            {categoryEvaluation.user.nickname.slice(0, 1) +
+              '*' +
+              categoryEvaluation.user.nickname.at(-1)}
+          </div>
+        ),
+        score: (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              position: 'relative',
+              top: '6px',
+            }}
+          >
+            <StarRounded
+              color="primary"
+              style={{ color: palette.yellow_500 }}
+            />
+            <span>x{categoryEvaluation.score}</span>
+          </div>
+        ),
+        review: categoryEvaluation.feedback,
+      };
+    });
   const columns = [
     {
       title: '닉네임',
