@@ -35,8 +35,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
     (state) =>
       !meQuery?.me.user &&
       state.examCategory.category &&
-      !state.examCategory.category.isPublic &&
-      meQuery?.me.user.role !== UserRole.Admin
+      !state.examCategory.category.isPublic
   );
   useEffect(() => {
     if (!meQuery) return;
@@ -48,16 +47,16 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
           },
         },
       });
-      const examSetting = getExamSettingHistory(categoryId);
-      if (!examSetting) return;
-      const { examIds } = examSetting;
-      if (examIds) setExamSetting({ categoryId, examIds });
       fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
         if (!res?.hasAccess && meQuery.me.user.role !== UserRole.Admin) {
           message.error('접근 권한이 없습니다.');
           router.push('/');
         }
       });
+      const examSetting = getExamSettingHistory(categoryId);
+      if (!examSetting) return;
+      const { examIds } = examSetting;
+      if (examIds) setExamSetting({ categoryId, examIds });
     }
     if (categoryAccessDenied) {
       message.error('접근 권한이 없습니다.');
