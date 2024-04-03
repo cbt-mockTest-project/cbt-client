@@ -56,7 +56,7 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 const createApolloClient = (Cookie: string) => {
   const authLink = setContext(async (_, { headers }) => {
-    const clientIp = !isServer() ? await fetchClientIp() : 'server';
+    // const clientIp = !isServer() ? await fetchClientIp() : 'server';
     const currentPagePath = !isServer() ? window.location : 'server';
     return {
       headers: {
@@ -64,7 +64,7 @@ const createApolloClient = (Cookie: string) => {
         Cookie,
         userAgent:
           typeof window !== 'undefined' ? window.navigator.userAgent : 'server',
-        ip: clientIp,
+        // ip: clientIp,
         currentPagePath,
       },
     };
