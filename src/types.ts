@@ -48,6 +48,12 @@ export type AttendanceInputTyper = {
   user: UserInputType;
 };
 
+export type BlogCategory = {
+  __typename?: 'BlogCategory';
+  categoryName: Scalars['String'];
+  postCnt: Scalars['Float'];
+};
+
 export type CategoryEvaluation = {
   __typename?: 'CategoryEvaluation';
   category: MockExamCategory;
@@ -989,6 +995,18 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetBlogCategoryListInput = {
+  blogId: Scalars['String'];
+};
+
+export type GetBlogCategoryListOutput = {
+  __typename?: 'GetBlogCategoryListOutput';
+  categories?: Maybe<Array<BlogCategory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  postCnt?: Maybe<Scalars['Float']>;
+};
+
 export type GetBuyersOutput = {
   __typename?: 'GetBuyersOutput';
   error?: Maybe<Scalars['String']>;
@@ -1113,6 +1131,17 @@ export type GetInvitedExamsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetKeywordSearchCountInput = {
+  keyword: Scalars['String'];
+};
+
+export type GetKeywordSearchCountOutput = {
+  __typename?: 'GetKeywordSearchCountOutput';
+  error?: Maybe<Scalars['String']>;
+  keywordList?: Maybe<Array<NaverKeywordSearchCount>>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetMyAllExamCategoriesLearningProgressOutput = {
   __typename?: 'GetMyAllExamCategoriesLearningProgressOutput';
   error?: Maybe<Scalars['String']>;
@@ -1214,6 +1243,33 @@ export type GetRolesCountOutput = {
   count?: Maybe<Scalars['Float']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type GetSearchAvailabilityInput = {
+  blogId: Scalars['String'];
+  itemCount: Scalars['Float'];
+  page: Scalars['Float'];
+};
+
+export type GetSearchAvailabilityOutput = {
+  __typename?: 'GetSearchAvailabilityOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  posts?: Maybe<Array<NaverPostInfo>>;
+};
+
+export type GetSearchRankInput = {
+  blogId: Scalars['String'];
+  keyword: Scalars['String'];
+};
+
+export type GetSearchRankOutput = {
+  __typename?: 'GetSearchRankOutput';
+  daumBlogSearchRank?: Maybe<Scalars['Float']>;
+  error?: Maybe<Scalars['String']>;
+  naverBlogSearchRank?: Maybe<Scalars['Float']>;
+  ok: Scalars['Boolean'];
+  postLink?: Maybe<Scalars['String']>;
 };
 
 export type GetTodayAttendanceOutput = {
@@ -2260,6 +2316,23 @@ export type NaverBlogViewMacroOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type NaverKeywordSearchCount = {
+  __typename?: 'NaverKeywordSearchCount';
+  monthlyMobileQcCnt: Scalars['Float'];
+  monthlyPcQcCnt: Scalars['Float'];
+  relKeyword: Scalars['String'];
+};
+
+export type NaverPostInfo = {
+  __typename?: 'NaverPostInfo';
+  commentCnt: Scalars['Float'];
+  isSearchAvailability: Scalars['Boolean'];
+  link: Scalars['String'];
+  logNo: Scalars['Float'];
+  sympathyCnt: Scalars['Float'];
+  titleWithInspectMessage: Scalars['String'];
+};
+
 export type Notice = {
   __typename?: 'Notice';
   confirm: Scalars['Boolean'];
@@ -2520,6 +2593,7 @@ export enum PostOrderType {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getBlogCategoryList: GetBlogCategoryListOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
   getExamCategories: GetExamCategoriesOutput;
@@ -2531,6 +2605,7 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
+  getKeywordSearchCount: GetKeywordSearchCountOutput;
   getMyAllExamCategoriesLearningProgress: GetMyAllExamCategoriesLearningProgressOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
   getMyBookmarkedExamCategories: GetMyBookmarkedExamCategoriesOutput;
@@ -2542,6 +2617,8 @@ export type Query = {
   getQuizs: GetQuizsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
+  getSearchAvailability: GetSearchAvailabilityOutput;
+  getSearchRank: GetSearchRankOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   getTodo: GetTodoOutput;
   getUserByNicknameOrEmail: GetUserByNicknameOrEmailOutput;
@@ -2596,6 +2673,11 @@ export type QueryFindMyExamHistoryArgs = {
 };
 
 
+export type QueryGetBlogCategoryListArgs = {
+  input: GetBlogCategoryListInput;
+};
+
+
 export type QueryGetCategoryEvaluationArgs = {
   input: GetCategoryEvaluationInput;
 };
@@ -2631,6 +2713,11 @@ export type QueryGetFeedbacksWithFilterArgs = {
 };
 
 
+export type QueryGetKeywordSearchCountArgs = {
+  input: GetKeywordSearchCountInput;
+};
+
+
 export type QueryGetMyBlogPostRankArgs = {
   input: GetMyBlogPostRankInput;
 };
@@ -2653,6 +2740,16 @@ export type QueryGetRoleCountArgs = {
 
 export type QueryGetRolesCountArgs = {
   input: GetRolesCountInput;
+};
+
+
+export type QueryGetSearchAvailabilityArgs = {
+  input: GetSearchAvailabilityInput;
+};
+
+
+export type QueryGetSearchRankArgs = {
+  input: GetSearchRankInput;
 };
 
 

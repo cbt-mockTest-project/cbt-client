@@ -25,6 +25,7 @@ import {
   EXAM_CREATE_PAGE,
   EXAM_PDF_PAGE,
   EXAM_SOLUTION_PAGE,
+  NAVER_BLOG_BOT_PAGE,
   PRICING_PAGE,
   QUESTION_EDIT_PAGE,
   QUESTION_PAGE,
@@ -45,6 +46,7 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
     EXAMS_PDF_PAGE,
     STUDY_PAGE,
     EXAM_CREATE_PAGE,
+    NAVER_BLOG_BOT_PAGE,
   ];
   const papgesWithoutBodyBorder: string[] = [
     PRICING_PAGE,

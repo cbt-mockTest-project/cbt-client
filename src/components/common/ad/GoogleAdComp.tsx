@@ -24,7 +24,6 @@ const GoogleAdComp: React.FC<GoogleAdCompProps> = ({ meQuery }) => {
       }
     } catch (error: any) {}
   };
-  console.log('isAdVisible', isAdVisible);
   useEffect(() => {
     loadAds();
   }, []);

@@ -78,7 +78,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const apolloClient = initializeApollo({}, '');
       const categoryName = context.params?.name;
       if (!categoryName || typeof categoryName !== 'string') {
-        console.log('categoryName is undefined');
         return;
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {

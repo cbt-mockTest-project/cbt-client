@@ -165,7 +165,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
-  console.log('CategoryComponent');
 
   return (
     <CategoryComponentBlock>
