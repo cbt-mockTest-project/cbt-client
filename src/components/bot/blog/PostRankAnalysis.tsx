@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import usePostSearchRank from './hooks/usePostSearchRank';
 import { useRouter } from 'next/router';
 import { LocalStorage } from '@lib/utils/localStorage';
-import { DeleteOutlined } from '@ant-design/icons';
 import { uniqueId } from 'lodash';
 import { useQueryClient } from '@tanstack/react-query';
 import palette from '@styles/palette';
@@ -49,6 +48,7 @@ interface SaveRankHistoryArgs {
 const PostRankAnalysis: React.FC<PostRankAnalysisProps> = ({ logNo }) => {
   const router = useRouter();
   const blogId = router.query.b as string;
+  const page = router.query.p as string;
   const storage = new LocalStorage();
   const queryclient = useQueryClient();
   const saveRankHistory = ({
@@ -157,6 +157,8 @@ const PostRankAnalysis: React.FC<PostRankAnalysisProps> = ({ logNo }) => {
   }, [data]);
 
   useEffect(() => {
+    setHistories([]);
+    setKeyword('');
     const histories = storage.get(RANK_HISTORY_KEY);
     if (!histories) return;
     if (!blogId) return;
@@ -165,10 +167,11 @@ const PostRankAnalysis: React.FC<PostRankAnalysisProps> = ({ logNo }) => {
     const myLogNo = myHistories[logNo];
     if (!myLogNo) return;
     setHistories(myLogNo);
-  }, []);
+  }, [page]);
   return (
     <PostRankAnalysisBlock>
       <Input.Search
+        key={page}
         placeholder="키워드"
         enterButton="검색"
         loading={isLoading}
