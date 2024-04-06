@@ -22,7 +22,7 @@ export type GetSearchAvailabilityQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetSearchAvailabilityQuery = { __typename?: 'Query', getSearchAvailability: { __typename?: 'GetSearchAvailabilityOutput', error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'NaverPostInfo', isSearchAvailability: boolean, commentCnt: number, link: string, logNo: number, sympathyCnt: number, titleWithInspectMessage: string }> | null } };
+export type GetSearchAvailabilityQuery = { __typename?: 'Query', getSearchAvailability: { __typename?: 'GetSearchAvailabilityOutput', error?: string | null, ok: boolean, posts?: Array<{ __typename?: 'NaverPostInfo', isSearchAvailability: boolean, commentCnt: number, link: string, logNo: number, sympathyCnt: number, titleWithInspectMessage: string, thumbnailCount: number }> | null } };
 
 export type GetSearchRankQueryVariables = Types.Exact<{
   input: Types.GetSearchRankInput;
@@ -30,6 +30,13 @@ export type GetSearchRankQueryVariables = Types.Exact<{
 
 
 export type GetSearchRankQuery = { __typename?: 'Query', getSearchRank: { __typename?: 'GetSearchRankOutput', daumBlogSearchRank?: number | null, naverBlogSearchRank?: number | null, ok: boolean, error?: string | null, postLink?: string | null } };
+
+export type GetBlogInfoQueryVariables = Types.Exact<{
+  input: Types.GetBlogInfoInput;
+}>;
+
+
+export type GetBlogInfoQuery = { __typename?: 'Query', getBlogInfo: { __typename?: 'GetBlogInfoOutput', ok: boolean, error?: string | null, blogInfo?: { __typename?: 'BlogInfo', blogName: string, subscriberCount: number, blogDirectoryName: string, totalVisitorCount: number, influencerUrl: string, blogVisitor?: Array<{ __typename?: 'BlogVisitor', visitor: string, date: string }> | null } | null } };
 
 
 export const GetKeywordSearchCountDocument = gql`
@@ -78,6 +85,7 @@ export const GetSearchAvailabilityDocument = gql`
       logNo
       sympathyCnt
       titleWithInspectMessage
+      thumbnailCount
     }
   }
 }
@@ -100,4 +108,27 @@ export const GetSearchRankDocument = gql`
 
 export function useGetSearchRankQuery(options: Omit<Urql.UseQueryArgs<GetSearchRankQueryVariables>, 'query'>) {
   return Urql.useQuery<GetSearchRankQuery, GetSearchRankQueryVariables>({ query: GetSearchRankDocument, ...options });
+};
+export const GetBlogInfoDocument = gql`
+    query GetBlogInfo($input: GetBlogInfoInput!) {
+  getBlogInfo(input: $input) {
+    ok
+    error
+    blogInfo {
+      blogName
+      subscriberCount
+      blogDirectoryName
+      totalVisitorCount
+      blogVisitor {
+        visitor
+        date
+      }
+      influencerUrl
+    }
+  }
+}
+    `;
+
+export function useGetBlogInfoQuery(options: Omit<Urql.UseQueryArgs<GetBlogInfoQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetBlogInfoQuery, GetBlogInfoQueryVariables>({ query: GetBlogInfoDocument, ...options });
 };

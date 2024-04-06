@@ -54,6 +54,22 @@ export type BlogCategory = {
   postCnt: Scalars['Float'];
 };
 
+export type BlogInfo = {
+  __typename?: 'BlogInfo';
+  blogDirectoryName: Scalars['String'];
+  blogName: Scalars['String'];
+  blogVisitor?: Maybe<Array<BlogVisitor>>;
+  influencerUrl: Scalars['String'];
+  subscriberCount: Scalars['Float'];
+  totalVisitorCount: Scalars['Float'];
+};
+
+export type BlogVisitor = {
+  __typename?: 'BlogVisitor';
+  date: Scalars['String'];
+  visitor: Scalars['String'];
+};
+
 export type CategoryEvaluation = {
   __typename?: 'CategoryEvaluation';
   category: MockExamCategory;
@@ -1005,6 +1021,17 @@ export type GetBlogCategoryListOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   postCnt?: Maybe<Scalars['Float']>;
+};
+
+export type GetBlogInfoInput = {
+  blogId: Scalars['String'];
+};
+
+export type GetBlogInfoOutput = {
+  __typename?: 'GetBlogInfoOutput';
+  blogInfo?: Maybe<BlogInfo>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type GetBuyersOutput = {
@@ -2330,6 +2357,7 @@ export type NaverPostInfo = {
   link: Scalars['String'];
   logNo: Scalars['Float'];
   sympathyCnt: Scalars['Float'];
+  thumbnailCount: Scalars['Float'];
   titleWithInspectMessage: Scalars['String'];
 };
 
@@ -2594,6 +2622,7 @@ export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
   getBlogCategoryList: GetBlogCategoryListOutput;
+  getBlogInfo: GetBlogInfoOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
   getExamCategories: GetExamCategoriesOutput;
@@ -2675,6 +2704,11 @@ export type QueryFindMyExamHistoryArgs = {
 
 export type QueryGetBlogCategoryListArgs = {
   input: GetBlogCategoryListInput;
+};
+
+
+export type QueryGetBlogInfoArgs = {
+  input: GetBlogInfoInput;
 };
 
 

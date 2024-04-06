@@ -40,6 +40,7 @@ export const GET_SEARCH_AVAILABILITY = gql`
         logNo
         sympathyCnt
         titleWithInspectMessage
+        thumbnailCount
       }
     }
   }
@@ -53,6 +54,26 @@ export const GET_POST_SEARCH_RANK = gql`
       ok
       error
       postLink
+    }
+  }
+`;
+
+export const GET_BLOG_INFO = gql`
+  query GetBlogInfo($input: GetBlogInfoInput!) {
+    getBlogInfo(input: $input) {
+      ok
+      error
+      blogInfo {
+        blogName
+        subscriberCount
+        blogDirectoryName
+        totalVisitorCount
+        blogVisitor {
+          visitor
+          date
+        }
+        influencerUrl
+      }
     }
   }
 `;
