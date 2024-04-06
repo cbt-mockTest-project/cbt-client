@@ -76,7 +76,7 @@ const PostRankAnalysis: React.FC<PostRankAnalysisProps> = ({ logNo }) => {
     }
     const prevMyHistory = histories[blogId];
     if (!prevMyHistory) {
-      return storage.set(RANK_HISTORY_KEY, newRankHistory);
+      return storage.set(RANK_HISTORY_KEY, { ...histories, ...newRankHistory });
     }
     const prevMyLogNo = Object.keys(prevMyHistory).includes(logNo);
     if (!prevMyLogNo) {
@@ -167,11 +167,11 @@ const PostRankAnalysis: React.FC<PostRankAnalysisProps> = ({ logNo }) => {
     const myLogNo = myHistories[logNo];
     if (!myLogNo) return;
     setHistories(myLogNo);
-  }, [page]);
+  }, [page, blogId]);
   return (
     <PostRankAnalysisBlock>
       <Input.Search
-        key={page}
+        key={page + blogId}
         placeholder="키워드"
         enterButton="검색"
         loading={isLoading}

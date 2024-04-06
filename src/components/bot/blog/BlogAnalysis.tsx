@@ -1,6 +1,6 @@
-import { Collapse, Input, Table } from 'antd';
+import { Collapse, Input, Table, Tag } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import useSearchAvailability from './hooks/useSearchAvailability';
 import useBlogCategoryList from './hooks/useBlogCategoryList';
@@ -15,6 +15,8 @@ import {
 } from '@ant-design/icons';
 import useBlogInfo from './hooks/useBlogInfo';
 import Link from 'next/link';
+import { extractBlogId } from './utils/extractBlogId';
+import { LocalStorage } from '@lib/utils/localStorage';
 
 const BlogAnalysisBlock = styled.div`
   .analysis-table {
@@ -27,17 +29,34 @@ const BlogAnalysisBlock = styled.div`
       min-width: 60px !important;
     }
   }
+  .analysis-history-tag-list {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    .ant-tag {
+      cursor: pointer;
+      margin: 0;
+      height: 32px;
+      line-height: 32px;
+      padding: 0 10px;
+    }
+  }
 `;
 
 interface BlogAnalysisProps {}
 
+const BLOG_ANALYSIS_HISTORY_KEY = 'BLOG_ANALYSIS_HISTORY';
+
 const BlogAnalysis: React.FC<BlogAnalysisProps> = () => {
+  const router = useRouter();
+  const storage = new LocalStorage();
   const { data: posts, isLoading: searchAvailabilityLoading } =
     useSearchAvailability();
   const { data: categoryList, isLoading: categoryListLoading } =
     useBlogCategoryList();
   const { data: blogInfo, isLoading: blogInfoLoading } = useBlogInfo();
-
+  const [analysisHistory, setAnalysisHistory] = useState([]);
   const formattedPosts = useMemo(
     () =>
       posts.map((post) => ({
@@ -125,7 +144,7 @@ const BlogAnalysis: React.FC<BlogAnalysisProps> = () => {
           (acc, cur) => acc + (acc ? '/' : '') + cur.visitor.toLocaleString(),
           ''
         ),
-        postCnt: categoryList ? categoryList.postCnt.toLocaleString() : 0,
+        postCnt: categoryList ? categoryList.postCnt?.toLocaleString() : 0,
         categoryList: (
           <Collapse
             size="small"
@@ -150,7 +169,29 @@ const BlogAnalysis: React.FC<BlogAnalysisProps> = () => {
     [categoryList, blogInfo]
   );
 
-  const router = useRouter();
+  useEffect(() => {
+    if (categoryList?.ok) {
+      const uniqueHistory = Array.from(
+        new Set([extractBlogId(String(router.query.b)), ...analysisHistory])
+      );
+      setAnalysisHistory(uniqueHistory);
+      storage.set(BLOG_ANALYSIS_HISTORY_KEY, uniqueHistory);
+    }
+  }, [categoryList]);
+
+  useEffect(() => {
+    const history = storage.get(BLOG_ANALYSIS_HISTORY_KEY);
+    if (history) {
+      setAnalysisHistory(history);
+    }
+  }, []);
+
+  const handleDeleteHistory = (blogId: string) => {
+    const newHistory = analysisHistory.filter((history) => history !== blogId);
+    setAnalysisHistory(newHistory);
+    storage.set(BLOG_ANALYSIS_HISTORY_KEY, newHistory);
+  };
+
   return (
     <BlogAnalysisBlock>
       <Input.Search
@@ -159,16 +200,31 @@ const BlogAnalysis: React.FC<BlogAnalysisProps> = () => {
         size="large"
         loading={searchAvailabilityLoading || categoryListLoading}
         onSearch={(value) => {
-          router.push({ query: { ...router.query, b: value } });
+          router.push({ query: { ...router.query, b: extractBlogId(value) } });
         }}
       />
-
+      <div className="analysis-history-tag-list">
+        {analysisHistory.length > 0 &&
+          analysisHistory.map((blogId, index) => (
+            <Tag
+              closable
+              key={blogId}
+              onClick={() => {
+                router.push({ query: { ...router.query, b: blogId } });
+              }}
+              onClose={() => handleDeleteHistory(blogId)}
+              color={index === 0 ? 'blue' : 'default'}
+            >
+              {blogId}
+            </Tag>
+          ))}
+      </div>
       <Table
         className="analysis-table"
         loading={{
           spinning: categoryListLoading || blogInfoLoading,
         }}
-        dataSource={formattedBlogInfo}
+        dataSource={blogInfo?.blogInfo.blogName && formattedBlogInfo}
         bordered
         scroll={{ x: true }}
         columns={blogInfoColumns}
