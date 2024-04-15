@@ -6,11 +6,13 @@ import { Button, Image, Popover } from 'antd';
 import { MockExamQuestion } from 'types';
 import palette from '@styles/palette';
 import useAuth from '@lib/hooks/useAuth';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
+import Link from 'next/link';
+import { LinkOffRounded, LinkRounded } from '@mui/icons-material';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -145,6 +147,13 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
         <div className="study-question-box-header-rignt-button-wrapper">
+          <Link
+            href={`/question/${question.id}`}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <LinkOutlined />
+          </Link>
           {isMyQuestion && (
             <a
               href={`/question/${question.id}/edit`}
