@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
 import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
-import { Image } from 'antd';
+import { Button, Image } from 'antd';
 import palette from '@styles/palette';
 import {
   AddFeedbackInput,
@@ -12,6 +12,8 @@ import {
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
 import EditorStyle from '@styles/editorStyle';
+import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
+import useAuth from '@lib/hooks/useAuth';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -42,6 +44,15 @@ const StudyAnswerBoxBlock = styled.div`
     margin-top: 10px;
     border-radius: 5px;
   }
+  .study-answer-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid ${palette.colorBorderLight};
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+  }
 `;
 
 interface StudyAnswerBoxProps {
@@ -65,6 +76,14 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   updateFeedbackRecommendation,
   className = '',
 }) => {
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const { handleCheckLogin } = useAuth();
+  const onClickOpenFeedbackModal = () => {
+    if (!handleCheckLogin()) {
+      return;
+    }
+    setIsFeedbackModalOpen(true);
+  };
   return (
     <StudyAnswerBoxBlock className={className}>
       <div
@@ -101,6 +120,23 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           updateFeedbackRecommendation={updateFeedbackRecommendation}
         />
       </div>
+      <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
+        <Button shape="circle">➕</Button>
+        <div>답안 추가</div>
+      </div>
+      {isFeedbackModalOpen && (
+        <QuestionFeedbackModal
+          addFeedback={addFeedback}
+          editFeedback={editFeedback}
+          question={question}
+          open={isFeedbackModalOpen}
+          onCancel={() => setIsFeedbackModalOpen(false)}
+          onClose={() => setIsFeedbackModalOpen(false)}
+          title={`${String(question.mockExam?.title)}\n${
+            question.number
+          }번 문제`}
+        />
+      )}
     </StudyAnswerBoxBlock>
   );
 };
