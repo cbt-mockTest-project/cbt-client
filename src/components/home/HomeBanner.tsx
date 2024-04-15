@@ -90,7 +90,7 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
     <HomeBannerBlock>
       <Swiper
         autoplay={{
-          delay: 1500,
+          delay: 3000,
           disableOnInteraction: false,
         }}
         speed={1000}
