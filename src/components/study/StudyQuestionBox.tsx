@@ -157,17 +157,14 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               </Button>
             </a>
           )}
-          {([12318, 1].includes(question.user.id) ||
-            question.user.id === user?.id) && (
-            <Popover content="답안 추가">
-              <div
-                className="study-question-box-header-rignt-button-edit"
-                onClick={handleOpenFeedbackModal}
-              >
-                <EditOutlined />
-              </div>
-            </Popover>
-          )}
+          <Popover content="답안 추가">
+            <div
+              className="study-question-box-header-rignt-button-edit"
+              onClick={handleOpenFeedbackModal}
+            >
+              <EditOutlined />
+            </div>
+          </Popover>
           <Bookmark
             onClick={onClickBookmark}
             role="button"
