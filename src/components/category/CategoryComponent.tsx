@@ -20,6 +20,7 @@ import CategoryEmptyWrapper from './CategoryEmptyWrapper';
 import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import CategoryUtilButtonWrapper from './CategoryUtilButtonWrapper';
+import CategoryHiddenExamList from './CategoryHiddenExamList';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -172,6 +173,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryProgressAndReview />
       <CategoryHeaderWrapper />
       <GoogleAd />
+      <CategoryHiddenExamList />
+
       {hasOriginalCategoryExams ? (
         <>
           <CategoryControlbar
