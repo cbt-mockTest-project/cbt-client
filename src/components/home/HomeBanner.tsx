@@ -52,10 +52,10 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: '/png/banner/ad-banner-pc01.png',
-        mobile: '/png/banner/ad-banner-mobile01.png',
+        pc: '/png/banner/ad-banner-pc05.png',
+        mobile: '/png/banner/ad-banner-mobile05.png',
       },
-      key: 'ad',
+      key: 'https://www.bloga.co.kr',
     },
     {
       img: {
