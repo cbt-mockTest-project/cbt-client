@@ -91,12 +91,10 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   handleSaveQuestionState,
   number,
 }) => {
-  const { questions } = useQuestions();
   const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
   const localStorage = new LocalStorage();
   const [defaultAnswer, setDefaultAnswer] = useState<string | null>(null);
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-  const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   const onChangeAnswer = (value: string) => {
     const prevAnswer = localStorage.get(IN_PROGRESS_ANSWERS);
     const newAnswer = {
@@ -119,6 +117,16 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
       textAreaRef.current.focus();
     }
   }, [textAreaRef, defaultAnswer]);
+
+  useEffect(() => {
+    if (isAnswerVisible) {
+      // 부드럽게
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [isAnswerVisible]);
 
   return (
     <TypingModeItemBlock>
