@@ -93,13 +93,11 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         isPublicOnly: true,
       });
     }
-    if (!userStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.User,
-        isPublicOnly: true,
-      });
-    }
+    fetchCategories({
+      limit: 30,
+      examSource: ExamSource.User,
+      isPublicOnly: true,
+    });
     if (!ehsStorageCategories.length) {
       fetchCategories({
         limit: 30,
@@ -107,18 +105,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       });
     }
   }, [moduStorageCategories, userStorageCategories, ehsStorageCategories]);
-
-  useEffect(() => {
-    if (typeof keyword !== 'string' || !keyword) return;
-    if (searchType === 'folder') {
-      fetchCategories({
-        limit: 30,
-        isPublicOnly: true,
-        keyword,
-      });
-      return;
-    }
-  }, [keyword]);
 
   return (
     <HomeComponentBlock>

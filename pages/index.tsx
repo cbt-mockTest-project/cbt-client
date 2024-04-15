@@ -68,6 +68,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           categories: moduCategories as MockExamCategory[],
         })
       );
+      const sortedUserCategories = [...userCategories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
       store.dispatch(
         homeActions.setUserStorageCategories({
           categories: userCategories as MockExamCategory[],
@@ -76,6 +79,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       store.dispatch(
         homeActions.setEhsStorageCategories({
           categories: ehsCategories as MockExamCategory[],
+        })
+      );
+      store.dispatch(
+        homeActions.setUserStorageCategories({
+          categories: sortedUserCategories as MockExamCategory[],
         })
       );
 
