@@ -34,6 +34,8 @@ import {
   TODAY_QUIZ_PAGE,
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
+import '@styles/global.css';
+
 
 export const queryClient = new QueryClient();
 
