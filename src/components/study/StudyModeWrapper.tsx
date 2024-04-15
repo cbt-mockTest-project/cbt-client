@@ -244,7 +244,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             initialSlide={1}
             direction="horizontal"
             threshold={10}
-            touchRatio={0.4}
+            touchRatio={0.8}
             longSwipes={false}
             shortSwipes={false}
             onTouchEnd={(e) => {

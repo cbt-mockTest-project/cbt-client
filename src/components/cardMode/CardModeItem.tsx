@@ -13,7 +13,6 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
-import { useRouter } from 'next/router';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
@@ -100,10 +99,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   handleSaveQuestionState,
   number,
 }) => {
-  const router = useRouter();
-  const activeIndex = Number(router.query.activeIndex);
   const [isFlipped, setIsFlipped] = useState(false);
-
   return (
     <CardModeItemBlock>
       <div className={`card ${isFlipped ? 'is-flipped' : ''}`}>
