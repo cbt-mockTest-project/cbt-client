@@ -37,16 +37,6 @@ export const convertStateToIcon = (
 };
 
 export const handleError = async (error: any) => {
-  const apolloClient = initializeApollo({}, '');
-  const sendErrorToTelegram = (message: string) =>
-    apolloClient.mutate({
-      mutation: PUSH_TO_TELEGRAM,
-      variables: {
-        input: {
-          message,
-        },
-      },
-    });
   if (error?.message === 'Forbidden resource') {
     return message.error({ content: '로그인이 필요합니다' });
   }
@@ -57,20 +47,6 @@ export const handleError = async (error: any) => {
   ) {
     return;
   }
-  // const clientIp = !isServer() ? await fetchClientIp() : 'server';
-  // const telegramMessage = `[Client Error]\nMessage: ${
-  //   error?.response?.data ||
-  //   error?.response?.message ||
-  //   error?.message ||
-  //   error ||
-  //   ''
-  // }\nCurrentPagePath: ${
-  //   typeof window !== 'undefined' ? window.location : ''
-  // }\nUserAgent: ${
-  //   typeof window !== 'undefined' ? window.navigator.userAgent : ''
-  // }\nIP:${clientIp}
-  //     `;
-  // sendErrorToTelegram(telegramMessage);
 };
 
 interface CheckUrlArgs {
