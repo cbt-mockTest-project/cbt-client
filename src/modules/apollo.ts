@@ -8,7 +8,6 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { getMainDefinition } from '@apollo/client/utilities';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
 import { isServer } from '@lib/utils/utils';
 import React from 'react';
@@ -64,18 +63,7 @@ const createApolloClient = (Cookie: string) => {
       },
     };
   });
-  const splitLink = !isServer()
-    ? split(
-        ({ query }) => {
-          const definition = getMainDefinition(query);
-          return (
-            definition.kind === 'OperationDefinition' &&
-            definition.operation === 'subscription'
-          );
-        },
-        from([errorLink, authLink, httpLink]) // 에러 핸들링 로직 추가
-      )
-    : from([errorLink, authLink, httpLink]); // 에러 핸들링 로직 추가
+  const splitLink = from([errorLink, authLink, httpLink]);
   return new ApolloClient({
     ssrMode: isServer(),
     link: splitLink,
