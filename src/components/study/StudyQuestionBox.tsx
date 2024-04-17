@@ -91,6 +91,8 @@ interface StudyQuestionBoxProps {
   question: MockExamQuestion;
   className?: string;
   title?: string;
+  hasExamTitle?: boolean;
+  hasQuestionLink?: boolean;
   onChangeIsFeedbackModalOpen?: (value: boolean) => void;
 }
 
@@ -100,6 +102,8 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   questionNumber,
   className = '',
   title,
+  hasExamTitle = true,
+  hasQuestionLink = true,
   onChangeIsFeedbackModalOpen,
 }) => {
   const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
@@ -141,19 +145,23 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {questionNumber > 0 && (
             <p className="study-question-box-number">{questionNumber}번</p>
           )}
-          <div className="study-question-exam-title">
-            {question?.mockExam?.title}
-          </div>
+          {hasExamTitle && (
+            <div className="study-question-exam-title">
+              {question?.mockExam?.title}
+            </div>
+          )}
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
         <div className="study-question-box-header-rignt-button-wrapper">
-          <Link
-            href={`/question/${question.id}`}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            <LinkOutlined />
-          </Link>
+          {hasQuestionLink && (
+            <Link
+              href={`/question/${question.id}`}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <LinkOutlined />
+            </Link>
+          )}
           {isMyQuestion && (
             <a
               href={`/question/${question.id}/edit`}

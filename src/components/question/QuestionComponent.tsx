@@ -55,6 +55,8 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox
+            hasQuestionLink={false}
+            hasExamTitle={false}
             saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}
