@@ -21,7 +21,7 @@ const IndexPage: React.FC<Props> = () => {
   return (
     <>
       <WithHead
-        title="모두CBT | 암기장 공유 서비스"
+        title="모두CBT | 암기짱 공유 서비스"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
       <HomeComponent />
