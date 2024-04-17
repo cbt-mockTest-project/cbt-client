@@ -1,5 +1,5 @@
 import palette from '@styles/palette';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal, ModalProps, Radio } from 'antd';
 import { checkboxOption } from 'customTypes';
@@ -20,6 +20,7 @@ interface QuestionFeedbackModalProps extends Omit<ModalProps, 'children'> {
   title: string | string[];
   question: MockExamQuestion;
   feedbackId?: number;
+  defaultFeedback?: string;
   onClose: () => void;
   editFeedback: (
     editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
@@ -37,6 +38,7 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
     onClose,
     question,
     title,
+    defaultFeedback,
     ...modalProps
   } = props;
   const [updateFeedbackLoading, setUpdateFeedbackLoading] = useState(false);
@@ -66,6 +68,14 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
     onClose();
     setUpdateFeedbackLoading(false);
   };
+
+  useEffect(() => {
+    setContent(defaultFeedback);
+  }, [defaultFeedback]);
+
+  useEffect(() => {
+    if (!feedbackId) setContent('');
+  }, [feedbackId]);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

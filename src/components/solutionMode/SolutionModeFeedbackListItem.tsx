@@ -158,6 +158,7 @@ const SolutionModeFeedbackListItem: React.FC<
   deleteFeedback,
   updateFeedbackRecommendation,
 }) => {
+  const [currentFeedback, setCurrentFeedback] = useState('');
   const { data: meQuery } = useMeQuery();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
@@ -187,6 +188,7 @@ const SolutionModeFeedbackListItem: React.FC<
           style={{ color: palette.colorText }}
           onClick={(e) => {
             e.stopPropagation();
+            setCurrentFeedback(feedback.content);
             setIsQuestionFeedbackModalOpen(true);
           }}
         >
@@ -249,7 +251,8 @@ const SolutionModeFeedbackListItem: React.FC<
             <span>{feedback.recommendationCount.bad}</span>
           </div>
           {(meQuery?.me.user?.id === feedback.user.id ||
-            meQuery?.me.user?.role === UserRole.Admin) && (
+            meQuery?.me.user?.role === UserRole.Admin ||
+            meQuery?.me.user?.id === question.user.id) && (
             <Dropdown
               menu={{ items: controlDropdownItems }}
               placement="topCenter"
@@ -271,6 +274,7 @@ const SolutionModeFeedbackListItem: React.FC<
         <QuestionFeedbackModal
           question={question}
           feedbackId={feedback.id}
+          defaultFeedback={currentFeedback}
           open={isQuestionFeedbackModalOpen}
           onCancel={() => setIsQuestionFeedbackModalOpen(false)}
           onClose={() => setIsQuestionFeedbackModalOpen(false)}
