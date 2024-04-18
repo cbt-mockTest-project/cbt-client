@@ -135,11 +135,9 @@ export interface PricingCardProps {
   onConfirm: () => void;
   confirmLabel?: string;
   disabledLabel?: string;
-  hasBeforePaymentModal?: boolean;
   isTempText?: string;
   confirmDisabled?: boolean;
   isFreeTrial?: boolean;
-  roleIds?: number[];
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -149,27 +147,14 @@ const PricingCard: React.FC<PricingCardProps> = ({
   benefits,
   isTempText,
   onConfirm,
-  hasBeforePaymentModal,
   confirmDisabled,
   beforeDiscountPrice,
   discountDate,
-  roleIds,
   priceAltText,
   endDate,
   confirmLabel = '결제하기',
   disabledLabel = '이용중',
 }) => {
-  const [getRoleCount, { data: roleCountQuery }] = useLazyGetRolesCount();
-  const {
-    value: paymentNoticeModalState,
-    onToggle: onTogglePaymentNoticeModal,
-  } = useToggle(false);
-  useEffect(() => {
-    if (roleIds && roleIds.length > 0) {
-      getRoleCount({ variables: { input: { roleIds } } });
-    }
-  }, []);
-
   return (
     <PricingCardBlock>
       <h3 className="pricing-card-title">{title}</h3>
@@ -203,22 +188,11 @@ const PricingCard: React.FC<PricingCardProps> = ({
               <span className="pricing-card-price-label">원</span>
             )}
           </div>
-          {/* {typeof roleCountQuery?.getRolesCount.count === 'number' ? (
-            <div className="pricing-card-price-user-count">{`현재 ${roleCountQuery?.getRolesCount.count}명 이용중!! `}</div>
-          ) : (
-            <SkeletonBox
-              className="pricing-card-price-user-count"
-              width="110px"
-              height="20px"
-            />
-          )} */}
           <Button
             className="pricing-button"
             type="primary"
             disabled={confirmDisabled}
-            onClick={
-              hasBeforePaymentModal ? onTogglePaymentNoticeModal : onConfirm
-            }
+            onClick={onConfirm}
           >
             {confirmDisabled ? disabledLabel : confirmLabel}
           </Button>
@@ -239,15 +213,6 @@ const PricingCard: React.FC<PricingCardProps> = ({
           </div>
         </>
       )}
-      <Portal>
-        {hasBeforePaymentModal && paymentNoticeModalState && (
-          <PaymentNoticeModal
-            handlePayment={onConfirm}
-            open={paymentNoticeModalState}
-            onClose={onTogglePaymentNoticeModal}
-          />
-        )}
-      </Portal>
     </PricingCardBlock>
   );
 };

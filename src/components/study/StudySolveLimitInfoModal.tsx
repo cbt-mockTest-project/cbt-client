@@ -1,81 +1,13 @@
-import palette from '@styles/palette';
-import { Button, Modal, ModalProps } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Modal, ModalProps, Select } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 import { DoneAll } from '@mui/icons-material';
 import usePayment from '@components/pricing/usePayment';
-import useAuth from '@lib/hooks/useAuth';
-import { useEditProfileMutation } from '@lib/graphql/hook/useUser';
+import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
+import { checkRole, makeMoneyString } from '@lib/utils/utils';
 
-const StudySolveLimitInfoModalBlock = styled(Modal)`
-  .study-solve-limit-info-modal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .study-solve-limit-info-modal-title {
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  .study-solve-limit-info-modal-content {
-    font-size: 16px;
-    margin-bottom: 15px;
-  }
-  .study-solve-limit-info-modal-date {
-    margin-bottom: 15px;
-    color: ${palette.colorSubText};
-  }
-  .study-solve-limit-info-modal-origin-price {
-    display: flex;
-    .study-solve-limit-info-modal-origin-price-tag {
-      font-size: 18px;
-      color: ${palette.colorSubText};
-      font-weight: bold;
-      text-decoration: line-through;
-    }
-    .study-solve-limit-info-modal-origin-price-date {
-      margin-top: auto;
-      font-size: 12px;
-      margin-left: 10px;
-      color: ${palette.red_500};
-    }
-  }
-  .study-solve-limit-info-modal-price {
-    margin-bottom: 15px;
-    font-weight: bold;
-    font-size: 20px;
-    svg {
-      width: 24px;
-      height: 24px;
-      position: relative;
-      top: 5px;
-    }
-    .study-solve-limit-info-modal-price-tag {
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-  .study-solve-limit-info-modal-price-button {
-    width: 150px;
-    margin-bottom: 15px;
-  }
-  .study-solve-limit-info-modal-benefit-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .study-solve-limit-info-modal-benefit-list {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    svg {
-      margin-right: 10px;
-      color: ${palette.antd_blue_02};
-    }
-  }
-`;
+const StudySolveLimitInfoModalBlock = styled(Modal)``;
 
 interface StudySolveLimitInfoModalProps extends Omit<ModalProps, 'children'> {
   title?: string;
@@ -89,22 +21,36 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
     ...modalProps
   } = props;
   const [isPricingTabOpen, setIsPricingTabOpen] = useState(false);
-  const { user } = useAuth();
+  const { data: meQuery } = useMeQuery();
   const [editProfileMutation] = useEditProfileMutation();
   const { handlePayment } = usePayment();
-  const handleBasicPlanPayment = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const [price, setPrice] = useState(9900);
+  const [selectedRoleId, setSelectedRoleId] = useState<number>(1);
+  const periodOptions = [
+    { label: '3개월', value: 1 },
+    { label: '12개월', value: 2 },
+  ];
+  const handleBasicPayment = async (roleId: number) => {
     await handlePayment({
-      orderName: '모두CBT 베이직 플랜',
-      price: 9900,
-      roleId: 1,
-      checkRoleIds: [1, 2],
+      orderName: `모두CBT 베이직 플랜 - ${
+        periodOptions.find((el) => el.value === roleId)?.label
+      }`,
+      price,
+      roleId,
+      checkRoleIds: [roleId],
     });
-    modalProps.onCancel(e);
   };
+  const isUsingLicense = useMemo(
+    () =>
+      checkRole({
+        roleIds: [selectedRoleId],
+        meQuery,
+      }),
+    [selectedRoleId]
+  );
+
   useEffect(() => {
-    if (!user) return;
+    if (!meQuery?.me.ok) return;
     editProfileMutation({
       variables: {
         input: {
@@ -112,64 +58,72 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
         },
       },
     });
-  }, [user]);
+  }, [meQuery]);
   return (
     <StudySolveLimitInfoModalBlock {...modalProps} footer={null}>
       <div className="study-solve-limit-info-modal">
         {isPricingTabOpen ? (
           <>
-            <div className="study-solve-limit-info-modal-title">
-              베이지 플랜
+            <div className="text-base font-bold">모두CBT 베이직플랜</div>
+            <div className="mt-3 flex items-end">
+              <AttachMoneyIcon class="w-7 h-7 mr-2" />
+              <div className="text-2xl font-bold">{makeMoneyString(price)}</div>
+              <div className="text-lg ml-1">원</div>
             </div>
-            <div className="study-solve-limit-info-modal-date">
-              이용기간: 3개월
-            </div>
-            <div className="study-solve-limit-info-modal-origin-price">
-              <div className="study-solve-limit-info-modal-origin-price-tag">
-                12,000
-              </div>
-            </div>
-            <div className="study-solve-limit-info-modal-price">
-              <AttachMoneyIcon /> 9,900
-              <span className="study-solve-limit-info-modal-price-tag">
-                {' '}
-                원
-              </span>
-            </div>
-            <Button
-              className="study-solve-limit-info-modal-price-button"
+            <Select
+              className="w-full mt-3"
               size="large"
+              placeholder="이용기간을 선택해주세요"
+              options={periodOptions}
+              defaultValue={periodOptions[0].value}
+              onChange={(value) => {
+                if (value === 1) {
+                  setPrice(9900);
+                  setSelectedRoleId(1);
+                }
+                if (value === 2) {
+                  setPrice(19900);
+                  setSelectedRoleId(2);
+                }
+              }}
+            />
+            <Button
               type="primary"
-              onClick={handleBasicPlanPayment}
+              size="large"
+              className="w-full mt-3"
+              disabled={isUsingLicense || !selectedRoleId}
+              onClick={() => handleBasicPayment(selectedRoleId)}
             >
-              구매하기
+              {isUsingLicense ? '이미 이용중입니다.' : '결제하기'}
             </Button>
-            <div className="study-solve-limit-info-modal-benefit-title">
-              혜택
-            </div>
-            <div className="study-solve-limit-info-modal-benefit-list">
-              <DoneAll />
+            <div className="mt-4 mb-2 font-bold">혜택</div>
+            <div className="flex gap-2 items-center font-bold">
+              <DoneAll className="text-blue-400" />
               <span>광고제거</span>
             </div>
-            <div className="study-solve-limit-info-modal-benefit-list">
-              <DoneAll />
+            <div className="flex gap-2 items-center font-bold">
+              <DoneAll className="text-blue-400" />
               <span>무제한 문제풀이</span>
             </div>
-            <div className="study-solve-limit-info-modal-benefit-list">
-              <DoneAll />
+            <div className="flex gap-2 items-center font-bold">
+              <DoneAll className="text-blue-400" />
               <span>무제한 모의고사</span>
             </div>
 
-            <div className="study-solve-limit-info-modal-benefit-list">
-              <DoneAll />
+            <div className="flex gap-2 items-center font-bold">
+              <DoneAll className="text-blue-400" />
               <span>무제한 출력</span>
             </div>
           </>
         ) : (
           <>
-            <div className="study-solve-limit-info-modal-title">{title}</div>
-            <pre className="study-solve-limit-info-modal-content">{`제한 없는 학습을 원하신다면\n베이직 플랜에 가입해보세요!`}</pre>
-            <Button type="primary" onClick={() => setIsPricingTabOpen(true)}>
+            <div className="text-base font-bold mb-4">{title}</div>
+            <pre className="mb-4 text-base  text-gray-600">{`제한 없는 학습을 원하신다면\n베이직 플랜에 가입해보세요!`}</pre>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => setIsPricingTabOpen(true)}
+            >
               베이직 플랜 가입하기
             </Button>
           </>

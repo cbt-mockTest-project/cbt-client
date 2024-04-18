@@ -6,18 +6,15 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PricingCard, { PricingCardProps } from './PricingCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useCreateFreeTrial, useMeQuery } from '@lib/graphql/hook/useUser';
-import { message } from 'antd';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { checkRole } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { coreActions } from '@modules/redux/slices/core';
-import { loginModal } from '@lib/constants';
 import useToggle from '@lib/hooks/useToggle';
 import PricingSelectModal from './PricingSelectModal';
 import usePayment from './usePayment';
 import { Pagination } from 'swiper/modules';
 import { useRouter } from 'next/router';
+import BasicPaymentSelectModalModal from './BasicPaymentSelectModal';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -88,23 +85,15 @@ interface PricingComponentProps {}
 const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
   const router = useRouter();
   const [swiper, setSwiper] = useState<any>(null);
-  const { handlePayment } = usePayment();
   const [price, setPrice] = useState(0);
-  const { data: meQuery } = useMeQuery();
-  const { value: selectModalState, onToggle: toggleSelectModal } =
+  const { value: isEhsSelectModalOpen, onToggle: toggleEhsSelectModalOpen } =
     useToggle(false);
-
-  const handleBasicPlanPayment = () =>
-    handlePayment({
-      orderName: '모두CBT 베이직 플랜',
-      price: 9900,
-      roleId: 1,
-      checkRoleIds: [1, 2],
-    });
+  const { value: isBasicModalOpen, onToggle: toggleBasicModalOpen } =
+    useToggle(false);
 
   const openEhsMasterPayModal = () => {
     setPrice(0);
-    toggleSelectModal();
+    toggleEhsSelectModalOpen();
   };
 
   const pricingCardData: PricingCardProps[] = [
@@ -120,12 +109,8 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
         '무제한 모의고사',
         '무제한 출력',
       ],
-      // benefits: ['광고제거', '랜덤모의고사 무제한 제공'],
-      confirmDisabled: meQuery?.me.user
-        ? checkRole({ roleIds: [1, 2], meQuery })
-        : false,
-      onConfirm: handleBasicPlanPayment,
-      roleIds: [1],
+      confirmDisabled: false,
+      onConfirm: toggleBasicModalOpen,
     },
     {
       title: 'AI 문제봇 대여',
@@ -145,7 +130,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
           'noopener'
         );
       },
-      roleIds: [4, 5, 6, 7, 8],
     },
     {
       title: '직8딴 플랜',
@@ -161,7 +145,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       ],
       confirmDisabled: false,
       onConfirm: openEhsMasterPayModal,
-      roleIds: [4, 5, 6, 7, 8],
     },
   ];
 
@@ -220,10 +203,19 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       >
         환불안내
       </a>
-      {selectModalState && (
+      {isEhsSelectModalOpen && (
         <PricingSelectModal
-          open={selectModalState}
-          onClose={toggleSelectModal}
+          open={isEhsSelectModalOpen}
+          onClose={toggleEhsSelectModalOpen}
+          price={price}
+          setPrice={setPrice}
+        />
+      )}
+      {isBasicModalOpen && (
+        <BasicPaymentSelectModalModal
+          title="모두CBT 베이직 플랜"
+          open={isBasicModalOpen}
+          onClose={toggleBasicModalOpen}
           price={price}
           setPrice={setPrice}
         />

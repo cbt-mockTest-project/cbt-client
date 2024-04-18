@@ -147,7 +147,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
       if (!meQuery.me) return;
       const isEhsExam = checkIsEhsMasterExam([examId]);
       if (isEhsExam) return;
-      const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+      const isBasicPlanUser = checkRole({ roleIds: [1, 2], meQuery });
 
       if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
         setIsPrintLimitModalOpen(true);
@@ -203,7 +203,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     if (!meQuery.me) return;
     const isEhsExam = checkIsEhsMasterExam([examId]);
     if (isEhsExam) return;
-    const isBasicPlanUser = checkRole({ roleIds: [1], meQuery });
+    const isBasicPlanUser = checkRole({ roleIds: [1, 2], meQuery });
 
     if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
       setIsPrintLimitModalOpen(true);
