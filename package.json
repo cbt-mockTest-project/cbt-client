@@ -58,7 +58,7 @@
     "react-spinners": "^0.13.8",
     "shortid": "^2.2.16",
     "socket.io-client": "^4.6.2",
-    "styled-components": "^5.3.6",
+    "styled-components": "5.3.5",
     "swiper": "11.0.5",
     "uuid": "^9.0.1"
   },
@@ -79,7 +79,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "18.0.10",
     "@types/shortid": "^0.0.29",
-    "@types/styled-components": "^5.1.26",
+    "@types/styled-components": "5.1.25",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "autoprefixer": "^10.4.12",
     "cypress": "^12.9.0",
