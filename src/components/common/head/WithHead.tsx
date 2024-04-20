@@ -8,6 +8,7 @@ interface IProps {
   description?: string;
   image?: string;
   keywords?: string;
+  noIndex?: boolean;
 }
 
 const WithHead: React.FC<IProps> = ({
@@ -16,6 +17,7 @@ const WithHead: React.FC<IProps> = ({
   image = '/png/logo01.png',
   keywords = '산업안전기사,산업안전기사실기,건설안전기사,건선안전기사실기,실기cbt,실기씨비티,위험물산업기사,대기환경기사,모두씨비티,나눔시비티,나눔씨비티,나눔,나눔cbt,comcbt,엔지니오,모두시비티,산업안전기사필답형,건설안전기사필답형,산업안전기사실기CBT,전기기사,전기기사실기,전기기사실기CBT,전기기사실기단답형,전자문제집,모두CBT,정보처리기사,정보처리기사실기,정보처리기사실기CBT,암기장,모두의 암기장,암기고래,암기짱',
   pageHeadingTitle,
+  noIndex = false,
 }) => {
   const { asPath } = useRouter();
   const CURRENT_URL = `${process.env.NEXT_PUBLIC_CLIENT_URL}${asPath}`;
@@ -23,6 +25,7 @@ const WithHead: React.FC<IProps> = ({
     <>
       <Head>
         <title>{title}</title>
+        {noIndex && <meta name="robots" content="noindex" />}
         <meta name="description" content={description} key="description" />
         <meta property="og:title" content={title} key="og:title" />
         <meta

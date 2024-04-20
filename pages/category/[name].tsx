@@ -41,6 +41,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         title={category.name + ' | 모두CBT'}
         pageHeadingTitle={`${category.name} 페이지`}
         description={category.description}
+        noIndex={category.isPublic ? false : true}
       />
       {isExistedCategory && (
         <CategoryComponent categoryQueryInput={categoryQueryInput} />
