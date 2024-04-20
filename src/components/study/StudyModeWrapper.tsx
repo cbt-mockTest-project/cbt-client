@@ -19,6 +19,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { isMobile } from 'react-device-detect';
 import StudyModeCore from './StudyModeCore';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { handleError } from '@lib/utils/utils';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -145,15 +146,19 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       router.query.categoryId &&
       examId
     ) {
-      upsertRecentlyStudiedExams({
-        variables: {
-          input: {
-            categoryId: Number(router.query.categoryId),
-            examIds: [Number(examId)],
-            questionIndex: activeIndex,
+      try {
+        upsertRecentlyStudiedExams({
+          variables: {
+            input: {
+              categoryId: Number(router.query.categoryId),
+              examIds: [Number(examId)],
+              questionIndex: activeIndex,
+            },
           },
-        },
-      });
+        });
+      } catch (e) {
+        handleError(e);
+      }
     }
   }, [activeIndex, isLoggedIn, examId, tab]);
 
