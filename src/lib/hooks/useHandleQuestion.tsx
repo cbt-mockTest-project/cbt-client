@@ -51,12 +51,7 @@ const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
         ...question,
         myQuestionState: state,
       }));
-      dispatch(
-        mockExamActions.setQuestionForScore({
-          ...question,
-          myQuestionState: state,
-        })
-      );
+
       await changeQuestionState({
         variables: {
           input: {
@@ -66,7 +61,6 @@ const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
         },
       });
     } catch (e) {
-      dispatch(mockExamActions.setQuestionForScore(question));
       setQuestion(() => question);
       console.log(e);
     }

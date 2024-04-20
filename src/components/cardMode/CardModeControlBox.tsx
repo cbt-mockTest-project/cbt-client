@@ -3,6 +3,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import useQuestionSlide from '@lib/hooks/useQuestionSlide';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 import { Tooltip } from '@mui/material';
 import palette from '@styles/palette';
 import { Button, Modal } from 'antd';
@@ -48,7 +49,7 @@ const CardModeControlBox: React.FC<CardModeControlBoxProps> = ({
   flipCard,
   isFlipped,
 }) => {
-  const { questions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
   const { handleSlideNext, handleSlidePrev } = useQuestionSlide();
   return (
     <CardModeControlBoxBlock>

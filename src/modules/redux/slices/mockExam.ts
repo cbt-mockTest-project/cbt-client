@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { MockExam, MockExamQuestion } from 'types';
+import { MockExam, MockExamQuestion, QuestionState } from 'types';
 
 export interface MockExamState {
   questions: MockExamQuestion[];
@@ -25,6 +25,15 @@ const mockExamSlice = createSlice({
       }
       state.questions = action.payload;
     },
+    filterQuestions: (state, action: PayloadAction<QuestionState[]>) => {
+      const states = action.payload;
+      state.questions = state.questions.filter((question) =>
+        states.includes(question.myQuestionState)
+      );
+    },
+    shuffleQuestions: (state) => {
+      state.questions = state.questions.sort(() => Math.random() - 0.5);
+    },
     setQuestion(state, action: PayloadAction<MockExamQuestion>) {
       state.questions = state.questions.map((question) => {
         if (question.id === action.payload.id) {
@@ -38,20 +47,6 @@ const mockExamSlice = createSlice({
       action: PayloadAction<MockExamQuestion[]>
     ) => {
       state.serverSideQuestions = action.payload;
-    },
-    setQuestionsForScore: (
-      state,
-      action: PayloadAction<MockExamQuestion[]>
-    ) => {
-      state.questionsForScore = action.payload;
-    },
-    setQuestionForScore(state, action: PayloadAction<MockExamQuestion>) {
-      state.questionsForScore = state.questionsForScore.map((question) => {
-        if (question.id === action.payload.id) {
-          return action.payload;
-        }
-        return question;
-      });
     },
   },
 });

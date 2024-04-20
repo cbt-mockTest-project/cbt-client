@@ -1,8 +1,7 @@
-import useQuestions from '@lib/hooks/useQuestions';
 import { Button } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion, QuestionState } from 'types';
+import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import StudyResultCard from './StudyResultCard';
 import palette from '@styles/palette';
@@ -17,6 +16,8 @@ import StudyEndCategoryReviewModal from './StudyEndCategoryReviewModal';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
 import { handleError } from '@lib/utils/utils';
 import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { uniqueId } from 'lodash';
 
 const StudyEndBlock = styled.div`
   display: flex;
@@ -92,7 +93,9 @@ interface StudyEndProps {}
 const StudyEnd: React.FC<StudyEndProps> = () => {
   const router = useRouter();
   const localStorage = new LocalStorage();
-  const { questions } = useQuestions();
+  const questionLength = useAppSelector(
+    (state) => state.mockExam.questions.length
+  );
   const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
   const [upsertRecentlyStudiedExams] = useUpsertRecentlyStudiedExams();
   const { isLoggedIn } = useAuth();
@@ -102,38 +105,6 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
   const categoryId = typeof router.query.categoryId
     ? Number(router.query.categoryId)
     : null;
-  const countQuestionsByScoreState = useCallback(() => {
-    let highScoreLength = 0;
-    let lowScoreLength = 0;
-    let middleScoreLength = 0;
-
-    questions.forEach((question: MockExamQuestion) => {
-      switch (question.myQuestionState) {
-        case QuestionState.High:
-          highScoreLength++;
-          break;
-        case QuestionState.Row: // Assuming "Row" was a typo and should be "Low"
-          lowScoreLength++;
-          break;
-        case QuestionState.Middle:
-          middleScoreLength++;
-          break;
-        // No default case needed since we cover all cases
-      }
-    });
-
-    return {
-      highScoreLength,
-      lowScoreLength,
-      middleScoreLength,
-      coreScoreLength:
-        questions.length - highScoreLength - lowScoreLength - middleScoreLength,
-    };
-  }, [questions]);
-
-  const scoreCounts = useMemo(countQuestionsByScoreState, [
-    countQuestionsByScoreState,
-  ]);
 
   useEffect(() => {
     if (router.query.tab === 'end') {
@@ -193,7 +164,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
       </div>
       <div className="study-end-result-wrapper">
         <div className="study-end-result-title">학습 결과</div>
-        <StudyResultCard scoreCounts={scoreCounts} />
+        <StudyResultCard />
       </div>
       <div className="study-end-button-wrapper">
         <Button
@@ -222,21 +193,17 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
           <ChangeHistoryIcon />, <ClearIcon /> &nbsp; 문제
         </div>
         <div className="study-end-wrong-question-list">
-          {questions
-            .filter(
-              (question: MockExamQuestion) =>
-                question.myQuestionState === QuestionState.Row ||
-                question.myQuestionState === QuestionState.Middle
-            )
-            .map((question, index) => (
+          {Array.from({ length: questionLength }, (_, index) => index).map(
+            (question, index) => (
               <SolutionModeCardItem
-                key={question.id}
-                defaultQuestion={question}
+                key={uniqueId('question-')}
+                filterStates={[QuestionState.Row, QuestionState.Middle]}
                 index={index}
                 isAnswerAllHidden={false}
                 hasScoreTable={false}
               />
-            ))}
+            )
+          )}
         </div>
       </div>
       {categoryId && (

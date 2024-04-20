@@ -25,27 +25,14 @@ import useQuestionFeedback, {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from './useQuestionFeedback';
-import { useMemo } from 'react';
 
 const useQuestions = () => {
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
-  const questions = useAppSelector((state) => state.mockExam.questions);
-  const serverSideQuestions = useAppSelector(
-    (state) => state.mockExam.serverSideQuestions
-  );
 
-  const questionsWithLowScore = useMemo(
-    () =>
-      questions.filter(
-        (question) => question.myQuestionState === QuestionState.Row
-      ),
-    [questions]
-  );
   const [readQuestionsQuery] = useLazyReadQuestionsByExamIds();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
   const [changeQuestionState] = useChangeQuestionState();
-  const [resetQuestionStateMutation] = useResetQuestionState();
 
   const {
     handleAddFeedback,
@@ -130,37 +117,8 @@ const useQuestions = () => {
     }
   };
 
-  const resetQuestionState = async () => {
-    try {
-      const res = await resetQuestionStateMutation({
-        variables: {
-          input: {
-            questionIds: questions.map((question) => question.id),
-          },
-        },
-      });
-      if (res.data?.resetMyExamQuestionState.ok) {
-        const newQuestions = questions.map((question) => ({
-          ...question,
-          myQuestionState: QuestionState.Core,
-        }));
-        dispatch(mockExamActions.setQuestions(newQuestions));
-        return;
-      }
-      message.error(res.data?.resetMyExamQuestionState.error);
-    } catch (e) {
-      message.error('문제 상태 초기화에 실패했습니다.');
-      handleError(e);
-    }
-  };
-
   const shuffleQuestions = () => {
-    const mixedQuestions = [...questions];
-    dispatch(
-      mockExamActions.setQuestions(
-        mixedQuestions.sort(() => Math.random() - 0.5)
-      )
-    );
+    dispatch(mockExamActions.shuffleQuestions());
   };
 
   const deleteFeedback = async ({
@@ -215,10 +173,7 @@ const useQuestions = () => {
   };
 
   const filterQuestions = (states: QuestionState[]) => {
-    const newQuestions = questions.filter((question) =>
-      states.includes(question.myQuestionState)
-    );
-    dispatch(mockExamActions.setQuestions(newQuestions));
+    dispatch(mockExamActions.filterQuestions(states));
   };
   const setQuestions = (questions: MockExamQuestion[]) => {
     dispatch(mockExamActions.setQuestions(questions));
@@ -229,8 +184,6 @@ const useQuestions = () => {
   };
 
   return {
-    questions,
-    serverSideQuestions,
     setServerSideQuestions,
     setQuestions,
     saveBookmark,
@@ -240,11 +193,9 @@ const useQuestions = () => {
     addFeedback,
     editFeedback,
     updateFeedbackRecommendation,
-    resetQuestionState,
     resetQuestions,
     shuffleQuestions,
     filterQuestions,
-    questionsWithLowScore,
   };
 };
 

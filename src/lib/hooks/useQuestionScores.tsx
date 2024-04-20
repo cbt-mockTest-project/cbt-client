@@ -1,4 +1,3 @@
-import { useReadExamTitleAndIdOfBookmarkedQuestion } from '@lib/graphql/hook/useQuestionBookmark';
 import {
   useReadExamTitleAndIdByState,
   useResetAllQuestionState,

@@ -11,6 +11,7 @@ import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem'
 import HistoryLoader from './HistoryLoader';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import { useRouter } from 'next/router';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ScoreTabBlock = styled.div`
   display: flex;
@@ -57,7 +58,8 @@ interface ScoreTabProps {}
 const ScoreTab: React.FC<ScoreTabProps> = () => {
   const router = useRouter();
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { questions, fetchQuestions, resetQuestions } = useQuestions();
+  const { fetchQuestions, resetQuestions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
   const { examTitles, getExamTitlesLoading, resetQuestionScores } =
     useQuestionScores();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
@@ -143,7 +145,6 @@ const ScoreTab: React.FC<ScoreTabProps> = () => {
           questions.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              defaultQuestion={question}
               index={index}
               isAnswerAllHidden={false}
             />

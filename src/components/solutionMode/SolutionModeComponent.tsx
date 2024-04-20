@@ -12,6 +12,7 @@ import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
 import SolutionModeCardItemList from './SolutionModeCardItemList';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -45,13 +46,9 @@ interface SolutionModeComponentProps {
 const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   questionsQueryInput,
 }) => {
-  const {
-    questions: clientSideQuestions,
-    serverSideQuestions,
-    shuffleQuestions,
-    fetchQuestions,
-    setServerSideQuestions,
-  } = useQuestions();
+  const isStaticPage = !!questionsQueryInput;
+  const { shuffleQuestions, fetchQuestions, setServerSideQuestions } =
+    useQuestions();
 
   const router = useRouter();
   const examIdsQuery = router.query.examIds;
@@ -74,11 +71,6 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (clientSideQuestions.length > 0 && serverSideQuestions) {
-      setServerSideQuestions(null);
-    }
-  }, [clientSideQuestions]);
   return (
     <SolutionModeComponentBlock>
       <div className="solution-mode-body">
@@ -115,7 +107,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
         </div>
         <ul className="solution-mode-solution-card-list">
           <SolutionModeCardItemList
-            defaultQuestions={serverSideQuestions || clientSideQuestions}
+            isStaticPage={isStaticPage}
             isAnswerAllHidden={isAnswerAllHidden}
           />
         </ul>

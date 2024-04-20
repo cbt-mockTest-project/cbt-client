@@ -1,7 +1,6 @@
 import 'swiper/css';
 import { IN_PROGRESS_ANSWERS } from '@lib/constants/localStorage';
 import useCurrentQuestionIndex from '@lib/hooks/useCurrentQuestionIndex';
-import useQuestions from '@lib/hooks/useQuestions';
 import { Modal, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -19,6 +18,7 @@ import useAuth from '@lib/hooks/useAuth';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { isMobile } from 'react-device-detect';
 import StudyModeCore from './StudyModeCore';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const StudyModeWrapperBlock = styled.div`
   .swiper-slide {
@@ -116,12 +116,12 @@ const StudyModeWrapperBlock = styled.div`
 interface StudyModeWrapperProps {}
 
 const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
-  const localStorage = new LocalStorage();
-
+  const questionsLength = useAppSelector(
+    (state) => state.mockExam.questions.length
+  );
   const [isGoogleAdModalOpen, setIsGoogleAdModalOpen] = useState(false);
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const { questions } = useQuestions();
   const [hasDefaultAnswers, setHasDefaultAnswers] = useState<boolean | null>(
     null
   );
@@ -134,10 +134,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   const mode = router.query.mode as string;
   const examId = router.query.examId as string;
   const tab = router.query.tab as string;
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity;
-  };
   const { updateQuestionIndexInfo } = useCurrentQuestionIndex();
 
   useEffect(() => {
@@ -162,30 +158,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
   }, [activeIndex, isLoggedIn, examId, tab]);
 
   useEffect(() => {
-    if (mode !== 'typing') return;
-    if (questions.length === 0) return;
-    const inProgressAnswers = localStorage.get(IN_PROGRESS_ANSWERS);
-    if (!inProgressAnswers) return;
-    const validAnswers = Object.keys(inProgressAnswers).filter((key) =>
-      questions.find((question) => question.id === Number(key))
-    );
-    if (validAnswers.length === 0) return;
-    Modal.confirm({
-      title: '이전에 작성한 답안이 남아 있습니다.',
-      content: '작성중인 답안을 삭제하시겠습니까?',
-      okText: '네',
-      cancelText: '아니오',
-      onOk() {
-        localStorage.remove(IN_PROGRESS_ANSWERS);
-        setHasDefaultAnswers(false);
-      },
-      onCancel() {
-        setHasDefaultAnswers(true);
-      },
-    });
-  }, [mode]);
-
-  useEffect(() => {
     const activeElement = document.activeElement as HTMLElement;
     if (mode === 'card') {
       activeElement.blur();
@@ -202,7 +174,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
         if (typingModeToggleAnswerButton) typingModeToggleAnswerButton.click();
       }
       if (e.key === 'ArrowRight' && e.shiftKey && e.altKey) {
-        handleSlideNext(questions.length);
+        handleSlideNext(questionsLength);
       }
       if (e.key === 'ArrowLeft' && e.shiftKey && e.altKey) {
         handleSlidePrev();
@@ -249,7 +221,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             shortSwipes={false}
             onTouchEnd={(e) => {
               if (e.touches.startX - e.touches.currentX > 100) {
-                handleSlideNext(questions.length);
+                handleSlideNext(questionsLength);
               }
               if (e.touches.startX - e.touches.currentX < -100) {
                 handleSlidePrev();
@@ -261,7 +233,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
               <StudyModeItemWrapper
                 key={activeIndex}
                 hasDefaultAnswers={hasDefaultAnswers}
-                question={questions[activeIndex - 1]}
                 number={activeIndex}
               />
             </SwiperSlide>
@@ -279,7 +250,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                 <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
                   <button
                     className="typing-mode-control-button"
-                    onClick={() => handleSlideNext(questions.length)}
+                    onClick={() => handleSlideNext(questionsLength)}
                   >
                     <RightOutlined />
                   </button>
@@ -292,7 +263,6 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
             <StudyModeItemWrapper
               key={activeIndex}
               hasDefaultAnswers={hasDefaultAnswers}
-              question={questions[activeIndex - 1]}
               number={activeIndex}
             />
             {mode === 'typing' && (
@@ -308,7 +278,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
                 <Tooltip title={isMobile ? '' : 'alt + shift + ->'}>
                   <button
                     className="typing-mode-control-button"
-                    onClick={() => handleSlideNext(questions.length)}
+                    onClick={() => handleSlideNext(questionsLength)}
                   >
                     <RightOutlined />
                   </button>
@@ -331,7 +301,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           <Tooltip title="alt + shift + ->">
             <button
               className="study-mode-navigation-next"
-              onClick={() => handleSlideNext(questions.length)}
+              onClick={() => handleSlideNext(questionsLength)}
             >
               <RightOutlined />
             </button>
@@ -341,7 +311,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
       {isGoogleAdModalOpen && (
         <GoogleAdModal onClose={() => setIsGoogleAdModalOpen(false)} />
       )}
-      <StudyModeCore />
+      <StudyModeCore setHasDefaultAnswers={setHasDefaultAnswers} />
     </StudyModeWrapperBlock>
   );
 };

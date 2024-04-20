@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { uniqueId } from 'lodash';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -10,22 +12,37 @@ const SolutionModeCardItemListBlock = styled.ul`
 `;
 
 interface SolutionModeCardItemListProps {
-  defaultQuestions: MockExamQuestion[];
   isAnswerAllHidden: boolean;
+  isStaticPage?: boolean;
 }
 
 const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
-  defaultQuestions,
   isAnswerAllHidden,
+  isStaticPage,
 }) => {
+  const serverSideQuestionLength = useAppSelector((state) =>
+    state.mockExam.serverSideQuestions
+      ? state.mockExam.serverSideQuestions.length
+      : 0
+  );
+  const clientSideQuestionLength = useAppSelector((state) =>
+    state.mockExam.questions ? state.mockExam.questions.length : 0
+  );
+  const questionLength = useMemo(
+    () =>
+      isStaticPage
+        ? clientSideQuestionLength || serverSideQuestionLength
+        : clientSideQuestionLength,
+    [serverSideQuestionLength, clientSideQuestionLength, isStaticPage]
+  );
   return (
     <SolutionModeCardItemListBlock>
-      {defaultQuestions.map((question, index) => (
+      {Array.from({ length: questionLength }).map((_, index) => (
         <SolutionModeCardItem
-          key={question.id}
-          defaultQuestion={question as MockExamQuestion}
+          key={uniqueId()}
           isAnswerAllHidden={isAnswerAllHidden}
           index={index}
+          isStaticPage={isStaticPage}
         />
       ))}
     </SolutionModeCardItemListBlock>

@@ -62,13 +62,13 @@ const StudyScoreModalBlock = styled(Modal)`
 `;
 
 interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
-  questions?: MockExamQuestion[];
   onClickItem?: (index: number) => void;
 }
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
-  const { questions, onClickItem, ...modalProps } = props;
-  const { questionsForScore, handleResetQuestionState } = useQuestionsScore();
+  const { onClickItem, ...modalProps } = props;
+  const questions = useAppSelector((state) => state.mockExam.questions);
+  const { handleResetQuestionState } = useQuestionsScore();
   const handleResetScore = async () => {
     Modal.confirm({
       title: '점수 초기화',
@@ -76,6 +76,7 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
       onOk: handleResetQuestionState,
     });
   };
+  if (!questions) return null;
   return (
     <StudyScoreModalBlock {...modalProps} footer={false}>
       <div className="study-score-header">
@@ -83,7 +84,7 @@ const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
         <Button onClick={handleResetScore}>점수 초기화</Button>
       </div>
       <div className="study-score-item-list">
-        {(questions || questionsForScore).map((question, index) => (
+        {questions.map((question, index) => (
           <div
             key={question.id}
             onClick={() => {

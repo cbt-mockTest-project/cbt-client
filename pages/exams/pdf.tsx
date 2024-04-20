@@ -3,6 +3,7 @@ import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAMS_PDF_PAGE } from '@lib/constants/displayName';
 import useQuestions from '@lib/hooks/useQuestions';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
@@ -12,7 +13,8 @@ interface ExamsPdfPageProps {}
 const ExamsPdfPage: React.FC<ExamsPdfPageProps> = ({}) => {
   const router = useRouter();
   const { order, states, limit, examIds, mode, examId } = router.query;
-  const { fetchQuestions, questions } = useQuestions();
+  const { fetchQuestions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
 
   useEffect(() => {
     if (!order || !limit || !examIds || !mode) return;

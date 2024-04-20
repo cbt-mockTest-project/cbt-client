@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ExamReviewStateCheckboxGroup from './ExamReviewStateCheckboxGroup';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ExamReviewComponentBlock = styled.div`
   padding: 20px;
@@ -29,8 +30,8 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
   const examIds = router.query.examIds as string;
   const categoryName = router.query.categoryName as string;
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { questions, fetchQuestions, resetQuestions } = useQuestions();
-
+  const { fetchQuestions, resetQuestions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
   useEffect(() => {
     resetQuestions();
   }, []);
@@ -50,7 +51,6 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
           questions.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              defaultQuestion={question}
               index={index}
               isAnswerAllHidden={false}
             />

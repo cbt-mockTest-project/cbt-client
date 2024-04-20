@@ -2,6 +2,7 @@ import CardModeItem from '@components/cardMode/CardModeItem';
 import TypingModeItem from '@components/typingMode/TypingModeItem';
 import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import useQuestions from '@lib/hooks/useQuestions';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -10,16 +11,17 @@ import { MockExamQuestion } from 'types';
 const StudyModeItemWrapperBlock = styled.div``;
 
 interface StudyModeItemWrapperProps {
-  question: MockExamQuestion;
   hasDefaultAnswers: boolean | null;
   number: number;
 }
 
 const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
-  question,
   number,
   hasDefaultAnswers,
 }) => {
+  const question = useAppSelector(
+    (state) => state.mockExam.questions[number - 1]
+  );
   const router = useRouter();
   const mode = router.query.mode as 'card' | 'typing';
 

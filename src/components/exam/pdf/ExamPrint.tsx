@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 import ExcelJS from 'exceljs';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -139,7 +140,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     [key: string]: string;
   }>({});
 
-  const { questions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
   const printAreaRef = useRef<HTMLDivElement>(null);
   const handleExportPdf = async () => {
     try {

@@ -109,19 +109,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
-  const { user, handleCheckLogin, handleUpdateUserCache } = useAuth();
+  const { user, handleUpdateUserCache } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
     return user.id === question?.user.id;
   }, [user, question]);
-
-  const handleOpenFeedbackModal: React.MouseEventHandler<HTMLDivElement> = (
-    e
-  ) => {
-    e.stopPropagation();
-    if (!handleCheckLogin()) return;
-    setIsFeedbackModalOpen(true);
-  };
 
   const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
@@ -137,6 +129,8 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
       onChangeIsFeedbackModalOpen(isFeedbackModalOpen);
     }
   }, [onChangeIsFeedbackModalOpen]);
+
+  if (!question) return null;
 
   return (
     <StudyQuestionBoxBlock className={className}>

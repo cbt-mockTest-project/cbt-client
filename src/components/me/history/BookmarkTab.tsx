@@ -9,6 +9,7 @@ import { HashLoader } from 'react-spinners';
 import styled from 'styled-components';
 import HistoryLoader from './HistoryLoader';
 import { useRouter } from 'next/router';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const BookmarkTabBlock = styled.div`
   display: flex;
@@ -34,8 +35,8 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
   const { examTitles, getExamTitlesLoading, resetQuestionBookmarks } =
     useBookmarkedQuestions();
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { questions, fetchQuestions } = useQuestions();
-
+  const { fetchQuestions } = useQuestions();
+  const questions = useAppSelector((state) => state.mockExam.questions);
   return (
     <BookmarkTabBlock>
       <Button
@@ -68,7 +69,6 @@ const BookmarkTab: React.FC<BookmarkTabProps> = () => {
           questions.map((question, index) => (
             <SolutionModeCardItem
               key={question.id}
-              defaultQuestion={question}
               index={index}
               isAnswerAllHidden={false}
             />

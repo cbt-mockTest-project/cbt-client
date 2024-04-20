@@ -25,6 +25,7 @@ import useAuth from '@lib/hooks/useAuth';
 import StudySolvedInfoModal from './StudySolvedInfoModal';
 import { isMobile } from 'react-device-detect';
 import useQuestions from '@lib/hooks/useQuestions';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -146,8 +147,6 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   hasScoreTable = true,
 }) => {
   const router = useRouter();
-  const { questions } = useQuestions();
-  const { data: meQuery } = useMeQuery();
   const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
   const hasFinishButton = useMemo(
@@ -168,6 +167,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
       handleUpdateUserCache({ hasSolvedBefore: true });
     }
   };
+  if (!question) return null;
   return (
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
@@ -286,11 +286,6 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
       )}
       {isStudyScoreModalOpen && hasScoreTable && (
         <StudyScoreModal
-          questions={
-            [ExamMode.CARD, ExamMode.TYPYING].includes(mode)
-              ? questions
-              : undefined
-          }
           onClickItem={(index) => {
             if ([ExamMode.CARD, ExamMode.TYPYING].includes(mode)) {
               router.replace({

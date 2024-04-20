@@ -1,10 +1,12 @@
 import BasicCard from '@components/common/card/BasicCard';
 import palette from '@styles/palette';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import { MockExamQuestion, QuestionState } from 'types';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const StudyResultCardBlock = styled.div`
   max-width: 500px;
@@ -34,16 +36,40 @@ const StudyResultCardBlock = styled.div`
   }
 `;
 
-interface StudyResultCardProps {
-  scoreCounts: {
-    highScoreLength: number;
-    lowScoreLength: number;
-    coreScoreLength: number;
-    middleScoreLength: number;
-  };
-}
+interface StudyResultCardProps {}
 
-const StudyResultCard: React.FC<StudyResultCardProps> = ({ scoreCounts }) => {
+const StudyResultCard: React.FC<StudyResultCardProps> = () => {
+  const questions = useAppSelector((state) => state.mockExam.questions);
+  const countQuestionsByScoreState = useCallback(() => {
+    let highScoreLength = 0;
+    let lowScoreLength = 0;
+    let middleScoreLength = 0;
+
+    questions.forEach((question: MockExamQuestion) => {
+      switch (question.myQuestionState) {
+        case QuestionState.High:
+          highScoreLength++;
+          break;
+        case QuestionState.Row:
+          lowScoreLength++;
+          break;
+        case QuestionState.Middle:
+          middleScoreLength++;
+          break;
+      }
+    });
+
+    return {
+      highScoreLength,
+      lowScoreLength,
+      middleScoreLength,
+      coreScoreLength:
+        questions.length - highScoreLength - lowScoreLength - middleScoreLength,
+    };
+  }, [questions]);
+  const scoreCounts = useMemo(countQuestionsByScoreState, [
+    countQuestionsByScoreState,
+  ]);
   const {
     highScoreLength,
     lowScoreLength,

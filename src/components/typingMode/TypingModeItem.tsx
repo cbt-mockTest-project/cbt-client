@@ -108,6 +108,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   };
 
   useEffect(() => {
+    if (!question) return;
     setDefaultAnswer(localStorage.get(IN_PROGRESS_ANSWERS)[question.id] || '');
   }, [hasDefaultAnswers]);
 

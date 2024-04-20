@@ -11,26 +11,23 @@ import { QuestionState } from 'types';
 const useQuestionsScore = () => {
   const dispatch = useAppDispatch();
   const [resetQuestionStateMutation] = useResetQuestionState();
-  const questionsForScore = useAppSelector(
-    (state) => state.mockExam.questionsForScore
-  );
+  const questions = useAppSelector((state) => state.mockExam.questions);
 
   const handleResetQuestionState = async () => {
     try {
       const res = await resetQuestionStateMutation({
         variables: {
           input: {
-            questionIds: questionsForScore.map((question) => question.id),
+            questionIds: questions.map((question) => question.id),
           },
         },
       });
       if (res.data?.resetMyExamQuestionState.ok) {
-        const newQuestions = questionsForScore.map((question) => ({
+        const newQuestions = questions.map((question) => ({
           ...question,
           myQuestionState: QuestionState.Core,
         }));
         dispatch(mockExamActions.setQuestions(newQuestions));
-        dispatch(mockExamActions.setQuestionsForScore(newQuestions));
         return;
       }
       message.error(res.data?.resetMyExamQuestionState.error);
@@ -39,7 +36,7 @@ const useQuestionsScore = () => {
       handleError(e);
     }
   };
-  return { questionsForScore, handleResetQuestionState };
+  return { questions, handleResetQuestionState };
 };
 
 export default useQuestionsScore;

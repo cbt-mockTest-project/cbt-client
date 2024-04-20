@@ -84,6 +84,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
     }
     setIsFeedbackModalOpen(true);
   };
+  if (!question) return null;
   return (
     <StudyAnswerBoxBlock className={className}>
       <div
