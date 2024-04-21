@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ExamSource, UserRole } from 'types';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -7,7 +7,7 @@ import { StorageType } from 'customTypes';
 import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
-import { Empty } from 'antd';
+import { Empty, Pagination } from 'antd';
 
 const EhsStorageComponentBlock = styled.div`
   .category-filter-input {
@@ -16,10 +16,13 @@ const EhsStorageComponentBlock = styled.div`
   }
 `;
 
+const LIMIT = 10;
+
 interface EhsStorageComponentProps {}
 
 const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
+  const [page, setPage] = useState(1);
   const { placeholder } = useSaveCategoryModal(StorageType.MODU);
   const {
     categories,
@@ -44,12 +47,20 @@ const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
         }}
       />
       <CategoryFolderList
-        categories={categories}
+        categories={categories.slice((page - 1) * LIMIT, page * LIMIT) || []}
         handleToggleBookmark={handleToggleCategoryBookmark}
       />
       {categories.length === 0 && (
         <Empty style={{ marginTop: '100px' }} description="준비중입니다." />
       )}
+      <div className="flex items-center mt-5 justify-center">
+        <Pagination
+          current={page}
+          total={categories.length}
+          pageSize={LIMIT}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
       {placeholder}
     </EhsStorageComponentBlock>
   );

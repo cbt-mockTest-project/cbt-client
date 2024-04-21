@@ -7,6 +7,7 @@ import useStorage from '@lib/hooks/useStorage';
 import { StorageType } from 'customTypes';
 import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 import TextInput from '@components/common/input/TextInput';
+import { Pagination } from 'antd';
 
 const ModuStorageComponentBlock = styled.div`
   .category-filter-input {
@@ -14,11 +15,13 @@ const ModuStorageComponentBlock = styled.div`
     margin-bottom: 20px;
   }
 `;
+const LIMIT = 10;
 
 interface ModuStorageComponentProps {}
 
 const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
+  const [page, setPage] = useState(1);
   const { placeholder } = useSaveCategoryModal(StorageType.MODU);
   const {
     categories,
@@ -43,9 +46,17 @@ const ModuStorageComponent: React.FC<ModuStorageComponentProps> = () => {
         }}
       />
       <CategoryFolderList
-        categories={categories}
+        categories={categories.slice((page - 1) * LIMIT, page * LIMIT) || []}
         handleToggleBookmark={handleToggleCategoryBookmark}
       />
+      <div className="flex items-center mt-5 justify-center">
+        <Pagination
+          current={page}
+          total={categories.length}
+          pageSize={LIMIT}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
       {placeholder}
     </ModuStorageComponentBlock>
   );

@@ -59,13 +59,14 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
       {categories.length <= 0 && (
         <Empty description="암기장이 존재하지 않습니다.." />
       )}
-      <Pagination
-        className="user-storage-pagination"
-        current={page}
-        total={categories.length}
-        pageSize={LIMIT}
-        onChange={(page) => setPage(page)}
-      />
+      <div className="flex items-center mt-5 justify-center">
+        <Pagination
+          current={page}
+          total={categories.length}
+          pageSize={LIMIT}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
     </UserStorageComponentBlock>
   );
 };

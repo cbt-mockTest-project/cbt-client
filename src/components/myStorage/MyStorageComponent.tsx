@@ -2,9 +2,9 @@ import CategoryInviteModal from '@components/category/CategoryInviteModal';
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import useStorage from '@lib/hooks/useStorage';
-import { Button, Select, Tooltip } from 'antd';
+import { Button, Pagination, Select, Tooltip } from 'antd';
 import { StorageType } from 'customTypes';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import InvitationManageModal from './InvitationManageModal';
 
@@ -26,6 +26,8 @@ const MyStorageComponentBlock = styled.div`
   }
 `;
 
+const LIMIT = 9;
+
 interface MyStorageComponentProps {}
 
 enum CategoryOptionEnum {
@@ -34,6 +36,7 @@ enum CategoryOptionEnum {
 }
 
 const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
+  const [page, setPage] = useState(1);
   const [storageType, setStorageType] = React.useState<StorageType>(
     StorageType.MY
   );
@@ -73,10 +76,18 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
         }}
       />
       <CategoryFolderList
-        categories={categories}
+        categories={categories.slice((page - 1) * LIMIT, page * LIMIT) || []}
         handleToggleBookmark={handleToggleCategoryBookmark}
         hasAllExamFolder={storageType === StorageType.MY}
       />
+      <div className="flex items-center mt-5 justify-center">
+        <Pagination
+          current={page}
+          total={categories.length}
+          pageSize={LIMIT}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
       {isInvitationManageModal && (
         <InvitationManageModal
           open={isInvitationManageModal}
