@@ -41,7 +41,7 @@ export const navItems = [
   {
     key: '/pricing',
     icon: <GoldOutlined />,
-    label: '스토어',
+    label: '이용권',
   },
   {
     key: '/me',

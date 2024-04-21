@@ -13,7 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
     key: ['data'],
   },
   {
-    label: '스토어',
+    label: '이용권',
     path: '/pricing',
     key: ['store', 'pricing', 'basic'],
   },

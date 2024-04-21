@@ -84,7 +84,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
       >
         <CategoryIcon className={`${isStorePage && 'active'}`} />
         <span className={`bottom-app-bar-item-text ${isStorePage && 'active'}`}>
-          스토어
+          이용권
         </span>
       </button>
       <button

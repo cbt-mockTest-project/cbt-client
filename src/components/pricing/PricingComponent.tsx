@@ -157,7 +157,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
 
   return (
     <PricingComponentBlock>
-      <h3 className="pricing-title">모두CBT 프리미엄 스토어</h3>
+      <h3 className="pricing-title">모두CBT 프리미엄 이용권</h3>
       <p className="pricing-intro">
         더욱 효율적인 학습을 원하신다면 프리미엄 서비스에 가입해 보세요.
       </p>

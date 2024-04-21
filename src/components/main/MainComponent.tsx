@@ -324,7 +324,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           </Link>
           <Button onClick={onToggleAppGuideModalState}>앱 설치하기</Button>
           <Link href="/pricing" style={{ width: '100%' }}>
-            <Button type="primary">프리미엄 스토어</Button>
+            <Button type="primary">프리미엄 이용권</Button>
           </Link>
 
           <button
