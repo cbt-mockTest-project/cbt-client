@@ -49,7 +49,6 @@ export const GET_SEARCH_AVAILABILITY = gql`
 export const GET_POST_SEARCH_RANK = gql`
   query GetSearchRank($input: GetSearchRankInput!) {
     getSearchRank(input: $input) {
-      daumBlogSearchRank
       naverBlogSearchRank
       ok
       error
@@ -72,7 +71,14 @@ export const GET_BLOG_INFO = gql`
           visitor
           date
         }
-        influencerUrl
+        influencerInfo {
+          category
+          introduction
+          keyword
+          nickName
+          subscriberCount
+          url
+        }
       }
     }
   }

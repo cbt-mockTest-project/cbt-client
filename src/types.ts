@@ -34,6 +34,12 @@ export type AddExamToCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ApproveCategoryInvitationLinkOutput = {
+  __typename?: 'ApproveCategoryInvitationLinkOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type Attendance = {
   __typename?: 'Attendance';
   content: Scalars['String'];
@@ -59,7 +65,7 @@ export type BlogInfo = {
   blogDirectoryName: Scalars['String'];
   blogName: Scalars['String'];
   blogVisitor?: Maybe<Array<BlogVisitor>>;
-  influencerUrl: Scalars['String'];
+  influencerInfo?: Maybe<InfluencerInfo>;
   subscriberCount: Scalars['Float'];
   totalVisitorCount: Scalars['Float'];
 };
@@ -88,6 +94,24 @@ export type CategoryEvaluationInputType = {
   isSecret?: InputMaybe<Scalars['Boolean']>;
   score?: InputMaybe<Scalars['Float']>;
   user: UserInputType;
+};
+
+export type CategoryInvitationLink = {
+  __typename?: 'CategoryInvitationLink';
+  category: MockExamCategory;
+  code: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  isUsed: Scalars['Boolean'];
+  updated_at: Scalars['DateTime'];
+  user?: Maybe<User>;
+};
+
+export type CategoryInvitationLinkInputType = {
+  category: MockExamCategoryInputType;
+  code?: Scalars['String'];
+  isUsed?: Scalars['Boolean'];
+  user?: InputMaybe<UserInputType>;
 };
 
 export type ChangeClientRoleAndCreatePaymentInput = {
@@ -186,6 +210,13 @@ export type CreateCategoryEvaluationInput = {
 export type CreateCategoryEvaluationOutput = {
   __typename?: 'CreateCategoryEvaluationOutput';
   categoryEvaluation?: Maybe<CategoryEvaluation>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateCategoryInvitationLinkOutput = {
+  __typename?: 'CreateCategoryInvitationLinkOutput';
+  code?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -1034,6 +1065,27 @@ export type GetBlogInfoOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetBlogPostDetailInput = {
+  blogId: Scalars['String'];
+  postId: Scalars['String'];
+};
+
+export type GetBlogPostDetailOutput = {
+  __typename?: 'GetBlogPostDetailOutput';
+  commentCount: Scalars['Float'];
+  error?: Maybe<Scalars['String']>;
+  imageCount: Scalars['Float'];
+  likeCount: Scalars['Float'];
+  linkList: Array<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  postAddDate: Scalars['String'];
+  tagList: Array<Scalars['String']>;
+  text: Scalars['String'];
+  textLength: Scalars['Float'];
+  title: Scalars['String'];
+  uniqueMorphemeList: Array<UniqueMorpheme>;
+};
+
 export type GetBuyersOutput = {
   __typename?: 'GetBuyersOutput';
   error?: Maybe<Scalars['String']>;
@@ -1292,9 +1344,10 @@ export type GetSearchRankInput = {
 
 export type GetSearchRankOutput = {
   __typename?: 'GetSearchRankOutput';
-  daumBlogSearchRank?: Maybe<Scalars['Float']>;
   error?: Maybe<Scalars['String']>;
   naverBlogSearchRank?: Maybe<Scalars['Float']>;
+  naverSmartSearchRank?: Maybe<Scalars['Float']>;
+  naverSmartSearchTitle?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   postLink?: Maybe<Scalars['String']>;
 };
@@ -1326,6 +1379,16 @@ export type GetUserByNicknameOrEmailOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   user?: Maybe<User>;
+};
+
+export type InfluencerInfo = {
+  __typename?: 'InfluencerInfo';
+  category: Scalars['String'];
+  introduction: Scalars['String'];
+  keyword: Scalars['String'];
+  nickName: Scalars['String'];
+  subscriberCount: Scalars['Float'];
+  url: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -1400,6 +1463,7 @@ export type MockExamCategory = {
   __typename?: 'MockExamCategory';
   approved: Scalars['Boolean'];
   categoryEvaluations?: Maybe<Array<CategoryEvaluation>>;
+  categoryInvitationLinks: Array<CategoryInvitationLink>;
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
@@ -1428,6 +1492,7 @@ export type MockExamCategory = {
 export type MockExamCategoryInputType = {
   approved?: Scalars['Boolean'];
   categoryEvaluations?: InputMaybe<Array<CategoryEvaluationInputType>>;
+  categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
   description?: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
@@ -1740,6 +1805,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptExamCategoryInvitation: AcceptExamCategoryInvitationOutput;
   addExamToCategory: AddExamToCategoryOutput;
+  approveCategoryInvitationLink: ApproveCategoryInvitationLinkOutput;
   changeClientRole: CoreOutput;
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
@@ -1749,6 +1815,7 @@ export type Mutation = {
   checkUserRole: CheckUserRoleOutput;
   createAttendance: CreateAttendanceOutput;
   createCategoryEvaluation: CreateCategoryEvaluationOutput;
+  createCategoryInvitationLink: CreateCategoryInvitationLinkOutput;
   createDiscountCode: Scalars['Boolean'];
   createExamCategoryInvitation: CreateExamCategoryInvitationOutput;
   createExamCategoryViewer: CreateExamCategoryViewerOutput;
@@ -2357,6 +2424,7 @@ export type NaverPostInfo = {
   link: Scalars['String'];
   logNo: Scalars['Float'];
   sympathyCnt: Scalars['Float'];
+  textLength: Scalars['Float'];
   thumbnailCount: Scalars['Float'];
   titleWithInspectMessage: Scalars['String'];
 };
@@ -2623,6 +2691,7 @@ export type Query = {
   findMyExamHistory: FindMyExamHistoryOutput;
   getBlogCategoryList: GetBlogCategoryListOutput;
   getBlogInfo: GetBlogInfoOutput;
+  getBlogPostDetail: GetBlogPostDetailOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
   getExamCategories: GetExamCategoriesOutput;
@@ -2709,6 +2778,11 @@ export type QueryGetBlogCategoryListArgs = {
 
 export type QueryGetBlogInfoArgs = {
   input: GetBlogInfoInput;
+};
+
+
+export type QueryGetBlogPostDetailArgs = {
+  input: GetBlogPostDetailInput;
 };
 
 
@@ -3686,6 +3760,12 @@ export type ToggleExamCategoryBookmarkOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type UniqueMorpheme = {
+  __typename?: 'UniqueMorpheme';
+  count: Scalars['Float'];
+  word: Scalars['String'];
+};
+
 export type UpdateAdblockPermissionInput = {
   userId: Scalars['Float'];
 };
@@ -3829,6 +3909,7 @@ export type User = {
   LoginType: LoginType;
   attendances?: Maybe<Array<Attendance>>;
   categoryEvaluations: Array<CategoryEvaluation>;
+  categoryInvitationLinks: Array<CategoryInvitationLink>;
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   discountCode?: Maybe<Array<DiscountCode>>;
@@ -3898,6 +3979,7 @@ export type UserInputType = {
   LoginType: LoginType;
   attendances?: InputMaybe<Array<AttendanceInputTyper>>;
   categoryEvaluations: Array<CategoryEvaluationInputType>;
+  categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
   deletedAt: Scalars['DateTime'];
   discountCode?: InputMaybe<Array<Discountcode>>;
   email: Scalars['String'];

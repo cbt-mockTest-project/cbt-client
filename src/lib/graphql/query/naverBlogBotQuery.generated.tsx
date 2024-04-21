@@ -29,14 +29,14 @@ export type GetSearchRankQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetSearchRankQuery = { __typename?: 'Query', getSearchRank: { __typename?: 'GetSearchRankOutput', daumBlogSearchRank?: number | null, naverBlogSearchRank?: number | null, ok: boolean, error?: string | null, postLink?: string | null } };
+export type GetSearchRankQuery = { __typename?: 'Query', getSearchRank: { __typename?: 'GetSearchRankOutput', naverBlogSearchRank?: number | null, ok: boolean, error?: string | null, postLink?: string | null } };
 
 export type GetBlogInfoQueryVariables = Types.Exact<{
   input: Types.GetBlogInfoInput;
 }>;
 
 
-export type GetBlogInfoQuery = { __typename?: 'Query', getBlogInfo: { __typename?: 'GetBlogInfoOutput', ok: boolean, error?: string | null, blogInfo?: { __typename?: 'BlogInfo', blogName: string, subscriberCount: number, blogDirectoryName: string, totalVisitorCount: number, influencerUrl: string, blogVisitor?: Array<{ __typename?: 'BlogVisitor', visitor: string, date: string }> | null } | null } };
+export type GetBlogInfoQuery = { __typename?: 'Query', getBlogInfo: { __typename?: 'GetBlogInfoOutput', ok: boolean, error?: string | null, blogInfo?: { __typename?: 'BlogInfo', blogName: string, subscriberCount: number, blogDirectoryName: string, totalVisitorCount: number, blogVisitor?: Array<{ __typename?: 'BlogVisitor', visitor: string, date: string }> | null, influencerInfo?: { __typename?: 'InfluencerInfo', category: string, introduction: string, keyword: string, nickName: string, subscriberCount: number, url: string } | null } | null } };
 
 
 export const GetKeywordSearchCountDocument = gql`
@@ -97,7 +97,6 @@ export function useGetSearchAvailabilityQuery(options: Omit<Urql.UseQueryArgs<Ge
 export const GetSearchRankDocument = gql`
     query GetSearchRank($input: GetSearchRankInput!) {
   getSearchRank(input: $input) {
-    daumBlogSearchRank
     naverBlogSearchRank
     ok
     error
@@ -123,7 +122,14 @@ export const GetBlogInfoDocument = gql`
         visitor
         date
       }
-      influencerUrl
+      influencerInfo {
+        category
+        introduction
+        keyword
+        nickName
+        subscriberCount
+        url
+      }
     }
   }
 }
