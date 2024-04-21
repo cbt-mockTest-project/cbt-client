@@ -30,7 +30,6 @@ const CategoryInviteLinkContent: React.FC<CategoryInviteLinkContentProps> = ({
         <Button
           onClick={async () => {
             const res = await createCategoryInviteLink.mutateAsync(categoryId);
-            console.log(res.createCategoryInvitationLink.code);
             setInviteCode(() => res.createCategoryInvitationLink.code);
           }}
         >

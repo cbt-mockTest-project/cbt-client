@@ -13,13 +13,11 @@ if (!fs.existsSync(sourcePath)) {
 }
 
 console.log('Source path:', sourcePath);
-console.log('');
 
 var files = fs.readdirSync(sourcePath);
 
 files.forEach(function (file) {
   var fileBase64 = fs.readFileSync(sourcePath + '/' + file).toString('base64');
-  console.log('FILE:', file);
 
   vfs[file] = fileBase64;
 });
@@ -27,5 +25,3 @@ files.forEach(function (file) {
 const vfsFileContent = vfsBefore + JSON.stringify(vfs, null, 2) + vfsAfter;
 fs.writeFileSync(vfsFilename, vfsFileContent);
 
-console.log('');
-console.log('Builded ' + files.length + ' files to ' + vfsFilename + '.');

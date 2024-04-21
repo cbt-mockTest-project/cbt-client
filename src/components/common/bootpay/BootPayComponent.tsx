@@ -72,7 +72,6 @@ const BootPayComponent: React.FC<BootPayComponentProps> = () => {
       }
     } catch (e: any) {
       handleError(e.message);
-      console.log(e.message);
       switch (e.event) {
         case 'cancel':
           break;
