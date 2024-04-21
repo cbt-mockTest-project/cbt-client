@@ -47,7 +47,7 @@ const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
         }}
       />
       <CategoryFolderList
-        categories={categories.slice((page - 1) * LIMIT, page * LIMIT) || []}
+        categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
         handleToggleBookmark={handleToggleCategoryBookmark}
       />
       {categories.length === 0 && (
@@ -56,7 +56,7 @@ const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
       <div className="flex items-center mt-5 justify-center">
         <Pagination
           current={page}
-          total={categories.length}
+          total={categories?.length || 0}
           pageSize={LIMIT}
           onChange={(page) => setPage(page)}
         />
