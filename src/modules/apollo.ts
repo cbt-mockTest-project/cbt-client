@@ -13,9 +13,9 @@ import { isServer } from '@lib/utils/utils';
 import React from 'react';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
-
 const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   const apolloClient = initializeApollo({}, '');
+
   const sendErrorToTelegram = (message: string) =>
     apolloClient.mutate({
       mutation: PUSH_TO_TELEGRAM,
@@ -111,3 +111,5 @@ export const addApolloState = (
 
   return pageProps;
 };
+
+export const apolloClient = initializeApollo({}, '');

@@ -151,8 +151,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               unikeyKey="user-storage"
             />
             <BookmarkedFolderList
-              title="북마크한 암기장 📌"
-              subTitle="북마크한 암기장을 모아보세요."
+              title="저장된 암기장 📌"
+              subTitle="저장된 암기장을 모아보세요."
             />
           </>
         )}

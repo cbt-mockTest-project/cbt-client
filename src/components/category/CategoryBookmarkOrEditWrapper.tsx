@@ -20,6 +20,9 @@ const CategoryBookmarkOrEditWrapper: React.FC<
     (state) => state.examCategory.category.user.id === meQuery?.me.user?.id
   );
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isPublic = useAppSelector(
+    (state) => state.examCategory.category.isPublic
+  );
   const isCategoryBookmarked = useAppSelector(
     (state) => state.examCategory.category.isBookmarked
   );
@@ -36,17 +39,19 @@ const CategoryBookmarkOrEditWrapper: React.FC<
           </div>
         </Dropdown>
       ) : (
-        <button
-          onClick={() => {
-            if (!handleCheckLogin()) return;
-            handleToggleCategoryBookmark(categoryId);
-          }}
-          className={`category-bookmark-button ${
-            isCategoryBookmarked ? 'active' : ''
-          }`}
-        >
-          <BookmarkOutlined />
-        </button>
+        isPublic && (
+          <button
+            onClick={() => {
+              if (!handleCheckLogin()) return;
+              handleToggleCategoryBookmark(categoryId);
+            }}
+            className={`category-bookmark-button ${
+              isCategoryBookmarked ? 'active' : ''
+            }`}
+          >
+            <BookmarkOutlined />
+          </button>
+        )
       )}
     </>
   );

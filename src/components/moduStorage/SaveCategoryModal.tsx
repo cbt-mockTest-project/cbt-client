@@ -1,6 +1,6 @@
 import useExamCategory from '@lib/hooks/useExamCategory';
 import useStorage from '@lib/hooks/useStorage';
-import { replaceSpaceAndSlashToHyphen } from '@lib/utils/utils';
+import { replaceSpaceSlashAndSpecialCharsToHyphen } from '@lib/utils/utils';
 import { Input, Modal, ModalProps, Radio, message } from 'antd';
 import { StorageType } from 'customTypes';
 import React from 'react';
@@ -88,7 +88,9 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         size="large"
         placeholder="제목을 입력하세요."
         value={name}
-        onChange={(e) => setName(replaceSpaceAndSlashToHyphen(e.target.value))}
+        onChange={(e) =>
+          setName(replaceSpaceSlashAndSpecialCharsToHyphen(e.target.value))
+        }
       />
       <Input.TextArea
         className="save-category-modal-description"

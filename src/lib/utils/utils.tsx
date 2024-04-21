@@ -230,8 +230,8 @@ export const reomveImgTag = (htmlString: string) => {
   return doc.body.innerHTML;
 };
 
-export const replaceSpaceAndSlashToHyphen = (string: string) => {
-  return string.replace(/[ \/]/g, '-');
+export const replaceSpaceSlashAndSpecialCharsToHyphen = (string: string) => {
+  return string.replace(/[ \/\\.,!?@#$%^&*_+={};:'"<>|`~]/g, '-');
 };
 
 export const linkify = (text: string) => {

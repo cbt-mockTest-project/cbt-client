@@ -34,8 +34,13 @@ export type AddExamToCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ApproveCategoryInvitationLinkInput = {
+  code: Scalars['String'];
+};
+
 export type ApproveCategoryInvitationLinkOutput = {
   __typename?: 'ApproveCategoryInvitationLinkOutput';
+  categoryName?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -212,6 +217,10 @@ export type CreateCategoryEvaluationOutput = {
   categoryEvaluation?: Maybe<CategoryEvaluation>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateCategoryInvitationLinkInput = {
+  categoryId: Scalars['Float'];
 };
 
 export type CreateCategoryInvitationLinkOutput = {
@@ -1925,6 +1934,11 @@ export type MutationAddExamToCategoryArgs = {
 };
 
 
+export type MutationApproveCategoryInvitationLinkArgs = {
+  input: ApproveCategoryInvitationLinkInput;
+};
+
+
 export type MutationChangeClientRoleArgs = {
   input: ChangeClientRoleInput;
 };
@@ -1967,6 +1981,11 @@ export type MutationCreateAttendanceArgs = {
 
 export type MutationCreateCategoryEvaluationArgs = {
   input: CreateCategoryEvaluationInput;
+};
+
+
+export type MutationCreateCategoryInvitationLinkArgs = {
+  input: CreateCategoryInvitationLinkInput;
 };
 
 

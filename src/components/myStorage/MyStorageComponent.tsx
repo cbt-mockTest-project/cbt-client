@@ -40,20 +40,11 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   const [storageType, setStorageType] = React.useState<StorageType>(
     StorageType.MY
   );
-  const [isInvitationManageModal, setIsInvitationManageModal] =
-    React.useState<boolean>(false);
   const { categories, handleFilterCategories, handleToggleCategoryBookmark } =
     useStorage(storageType);
   return (
     <MyStorageComponentBlock>
-      <Tooltip title="초대받은 암기장 목록을 관리합니다.">
-        <Button
-          className="my-storage-toggle-invite-modal-button"
-          onClick={() => setIsInvitationManageModal(true)}
-        >
-          초대함
-        </Button>
-      </Tooltip>
+      <Tooltip title="초대받은 암기장 목록을 관리합니다."></Tooltip>
       <Select
         className="my-storage-filter-select"
         style={{ width: '200px' }}
@@ -88,12 +79,6 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
           onChange={(page) => setPage(page)}
         />
       </div>
-      {isInvitationManageModal && (
-        <InvitationManageModal
-          open={isInvitationManageModal}
-          onCancel={() => setIsInvitationManageModal(false)}
-        />
-      )}
     </MyStorageComponentBlock>
   );
 };

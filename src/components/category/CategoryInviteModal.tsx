@@ -1,10 +1,11 @@
-import { SearchOutlined } from '@ant-design/icons';
 import useCategoryInvitation from '@lib/hooks/useCategoryInvitation';
 import { Clear } from '@mui/icons-material';
 import palette from '@styles/palette';
-import { Button, Input, InputRef, List, Modal, ModalProps, Select } from 'antd';
+import { Button, List, Modal, ModalProps, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+import CategoryInviteLinkContent from './CategoryInviteLinkContent';
+import { useCreateCategoryInviteLinkMutation } from '@lib/hooks/useCategoryInviteLink';
 
 const CategoryInviteModalBlock = styled(Modal)`
   .category-invite-modal-wrapper {
@@ -43,13 +44,28 @@ interface CategoryInviteModalProps extends Omit<ModalProps, 'children'> {
 
 const CategoryInviteModal: React.FC<CategoryInviteModalProps> = (props) => {
   const { categoryId, ...modalProps } = props;
-  const searchUserInputRef = useRef<InputRef>(null);
+  const createCategoryInviteLink = useCreateCategoryInviteLinkMutation();
+  const { subscribers, handleDeleteCategorySubscriber } =
+    useCategoryInvitation(categoryId);
+  const onClickCreateInviteLink = async () => {
+    const res = await createCategoryInviteLink.mutateAsync(categoryId);
+    if (!res.createCategoryInvitationLink.ok) {
+      message.error(res.createCategoryInvitationLink.error);
+      return;
+    }
 
-  const {
-    handleSearchAndInviteUser,
-    subscribers,
-    handleDeleteCategorySubscriber,
-  } = useCategoryInvitation(categoryId);
+    Modal.success({
+      title: '초대링크',
+      footer: null,
+      content: (
+        <CategoryInviteLinkContent
+          createCategoryInviteLink={createCategoryInviteLink}
+          categoryId={categoryId}
+          defaultInviteCode={res.createCategoryInvitationLink.code}
+        />
+      ),
+    });
+  };
   return (
     <CategoryInviteModalBlock {...modalProps}>
       <div className="category-invite-modal-wrapper">
@@ -59,29 +75,9 @@ const CategoryInviteModal: React.FC<CategoryInviteModalProps> = (props) => {
             초대된 유저는 폴더를 학습할 수 있습니다.
           </p>
         </div>
-        <Input
-          size="large"
-          placeholder="초대할 유저를 검색해주세요."
-          ref={searchUserInputRef}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearchAndInviteUser({
-                keyword: searchUserInputRef.current.input.value,
-                categoryId,
-              });
-            }
-          }}
-          suffix={
-            <SearchOutlined
-              onClick={() => {
-                handleSearchAndInviteUser({
-                  keyword: searchUserInputRef.current.input.value,
-                  categoryId,
-                });
-              }}
-            />
-          }
-        />
+        <Button type="primary" size="large" onClick={onClickCreateInviteLink}>
+          초대링크 생성
+        </Button>
         <List
           header="폴더를 구독하고 있는 유저"
           dataSource={subscribers}
