@@ -52,22 +52,22 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: '/png/banner/ad-banner-pc05.png',
-        mobile: '/png/banner/ad-banner-mobile05.png',
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ad-banner-pc01.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ad-banner-mobile01.png`,
       },
-      key: 'https://www.bloga.co.kr',
+      key: 'ad',
     },
     {
       img: {
-        pc: '/png/banner/ehs-banner-pc03.png',
-        mobile: '/png/banner/ehs-banner-mobile03.png',
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ehs-banner-pc03.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ehs-banner-mobile03.png`,
       },
       key: 'https://ehs-master.com',
     },
     {
       img: {
-        pc: '/png/banner/main-banner-pc04.png',
-        mobile: '/png/banner/main-banner-mobile04.png',
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/main-banner-pc04.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/main-banner-mobile04.png`,
       },
       key: 'open-chat',
     },
