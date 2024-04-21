@@ -113,7 +113,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           title,
           description: removeHtmlTag(description),
         },
-        revalidate: 1,
+        revalidate: 43200,
       });
     } catch (e) {
       return {
