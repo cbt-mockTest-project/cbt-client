@@ -1,7 +1,6 @@
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 import useStorage from '@lib/hooks/useStorage';
 import { Empty, Pagination } from 'antd';
 import { StorageType } from 'customTypes';

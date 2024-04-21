@@ -52,22 +52,22 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ad-banner-pc01.png`,
-        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ad-banner-mobile01.png`,
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ad-banner-pc01.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ad-banner-mobile01.png`,
       },
       key: 'ad',
     },
     {
       img: {
-        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ehs-banner-pc03.png`,
-        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/ehs-banner-mobile03.png`,
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ehs-banner-pc03.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ehs-banner-mobile03.png`,
       },
       key: 'https://ehs-master.com',
     },
     {
       img: {
-        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/main-banner-pc04.png`,
-        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}banner/main-banner-mobile04.png`,
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-pc04.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-mobile04.png`,
       },
       key: 'open-chat',
     },
