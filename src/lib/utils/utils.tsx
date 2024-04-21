@@ -1,5 +1,4 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { fetchClientIp } from '@lib/apis/fetch-client-ip';
 import { circleIcon } from '@lib/constants';
 import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
@@ -7,9 +6,7 @@ import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
 import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { cloneDeep } from 'lodash';
-import { addHours, format } from 'date-fns';
-import { initializeApollo } from '@modules/apollo';
-import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
+import { format } from 'date-fns';
 import {
   EHS_AIR_EXAM_IDS,
   EHS_CONSTRUCTION_EXAM_IDS,
@@ -211,7 +208,7 @@ export const convertToKST = (
   dateString: string,
   formatString: string = 'yy.MM.dd HH:mm'
 ) => {
-  let date = new Date(new Date(dateString).getTime() + 9 * 60 * 60 * 1000);
+  let date = new Date(new Date(dateString).getTime());
   return format(date, formatString, { locale: ko });
 };
 

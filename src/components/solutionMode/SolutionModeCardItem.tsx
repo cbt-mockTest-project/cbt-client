@@ -1,11 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import EditorStyle from '@styles/editorStyle';
-import {
-  MockExamQuestionState,
-  QuestionState,
-  ReadQuestionsByExamIdsOutput,
-} from 'types';
+import { QuestionState } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';

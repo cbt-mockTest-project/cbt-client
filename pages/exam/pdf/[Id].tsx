@@ -45,21 +45,21 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
   const apolloClient = initializeApollo({}, '');
   let paths: { params: { Id: string } }[] = [];
   try {
-    const res = await apolloClient.query<ReadAllMockExamQuery>({
-      query: READ_ALL_MOCK_EXAM,
-      variables: {
-        input: {
-          category: '',
-          query: '',
-          all: true,
-        },
-      },
-    });
-    if (res.data.readAllMockExam.mockExams) {
-      paths = res.data.readAllMockExam.mockExams.map((el) => ({
-        params: { Id: String(el.id) },
-      }));
-    }
+    // const res = await apolloClient.query<ReadAllMockExamQuery>({
+    //   query: READ_ALL_MOCK_EXAM,
+    //   variables: {
+    //     input: {
+    //       category: '',
+    //       query: '',
+    //       all: true,
+    //     },
+    //   },
+    // });
+    // if (res.data.readAllMockExam.mockExams) {
+    //   paths = res.data.readAllMockExam.mockExams.map((el) => ({
+    //     params: { Id: String(el.id) },
+    //   }));
+    // }
     return { paths, fallback: 'blocking' };
   } catch (err) {
     return {

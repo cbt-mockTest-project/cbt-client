@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion } from 'types';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { uniqueId } from 'lodash';

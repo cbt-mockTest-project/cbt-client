@@ -2,7 +2,7 @@ const { default: axios } = require('axios');
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_CLIENT_URL,
+  siteUrl: 'https://www.moducbt.com',
   changefreq: 'daily',
   priority: 0.7,
   sitemapSize: 5000,

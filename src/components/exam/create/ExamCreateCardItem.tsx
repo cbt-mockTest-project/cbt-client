@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
 import ExamCreateEditor from './ExamCreateEditor';
 import palette from '@styles/palette';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
@@ -139,6 +139,9 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
   };
 
   const handleAddQuestion = () => {
+    if (getValues('questions').length >= 100) {
+      return message.error('문제는 최대 100개까지 등록할 수 있습니다.');
+    }
     setValue(
       'questions',
       getValues('questions')
@@ -187,12 +190,6 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
             handleEditorImageChange(value, 'question_img')
           }
           onChangeText={(value) => handleEditorTextChange(value, 'question')}
-          key={
-            question.orderId +
-              'question' +
-              question.question +
-              question.question_img[0]?.url || ''
-          }
           defaultValue={question.question}
           defaultImgUrl={question.question_img[0]?.url}
           editorPlaceholder="문제를 입력해주세요."
@@ -202,12 +199,6 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
             handleEditorImageChange(value, 'solution_img')
           }
           onChangeText={(value) => handleEditorTextChange(value, 'solution')}
-          key={
-            question.orderId +
-              'solution' +
-              question.solution +
-              question.solution_img[0]?.url || ''
-          }
           defaultValue={question.solution}
           defaultImgUrl={question.solution_img[0]?.url || ''}
           editorPlaceholder="정답을 입력해주세요."

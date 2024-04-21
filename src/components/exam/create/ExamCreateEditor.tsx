@@ -70,7 +70,6 @@ const ExamCreateEditorBlock = styled.div`
 `;
 
 interface ExamCreateEditorProps {
-  key: React.Key;
   defaultValue?: string;
   onChangeText: (text: string) => void;
   onChangeImage: (url: string) => void;
@@ -79,7 +78,6 @@ interface ExamCreateEditorProps {
 }
 
 const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
-  key,
   defaultValue,
   onChangeText,
   onChangeImage,
@@ -134,7 +132,7 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   );
 
   return (
-    <ExamCreateEditorBlock key={key}>
+    <ExamCreateEditorBlock>
       <CustomEditor
         defaultValue={defaultValue}
         onChangeText={onChangeText}

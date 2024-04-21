@@ -11,6 +11,7 @@ import {
   MoneyCollectOutlined,
   AlertOutlined,
   GlobalOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 export const navItems = [
   {
@@ -34,19 +35,24 @@ export const navItems = [
     label: '내 암기장',
   },
   {
-    key: '/me/history',
-    icon: <HistoryOutlined />,
-    label: '기록',
-  },
-  {
     key: '/pricing',
     icon: <GoldOutlined />,
     label: '이용권',
   },
+  // {
+  //   key: '/store',
+  //   icon: <StarOutlined />,
+  //   label: '자료 스토어',
+  // },
   {
     key: '/me',
     icon: <UserOutlined />,
     label: '내 정보',
+  },
+  {
+    key: '/me/history',
+    icon: <HistoryOutlined />,
+    label: '기록',
   },
 ];
 

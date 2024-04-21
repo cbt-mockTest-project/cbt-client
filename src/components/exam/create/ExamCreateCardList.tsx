@@ -62,7 +62,6 @@ const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
                 >
                   <ExamCreateCardItem
                     index={index}
-                    key={JSON.stringify(defaultQuestions)}
                     question={question}
                     setQuestions={setQuestions}
                     dragHandleProps={provided.dragHandleProps}

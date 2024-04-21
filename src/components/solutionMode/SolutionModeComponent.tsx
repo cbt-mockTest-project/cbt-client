@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
-import LoopIcon from '@mui/icons-material/Loop';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { ReadQuestionsByExamIdsInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
@@ -12,7 +11,6 @@ import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
 import SolutionModeCardItemList from './SolutionModeCardItemList';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
