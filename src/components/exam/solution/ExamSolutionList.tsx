@@ -1,6 +1,3 @@
-// import Bookmark from '@components/common/bookmark/Bookmark';
-import CommentModal from '@components/common/modal/CommentModal';
-import ReportModal from '@components/common/modal/ReportModal';
 import { loginModal } from '@lib/constants';
 import { useCreateQuestionFeedBack } from '@lib/graphql/hook/useFeedBack';
 import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
@@ -8,31 +5,20 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { ellipsisText, handleError, removeHtmlTag } from '@lib/utils/utils';
+import { handleError, removeHtmlTag } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Button, Image, message, Tooltip } from 'antd';
+import { message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import styled, { css } from 'styled-components';
 import dynamic from 'next/dynamic';
-import QuestionComment from '@components/question/QuestionComment';
-import QuestionShareModal from '@components/common/modal/QuestionShareModal';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import StateSelecboxGroup from '@components/common/selectbox/StateSelecboxGroup';
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { QuestionFeedbackType, QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 import { QuestionListType } from '@modules/redux/slices/exam';
-import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
-
-const ExamSolutionFeedback = dynamic(() => import('./ExamSolutionFeedback'), {
-  ssr: false,
-});
 
 const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
   ssr: false,

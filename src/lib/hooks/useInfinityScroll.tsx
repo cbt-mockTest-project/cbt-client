@@ -3,9 +3,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 type UseInfinityScrollProps = {
   loadMore: () => Promise<void>;
   hasMore: boolean;
+  rootMargin?: string;
 };
 
-function useInfinityScroll({ loadMore, hasMore }: UseInfinityScrollProps) {
+function useInfinityScroll({
+  loadMore,
+  hasMore,
+  rootMargin = '100px',
+}: UseInfinityScrollProps) {
   const [isLoading, setIsLoading] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<HTMLDivElement | null>(null);
@@ -17,6 +22,7 @@ function useInfinityScroll({ loadMore, hasMore }: UseInfinityScrollProps) {
   }, [isLoading, hasMore, loadMore]);
 
   useEffect(() => {
+    if (!loadingRef.current) return;
     observerRef.current = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -24,8 +30,8 @@ function useInfinityScroll({ loadMore, hasMore }: UseInfinityScrollProps) {
         }
       },
       {
-        rootMargin: '30px',
-        threshold: 1.0, //
+        rootMargin,
+        threshold: 0.1, //
       }
     );
 
@@ -39,7 +45,7 @@ function useInfinityScroll({ loadMore, hasMore }: UseInfinityScrollProps) {
     };
   }, [loadMoreItems]);
 
-  return { isLoading, loadingRef };
+  return { isLoading, loadingRef, observerRef };
 }
 
 export default useInfinityScroll;
