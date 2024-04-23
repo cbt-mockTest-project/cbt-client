@@ -51,7 +51,10 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 500));
       setPage((prev) => prev + 1);
     },
-    hasMore: questionIds.length > (page - 1) * LIMIT,
+    hasMore:
+      questionIds.length > (page - 1) * LIMIT &&
+      (clientSideQuestionIds.length > LIMIT ||
+        serverSideQuestionIds.length > LIMIT),
     rootMargin: '500px',
   });
   return (
