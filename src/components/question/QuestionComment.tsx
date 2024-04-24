@@ -7,7 +7,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
-import { convertToKST, handleError } from '@lib/utils/utils';
+import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import { Button, message } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -117,7 +117,10 @@ const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
                 content: comment.content,
                 role: comment.user.role,
                 id: comment.id,
-                time: convertToKST(comment.created_at, 'yy.MM.dd HH:mm'),
+                time: convertServerTimeToKST(
+                  comment.created_at,
+                  'yy.MM.dd HH:mm'
+                ),
                 parrentId: questionId,
                 userId: comment.user.id,
               }}

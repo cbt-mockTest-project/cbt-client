@@ -14,7 +14,11 @@ import {
 } from '@modules/redux/store/configureStore';
 import { dataActions } from '@modules/redux/slices/data';
 import { useRouter } from 'next/router';
-import { convertToKST, isServer, reomveImgTag } from '@lib/utils/utils';
+import {
+  convertServerTimeToKST,
+  isServer,
+  reomveImgTag,
+} from '@lib/utils/utils';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal } from '@lib/constants';
@@ -212,7 +216,7 @@ const DataComponent: React.FC<DataComponentProps> = () => {
               <DataCard
                 title={data.title}
                 content={parse(reomveImgTag(data.content))}
-                date={convertToKST(data.created_at, 'yy.MM.dd')}
+                date={convertServerTimeToKST(data.created_at, 'yy.MM.dd')}
                 price={data.data ? data.data.price : 0}
                 page={data.data ? data.data.postFile[0].page : 0}
                 username={data.user.nickname}

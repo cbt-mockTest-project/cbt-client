@@ -12,7 +12,7 @@ import useInput from '@lib/hooks/useInput';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import { FEEDBACK_TYPES, FEEDBACK_TYPE_MAP } from './ManageFeedback.constants';
 import { QuestionFeedbackType } from 'types';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 ('@lib/graphql/user/hook/useQuestionFeedback');
 
 interface ManageFeedbackComponentProps {}
@@ -172,7 +172,7 @@ const ManageFeedbackComponent: React.FC<ManageFeedbackComponentProps> = () => {
                     {FEEDBACK_TYPE_MAP[item.type]}
                   </Col>
                   <Col className="feedback-list-item-col" span={3}>
-                    {convertToKST(item.created_at, 'yy.MM.dd HH:mm')}
+                    {convertServerTimeToKST(item.created_at, 'yy.MM.dd HH:mm')}
                   </Col>
                 </Row>
               </a>

@@ -1,4 +1,3 @@
-import useAuth from './useAuth';
 import { CreateQuizCommentInput, EditQuizCommentInput } from 'types';
 import {
   CREATE_QUIZ_COMMENT,
@@ -14,7 +13,7 @@ import {
   GetQuizsQuery,
   GetQuizsQueryVariables,
 } from '@lib/graphql/query/quizQuery.generated';
-import { convertToKST, handleError } from '@lib/utils/utils';
+import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { message } from 'antd';
 import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -37,7 +36,10 @@ const useQuizs = () => {
         variables: {
           input: {
             categoryId,
-            date: convertToKST(new Date().toISOString(), 'yyyy-MM-dd'),
+            date: convertServerTimeToKST(
+              new Date().toISOString(),
+              'yyyy-MM-dd'
+            ),
           },
         },
       });

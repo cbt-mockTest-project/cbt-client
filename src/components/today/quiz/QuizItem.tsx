@@ -2,19 +2,13 @@ import EditorStyle from '@styles/editorStyle';
 import { Button, Collapse, Image, Input, Modal } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion, Quiz } from 'types';
+import { Quiz } from 'types';
 import parse from 'html-react-parser';
 import useAuth from '@lib/hooks/useAuth';
 import palette from '@styles/palette';
 import TextArea from 'antd/lib/input/TextArea';
 import QuizComment from './QuizComment';
 import useQuizs from '@lib/hooks/useQuizs';
-import {
-  DeleteFilled,
-  DeleteOutlined,
-  EditFilled,
-  EditOutlined,
-} from '@ant-design/icons';
 
 const QuizItemBlock = styled.div`
   display: flex;

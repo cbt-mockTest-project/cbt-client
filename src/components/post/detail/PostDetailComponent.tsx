@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import PostDetailSkeleton from './PostDetailSkeleton';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import { UserOutlined } from '@ant-design/icons';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -71,7 +71,7 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
                 <div>{post.user.nickname}</div>
               </div>
               <div className="post-detail-top-date">
-                {convertToKST(post.created_at, 'yy.MM.dd HH:mm')}
+                {convertServerTimeToKST(post.created_at, 'yy.MM.dd HH:mm')}
               </div>
             </div>
             <div className="post-detail-top-view-count">
@@ -136,7 +136,10 @@ const PostDetailComponent: React.FC<PostDetailComponentProps> = ({
                     likesCount: comment.likesCount,
                     likeState: comment.likeState,
                     nickname: comment.user.nickname,
-                    time: convertToKST(comment.created_at, 'yy.MM.dd HH:mm'),
+                    time: convertServerTimeToKST(
+                      comment.created_at,
+                      'yy.MM.dd HH:mm'
+                    ),
                     userId: comment.user.id,
                     parrentId: post.id,
                   }}

@@ -1,5 +1,5 @@
 import { useDeleteExam, useSaveExam } from '@lib/graphql/hook/useExam';
-import { convertToKST, handleError } from '@lib/utils/utils';
+import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { examCreateActions } from '@modules/redux/slices/examCreate';
 import {
   useAppDispatch,
@@ -7,6 +7,7 @@ import {
 } from '@modules/redux/store/configureStore';
 import { Modal, message } from 'antd';
 import { CreateExamForm } from 'customTypes';
+import { format } from 'date-fns';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
 
@@ -54,9 +55,7 @@ const useSaveExamHandler = () => {
       }
       if (hasSuccessMessage) message.success('시험지가 저장되었습니다.');
       dispatch(
-        examCreateActions.setSavedTime(
-          convertToKST(new Date().toISOString(), 'yy-MM-dd hh:mm:ss')
-        )
+        examCreateActions.setSavedTime(format(new Date(), 'yy-MM-dd hh:mm:ss'))
       );
     } catch (e) {
       handleError(e);

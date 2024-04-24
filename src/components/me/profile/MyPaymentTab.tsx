@@ -1,5 +1,5 @@
 import { useGetMyPayments } from '@lib/graphql/hook/usePayment';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import { Table } from 'antd';
 import React, { ComponentProps, useMemo } from 'react';
 import styled from 'styled-components';
@@ -19,7 +19,7 @@ const MyPaymentTab: React.FC<MyPaymentTabProps> = () => {
         key: payment.id,
         productName: payment.productName,
         price: payment.price,
-        date: convertToKST(payment.created_at),
+        date: convertServerTimeToKST(payment.created_at),
         receiptUrl: payment.receiptUrl ? (
           <a
             href={payment.receiptUrl.toString()}

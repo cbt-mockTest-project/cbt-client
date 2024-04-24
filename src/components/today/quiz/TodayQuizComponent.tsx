@@ -5,7 +5,7 @@ import QuizItem from './QuizItem';
 import { Collapse } from 'antd';
 import { useRouter } from 'next/router';
 import useQuizs from '@lib/hooks/useQuizs';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import { MockExamQuestion, Quiz } from 'types';
 
 const TodayQuizComponentBlock = styled.div`

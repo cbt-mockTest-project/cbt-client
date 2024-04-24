@@ -1,5 +1,5 @@
 import { FeedbackTypeMap } from '@lib/constants/feedback';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
 import { Dropdown, MenuProps, Modal, Tag } from 'antd';
@@ -267,7 +267,7 @@ const SolutionModeFeedbackListItem: React.FC<
           )}
         </div>
         <div className="feedback-date">
-          {convertToKST(feedback.created_at, 'yy.MM.dd HH:mm')}
+          {convertServerTimeToKST(feedback.created_at, 'yy.MM.dd HH:mm')}
         </div>
       </div>
       {isQuestionFeedbackModalOpen && (

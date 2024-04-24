@@ -2,7 +2,7 @@ import GoogleAd from '@components/common/ad/GoogleAd';
 import Modal from '@components/common/modal/Modal';
 import { useReadExamHistories } from '@lib/graphql/hook/useExamHistory';
 import { responsive } from '@lib/utils/responsive';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button } from 'antd';
@@ -41,7 +41,7 @@ const ExamHistory: React.FC = () => {
               <div className="mypage-exam-list-title-and-date">
                 <span>{el.title}</span>
                 <p className="mypage-exam-list-date">
-                  {convertToKST(el.updated_at)}
+                  {convertServerTimeToKST(el.updated_at)}
                 </p>
               </div>
               <div className="mypage-exam-list-button-wrapper">

@@ -13,7 +13,7 @@ import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import { POST_CATEGORY_MAP, postCategories } from './Community.constants';
 import SearchInput from '@components/common/input/SearchInput';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import useCommunityList from './hooks/useCommunityList';
 
 interface CommunityComponentProps {}
@@ -90,7 +90,7 @@ const CommunityComponent: React.FC<CommunityComponentProps> = () => {
                 id={post.id}
                 category={POST_CATEGORY_MAP[post.category]}
                 commentCount={post.commentsCount}
-                date={convertToKST(post.created_at, 'yy.MM.dd HH:mm')}
+                date={convertServerTimeToKST(post.created_at, 'yy.MM.dd HH:mm')}
                 likeCount={post.likesCount}
                 title={post.title}
                 priority={post.priority}
