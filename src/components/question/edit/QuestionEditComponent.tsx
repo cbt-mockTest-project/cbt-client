@@ -33,6 +33,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
   const [editButtonDisabled, setEditButtonDisabled] = useState(false);
 
   useEffect(() => {
+    if (!router.query.Id) return;
     (async () => {
       const res = await readQuestion({
         variables: { input: { questionId: Number(String(router.query.Id)) } },
