@@ -115,10 +115,6 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
   const router = useRouter();
-  const isCategorySearchModalOpen = useMemo(
-    () => router.query.tab === 'user-storage',
-    [router.query.tab]
-  );
   const handleMoreViewTrigger = (trigger: string) => {
     if (trigger === 'user-storage') {
       router.push({
@@ -182,12 +178,26 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       </div>
 
       <ul className="home-folder-list" ref={folderListRef}>
-        {categories?.map((category) => (
-          <CategoryFolderListItem
-            key={category.id}
-            className="home-folder-item"
-            category={category}
-          />
+        {categories?.map((category, index) => (
+          <>
+            <CategoryFolderListItem
+              key={category.id}
+              className="home-folder-item"
+              category={category}
+            />
+            {index === categories.length - 1 && (
+              <div className="flex items-center ">
+                <Button
+                  size="large"
+                  className="w-36 h-full"
+                  type="link"
+                  href={link}
+                >
+                  {`더 보기`}
+                </Button>
+              </div>
+            )}
+          </>
         ))}
         {!categories &&
           [1, 2, 3, 4, 5].map((i) => (
@@ -205,7 +215,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
           />
         )}
       </ul>
-      {categories && categories.length > 5 && (
+      {categories && categories.length > 4 && (
         <>
           <Button
             onClick={() => handleListScroll('prev')}
@@ -228,12 +238,6 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
             <RightOutlined />
           </Button>
         </>
-      )}
-      {isCategorySearchModalOpen && (
-        <HomeCategorySearchModal
-          open={isCategorySearchModalOpen}
-          onCancel={() => router.back()}
-        />
       )}
     </HomeFolderListBlock>
   );
