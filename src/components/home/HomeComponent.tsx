@@ -93,11 +93,14 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         isPublicOnly: true,
       });
     }
-    fetchCategories({
-      limit: 30,
-      examSource: ExamSource.User,
-      isPublicOnly: true,
-    });
+    if (!userStorageCategories.length) {
+      fetchCategories({
+        limit: 30,
+        examSource: ExamSource.User,
+        isPublicOnly: true,
+      });
+    }
+
     if (!ehsStorageCategories.length) {
       fetchCategories({
         limit: 30,

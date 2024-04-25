@@ -63,13 +63,20 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           limit: 30,
         }),
       ]);
-      store.dispatch(
-        homeActions.setModuStorageCategories({
-          categories: moduCategories as MockExamCategory[],
-        })
-      );
+
       const sortedUserCategories = [...userCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
+      const sortedModuCategories = [...moduCategories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
+      const sortedEhsCategories = [...ehsCategories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
+      store.dispatch(
+        homeActions.setModuStorageCategories({
+          categories: sortedModuCategories as MockExamCategory[],
+        })
       );
       store.dispatch(
         homeActions.setUserStorageCategories({
@@ -78,7 +85,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       );
       store.dispatch(
         homeActions.setEhsStorageCategories({
-          categories: ehsCategories as MockExamCategory[],
+          categories: sortedEhsCategories as MockExamCategory[],
         })
       );
       store.dispatch(
