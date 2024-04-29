@@ -30,6 +30,7 @@ const StoreItem: React.FC<StoreItemProps> = () => {
           <div className="mt-4 flex text-sm text-gray-500 items-center">
             <Tag>{`${38}페이지`}</Tag>
             <Tag>{`${10000}원`}</Tag>
+            <Tag>{`암기장 공유`}</Tag>
             <Tag>{`22.05.13`}</Tag>
           </div>
         </div>

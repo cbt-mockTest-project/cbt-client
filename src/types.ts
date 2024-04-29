@@ -45,6 +45,16 @@ export type ApproveCategoryInvitationLinkOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ApproveItemInput = {
+  id: Scalars['Float'];
+};
+
+export type ApproveItemOutput = {
+  __typename?: 'ApproveItemOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type Attendance = {
   __typename?: 'Attendance';
   content: Scalars['String'];
@@ -265,6 +275,20 @@ export type CreateFeedbackOutput = {
 
 export type CreateFreeTrialRoleOutput = {
   __typename?: 'CreateFreeTrialRoleOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateItemInput = {
+  description: Scalars['String'];
+  file?: InputMaybe<ItemFileInputType>;
+  price: Scalars['Float'];
+  thumbnail?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+};
+
+export type CreateItemOutput = {
+  __typename?: 'CreateItemOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -562,6 +586,16 @@ export type DeleteExamCategoryViewerInput = {
 
 export type DeleteExamCategoryViewerOutput = {
   __typename?: 'DeleteExamCategoryViewerOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteItemInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteItemOutput = {
+  __typename?: 'DeleteItemOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -1219,6 +1253,31 @@ export type GetInvitedExamsOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetItemInput = {
+  id: Scalars['Float'];
+};
+
+export type GetItemsForOwnerOutput = {
+  __typename?: 'GetItemsForOwnerOutput';
+  error?: Maybe<Scalars['String']>;
+  items?: Maybe<Array<Item>>;
+  ok: Scalars['Boolean'];
+};
+
+export type GetItemsInput = {
+  limit: Scalars['Float'];
+  page: Scalars['Float'];
+  search?: InputMaybe<Scalars['String']>;
+};
+
+export type GetItemsOutput = {
+  __typename?: 'GetItemsOutput';
+  error?: Maybe<Scalars['String']>;
+  items?: Maybe<Array<Item>>;
+  ok: Scalars['Boolean'];
+  totalCount?: Maybe<Scalars['Float']>;
+};
+
 export type GetKeywordSearchCountInput = {
   keyword: Scalars['String'];
 };
@@ -1297,6 +1356,18 @@ export type GetPartnersOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   partners?: Maybe<Array<Partner>>;
+};
+
+export type GetPresignedUrlInput = {
+  path: Scalars['String'];
+};
+
+export type GetPresignedUrlOutput = {
+  __typename?: 'GetPresignedUrlOutput';
+  error?: Maybe<Scalars['String']>;
+  fileUrl?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  presignedUrl?: Maybe<Scalars['String']>;
 };
 
 export type GetQuizsInput = {
@@ -1400,6 +1471,75 @@ export type InfluencerInfo = {
   url: Scalars['String'];
 };
 
+export type Item = {
+  __typename?: 'Item';
+  category?: Maybe<MockExamCategory>;
+  created_at: Scalars['DateTime'];
+  description: Scalars['String'];
+  file?: Maybe<ItemFileType>;
+  id: Scalars['Float'];
+  itemSalesHistory: Array<ItemSalesHistory>;
+  price: Scalars['Float'];
+  state: ItemStateEnum;
+  thumbnail?: Maybe<Scalars['String']>;
+  thumbnailTemplate?: Maybe<ThumbnailTemplate>;
+  title: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type ItemFileInputType = {
+  name: Scalars['String'];
+  size: Scalars['Float'];
+  type: Scalars['String'];
+  uid: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type ItemFileType = {
+  __typename?: 'ItemFileType';
+  name: Scalars['String'];
+  size: Scalars['Float'];
+  type: Scalars['String'];
+  uid: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type ItemInputType = {
+  category?: InputMaybe<MockExamCategoryInputType>;
+  description: Scalars['String'];
+  file?: InputMaybe<ItemFileInputType>;
+  itemSalesHistory: Array<ItemSalesHistoryInputType>;
+  price: Scalars['Float'];
+  state: ItemStateEnum;
+  thumbnail?: InputMaybe<Scalars['String']>;
+  thumbnailTemplate?: InputMaybe<ThumbnailTemplateInputType>;
+  title: Scalars['String'];
+  user: UserInputType;
+};
+
+export type ItemSalesHistory = {
+  __typename?: 'ItemSalesHistory';
+  buyer?: Maybe<User>;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  item: Item;
+  price: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+};
+
+export type ItemSalesHistoryInputType = {
+  buyer?: InputMaybe<UserInputType>;
+  item: ItemInputType;
+  price: Scalars['Float'];
+};
+
+export enum ItemStateEnum {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1485,6 +1625,7 @@ export type MockExamCategory = {
   id: Scalars['Float'];
   isBookmarked?: Maybe<Scalars['Boolean']>;
   isPublic: Scalars['Boolean'];
+  items: Array<Item>;
   mockExam: Array<MockExam>;
   name: Scalars['String'];
   order: Scalars['Float'];
@@ -1512,6 +1653,7 @@ export type MockExamCategoryInputType = {
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isPublic?: Scalars['Boolean'];
+  items: Array<ItemInputType>;
   mockExam: Array<MockExamInputType>;
   name: Scalars['String'];
   order: Scalars['Float'];
@@ -1815,6 +1957,7 @@ export type Mutation = {
   acceptExamCategoryInvitation: AcceptExamCategoryInvitationOutput;
   addExamToCategory: AddExamToCategoryOutput;
   approveCategoryInvitationLink: ApproveCategoryInvitationLinkOutput;
+  approveItem: ApproveItemOutput;
   changeClientRole: CoreOutput;
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
@@ -1830,6 +1973,7 @@ export type Mutation = {
   createExamCategoryViewer: CreateExamCategoryViewerOutput;
   createFeedback: CreateFeedbackOutput;
   createFreeTrialRole: CreateFreeTrialRoleOutput;
+  createItem: CreateItemOutput;
   createMockExam: CreateMockExamOutput;
   createMockExamCategory: CreateMockExamCategoryOutput;
   createMockExamHistory: CreateMockExamHistoryOutput;
@@ -1857,6 +2001,7 @@ export type Mutation = {
   deleteExamCategoryBookmark: DeleteExamCategoryBookmarkOutput;
   deleteExamCategoryInvitation: DeleteExamCategoryInvitationOutput;
   deleteExamCategoryViewer: DeleteExamCategoryViewerOutput;
+  deleteItem: DeleteItemOutput;
   deleteMockExam: DeleteMockExamOutput;
   deleteMockExamCategory: DeleteMockExamCategoryOutput;
   deleteMockExamQuestion: DeleteMockExamQuestionOutput;
@@ -1893,6 +2038,7 @@ export type Mutation = {
   moveExamOrder: MoveExamOrderOutput;
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
+  rejectItem: RejectItemOutput;
   removeExamFromCategory: RemoveExamFromCategoryOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
@@ -1913,6 +2059,7 @@ export type Mutation = {
   updateDiscountCode: UpdateDiscountCodeOutput;
   updateExamOrder: UpdateExamOrderOutput;
   updateExamViewerApproveState: UpdateExamViewerApproveStateOutput;
+  updateItem: UpdateItemOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updatePayment: UpdatePaymentOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
@@ -1936,6 +2083,11 @@ export type MutationAddExamToCategoryArgs = {
 
 export type MutationApproveCategoryInvitationLinkArgs = {
   input: ApproveCategoryInvitationLinkInput;
+};
+
+
+export type MutationApproveItemArgs = {
+  input: ApproveItemInput;
 };
 
 
@@ -2001,6 +2153,11 @@ export type MutationCreateExamCategoryViewerArgs = {
 
 export type MutationCreateFeedbackArgs = {
   input: CreateFeedbackInput;
+};
+
+
+export type MutationCreateItemArgs = {
+  input: CreateItemInput;
 };
 
 
@@ -2121,6 +2278,11 @@ export type MutationDeleteExamCategoryInvitationArgs = {
 
 export type MutationDeleteExamCategoryViewerArgs = {
   input: DeleteExamCategoryViewerInput;
+};
+
+
+export type MutationDeleteItemArgs = {
+  input: DeleteItemInput;
 };
 
 
@@ -2289,6 +2451,11 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationRejectItemArgs = {
+  input: RejectItemInput;
+};
+
+
 export type MutationRemoveExamFromCategoryArgs = {
   input: RemoveExamFromCategoryInput;
 };
@@ -2371,6 +2538,11 @@ export type MutationUpdateExamOrderArgs = {
 
 export type MutationUpdateExamViewerApproveStateArgs = {
   input: UpdateExamViewerApproveStateInput;
+};
+
+
+export type MutationUpdateItemArgs = {
+  input: UpdateItemInput;
 };
 
 
@@ -2722,6 +2894,9 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
+  getItem: Item;
+  getItems: GetItemsOutput;
+  getItemsForOwner: GetItemsForOwnerOutput;
   getKeywordSearchCount: GetKeywordSearchCountOutput;
   getMyAllExamCategoriesLearningProgress: GetMyAllExamCategoriesLearningProgressOutput;
   getMyBlogPostRank: GetMyBlogPostRankOutput;
@@ -2731,6 +2906,7 @@ export type Query = {
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
+  getPresignedUrl: GetPresignedUrlOutput;
   getQuizs: GetQuizsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
@@ -2840,6 +3016,16 @@ export type QueryGetFeedbacksWithFilterArgs = {
 };
 
 
+export type QueryGetItemArgs = {
+  input: GetItemInput;
+};
+
+
+export type QueryGetItemsArgs = {
+  input: GetItemsInput;
+};
+
+
 export type QueryGetKeywordSearchCountArgs = {
   input: GetKeywordSearchCountInput;
 };
@@ -2852,6 +3038,11 @@ export type QueryGetMyBlogPostRankArgs = {
 
 export type QueryGetMyExamsArgs = {
   input: GetMyExamsInput;
+};
+
+
+export type QueryGetPresignedUrlArgs = {
+  input: GetPresignedUrlInput;
 };
 
 
@@ -3546,6 +3737,16 @@ export type RegisterOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type RejectItemInput = {
+  id: Scalars['Float'];
+};
+
+export type RejectItemOutput = {
+  __typename?: 'RejectItemOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type RemoveExamFromCategoryInput = {
   categoryId: Scalars['Float'];
   examId: Scalars['Float'];
@@ -3724,6 +3925,17 @@ export type SendVerificationMailOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type ThumbnailTemplate = {
+  __typename?: 'ThumbnailTemplate';
+  description: Scalars['String'];
+  title: Scalars['String'];
+};
+
+export type ThumbnailTemplateInputType = {
+  description: Scalars['String'];
+  title: Scalars['String'];
+};
+
 export type TitleAndId = {
   __typename?: 'TitleAndId';
   id?: Maybe<Scalars['Float']>;
@@ -3853,6 +4065,21 @@ export type UpdateExamViewerApproveStateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type UpdateItemInput = {
+  description?: InputMaybe<Scalars['String']>;
+  file?: InputMaybe<ItemFileInputType>;
+  id?: InputMaybe<Scalars['Float']>;
+  price?: InputMaybe<Scalars['Float']>;
+  thumbnail?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateItemOutput = {
+  __typename?: 'UpdateItemOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateMockExamQuestionFeedbackRecommendationInput = {
   feedbackId: Scalars['Float'];
   type: QuestionFeedbackRecommendationType;
@@ -3946,6 +4173,8 @@ export type User = {
   hasSolvedBefore?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isAllowAdblock: Scalars['Boolean'];
+  itemSalesHistories: Array<ItemSalesHistory>;
+  items: Array<Item>;
   lastLogInIp: Scalars['String'];
   mockExam: Array<MockExam>;
   mockExamCategory: Array<MockExamCategory>;
@@ -4014,6 +4243,8 @@ export type UserInputType = {
   hasReachedPaymentReminder?: InputMaybe<Scalars['Boolean']>;
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   isAllowAdblock: Scalars['Boolean'];
+  itemSalesHistories: Array<ItemSalesHistoryInputType>;
+  items: Array<ItemInputType>;
   lastLogInIp?: Scalars['String'];
   mockExam: Array<MockExamInputType>;
   mockExamCategory: Array<MockExamCategoryInputType>;

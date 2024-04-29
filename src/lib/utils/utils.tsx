@@ -266,3 +266,10 @@ export const checkIsEhsMasterExam = (examIds: number[]) => {
     ].includes(examId);
   });
 };
+
+export const fixEncoding = (str: string) => {
+  const bytes = new Uint8Array(str.split('').map((c) => c.charCodeAt(0)));
+  const decoder = new TextDecoder('utf-8');
+  const fixedString = decoder.decode(bytes);
+  return fixedString;
+};

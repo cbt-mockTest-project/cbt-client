@@ -290,3 +290,14 @@ export const DELETE_RECENTLY_STUDIED_EXAMS = gql`
     }
   }
 `;
+
+export const GET_PRESIGNED_URL = gql`
+  query GetPresignedUrl($input: GetPresignedUrlInput!) {
+    getPresignedUrl(input: $input) {
+      error
+      ok
+      presignedUrl
+      fileUrl
+    }
+  }
+`;
