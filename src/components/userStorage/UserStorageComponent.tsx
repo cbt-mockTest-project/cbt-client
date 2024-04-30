@@ -62,7 +62,7 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
 
   useEffect(() => {
     if (meQuery?.me.ok) {
-      fetchCategories({ examSource: ExamSource.User });
+      fetchCategories({ examSource: ExamSource.User }, 'popular');
     }
   }, [meQuery]);
   return (

@@ -51,21 +51,32 @@ const useStorage = (type: StorageType) => {
   const [createCategory, { loading: createCategoryLoading }] =
     useCreateExamCategory();
 
-  const fetchCategories = async (input: GetExamCategoriesInput) => {
+  const fetchCategories = async (
+    input: GetExamCategoriesInput,
+    order?: 'popular' | 'latest'
+  ) => {
     const res = await getExamCategories({
       variables: {
         input,
       },
       fetchPolicy: getExamCategoriesQuery ? 'cache-first' : 'network-only',
     });
-    if (
-      res.data?.getExamCategories.categories &&
-      !isEqual(categories, res.data.getExamCategories.categories)
-    ) {
-      setCategories(
-        res.data?.getExamCategories.categories as MockExamCategory[]
+    let sortedCategories = [];
+    if (order === 'popular') {
+      sortedCategories = [...res.data.getExamCategories.categories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
     }
+    if (order === 'latest') {
+      sortedCategories = [...res.data.getExamCategories.categories].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    }
+    if (!order) {
+      sortedCategories = res.data.getExamCategories.categories;
+    }
+    setCategories(sortedCategories as MockExamCategory[]);
   };
 
   const refetchCategories = async (input: GetExamCategoriesInput) => {

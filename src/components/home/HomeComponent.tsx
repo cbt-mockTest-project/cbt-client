@@ -85,30 +85,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     if (searchType === 'question') return router.query.q_keyword;
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
-  useEffect(() => {
-    if (!moduStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.MoudCbt,
-        isPublicOnly: true,
-      });
-    }
-    if (!userStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.User,
-        isPublicOnly: true,
-      });
-    }
-
-    if (!ehsStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.EhsMaster,
-      });
-    }
-  }, [moduStorageCategories, userStorageCategories, ehsStorageCategories]);
-
   return (
     <HomeComponentBlock>
       <HomeBanner />
