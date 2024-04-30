@@ -51,12 +51,10 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         getCategories({
           examSource: ExamSource.MoudCbt,
           limit: 30,
-          isPublicOnly: true,
         }),
         getCategories({
           examSource: ExamSource.User,
           limit: 30,
-          isPublicOnly: true,
         }),
         getCategories({
           examSource: ExamSource.EhsMaster,

@@ -44,7 +44,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         variables: {
           input: {
             examSource: ExamSource.User,
-            isPublicOnly: true,
           },
         },
       });

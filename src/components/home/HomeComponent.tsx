@@ -99,7 +99,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
                 handleToggleCategoryBookmark({
                   categoryId: id,
                   type: 'search',
-                  input: { keyword, limit: 30, isPublicOnly: true },
+                  input: { keyword, limit: 30 },
                 });
               }}
             />

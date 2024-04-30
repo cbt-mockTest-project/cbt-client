@@ -22,11 +22,15 @@ const UserStorageComponentBlock = styled.div`
   }
 `;
 
-interface UserStorageComponentProps {}
+interface UserStorageComponentProps {
+  type?: 'user' | 'public';
+}
 
 const LIMIT = 10;
 
-const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
+const UserStorageComponent: React.FC<UserStorageComponentProps> = ({
+  type = 'public',
+}) => {
   const { data: meQuery } = useMeQuery();
   const [page, setPage] = useState(1);
   const dispatch = useAppDispatch();
@@ -62,7 +66,9 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
 
   useEffect(() => {
     if (meQuery?.me.ok) {
-      fetchCategories({ examSource: ExamSource.User }, 'popular');
+      if (type === 'public') {
+        fetchCategories({ examSource: ExamSource.User }, 'popular');
+      }
     }
   }, [meQuery]);
   return (

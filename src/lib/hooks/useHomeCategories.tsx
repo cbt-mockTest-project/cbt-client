@@ -73,17 +73,14 @@ const useHomeCategories = () => {
           getCategories({
             examSource: ExamSource.MoudCbt,
             limit: 30,
-            isPublicOnly: true,
           }),
           getCategories({
             examSource: ExamSource.User,
             limit: 30,
-            isPublicOnly: true,
           }),
           getCategories({
             examSource: ExamSource.EhsMaster,
             limit: 30,
-            isPublicOnly: true,
           }),
         ]
       );
