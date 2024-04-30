@@ -2,11 +2,13 @@ import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useStorage from '@lib/hooks/useStorage';
-import { Empty, Pagination } from 'antd';
+import { storageActions } from '@modules/redux/slices/storage';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { Empty, Pagination, Select } from 'antd';
 import { StorageType } from 'customTypes';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ExamSource, UserRole } from 'types';
+import { ExamSource, MockExamCategory, UserRole } from 'types';
 
 const UserStorageComponentBlock = styled.div`
   .category-filter-input {
@@ -27,13 +29,36 @@ const LIMIT = 10;
 const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
   const { data: meQuery } = useMeQuery();
   const [page, setPage] = useState(1);
-
+  const dispatch = useAppDispatch();
   const {
     categories,
     handleFilterCategories,
     handleToggleCategoryBookmark,
     fetchCategories,
   } = useStorage(StorageType.USER);
+
+  const onChangeOrder = (value: string) => {
+    if (value === 'popular') {
+      const sortedCategories = [...categories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
+      dispatch(
+        storageActions.setUserStorageCategories({
+          categories: sortedCategories,
+        })
+      );
+    } else {
+      const sortedCategories = [...categories].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      dispatch(
+        storageActions.setUserStorageCategories({
+          categories: sortedCategories,
+        })
+      );
+    }
+  };
 
   useEffect(() => {
     if (meQuery?.me.ok) {
@@ -49,6 +74,23 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({}) => {
           handleFilterCategories(e.target.value);
         }}
       />
+      <div className="mb-6">
+        <Select
+          style={{ width: '150px' }}
+          defaultValue={'popular'}
+          options={[
+            {
+              label: '인기순',
+              value: 'popular',
+            },
+            {
+              label: '최신순',
+              value: 'latest',
+            },
+          ]}
+          onChange={onChangeOrder}
+        />
+      </div>
       {categories.length > 0 && (
         <CategoryFolderList
           categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
