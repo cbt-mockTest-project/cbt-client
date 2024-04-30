@@ -15,7 +15,7 @@ export type ApproveCategoryInvitationLinkMutationVariables = Types.Exact<{
 }>;
 
 
-export type ApproveCategoryInvitationLinkMutation = { __typename?: 'Mutation', approveCategoryInvitationLink: { __typename?: 'ApproveCategoryInvitationLinkOutput', error?: string | null, ok: boolean, categoryName?: string | null } };
+export type ApproveCategoryInvitationLinkMutation = { __typename?: 'Mutation', approveCategoryInvitationLink: { __typename?: 'ApproveCategoryInvitationLinkOutput', error?: string | null, ok: boolean, categoryName?: string | null, urlSlug?: string | null } };
 
 
 export const CreateCategoryInvitationLinkDocument = gql`
@@ -37,6 +37,7 @@ export const ApproveCategoryInvitationLinkDocument = gql`
     error
     ok
     categoryName
+    urlSlug
   }
 }
     `;

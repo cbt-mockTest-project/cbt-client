@@ -43,6 +43,7 @@ export type ApproveCategoryInvitationLinkOutput = {
   categoryName?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  urlSlug?: Maybe<Scalars['String']>;
 };
 
 export type Attendance = {
@@ -1495,6 +1496,7 @@ export type MockExamCategory = {
   source: ExamSource;
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
+  urlSlug: Scalars['String'];
   user: User;
 };
 
@@ -1521,6 +1523,7 @@ export type MockExamCategoryInputType = {
   seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
   type: MockExamCategoryTypes;
+  urlSlug: Scalars['String'];
   user: UserInputType;
 };
 
@@ -3230,6 +3233,7 @@ export type ReadMockExamCategoriesOutput = {
 export type ReadMockExamCategoryByCategoryIdInput = {
   id?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
+  urlSlug?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadMockExamCategoryByCategoryIdOutput = {
@@ -3262,6 +3266,7 @@ export type ReadMockExamCategoryNamesOutput = {
   error?: Maybe<Scalars['String']>;
   names?: Maybe<Array<Scalars['String']>>;
   ok: Scalars['Boolean'];
+  urlSlugs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ReadMockExamInput = {

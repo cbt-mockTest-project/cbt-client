@@ -115,7 +115,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   const { handleCheckLogin, user, isLoggedIn } = useAuth();
   return (
     <CategoryFolderListItemBlock
-      href={`/category/${category?.name}`}
+      href={`/category/${category?.urlSlug}`}
       className={className}
     >
       {category && !isLoading && (

@@ -260,6 +260,7 @@ export const READ_EXAM_CATEGORY_IDS = gql`
 export const READ_EXAM_CATEGORY_NAMES = gql`
   query ReadMockExamCategoryNames {
     readMockExamCategoryNames {
+      urlSlugs
       error
       names
       ok
@@ -280,6 +281,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
         name
         description
         isPublic
+        urlSlug
         mockExam {
           slug
           title
@@ -318,6 +320,7 @@ export const GET_EXAM_CATEGORIES = gql`
         }
         isBookmarked
         id
+        urlSlug
         name
         isPublic
         source

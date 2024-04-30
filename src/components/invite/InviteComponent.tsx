@@ -13,14 +13,14 @@ const InviteComponent: React.FC<InviteComponentProps> = () => {
     'pending'
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [categoryName, setCategoryName] = useState<string>('');
+  const [urlSlug, setUrlSlug] = useState<string>('');
   const approveCategoryInviteLink = useApproveCategoryInviteLinkMutation();
   useEffect(() => {
     if (!code) return;
     approveCategoryInviteLink.mutateAsync(code).then((res) => {
       if (res.approveCategoryInvitationLink.ok) {
         setResult('success');
-        setCategoryName(res.approveCategoryInvitationLink.categoryName);
+        setUrlSlug(res.approveCategoryInvitationLink.urlSlug);
       } else {
         setErrorMessage(res.approveCategoryInvitationLink.error);
         setResult('error');
@@ -41,7 +41,7 @@ const InviteComponent: React.FC<InviteComponentProps> = () => {
                 type="primary"
                 key="console"
                 onClick={() => {
-                  router.push(`/category/${categoryName}`);
+                  router.push(`/category/${urlSlug}`);
                 }}
               >
                 암기장으로 이동
