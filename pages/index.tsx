@@ -79,11 +79,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         })
       );
       store.dispatch(
-        homeActions.setUserStorageCategories({
-          categories: userCategories as MockExamCategory[],
-        })
-      );
-      store.dispatch(
         homeActions.setEhsStorageCategories({
           categories: sortedEhsCategories as MockExamCategory[],
         })
