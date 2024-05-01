@@ -1,9 +1,8 @@
 import { useGetMyPayments } from '@lib/graphql/hook/usePayment';
 import { responsive } from '@lib/utils/responsive';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Button, Spin } from 'antd';
-import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -13,29 +12,6 @@ interface PaymentHistoryComponentProps {}
 const PaymentHistoryComponent: React.FC<PaymentHistoryComponentProps> = () => {
   const { data: paymentsResponse, loading: getPaymentsLoading } =
     useGetMyPayments();
-  const mock = [
-    {
-      id: 1,
-      productName: '베이직플랜',
-      price: 5000,
-      date: '2022년 1월 31일 19시',
-      receiptUrl: 'https://www.naver.com',
-    },
-    {
-      id: 2,
-      productName: '베이직플랜',
-      price: 30000,
-      date: '2022년 1월 31일 19시',
-      receiptUrl: 'https://www.naver.com',
-    },
-    {
-      id: 3,
-      productName: '베이직플랜',
-      price: 5000,
-      date: '2022년 1월 31일 19시',
-      receiptUrl: 'https://www.naver.com',
-    },
-  ];
 
   return (
     <PaymentHistoryComponentBlock>
@@ -68,7 +44,7 @@ const PaymentHistoryComponent: React.FC<PaymentHistoryComponentProps> = () => {
                       {payment.price}
                     </td>
                     <td className="payment-history-table-data">
-                      {convertToKST(
+                      {convertServerTimeToKST(
                         payment.updated_at,
                         'yyyy년 MM월 dd일 HH시 mm분'
                       )}

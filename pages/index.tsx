@@ -51,34 +51,34 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         getCategories({
           examSource: ExamSource.MoudCbt,
           limit: 30,
-          isPublicOnly: true,
         }),
         getCategories({
           examSource: ExamSource.User,
           limit: 30,
-          isPublicOnly: true,
         }),
         getCategories({
           examSource: ExamSource.EhsMaster,
           limit: 30,
         }),
       ]);
-      store.dispatch(
-        homeActions.setModuStorageCategories({
-          categories: moduCategories as MockExamCategory[],
-        })
-      );
+
       const sortedUserCategories = [...userCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
+      const sortedModuCategories = [...moduCategories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
+      const sortedEhsCategories = [...ehsCategories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
       store.dispatch(
-        homeActions.setUserStorageCategories({
-          categories: userCategories as MockExamCategory[],
+        homeActions.setModuStorageCategories({
+          categories: sortedModuCategories as MockExamCategory[],
         })
       );
       store.dispatch(
         homeActions.setEhsStorageCategories({
-          categories: ehsCategories as MockExamCategory[],
+          categories: sortedEhsCategories as MockExamCategory[],
         })
       );
       store.dispatch(

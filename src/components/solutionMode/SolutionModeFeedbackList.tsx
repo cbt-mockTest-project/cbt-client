@@ -1,6 +1,5 @@
-import { Divider } from 'antd';
+import { Collapse, Divider } from 'antd';
 import React from 'react';
-import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackListItem from './SolutionModeFeedbackListItem';
 import {
@@ -9,11 +8,6 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
-
-const SolutionModeFeedbackListBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 interface SolutionModeFeedbackListProps {
   question: MockExamQuestion;
@@ -32,28 +26,35 @@ const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
   deleteFeedback,
   updateFeedbackRecommendation,
 }) => {
+  if (question.mockExamQuestionFeedback.length === 0) return null;
   return (
-    <SolutionModeFeedbackListBlock>
-      {question.mockExamQuestionFeedback.map((feedback, index) => (
-        <>
-          {index === 0 && <Divider style={{ margin: '12px 0' }} />}
-          {feedback.user && (
-            <SolutionModeFeedbackListItem
-              deleteFeedback={deleteFeedback}
-              updateFeedbackRecommendation={updateFeedbackRecommendation}
-              addFeedback={addFeedback}
-              editFeedback={editFeedback}
-              key={feedback.id}
-              feedback={feedback}
-              question={question}
-            />
-          )}
-          {index !== question.mockExamQuestionFeedback.length - 1 && (
-            <Divider style={{ margin: '12px 0' }} />
-          )}
-        </>
-      ))}
-    </SolutionModeFeedbackListBlock>
+    <div className="mt-5">
+      <Collapse>
+        <Collapse.Panel
+          header={`추가답안 (${question.mockExamQuestionFeedback.length})`}
+          key="1"
+        >
+          {question.mockExamQuestionFeedback.map((feedback, index) => (
+            <>
+              {feedback.user && (
+                <SolutionModeFeedbackListItem
+                  deleteFeedback={deleteFeedback}
+                  updateFeedbackRecommendation={updateFeedbackRecommendation}
+                  addFeedback={addFeedback}
+                  editFeedback={editFeedback}
+                  key={feedback.id}
+                  feedback={feedback}
+                  question={question}
+                />
+              )}
+              {index !== question.mockExamQuestionFeedback.length - 1 && (
+                <Divider style={{ margin: '12px 0' }} />
+              )}
+            </>
+          ))}
+        </Collapse.Panel>
+      </Collapse>
+    </div>
   );
 };
 

@@ -44,7 +44,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         variables: {
           input: {
             examSource: ExamSource.User,
-            isPublicOnly: true,
           },
         },
       });
@@ -55,9 +54,12 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           notFound: true,
         };
       }
+      const sortedUserCategories = [...categories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
       store.dispatch(
         storageActions.setUserStorageCategories({
-          categories: categories as MockExamCategory[],
+          categories: sortedUserCategories as MockExamCategory[],
         })
       );
       return addApolloState(apolloClient, {

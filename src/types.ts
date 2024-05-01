@@ -44,6 +44,7 @@ export type ApproveCategoryInvitationLinkOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   urlSlug?: Maybe<Scalars['String']>;
+<<<<<<< HEAD
 };
 
 export type ApproveItemInput = {
@@ -54,6 +55,8 @@ export type ApproveItemOutput = {
   __typename?: 'ApproveItemOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+=======
+>>>>>>> 78abf93019b1772f46e14d028c9e1a8cf42a11ef
 };
 
 export type Attendance = {

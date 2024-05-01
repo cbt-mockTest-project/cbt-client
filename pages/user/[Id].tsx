@@ -25,9 +25,12 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
 
   useEffect(() => {
     if (meQuery?.me.user && user) {
-      fetchCategories({
-        categoryMakerId: user.id,
-      });
+      fetchCategories(
+        {
+          categoryMakerId: user.id,
+        },
+        'popular'
+      );
     }
   }, [meQuery, user]);
   return (
@@ -41,7 +44,7 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
         hasOpenSaveCategoryModalButton={meQuery?.me.user?.id === user.id}
         title={`${user.nickname}님의 암기장`}
       >
-        <UserStorageComponent />
+        <UserStorageComponent type="user" />
       </StorageLayout>
     </>
   );
@@ -102,8 +105,15 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       }
       const categories = categoryRes.data.getExamCategories
         .categories as MockExamCategory[];
+      const sortedCategories = [...categories].sort(
+        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+      );
       const user = userRes.data.userProfile.user as User;
-      store.dispatch(storageActions.setUserStorageCategories({ categories }));
+      store.dispatch(
+        storageActions.setUserStorageCategories({
+          categories: sortedCategories,
+        })
+      );
       return addApolloState(apolloClient, {
         props: { user },
         revalidate: 43200,

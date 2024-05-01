@@ -9,9 +9,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const res = await client.query<ReadMockExamCategoryNamesQuery>({
     query: READ_EXAM_CATEGORY_NAMES,
   });
-  const categoryNames = res.data.readMockExamCategoryNames.names;
-  const fields = categoryNames.map((name) => ({
-    loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/category/${name}`,
+  const categoryUrlSlugs = res.data.readMockExamCategoryNames.urlSlugs;
+  const fields = categoryUrlSlugs.map((slug) => ({
+    loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/category/${slug}`,
     lastmod: new Date().toISOString(),
     changefreq: 'daily',
     priority: 0.7,

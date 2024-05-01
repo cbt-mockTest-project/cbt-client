@@ -59,8 +59,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const res = await apolloClient.query<ReadMockExamCategoryNamesQuery>({
       query: READ_EXAM_CATEGORY_NAMES,
     });
-    if (res.data.readMockExamCategoryNames.names) {
-      paths = res.data.readMockExamCategoryNames.names.map((el) => ({
+    if (res.data.readMockExamCategoryNames.urlSlugs) {
+      paths = res.data.readMockExamCategoryNames.urlSlugs.map((el) => ({
         params: { name: String(el) },
       }));
     }
@@ -77,12 +77,12 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
     try {
       const apolloClient = initializeApollo({}, '');
-      const categoryName = context.params?.name;
-      if (!categoryName || typeof categoryName !== 'string') {
+      const urlSlug = context.params?.name;
+      if (!urlSlug || typeof urlSlug !== 'string') {
         return;
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
-        name: categoryName,
+        urlSlug,
       };
       const res =
         await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>({
@@ -105,7 +105,13 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       );
       resetServerContext();
       return addApolloState(apolloClient, {
-        props: { categoryQueryInput, category },
+        props: {
+          categoryQueryInput: {
+            ...categoryQueryInput,
+            name: res.data.readMockExamCategoryByCategoryId.category.name,
+          },
+          category,
+        },
         revalidate: 43200,
       });
     } catch (e) {

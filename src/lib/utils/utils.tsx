@@ -204,11 +204,12 @@ export const removeTypeNameFromObjectArray = <T,>(array: Array<T>) => {
   });
 };
 
-export const convertToKST = (
+// 서버 시간 포맷팅
+export const convertServerTimeToKST = (
   dateString: string,
   formatString: string = 'yy.MM.dd HH:mm'
 ) => {
-  let date = new Date(new Date(dateString).getTime());
+  let date = new Date(new Date(dateString).getTime() + 9 * 60 * 60 * 1000);
   return format(date, formatString, { locale: ko });
 };
 

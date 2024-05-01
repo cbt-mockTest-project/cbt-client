@@ -4,7 +4,7 @@ import { Button, Card, message } from 'antd';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
 import { useDeletePost, useLazyReadPost } from '@lib/graphql/hook/usePost';
-import { convertToKST, handleError } from '@lib/utils/utils';
+import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import EditorStyle from '@styles/editorStyle';
 import { FavoriteBorderOutlined, FavoriteOutlined } from '@mui/icons-material';
 import {
@@ -190,13 +190,13 @@ const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">등록일</p>
               <p className="data-detail-info-content-value">
-                {convertToKST(post.created_at, 'yyyy.MM.dd')}
+                {convertServerTimeToKST(post.created_at, 'yyyy.MM.dd')}
               </p>
             </div>
             <div className="data-detail-info-content-wrapper">
               <p className="data-detail-info-content-key">수정일</p>
               <p className="data-detail-info-content-value">
-                {convertToKST(post.updated_at, 'yyyy.MM.dd')}
+                {convertServerTimeToKST(post.updated_at, 'yyyy.MM.dd')}
               </p>
             </div>
             <div className="data-detail-info-content-wrapper">

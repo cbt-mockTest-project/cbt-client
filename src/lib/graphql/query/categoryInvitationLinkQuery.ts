@@ -20,6 +20,7 @@ export const APPROVE_CATEGORY_INVITATION_LINK = gql`
       error
       ok
       categoryName
+      urlSlug
     }
   }
 `;

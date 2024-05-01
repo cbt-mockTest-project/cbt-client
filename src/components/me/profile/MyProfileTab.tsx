@@ -227,7 +227,7 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
         open={isWithdrawalModalOpen}
         confirmLabel="탈퇴하기"
         content={
-          <pre>{`탈퇴시 데이터는 복구할 수 없습니다.\n탈퇴 하시겠습니까?`}</pre>
+          <pre>{`탈퇴시 데이터는 복구할 수 없으며,\n재가입이 불가능합니다.\n탈퇴 하시겠습니까?`}</pre>
         }
         onConfirm={requestWithdrawal}
         onClose={() => setIsWithdrawalModalOpen(false)}

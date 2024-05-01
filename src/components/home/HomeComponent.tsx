@@ -85,27 +85,6 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
     if (searchType === 'question') return router.query.q_keyword;
   }, [router.query.q_keyword, router.query.f_keyword, searchType]);
 
-  useEffect(() => {
-    if (!moduStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.MoudCbt,
-        isPublicOnly: true,
-      });
-    }
-    fetchCategories({
-      limit: 30,
-      examSource: ExamSource.User,
-      isPublicOnly: true,
-    });
-    if (!ehsStorageCategories.length) {
-      fetchCategories({
-        limit: 30,
-        examSource: ExamSource.EhsMaster,
-      });
-    }
-  }, [moduStorageCategories, userStorageCategories, ehsStorageCategories]);
-
   return (
     <HomeComponentBlock>
       <HomeBanner />
@@ -120,7 +99,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
                 handleToggleCategoryBookmark({
                   categoryId: id,
                   type: 'search',
-                  input: { keyword, limit: 30, isPublicOnly: true },
+                  input: { keyword, limit: 30 },
                 });
               }}
             />

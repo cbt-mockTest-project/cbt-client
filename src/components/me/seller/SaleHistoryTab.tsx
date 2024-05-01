@@ -1,5 +1,5 @@
 import { useGetBuyers } from '@lib/graphql/hook/useSeller';
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import { Table } from 'antd';
 import React, { ComponentProps, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -18,7 +18,7 @@ const SaleHistoryTab: React.FC<SaleHistoryTabProps> = () => {
         key: userAndRole.id,
         productName: userAndRole.role.name,
         buyer: userAndRole.user?.nickname || '탈퇴한 회원',
-        date: convertToKST(userAndRole.created_at, 'yy.MM.dd HH:mm'),
+        date: convertServerTimeToKST(userAndRole.created_at, 'yy.MM.dd HH:mm'),
         price: `${new Intl.NumberFormat('ko-KR').format(userAndRole.price)}원`,
       };
     });

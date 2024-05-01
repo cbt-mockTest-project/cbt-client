@@ -1,9 +1,9 @@
-import { convertToKST } from '@lib/utils/utils';
+import { convertServerTimeToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import { Empty } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { QuizComment } from 'types';
+import { QuizComment as QuizCommentType } from 'types';
 
 const QuizCommentBlock = styled.div`
   margin-top: 10px;
@@ -36,7 +36,7 @@ const QuizCommentBlock = styled.div`
 `;
 
 interface QuizCommentProps {
-  comments: QuizComment[];
+  comments: QuizCommentType[];
 }
 
 const QuizComment: React.FC<QuizCommentProps> = ({ comments }) => {
@@ -49,7 +49,7 @@ const QuizComment: React.FC<QuizCommentProps> = ({ comments }) => {
               작성자: {comment.user.nickname}
             </div>
             <div className="quiz-comment-date">
-              {convertToKST(comment.created_at, 'MM-dd hh:mm')}
+              {convertServerTimeToKST(comment.created_at, 'MM-dd hh:mm')}
             </div>
           </div>
           <pre className="quiz-comment-content">{comment.content}</pre>

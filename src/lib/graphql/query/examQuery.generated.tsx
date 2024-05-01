@@ -142,21 +142,21 @@ export type ReadMockExamCategoryIdsQuery = { __typename?: 'Query', readMockExamC
 export type ReadMockExamCategoryNamesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ReadMockExamCategoryNamesQuery = { __typename?: 'Query', readMockExamCategoryNames: { __typename?: 'ReadMockExamCategoryNamesOutput', error?: string | null, names?: Array<string> | null, ok: boolean } };
+export type ReadMockExamCategoryNamesQuery = { __typename?: 'Query', readMockExamCategoryNames: { __typename?: 'ReadMockExamCategoryNamesOutput', urlSlugs?: Array<string> | null, error?: string | null, names?: Array<string> | null, ok: boolean } };
 
 export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamCategoryByCategoryIdInput;
 }>;
 
 
-export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', hasAccess?: boolean | null, isBookmarked?: boolean | null, id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, isBookmarked?: boolean | null, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
+export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', hasAccess?: boolean | null, isBookmarked?: boolean | null, id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, urlSlug: string, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, isBookmarked?: boolean | null, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
 
 export type GetExamCategoriesQueryVariables = Types.Exact<{
   input: Types.GetExamCategoriesInput;
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', isBookmarked?: boolean | null, id: number, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number }> }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', created_at: any, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number }> }> | null } };
 
 export type GetMyExamsQueryVariables = Types.Exact<{
   input: Types.GetMyExamsInput;
@@ -534,6 +534,7 @@ export function useReadMockExamCategoryIdsQuery(options?: Omit<Urql.UseQueryArgs
 export const ReadMockExamCategoryNamesDocument = gql`
     query ReadMockExamCategoryNames {
   readMockExamCategoryNames {
+    urlSlugs
     error
     names
     ok
@@ -555,6 +556,7 @@ export const ReadMockExamCategoryByCategoryIdDocument = gql`
       name
       description
       isPublic
+      urlSlug
       mockExam {
         slug
         title
@@ -590,11 +592,13 @@ export const GetExamCategoriesDocument = gql`
     ok
     error
     categories {
+      created_at
       categoryEvaluations {
         score
       }
       isBookmarked
       id
+      urlSlug
       name
       isPublic
       source

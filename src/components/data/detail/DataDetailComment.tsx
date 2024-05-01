@@ -4,7 +4,7 @@ import {
   useDeletePostComment,
 } from '@lib/graphql/hook/usePostComment';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { convertToKST, handleError } from '@lib/utils/utils';
+import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { dataActions } from '@modules/redux/slices/data';
 import {
@@ -162,7 +162,7 @@ const DataDetailComment: React.FC<DataDetailCommentProps> = ({
                 {comment.user.nickname}
               </div>
               <div className="data-detail-comment-date">
-                {convertToKST(comment.created_at, 'yy.MM.dd hh:mm')}
+                {convertServerTimeToKST(comment.created_at, 'yy.MM.dd hh:mm')}
               </div>
               {meQuery?.me.user?.id === comment.user.id && (
                 <Button
