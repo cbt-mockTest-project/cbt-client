@@ -28,9 +28,7 @@ const formats: ComponentProps<typeof ReactQuill>['formats'] = [
   'bold',
   'italic',
   'underline',
-  'list',
   'indent',
-  'link',
   'image',
 ];
 
@@ -47,11 +45,13 @@ const ReactQuillWrapper = dynamic(
 interface StoreContentEditorProps {
   setContent: (content: string) => void;
   className?: string;
+  placeholder?: string;
 }
 
 const StoreContentEditor: React.FC<StoreContentEditorProps> = ({
   setContent,
   className = '',
+  placeholder = '',
 }) => {
   const reactQuillRef = useRef<ReactQuill | null>(null);
   const imageHandler = () => {
@@ -104,13 +104,8 @@ const StoreContentEditor: React.FC<StoreContentEditorProps> = ({
         container: [
           [{ header: [1, 2, false] }],
           ['bold', 'italic', 'underline'],
-          [
-            { list: 'ordered' },
-            { list: 'bullet' },
-            { indent: '-1' },
-            { indent: '+1' },
-          ],
-          ['link', 'image'],
+          [{ indent: '-1' }, { indent: '+1' }],
+          ['image'],
         ],
         handlers: {
           image: imageHandler,
@@ -127,7 +122,7 @@ const StoreContentEditor: React.FC<StoreContentEditorProps> = ({
         formats={formats}
         modules={modules}
         onChange={setContent}
-        placeholder="자료소개 및 목차를 작성해주세요."
+        placeholder={placeholder}
       />
     </StoreContentEditorBlock>
   );

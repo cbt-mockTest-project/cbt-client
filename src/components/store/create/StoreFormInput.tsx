@@ -11,16 +11,13 @@ interface StoreFormInputProps extends InputProps {
 }
 
 const StoreFormInput: React.FC<StoreFormInputProps> = (props) => {
-  const { watch, getFieldState, getValues, formState } =
+  const { watch, register, getValues, setError } =
     useFormContext<CreateItemInput>();
-  const prevData = useRef<any>(null);
   const { name, ...inputProps } = props;
-  const [priceValue, setPriceValue] = useState('');
+  const [priceValue, setPriceValue] = useState('￦ 0');
 
   useEffect(() => {
     watch((data) => {
-      console.log(data.title);
-      console.log(getValues('title'));
       if (name === 'price') {
         const value =
           typeof Number(data.price) === 'number' && data.price
@@ -31,21 +28,13 @@ const StoreFormInput: React.FC<StoreFormInputProps> = (props) => {
     });
   }, [watch]);
 
-  // useEffect(() => {
-  //   console.log(formState.errors[name]);
-  // }, [formState.errors[name]]);
   return (
     <div className="flex flex-col w-full gap-0">
       <Input
         {...inputProps}
         {...(name === 'price' ? { value: priceValue } : {})}
       />
-      {/* {getFieldState[name]?.error && (
-        <StoreFormErrorMessage errorMessage={getFieldState[name].error} />
-      )} */}
-      {/* {formState.errors[name] && (
-        <StoreFormErrorMessage errorMessage={formState.errors[name].message} />
-      )} */}
+      <StoreFormErrorMessage name={name} />
     </div>
   );
 };

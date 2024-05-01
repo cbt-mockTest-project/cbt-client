@@ -43,6 +43,7 @@ export type ApproveCategoryInvitationLinkOutput = {
   categoryName?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  urlSlug?: Maybe<Scalars['String']>;
 };
 
 export type ApproveItemInput = {
@@ -280,10 +281,12 @@ export type CreateFreeTrialRoleOutput = {
 };
 
 export type CreateItemInput = {
+  contents: Scalars['String'];
   description: Scalars['String'];
   file?: InputMaybe<ItemFileInputType>;
   price: Scalars['Float'];
   thumbnail?: InputMaybe<Scalars['String']>;
+  thumbnailTemplate?: InputMaybe<ThumbnailTemplateInputType>;
   title: Scalars['String'];
 };
 
@@ -1474,6 +1477,7 @@ export type InfluencerInfo = {
 export type Item = {
   __typename?: 'Item';
   category?: Maybe<MockExamCategory>;
+  contents: Scalars['String'];
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
   file?: Maybe<ItemFileType>;
@@ -1507,6 +1511,7 @@ export type ItemFileType = {
 
 export type ItemInputType = {
   category?: InputMaybe<MockExamCategoryInputType>;
+  contents: Scalars['String'];
   description: Scalars['String'];
   file?: InputMaybe<ItemFileInputType>;
   itemSalesHistory: Array<ItemSalesHistoryInputType>;
@@ -1636,6 +1641,7 @@ export type MockExamCategory = {
   source: ExamSource;
   type: MockExamCategoryTypes;
   updated_at: Scalars['DateTime'];
+  urlSlug: Scalars['String'];
   user: User;
 };
 
@@ -1663,6 +1669,7 @@ export type MockExamCategoryInputType = {
   seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
   type: MockExamCategoryTypes;
+  urlSlug: Scalars['String'];
   user: UserInputType;
 };
 
@@ -3421,6 +3428,7 @@ export type ReadMockExamCategoriesOutput = {
 export type ReadMockExamCategoryByCategoryIdInput = {
   id?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
+  urlSlug?: InputMaybe<Scalars['String']>;
 };
 
 export type ReadMockExamCategoryByCategoryIdOutput = {
@@ -3453,6 +3461,7 @@ export type ReadMockExamCategoryNamesOutput = {
   error?: Maybe<Scalars['String']>;
   names?: Maybe<Array<Scalars['String']>>;
   ok: Scalars['Boolean'];
+  urlSlugs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type ReadMockExamInput = {
@@ -4066,6 +4075,7 @@ export type UpdateExamViewerApproveStateOutput = {
 };
 
 export type UpdateItemInput = {
+  contents?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   file?: InputMaybe<ItemFileInputType>;
   id?: InputMaybe<Scalars['Float']>;

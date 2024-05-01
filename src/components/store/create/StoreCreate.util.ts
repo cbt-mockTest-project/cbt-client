@@ -1,7 +1,9 @@
+import { DeepPartial } from '@apollo/client/utilities';
+import { removeHtmlTag } from '@lib/utils/utils';
 import { CreateItemInput } from 'types';
 
 export const validateStoreCreateForm = (
-  data: Partial<CreateItemInput>,
+  data: DeepPartial<CreateItemInput>,
   key: keyof CreateItemInput
 ) => {
   if (key === 'title') {
@@ -21,7 +23,25 @@ export const validateStoreCreateForm = (
       return '가격은 0보다 작을 수 없습니다.';
     }
     if (data.price < 1000) {
-      return '판매가격은 1000원 이상이어야 합니다.';
+      return '가격은 0원 또는 1000원 이상으로 입력해주세요.';
+    }
+    return null;
+  }
+  if (key === 'file') {
+    if (!data.file) {
+      return '파일을 업로드해주세요.';
+    }
+    return null;
+  }
+  if (key === 'description') {
+    if (removeHtmlTag(data.description).length < 10) {
+      return '자료소개는 10글자 이상 입력해주세요.';
+    }
+    return null;
+  }
+  if (key === 'contents') {
+    if (removeHtmlTag(data.contents).length < 10) {
+      return '목차는 10글자 이상 입력해주세요.';
     }
     return null;
   }

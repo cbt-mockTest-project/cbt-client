@@ -1,6 +1,6 @@
 import { UploadFile, UploadProps, message } from 'antd';
 import axios, { Canceler } from 'axios';
-import { uniqueId } from 'lodash';
+import { omit, uniqueId } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import StoreCustomDragger from './StoreCustomDragger';
 import { fixEncoding } from '@lib/utils/utils';
@@ -31,6 +31,7 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
     beforeUpload(uploadFile) {
       if (fileData?.cancelToken) {
         fileData.cancelToken('User canceled');
+        onChage(null);
         setFileData(null);
       }
       // 개별 파일 1GB 제한
@@ -45,6 +46,7 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
       if (file.cancelToken) {
         file.cancelToken('User canceled');
       }
+      onChage(null);
       setFileData(null);
     },
     customRequest: async ({ file, onSuccess, onError, onProgress }) => {
@@ -54,7 +56,7 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
         formData.append('path', 'items');
         const { token, cancel } = axios.CancelToken.source();
         const uploadingId = uniqueId('uploading_');
-        setFileData({
+        const newFileData: UploadFileWithCancel = {
           name: (file as Blob).name,
           size: (file as Blob).size,
           type: (file as Blob).type,
@@ -62,7 +64,9 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
           status: 'uploading',
           uid: uploadingId,
           cancelToken: cancel,
-        });
+        };
+        onChage(omit(newFileData, ['cancelToken']) as ItemFileType);
+        setFileData(newFileData);
         const {
           data: { getPresignedUrl },
         } = await apolloClient.query<GetPresignedUrlQuery>({
@@ -91,22 +95,24 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
           },
           cancelToken: token,
         });
-        setFileData((prev) => ({
-          ...prev,
+        const successFileData: UploadFileWithCancel = {
+          ...newFileData,
           percent: 100,
           status: 'done',
           uid: getPresignedUrl.fileUrl,
-        }));
+        };
+        onChage(omit(successFileData, ['cancelToken']) as ItemFileType);
+        setFileData(successFileData);
         onSuccess && onSuccess(res);
       } catch (e: any) {
         onError && onError(e);
       }
     },
   };
-  useEffect(() => {
-    if (!fileData?.uid || fileData?.uid.includes('uploading')) return;
-    onChage(fileData as ItemFileType);
-  }, [fileData]);
+  // useEffect(() => {
+  //   if (!fileData?.uid || fileData?.uid.includes('uploading')) return;
+
+  // }, [fileData]);
 
   useEffect(() => {
     if (!defaultFile) return;
