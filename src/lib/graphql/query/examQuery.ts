@@ -386,6 +386,7 @@ export const GET_MY_EXAM_CATEGORIES = gql`
         id
         name
         isPublic
+        urlSlug
         user {
           id
           nickname

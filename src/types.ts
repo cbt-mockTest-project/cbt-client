@@ -44,7 +44,6 @@ export type ApproveCategoryInvitationLinkOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   urlSlug?: Maybe<Scalars['String']>;
-<<<<<<< HEAD
 };
 
 export type ApproveItemInput = {
@@ -55,8 +54,6 @@ export type ApproveItemOutput = {
   __typename?: 'ApproveItemOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-=======
->>>>>>> 78abf93019b1772f46e14d028c9e1a8cf42a11ef
 };
 
 export type Attendance = {
@@ -289,7 +286,6 @@ export type CreateItemInput = {
   file?: InputMaybe<ItemFileInputType>;
   price: Scalars['Float'];
   thumbnail?: InputMaybe<Scalars['String']>;
-  thumbnailTemplate?: InputMaybe<ThumbnailTemplateInputType>;
   title: Scalars['String'];
 };
 
@@ -1489,7 +1485,6 @@ export type Item = {
   price: Scalars['Float'];
   state: ItemStateEnum;
   thumbnail?: Maybe<Scalars['String']>;
-  thumbnailTemplate?: Maybe<ThumbnailTemplate>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
   user: User;
@@ -1500,7 +1495,6 @@ export type ItemFileInputType = {
   size: Scalars['Float'];
   type: Scalars['String'];
   uid: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type ItemFileType = {
@@ -1509,7 +1503,6 @@ export type ItemFileType = {
   size: Scalars['Float'];
   type: Scalars['String'];
   uid: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type ItemInputType = {
@@ -1521,7 +1514,6 @@ export type ItemInputType = {
   price: Scalars['Float'];
   state: ItemStateEnum;
   thumbnail?: InputMaybe<Scalars['String']>;
-  thumbnailTemplate?: InputMaybe<ThumbnailTemplateInputType>;
   title: Scalars['String'];
   user: UserInputType;
 };
@@ -3935,17 +3927,6 @@ export type SendVerificationMailOutput = {
   __typename?: 'SendVerificationMailOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
-};
-
-export type ThumbnailTemplate = {
-  __typename?: 'ThumbnailTemplate';
-  description: Scalars['String'];
-  title: Scalars['String'];
-};
-
-export type ThumbnailTemplateInputType = {
-  description: Scalars['String'];
-  title: Scalars['String'];
 };
 
 export type TitleAndId = {

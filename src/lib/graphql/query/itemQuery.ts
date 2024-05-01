@@ -55,16 +55,11 @@ export const GET_ITEM_QUERY = gql`
         type
         size
         uid
-        url
       }
       id
       price
       state
       thumbnail
-      thumbnailTemplate {
-        description
-        title
-      }
       title
       updated_at
       user {
@@ -91,10 +86,6 @@ export const GET_ITEMS_QUERY = gql`
         description
         price
         thumbnail
-        thumbnailTemplate {
-          description
-          title
-        }
         title
         created_at
         updated_at

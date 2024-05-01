@@ -43,14 +43,14 @@ export type GetItemQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'Item', created_at: any, description: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', name: string, type: string, size: number, uid: string, url: string } | null, thumbnailTemplate?: { __typename?: 'ThumbnailTemplate', description: string, title: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } };
+export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'Item', created_at: any, description: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', name: string, type: string, size: number, uid: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } };
 
 export type GetItemsQueryVariables = Types.Exact<{
   input: Types.GetItemsInput;
 }>;
 
 
-export type GetItemsQuery = { __typename?: 'Query', getItems: { __typename?: 'GetItemsOutput', error?: string | null, ok: boolean, totalCount?: number | null, items?: Array<{ __typename?: 'Item', id: number, description: string, price: number, thumbnail?: string | null, title: string, created_at: any, updated_at: any, thumbnailTemplate?: { __typename?: 'ThumbnailTemplate', description: string, title: string } | null, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+export type GetItemsQuery = { __typename?: 'Query', getItems: { __typename?: 'GetItemsOutput', error?: string | null, ok: boolean, totalCount?: number | null, items?: Array<{ __typename?: 'Item', id: number, description: string, price: number, thumbnail?: string | null, title: string, created_at: any, updated_at: any, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
 
 
 export const CreateItemDocument = gql`
@@ -123,16 +123,11 @@ export const GetItemDocument = gql`
       type
       size
       uid
-      url
     }
     id
     price
     state
     thumbnail
-    thumbnailTemplate {
-      description
-      title
-    }
     title
     updated_at
     user {
@@ -162,10 +157,6 @@ export const GetItemsDocument = gql`
       description
       price
       thumbnail
-      thumbnailTemplate {
-        description
-        title
-      }
       title
       created_at
       updated_at
