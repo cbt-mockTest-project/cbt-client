@@ -157,7 +157,7 @@ const StudyModeWrapper: React.FC<StudyModeWrapperProps> = () => {
           },
         });
       } catch (e) {
-        handleError(e);
+        console.log(e);
       }
     }
   }, [activeIndex, isLoggedIn, examId, tab]);

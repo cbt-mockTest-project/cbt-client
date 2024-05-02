@@ -123,7 +123,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
             },
           });
         } catch (e) {
-          handleError(e);
+          console.log(e);
         }
       }
     }
