@@ -12,7 +12,7 @@ const StoreHeader: React.FC<StoreHeaderProps> = () => {
         <div className="text-yellow-500">
           <StarFilled className="text-2xl" />
         </div>
-        <p className="text-lg font-bold">암기장 스토어</p>
+        <p className="text-lg font-bold">자료 스토어</p>
       </div>
       <Link href="/store/create">
         <Button type="primary">자료 등록</Button>

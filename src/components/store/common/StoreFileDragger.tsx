@@ -128,7 +128,7 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
     <StoreCustomDragger
       {...uploadProps}
       mainText="파일을 업로드해주세요."
-      subText="500MB 이하의 파일만 업로드 가능합니다."
+      subText="1GB 이하의 파일만 업로드 가능합니다."
     />
   );
 };

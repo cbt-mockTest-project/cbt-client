@@ -42,7 +42,7 @@ export const navItems = [
   {
     key: '/store',
     icon: <StarOutlined />,
-    label: '암기장 스토어',
+    label: '자료 스토어',
   },
   {
     key: '/me',

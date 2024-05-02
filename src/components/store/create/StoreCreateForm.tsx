@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StoreContentEditor from './StoreContentEditor';
 import StoreCreateCoverImage from './StoreCreateCoverImage';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -8,10 +8,20 @@ import StoreFileDragger from '../common/StoreFileDragger';
 import StoreCreateFormCore from './StoreCreateFormCore';
 import StoreFormErrorMessage from './StoreFormErrorMessage';
 import { Button, message } from 'antd';
+import StoreCategorySelect from './StoreCategorySelect';
+import { useCreateStoreItemMutation } from '@lib/hooks/useStoreItem.mutation';
+import { handleError } from '@lib/utils/utils';
+import ItemRegisterModal from './ItemRegisterModal';
+import { useRouter } from 'next/router';
 
-interface StoreCreateFormProps {}
+interface StoreCreateFormProps {
+  isAgreedRef: React.MutableRefObject<boolean>;
+}
 
-const StoreCreateForm: React.FC<StoreCreateFormProps> = () => {
+const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
+  const router = useRouter();
+  const createItemMutation = useCreateStoreItemMutation();
+  const [isItemRegisterModalOpen, setIsItemRegisterModalOpen] = useState(false);
   const methods = useForm<CreateItemInput>({
     defaultValues: {
       title: '',
@@ -22,26 +32,45 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = () => {
       thumbnail: null,
     },
   });
-  const { handleSubmit, setValue } = methods;
-  const onSubmit = (data: CreateItemInput) => {
-    if (data.file['percent'] !== 100) {
-      message.warning('파일 업로드가 진행중입니다.');
-      return;
+  const { handleSubmit, setValue, formState } = methods;
+  const onSubmit = async (data: CreateItemInput) => {
+    try {
+      if (isAgreedRef.current === false) {
+        return;
+      }
+      if (data.file['percent'] !== 100) {
+        message.warning('파일 업로드가 진행중입니다.');
+        return;
+      }
+      const postData: CreateItemInput = {
+        ...data,
+        file: {
+          name: data.file.name,
+          size: data.file.size,
+          type: data.file.type,
+          uid: data.file.uid,
+        },
+      };
+      if (data.price > 0 && !isItemRegisterModalOpen) {
+        setIsItemRegisterModalOpen(true);
+        return;
+      }
+
+      const res = await createItemMutation.mutateAsync(postData);
+      if (res?.createItem?.ok) {
+        message.success('성공적으로 등록되었습니다.');
+        router.replace(`/store`);
+        return;
+      }
+      return message.error(res.createItem.error);
+    } catch (e) {
+      message.error('등록에 실패했습니다.');
+      handleError(e);
     }
-    const postData = {
-      ...data,
-      file: {
-        name: data.file.name,
-        size: data.file.size,
-        type: data.file.type,
-        url: data.file.uid,
-      },
-    };
-    console.log(postData);
   };
   return (
     <FormProvider {...methods}>
-      <StoreCreateFormCore />
+      <StoreCreateFormCore isAgreedRef={isAgreedRef} />
       <form
         className="mt-4 w-3/5 flex flex-col gap-4 shrink-0"
         onSubmit={handleSubmit(onSubmit)}
@@ -80,6 +109,20 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = () => {
             <StoreFormErrorMessage name="file" />
           </div>
         </div>
+        <div className="mb-2 flex gap-4 items-center w-full">
+          <div className="w-full">
+            <div className="text-lg font-bold mb-1" id="file">
+              암기장 등록 <span className="text-sm text-gray-500">(선택)</span>
+            </div>
+            <pre className="text-sm text-gray-500 mb-2">
+              {`암기장 등록시, 구매자에게 암기장 초대링크가 제공됩니다.`}
+            </pre>
+            <StoreCategorySelect
+              onChange={(value) => setValue('categoryId', value)}
+            />
+            <StoreFormErrorMessage name="categoryId" />
+          </div>
+        </div>
         <div>
           <div className="text-lg font-bold mb-2" id="description">
             자료소개
@@ -109,9 +152,23 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = () => {
           <StoreCreateCoverImage />
           <StoreFormErrorMessage name="thumbnail" />
         </div>
-        <Button type="primary" size="large" htmlType="submit">
+        <Button
+          type="primary"
+          size="large"
+          htmlType="submit"
+          loading={formState.isSubmitting}
+        >
           등록하기
         </Button>
+        {isItemRegisterModalOpen && (
+          <ItemRegisterModal
+            open={isItemRegisterModalOpen}
+            onSubmit={async () => {
+              await onSubmit(methods.getValues());
+            }}
+            onCancel={() => setIsItemRegisterModalOpen(false)}
+          />
+        )}
       </form>
     </FormProvider>
   );

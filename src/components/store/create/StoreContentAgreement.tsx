@@ -2,9 +2,13 @@ import { Checkbox, Collapse } from 'antd';
 import React from 'react';
 import { copyrightRulesText, pledgeDocumentText } from './StoreCreate.texts';
 
-interface StoreContentAgreementProps {}
+interface StoreContentAgreementProps {
+  isAgreedRef: React.MutableRefObject<boolean>;
+}
 
-const StoreContentAgreement: React.FC<StoreContentAgreementProps> = () => {
+const StoreContentAgreement: React.FC<StoreContentAgreementProps> = ({
+  isAgreedRef,
+}) => {
   return (
     <div className="mt-4 w-2/5">
       <p className="text-lg font-bold mb-2">약관 동의</p>
@@ -21,6 +25,9 @@ const StoreContentAgreement: React.FC<StoreContentAgreementProps> = () => {
         </Collapse.Panel>
       </Collapse>
       <Checkbox
+        onChange={(e) => {
+          isAgreedRef.current = e.target.checked;
+        }}
         className="mt-4 font-sm text-gray-500"
         style={{
           fontSize: '0.=75rem',

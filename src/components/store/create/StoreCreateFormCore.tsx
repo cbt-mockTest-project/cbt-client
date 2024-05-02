@@ -3,12 +3,15 @@ import { DeepPartial, useFormContext } from 'react-hook-form';
 import { CreateItemInput } from 'types';
 import { validateStoreCreateForm } from './StoreCreate.util';
 import { cloneDeep } from 'lodash';
-import { useRouter } from 'next/router';
+import { message } from 'antd';
 
-interface StoreCreateFormCoreProps {}
+interface StoreCreateFormCoreProps {
+  isAgreedRef: React.MutableRefObject<boolean>;
+}
 
-const StoreCreateFormCore: React.FC<StoreCreateFormCoreProps> = () => {
-  const router = useRouter();
+const StoreCreateFormCore: React.FC<StoreCreateFormCoreProps> = ({
+  isAgreedRef,
+}) => {
   const {
     watch,
     setError,
@@ -42,6 +45,13 @@ const StoreCreateFormCore: React.FC<StoreCreateFormCoreProps> = () => {
 
   useEffect(() => {
     if (!isSubmitting) return;
+    if (!isAgreedRef.current) {
+      message.error('약관에 동의해주세요.');
+      document.body.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
     Object.keys(getValues()).forEach((key) => {
       const typedKey = key as keyof CreateItemInput;
       const error = validateStoreCreateForm(getValues(), typedKey);
@@ -55,10 +65,12 @@ const StoreCreateFormCore: React.FC<StoreCreateFormCoreProps> = () => {
     const errorKeys = Object.keys(errors);
     const firstErrorKey = errorKeys[0] as keyof CreateItemInput;
     if (!firstErrorKey) return;
-    document.querySelector(`#${firstErrorKey}`)?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    if (isAgreedRef.current) {
+      document.querySelector(`#${firstErrorKey}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
   }, [errors, isSubmitting]);
   return null;
 };

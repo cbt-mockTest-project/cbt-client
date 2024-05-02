@@ -281,6 +281,7 @@ export type CreateFreeTrialRoleOutput = {
 };
 
 export type CreateItemInput = {
+  categoryId?: InputMaybe<Scalars['Float']>;
   contents: Scalars['String'];
   description: Scalars['String'];
   file?: InputMaybe<ItemFileInputType>;
