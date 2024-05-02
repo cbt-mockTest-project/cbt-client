@@ -1,3 +1,4 @@
+import useStoreItems from '@lib/hooks/useStoreItems.query';
 import { Pagination } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -6,12 +7,13 @@ interface StorePaginationProps {}
 
 const StorePagination: React.FC<StorePaginationProps> = () => {
   const router = useRouter();
-  const page = router.query.page ? Number(router.query.page as string) : 1;
+  const { data, page, limit } = useStoreItems();
+  if (!data?.getItems?.items) return null;
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center mt-5">
       <Pagination
-        total={50}
-        pageSize={10}
+        total={data.getItems.totalCount}
+        pageSize={limit}
         current={page}
         onChange={(page) => {
           router.push({

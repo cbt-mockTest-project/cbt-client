@@ -45,6 +45,42 @@ export const REJECT_ITEM_MUTATION = gql`
   }
 `;
 
+export const GET_ITEM_REVISION_QUERY = gql`
+  query GetItemRevision($input: GetItemRevisionInput!) {
+    getItemRevision(input: $input) {
+      ok
+      error
+      itemRevision {
+        id
+        created_at
+        description
+        file {
+          size
+          name
+          type
+          uid
+        }
+        id
+        item {
+          id
+        }
+        price
+        state
+        thumbnail
+        title
+        updated_at
+        user {
+          id
+        }
+        category {
+          id
+        }
+        contents
+      }
+    }
+  }
+`;
+
 export const GET_ITEM_QUERY = gql`
   query GetItem($input: GetItemInput!) {
     getItem(input: $input) {
