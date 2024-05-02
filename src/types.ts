@@ -1260,6 +1260,10 @@ export type GetItemInput = {
   id: Scalars['Float'];
 };
 
+export type GetItemRevisionInput = {
+  id: Scalars['Float'];
+};
+
 export type GetItemsForOwnerOutput = {
   __typename?: 'GetItemsForOwnerOutput';
   error?: Maybe<Scalars['String']>;
@@ -1519,6 +1523,43 @@ export type ItemInputType = {
   user: UserInputType;
 };
 
+export type ItemRevision = {
+  __typename?: 'ItemRevision';
+  category?: Maybe<MockExamCategory>;
+  contents: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  description: Scalars['String'];
+  file?: Maybe<ItemFileType>;
+  id: Scalars['Float'];
+  item: Item;
+  price: Scalars['Float'];
+  state: ItemRevisionStateEnum;
+  thumbnail?: Maybe<Scalars['String']>;
+  title: Scalars['String'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type ItemRevisionInputType = {
+  category?: InputMaybe<MockExamCategoryInputType>;
+  contents: Scalars['String'];
+  description: Scalars['String'];
+  file?: InputMaybe<ItemFileInputType>;
+  item: ItemInputType;
+  price: Scalars['Float'];
+  state: ItemRevisionStateEnum;
+  thumbnail?: InputMaybe<Scalars['String']>;
+  title: Scalars['String'];
+  user: UserInputType;
+};
+
+export enum ItemRevisionStateEnum {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  RequestDeletion = 'REQUEST_DELETION'
+}
+
 export type ItemSalesHistory = {
   __typename?: 'ItemSalesHistory';
   buyer?: Maybe<User>;
@@ -1626,6 +1667,7 @@ export type MockExamCategory = {
   id: Scalars['Float'];
   isBookmarked?: Maybe<Scalars['Boolean']>;
   isPublic: Scalars['Boolean'];
+  itemRevisions: Array<ItemRevision>;
   items: Array<Item>;
   mockExam: Array<MockExam>;
   name: Scalars['String'];
@@ -1655,6 +1697,7 @@ export type MockExamCategoryInputType = {
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isPublic?: Scalars['Boolean'];
+  itemRevisions: Array<ItemRevisionInputType>;
   items: Array<ItemInputType>;
   mockExam: Array<MockExamInputType>;
   name: Scalars['String'];
@@ -2043,6 +2086,7 @@ export type Mutation = {
   register: RegisterOutput;
   rejectItem: RejectItemOutput;
   removeExamFromCategory: RemoveExamFromCategoryOutput;
+  requestDeleteItem: RequestDeleteItemOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
   restMyAllQuestionStates: CoreOutput;
@@ -2461,6 +2505,11 @@ export type MutationRejectItemArgs = {
 
 export type MutationRemoveExamFromCategoryArgs = {
   input: RemoveExamFromCategoryInput;
+};
+
+
+export type MutationRequestDeleteItemArgs = {
+  input: RequestDeleteItemInput;
 };
 
 
@@ -2898,6 +2947,7 @@ export type Query = {
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
   getItem: Item;
+  getItemRevision: ItemRevision;
   getItems: GetItemsOutput;
   getItemsForOwner: GetItemsForOwnerOutput;
   getKeywordSearchCount: GetKeywordSearchCountOutput;
@@ -3021,6 +3071,11 @@ export type QueryGetFeedbacksWithFilterArgs = {
 
 export type QueryGetItemArgs = {
   input: GetItemInput;
+};
+
+
+export type QueryGetItemRevisionArgs = {
+  input: GetItemRevisionInput;
 };
 
 
@@ -3763,6 +3818,16 @@ export type RemoveExamFromCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type RequestDeleteItemInput = {
+  itemId: Scalars['Float'];
+};
+
+export type RequestDeleteItemOutput = {
+  __typename?: 'RequestDeleteItemOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type ResetMyExamQuestionStateInput = {
   examId?: InputMaybe<Scalars['Float']>;
   questionIds?: InputMaybe<Array<Scalars['Float']>>;
@@ -4060,6 +4125,7 @@ export type UpdateExamViewerApproveStateOutput = {
 };
 
 export type UpdateItemInput = {
+  categoryId?: InputMaybe<Scalars['Float']>;
   contents?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
   file?: InputMaybe<ItemFileInputType>;
@@ -4168,6 +4234,7 @@ export type User = {
   hasSolvedBefore?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isAllowAdblock: Scalars['Boolean'];
+  itemRevisions: Array<ItemRevision>;
   itemSalesHistories: Array<ItemSalesHistory>;
   items: Array<Item>;
   lastLogInIp: Scalars['String'];
@@ -4238,6 +4305,7 @@ export type UserInputType = {
   hasReachedPaymentReminder?: InputMaybe<Scalars['Boolean']>;
   hasSolvedBefore?: InputMaybe<Scalars['Boolean']>;
   isAllowAdblock: Scalars['Boolean'];
+  itemRevisions: Array<ItemRevisionInputType>;
   itemSalesHistories: Array<ItemSalesHistoryInputType>;
   items: Array<ItemInputType>;
   lastLogInIp?: Scalars['String'];
