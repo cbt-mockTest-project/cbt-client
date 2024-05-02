@@ -1,11 +1,16 @@
 import React, { useRef } from 'react';
 import StoreCreateForm from './StoreCreateForm';
 import StoreContentAgreement from './StoreContentAgreement';
+import { ItemRevision } from 'types';
 
-interface StoreCreateComponentProps {}
+interface StoreCreateComponentProps {
+  defaultValues?: ItemRevision;
+}
 
-const StoreCreateComponent: React.FC<StoreCreateComponentProps> = () => {
-  const isAgreedRef = useRef(false);
+const StoreCreateComponent: React.FC<StoreCreateComponentProps> = ({
+  defaultValues,
+}) => {
+  const isAgreedRef = useRef(defaultValues ? true : false);
   return (
     <div className="flex flex-col py-5 px-7 overflow-auto">
       <div className="flex flex-col w-1/3">
@@ -16,7 +21,10 @@ const StoreCreateComponent: React.FC<StoreCreateComponentProps> = () => {
       </div>
       <div className="flex gap-20 mt-5 ">
         <StoreContentAgreement isAgreedRef={isAgreedRef} />
-        <StoreCreateForm isAgreedRef={isAgreedRef} />
+        <StoreCreateForm
+          isAgreedRef={isAgreedRef}
+          defaultValues={defaultValues}
+        />
       </div>
     </div>
   );

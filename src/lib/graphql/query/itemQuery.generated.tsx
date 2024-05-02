@@ -38,6 +38,13 @@ export type RejectItemMutationVariables = Types.Exact<{
 
 export type RejectItemMutation = { __typename?: 'Mutation', rejectItem: { __typename?: 'RejectItemOutput', error?: string | null, ok: boolean } };
 
+export type GetItemRevisionQueryVariables = Types.Exact<{
+  input: Types.GetItemRevisionInput;
+}>;
+
+
+export type GetItemRevisionQuery = { __typename?: 'Query', getItemRevision: { __typename?: 'GetItemRevisionOutput', ok: boolean, error?: string | null, itemRevision?: { __typename?: 'ItemRevision', id: number, created_at: any, description: string, price: number, state: Types.ItemRevisionStateEnum, thumbnail?: string | null, title: string, updated_at: any, contents: string, file?: { __typename?: 'ItemFileType', size: number, name: string, type: string, uid: string } | null, item: { __typename?: 'Item', id: number }, user: { __typename?: 'User', id: number }, category?: { __typename?: 'MockExamCategory', id: number } | null } | null } };
+
 export type GetItemQueryVariables = Types.Exact<{
   input: Types.GetItemInput;
 }>;
@@ -112,6 +119,45 @@ export const RejectItemDocument = gql`
 
 export function useRejectItemMutation() {
   return Urql.useMutation<RejectItemMutation, RejectItemMutationVariables>(RejectItemDocument);
+};
+export const GetItemRevisionDocument = gql`
+    query GetItemRevision($input: GetItemRevisionInput!) {
+  getItemRevision(input: $input) {
+    ok
+    error
+    itemRevision {
+      id
+      created_at
+      description
+      file {
+        size
+        name
+        type
+        uid
+      }
+      id
+      item {
+        id
+      }
+      price
+      state
+      thumbnail
+      title
+      updated_at
+      user {
+        id
+      }
+      category {
+        id
+      }
+      contents
+    }
+  }
+}
+    `;
+
+export function useGetItemRevisionQuery(options: Omit<Urql.UseQueryArgs<GetItemRevisionQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetItemRevisionQuery, GetItemRevisionQueryVariables>({ query: GetItemRevisionDocument, ...options });
 };
 export const GetItemDocument = gql`
     query GetItem($input: GetItemInput!) {

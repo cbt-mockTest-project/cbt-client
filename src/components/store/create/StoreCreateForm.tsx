@@ -2,38 +2,61 @@ import React, { useState } from 'react';
 import StoreContentEditor from './StoreContentEditor';
 import StoreCreateCoverImage from './StoreCreateCoverImage';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateItemInput } from 'types';
+import { CreateItemInput, ItemRevision, UpdateItemInput } from 'types';
 import StoreFormInput from './StoreFormInput';
 import StoreFileDragger from '../common/StoreFileDragger';
 import StoreCreateFormCore from './StoreCreateFormCore';
 import StoreFormErrorMessage from './StoreFormErrorMessage';
 import { Button, message } from 'antd';
 import StoreCategorySelect from './StoreCategorySelect';
-import { useCreateStoreItemMutation } from '@lib/hooks/useStoreItem.mutation';
+import {
+  useCreateStoreItemMutation,
+  useUpdateStoreItemMutation,
+} from '@lib/hooks/useStoreItem.mutation';
 import { handleError } from '@lib/utils/utils';
 import ItemRegisterModal from './ItemRegisterModal';
 import { useRouter } from 'next/router';
 
 interface StoreCreateFormProps {
   isAgreedRef: React.MutableRefObject<boolean>;
+  defaultValues?: ItemRevision;
 }
 
-const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
+const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
+  isAgreedRef,
+  defaultValues,
+}) => {
   const router = useRouter();
   const createItemMutation = useCreateStoreItemMutation();
+  const updateItemMutation = useUpdateStoreItemMutation();
   const [isItemRegisterModalOpen, setIsItemRegisterModalOpen] = useState(false);
-  const methods = useForm<CreateItemInput>({
-    defaultValues: {
-      title: '',
-      price: 0,
-      file: null,
-      description: '',
-      contents: '',
-      thumbnail: null,
-    },
+  const methods = useForm<CreateItemInput | UpdateItemInput>({
+    defaultValues: defaultValues
+      ? {
+          id: defaultValues.item.id,
+          title: defaultValues.title,
+          price: defaultValues.price,
+          file: {
+            ...defaultValues.file,
+            percent: 100,
+            status: 'done',
+          } as unknown as ItemRevision['file'],
+          description: defaultValues.description,
+          contents: defaultValues.contents,
+          thumbnail: defaultValues.thumbnail,
+          categoryId: defaultValues.category?.id,
+        }
+      : {
+          title: '',
+          price: 0,
+          file: null,
+          description: '',
+          contents: '',
+          thumbnail: null,
+        },
   });
-  const { handleSubmit, setValue, formState } = methods;
-  const onSubmit = async (data: CreateItemInput) => {
+  const { handleSubmit, setValue, formState, getValues } = methods;
+  const onSubmit = async (data: CreateItemInput | UpdateItemInput) => {
     try {
       if (isAgreedRef.current === false) {
         return;
@@ -42,7 +65,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
         message.warning('파일 업로드가 진행중입니다.');
         return;
       }
-      const postData: CreateItemInput = {
+      const postData: CreateItemInput | UpdateItemInput = {
         ...data,
         file: {
           name: data.file.name,
@@ -55,14 +78,33 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
         setIsItemRegisterModalOpen(true);
         return;
       }
-
-      const res = await createItemMutation.mutateAsync(postData);
-      if (res?.createItem?.ok) {
-        message.success('성공적으로 등록되었습니다.');
-        router.replace(`/store`);
-        return;
+      const isEditMode = !!defaultValues;
+      if (isEditMode) {
+        const res = await updateItemMutation.mutateAsync(
+          postData as UpdateItemInput
+        );
+        if (res.updateItem?.ok) {
+          if (data.price > 0) {
+            message.success('수정요청이 완료되었습니다.');
+          }
+          if (data.price === 0) {
+            message.success('성공적으로 수정되었습니다.');
+          }
+          router.replace(`/store`);
+          return;
+        }
       }
-      return message.error(res.createItem.error);
+      if (!isEditMode) {
+        const res = await createItemMutation.mutateAsync(
+          postData as CreateItemInput
+        );
+        if (res?.createItem?.ok) {
+          message.success('성공적으로 등록되었습니다.');
+          router.replace(`/store`);
+          return;
+        }
+        return message.error(res.createItem.error);
+      }
     } catch (e) {
       message.error('등록에 실패했습니다.');
       handleError(e);
@@ -81,6 +123,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
           </div>
           <StoreFormInput
             name="title"
+            defaultValue={getValues('title')}
             placeholder="자료 제목"
             size="large"
             onChange={(e) => setValue('title', e.target.value)}
@@ -92,6 +135,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
           </div>
           <StoreFormInput
             name="price"
+            defaultValue={getValues('price')}
             placeholder="가격"
             size="large"
             onChange={(e) => {
@@ -105,7 +149,10 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
             <div className="text-lg font-bold mb-2" id="file">
               파일 업로드
             </div>
-            <StoreFileDragger onChage={(file) => setValue('file', file)} />
+            <StoreFileDragger
+              onChage={(file) => setValue('file', file)}
+              defaultFile={getValues('file')}
+            />
             <StoreFormErrorMessage name="file" />
           </div>
         </div>
@@ -118,6 +165,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
               {`암기장 등록시, 구매자에게 암기장 초대링크가 제공됩니다.`}
             </pre>
             <StoreCategorySelect
+              defalutValue={getValues('categoryId')}
               onChange={(value) => setValue('categoryId', value)}
             />
             <StoreFormErrorMessage name="categoryId" />
@@ -128,6 +176,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
             자료소개
           </div>
           <StoreContentEditor
+            defaultValue={getValues('description')}
             placeholder="자료에 대한 소개를 작성해주세요."
             setContent={(e) => {
               setValue('description', e);
@@ -140,6 +189,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
             목차
           </div>
           <StoreContentEditor
+            defaultValue={getValues('contents')}
             placeholder="자료의 목차를 작성해주세요."
             setContent={(e) => {
               setValue('contents', e);
@@ -149,7 +199,12 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
         </div>
         <div id="thumbnail">
           <div className="text-lg font-bold mb-2">커버 이미지</div>
-          <StoreCreateCoverImage />
+          <StoreCreateCoverImage
+            onChangeImage={(url) => setValue('thumbnail', url)}
+            defaultUrl={getValues('thumbnail')}
+            defaultTitle={getValues('title')}
+            defaultDescription={getValues('description')}
+          />
           <StoreFormErrorMessage name="thumbnail" />
         </div>
         <Button
@@ -158,10 +213,13 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({ isAgreedRef }) => {
           htmlType="submit"
           loading={formState.isSubmitting}
         >
-          등록하기
+          {defaultValues ? '수정하기' : '등록하기'}
         </Button>
         {isItemRegisterModalOpen && (
           <ItemRegisterModal
+            title={defaultValues ? '판매 상품 수정신청' : '판매 상품 등록신청'}
+            okText={defaultValues ? '수정 신청' : '판매 신청'}
+            cancelText="취소"
             open={isItemRegisterModalOpen}
             onSubmit={async () => {
               await onSubmit(methods.getValues());

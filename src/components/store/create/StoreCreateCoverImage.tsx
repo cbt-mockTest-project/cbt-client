@@ -5,15 +5,27 @@ import StoreContentThumbnail from '../common/StoreContentThumbnail';
 import { useFormContext } from 'react-hook-form';
 import { CreateItemInput } from 'types';
 
-interface StoreCreateCoverImageProps {}
+interface StoreCreateCoverImageProps {
+  onChangeImage: (url: string) => void;
+  defaultUrl?: string;
+  defaultTitle?: string;
+  defaultDescription?: string;
+}
 
-const StoreCreateCoverImage: React.FC<StoreCreateCoverImageProps> = () => {
+const StoreCreateCoverImage: React.FC<StoreCreateCoverImageProps> = ({
+  onChangeImage,
+  defaultUrl,
+  defaultTitle,
+  defaultDescription,
+}) => {
   const { watch } = useFormContext<CreateItemInput>();
   const [coverImageMode, setCoverImageMode] = useState<'template' | 'upload'>(
-    'template'
+    defaultUrl ? 'upload' : 'template'
   );
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [title, setTitle] = useState<string>(defaultTitle || '');
+  const [description, setDescription] = useState<string>(
+    defaultDescription || ''
+  );
 
   useEffect(() => {
     watch((data) => {
@@ -30,6 +42,7 @@ const StoreCreateCoverImage: React.FC<StoreCreateCoverImageProps> = () => {
     <Card>
       <Radio.Group
         className="mb-4"
+        defaultValue={'upload'}
         options={[
           { label: '기본 이미지 사용', value: 'template' },
           { label: '이미지 업로드', value: 'upload' },
@@ -46,7 +59,10 @@ const StoreCreateCoverImage: React.FC<StoreCreateCoverImageProps> = () => {
         </div>
       )}
       {coverImageMode === 'upload' && (
-        <StoreCreateThumbnailUploader onChangeImage={() => {}} />
+        <StoreCreateThumbnailUploader
+          onChangeImage={onChangeImage}
+          defaultImgUrl={defaultUrl}
+        />
       )}
     </Card>
   );

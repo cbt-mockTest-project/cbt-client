@@ -5,10 +5,12 @@ import { Select } from 'antd';
 import React from 'react';
 
 interface StoreCategorySelectProps {
+  defalutValue?: number;
   onChange: (value: number | null) => void;
 }
 
 const StoreCategorySelect: React.FC<StoreCategorySelectProps> = ({
+  defalutValue,
   onChange,
 }) => {
   const { data } = useGetMyCategories();
@@ -35,6 +37,7 @@ const StoreCategorySelect: React.FC<StoreCategorySelectProps> = ({
         className="w-full"
         size="large"
         placeholder="등록 할 암기장을 선택해주세요."
+        defaultValue={defalutValue}
         value={selectedCategory === null ? undefined : selectedCategory}
         options={options}
         onChange={(value) => {

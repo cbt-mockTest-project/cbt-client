@@ -22,7 +22,17 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
   onChage,
   defaultFile,
 }) => {
-  const [fileData, setFileData] = useState<UploadFileWithCancel | null>(null);
+  const [fileData, setFileData] = useState<UploadFileWithCancel | null>(
+    defaultFile
+      ? {
+          uid: defaultFile.uid,
+          name: defaultFile.name,
+          size: defaultFile.size,
+          percent: 100,
+          status: 'done',
+        }
+      : null
+  );
   const uploadProps: UploadProps = {
     name: 'file',
     multiple: false,
@@ -109,21 +119,7 @@ const StoreFileDragger: React.FC<StoreFileDraggerProps> = ({
       }
     },
   };
-  // useEffect(() => {
-  //   if (!fileData?.uid || fileData?.uid.includes('uploading')) return;
 
-  // }, [fileData]);
-
-  useEffect(() => {
-    if (!defaultFile) return;
-    setFileData(() => ({
-      uid: defaultFile.uid,
-      name: fixEncoding(defaultFile.name),
-      size: defaultFile.size,
-      percent: 100,
-      status: 'done',
-    }));
-  }, [defaultFile]);
   return (
     <StoreCustomDragger
       {...uploadProps}

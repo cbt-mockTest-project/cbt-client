@@ -25,6 +25,7 @@ const StoreContentAgreement: React.FC<StoreContentAgreementProps> = ({
         </Collapse.Panel>
       </Collapse>
       <Checkbox
+        defaultChecked={isAgreedRef.current}
         onChange={(e) => {
           isAgreedRef.current = e.target.checked;
         }}

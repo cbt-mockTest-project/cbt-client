@@ -22,10 +22,7 @@ const ItemRegisterModal: React.FC<ItemRegisterModalProps> = (props) => {
       okButtonProps={{
         loading: isLoading,
       }}
-      okText="판매 신청"
       onOk={onClickOk}
-      cancelText="취소"
-      title="판매 상품 등록신청"
     >
       <div className=" text-gray-500 mb-2 font-bold">
         판매 상품등록 유의사항

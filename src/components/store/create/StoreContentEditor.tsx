@@ -46,12 +46,14 @@ interface StoreContentEditorProps {
   setContent: (content: string) => void;
   className?: string;
   placeholder?: string;
+  defaultValue?: string;
 }
 
 const StoreContentEditor: React.FC<StoreContentEditorProps> = ({
   setContent,
   className = '',
   placeholder = '',
+  defaultValue = '',
 }) => {
   const reactQuillRef = useRef<ReactQuill | null>(null);
   const imageHandler = () => {
@@ -118,6 +120,7 @@ const StoreContentEditor: React.FC<StoreContentEditorProps> = ({
     <StoreContentEditorBlock className={className}>
       <ReactQuillWrapper
         theme="snow"
+        defaultValue={defaultValue}
         forwardedRef={reactQuillRef}
         formats={formats}
         modules={modules}

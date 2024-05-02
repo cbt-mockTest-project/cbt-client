@@ -1264,6 +1264,13 @@ export type GetItemRevisionInput = {
   id: Scalars['Float'];
 };
 
+export type GetItemRevisionOutput = {
+  __typename?: 'GetItemRevisionOutput';
+  error?: Maybe<Scalars['String']>;
+  itemRevision?: Maybe<ItemRevision>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetItemsForOwnerOutput = {
   __typename?: 'GetItemsForOwnerOutput';
   error?: Maybe<Scalars['String']>;
@@ -2947,7 +2954,7 @@ export type Query = {
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
   getItem: Item;
-  getItemRevision: ItemRevision;
+  getItemRevision: GetItemRevisionOutput;
   getItems: GetItemsOutput;
   getItemsForOwner: GetItemsForOwnerOutput;
   getKeywordSearchCount: GetKeywordSearchCountOutput;

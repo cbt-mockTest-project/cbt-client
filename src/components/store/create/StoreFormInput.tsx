@@ -28,6 +28,13 @@ const StoreFormInput: React.FC<StoreFormInputProps> = (props) => {
     });
   }, [watch]);
 
+  useEffect(() => {
+    if (name === 'price' && inputProps.defaultValue) {
+      const value = `￦ ${Number(inputProps.defaultValue).toLocaleString()}`;
+      setPriceValue(value);
+    }
+  }, [inputProps.defaultValue, name]);
+
   return (
     <div className="flex flex-col w-full gap-0">
       <Input
