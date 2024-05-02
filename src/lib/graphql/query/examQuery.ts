@@ -90,6 +90,7 @@ export const CREATE_MOCK_EXAM_CATEGORY = gql`
         name
         description
         isPublic
+        urlSlug
       }
       error
       ok

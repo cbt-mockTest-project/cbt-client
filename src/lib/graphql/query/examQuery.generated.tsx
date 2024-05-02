@@ -57,7 +57,7 @@ export type CreateMockExamCategoryMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string, description: string, isPublic: boolean } | null } };
+export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string, description: string, isPublic: boolean, urlSlug: string } | null } };
 
 export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
   input: Types.ReadMockExamTitlesByCateoryInput;
@@ -329,6 +329,7 @@ export const CreateMockExamCategoryDocument = gql`
       name
       description
       isPublic
+      urlSlug
     }
     error
     ok
