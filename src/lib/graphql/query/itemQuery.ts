@@ -54,6 +54,7 @@ export const GET_ITEM_REVISION_QUERY = gql`
         id
         created_at
         description
+        urlSlug
         file {
           size
           name
@@ -86,6 +87,7 @@ export const GET_ITEM_QUERY = gql`
     getItem(input: $input) {
       created_at
       description
+      urlSlug
       file {
         name
         type
@@ -118,6 +120,7 @@ export const GET_ITEMS_QUERY = gql`
       ok
       totalCount
       items {
+        urlSlug
         id
         description
         price

@@ -13,7 +13,10 @@ import {
   useCreateStoreItemMutation,
   useUpdateStoreItemMutation,
 } from '@lib/hooks/useStoreItem.mutation';
-import { handleError } from '@lib/utils/utils';
+import {
+  handleError,
+  replaceSpaceSlashAndSpecialCharsToHyphen,
+} from '@lib/utils/utils';
 import ItemRegisterModal from './ItemRegisterModal';
 import { useRouter } from 'next/router';
 
@@ -67,6 +70,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
       }
       const postData: CreateItemInput | UpdateItemInput = {
         ...data,
+        urlSlug: replaceSpaceSlashAndSpecialCharsToHyphen(data.title),
         file: {
           name: data.file.name,
           size: data.file.size,

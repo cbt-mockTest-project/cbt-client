@@ -288,6 +288,7 @@ export type CreateItemInput = {
   price: Scalars['Float'];
   thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+  urlSlug: Scalars['String'];
 };
 
 export type CreateItemOutput = {
@@ -1499,6 +1500,7 @@ export type Item = {
   thumbnail?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
+  urlSlug: Scalars['String'];
   user: User;
 };
 
@@ -1527,6 +1529,7 @@ export type ItemInputType = {
   state: ItemStateEnum;
   thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+  urlSlug: Scalars['String'];
   user: UserInputType;
 };
 
@@ -1544,6 +1547,7 @@ export type ItemRevision = {
   thumbnail?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   updated_at: Scalars['DateTime'];
+  urlSlug: Scalars['String'];
   user: User;
 };
 
@@ -1557,6 +1561,7 @@ export type ItemRevisionInputType = {
   state: ItemRevisionStateEnum;
   thumbnail?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
+  urlSlug: Scalars['String'];
   user: UserInputType;
 };
 
