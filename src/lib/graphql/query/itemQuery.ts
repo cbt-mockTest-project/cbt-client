@@ -56,6 +56,9 @@ export const GET_ITEM_REVISION_QUERY = gql`
         description
         urlSlug
         file {
+          page
+          previewImagesCount
+          previewImages
           size
           name
           type
@@ -85,29 +88,37 @@ export const GET_ITEM_REVISION_QUERY = gql`
 export const GET_ITEM_QUERY = gql`
   query GetItem($input: GetItemInput!) {
     getItem(input: $input) {
-      created_at
-      description
-      urlSlug
-      file {
-        name
-        type
-        size
-        uid
-      }
-      id
-      price
-      state
-      thumbnail
-      title
-      updated_at
-      user {
-        email
+      ok
+      error
+      item {
+        created_at
+        description
+        contents
+        urlSlug
+        file {
+          page
+          previewImagesCount
+          previewImages
+          name
+          type
+          size
+          uid
+        }
         id
-        nickname
-      }
-      category {
-        id
-        name
+        price
+        state
+        thumbnail
+        title
+        updated_at
+        user {
+          email
+          id
+          nickname
+        }
+        category {
+          id
+          name
+        }
       }
     }
   }
@@ -133,6 +144,17 @@ export const GET_ITEMS_QUERY = gql`
           nickname
         }
       }
+    }
+  }
+`;
+
+export const GET_APPROVED_ITEM_IDS_AND_SLUGS_QUERY = gql`
+  query GetApprovedItemIdsAndsSlugs {
+    getApprovedItemIdsAndsSlugs {
+      error
+      ids
+      ok
+      slugs
     }
   }
 `;

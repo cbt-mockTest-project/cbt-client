@@ -1089,6 +1089,14 @@ export type FindMyExamHistoryOutput = {
   titleAndId?: Maybe<Array<TitleAndId>>;
 };
 
+export type GetApprovedItemIdsAndsSlugsOutput = {
+  __typename?: 'GetApprovedItemIdsAndsSlugsOutput';
+  error?: Maybe<Scalars['String']>;
+  ids?: Maybe<Array<Scalars['Float']>>;
+  ok: Scalars['Boolean'];
+  slugs?: Maybe<Array<Scalars['String']>>;
+};
+
 export type GetBlogCategoryListInput = {
   blogId: Scalars['String'];
 };
@@ -1258,7 +1266,15 @@ export type GetInvitedExamsOutput = {
 };
 
 export type GetItemInput = {
-  id: Scalars['Float'];
+  id?: InputMaybe<Scalars['Float']>;
+  urlSlug?: InputMaybe<Scalars['String']>;
+};
+
+export type GetItemOutput = {
+  __typename?: 'GetItemOutput';
+  error?: Maybe<Scalars['String']>;
+  item?: Maybe<Item>;
+  ok: Scalars['Boolean'];
 };
 
 export type GetItemRevisionInput = {
@@ -1506,6 +1522,9 @@ export type Item = {
 
 export type ItemFileInputType = {
   name: Scalars['String'];
+  page?: InputMaybe<Scalars['Float']>;
+  previewImages?: InputMaybe<Array<Scalars['String']>>;
+  previewImagesCount?: InputMaybe<Scalars['Float']>;
   size: Scalars['Float'];
   type: Scalars['String'];
   uid: Scalars['String'];
@@ -1514,6 +1533,9 @@ export type ItemFileInputType = {
 export type ItemFileType = {
   __typename?: 'ItemFileType';
   name: Scalars['String'];
+  page?: Maybe<Scalars['Float']>;
+  previewImages?: Maybe<Array<Scalars['String']>>;
+  previewImagesCount?: Maybe<Scalars['Float']>;
   size: Scalars['Float'];
   type: Scalars['String'];
   uid: Scalars['String'];
@@ -2944,6 +2966,7 @@ export enum PostOrderType {
 export type Query = {
   __typename?: 'Query';
   findMyExamHistory: FindMyExamHistoryOutput;
+  getApprovedItemIdsAndsSlugs: GetApprovedItemIdsAndsSlugsOutput;
   getBlogCategoryList: GetBlogCategoryListOutput;
   getBlogInfo: GetBlogInfoOutput;
   getBlogPostDetail: GetBlogPostDetailOutput;
@@ -2958,7 +2981,7 @@ export type Query = {
   getFeedbacksByRecommendationCount: GetFeedbacksByRecommendationCountOutput;
   getFeedbacksWithFilter: GetFeedbacksWithFilterOutput;
   getInvitedExams: GetInvitedExamsOutput;
-  getItem: Item;
+  getItem: GetItemOutput;
   getItemRevision: GetItemRevisionOutput;
   getItems: GetItemsOutput;
   getItemsForOwner: GetItemsForOwnerOutput;

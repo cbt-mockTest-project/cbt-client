@@ -36,7 +36,6 @@ import {
 import { setCookie } from 'cookies-next';
 import '@styles/global.css';
 
-
 export const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps<any>) => {

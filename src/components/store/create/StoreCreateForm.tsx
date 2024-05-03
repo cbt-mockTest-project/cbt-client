@@ -43,6 +43,9 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
             ...defaultValues.file,
             percent: 100,
             status: 'done',
+            page: defaultValues.file.page,
+            previewImages: defaultValues.file.previewImages,
+            previewImagesCount: defaultValues.file.previewImagesCount,
           } as unknown as ItemRevision['file'],
           description: defaultValues.description,
           contents: defaultValues.contents,
@@ -70,12 +73,14 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
       }
       const postData: CreateItemInput | UpdateItemInput = {
         ...data,
-        urlSlug: replaceSpaceSlashAndSpecialCharsToHyphen(data.title),
         file: {
           name: data.file.name,
           size: data.file.size,
           type: data.file.type,
           uid: data.file.uid,
+          page: data.file.page,
+          previewImages: data.file.previewImages,
+          previewImagesCount: data.file.previewImagesCount,
         },
       };
       if (data.price > 0 && !isItemRegisterModalOpen) {
@@ -99,6 +104,8 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
         }
       }
       if (!isEditMode) {
+        (postData as CreateItemInput).urlSlug =
+          replaceSpaceSlashAndSpecialCharsToHyphen(data.title);
         const res = await createItemMutation.mutateAsync(
           postData as CreateItemInput
         );
@@ -154,7 +161,7 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
               파일 업로드
             </div>
             <StoreFileDragger
-              onChage={(file) => setValue('file', file)}
+              onChageFile={(file) => setValue('file', file)}
               defaultFile={getValues('file')}
             />
             <StoreFormErrorMessage name="file" />

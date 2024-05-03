@@ -13,8 +13,8 @@ interface StoreItemProps {
 
 const StoreItem: React.FC<StoreItemProps> = ({ item }) => {
   return (
-    <Link href={`/store/${item.id}`}>
-      <div className="h-48 border-b border-gray-200 border-solid last:border-b-0 cursor-pointer hover:bg-slate-50 py-5 transition-colors duration-200 ease-in-out">
+    <Link href={`/store/${item.urlSlug}`}>
+      <div className="h-48 border-b border-gray-200 border-solid last:border-b-0 cursor-pointer py-5 transition-colors duration-200 ease-in-out group">
         <div className="flex gap-4 min-w-[800px]">
           {item.thumbnail ? (
             <Image
@@ -34,7 +34,7 @@ const StoreItem: React.FC<StoreItemProps> = ({ item }) => {
             </div>
           )}
           <div className="w-[calc(100%-140px)]">
-            <div className="text-lg font-bold break-all whitespace-nowrap overflow-hidden overflow-ellipsis w-full  mb-4">
+            <div className="text-lg font-bold break-all whitespace-nowrap overflow-hidden overflow-ellipsis w-full mb-4 group-hover:underline ">
               {item.title}
             </div>
             <div className="text-sm text-gray-700 line-clamp-3">

@@ -43,14 +43,14 @@ export type GetItemRevisionQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetItemRevisionQuery = { __typename?: 'Query', getItemRevision: { __typename?: 'GetItemRevisionOutput', ok: boolean, error?: string | null, itemRevision?: { __typename?: 'ItemRevision', id: number, created_at: any, description: string, urlSlug: string, price: number, state: Types.ItemRevisionStateEnum, thumbnail?: string | null, title: string, updated_at: any, contents: string, file?: { __typename?: 'ItemFileType', size: number, name: string, type: string, uid: string } | null, item: { __typename?: 'Item', id: number }, user: { __typename?: 'User', id: number }, category?: { __typename?: 'MockExamCategory', id: number } | null } | null } };
+export type GetItemRevisionQuery = { __typename?: 'Query', getItemRevision: { __typename?: 'GetItemRevisionOutput', ok: boolean, error?: string | null, itemRevision?: { __typename?: 'ItemRevision', id: number, created_at: any, description: string, urlSlug: string, price: number, state: Types.ItemRevisionStateEnum, thumbnail?: string | null, title: string, updated_at: any, contents: string, file?: { __typename?: 'ItemFileType', page?: number | null, previewImagesCount?: number | null, previewImages?: Array<string> | null, size: number, name: string, type: string, uid: string } | null, item: { __typename?: 'Item', id: number }, user: { __typename?: 'User', id: number }, category?: { __typename?: 'MockExamCategory', id: number } | null } | null } };
 
 export type GetItemQueryVariables = Types.Exact<{
   input: Types.GetItemInput;
 }>;
 
 
-export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'Item', created_at: any, description: string, urlSlug: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', name: string, type: string, size: number, uid: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } };
+export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'GetItemOutput', ok: boolean, error?: string | null, item?: { __typename?: 'Item', created_at: any, description: string, urlSlug: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', page?: number | null, previewImagesCount?: number | null, previewImages?: Array<string> | null, name: string, type: string, size: number, uid: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } | null } };
 
 export type GetItemsQueryVariables = Types.Exact<{
   input: Types.GetItemsInput;
@@ -58,6 +58,11 @@ export type GetItemsQueryVariables = Types.Exact<{
 
 
 export type GetItemsQuery = { __typename?: 'Query', getItems: { __typename?: 'GetItemsOutput', error?: string | null, ok: boolean, totalCount?: number | null, items?: Array<{ __typename?: 'Item', urlSlug: string, id: number, description: string, price: number, thumbnail?: string | null, title: string, created_at: any, updated_at: any, user: { __typename?: 'User', id: number, nickname: string } }> | null } };
+
+export type GetApprovedItemIdsAndsSlugsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetApprovedItemIdsAndsSlugsQuery = { __typename?: 'Query', getApprovedItemIdsAndsSlugs: { __typename?: 'GetApprovedItemIdsAndsSlugsOutput', error?: string | null, ids?: Array<number> | null, ok: boolean, slugs?: Array<string> | null } };
 
 
 export const CreateItemDocument = gql`
@@ -131,6 +136,9 @@ export const GetItemRevisionDocument = gql`
       description
       urlSlug
       file {
+        page
+        previewImagesCount
+        previewImages
         size
         name
         type
@@ -163,29 +171,36 @@ export function useGetItemRevisionQuery(options: Omit<Urql.UseQueryArgs<GetItemR
 export const GetItemDocument = gql`
     query GetItem($input: GetItemInput!) {
   getItem(input: $input) {
-    created_at
-    description
-    urlSlug
-    file {
-      name
-      type
-      size
-      uid
-    }
-    id
-    price
-    state
-    thumbnail
-    title
-    updated_at
-    user {
-      email
+    ok
+    error
+    item {
+      created_at
+      description
+      urlSlug
+      file {
+        page
+        previewImagesCount
+        previewImages
+        name
+        type
+        size
+        uid
+      }
       id
-      nickname
-    }
-    category {
-      id
-      name
+      price
+      state
+      thumbnail
+      title
+      updated_at
+      user {
+        email
+        id
+        nickname
+      }
+      category {
+        id
+        name
+      }
     }
   }
 }
@@ -220,4 +235,18 @@ export const GetItemsDocument = gql`
 
 export function useGetItemsQuery(options: Omit<Urql.UseQueryArgs<GetItemsQueryVariables>, 'query'>) {
   return Urql.useQuery<GetItemsQuery, GetItemsQueryVariables>({ query: GetItemsDocument, ...options });
+};
+export const GetApprovedItemIdsAndsSlugsDocument = gql`
+    query GetApprovedItemIdsAndsSlugs {
+  getApprovedItemIdsAndsSlugs {
+    error
+    ids
+    ok
+    slugs
+  }
+}
+    `;
+
+export function useGetApprovedItemIdsAndsSlugsQuery(options?: Omit<Urql.UseQueryArgs<GetApprovedItemIdsAndsSlugsQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetApprovedItemIdsAndsSlugsQuery, GetApprovedItemIdsAndsSlugsQueryVariables>({ query: GetApprovedItemIdsAndsSlugsDocument, ...options });
 };
