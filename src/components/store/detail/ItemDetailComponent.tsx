@@ -3,8 +3,12 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 import parse from 'html-react-parser';
 import React from 'react';
 import StoreGallery from '../common/StoreGallery';
-import { Button, Card } from 'antd';
-import { HeartFilled } from '@ant-design/icons';
+import { Button, Card, Tooltip } from 'antd';
+import {
+  HeartFilled,
+  QuestionCircleFilled,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 
 interface ItemDetailComponentProps {}
 
@@ -42,14 +46,27 @@ const ItemDetailComponent: React.FC<ItemDetailComponentProps> = () => {
               <div className="text-gray-500">이용자 수 :</div>
               <div>{`${100}명`}</div>
             </div>
+
+            <div className="flex gap-2">
+              <div className="text-gray-500">암기장 제공 :</div>
+              <div className="flex gap-2">
+                <span>{item.category.name}</span>
+                <button>
+                  <Tooltip title="상품 구매시 암기장 초대링크가 제공됩니다.">
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </button>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="text-gray-500">자료 정보 :</div>
+              <div>{`${item.file.page}페이지 / PDF`}</div>
+            </div>
             <div className="flex gap-2">
               <div className="text-gray-500">가격 :</div>
               <div>{`${
                 item.price ? item.price.toLocaleString() : '무료'
               }`}</div>
-            </div>
-            <div className="flex gap-2">
-              <div>{`${item.file.page}페이지 / PDF`}</div>
             </div>
 
             <Button type="primary" size="large">
