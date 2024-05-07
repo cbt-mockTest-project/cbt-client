@@ -67,7 +67,6 @@ interface HomeComponentProps {}
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   const router = useRouter();
   const {
-    fetchCategories,
     searchedCategories,
     fetchCategoriesLoading,
     moduStorageCategories,

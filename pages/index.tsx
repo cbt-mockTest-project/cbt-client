@@ -62,28 +62,64 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         }),
       ]);
 
-      const sortedUserCategories = [...userCategories].sort(
+      const UserCategoriesSortedByLikes = [...userCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
-      const sortedModuCategories = [...moduCategories].sort(
+      const UserCategoriesSortedByCreatedAt = [...userCategories]
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .map((category) => ({
+          ...category,
+          isNew: true,
+        }));
+      const ModuCategoriesSortedByLikes = [...moduCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
-      const sortedEhsCategories = [...ehsCategories].sort(
+      const ModuCategoriesSortedByCreatedAt = [...moduCategories]
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .map((category) => ({
+          ...category,
+          isNew: true,
+        }));
+      const EhsCategoriesSortedByLikes = [...ehsCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
+      const EhsCategoriesSortedByCreatedAt = [...ehsCategories]
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .map((category) => ({
+          ...category,
+          isNew: true,
+        }));
       store.dispatch(
         homeActions.setModuStorageCategories({
-          categories: sortedModuCategories as MockExamCategory[],
+          categories: [
+            ...ModuCategoriesSortedByCreatedAt.slice(0, 2),
+            ...ModuCategoriesSortedByLikes,
+          ] as MockExamCategory[],
         })
       );
       store.dispatch(
         homeActions.setEhsStorageCategories({
-          categories: sortedEhsCategories as MockExamCategory[],
+          categories: [
+            ...EhsCategoriesSortedByCreatedAt.slice(0, 2),
+            ...EhsCategoriesSortedByLikes,
+          ] as MockExamCategory[],
         })
       );
       store.dispatch(
         homeActions.setUserStorageCategories({
-          categories: sortedUserCategories as MockExamCategory[],
+          categories: [
+            ...UserCategoriesSortedByCreatedAt.slice(0, 2),
+            ...UserCategoriesSortedByLikes,
+          ] as MockExamCategory[],
         })
       );
 
