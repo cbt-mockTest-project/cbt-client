@@ -89,15 +89,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const EhsCategoriesSortedByLikes = [...ehsCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
-      const EhsCategoriesSortedByCreatedAt = [...ehsCategories]
-        .sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        )
-        .map((category) => ({
-          ...category,
-          isNew: true,
-        }));
+
       store.dispatch(
         homeActions.setModuStorageCategories({
           categories: [
@@ -108,10 +100,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       );
       store.dispatch(
         homeActions.setEhsStorageCategories({
-          categories: [
-            ...EhsCategoriesSortedByCreatedAt.slice(0, 2),
-            ...EhsCategoriesSortedByLikes,
-          ] as MockExamCategory[],
+          categories: EhsCategoriesSortedByLikes as MockExamCategory[],
         })
       );
       store.dispatch(
