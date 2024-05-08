@@ -4,7 +4,7 @@ import useAuth from '@lib/hooks/useAuth';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { BookmarkOutlined } from '@mui/icons-material';
-import { Dropdown, MenuProps } from 'antd';
+import { Button, Dropdown, MenuProps } from 'antd';
 import React from 'react';
 
 interface CategoryBookmarkOrEditWrapperProps {
@@ -30,14 +30,17 @@ const CategoryBookmarkOrEditWrapper: React.FC<
   return (
     <>
       {isMyCategory ? (
-        <Dropdown menu={{ items: dropdownItems }} placement="bottomRight">
-          <div
-            className="category-setting-button-wrapper"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <EllipsisOutlined />
-          </div>
-        </Dropdown>
+        <div className="absolute top-[30px] right-[30px] flex flex-col items-end gap-4">
+          <Dropdown menu={{ items: dropdownItems }} placement="bottomRight">
+            <div
+              className="category-setting-button-wrapper"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <EllipsisOutlined />
+            </div>
+          </Dropdown>
+          <Button type="primary">수익창출 신청</Button>
+        </div>
       ) : (
         isPublic && (
           <button

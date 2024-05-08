@@ -54,10 +54,10 @@ const CategoryComponentBlock = styled.div`
     }
   }
   .category-setting-button-wrapper {
-    position: absolute;
+    /* position: absolute;
     top: 30px;
     right: 30px;
-    cursor: pointer;
+    cursor: pointer; */
     border-radius: 50%;
     border: 1px solid ${palette.colorBorder};
     width: 35px;
