@@ -43,7 +43,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
       updateRecentlyStudiedCategory({
         variables: {
           input: {
-            categoryName: categoryQueryInput.name,
+            categorySlug: categoryQueryInput.urlSlug,
           },
         },
       });
