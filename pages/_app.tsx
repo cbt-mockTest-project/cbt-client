@@ -36,7 +36,6 @@ import {
 import { setCookie } from 'cookies-next';
 import '@styles/global.css';
 
-
 export const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
@@ -163,6 +162,19 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           content="width=device-width, initial-scale=1, user-scalable=no"
         />
       </Head>
+      <Script
+        id="clarify-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+          (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "m92p1x5uzm");
+        `,
+        }}
+      />
       <Script
         id="gtm-init"
         strategy="afterInteractive"
