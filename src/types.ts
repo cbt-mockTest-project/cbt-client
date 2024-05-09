@@ -411,6 +411,18 @@ export type CreatePaymentOutput = {
   payment?: Maybe<Payment>;
 };
 
+export type CreatePointTransactionInput = {
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
+};
+
+export type CreatePointTransactionOutput = {
+  __typename?: 'CreatePointTransactionOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreatePostCommentInput = {
   content: Scalars['String'];
   postId: Scalars['Float'];
@@ -481,6 +493,17 @@ export type CreateQuizOutput = {
   __typename?: 'CreateQuizOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateRevenueRequestFormInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type CreateRevenueRequestFormOutput = {
+  __typename?: 'CreateRevenueRequestFormOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  revenueRequestForm?: Maybe<RevenueRequestForm>;
 };
 
 export type CreateUserRoleInput = {
@@ -1491,6 +1514,7 @@ export type MockExamCategory = {
   order: Scalars['Float'];
   partner?: Maybe<Partner>;
   quiz: Array<Quiz>;
+  revenueRequestForm?: Maybe<RevenueRequestForm>;
   roles: Array<Role>;
   seller?: Maybe<Seller>;
   source: ExamSource;
@@ -1519,6 +1543,7 @@ export type MockExamCategoryInputType = {
   order: Scalars['Float'];
   partner?: InputMaybe<PartnerInputType>;
   quiz: Array<QuizInputType>;
+  revenueRequestForm?: InputMaybe<RevenueRequestFormInputType>;
   roles: Array<RoleInputType>;
   seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
@@ -1844,12 +1869,14 @@ export type Mutation = {
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createOrUpdateTodo: CreateOrUpdateTodoOutput;
   createPayment: CreatePaymentOutput;
+  createPointTransaction: CreatePointTransactionOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
   createQuiz: CreateQuizOutput;
   createQuizComment: CreateQuizCommentOutput;
+  createRevenueRequestForm: CreateRevenueRequestFormOutput;
   createUserRole: CreateUserRoleOutput;
   createVideo: CreateVideoOutput;
   createVisit: CoreOutput;
@@ -2062,6 +2089,11 @@ export type MutationCreatePaymentArgs = {
 };
 
 
+export type MutationCreatePointTransactionArgs = {
+  input: CreatePointTransactionInput;
+};
+
+
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
@@ -2089,6 +2121,11 @@ export type MutationCreateQuizArgs = {
 
 export type MutationCreateQuizCommentArgs = {
   input: CreateQuizCommentInput;
+};
+
+
+export type MutationCreateRevenueRequestFormArgs = {
+  input: CreateRevenueRequestFormInput;
 };
 
 
@@ -2547,6 +2584,38 @@ export type Payment = {
   receiptUrl?: Maybe<Scalars['String']>;
   updated_at: Scalars['DateTime'];
   user: User;
+};
+
+export type PointBalance = {
+  __typename?: 'PointBalance';
+  balance: Scalars['Float'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PointBalanceInputType = {
+  balance: Scalars['Float'];
+  user: UserInputType;
+};
+
+export type PointTransaction = {
+  __typename?: 'PointTransaction';
+  created_at: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['Float'];
+  point: Scalars['Float'];
+  type: TransactionType;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PointTransactionInputType = {
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
+  user: UserInputType;
 };
 
 export type Post = {
@@ -3587,6 +3656,28 @@ export type RevalidateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type RevenueRequestForm = {
+  __typename?: 'RevenueRequestForm';
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  reason?: Maybe<Scalars['String']>;
+  status: RevenueRequestFormStatus;
+  updated_at: Scalars['DateTime'];
+};
+
+export type RevenueRequestFormInputType = {
+  category: MockExamCategoryInputType;
+  reason?: InputMaybe<Scalars['String']>;
+  status: RevenueRequestFormStatus;
+};
+
+export enum RevenueRequestFormStatus {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type Role = {
   __typename?: 'Role';
   created_at: Scalars['DateTime'];
@@ -3784,6 +3875,12 @@ export type ToggleExamCategoryBookmarkOutput = {
   ok: Scalars['Boolean'];
 };
 
+export enum TransactionType {
+  Accumulation = 'ACCUMULATION',
+  Use = 'USE',
+  Withdraw = 'WITHDRAW'
+}
+
 export type UniqueMorpheme = {
   __typename?: 'UniqueMorpheme';
   count: Scalars['Float'];
@@ -3965,6 +4062,8 @@ export type User = {
   notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
   payments: Array<Payment>;
+  pointBalance?: Maybe<PointBalance>;
+  pointTransactions?: Maybe<Array<PointTransaction>>;
   post?: Maybe<Array<Post>>;
   postComment: Array<PostComment>;
   postData: Array<PostData>;
@@ -4033,6 +4132,8 @@ export type UserInputType = {
   notice?: InputMaybe<Array<NoticeInputType>>;
   password: Scalars['String'];
   payments: Array<PayInputType>;
+  pointBalance?: InputMaybe<PointBalanceInputType>;
+  pointTransactions?: InputMaybe<Array<PointTransactionInputType>>;
   post?: InputMaybe<Array<PostInputType>>;
   postComment: Array<PostCommentInputType>;
   postData: Array<PostDataInputType>;
