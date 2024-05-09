@@ -1,12 +1,12 @@
-import CategoryInviteModal from '@components/category/CategoryInviteModal';
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import useStorage from '@lib/hooks/useStorage';
-import { Button, Pagination, Select, Tooltip } from 'antd';
+import { Button, Empty, Pagination, Select, Skeleton, Tooltip } from 'antd';
 import { StorageType } from 'customTypes';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import InvitationManageModal from './InvitationManageModal';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 
 const MyStorageComponentBlock = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ const MyStorageComponentBlock = styled.div`
   }
 `;
 
-const LIMIT = 9;
+const LIMIT = 10;
 
 interface MyStorageComponentProps {}
 
@@ -40,8 +40,13 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   const [storageType, setStorageType] = React.useState<StorageType>(
     StorageType.MY
   );
+  const setMyCategoriesLoading = useAppSelector(
+    (state) => state.storage.setMyCategoriesLoading
+  );
   const { categories, handleFilterCategories, handleToggleCategoryBookmark } =
     useStorage(storageType);
+  const { openSaveCategoryModal, placeholder } =
+    useSaveCategoryModal(storageType);
   return (
     <MyStorageComponentBlock>
       <Tooltip title="초대받은 암기장 목록을 관리합니다."></Tooltip>
@@ -71,6 +76,19 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
         handleToggleBookmark={handleToggleCategoryBookmark}
         hasAllExamFolder={storageType === StorageType.MY}
       />
+      {setMyCategoriesLoading && (
+        <div className="flex justify-center flex-col gap-4">
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+      )}
+      {!setMyCategoriesLoading && categories?.length === 0 && (
+        <Empty description="암기장이 없습니다.">
+          <Button type="primary" onClick={openSaveCategoryModal}>
+            암기장 생성하기
+          </Button>
+        </Empty>
+      )}
       <div className="flex items-center mt-5 justify-center">
         <Pagination
           current={page}
@@ -79,6 +97,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
           onChange={(page) => setPage(page)}
         />
       </div>
+      {placeholder}
     </MyStorageComponentBlock>
   );
 };

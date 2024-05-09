@@ -55,6 +55,9 @@ const useStorage = (type: StorageType) => {
     input: GetExamCategoriesInput,
     order?: 'popular' | 'latest'
   ) => {
+    if (type === StorageType.MY) {
+      dispatch(storageActions.setMyCategoriesLoading());
+    }
     const res = await getExamCategories({
       variables: {
         input,
