@@ -1164,6 +1164,17 @@ export type GetCategoryEvaluationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetCategoryPointHistoriesInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type GetCategoryPointHistoriesOutput = {
+  __typename?: 'GetCategoryPointHistoriesOutput';
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetExamCategoriesInput = {
   categoryIds?: InputMaybe<Array<Scalars['Float']>>;
   categoryMakerId?: InputMaybe<Scalars['Float']>;
@@ -2813,6 +2824,7 @@ export type Query = {
   getBlogPostDetail: GetBlogPostDetailOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
+  getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
   getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
@@ -2907,6 +2919,11 @@ export type QueryGetBlogPostDetailArgs = {
 
 export type QueryGetCategoryEvaluationArgs = {
   input: GetCategoryEvaluationInput;
+};
+
+
+export type QueryGetCategoryPointHistoriesArgs = {
+  input: GetCategoryPointHistoriesInput;
 };
 
 

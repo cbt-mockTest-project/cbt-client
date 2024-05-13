@@ -9,6 +9,7 @@ import React, { useMemo, useState } from 'react';
 import RequestRevenueModal from './RequestRevenueModal';
 import { RevenueRequestFormStatus } from 'types';
 import palette from '@styles/palette';
+import CategoryRevenueHistoryModal from './CategoryRevenueHistoryModal';
 
 interface CategoryBookmarkOrEditWrapperProps {
   dropdownItems: MenuProps['items'];
@@ -18,6 +19,8 @@ const CategoryBookmarkOrEditWrapper: React.FC<
   CategoryBookmarkOrEditWrapperProps
 > = ({ dropdownItems }) => {
   const [isRequestRevenueModalOpen, setIsRequestRevenueModalOpen] =
+    useState(false);
+  const [isRevenueHistoryModalOpen, setIsRevenueHistoryModalOpen] =
     useState(false);
   const { data: meQuery } = useMeQuery();
   const { handleCheckLogin } = useAuth();
@@ -41,7 +44,7 @@ const CategoryBookmarkOrEditWrapper: React.FC<
     if (revenueRequestForm?.status === RevenueRequestFormStatus.Rejected)
       return '수익창출 재신청';
     if (revenueRequestForm?.status === RevenueRequestFormStatus.Approved)
-      return '승인 완료';
+      return '수익 현황';
     return '수익창출 신청';
   }, [revenueRequestForm?.status]);
 
@@ -74,11 +77,15 @@ const CategoryBookmarkOrEditWrapper: React.FC<
             >
               <Button
                 type="primary"
-                disabled={[
-                  RevenueRequestFormStatus.Pending,
-                  RevenueRequestFormStatus.Approved,
-                ].includes(revenueRequestForm?.status)}
-                onClick={() => setIsRequestRevenueModalOpen(true)}
+                disabled={[RevenueRequestFormStatus.Pending].includes(
+                  revenueRequestForm?.status
+                )}
+                onClick={() =>
+                  revenueRequestForm.status ===
+                  RevenueRequestFormStatus.Approved
+                    ? setIsRevenueHistoryModalOpen(true)
+                    : setIsRequestRevenueModalOpen(true)
+                }
               >
                 {revenueRequestStatusText}
               </Button>
@@ -121,6 +128,13 @@ const CategoryBookmarkOrEditWrapper: React.FC<
           open={isRequestRevenueModalOpen}
           onCancel={() => setIsRequestRevenueModalOpen(false)}
           onClose={() => setIsRequestRevenueModalOpen(false)}
+          categoryId={categoryId}
+        />
+      )}
+      {isRevenueHistoryModalOpen && (
+        <CategoryRevenueHistoryModal
+          open={isRevenueHistoryModalOpen}
+          onCancel={() => setIsRevenueHistoryModalOpen(false)}
           categoryId={categoryId}
         />
       )}
