@@ -120,8 +120,25 @@ export type CategoryInvitationLinkInputType = {
   user?: InputMaybe<UserInputType>;
 };
 
+export type CategoryPointHistory = {
+  __typename?: 'CategoryPointHistory';
+  buyer?: Maybe<User>;
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  pointTransaction: PointTransaction;
+  updated_at: Scalars['DateTime'];
+};
+
+export type CategoryPointHistoryInputType = {
+  buyer?: InputMaybe<UserInputType>;
+  category: MockExamCategoryInputType;
+  pointTransaction: PointTransactionInputType;
+};
+
 export type ChangeClientRoleAndCreatePaymentInput = {
   changeClientRoleInput: ChangeClientRoleInput;
+  createCategoryPointHistoryInput?: InputMaybe<CreateCategoryPointHistoryInput>;
   createPaymentInput: CreatePaymentInput;
 };
 
@@ -229,6 +246,13 @@ export type CreateCategoryInvitationLinkOutput = {
   code?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateCategoryPointHistoryInput = {
+  categoryId: Scalars['Float'];
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
 };
 
 export type CreateExamCategoryInvitationInput = {
@@ -398,6 +422,7 @@ export type CreateOrUpdateTodoOutput = {
 };
 
 export type CreatePaymentInput = {
+  createCategoryPointHistoryInput?: InputMaybe<CreateCategoryPointHistoryInput>;
   orderId: Scalars['String'];
   price: Scalars['Float'];
   productName: Scalars['String'];
@@ -421,6 +446,7 @@ export type CreatePointTransactionOutput = {
   __typename?: 'CreatePointTransactionOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+  pointTransaction?: Maybe<PointTransaction>;
 };
 
 export type CreatePostCommentInput = {
@@ -1497,6 +1523,7 @@ export type MockExamCategory = {
   approved: Scalars['Boolean'];
   categoryEvaluations?: Maybe<Array<CategoryEvaluation>>;
   categoryInvitationLinks: Array<CategoryInvitationLink>;
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
@@ -1528,6 +1555,7 @@ export type MockExamCategoryInputType = {
   approved?: Scalars['Boolean'];
   categoryEvaluations?: InputMaybe<Array<CategoryEvaluationInputType>>;
   categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
+  categoryPointHistories?: InputMaybe<Array<CategoryPointHistoryInputType>>;
   description?: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
@@ -4032,6 +4060,7 @@ export type User = {
   attendances?: Maybe<Array<Attendance>>;
   categoryEvaluations: Array<CategoryEvaluation>;
   categoryInvitationLinks: Array<CategoryInvitationLink>;
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   discountCode?: Maybe<Array<DiscountCode>>;
@@ -4104,6 +4133,7 @@ export type UserInputType = {
   attendances?: InputMaybe<Array<AttendanceInputTyper>>;
   categoryEvaluations: Array<CategoryEvaluationInputType>;
   categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
+  categoryPointHistories?: InputMaybe<Array<CategoryPointHistoryInputType>>;
   deletedAt: Scalars['DateTime'];
   discountCode?: InputMaybe<Array<Discountcode>>;
   email: Scalars['String'];

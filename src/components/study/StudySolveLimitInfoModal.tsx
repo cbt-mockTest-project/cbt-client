@@ -6,6 +6,9 @@ import { DoneAll } from '@mui/icons-material';
 import usePayment from '@components/pricing/usePayment';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import { checkRole, makeMoneyString } from '@lib/utils/utils';
+import { TransactionType } from 'types';
+import { LocalStorage } from '@lib/utils/localStorage';
+import { LAST_VISITED_CATEGORY_ID } from '@lib/constants/localStorage';
 
 const StudySolveLimitInfoModalBlock = styled(Modal)``;
 
@@ -22,6 +25,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
   } = props;
   const [isPricingTabOpen, setIsPricingTabOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
+  const localStorage = new LocalStorage();
   const [editProfileMutation] = useEditProfileMutation();
   const { handlePayment } = usePayment();
   const [price, setPrice] = useState(9900);
@@ -30,7 +34,11 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
     { label: '3개월', value: 1 },
     { label: '12개월', value: 2 },
   ];
-  const handleBasicPayment = async (roleId: number) => {
+  const handleBasicPayment = async (
+    e: React.MouseEvent<any, MouseEvent>,
+    roleId: number
+  ) => {
+    const categoryId = Number(localStorage.get(LAST_VISITED_CATEGORY_ID));
     await handlePayment({
       orderName: `모두CBT 베이직 플랜 - ${
         periodOptions.find((el) => el.value === roleId)?.label
@@ -38,7 +46,18 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
       price,
       roleId,
       checkRoleIds: [roleId],
+      ...(categoryId
+        ? {
+            createCategoryPointHistoryInput: {
+              categoryId,
+              point: 3000,
+              type: TransactionType.Accumulation,
+              description: '모두CBT 베이직 플랜 결제',
+            },
+          }
+        : {}),
     });
+    modalProps.onCancel?.(e);
   };
   const isUsingLicense = useMemo(
     () =>
@@ -92,7 +111,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               size="large"
               className="w-full mt-3"
               disabled={isUsingLicense || !selectedRoleId}
-              onClick={() => handleBasicPayment(selectedRoleId)}
+              onClick={(e) => handleBasicPayment(e, selectedRoleId)}
             >
               {isUsingLicense ? '이미 이용중입니다.' : '결제하기'}
             </Button>

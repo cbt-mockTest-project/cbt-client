@@ -1,4 +1,7 @@
-import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import {
+  LAST_VISITED_CATEGORY,
+  LAST_VISITED_CATEGORY_ID,
+} from '@lib/constants/localStorage';
 import {
   useMeQuery,
   useUpdateRecentlyStudiedCategory,
@@ -67,6 +70,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
   useEffect(() => {
     if (!router.asPath) return;
     localStorage.set(LAST_VISITED_CATEGORY, router.asPath);
+    localStorage.set(LAST_VISITED_CATEGORY_ID, categoryId);
   }, [router.asPath]);
 
   return <></>;
