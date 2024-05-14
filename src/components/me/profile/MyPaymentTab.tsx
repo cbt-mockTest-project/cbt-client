@@ -40,7 +40,9 @@ const MyPaymentTab: React.FC<MyPaymentTabProps> = () => {
         columns={columns}
         dataSource={paymentData}
         loading={getPaymentsLoading}
-        pagination={false}
+        pagination={{
+          pageSize: 10,
+        }}
       />
     </MyPaymentTabBlock>
   );

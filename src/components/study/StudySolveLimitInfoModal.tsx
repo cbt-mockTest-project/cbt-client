@@ -52,7 +52,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
               categoryId,
               point: 3000,
               type: TransactionType.Accumulation,
-              description: '모두CBT 베이직 플랜 결제',
+              description: '유저의 베이직 플랜 결제',
             },
           }
         : {}),

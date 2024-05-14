@@ -1360,6 +1360,13 @@ export type GetPartnersOutput = {
   partners?: Maybe<Array<Partner>>;
 };
 
+export type GetPointTransactionsOutput = {
+  __typename?: 'GetPointTransactionsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  pointTransactions?: Maybe<Array<PointTransaction>>;
+};
+
 export type GetQuizsInput = {
   categoryId: Scalars['Float'];
   date: Scalars['String'];
@@ -2843,6 +2850,7 @@ export type Query = {
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
   getPartners: GetPartnersOutput;
+  getPointTransactions: GetPointTransactionsOutput;
   getQuizs: GetQuizsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
