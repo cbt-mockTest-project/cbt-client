@@ -57,6 +57,7 @@ const CategoryRevenueHistoryModal: React.FC<
         columns={columns}
         dataSource={dataSource}
         pagination={{ pageSize: 6 }}
+        loading={isLoading}
         footer={() => (
           <CategoryRevenueHistoryTableFooter totalPoint={totalPoint} />
         )}
