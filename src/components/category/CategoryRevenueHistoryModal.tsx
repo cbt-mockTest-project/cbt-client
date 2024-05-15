@@ -34,7 +34,7 @@ const CategoryRevenueHistoryModal: React.FC<
       key: 'point',
     },
     {
-      title: '구매자',
+      title: '유저',
       dataIndex: 'buyer',
       key: 'buyer',
     },
