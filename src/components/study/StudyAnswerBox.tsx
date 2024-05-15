@@ -65,6 +65,7 @@ interface StudyAnswerBoxProps {
   updateFeedbackRecommendation: (
     updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
   ) => Promise<void>;
+  hasAddAnswerButton?: boolean;
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
@@ -74,6 +75,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   addFeedback,
   deleteFeedback,
   updateFeedbackRecommendation,
+  hasAddAnswerButton = true,
   className = '',
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -121,10 +123,12 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           updateFeedbackRecommendation={updateFeedbackRecommendation}
         />
       </div>
-      <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
-        <Button shape="circle">➕</Button>
-        <div>답안 추가</div>
-      </div>
+      {hasAddAnswerButton && (
+        <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
+          <Button shape="circle">➕</Button>
+          <div>답안 추가</div>
+        </div>
+      )}
       {isFeedbackModalOpen && (
         <QuestionFeedbackModal
           addFeedback={addFeedback}

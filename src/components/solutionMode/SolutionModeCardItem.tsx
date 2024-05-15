@@ -9,6 +9,7 @@ import StudyControlBox from '@components/study/StudyControlBox';
 import palette from '@styles/palette';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { useRouter } from 'next/router';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -41,6 +42,8 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   filterStates = [],
   isStaticPage,
 }) => {
+  const router = useRouter();
+  const hasAddAnswerButton = router.query.rel !== 'q';
   const {
     addFeedback,
     deleteFeedback,
@@ -97,6 +100,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             question={question}
             editFeedback={editFeedback}
             addFeedback={addFeedback}
+            hasAddAnswerButton={hasAddAnswerButton}
           />
         </div>
       </BasicCard>
