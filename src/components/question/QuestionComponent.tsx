@@ -72,7 +72,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             editFeedback={handleEditFeedback}
             deleteFeedback={handleDeleteFeedback}
             updateFeedbackRecommendation={handleUpdateFeedbackRecommendation}
-            hasAddAnswerButton={isMyQuestion}
           />
         </div>
       </BasicCard>
