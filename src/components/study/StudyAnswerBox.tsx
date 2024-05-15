@@ -14,6 +14,7 @@ import {
 import EditorStyle from '@styles/editorStyle';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useAuth from '@lib/hooks/useAuth';
+import { useRouter } from 'next/router';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -65,7 +66,6 @@ interface StudyAnswerBoxProps {
   updateFeedbackRecommendation: (
     updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
   ) => Promise<void>;
-  hasAddAnswerButton?: boolean;
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
@@ -75,10 +75,12 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   addFeedback,
   deleteFeedback,
   updateFeedbackRecommendation,
-  hasAddAnswerButton = true,
   className = '',
 }) => {
+  const router = useRouter();
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const hasAddAnswerButton =
+    router.query.rel !== 'q' && router.pathname !== '/question/[Id]';
   const { handleCheckLogin } = useAuth();
   const onClickOpenFeedbackModal = () => {
     if (!handleCheckLogin()) {

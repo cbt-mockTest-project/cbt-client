@@ -11,6 +11,7 @@ import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
 import SolutionModeCardItemList from './SolutionModeCardItemList';
+import LoopIcon from '@mui/icons-material/Loop';
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-body {
@@ -99,6 +100,14 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
               <div className="solution-mode-control-button-inner">
                 <ShuffleIcon />
                 섞기
+              </div>
+            </Button>
+          </Tooltip>
+          <Tooltip title="학습 형태를 변경합니다.">
+            <Button onClick={() => setIsSelectStudyModeModalOpen(true)}>
+              <div className="solution-mode-control-button-inner">
+                <LoopIcon />
+                형태
               </div>
             </Button>
           </Tooltip>

@@ -43,7 +43,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   isStaticPage,
 }) => {
   const router = useRouter();
-  const hasAddAnswerButton = router.query.rel !== 'q';
+
   const {
     addFeedback,
     deleteFeedback,
@@ -100,7 +100,6 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             question={question}
             editFeedback={editFeedback}
             addFeedback={addFeedback}
-            hasAddAnswerButton={hasAddAnswerButton}
           />
         </div>
       </BasicCard>
