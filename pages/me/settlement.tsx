@@ -10,7 +10,7 @@ const SettlementPage: NextPage<SettlementPageProps> = () => {
   return (
     <>
       <WithHead
-        title="정산 페이지 | 모두CBT"
+        title="포인트 출금 페이지 | 모두CBT"
         pageHeadingTitle="모두CBT 서비스 마이 페이지"
       />
       <SettlementComponent />

@@ -81,13 +81,13 @@ const SideNavList: React.FC<SideNavListProps> = () => {
       />
       <CustomNavDivider />
       <UserAuthBox className="side-user-auth-box" />
-      {isLoggedIn && [UserRole.Seller, UserRole.Admin].includes(user.role) && (
+      {isLoggedIn && [UserRole.Admin].includes(user.role) && (
         <>
           <CustomNavDivider />
           <Menu
             className="side-nav-list"
             onClick={(e) => {
-              if (e.key === '/me/seller') {
+              if (e.key === '/me/admin') {
                 router.push(e.key);
                 return;
               }

@@ -15,7 +15,7 @@ const CategoryRevenueHistoryTableFooter: React.FC<
         누적: {totalPoint.toLocaleString()} 포인트
       </div>
       <Link href="/me/settlement">
-        <Button type="primary">정산하러 가기</Button>
+        <Button type="primary">포인트 출금하기</Button>
       </Link>
     </div>
   );
