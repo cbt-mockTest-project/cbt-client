@@ -8,11 +8,10 @@ import {
   WechatOutlined,
   ClearOutlined,
   CrownOutlined,
-  MoneyCollectOutlined,
   AlertOutlined,
   GlobalOutlined,
-  StarOutlined,
 } from '@ant-design/icons';
+import { AdminPanelSettingsOutlined } from '@mui/icons-material';
 export const navItems = [
   {
     key: '/modu-storage',
@@ -81,8 +80,8 @@ export const navBottomItems = [
 
 export const navSellerItems = [
   {
-    key: '/me/seller',
-    icon: <MoneyCollectOutlined />,
-    label: '판매 정보',
+    key: '/me/admin',
+    icon: <AdminPanelSettingsOutlined />,
+    label: '관리자',
   },
 ];

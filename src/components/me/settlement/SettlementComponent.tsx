@@ -5,7 +5,9 @@ import {
   CreateSettlementRequestMutationVariables,
 } from '@lib/graphql/query/settlementRequestQuery.generated';
 import useMyPointTransactions from '@lib/hooks/useMyPointTransactions.query';
+import { mySettlementRequestQueryOptions } from '@lib/queryOptions/mySettlementRequest';
 import { apolloClient } from '@modules/apollo';
+import { useQuery } from '@tanstack/react-query';
 import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
 import React from 'react';
 import { CreateSettlementRequestInput, TransactionType } from 'types';
@@ -13,23 +15,23 @@ import { CreateSettlementRequestInput, TransactionType } from 'types';
 interface SettlementComponentProps {}
 
 const SettlementComponent: React.FC<SettlementComponentProps> = () => {
+  const { data: myPendingSettlementRequestResponse } = useQuery(
+    mySettlementRequestQueryOptions
+  );
+  const isExistedSettlementRequest =
+    myPendingSettlementRequestResponse?.getMySettlementRequest.ok;
   const { data: meQuery } = useMeQuery();
   const [form] = Form.useForm<CreateSettlementRequestInput>();
   const { pointHistories } = useMyPointTransactions();
-  const totalPoint = pointHistories.reduce((acc, cur) => {
-    if (cur.type === TransactionType.Accumulation) return acc + cur.point;
-    if (cur.type === TransactionType.Use) return acc - cur.point;
-    if (cur.type === TransactionType.Withdraw) return acc - cur.point;
-    return acc;
-  }, 0);
+  const totalPoint = pointHistories.reduce((acc, cur) => acc + cur.point, 0);
   const user = meQuery?.me.user;
   const onFinish = async (input: CreateSettlementRequestInput) => {
     try {
       if (!user) return message.error('로그인이 필요합니다.');
       if (totalPoint < 5000)
-        return message.error('5000 포인트 이상부터 정산이 가능합니다.');
+        return message.error('5000 포인트 이상부터 출금이 가능합니다.');
       if (totalPoint < input.amount) {
-        return message.error('보유 포인트보다 큰 금액은 정산이 불가능합니다.');
+        return message.error('보유 포인트보다 큰 금액은 출금이 불가능합니다.');
       }
       const res = await apolloClient.mutate<
         CreateSettlementRequestMutation,
@@ -41,11 +43,11 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
         },
       });
       if (res.data?.createSettlementRequest.ok) {
-        return message.success('정산 요청이 완료되었습니다.');
+        return message.success('출금 요청이 완료되었습니다.');
       }
-      return message.error('정산 요청에 실패했습니다.');
+      return message.error('출금 요청에 실패했습니다.');
     } catch (e) {
-      message.error('정산 요청에 실패했습니다.');
+      message.error('출금 요청에 실패했습니다.');
     }
   };
   const onCickSubmitButton = () => {
@@ -60,19 +62,30 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
       form.validateFields();
       return;
     }
-
-    Modal.confirm({
-      title: '정산 요청',
-      content: '정산 요청을 하시겠습니까?',
-      onOk: () => {
-        form.submit();
-      },
-    });
+    if (isExistedSettlementRequest) {
+      Modal.confirm({
+        title: '출금 재요청',
+        content: (
+          <pre>{`이미 출금 요청이 진행중입니다.\n출금을 재요청하시겠습니까?`}</pre>
+        ),
+        onOk: () => {
+          form.submit();
+        },
+      });
+    } else {
+      Modal.confirm({
+        title: '출금 요청',
+        content: '출금 요청을 하시겠습니까?',
+        onOk: () => {
+          form.submit();
+        },
+      });
+    }
   };
   if (!user) return null;
   return (
     <div className="py-[20px] px-[30px]">
-      <div className="text-[20px] font-bold">정산 페이지</div>
+      <div className="text-[20px] font-bold">출금 페이지</div>
       <div className="text-[16px] mt-[20px] mb-[10px]">
         <span className="text-[18px] font-bold">{`"${user.nickname}"`}</span>
         님의 현재 보유 포인트는{' '}
@@ -84,20 +97,20 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
         <Form form={form} onFinish={onFinish} layout="vertical">
           <Form.Item
             name="amount"
-            label="정산 금액"
+            label="출금 금액"
             rules={[
               {
                 validator: (_, value) => {
                   if (!value)
-                    return Promise.reject('정산 금액을 입력해주세요.');
+                    return Promise.reject('출금 금액을 입력해주세요.');
                   if (value < 5000) {
                     return Promise.reject(
-                      '5000 포인트 이상부터 정산이 가능합니다.'
+                      '5000 포인트 이상부터 출금이 가능합니다.'
                     );
                   }
                   if (value > totalPoint) {
                     return Promise.reject(
-                      '보유 포인트보다 큰 금액은 정산이 불가능합니다.'
+                      '보유 포인트보다 큰 금액은 출금이 불가능합니다.'
                     );
                   }
                   return Promise.resolve();
@@ -108,7 +121,7 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
             <InputNumber
               className="w-full"
               size="large"
-              placeholder="정산 금액을 입력해주세요."
+              placeholder="출금 금액을 입력해주세요."
               type="number"
             />
           </Form.Item>
@@ -140,14 +153,14 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
               type="primary"
               onClick={onCickSubmitButton}
             >
-              정산 요청
+              출금 요청하기
             </Button>
           </div>
         </Form>
       </div>
 
       <div className="text-sm mt-4 font-bold text-gray-500">
-        *정산 요청은 최소 5000 포인트 이상부터 가능합니다.
+        *출금 요청은 최소 5000 포인트 이상부터 가능합니다.
       </div>
       <a
         className="text-sm mt-4 font-bold text-gray-500 block"
