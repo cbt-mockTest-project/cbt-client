@@ -2,7 +2,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { SetCategoryPayload, SetMyExamsPayload } from 'customTypes';
 import { cloneDeep, isEqual } from 'lodash';
 import { DropResult } from 'react-beautiful-dnd';
-import { MockExam, MockExamCategory } from 'types';
+import {
+  MockExam,
+  MockExamCategory,
+  RevenueRequestForm,
+  RevenueRequestFormStatus,
+} from 'types';
 
 export interface ExamCategoryState {
   category: MockExamCategory | null;
@@ -28,6 +33,13 @@ const examCategorySlice = createSlice({
       const { category, shouldUpdateOriginal = true } = action.payload;
       state.category = category;
       if (shouldUpdateOriginal) state.originalCategory = category;
+    },
+    setCategoryRevenueRequestForm: (
+      state,
+      action: PayloadAction<RevenueRequestForm>
+    ) => {
+      if (!state.category) return;
+      state.category.revenueRequestForm = action.payload;
     },
     setMyExams: (state, action: PayloadAction<SetMyExamsPayload>) => {
       const { myExams, shouldUpdateOriginal = true } = action.payload;

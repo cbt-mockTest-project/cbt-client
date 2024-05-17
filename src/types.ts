@@ -120,8 +120,25 @@ export type CategoryInvitationLinkInputType = {
   user?: InputMaybe<UserInputType>;
 };
 
+export type CategoryPointHistory = {
+  __typename?: 'CategoryPointHistory';
+  buyer?: Maybe<User>;
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  pointTransaction: PointTransaction;
+  updated_at: Scalars['DateTime'];
+};
+
+export type CategoryPointHistoryInputType = {
+  buyer?: InputMaybe<UserInputType>;
+  category: MockExamCategoryInputType;
+  pointTransaction: PointTransactionInputType;
+};
+
 export type ChangeClientRoleAndCreatePaymentInput = {
   changeClientRoleInput: ChangeClientRoleInput;
+  createCategoryPointHistoryInput?: InputMaybe<CreateCategoryPointHistoryInput>;
   createPaymentInput: CreatePaymentInput;
 };
 
@@ -229,6 +246,13 @@ export type CreateCategoryInvitationLinkOutput = {
   code?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
+};
+
+export type CreateCategoryPointHistoryInput = {
+  categoryId: Scalars['Float'];
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
 };
 
 export type CreateExamCategoryInvitationInput = {
@@ -398,6 +422,7 @@ export type CreateOrUpdateTodoOutput = {
 };
 
 export type CreatePaymentInput = {
+  createCategoryPointHistoryInput?: InputMaybe<CreateCategoryPointHistoryInput>;
   orderId: Scalars['String'];
   price: Scalars['Float'];
   productName: Scalars['String'];
@@ -409,6 +434,33 @@ export type CreatePaymentOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   payment?: Maybe<Payment>;
+};
+
+export type CreatePointTransactionForAdminInput = {
+  description: Scalars['String'];
+  email: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
+};
+
+export type CreatePointTransactionForAdminOutput = {
+  __typename?: 'CreatePointTransactionForAdminOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  pointTransaction?: Maybe<PointTransaction>;
+};
+
+export type CreatePointTransactionInput = {
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
+};
+
+export type CreatePointTransactionOutput = {
+  __typename?: 'CreatePointTransactionOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  pointTransaction?: Maybe<PointTransaction>;
 };
 
 export type CreatePostCommentInput = {
@@ -479,6 +531,30 @@ export type CreateQuizInput = {
 
 export type CreateQuizOutput = {
   __typename?: 'CreateQuizOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateRevenueRequestFormInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type CreateRevenueRequestFormOutput = {
+  __typename?: 'CreateRevenueRequestFormOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  revenueRequestForm?: Maybe<RevenueRequestForm>;
+};
+
+export type CreateSettlementRequestInput = {
+  accountHolder: Scalars['String'];
+  accountNumber: Scalars['String'];
+  amount: Scalars['Float'];
+  bankName: Scalars['String'];
+};
+
+export type CreateSettlementRequestOutput = {
+  __typename?: 'CreateSettlementRequestOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -1115,6 +1191,17 @@ export type GetCategoryEvaluationOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type GetCategoryPointHistoriesInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type GetCategoryPointHistoriesOutput = {
+  __typename?: 'GetCategoryPointHistoriesOutput';
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type GetExamCategoriesInput = {
   categoryIds?: InputMaybe<Array<Scalars['Float']>>;
   categoryMakerId?: InputMaybe<Scalars['Float']>;
@@ -1293,11 +1380,43 @@ export type GetMyPaymentsOutput = {
   payments?: Maybe<Array<Payment>>;
 };
 
+export type GetMySettlementRequestOutput = {
+  __typename?: 'GetMySettlementRequestOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  settlementRequest?: Maybe<SettlementRequest>;
+};
+
+export type GetMySettlementRequestsOutput = {
+  __typename?: 'GetMySettlementRequestsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  settlementRequests?: Maybe<Array<SettlementRequest>>;
+};
+
 export type GetPartnersOutput = {
   __typename?: 'GetPartnersOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   partners?: Maybe<Array<Partner>>;
+};
+
+export type GetPointTransactionsForAdminInput = {
+  email: Scalars['String'];
+};
+
+export type GetPointTransactionsForAdminOutput = {
+  __typename?: 'GetPointTransactionsForAdminOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  pointTransactions?: Maybe<Array<PointTransaction>>;
+};
+
+export type GetPointTransactionsOutput = {
+  __typename?: 'GetPointTransactionsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  pointTransactions?: Maybe<Array<PointTransaction>>;
 };
 
 export type GetQuizsInput = {
@@ -1310,6 +1429,13 @@ export type GetQuizsOutput = {
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   quizs?: Maybe<Array<Quiz>>;
+};
+
+export type GetRevenueRequestFormsOutput = {
+  __typename?: 'GetRevenueRequestFormsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  revenueRequestForms?: Maybe<Array<RevenueRequestForm>>;
 };
 
 export type GetRoleCountInput = {
@@ -1360,6 +1486,13 @@ export type GetSearchRankOutput = {
   naverSmartSearchTitle?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
   postLink?: Maybe<Scalars['String']>;
+};
+
+export type GetSettlementRequestsOutput = {
+  __typename?: 'GetSettlementRequestsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  settlementRequests?: Maybe<Array<SettlementRequest>>;
 };
 
 export type GetTodayAttendanceOutput = {
@@ -1474,6 +1607,7 @@ export type MockExamCategory = {
   approved: Scalars['Boolean'];
   categoryEvaluations?: Maybe<Array<CategoryEvaluation>>;
   categoryInvitationLinks: Array<CategoryInvitationLink>;
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
@@ -1490,7 +1624,9 @@ export type MockExamCategory = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: Maybe<Partner>;
+  pointEarningUserIds?: Maybe<Array<Scalars['Float']>>;
   quiz: Array<Quiz>;
+  revenueRequestForm?: Maybe<RevenueRequestForm>;
   roles: Array<Role>;
   seller?: Maybe<Seller>;
   source: ExamSource;
@@ -1504,6 +1640,7 @@ export type MockExamCategoryInputType = {
   approved?: Scalars['Boolean'];
   categoryEvaluations?: InputMaybe<Array<CategoryEvaluationInputType>>;
   categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
+  categoryPointHistories?: InputMaybe<Array<CategoryPointHistoryInputType>>;
   description?: Scalars['String'];
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
@@ -1518,7 +1655,9 @@ export type MockExamCategoryInputType = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: InputMaybe<PartnerInputType>;
+  pointEarningUserIds?: InputMaybe<Array<Scalars['Float']>>;
   quiz: Array<QuizInputType>;
+  revenueRequestForm?: InputMaybe<RevenueRequestFormInputType>;
   roles: Array<RoleInputType>;
   seller?: InputMaybe<SellerInputType>;
   source: ExamSource;
@@ -1844,12 +1983,16 @@ export type Mutation = {
   createOrUpdateMockExamQuestionState: CreateOrUpdateMockExamQuestionStateOutput;
   createOrUpdateTodo: CreateOrUpdateTodoOutput;
   createPayment: CreatePaymentOutput;
+  createPointTransaction: CreatePointTransactionOutput;
+  createPointTransactionForAdmin: CreatePointTransactionForAdminOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
   createQuiz: CreateQuizOutput;
   createQuizComment: CreateQuizCommentOutput;
+  createRevenueRequestForm: CreateRevenueRequestFormOutput;
+  createSettlementRequest: CreateSettlementRequestOutput;
   createUserRole: CreateUserRoleOutput;
   createVideo: CreateVideoOutput;
   createVisit: CoreOutput;
@@ -1922,6 +2065,8 @@ export type Mutation = {
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
   updateRecentlyStudiedCategory: UpdateRecentlyStudiedCategoryOutput;
+  updateRevenueRequestForm: UpdateRevenueRequestFormOutput;
+  updateSettlementRequest: UpdateSettlementRequestOutput;
   upsertRecentlyStudiedExams: UpsertRecentlyStudiedExamsOutput;
   viewPost: ViewPostOutput;
 };
@@ -2062,6 +2207,16 @@ export type MutationCreatePaymentArgs = {
 };
 
 
+export type MutationCreatePointTransactionArgs = {
+  input: CreatePointTransactionInput;
+};
+
+
+export type MutationCreatePointTransactionForAdminArgs = {
+  input: CreatePointTransactionForAdminInput;
+};
+
+
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
@@ -2089,6 +2244,16 @@ export type MutationCreateQuizArgs = {
 
 export type MutationCreateQuizCommentArgs = {
   input: CreateQuizCommentInput;
+};
+
+
+export type MutationCreateRevenueRequestFormArgs = {
+  input: CreateRevenueRequestFormInput;
+};
+
+
+export type MutationCreateSettlementRequestArgs = {
+  input: CreateSettlementRequestInput;
 };
 
 
@@ -2402,6 +2567,16 @@ export type MutationUpdateRecentlyStudiedCategoryArgs = {
 };
 
 
+export type MutationUpdateRevenueRequestFormArgs = {
+  input: UpdateRevenueRequestFormInput;
+};
+
+
+export type MutationUpdateSettlementRequestArgs = {
+  input: UpdateSettlementRequestInput;
+};
+
+
 export type MutationUpsertRecentlyStudiedExamsArgs = {
   input: UpsertRecentlyStudiedExamsInput;
 };
@@ -2547,6 +2722,38 @@ export type Payment = {
   receiptUrl?: Maybe<Scalars['String']>;
   updated_at: Scalars['DateTime'];
   user: User;
+};
+
+export type PointBalance = {
+  __typename?: 'PointBalance';
+  balance: Scalars['Float'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PointBalanceInputType = {
+  balance: Scalars['Float'];
+  user: UserInputType;
+};
+
+export type PointTransaction = {
+  __typename?: 'PointTransaction';
+  created_at: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['Float'];
+  point: Scalars['Float'];
+  type: TransactionType;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type PointTransactionInputType = {
+  description: Scalars['String'];
+  point: Scalars['Float'];
+  type: TransactionType;
+  user: UserInputType;
 };
 
 export type Post = {
@@ -2716,6 +2923,7 @@ export type Query = {
   getBlogPostDetail: GetBlogPostDetailOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
+  getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
   getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
@@ -2733,12 +2941,18 @@ export type Query = {
   getMyExamCategories: GetMyExamCategoriesOutput;
   getMyExams: GetMyExamsOutput;
   getMyPayments: GetMyPaymentsOutput;
+  getMySettlementRequest: GetMySettlementRequestOutput;
+  getMySettlementRequests: GetMySettlementRequestsOutput;
   getPartners: GetPartnersOutput;
+  getPointTransactions: GetPointTransactionsOutput;
+  getPointTransactionsForAdmin: GetPointTransactionsForAdminOutput;
   getQuizs: GetQuizsOutput;
+  getRevenueRequestForms: GetRevenueRequestFormsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
   getSearchAvailability: GetSearchAvailabilityOutput;
   getSearchRank: GetSearchRankOutput;
+  getSettlementRequests: GetSettlementRequestsOutput;
   getTodayAttendance: GetTodayAttendanceOutput;
   getTodo: GetTodoOutput;
   getUserByNicknameOrEmail: GetUserByNicknameOrEmailOutput;
@@ -2813,6 +3027,11 @@ export type QueryGetCategoryEvaluationArgs = {
 };
 
 
+export type QueryGetCategoryPointHistoriesArgs = {
+  input: GetCategoryPointHistoriesInput;
+};
+
+
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
 };
@@ -2855,6 +3074,11 @@ export type QueryGetMyBlogPostRankArgs = {
 
 export type QueryGetMyExamsArgs = {
   input: GetMyExamsInput;
+};
+
+
+export type QueryGetPointTransactionsForAdminArgs = {
+  input: GetPointTransactionsForAdminInput;
 };
 
 
@@ -3587,6 +3811,28 @@ export type RevalidateOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type RevenueRequestForm = {
+  __typename?: 'RevenueRequestForm';
+  category: MockExamCategory;
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  reason?: Maybe<Scalars['String']>;
+  status: RevenueRequestFormStatus;
+  updated_at: Scalars['DateTime'];
+};
+
+export type RevenueRequestFormInputType = {
+  category: MockExamCategoryInputType;
+  reason?: InputMaybe<Scalars['String']>;
+  status: RevenueRequestFormStatus;
+};
+
+export enum RevenueRequestFormStatus {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type Role = {
   __typename?: 'Role';
   created_at: Scalars['DateTime'];
@@ -3729,6 +3975,34 @@ export type SendVerificationMailOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type SettlementRequest = {
+  __typename?: 'SettlementRequest';
+  accountHolder: Scalars['String'];
+  accountNumber: Scalars['String'];
+  amount: Scalars['Float'];
+  bankName: Scalars['String'];
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  status: SettlementRequestStatus;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type SettlementRequestInputType = {
+  accountHolder: Scalars['String'];
+  accountNumber: Scalars['String'];
+  amount: Scalars['Float'];
+  bankName: Scalars['String'];
+  status: SettlementRequestStatus;
+  user: UserInputType;
+};
+
+export enum SettlementRequestStatus {
+  Approved = 'Approved',
+  Pending = 'Pending',
+  Rejected = 'Rejected'
+}
+
 export type TitleAndId = {
   __typename?: 'TitleAndId';
   id?: Maybe<Scalars['Float']>;
@@ -3783,6 +4057,12 @@ export type ToggleExamCategoryBookmarkOutput = {
   isBookmarked?: Maybe<Scalars['Boolean']>;
   ok: Scalars['Boolean'];
 };
+
+export enum TransactionType {
+  Accumulation = 'ACCUMULATION',
+  Use = 'USE',
+  Withdraw = 'WITHDRAW'
+}
 
 export type UniqueMorpheme = {
   __typename?: 'UniqueMorpheme';
@@ -3917,6 +4197,29 @@ export type UpdateRecentlyStudiedCategoryOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type UpdateRevenueRequestFormInput = {
+  id?: InputMaybe<Scalars['Float']>;
+  reason?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<RevenueRequestFormStatus>;
+};
+
+export type UpdateRevenueRequestFormOutput = {
+  __typename?: 'UpdateRevenueRequestFormOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type UpdateSettlementRequestInput = {
+  id?: InputMaybe<Scalars['Float']>;
+  status?: InputMaybe<SettlementRequestStatus>;
+};
+
+export type UpdateSettlementRequestOutput = {
+  __typename?: 'UpdateSettlementRequestOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpsertRecentlyStudiedExamsInput = {
   categoryId: Scalars['Float'];
   examIds: Array<Scalars['Float']>;
@@ -3935,6 +4238,7 @@ export type User = {
   attendances?: Maybe<Array<Attendance>>;
   categoryEvaluations: Array<CategoryEvaluation>;
   categoryInvitationLinks: Array<CategoryInvitationLink>;
+  categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
   created_at: Scalars['DateTime'];
   deletedAt: Scalars['DateTime'];
   discountCode?: Maybe<Array<DiscountCode>>;
@@ -3965,6 +4269,8 @@ export type User = {
   notice?: Maybe<Array<Notice>>;
   password: Scalars['String'];
   payments: Array<Payment>;
+  pointBalance?: Maybe<PointBalance>;
+  pointTransactions?: Maybe<Array<PointTransaction>>;
   post?: Maybe<Array<Post>>;
   postComment: Array<PostComment>;
   postData: Array<PostData>;
@@ -3981,6 +4287,7 @@ export type User = {
   recentlyStudiedExams?: Maybe<Array<RecentlyStudiedExams>>;
   role: UserRole;
   seller?: Maybe<Seller>;
+  settlementRequests: Array<SettlementRequest>;
   solveLimit?: Maybe<Scalars['Float']>;
   solvedProblemCount?: Maybe<Scalars['Float']>;
   todos: Array<Todo>;
@@ -4005,6 +4312,7 @@ export type UserInputType = {
   attendances?: InputMaybe<Array<AttendanceInputTyper>>;
   categoryEvaluations: Array<CategoryEvaluationInputType>;
   categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
+  categoryPointHistories?: InputMaybe<Array<CategoryPointHistoryInputType>>;
   deletedAt: Scalars['DateTime'];
   discountCode?: InputMaybe<Array<Discountcode>>;
   email: Scalars['String'];
@@ -4033,6 +4341,8 @@ export type UserInputType = {
   notice?: InputMaybe<Array<NoticeInputType>>;
   password: Scalars['String'];
   payments: Array<PayInputType>;
+  pointBalance?: InputMaybe<PointBalanceInputType>;
+  pointTransactions?: InputMaybe<Array<PointTransactionInputType>>;
   post?: InputMaybe<Array<PostInputType>>;
   postComment: Array<PostCommentInputType>;
   postData: Array<PostDataInputType>;
@@ -4049,6 +4359,7 @@ export type UserInputType = {
   recentlyStudiedExams?: InputMaybe<Array<RecentlyStudiedExamsInputType>>;
   role: UserRole;
   seller?: InputMaybe<SellerInputType>;
+  settlementRequests: Array<SettlementRequestInputType>;
   solveLimit?: InputMaybe<Scalars['Float']>;
   solvedProblemCount?: InputMaybe<Scalars['Float']>;
   todos: Array<TodoInputType>;

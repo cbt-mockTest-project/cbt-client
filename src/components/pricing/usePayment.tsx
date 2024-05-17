@@ -17,7 +17,7 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { useRef } from 'react';
 import shortid from 'shortid';
-import { DiscountCodeStatus } from 'types';
+import { CreateCategoryPointHistoryInput, DiscountCodeStatus } from 'types';
 
 interface handlePaymentParams {
   price: number;
@@ -25,6 +25,7 @@ interface handlePaymentParams {
   roleId: number;
   checkRoleIds: number[];
   discountCode?: string;
+  createCategoryPointHistoryInput?: CreateCategoryPointHistoryInput;
 }
 
 const usePayment = () => {
@@ -46,6 +47,7 @@ const usePayment = () => {
     roleId,
     checkRoleIds,
     discountCode,
+    createCategoryPointHistoryInput,
   }: handlePaymentParams) => {
     const orderId = `${meQuery?.me.user?.id}_${shortid.generate()}`;
     if (!meQuery?.me.user) {
@@ -124,6 +126,11 @@ const usePayment = () => {
               productName: orderName,
               price,
               receiptId,
+              ...(createCategoryPointHistoryInput
+                ? {
+                    createCategoryPointHistoryInput,
+                  }
+                : {}),
             },
           },
         });

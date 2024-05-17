@@ -283,6 +283,10 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
         description
         isPublic
         urlSlug
+        revenueRequestForm {
+          status
+          reason
+        }
         mockExam {
           slug
           title
