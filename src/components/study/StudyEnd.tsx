@@ -206,7 +206,7 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
           )}
         </div>
       </div>
-      {categoryId && (
+      {!!categoryId && (
         <StudyEndCategoryReviewModal
           categoryId={categoryId}
           open={isCategoryReviewModalOpen}

@@ -47,8 +47,8 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   return (
     <QuestionComponentBlock>
-      <div className="question-detail-top-button-wrapper hidden-title">
-        <Link href={`/exam/solution/${question.mockExam.id}`}>
+      <div className="question-detail-top-button-wrapper">
+        <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
           <Button>{`관련 시험지로 이동 >`}</Button>
         </Link>
       </div>

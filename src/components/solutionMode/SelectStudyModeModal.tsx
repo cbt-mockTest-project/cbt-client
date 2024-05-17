@@ -30,6 +30,7 @@ const SelectStudyModeModal: React.FC<SelectStudyModeModalProps> = (props) => {
       router.push({
         pathname: '/study',
         query: {
+          ...router.query,
           mode,
           examId: router.query.Id,
         },
@@ -49,7 +50,7 @@ const SelectStudyModeModal: React.FC<SelectStudyModeModalProps> = (props) => {
   return (
     <SelectStudyModeModalBlock {...modalProps} footer={false}>
       <div className="select-study-mode-modal-body">
-        <div>버튼 클릭시 모드가 변경됩니다.</div>
+        <div>버튼 클릭시 학습 모드가 변경됩니다.</div>
         <div className="select-study-mode-modal-body-button-wrapper">
           <Button
             disabled={isTypingMode}

@@ -73,7 +73,9 @@ const CategoryFolderIncludingAllExamsBlock = styled(Link)`
 interface CategoryFolderIncludingAllExamsProps {
   examCount?: number;
 }
-
+/**
+ * deprecated
+ */
 const CategoryFolderIncludingAllExams: React.FC<
   CategoryFolderIncludingAllExamsProps
 > = ({ examCount }) => {

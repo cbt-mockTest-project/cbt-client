@@ -14,6 +14,7 @@ import {
 import EditorStyle from '@styles/editorStyle';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useAuth from '@lib/hooks/useAuth';
+import { useRouter } from 'next/router';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -76,7 +77,10 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   updateFeedbackRecommendation,
   className = '',
 }) => {
+  const router = useRouter();
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const hasAddAnswerButton =
+    router.query.rel !== 'q' && router.pathname !== '/question/[Id]';
   const { handleCheckLogin } = useAuth();
   const onClickOpenFeedbackModal = () => {
     if (!handleCheckLogin()) {
@@ -121,10 +125,12 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           updateFeedbackRecommendation={updateFeedbackRecommendation}
         />
       </div>
-      <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
-        <Button shape="circle">➕</Button>
-        <div>답안 추가</div>
-      </div>
+      {hasAddAnswerButton && (
+        <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
+          <Button shape="circle">➕</Button>
+          <div>답안 추가</div>
+        </div>
+      )}
       {isFeedbackModalOpen && (
         <QuestionFeedbackModal
           addFeedback={addFeedback}

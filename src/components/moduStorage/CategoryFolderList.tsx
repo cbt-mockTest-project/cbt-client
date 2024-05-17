@@ -19,17 +19,9 @@ interface CategoryFolderListProps {
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
   handleToggleBookmark,
-  hasAllExamFolder = false,
 }) => {
-  const examCount = categories?.reduce(
-    (acc, cur) => acc + cur.mockExam?.length || 0,
-    0
-  );
   return (
     <CategoryFolderListBlock>
-      {hasAllExamFolder && (
-        <CategoryFolderIncludingAllExams examCount={examCount} />
-      )}
       {categories?.map((category) => (
         <CategoryFolderListItem
           key={category.id}
