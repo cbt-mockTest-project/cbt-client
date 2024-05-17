@@ -5,14 +5,11 @@ import {
   useAppSelector,
 } from '@modules/redux/store/configureStore';
 import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
-import useApolloClient from './useApolloCient';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
-import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
-import { cloneDeep } from 'lodash';
-import { message } from 'antd';
 import { homeActions } from '@modules/redux/slices/home';
 import { WatchQueryFetchPolicy } from '@apollo/client';
+import { apolloClient } from '@modules/apollo';
 
 export interface handleToggleCategoryBookmarkProps {
   categoryId: number;
@@ -22,15 +19,8 @@ export interface handleToggleCategoryBookmarkProps {
 
 const useHomeCategories = () => {
   const dispatch = useAppDispatch();
-  const { updateCache, client } = useApolloClient();
-  const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
-  const [
-    getExamCategories,
-    { data: searchedCategoriesResponse, loading: fetchCategoriesLoading },
-  ] = useLazyGetExamCategories();
-  const searchedCategories =
-    searchedCategoriesResponse?.getExamCategories.categories ||
-    ([] as MockExamCategory[]);
+  const [getExamCategories] = useLazyGetExamCategories();
+
   const moduStorageCategories = useAppSelector(
     (state) => state.home.moduStorageCategories
   );
@@ -60,7 +50,7 @@ const useHomeCategories = () => {
   const refetchHomeCategories = async () => {
     try {
       const getCategories = (input: GetExamCategoriesInput) =>
-        client
+        apolloClient
           .query<GetExamCategoriesQuery>({
             query: GET_EXAM_CATEGORIES,
             variables: {
@@ -92,103 +82,11 @@ const useHomeCategories = () => {
     }
   };
 
-  const handleToggleCategoryBookmark = async ({
-    categoryId,
-    type,
-    input,
-  }: handleToggleCategoryBookmarkProps) => {
-    try {
-      const res = await toggleCategoryBookmark({
-        variables: {
-          input: {
-            categoryId,
-          },
-        },
-      });
-      if (res.data.toggleExamCategorieBookmark.ok) {
-        if (type === 'modu') {
-          const newCategories = cloneDeep(moduStorageCategories);
-          if (!newCategories) return;
-          const targetIndex = newCategories.findIndex(
-            (category) => category.id === categoryId
-          );
-          if (targetIndex === -1) return;
-          newCategories[targetIndex].isBookmarked =
-            !newCategories[targetIndex].isBookmarked;
-          setModuStorageCategories(newCategories);
-        }
-        if (type === 'user') {
-          const newCategories = cloneDeep(userStorageCategories);
-          if (!newCategories) return;
-          const targetIndex = newCategories.findIndex(
-            (category) => category.id === categoryId
-          );
-          if (targetIndex === -1) return;
-          newCategories[targetIndex].isBookmarked =
-            !newCategories[targetIndex].isBookmarked;
-          setUserStorageCategories(newCategories);
-        }
-        if (type === 'search') {
-          const newCategories = cloneDeep(searchedCategories);
-          if (!newCategories) return;
-          const targetIndex = newCategories.findIndex(
-            (category) => category.id === categoryId
-          );
-          if (targetIndex === -1) return;
-          newCategories[targetIndex].isBookmarked =
-            !newCategories[targetIndex].isBookmarked;
-          setSearchedCategories(newCategories as MockExamCategory[], input);
-        }
-        if (type === 'ehs') {
-          const newCategories = cloneDeep(ehsStorageCategories);
-          if (!newCategories) return;
-          const targetIndex = newCategories.findIndex(
-            (category) => category.id === categoryId
-          );
-          if (targetIndex === -1) return;
-          newCategories[targetIndex].isBookmarked =
-            !newCategories[targetIndex].isBookmarked;
-          setEhsStorageCategories(newCategories);
-        }
-        if (res.data.toggleExamCategorieBookmark.isBookmarked)
-          return message.success('북마크 되었습니다.');
-        else return message.success('북마크가 해제되었습니다.');
-      }
-      message.error(res.data?.toggleExamCategorieBookmark.error);
-    } catch (e) {
-      handleError(e);
-      message.error('북마크 설정에 실패했습니다.');
-    }
-  };
-
   const setModuStorageCategories = (categories: MockExamCategory[]) =>
     dispatch(homeActions.setModuStorageCategories({ categories }));
 
   const setUserStorageCategories = (categories: MockExamCategory[]) =>
     dispatch(homeActions.setUserStorageCategories({ categories }));
-
-  const setSearchedCategories = (
-    categories: MockExamCategory[],
-    input: GetExamCategoriesInput
-  ) => {
-    updateCache<GetExamCategoriesQuery>(
-      {
-        query: GET_EXAM_CATEGORIES,
-        variables: {
-          input,
-        },
-      },
-      (data) => {
-        return {
-          ...data,
-          getExamCategories: {
-            ...data.getExamCategories,
-            categories,
-          },
-        };
-      }
-    );
-  };
 
   const setEhsStorageCategories = (categories: MockExamCategory[]) =>
     dispatch(homeActions.setEhsStorageCategories({ categories }));
@@ -197,15 +95,12 @@ const useHomeCategories = () => {
     dispatch(homeActions.setBookmarkedCategories({ categories }));
 
   return {
-    searchedCategories,
     fetchCategories,
     refetchHomeCategories,
-    fetchCategoriesLoading,
     moduStorageCategories,
     userStorageCategories,
     ehsStorageCategories,
     setBookmarkedCategories,
-    handleToggleCategoryBookmark,
   };
 };
 

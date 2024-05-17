@@ -53,7 +53,7 @@ const BookmarkedFolderList: React.FC<BookmarkedFolderListProps> = (props) => {
       <HomeFolderList
         {...homeFolderListProps}
         unikeyKey="bookmarked-storage"
-        categories={bookmarkedCategories}
+        type="bookmark"
       />
     </BookmarkedFolderListBlock>
   );

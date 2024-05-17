@@ -49,13 +49,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
             },
           })
           .then((res) => res.data.getExamCategories.categories || []);
-      let [moduCategories, userCategories, ehsCategories] = await Promise.all([
+      let [moduCategories, ehsCategories] = await Promise.all([
         getCategories({
           examSource: ExamSource.MoudCbt,
-          limit: 30,
-        }),
-        getCategories({
-          examSource: ExamSource.User,
           limit: 30,
         }),
         getCategories({
@@ -67,25 +63,13 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const ModuCategoriesSortedByLikes = [...moduCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
-      const ModuCategoriesSortedByCreatedAt = [...moduCategories]
-        .sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        )
-        .map((category) => ({
-          ...category,
-          isNew: true,
-        }));
       const EhsCategoriesSortedByLikes = [...ehsCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
       );
 
       store.dispatch(
         homeActions.setModuStorageCategories({
-          categories: [
-            ...ModuCategoriesSortedByCreatedAt.slice(0, 2),
-            ...ModuCategoriesSortedByLikes,
-          ] as MockExamCategory[],
+          categories: ModuCategoriesSortedByLikes as MockExamCategory[],
         })
       );
       store.dispatch(

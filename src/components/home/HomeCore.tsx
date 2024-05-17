@@ -33,7 +33,7 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
         homeActions.setUserStorageCategories({
           categories: [
             ...categoriesSortedByCreatedAt.slice(0, 2),
-            ...categoriesSortedByLikes,
+            ...categoriesSortedByLikes.filter((category) => !category['isNew']),
           ] as MockExamCategory[],
         })
       );

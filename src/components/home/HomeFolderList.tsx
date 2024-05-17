@@ -12,9 +12,11 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import { MockExamCategory } from 'types';
+import { ExamSource, MockExamCategory } from 'types';
 import HomeCategorySearchModal from './HomeCategorySearchModal';
 import { useRouter } from 'next/router';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import { uniqueId } from 'lodash';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -93,16 +95,15 @@ const HomeFolderListBlock = styled.div`
 export interface HomeFolderListProps {
   title: string;
   subTitle: string;
-  categories: MockExamCategory[];
   link?: string;
   trigger?: string;
   unikeyKey: string;
   headerButton?: React.ReactNode;
   emptyDescription?: string;
+  type: ExamSource | 'bookmark';
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
-  categories,
   title,
   subTitle,
   link,
@@ -110,7 +111,22 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   unikeyKey,
   headerButton,
   emptyDescription = '아직 암기장이 없습니다.',
+  type,
 }) => {
+  const categories = useAppSelector((state) => {
+    switch (type) {
+      case ExamSource.MoudCbt:
+        return state.home.moduStorageCategories;
+      case ExamSource.User:
+        return state.home.userStorageCategories;
+      case ExamSource.EhsMaster:
+        return state.home.ehsStorageCategories;
+      case 'bookmark':
+        return state.home.bookmarkedCategories;
+      default:
+        return [];
+    }
+  });
   const folderListRef = useRef<HTMLUListElement | null>(null);
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
@@ -179,14 +195,13 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
 
       <ul className="home-folder-list" ref={folderListRef}>
         {categories?.map((category, index) => (
-          <>
+          <div className="flex items-center" key={uniqueId(type)}>
             <CategoryFolderListItem
-              key={category.id}
               className="home-folder-item"
               category={category}
             />
             {index === categories.length - 1 && (
-              <div className="flex items-center ">
+              <div className="flex items-center">
                 <Button
                   size="large"
                   className="w-36 h-full"
@@ -197,7 +212,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
                 </Button>
               </div>
             )}
-          </>
+          </div>
         ))}
         {!categories &&
           [1, 2, 3, 4, 5].map((i) => (
