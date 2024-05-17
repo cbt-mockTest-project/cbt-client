@@ -81,7 +81,7 @@ const CategoryBookmarkOrEditWrapper: React.FC<
                   revenueRequestForm?.status
                 )}
                 onClick={() =>
-                  revenueRequestForm.status ===
+                  revenueRequestForm?.status ===
                   RevenueRequestFormStatus.Approved
                     ? setIsRevenueHistoryModalOpen(true)
                     : setIsRequestRevenueModalOpen(true)
