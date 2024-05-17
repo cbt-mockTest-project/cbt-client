@@ -1431,6 +1431,13 @@ export type GetQuizsOutput = {
   quizs?: Maybe<Array<Quiz>>;
 };
 
+export type GetRevenueRequestFormsOutput = {
+  __typename?: 'GetRevenueRequestFormsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  revenueRequestForms?: Maybe<Array<RevenueRequestForm>>;
+};
+
 export type GetRoleCountInput = {
   roleId: Scalars['Float'];
 };
@@ -1617,6 +1624,7 @@ export type MockExamCategory = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: Maybe<Partner>;
+  pointEarningUserIds?: Maybe<Array<Scalars['Float']>>;
   quiz: Array<Quiz>;
   revenueRequestForm?: Maybe<RevenueRequestForm>;
   roles: Array<Role>;
@@ -1647,6 +1655,7 @@ export type MockExamCategoryInputType = {
   name: Scalars['String'];
   order: Scalars['Float'];
   partner?: InputMaybe<PartnerInputType>;
+  pointEarningUserIds?: InputMaybe<Array<Scalars['Float']>>;
   quiz: Array<QuizInputType>;
   revenueRequestForm?: InputMaybe<RevenueRequestFormInputType>;
   roles: Array<RoleInputType>;
@@ -2056,6 +2065,7 @@ export type Mutation = {
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
   updateRecentlyStudiedCategory: UpdateRecentlyStudiedCategoryOutput;
+  updateRevenueRequestForm: UpdateRevenueRequestFormOutput;
   updateSettlementRequest: UpdateSettlementRequestOutput;
   upsertRecentlyStudiedExams: UpsertRecentlyStudiedExamsOutput;
   viewPost: ViewPostOutput;
@@ -2557,6 +2567,11 @@ export type MutationUpdateRecentlyStudiedCategoryArgs = {
 };
 
 
+export type MutationUpdateRevenueRequestFormArgs = {
+  input: UpdateRevenueRequestFormInput;
+};
+
+
 export type MutationUpdateSettlementRequestArgs = {
   input: UpdateSettlementRequestInput;
 };
@@ -2932,6 +2947,7 @@ export type Query = {
   getPointTransactions: GetPointTransactionsOutput;
   getPointTransactionsForAdmin: GetPointTransactionsForAdminOutput;
   getQuizs: GetQuizsOutput;
+  getRevenueRequestForms: GetRevenueRequestFormsOutput;
   getRoleCount: GetRoleCountOutput;
   getRolesCount: GetRolesCountOutput;
   getSearchAvailability: GetSearchAvailabilityOutput;
@@ -4177,6 +4193,18 @@ export type UpdateRecentlyStudiedCategoryInput = {
 
 export type UpdateRecentlyStudiedCategoryOutput = {
   __typename?: 'UpdateRecentlyStudiedCategoryOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type UpdateRevenueRequestFormInput = {
+  id?: InputMaybe<Scalars['Float']>;
+  reason?: InputMaybe<Scalars['String']>;
+  status?: InputMaybe<RevenueRequestFormStatus>;
+};
+
+export type UpdateRevenueRequestFormOutput = {
+  __typename?: 'UpdateRevenueRequestFormOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };

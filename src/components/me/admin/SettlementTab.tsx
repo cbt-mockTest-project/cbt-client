@@ -1,10 +1,8 @@
 import { settlementRequestsQueryOptions } from '@lib/queryOptions/settlementRequests';
 import { convertServerTimeToKST } from '@lib/utils/utils';
 import { useQuery } from '@tanstack/react-query';
-import { Input, Select, Table } from 'antd';
-import { useRouter } from 'next/router';
-import React, { ComponentProps, useEffect, useState } from 'react';
-import { SettlementRequestStatus } from 'types';
+import { Table } from 'antd';
+import React, { ComponentProps } from 'react';
 import SettlementStatusSelect from './SettlementStatusSelect';
 
 interface SettlementTabProps {}

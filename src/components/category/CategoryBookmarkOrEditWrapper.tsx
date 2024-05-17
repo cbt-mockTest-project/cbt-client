@@ -54,9 +54,9 @@ const CategoryBookmarkOrEditWrapper: React.FC<
       content: (
         <div>
           <div className="text-[16px] text-gray-700 font-bold">거절 사유</div>
-          <div className="text-[15px] text-gray-700 mt-4 border-l-4 border-red-500 pl-4 border-solid">
+          <pre className="text-[15px] text-gray-700 mt-4 border-l-4 border-red-500 pl-4 border-solid">
             {revenueRequestForm?.reason}
-          </div>
+          </pre>
         </div>
       ),
       onOk() {},
