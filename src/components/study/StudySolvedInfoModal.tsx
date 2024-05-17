@@ -50,8 +50,8 @@ const StudySolvedInfoModal: React.FC<StudySolvedInfoModalProps> = (props) => {
         <div className="study-solved-info-modal-description-list">
           <div className="study-solved-info-modal-description">{`- 성취도 체크 결과는 실시간으로 저장됩니다.`}</div>
           <div className="study-solved-info-modal-description">{`- 저장된 성취도를 활용해 성취도별 문제 풀이가 가능합니다.`}</div>
+          <div className="study-solved-info-modal-description">{`- △, X 로 체크된 문제는 자동으로 오답노트에 등록됩니다.`}</div>
           <div className="study-solved-info-modal-description">{`- 시험 진행중 성취도 보기 - '이동 & 점수' 버튼 클릭`}</div>
-          <div className="study-solved-info-modal-description">{`- 시험 종료후 성취도 보기 - 기록페이지(오답노트 탭)에서 확인`}</div>
         </div>
       </div>
     </StudySolvedInfoModalBlock>
