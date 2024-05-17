@@ -52,10 +52,10 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const banners = [
     {
       img: {
-        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ad-banner-pc01.png`,
-        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ad-banner-mobile01.png`,
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-pc06.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-mobile06.png`,
       },
-      key: 'ad',
+      key: 'https://pinto-buffalo-54c.notion.site/be660af277984f78ac8be42940b61a8c',
     },
     {
       img: {
@@ -63,13 +63,6 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
         mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ehs-banner-mobile03.png`,
       },
       key: 'https://ehs-master.com',
-    },
-    {
-      img: {
-        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-pc04.png`,
-        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/main-banner-mobile04.png`,
-      },
-      key: 'open-chat',
     },
   ];
   const handleBannerClick = (key: string) => {
