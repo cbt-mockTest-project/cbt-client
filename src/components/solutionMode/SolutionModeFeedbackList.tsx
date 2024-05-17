@@ -1,6 +1,6 @@
 import { Collapse, Divider } from 'antd';
 import React from 'react';
-import { MockExamQuestion } from 'types';
+import { MockExamQuestion, MockExamQuestionFeedback } from 'types';
 import SolutionModeFeedbackListItem from './SolutionModeFeedbackListItem';
 import {
   AddFeedbackInput,
@@ -14,9 +14,11 @@ interface SolutionModeFeedbackListProps {
   editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
   addFeedback: (editFeedbackInput: AddFeedbackInput) => Promise<void>;
   deleteFeedback: (deleteFeedbackInput: DeleteFeedbackInput) => Promise<void>;
+  feedbackList: MockExamQuestionFeedback[];
   updateFeedbackRecommendation: (
     updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
   ) => Promise<void>;
+  type?: 'collapse' | 'list';
 }
 
 const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
@@ -25,35 +27,54 @@ const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
   addFeedback,
   deleteFeedback,
   updateFeedbackRecommendation,
+  feedbackList,
+  type = 'collapse',
 }) => {
-  if (question.mockExamQuestionFeedback.length === 0) return null;
   return (
     <div className="mt-5">
-      <Collapse>
-        <Collapse.Panel
-          header={`추가답안 (${question.mockExamQuestionFeedback.length})`}
-          key="1"
-        >
-          {question.mockExamQuestionFeedback.map((feedback, index) => (
-            <>
-              {feedback.user && (
-                <SolutionModeFeedbackListItem
-                  deleteFeedback={deleteFeedback}
-                  updateFeedbackRecommendation={updateFeedbackRecommendation}
-                  addFeedback={addFeedback}
-                  editFeedback={editFeedback}
-                  key={feedback.id}
-                  feedback={feedback}
-                  question={question}
-                />
-              )}
-              {index !== question.mockExamQuestionFeedback.length - 1 && (
-                <Divider style={{ margin: '12px 0' }} />
-              )}
-            </>
-          ))}
-        </Collapse.Panel>
-      </Collapse>
+      {type === 'collapse' && (
+        <Collapse>
+          <Collapse.Panel header={`추가답안 (${feedbackList.length})`} key="1">
+            {feedbackList.map((feedback, index) => (
+              <>
+                {feedback.user && (
+                  <SolutionModeFeedbackListItem
+                    deleteFeedback={deleteFeedback}
+                    updateFeedbackRecommendation={updateFeedbackRecommendation}
+                    addFeedback={addFeedback}
+                    editFeedback={editFeedback}
+                    key={feedback.id}
+                    feedback={feedback}
+                    question={question}
+                  />
+                )}
+                {index !== feedbackList.length - 1 && (
+                  <Divider style={{ margin: '12px 0' }} />
+                )}
+              </>
+            ))}
+          </Collapse.Panel>
+        </Collapse>
+      )}
+      {type === 'list' &&
+        feedbackList.map((feedback, index) => (
+          <>
+            {feedback.user && (
+              <SolutionModeFeedbackListItem
+                deleteFeedback={deleteFeedback}
+                updateFeedbackRecommendation={updateFeedbackRecommendation}
+                addFeedback={addFeedback}
+                editFeedback={editFeedback}
+                key={feedback.id}
+                feedback={feedback}
+                question={question}
+              />
+            )}
+            {index !== feedbackList.length - 1 && (
+              <Divider style={{ margin: '12px 0' }} />
+            )}
+          </>
+        ))}
     </div>
   );
 };

@@ -15,6 +15,7 @@ import EditorStyle from '@styles/editorStyle';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useAuth from '@lib/hooks/useAuth';
 import { useRouter } from 'next/router';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -77,11 +78,15 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   updateFeedbackRecommendation,
   className = '',
 }) => {
+  const { data: meQuery } = useMeQuery();
   const router = useRouter();
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const hasAddAnswerButton =
     router.query.rel !== 'q' && router.pathname !== '/question/[Id]';
   const { handleCheckLogin } = useAuth();
+  const myFeedbackList = question.mockExamQuestionFeedback.filter(
+    (feedback) => feedback.user.id === meQuery?.me?.user?.id
+  );
   const onClickOpenFeedbackModal = () => {
     if (!handleCheckLogin()) {
       return;
@@ -117,12 +122,28 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
               />
             )}
         </div>
+        {!!myFeedbackList.length && (
+          <div className="border-t border-gray-200 mt-4  border-solid">
+            <SolutionModeFeedbackList
+              question={question}
+              editFeedback={editFeedback}
+              addFeedback={addFeedback}
+              deleteFeedback={deleteFeedback}
+              updateFeedbackRecommendation={updateFeedbackRecommendation}
+              feedbackList={myFeedbackList}
+              type="list"
+            />
+          </div>
+        )}
         <SolutionModeFeedbackList
           question={question}
           editFeedback={editFeedback}
           addFeedback={addFeedback}
           deleteFeedback={deleteFeedback}
           updateFeedbackRecommendation={updateFeedbackRecommendation}
+          feedbackList={question.mockExamQuestionFeedback.filter(
+            (feedback) => feedback.user.id !== meQuery?.me?.user?.id
+          )}
         />
       </div>
       {hasAddAnswerButton && (
