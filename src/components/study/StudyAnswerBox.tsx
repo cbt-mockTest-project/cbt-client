@@ -85,7 +85,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
     router.query.rel !== 'q' && router.pathname !== '/question/[Id]';
   const { handleCheckLogin } = useAuth();
   const myFeedbackList = question.mockExamQuestionFeedback.filter(
-    (feedback) => feedback.user.id === meQuery?.me?.user?.id
+    (feedback) => feedback.user?.id === meQuery?.me?.user?.id
   );
   const onClickOpenFeedbackModal = () => {
     if (!handleCheckLogin()) {
@@ -142,7 +142,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           deleteFeedback={deleteFeedback}
           updateFeedbackRecommendation={updateFeedbackRecommendation}
           feedbackList={question.mockExamQuestionFeedback.filter(
-            (feedback) => feedback.user.id !== meQuery?.me?.user?.id
+            (feedback) => feedback.user?.id !== meQuery?.me?.user?.id
           )}
         />
       </div>
