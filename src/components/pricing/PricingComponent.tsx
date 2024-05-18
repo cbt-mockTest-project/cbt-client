@@ -15,6 +15,7 @@ import usePayment from './usePayment';
 import { Pagination } from 'swiper/modules';
 import { useRouter } from 'next/router';
 import BasicPaymentSelectModalModal from './BasicPaymentSelectModal';
+import { Collapse } from 'antd';
 
 const PricingComponentBlock = styled.div`
   display: flex;
@@ -187,6 +188,31 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
           ))}
         </Swiper>
       </div>
+      <div className="mt-4 max">
+        <Collapse>
+          <Collapse.Panel header="자주하는 질문" key="1">
+            <ul className="flex flex-col gap-4">
+              <li>
+                <strong>Q. 베이직 플랜은 어떤 암기장에 적용되나요?</strong>
+                <p>
+                  A. 베이직 플랜은 <strong>{`"직8딴 시리즈"`}</strong>를 제외한
+                  모두CBT에서 제공하는 모든 암기장에 적용됩니다.
+                </p>
+              </li>
+              <li>
+                <strong>
+                  Q. 직8딴 플랜을 구매하면 베이직플랜도 적용되나요?
+                </strong>
+                <p>
+                  A. 적용되지 않습니다. 직8딴 플랜을 결제하실 경우 결제한 과목에
+                  대해서만 이용이 가능합니다.
+                </p>
+              </li>
+            </ul>
+          </Collapse.Panel>
+        </Collapse>
+      </div>
+
       <a
         className="pricing-contact"
         href="https://open.kakao.com/o/sZy6kxbf"
