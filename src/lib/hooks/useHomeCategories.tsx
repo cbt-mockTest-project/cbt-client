@@ -21,16 +21,6 @@ const useHomeCategories = () => {
   const dispatch = useAppDispatch();
   const [getExamCategories] = useLazyGetExamCategories();
 
-  const moduStorageCategories = useAppSelector(
-    (state) => state.home.moduStorageCategories
-  );
-  const userStorageCategories = useAppSelector(
-    (state) => state.home.userStorageCategories
-  );
-  const ehsStorageCategories = useAppSelector(
-    (state) => state.home.ehsStorageCategories
-  );
-
   const fetchCategories = async (
     input: GetExamCategoriesInput,
     fetchPolicy?: WatchQueryFetchPolicy
@@ -97,9 +87,6 @@ const useHomeCategories = () => {
   return {
     fetchCategories,
     refetchHomeCategories,
-    moduStorageCategories,
-    userStorageCategories,
-    ehsStorageCategories,
     setBookmarkedCategories,
   };
 };

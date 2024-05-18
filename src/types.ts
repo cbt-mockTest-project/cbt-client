@@ -1207,6 +1207,7 @@ export type GetExamCategoriesInput = {
   categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSource?: InputMaybe<ExamSource>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
+  isPick?: InputMaybe<Scalars['Boolean']>;
   isPublicOnly?: InputMaybe<Scalars['Boolean']>;
   keyword?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Float']>;
@@ -1619,6 +1620,7 @@ export type MockExamCategory = {
   hasAccess?: Maybe<Scalars['Boolean']>;
   id: Scalars['Float'];
   isBookmarked?: Maybe<Scalars['Boolean']>;
+  isPick?: Maybe<Scalars['Boolean']>;
   isPublic: Scalars['Boolean'];
   mockExam: Array<MockExam>;
   name: Scalars['String'];
@@ -1650,6 +1652,7 @@ export type MockExamCategoryInputType = {
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   hasAccess?: InputMaybe<Scalars['Boolean']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
+  isPick?: InputMaybe<Scalars['Boolean']>;
   isPublic?: Scalars['Boolean'];
   mockExam: Array<MockExamInputType>;
   name: Scalars['String'];

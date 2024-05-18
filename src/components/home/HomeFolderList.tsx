@@ -4,16 +4,9 @@ import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
 import { Button, Empty } from 'antd';
 import Link from 'next/link';
-import React, {
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ExamSource, MockExamCategory } from 'types';
-import HomeCategorySearchModal from './HomeCategorySearchModal';
+import { ExamSource } from 'types';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { uniqueId } from 'lodash';
@@ -100,7 +93,7 @@ export interface HomeFolderListProps {
   unikeyKey: string;
   headerButton?: React.ReactNode;
   emptyDescription?: string;
-  type: ExamSource | 'bookmark';
+  type: ExamSource | 'bookmark' | 'isPick';
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
@@ -123,6 +116,8 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         return state.home.ehsStorageCategories;
       case 'bookmark':
         return state.home.bookmarkedCategories;
+      case 'isPick':
+        return state.home.isPickedCategories;
       default:
         return [];
     }

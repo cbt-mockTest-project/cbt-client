@@ -11,10 +11,26 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
   const { fetchCategories } = useHomeCategories();
   const dispatch = useAppDispatch();
   useEffect(() => {
+    const fetchPickedCategories = async () => {
+      fetchCategories({
+        limit: 30,
+        examSource: ExamSource.User,
+        isPick: true,
+      }).then((res) => {
+        const categories = res?.data.getExamCategories.categories || [];
+        dispatch(
+          homeActions.setIsPickedCategories({
+            categories: categories as MockExamCategory[],
+          })
+        );
+      });
+    };
+
     const fetchUserCategories = async () => {
       const res = await fetchCategories({
         examSource: ExamSource.User,
         limit: 30,
+        isPick: false,
       });
       const categories = res?.data.getExamCategories.categories || [];
       const categoriesSortedByLikes = [...categories].sort(
@@ -40,6 +56,7 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
     };
     try {
       fetchUserCategories();
+      fetchPickedCategories();
     } catch (err) {
       handleError(err);
     }

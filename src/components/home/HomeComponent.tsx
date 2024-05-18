@@ -79,6 +79,13 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           type={ExamSource.EhsMaster}
         />
         <HomeFolderList
+          title="주인장 Pick 암기장 📌"
+          subTitle="주인장이 추천하는 검증된 암기장이에요."
+          link="/user-storage"
+          unikeyKey="user-storage"
+          type={'isPick'}
+        />
+        <HomeFolderList
           title="유저가 만든 공개 암기장 📂"
           subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
           link="/user-storage"
