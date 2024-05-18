@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SettlementTab from './SettlementTab';
 import RevenueRequestTab from './RevenueRequestTab';
+import PointCheckTab from './PointCheckTab';
 
 const AdminComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -34,5 +35,10 @@ const tabItems: TabsProps['items'] = [
     key: '2',
     label: '수익창출신청',
     children: <RevenueRequestTab />,
+  },
+  {
+    key: '3',
+    label: '포인트 조회',
+    children: <PointCheckTab />,
   },
 ];
