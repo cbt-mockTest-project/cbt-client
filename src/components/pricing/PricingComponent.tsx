@@ -114,6 +114,21 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       onConfirm: toggleBasicModalOpen,
     },
     {
+      title: '직8딴 플랜',
+      endDate: '이용기간: ~ 2024-12-25 까지',
+      intro:
+        '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
+      price: 16000,
+      priceAltText: '16,000 ~',
+      benefits: [
+        '직8딴 암기장 학습시스템 제공',
+        '구매자 전용 오픈톡방을 통한 저자의 즉각 질문답변 대응',
+        '광고제거',
+      ],
+      confirmDisabled: false,
+      onConfirm: openEhsMasterPayModal,
+    },
+    {
       title: 'AI 문제봇 대여',
       endDate: '이용기간: 3개월',
       intro: 'AI 문제봇을 활용하여\n효율적인 학습을 경험해보세요!',
@@ -131,21 +146,6 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
           'noopener'
         );
       },
-    },
-    {
-      title: '직8딴 플랜',
-      endDate: '이용기간: ~ 2024-12-25 까지',
-      intro:
-        '- 기출 중복 문제 소거\n- 답안 글자 수 최소화\n- 키워드별 문제 구성 ',
-      price: 16000,
-      priceAltText: '16,000 ~',
-      benefits: [
-        '직8딴 암기장 학습시스템 제공',
-        '구매자 전용 오픈톡방을 통한 저자의 즉각 질문답변 대응',
-        '광고제거',
-      ],
-      confirmDisabled: false,
-      onConfirm: openEhsMasterPayModal,
     },
   ];
 
