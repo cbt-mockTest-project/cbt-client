@@ -87,6 +87,9 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   const myFeedbackList = question.mockExamQuestionFeedback.filter(
     (feedback) => feedback.user?.id === meQuery?.me?.user?.id
   );
+  const feedbackListExceptMe = question.mockExamQuestionFeedback.filter(
+    (feedback) => feedback.user?.id !== meQuery?.me?.user?.id
+  );
   const onClickOpenFeedbackModal = () => {
     if (!handleCheckLogin()) {
       return;
@@ -135,16 +138,16 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
             />
           </div>
         )}
-        <SolutionModeFeedbackList
-          question={question}
-          editFeedback={editFeedback}
-          addFeedback={addFeedback}
-          deleteFeedback={deleteFeedback}
-          updateFeedbackRecommendation={updateFeedbackRecommendation}
-          feedbackList={question.mockExamQuestionFeedback.filter(
-            (feedback) => feedback.user?.id !== meQuery?.me?.user?.id
-          )}
-        />
+        {!!feedbackListExceptMe.length && (
+          <SolutionModeFeedbackList
+            question={question}
+            editFeedback={editFeedback}
+            addFeedback={addFeedback}
+            deleteFeedback={deleteFeedback}
+            updateFeedbackRecommendation={updateFeedbackRecommendation}
+            feedbackList={feedbackListExceptMe}
+          />
+        )}
       </div>
       {hasAddAnswerButton && (
         <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
