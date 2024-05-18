@@ -79,6 +79,7 @@ export const READ_QUESTION = gql`
         mockExam {
           id
           title
+          approved
         }
         user {
           id
@@ -242,6 +243,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         mockExam {
           id
           title
+          approved
         }
         user {
           id

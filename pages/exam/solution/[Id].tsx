@@ -19,6 +19,7 @@ interface ExamSolutionPageProps {
   questions: MockExamQuestion[];
   title: string;
   description: string;
+  isNoIndex?: boolean;
 }
 
 const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
@@ -26,6 +27,7 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   questions,
   title,
   description,
+  isNoIndex,
 }) => {
   return (
     <>
@@ -33,9 +35,9 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         title={`${convertExamTitle(title)} 해설 | 모두CBT`}
         pageHeadingTitle={`${convertExamTitle(title)} 해설 페이지`}
         description={description}
+        noIndex={isNoIndex}
       />
       <StudyHeader questions={questions} />
-
       <GoogleAd
         style={{
           margin: '10px auto',
@@ -111,6 +113,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
       );
       const title = questions[0]?.mockExam.title || '';
+      const isNoIndex = !questions[0]?.mockExam.approved;
       const description = questions.reduce(
         (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
         ''
@@ -122,6 +125,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
           questions,
           title,
           description: removeHtmlTag(description),
+          isNoIndex,
         },
         revalidate: 43200,
       });

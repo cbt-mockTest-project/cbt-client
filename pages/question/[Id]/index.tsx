@@ -74,6 +74,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       50
     )
   );
+
   const description = removeHtmlTag(
     questionQuery.readMockExamQuestion.mockExamQusetion?.question +
       questionQuery.readMockExamQuestion.mockExamQusetion.solution || ''

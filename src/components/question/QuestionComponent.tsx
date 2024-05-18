@@ -18,7 +18,7 @@ interface QuestionComponentProps {
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQueryInput,
 }) => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const {
     refetchQuestion,
@@ -34,8 +34,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   const question = questionQuery?.readMockExamQuestion
     .mockExamQusetion as MockExamQuestion;
 
-  const isMyQuestion = question.user.id == user?.id;
-
   useEffect(() => {
     if (!isLoggedIn || !questionQueryInput.questionId) return;
     refetchQuestion({
@@ -47,11 +45,13 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   return (
     <QuestionComponentBlock>
-      <div className="question-detail-top-button-wrapper">
-        <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
-          <Button>{`관련 시험지로 이동 >`}</Button>
-        </Link>
-      </div>
+      {question.mockExam.approved && (
+        <div className="question-detail-top-button-wrapper">
+          <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
+            <Button>{`관련 시험지로 이동 >`}</Button>
+          </Link>
+        </div>
+      )}
       <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox

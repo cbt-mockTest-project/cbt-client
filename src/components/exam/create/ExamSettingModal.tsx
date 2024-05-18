@@ -46,9 +46,19 @@ const ExamSettingModal: React.FC<ExamSettingModalProps> = (props) => {
   };
   return (
     <ExamSettingModalBlock {...modalProps} footer={false}>
-      <Button onClick={() => handleDeleteExam(examId)} type="dashed">
-        삭제하기
-      </Button>
+      <div className="exam-setting-modal-inner">
+        <div className="exam-setting-approve-switch-wrapper">
+          <div>검색허용</div>
+          <Switch
+            checked={isApproved}
+            loading={editExamLoading}
+            onChange={() => handleOnChangeApproveState(!isApproved)}
+          />
+        </div>
+        <Button onClick={() => handleDeleteExam(examId)} type="dashed">
+          삭제하기
+        </Button>
+      </div>
     </ExamSettingModalBlock>
   );
 };
