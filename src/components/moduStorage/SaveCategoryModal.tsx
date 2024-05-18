@@ -98,6 +98,13 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
+
+      {!isPublic && (
+        <div className="mt-4 text-sm text-gray-500">
+          <p>비공개 폴더의 경우에, 모두CBT 내에서는 노출되지 않지만,</p>
+          <p>구글등의 검색결과에 노출 될 수 있습니다.</p>
+        </div>
+      )}
     </SaveCategoryModalBlock>
   );
 };
