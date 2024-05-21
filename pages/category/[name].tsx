@@ -79,7 +79,10 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const apolloClient = initializeApollo({}, '');
       const urlSlug = context.params?.name;
       if (!urlSlug || typeof urlSlug !== 'string') {
-        return;
+        return {
+          notFound: true,
+          revalidate: 1,
+        };
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
         urlSlug,

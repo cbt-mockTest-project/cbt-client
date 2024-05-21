@@ -168,6 +168,13 @@ export type DeleteRecentlyStudiedExamsMutationVariables = Types.Exact<{ [key: st
 
 export type DeleteRecentlyStudiedExamsMutation = { __typename?: 'Mutation', deleteRecentlyStudiedExams: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
 
+export type GetPresignedUrlQueryVariables = Types.Exact<{
+  input: Types.GetPresignedUrlInput;
+}>;
+
+
+export type GetPresignedUrlQuery = { __typename?: 'Query', getPresignedUrl: { __typename?: 'GetPresignedUrlOutput', error?: string | null, ok: boolean, presignedUrl?: string | null, fileUrl?: string | null } };
+
 
 export const RegisterDocument = gql`
     mutation register($input: RegisterInput!) {
@@ -529,4 +536,18 @@ export const DeleteRecentlyStudiedExamsDocument = gql`
 
 export function useDeleteRecentlyStudiedExamsMutation() {
   return Urql.useMutation<DeleteRecentlyStudiedExamsMutation, DeleteRecentlyStudiedExamsMutationVariables>(DeleteRecentlyStudiedExamsDocument);
+};
+export const GetPresignedUrlDocument = gql`
+    query GetPresignedUrl($input: GetPresignedUrlInput!) {
+  getPresignedUrl(input: $input) {
+    error
+    ok
+    presignedUrl
+    fileUrl
+  }
+}
+    `;
+
+export function useGetPresignedUrlQuery(options: Omit<Urql.UseQueryArgs<GetPresignedUrlQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetPresignedUrlQuery, GetPresignedUrlQueryVariables>({ query: GetPresignedUrlDocument, ...options });
 };

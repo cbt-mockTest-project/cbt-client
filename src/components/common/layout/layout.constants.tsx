@@ -39,11 +39,11 @@ export const navItems = [
     icon: <GoldOutlined />,
     label: '이용권',
   },
-  // {
-  //   key: '/store',
-  //   icon: <StarOutlined />,
-  //   label: '자료 스토어',
-  // },
+  {
+    key: '/store',
+    icon: <StarOutlined />,
+    label: '자료 스토어',
+  },
   {
     key: '/me',
     icon: <UserOutlined />,

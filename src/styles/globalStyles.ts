@@ -1,6 +1,7 @@
 import { responsive } from '@lib/utils/responsive';
 import { createGlobalStyle } from 'styled-components';
 import palette from './palette';
+import EditorStyle from './editorStyle';
 
 const Globalstyles = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -166,6 +167,9 @@ const Globalstyles = createGlobalStyle`
     }
   }
 
+  .editor-style {
+    ${EditorStyle}
+  }
   @media (max-width: ${responsive.lsmall}) {
     * {
       -webkit-user-select: none;

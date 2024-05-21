@@ -1,9 +1,20 @@
 import React from 'react';
+import StoreSearch from './StoreSearch';
+import StoreItemList from './StoreItemList';
+import StorePagination from './StorePagination';
+import StoreHeader from './StoreHeader';
 
 interface StoreComponentProps {}
 
 const StoreComponent: React.FC<StoreComponentProps> = () => {
-  return <div>{/* 컴포넌트의 내용을 여기에 작성하세요. */}</div>;
+  return (
+    <div className="py-5 px-7">
+      <StoreHeader />
+      <StoreSearch />
+      <StoreItemList />
+      <StorePagination />
+    </div>
+  );
 };
 
 export default StoreComponent;

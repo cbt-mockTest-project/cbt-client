@@ -182,7 +182,7 @@ export type RemoveExamFromCategoryMutation = { __typename?: 'Mutation', removeEx
 export type GetMyExamCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMyExamCategoriesQuery = { __typename?: 'Query', getMyExamCategories: { __typename?: 'GetMyExamCategoriesOutput', error?: string | null, ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, user: { __typename?: 'User', id: number, nickname: string, profileImg: string } }> | null } };
+export type GetMyExamCategoriesQuery = { __typename?: 'Query', getMyExamCategories: { __typename?: 'GetMyExamCategoriesOutput', error?: string | null, ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', id: number, name: string, isPublic: boolean, urlSlug: string, user: { __typename?: 'User', id: number, nickname: string, profileImg: string } }> | null } };
 
 export type ReadMockExamQueryVariables = Types.Exact<{
   input: Types.ReadMockExamInput;
@@ -681,6 +681,7 @@ export const GetMyExamCategoriesDocument = gql`
       id
       name
       isPublic
+      urlSlug
       user {
         id
         nickname

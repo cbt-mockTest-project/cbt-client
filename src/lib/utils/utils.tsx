@@ -267,3 +267,28 @@ export const checkIsEhsMasterExam = (examIds: number[]) => {
     ].includes(examId);
   });
 };
+
+export const fixEncoding = (str: string) => {
+  const bytes = new Uint8Array(str.split('').map((c) => c.charCodeAt(0)));
+  const decoder = new TextDecoder('utf-8');
+  const fixedString = decoder.decode(bytes);
+  return fixedString;
+};
+
+export const base64ToBlob = (
+  base64Data: string,
+  contentType: string = 'application/octet-stream'
+): Blob => {
+  // Base64 문자열에서 데이터 부분만 추출 (콤마 이후)
+  const base64Response = base64Data.split(',')[1];
+  // Base64 문자열을 디코드
+  const binaryString = window.atob(base64Response);
+  // 문자열을 숫자 배열로 변환
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  // Blob 객체 생성
+  return new Blob([bytes], { type: contentType });
+};
