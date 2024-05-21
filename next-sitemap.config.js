@@ -45,6 +45,8 @@ module.exports = {
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_02.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_03.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_04.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_05.xml`,
+      `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_06.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_category.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_exam.xml`,
     ],
