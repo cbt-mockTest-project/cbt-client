@@ -73,6 +73,13 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             if (!handleCheckLogin()) return;
             setIsReportModalOpen(true);
           }
+          if (e.key === 'youtube') {
+            window.open(
+              'https://www.youtube.com/@moducbt',
+              '_blank',
+              'noopener'
+            );
+          }
         }}
         style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"

@@ -10,6 +10,7 @@ import {
   CrownOutlined,
   AlertOutlined,
   GlobalOutlined,
+  YoutubeOutlined,
 } from '@ant-design/icons';
 import { AdminPanelSettingsOutlined } from '@mui/icons-material';
 export const navItems = [
@@ -60,6 +61,11 @@ export const navBottomItems = [
     key: 'app-download',
     icon: <MobileOutlined />,
     label: '앱 설치',
+  },
+  {
+    key: 'youtube',
+    icon: <YoutubeOutlined />,
+    label: '공식 유튜브',
   },
   {
     key: 'open-chat',
