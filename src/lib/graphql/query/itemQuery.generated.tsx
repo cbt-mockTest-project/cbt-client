@@ -50,7 +50,7 @@ export type GetItemQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'GetItemOutput', ok: boolean, error?: string | null, item?: { __typename?: 'Item', created_at: any, description: string, urlSlug: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', page?: number | null, previewImagesCount?: number | null, previewImages?: Array<string> | null, name: string, type: string, size: number, uid: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } | null } };
+export type GetItemQuery = { __typename?: 'Query', getItem: { __typename?: 'GetItemOutput', ok: boolean, error?: string | null, item?: { __typename?: 'Item', created_at: any, description: string, contents: string, urlSlug: string, id: number, price: number, state: Types.ItemStateEnum, thumbnail?: string | null, title: string, updated_at: any, file?: { __typename?: 'ItemFileType', page?: number | null, previewImagesCount?: number | null, previewImages?: Array<string> | null, name: string, type: string, size: number, uid: string } | null, user: { __typename?: 'User', email: string, id: number, nickname: string }, category?: { __typename?: 'MockExamCategory', id: number, name: string } | null } | null } };
 
 export type GetItemsQueryVariables = Types.Exact<{
   input: Types.GetItemsInput;
@@ -176,6 +176,7 @@ export const GetItemDocument = gql`
     item {
       created_at
       description
+      contents
       urlSlug
       file {
         page
