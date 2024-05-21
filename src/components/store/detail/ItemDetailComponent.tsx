@@ -48,17 +48,6 @@ const ItemDetailComponent: React.FC<ItemDetailComponentProps> = () => {
             </div>
 
             <div className="flex gap-2">
-              <div className="text-gray-500">암기장 제공 :</div>
-              <div className="flex gap-2">
-                <span>{item.category.name}</span>
-                <button>
-                  <Tooltip title="상품 구매시 암기장 초대링크가 제공됩니다.">
-                    <QuestionCircleOutlined />
-                  </Tooltip>
-                </button>
-              </div>
-            </div>
-            <div className="flex gap-2">
               <div className="text-gray-500">자료 정보 :</div>
               <div>{`${item.file.page}페이지 / PDF`}</div>
             </div>

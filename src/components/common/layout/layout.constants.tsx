@@ -11,6 +11,7 @@ import {
   AlertOutlined,
   GlobalOutlined,
   YoutubeOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 import { AdminPanelSettingsOutlined } from '@mui/icons-material';
 export const navItems = [

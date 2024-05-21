@@ -167,21 +167,6 @@ const StoreCreateForm: React.FC<StoreCreateFormProps> = ({
             <StoreFormErrorMessage name="file" />
           </div>
         </div>
-        <div className="mb-2 flex gap-4 items-center w-full">
-          <div className="w-full">
-            <div className="text-lg font-bold mb-1" id="file">
-              암기장 등록 <span className="text-sm text-gray-500">(선택)</span>
-            </div>
-            <pre className="text-sm text-gray-500 mb-2">
-              {`암기장 등록시, 구매자에게 암기장 초대링크가 제공됩니다.`}
-            </pre>
-            <StoreCategorySelect
-              defalutValue={getValues('categoryId')}
-              onChange={(value) => setValue('categoryId', value)}
-            />
-            <StoreFormErrorMessage name="categoryId" />
-          </div>
-        </div>
         <div>
           <div className="text-lg font-bold mb-2" id="description">
             자료소개
