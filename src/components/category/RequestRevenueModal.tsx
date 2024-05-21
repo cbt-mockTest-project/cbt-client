@@ -49,9 +49,8 @@ const RequestRevenueModal: React.FC<RequestRevenueModalProps> = (props) => {
         아래와 같은 항목을 만족할 경우 수익창출 신청이 가능합니다
       </div>
       <div className="text-[15px] text-gray-700 mt-4 border-l-4 border-blue-500 pl-4 border-solid">
-        <div>- 리뷰수 3개 이상</div>
-        <div>- 평점 3.5 이상</div>
         <div>- 타 암기장과 중복되지 않는 내용</div>
+        <div>- 2개 이상의 시험지</div>
       </div>
       <div className="text-gray-700 mt-4 ">
         <div>
