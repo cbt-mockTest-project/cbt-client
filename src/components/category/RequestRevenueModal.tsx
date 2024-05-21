@@ -50,7 +50,8 @@ const RequestRevenueModal: React.FC<RequestRevenueModalProps> = (props) => {
       </div>
       <div className="text-[15px] text-gray-700 mt-4 border-l-4 border-blue-500 pl-4 border-solid">
         <div>- 타 암기장과 중복되지 않는 내용</div>
-        <div>- 2개 이상의 시험지</div>
+        <div>- 시험지수 2개 이상</div>
+        <div>- 문제수 50개 이상</div>
       </div>
       <div className="text-gray-700 mt-4 ">
         <div>
