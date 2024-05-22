@@ -61,7 +61,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       ]);
 
       const ModuCategoriesSortedByLikes = [...moduCategories].sort(
-        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+        (a, b) => a.order - b.order
       );
       const EhsCategoriesSortedByLikes = [...ehsCategories].sort(
         (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length

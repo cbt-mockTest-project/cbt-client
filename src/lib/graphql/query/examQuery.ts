@@ -319,6 +319,7 @@ export const GET_EXAM_CATEGORIES = gql`
       ok
       error
       categories {
+        order
         created_at
         categoryEvaluations {
           score
