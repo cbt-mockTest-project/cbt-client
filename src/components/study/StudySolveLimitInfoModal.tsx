@@ -33,6 +33,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
   const periodOptions = [
     { label: '3개월', value: 1 },
     { label: '12개월', value: 2 },
+    { label: '무제한', value: 3 },
   ];
   const handleBasicPayment = async (
     e: React.MouseEvent<any, MouseEvent>,
@@ -103,6 +104,10 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
                 if (value === 2) {
                   setPrice(19900);
                   setSelectedRoleId(2);
+                }
+                if (value === 3) {
+                  setPrice(49900);
+                  setSelectedRoleId(3);
                 }
               }}
             />

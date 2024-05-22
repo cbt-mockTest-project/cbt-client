@@ -103,7 +103,7 @@ const PricingComponent: React.FC<PricingComponentProps> = ({}) => {
       intro: '베이직 플랜으로\n학습효율을 높여보세요!',
       price: 9900,
       beforeDiscountPrice: 12000,
-      endDate: '이용기간: 3개월',
+      endDate: '이용기간: 선택',
       benefits: [
         '광고제거',
         '무제한 문제풀이',
