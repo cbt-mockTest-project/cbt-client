@@ -93,7 +93,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     try {
       if (meQuery.me) {
         const isEhsExam = checkIsEhsMasterExam(examIds);
-        const isBasicPlanUser = checkRole({ roleIds: [1, 2], meQuery });
+        const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
         if (
           meQuery.me.user.randomExamLimit <= 0 &&
           !isEhsExam &&
