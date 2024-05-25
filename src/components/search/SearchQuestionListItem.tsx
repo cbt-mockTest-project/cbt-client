@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { MockExamQuestion } from 'types';
 import parse from 'html-react-parser';
 import palette from '@styles/palette';
-import { EditFilled } from '@ant-design/icons';
+import { EditFilled, LinkOutlined } from '@ant-design/icons';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import Link from 'next/link';
 
@@ -84,6 +84,11 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
               )}
           </div>
           <div className="search-question-tool-box">
+            {
+              <Link href={`/question/${question.id}`}>
+                <LinkOutlined />
+              </Link>
+            }
             {hasEditButton && (
               <Link
                 href={`/question/${question.id}/edit`}

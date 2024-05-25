@@ -103,11 +103,6 @@ const useSearchQuestions = () => {
         return message.error(data.error);
       }
     },
-    // onSettled: () => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: searchQuestionsQueryOptions.queryKey,
-    //   });
-    // },
   });
 
   return {
