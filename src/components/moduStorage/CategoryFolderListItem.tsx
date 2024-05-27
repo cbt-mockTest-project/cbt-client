@@ -123,11 +123,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
       href={`/category/${category?.urlSlug}`}
       className={className}
     >
-      {/* {category.isNew && (
-        <div className="absolute top-2 left-4">
-          <Tag color="red">NEW</Tag>
-        </div>
-      )} */}
       {category && !isLoading && (
         <BasicCard hoverEffect type="primary">
           <div className="category-wrapper">

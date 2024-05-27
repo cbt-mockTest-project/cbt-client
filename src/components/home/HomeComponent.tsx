@@ -65,6 +65,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       <HomeBanner />
       <div className="home-wrapper">
         <HomeFolderList
+          key="modu-storage"
           title="국가고시 실기시험 준비하기 👀"
           subTitle="실기 시험을 효율적으로 준비해보세요."
           link="/modu-storage"
@@ -72,6 +73,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           type={ExamSource.MoudCbt}
         />
         <HomeFolderList
+          key="ehs-storage"
           title="직8딴 시리즈(기출문제 중복소거) 📒"
           subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
           link="/ehs-storage"
@@ -79,13 +81,15 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           type={ExamSource.EhsMaster}
         />
         <HomeFolderList
+          key="user-picked-storage"
           title="주인장 Pick 암기장 📌"
           subTitle="주인장이 추천하는 검증된 암기장이에요."
           link="/user-storage"
-          unikeyKey="user-storage"
-          type={'isPick'}
+          unikeyKey="user-picked-storage"
+          type="isPick"
         />
         <HomeFolderList
+          key="user-storage"
           title="유저가 만든 공개 암기장 📂"
           subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
           link="/user-storage"
@@ -93,6 +97,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           type={ExamSource.User}
         />
         <BookmarkedFolderList
+          key="bookmarked-storage"
           title="저장된 암기장 📌"
           subTitle="저장된 암기장을 모아보세요."
         />
