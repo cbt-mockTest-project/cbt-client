@@ -5,15 +5,14 @@ import { Modal, ModalProps, Radio } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { MockExamQuestion, QuestionFeedbackType } from 'types';
 import CreateQuestionEditor from '@components/exam/write/CreateQuestionEditor';
-import useQuestions from '@lib/hooks/useQuestions';
 import {
   AddFeedbackInput,
   EditFeedbackInput,
 } from '@lib/hooks/useQuestionFeedback';
 
 export const feedbackOptions: checkboxOption[] = [
-  { label: '공개', value: QuestionFeedbackType.Public },
   { label: '비공개', value: QuestionFeedbackType.Private },
+  { label: '공개', value: QuestionFeedbackType.Public },
   { label: '오류신고', value: QuestionFeedbackType.Report },
 ];
 interface QuestionFeedbackModalProps extends Omit<ModalProps, 'children'> {
@@ -21,6 +20,7 @@ interface QuestionFeedbackModalProps extends Omit<ModalProps, 'children'> {
   question: MockExamQuestion;
   feedbackId?: number;
   defaultFeedback?: string;
+  defaultType?: QuestionFeedbackType;
   onClose: () => void;
   editFeedback: (
     editFeedbackInput: Omit<EditFeedbackInput, 'setQuestion'>
@@ -39,13 +39,13 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
     question,
     title,
     defaultFeedback,
+    defaultType = QuestionFeedbackType.Private,
     ...modalProps
   } = props;
   const [updateFeedbackLoading, setUpdateFeedbackLoading] = useState(false);
 
-  const [selectedType, setSelectedType] = useState<QuestionFeedbackType>(
-    QuestionFeedbackType.Public
-  );
+  const [selectedType, setSelectedType] =
+    useState<QuestionFeedbackType>(defaultType);
   const [content, setContent] = useState('');
   const handleAddQuestionFeedback = async () => {
     setUpdateFeedbackLoading(true);
@@ -89,7 +89,7 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
         okButtonProps={{ loading: updateFeedbackLoading }}
       >
         <div className="add-answer-modal-inner">
-          <label className="content-label">오류신고 및 답안추가</label>
+          <label className="content-label">메모</label>
           <pre className="content-title">{title}</pre>
           <Radio.Group
             className="content-feedback-type-checkbox-group"

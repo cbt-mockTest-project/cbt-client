@@ -275,6 +275,7 @@ const SolutionModeFeedbackListItem: React.FC<
           question={question}
           feedbackId={feedback.id}
           defaultFeedback={currentFeedback}
+          defaultType={feedback.type}
           open={isQuestionFeedbackModalOpen}
           onCancel={() => setIsQuestionFeedbackModalOpen(false)}
           onClose={() => setIsQuestionFeedbackModalOpen(false)}

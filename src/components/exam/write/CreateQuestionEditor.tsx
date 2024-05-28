@@ -37,7 +37,6 @@ const CreateQuestionEditorBlock = styled.div`
 const formats: ComponentProps<typeof ReactQuill>['formats'] = [
   'header',
   'bold',
-  'list',
   'italic',
   'underline',
   'link',

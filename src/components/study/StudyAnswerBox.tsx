@@ -152,7 +152,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
       {hasAddAnswerButton && (
         <div className="study-answer-footer" onClick={onClickOpenFeedbackModal}>
           <Button shape="circle">➕</Button>
-          <div>답안 추가</div>
+          <div>메모</div>
         </div>
       )}
       {isFeedbackModalOpen && (
