@@ -50,6 +50,12 @@ const BugReportModal: React.FC<BugReportModalProps> = (props) => {
           placeholder="내용을 입력해주세요."
           rows={4}
         />
+        <div>
+          <div>빠른 문의</div>
+          <a href="https://open.kakao.com/o/sZy6kxbf">
+            https://open.kakao.com/o/sZy6kxbf
+          </a>
+        </div>
       </div>
     </BugReportModalBlock>
   );
