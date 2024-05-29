@@ -3,15 +3,11 @@ import { loginModal } from '@lib/constants';
 import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
 import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 
-import {
-  useChangeQuestionState,
-  useResetQuestionState,
-} from '@lib/graphql/hook/useQuestionState';
+import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import {

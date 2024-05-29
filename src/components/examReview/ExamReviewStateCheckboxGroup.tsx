@@ -69,7 +69,7 @@ const ExamReviewStateCheckboxGroup: React.FC<
     fetchQuestions({
       ids: examIds.split(',').map((id) => +id),
       states: checkedValues,
-    }).then(() => setFetchQuestionsLoading(false));
+    }).finally(() => setFetchQuestionsLoading(false));
   };
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const ExamReviewStateCheckboxGroup: React.FC<
         value={checkedStates}
         onChange={handleStateCheck}
       />
-      <Button onClick={() => setIsStudyModalOpen(true)}>학습모드</Button>
+      <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button>
       {isStudyModalOpen && (
         <ExamReviewStudyModal
           open={isStudyModalOpen}
