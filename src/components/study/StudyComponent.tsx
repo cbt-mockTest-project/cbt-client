@@ -34,7 +34,8 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();
-  const { order, states, limit, examIds, mode, examId } = router.query;
+  const { order, states, limit, examIds, mode, examId, bookmarked } =
+    router.query;
   useEffect(() => {
     setFetchQuestionsLoading(true);
     if (!router.isReady) return;
@@ -60,6 +61,9 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
           .split(',')
           .map((id) => Number(id)),
       };
+      if (bookmarked && bookmarked === 'true') {
+        input.bookmarked = true;
+      }
       if (states && typeof states === 'string')
         input.states = states.split(',') as QuestionState[];
 

@@ -1,9 +1,6 @@
 import { Button, Checkbox, InputNumber, Modal, ModalProps, Radio } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
-import ClearIcon from '@mui/icons-material/Clear';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import palette from '@styles/palette';
 import { ExamMode, ExamSettingType } from 'customTypes';
 import { QuestionState } from 'types';
@@ -12,13 +9,9 @@ import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
 import useAuth from '@lib/hooks/useAuth';
-import {
-  getExamSettingHistory,
-  setExamSettingHistory,
-} from '@lib/utils/examSettingHistory';
-import { useAppSelector } from '@modules/redux/store/configureStore';
+import { setExamSettingHistory } from '@lib/utils/examSettingHistory';
 
-const ExamReviewStudyModalBlock = styled(Modal)`
+const ExamBookmarkStudyModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
   .exam-multiple-select-card-limit-wrapper,
   .exam-multiple-select-score-checkbox-wrapper,
@@ -48,12 +41,12 @@ const ExamReviewStudyModalBlock = styled(Modal)`
   }
 `;
 
-interface ExamReviewStudyModalProps extends Omit<ModalProps, 'children'> {
-  questionStates: QuestionState[];
-}
+interface ExamBookmarkStudyModalProps extends Omit<ModalProps, 'children'> {}
 
-const ExamReviewStudyModal: React.FC<ExamReviewStudyModalProps> = (props) => {
-  const { questionStates, ...modalProps } = props;
+const ExamBookmarkStudyModal: React.FC<ExamBookmarkStudyModalProps> = (
+  props
+) => {
+  const { ...modalProps } = props;
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
 
@@ -99,7 +92,6 @@ const ExamReviewStudyModal: React.FC<ExamReviewStudyModalProps> = (props) => {
         categoryId,
         mode,
         isRandom,
-        questionStates,
         limit,
         examIds,
       };
@@ -113,9 +105,9 @@ const ExamReviewStudyModal: React.FC<ExamReviewStudyModalProps> = (props) => {
         query: {
           ...(categoryId ? { categoryId } : {}),
           order: isRandom ? 'random' : 'normal',
-          states: questionStates.join(','),
           limit: limit ? limit.toString() : '',
           examIds: examIds.join(','),
+          bookmarked: 'true',
           mode,
         },
       });
@@ -124,29 +116,12 @@ const ExamReviewStudyModal: React.FC<ExamReviewStudyModalProps> = (props) => {
     }
   };
   return (
-    <ExamReviewStudyModalBlock
+    <ExamBookmarkStudyModalBlock
       {...modalProps}
       title="학습 설정하기"
       footer={false}
     >
       <div>
-        <div className="exam-multiple-select-option-wrapper">
-          <label className="exam-multiple-select-label">
-            * 학습 형태를 선택해주세요.
-          </label>
-          <Radio.Group
-            className="exam-multiple-select-radio-group"
-            value={mode}
-            onChange={(e) => {
-              setMode(e.target.value);
-            }}
-          >
-            <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
-            {!checkIsEhsMasterExam(examIds) && (
-              <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
-            )}
-          </Radio.Group>
-        </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">
           <label className="exam-multiple-select-label">* 문제 순서</label>
           <div>
@@ -183,7 +158,7 @@ const ExamReviewStudyModal: React.FC<ExamReviewStudyModalProps> = (props) => {
           onCancel={() => setIsRandomExamLimitModalOpen(false)}
         />
       )}
-    </ExamReviewStudyModalBlock>
+    </ExamBookmarkStudyModalBlock>
   );
 };
-export default ExamReviewStudyModal;
+export default ExamBookmarkStudyModal;

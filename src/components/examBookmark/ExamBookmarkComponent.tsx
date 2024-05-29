@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import ExamBookmarkStudyModal from './ExamBookmarkStudyModal';
 
 const ExamBookmarkComponentBlock = styled.div`
   padding: 20px;
@@ -56,7 +57,9 @@ const ExamBookmarkComponent: React.FC<ExamBookmarkComponentProps> = () => {
   return (
     <ExamBookmarkComponentBlock>
       <div className="exam-review-title">{`"${categoryName}" 북마크`}</div>
-      {/* <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button> */}
+      <Button className="mb-4" onClick={() => setIsStudyModalOpen(true)}>
+        풀이모드 전환
+      </Button>
       <div className="exam-review-question-list">
         {!fetchQuestionsLoading &&
           questions.map((question, index) => (
@@ -76,6 +79,12 @@ const ExamBookmarkComponent: React.FC<ExamBookmarkComponentProps> = () => {
           </>
         )}
       </div>
+      {isStudyModalOpen && (
+        <ExamBookmarkStudyModal
+          open={isStudyModalOpen}
+          onCancel={() => setIsStudyModalOpen(false)}
+        />
+      )}
     </ExamBookmarkComponentBlock>
   );
 };
