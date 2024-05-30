@@ -40,10 +40,7 @@ const StudyBookmarkInfoModal: React.FC<StudyBookmarkInfoModalProps> = (
         <div className="study-bookmark-info-modal-title">
           첫번째 북마크를 축하합니다 😊
         </div>
-        <div className="study-bookmark-info-modal-description">{`북마크된 문제는 '기록' 페이지에서 확인할 수 있습니다.`}</div>
-        <Button href="/me/history" type="primary">
-          기록 페이지로 이동
-        </Button>
+        <div className="study-bookmark-info-modal-description">{`북마크된 문제는 암기장 상단의 '북마크노트'에서 확인할 수 있습니다.`}</div>
       </div>
     </StudyBookmarkInfoModalBlock>
   );
