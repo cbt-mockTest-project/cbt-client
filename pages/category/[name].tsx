@@ -79,7 +79,10 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       const apolloClient = initializeApollo({}, '');
       const urlSlug = context.params?.name;
       if (!urlSlug || typeof urlSlug !== 'string') {
-        return;
+        return {
+          notFound: true,
+          revalidate: 43200,
+        };
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
         urlSlug,
@@ -94,7 +97,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       if (!res.data.readMockExamCategoryByCategoryId.ok) {
         return {
           notFound: true,
-          revalidate: 1,
+          revalidate: 43200,
         };
       }
       const category = res.data.readMockExamCategoryByCategoryId.category;
@@ -118,7 +121,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       console.log(e);
       return {
         notFound: true,
-        revalidate: 1,
+        revalidate: 43200,
       };
     }
   }
