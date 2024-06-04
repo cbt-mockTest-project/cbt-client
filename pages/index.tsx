@@ -1,6 +1,5 @@
 import WithHead from '@components/common/head/WithHead';
 import HomeComponent from '@components/home/HomeComponent';
-import HomeCore from '@components/home/HomeCore';
 import { MAIN_PAGE } from '@lib/constants/displayName';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
@@ -25,7 +24,6 @@ const IndexPage: React.FC<Props> = () => {
         title="모두CBT | 암기짱 공유 서비스"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      <HomeCore />
       <HomeComponent />
       <HomeNoti />
     </>
