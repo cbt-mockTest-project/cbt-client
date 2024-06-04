@@ -189,26 +189,28 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       </div>
 
       <ul className="home-folder-list" ref={folderListRef}>
-        {categories?.map((category, index) => (
-          <div className="flex items-center" key={uniqueId(type)}>
-            <CategoryFolderListItem
-              className="home-folder-item"
-              category={category}
-            />
-            {index === categories.length - 1 && (
-              <div className="flex items-center">
-                <Button
-                  size="large"
-                  className="w-36 h-full"
-                  type="link"
-                  href={link}
-                >
-                  {`더 보기`}
-                </Button>
-              </div>
-            )}
-          </div>
-        ))}
+        {categories &&
+          categories.length > 0 &&
+          categories.map((category, index) => (
+            <div className="flex items-center" key={uniqueId(type)}>
+              <CategoryFolderListItem
+                className="home-folder-item"
+                category={category}
+              />
+              {index === categories.length - 1 && (
+                <div className="flex items-center">
+                  <Button
+                    size="large"
+                    className="w-36 h-full"
+                    type="link"
+                    href={link}
+                  >
+                    {`더 보기`}
+                  </Button>
+                </div>
+              )}
+            </div>
+          ))}
         {!categories &&
           [1, 2, 3, 4, 5].map((i) => (
             <CategoryFolderListItem

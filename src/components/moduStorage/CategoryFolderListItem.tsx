@@ -117,10 +117,11 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   className = '',
 }) => {
   const router = useRouter();
-  const { handleCheckLogin, user, isLoggedIn } = useAuth();
+  const { handleCheckLogin, user } = useAuth();
+  if (!category) return null;
   return (
     <CategoryFolderListItemBlock
-      href={`/category/${category?.urlSlug}`}
+      href={`/category/${category.urlSlug}`}
       className={className}
     >
       {category && !isLoading && (
@@ -176,9 +177,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
             </div>
           </div>
         </BasicCard>
-      )}
-      {isLoading && (
-        <SkeletonBox width="100%" height="111px" borderRadius="6px" />
       )}
     </CategoryFolderListItemBlock>
   );

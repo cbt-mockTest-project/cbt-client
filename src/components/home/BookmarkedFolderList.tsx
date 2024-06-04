@@ -22,9 +22,6 @@ const BookmarkedFolderList: React.FC<BookmarkedFolderListProps> = (props) => {
   const { isLoggedIn } = useAuth();
   const { ...homeFolderListProps } = props;
   const { fetchCategories, setBookmarkedCategories } = useHomeCategories();
-  const bookmarkedCategories = useAppSelector(
-    (state) => state.home.bookmarkedCategories
-  );
   useEffect(() => {
     if (router.query.type) return;
 
