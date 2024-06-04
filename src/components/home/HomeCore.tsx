@@ -38,14 +38,11 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
     const fetchUserCategories = async () => {
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
-          const res = await fetchCategories(
-            {
-              examSource: ExamSource.User,
-              limit: 30,
-              isPick: false,
-            },
-            'no-cache'
-          );
+          const res = await fetchCategories({
+            examSource: ExamSource.User,
+            limit: 30,
+            isPick: false,
+          });
           const categories = res?.data.getExamCategories.categories || [];
           const categoriesSortedByLikes = [...categories].sort(
             (a, b) =>
@@ -64,7 +61,7 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
           dispatch(
             homeActions.setUserStorageCategories({
               categories: [
-                ...categoriesSortedByCreatedAt.slice(0, 2),
+                ...categoriesSortedByCreatedAt.slice(0, 1),
                 ...categoriesSortedByLikes.filter(
                   (category) => !category['isNew']
                 ),
@@ -80,7 +77,6 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
 
     try {
       fetchUserCategories();
-      fetchPickedCategories();
     } catch (err) {
       handleError(err);
     }
