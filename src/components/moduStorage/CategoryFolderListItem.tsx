@@ -171,11 +171,13 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                   {category.user.nickname}
                 </div>
               </button>
-              {category.mockExam.some((el) => el.isPremium) && (
-                <Tag color="blue">유료</Tag>
-              )}
-              <div className="category-exam-count">
-                {category.mockExam.length} 세트
+              <div className="flex gap-2 items-center">
+                {category.mockExam.some((el) => el.isPremium) && (
+                  <Tag color="blue">유료</Tag>
+                )}
+                <div className="category-exam-count">
+                  {category.mockExam.length} 세트
+                </div>
               </div>
             </div>
           </div>
