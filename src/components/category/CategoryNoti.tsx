@@ -14,6 +14,7 @@ const CategoryNoti: React.FC<CategoryNotiProps> = ({ category }) => {
   const { user } = useAuth();
   const router = useRouter();
   const openNotification = (placement: NotificationPlacement) => {
+    return;
     if (!user) return;
     if (!user.recentlyStudiedExams.length) return;
     const key = `open${Date.now()}`;
