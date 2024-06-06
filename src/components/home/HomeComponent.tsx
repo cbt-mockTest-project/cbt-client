@@ -4,21 +4,21 @@ import HomeBanner from './HomeBanner';
 import { responsive } from '@lib/utils/responsive';
 import HomeFolderList from './HomeFolderList';
 import { ExamSource } from 'types';
-import useHomeCategories from '@lib/hooks/useHomeCategories';
 import BookmarkedFolderList from './BookmarkedFolderList';
+import { Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
 
   .home-wrapper {
-    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 50px;
     padding: 20px 30px 30px 30px;
-
     .home-folder-search-input-and-radio {
       display: flex;
       flex-direction: column;
@@ -63,10 +63,20 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
   return (
     <HomeComponentBlock>
       <HomeBanner />
+      <div className="ml-[30px] mt-4 lg:ml-[20px]">
+        <Link href="/search-categories">
+          <Button type="primary">
+            <div className="flex gap-2 items-center">
+              암기장 통합검색
+              <SearchOutlined />
+            </div>
+          </Button>
+        </Link>
+      </div>
       <div className="home-wrapper">
         <HomeFolderList
           key="modu-storage"
-          title="국가고시 실기시험 준비하기 👀"
+          title="모두CBT 공식 암기장 👀"
           subTitle="실기 시험을 효율적으로 준비해보세요."
           link="/modu-storage"
           unikeyKey="modu-storage"
@@ -74,7 +84,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         />
         <HomeFolderList
           key="ehs-storage"
-          title="직8딴 시리즈(기출문제 중복소거) 📒"
+          title="직8딴 암기장(기출문제 중복소거) 📒"
           subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
           link="/ehs-storage"
           unikeyKey="modu-storage"
@@ -82,7 +92,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         />
         <HomeFolderList
           key="user-storage"
-          title="유저가 만든 공개 암기장 📂"
+          title="유저 공유 암기장 📂"
           subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
           link="/user-storage"
           unikeyKey="user-storage"

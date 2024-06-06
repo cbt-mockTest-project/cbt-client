@@ -33,6 +33,7 @@ const useStorage = (type: StorageType) => {
       return state.storage.premiumStorageCategories;
     if (type === StorageType.MY) return state.storage.myStorageCategories;
     if (type === StorageType.USER) return state.storage.userStorageCategories;
+    if (type === StorageType.SEARCH) return state.storage.searchCategories;
     if (type === StorageType.BOOKMARK)
       return state.storage.bookmarkedStorageCategories;
     return state.storage.moduStorageCategories;
@@ -46,6 +47,8 @@ const useStorage = (type: StorageType) => {
       return state.storage.originalUserStorageCategories;
     if (type === StorageType.BOOKMARK)
       return state.storage.originalBookmarkedStorageCategories;
+    if (type === StorageType.SEARCH)
+      return state.storage.originalSearchCategories;
     return state.storage.originalModuStorageCategories;
   });
   const [createCategory, { loading: createCategoryLoading }] =
@@ -229,6 +232,17 @@ const useStorage = (type: StorageType) => {
       })
     );
 
+  const setSearchCategories = (
+    categories: MockExamCategory[],
+    shouldUpdateOriginal: boolean
+  ) =>
+    dispatch(
+      storageActions.setSearchCategories({
+        categories,
+        shouldUpdateOriginal,
+      })
+    );
+
   const setCategories = (
     categories: MockExamCategory[],
     shouldUpdateOriginal = true
@@ -243,6 +257,8 @@ const useStorage = (type: StorageType) => {
       setUserCateogries(categories, shouldUpdateOriginal);
     if (type === StorageType.BOOKMARK)
       setBookmarkedCateogries(categories, shouldUpdateOriginal);
+    if (type === StorageType.SEARCH)
+      setSearchCategories(categories, shouldUpdateOriginal);
   };
 
   return {

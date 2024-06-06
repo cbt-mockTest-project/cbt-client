@@ -111,6 +111,7 @@ export enum StorageType {
   MY = 'my',
   USER = 'user',
   BOOKMARK = 'bookmark',
+  SEARCH = 'search',
 }
 
 export interface CreateExamForm {

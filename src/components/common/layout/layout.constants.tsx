@@ -11,13 +11,14 @@ import {
   AlertOutlined,
   GlobalOutlined,
   YoutubeOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
 import { AdminPanelSettingsOutlined } from '@mui/icons-material';
 export const navItems = [
   {
     key: '/modu-storage',
     icon: <CloudOutlined />,
-    label: '국가고시 암기장',
+    label: '모두CBT 암기장',
   },
   {
     key: '/ehs-storage',
@@ -27,12 +28,17 @@ export const navItems = [
   {
     key: '/user-storage',
     icon: <GlobalOutlined />,
-    label: '공개 암기장',
+    label: '유저 공유 암기장',
   },
   {
     key: '/me/storage',
     icon: <FolderOutlined />,
     label: '내 암기장',
+  },
+  {
+    key: '/search-categories',
+    icon: <SearchOutlined />,
+    label: '암기장 통합검색',
   },
   {
     key: '/pricing',

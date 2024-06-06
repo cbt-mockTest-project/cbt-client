@@ -13,6 +13,8 @@ export interface StorageState {
   originalBookmarkedStorageCategories: MockExamCategory[] | null;
   userStorageCategories: MockExamCategory[] | null;
   originalUserStorageCategories: MockExamCategory[] | null;
+  searchCategories: MockExamCategory[] | null;
+  originalSearchCategories: MockExamCategory[] | null;
   setMyCategoriesLoading: boolean;
 }
 
@@ -27,6 +29,8 @@ const storageState: StorageState = {
   originalMyStorageCategories: null,
   originalBookmarkedStorageCategories: null,
   originalUserStorageCategories: null,
+  searchCategories: null,
+  originalSearchCategories: null,
   setMyCategoriesLoading: false,
 };
 
@@ -73,6 +77,14 @@ const storageSlice = createSlice({
       state.userStorageCategories = categories;
       if (shouldUpdateOriginal)
         state.originalUserStorageCategories = categories;
+    },
+    setSearchCategories: (
+      state,
+      action: PayloadAction<SetStorageCategoriesPayload>
+    ) => {
+      const { categories, shouldUpdateOriginal = true } = action.payload;
+      state.searchCategories = categories;
+      if (shouldUpdateOriginal) state.originalSearchCategories = categories;
     },
     setBookmarkedStorageCategories: (
       state,
