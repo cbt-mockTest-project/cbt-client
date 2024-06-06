@@ -144,12 +144,14 @@ interface ExamListItemProps {
   exam: MockExam;
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
   hasRecentlyMark?: boolean;
+  recentlyStudyQuestionNumber?: number;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
   exam,
   dragHandleProps,
   hasRecentlyMark = false,
+  recentlyStudyQuestionNumber = 0,
 }) => {
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
@@ -286,7 +288,11 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         </div>
         {hasRecentlyMark && (
           <div className="absolute top-[-15px] left-[15px]">
-            <Tag color="blue">최근 학습</Tag>
+            <Tag color="blue">{`최근 학습${
+              recentlyStudyQuestionNumber !== 0
+                ? `- ${recentlyStudyQuestionNumber}번 문제`
+                : '- 해설모드'
+            }`}</Tag>
           </div>
         )}
       </BasicCard>

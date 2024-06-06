@@ -12,17 +12,10 @@ import { addApolloState, initializeApollo } from '@modules/apollo';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import wrapper, { useAppSelector } from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import dynamic from 'next/dynamic';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
-const CategoryNoti = dynamic(
-  () => import('@components/category/CategoryNoti'),
-  {
-    ssr: false,
-  }
-);
 interface CategoryPageProps {
   category: MockExamCategory;
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
@@ -46,7 +39,6 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
       {isExistedCategory && (
         <CategoryComponent categoryQueryInput={categoryQueryInput} />
       )}
-      <CategoryNoti category={category} />
     </>
   );
 };

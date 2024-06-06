@@ -38,11 +38,26 @@ const ExamList: React.FC<ExamListProps> = () => {
           {isMyCategory &&
             exams.map((exam, index) => {
               const isRecentStudy = () => {
-                if (!user) return false;
-                return !!user.recentlyStudiedExams
-                  ?.find((el) => el.categoryId === categoryId)
-                  ?.examIds.includes(exam.id);
+                if (!user)
+                  return {
+                    hasRecentlyStudy: false,
+                    recentlyStudyQuestionNumber: 0,
+                  };
+                const recentlyStudyExam = user.recentlyStudiedExams?.find(
+                  (el) => el.categoryId === categoryId
+                );
+                const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
+                  exam.id
+                );
+                const recentlyStudyQuestionNumber =
+                  recentlyStudyExam?.questionIndex || 0;
+                return {
+                  hasRecentlyStudy,
+                  recentlyStudyQuestionNumber,
+                };
               };
+              const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
+                isRecentStudy();
               return (
                 <Draggable
                   key={exam.id}
@@ -60,7 +75,10 @@ const ExamList: React.FC<ExamListProps> = () => {
                       <ExamListItem
                         exam={exam}
                         dragHandleProps={provided.dragHandleProps}
-                        hasRecentlyMark={isRecentStudy()}
+                        hasRecentlyMark={hasRecentlyStudy}
+                        recentlyStudyQuestionNumber={
+                          recentlyStudyQuestionNumber
+                        }
                       />
                     </div>
                   )}
@@ -72,8 +90,35 @@ const ExamList: React.FC<ExamListProps> = () => {
       <ExamListBlock>
         {!isMyCategory &&
           exams.map((exam, index) => {
+            const isRecentStudy = () => {
+              if (!user)
+                return {
+                  hasRecentlyStudy: false,
+                  recentlyStudyQuestionNumber: 0,
+                };
+              const recentlyStudyExam = user.recentlyStudiedExams?.find(
+                (el) => el.categoryId === categoryId
+              );
+              const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
+                exam.id
+              );
+              const recentlyStudyQuestionNumber =
+                recentlyStudyExam?.questionIndex || 0;
+              return {
+                hasRecentlyStudy,
+                recentlyStudyQuestionNumber,
+              };
+            };
+            const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
+              isRecentStudy();
             return (
-              <ExamListItem dragHandleProps={null} key={exam.id} exam={exam} />
+              <ExamListItem
+                dragHandleProps={null}
+                key={exam.id}
+                exam={exam}
+                hasRecentlyMark={hasRecentlyStudy}
+                recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
+              />
             );
           })}
       </ExamListBlock>

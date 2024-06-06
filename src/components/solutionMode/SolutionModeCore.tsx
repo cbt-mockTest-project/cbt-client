@@ -9,9 +9,7 @@ interface SolutionModeCoreProps {}
 
 const SolutionModeCore: React.FC<SolutionModeCoreProps> = () => {
   const router = useRouter();
-  const categoryId = useAppSelector(
-    (state) => state.examCategory?.category?.id
-  );
+  const categoryId = router.query.cid;
   const examId = router.query.Id;
   const { isLoggedIn } = useAuth();
   const [upsertRecentlyStudiedExams] = useUpsertRecentlyStudiedExams();
@@ -22,9 +20,9 @@ const SolutionModeCore: React.FC<SolutionModeCoreProps> = () => {
         upsertRecentlyStudiedExams({
           variables: {
             input: {
-              categoryId,
+              categoryId: Number(categoryId),
               examIds: [Number(examId)],
-              questionIndex: 1,
+              questionIndex: 0,
             },
           },
         });
