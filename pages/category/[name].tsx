@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       if (!urlSlug || typeof urlSlug !== 'string') {
         return {
           notFound: true,
-          revalidate: 43200,
+          revalidate: 1,
         };
       }
       const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
@@ -97,7 +97,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       if (!res.data.readMockExamCategoryByCategoryId.ok) {
         return {
           notFound: true,
-          revalidate: 43200,
+          revalidate: 1,
         };
       }
       const category = res.data.readMockExamCategoryByCategoryId.category;
@@ -121,7 +121,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       console.log(e);
       return {
         notFound: true,
-        revalidate: 43200,
+        revalidate: 1,
       };
     }
   }
