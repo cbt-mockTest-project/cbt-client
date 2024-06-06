@@ -1,13 +1,12 @@
-import { EditOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import palette from '@styles/palette';
-import { Checkbox, Dropdown, MenuProps, Modal, Tag } from 'antd';
-import { ExamSettingType } from 'customTypes';
+import { Dropdown, MenuProps, Modal, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { MockExam } from 'types';
 import ExamSelecModal from './ExamSelecModal';
 import { useRouter } from 'next/router';
@@ -17,11 +16,19 @@ import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import ExamListItemCheckbox from './ExamListItemCheckbox';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 
-const ExamListItemBlock = styled.div`
+const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   width: 100%;
   display: flex;
   gap: 10px;
   align-items: center;
+  ${(props) =>
+    props.hasRecentlyMark &&
+    css`
+      .exam-list-basic-card {
+        position: relative;
+        border-color: ${palette.antd_blue_02};
+      }
+    `}
   .exam-list-item-checkbox {
     height: 85px;
     text-align: center;
@@ -136,11 +143,13 @@ const ExamListItemBlock = styled.div`
 interface ExamListItemProps {
   exam: MockExam;
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
+  hasRecentlyMark?: boolean;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
   exam,
   dragHandleProps,
+  hasRecentlyMark = false,
 }) => {
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
@@ -226,13 +235,18 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   );
 
   return (
-    <ExamListItemBlock>
+    <ExamListItemBlock hasRecentlyMark={hasRecentlyMark}>
       <ExamListItemCheckbox
         categoryId={categoryId}
         exams={exams}
         examId={exam.id}
       />
-      <BasicCard onClick={handleExamClick} hoverEffect type="primary">
+      <BasicCard
+        className="exam-list-basic-card"
+        onClick={handleExamClick}
+        hoverEffect
+        type="primary"
+      >
         <div className="exam-list-item-top-wrapper">
           <div className="exam-list-item-title-and-edit-button">
             <div className="exam-list-item-title">{exam.title}</div>
@@ -270,6 +284,11 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           <UserProfile />
           <ExamCountTag />
         </div>
+        {hasRecentlyMark && (
+          <div className="absolute top-[-15px] left-[15px]">
+            <Tag color="blue">최근 학습</Tag>
+          </div>
+        )}
       </BasicCard>
       {isMyCategory && (
         <div {...dragHandleProps}>

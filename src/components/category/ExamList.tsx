@@ -37,6 +37,12 @@ const ExamList: React.FC<ExamListProps> = () => {
         <ExamListBlock>
           {isMyCategory &&
             exams.map((exam, index) => {
+              const isRecentStudy = () => {
+                if (!user) return false;
+                return !!user.recentlyStudiedExams
+                  ?.find((el) => el.categoryId === categoryId)
+                  ?.examIds.includes(exam.id);
+              };
               return (
                 <Draggable
                   key={exam.id}
@@ -54,6 +60,7 @@ const ExamList: React.FC<ExamListProps> = () => {
                       <ExamListItem
                         exam={exam}
                         dragHandleProps={provided.dragHandleProps}
+                        hasRecentlyMark={isRecentStudy()}
                       />
                     </div>
                   )}

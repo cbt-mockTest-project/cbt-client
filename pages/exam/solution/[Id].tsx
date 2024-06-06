@@ -1,6 +1,7 @@
 import GoogleAd from '@components/common/ad/GoogleAd';
 import WithHead from '@components/common/head/WithHead';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
+import SolutionModeCore from '@components/solutionMode/SolutionModeCore';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
@@ -44,6 +45,7 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         }}
       />
       <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
+      <SolutionModeCore />
     </>
   );
 };
