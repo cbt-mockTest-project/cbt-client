@@ -1,4 +1,4 @@
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
@@ -175,7 +175,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         >
           <span>{title}</span>
           <span>
-            <RightOutlined />
+            <SearchOutlined />
           </span>
         </button>
       ) : (

@@ -337,6 +337,7 @@ export const GET_EXAM_CATEGORIES = gql`
         }
         mockExam {
           id
+          isPremium
         }
       }
     }

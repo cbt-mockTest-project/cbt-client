@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
-import { MockExamCategory } from 'types';
+import { MockExamCategory, MockExamCategoryTypes } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
@@ -171,6 +171,9 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                   {category.user.nickname}
                 </div>
               </button>
+              {category.mockExam.some((el) => el.isPremium) && (
+                <Tag color="blue">유료</Tag>
+              )}
               <div className="category-exam-count">
                 {category.mockExam.length} 세트
               </div>
