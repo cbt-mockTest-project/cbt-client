@@ -10,6 +10,7 @@ import { ExamSource } from 'types';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { uniqueId } from 'lodash';
+import HomeCategoriesRefresh from './HomeCategoriesRefresh';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -190,7 +191,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
 
       <ul className="home-folder-list" ref={folderListRef}>
         {categories &&
-          categories.length > 0 &&
+          categories?.length > 0 &&
           categories.map((category, index) => (
             <div className="flex items-center" key={uniqueId(type)}>
               <CategoryFolderListItem
@@ -212,13 +213,9 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
             </div>
           ))}
         {!categories &&
-          [1, 2, 3, 4, 5].map((i) => (
-            <CategoryFolderListItem
-              className="home-folder-item"
-              key={i}
-              isLoading
-            />
-          ))}
+          [ExamSource.MoudCbt, ExamSource.EhsMaster].includes(
+            type as ExamSource
+          ) && <HomeCategoriesRefresh />}
         {categories && categories.length === 0 && (
           <Empty
             className="home-folder-list-empty"
