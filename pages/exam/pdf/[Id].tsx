@@ -71,54 +71,46 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
-    try {
-      if (!context.params?.Id) {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
-      }
-      const apolloClient = initializeApollo({}, '');
-      const examId = context.params?.Id;
-      const questionsQueryInput: ReadQuestionsByExamIdsInput = {
-        ids: [Number(String(examId))],
-      };
-
-      const res = await apolloClient.query<ReadQuestionsByExamIdsQuery>({
-        query: READ_QUESTIONS_BY_EXAM_IDS,
-        variables: {
-          input: questionsQueryInput,
-        },
-      });
-      if (!res.data?.readQuestionsByExamIds) {
-        return {
-          notFound: true,
-        };
-      }
-      const questions = (res?.data.readQuestionsByExamIds.questions ||
-        []) as MockExamQuestion[];
-      store.dispatch(
-        mockExamActions.setQuestions(questions as MockExamQuestion[])
-      );
-      const title = questions[0]?.mockExam.title || '';
-      const description = questions.reduce(
-        (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
-        ''
-      );
-
-      return addApolloState(apolloClient, {
-        props: {
-          questionsQueryInput,
-          questions,
-          title,
-          description: removeHtmlTag(description),
-        },
-        revalidate: 43200,
-      });
-    } catch (e) {
+    if (!context.params?.Id) {
       return {
         notFound: true,
+        revalidate: 1,
       };
     }
+    const apolloClient = initializeApollo({}, '');
+    const examId = context.params?.Id;
+    const questionsQueryInput: ReadQuestionsByExamIdsInput = {
+      ids: [Number(String(examId))],
+    };
+
+    const res = await apolloClient.query<ReadQuestionsByExamIdsQuery>({
+      query: READ_QUESTIONS_BY_EXAM_IDS,
+      variables: {
+        input: questionsQueryInput,
+      },
+    });
+    if (!res.data?.readQuestionsByExamIds) {
+      throw new Error('No data returned from the query');
+    }
+    const questions = (res?.data.readQuestionsByExamIds.questions ||
+      []) as MockExamQuestion[];
+    store.dispatch(
+      mockExamActions.setQuestions(questions as MockExamQuestion[])
+    );
+    const title = questions[0]?.mockExam.title || '';
+    const description = questions.reduce(
+      (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
+      ''
+    );
+
+    return addApolloState(apolloClient, {
+      props: {
+        questionsQueryInput,
+        questions,
+        title,
+        description: removeHtmlTag(description),
+      },
+      revalidate: 43200,
+    });
   }
 );

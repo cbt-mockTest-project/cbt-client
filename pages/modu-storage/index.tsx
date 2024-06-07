@@ -39,35 +39,27 @@ export default ModuStorage;
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
-    try {
-      const apolloClient = initializeApollo({}, '');
-      const res = await apolloClient.query<GetExamCategoriesQuery>({
-        query: GET_EXAM_CATEGORIES,
-        variables: {
-          input: {
-            examSource: ExamSource.MoudCbt,
-          },
+    const apolloClient = initializeApollo({}, '');
+    const res = await apolloClient.query<GetExamCategoriesQuery>({
+      query: GET_EXAM_CATEGORIES,
+      variables: {
+        input: {
+          examSource: ExamSource.MoudCbt,
         },
-      });
-      const categories = res.data.getExamCategories.categories;
+      },
+    });
+    const categories = res.data.getExamCategories.categories;
 
-      if (!categories) {
-        return {
-          notFound: true,
-        };
-      }
-      store.dispatch(
-        storageActions.setModuStorageCategories({
-          categories: categories as MockExamCategory[],
-        })
-      );
-      return addApolloState(apolloClient, {
-        revalidate: 43200,
-      });
-    } catch {
-      return {
-        notFound: true,
-      };
+    if (!categories) {
+      throw new Error('No data returned from the query');
     }
+    store.dispatch(
+      storageActions.setModuStorageCategories({
+        categories: categories as MockExamCategory[],
+      })
+    );
+    return addApolloState(apolloClient, {
+      revalidate: 43200,
+    });
   }
 );

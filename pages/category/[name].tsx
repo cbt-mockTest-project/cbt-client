@@ -67,54 +67,44 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
-    try {
-      const apolloClient = initializeApollo({}, '');
-      const urlSlug = context.params?.name;
-      if (!urlSlug || typeof urlSlug !== 'string') {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
-      }
-      const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
-        urlSlug,
-      };
-      const res =
-        await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>({
-          query: READ_EXAM_CATEGORY_BY_ID,
-          variables: {
-            input: categoryQueryInput,
-          },
-        });
-      if (!res.data.readMockExamCategoryByCategoryId.ok) {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
-      }
-      const category = res.data.readMockExamCategoryByCategoryId.category;
-      store.dispatch(
-        examCategoryActions.setCategory({
-          category: category as MockExamCategory,
-        })
-      );
-      resetServerContext();
-      return addApolloState(apolloClient, {
-        props: {
-          categoryQueryInput: {
-            ...categoryQueryInput,
-            name: res.data.readMockExamCategoryByCategoryId.category.name,
-          },
-          category,
-        },
-        revalidate: 43200,
-      });
-    } catch (e) {
-      console.log(e);
+    const apolloClient = initializeApollo({}, '');
+    const urlSlug = context.params?.name;
+    if (!urlSlug || typeof urlSlug !== 'string') {
       return {
         notFound: true,
         revalidate: 1,
       };
     }
+    const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
+      urlSlug,
+    };
+    const res = await apolloClient.query<ReadMockExamCategoryByCategoryIdQuery>(
+      {
+        query: READ_EXAM_CATEGORY_BY_ID,
+        variables: {
+          input: categoryQueryInput,
+        },
+      }
+    );
+    if (!res.data.readMockExamCategoryByCategoryId.ok) {
+      throw new Error('No data returned from the query');
+    }
+    const category = res.data.readMockExamCategoryByCategoryId.category;
+    store.dispatch(
+      examCategoryActions.setCategory({
+        category: category as MockExamCategory,
+      })
+    );
+    resetServerContext();
+    return addApolloState(apolloClient, {
+      props: {
+        categoryQueryInput: {
+          ...categoryQueryInput,
+          name: res.data.readMockExamCategoryByCategoryId.category.name,
+        },
+        category,
+      },
+      revalidate: 43200,
+    });
   }
 );

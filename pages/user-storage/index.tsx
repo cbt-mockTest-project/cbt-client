@@ -37,38 +37,29 @@ export default UserStorage;
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
-    try {
-      const apolloClient = initializeApollo({}, '');
-      const res = await apolloClient.query<GetExamCategoriesQuery>({
-        query: GET_EXAM_CATEGORIES,
-        variables: {
-          input: {
-            examSource: ExamSource.User,
-          },
+    const apolloClient = initializeApollo({}, '');
+    const res = await apolloClient.query<GetExamCategoriesQuery>({
+      query: GET_EXAM_CATEGORIES,
+      variables: {
+        input: {
+          examSource: ExamSource.User,
         },
-      });
-      const categories = res.data.getExamCategories.categories;
+      },
+    });
+    const categories = res.data.getExamCategories.categories;
 
-      if (!categories) {
-        return {
-          notFound: true,
-        };
-      }
-      const sortedUserCategories = [...categories].sort(
-        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
-      );
-      store.dispatch(
-        storageActions.setUserStorageCategories({
-          categories: sortedUserCategories as MockExamCategory[],
-        })
-      );
-      return addApolloState(apolloClient, {
-        revalidate: 43200,
-      });
-    } catch {
-      return {
-        notFound: true,
-      };
+    if (!categories) {
     }
+    const sortedUserCategories = [...categories].sort(
+      (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+    );
+    store.dispatch(
+      storageActions.setUserStorageCategories({
+        categories: sortedUserCategories as MockExamCategory[],
+      })
+    );
+    return addApolloState(apolloClient, {
+      revalidate: 43200,
+    });
   }
 );
