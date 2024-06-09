@@ -45,13 +45,13 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   return (
     <QuestionComponentBlock>
-      {question.mockExam.approved && (
+      {/* {question.mockExam.approved && (
         <div className="question-detail-top-button-wrapper">
           <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
             <Button>{`관련 시험지로 이동 >`}</Button>
           </Link>
         </div>
-      )}
+      )} */}
       <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox
