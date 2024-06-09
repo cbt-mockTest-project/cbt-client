@@ -7,6 +7,7 @@ import DragDropContextWrapper from '@components/common/dragDrop/DragDropContextW
 import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { Skeleton } from 'antd';
 
 const ExamListBlock = styled.ul`
   margin-top: 20px;
@@ -21,6 +22,9 @@ const ExamList: React.FC<ExamListProps> = () => {
   const { handleMoveExamOrder } = useExamCategory();
   const { user } = useAuth();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isPrivate = useAppSelector(
+    (state) => !state.examCategory.category.isPublic
+  );
   const isMyCategory = useAppSelector(
     (state) =>
       state.examCategory.category &&
@@ -89,6 +93,7 @@ const ExamList: React.FC<ExamListProps> = () => {
       </DragDropContextWrapper>
       <ExamListBlock>
         {!isMyCategory &&
+          !isPrivate &&
           exams.map((exam, index) => {
             const isRecentStudy = () => {
               if (!user)
@@ -121,6 +126,12 @@ const ExamList: React.FC<ExamListProps> = () => {
               />
             );
           })}
+        {!isMyCategory && isPrivate && (
+          <div className="flex flex-col gap-2">
+            <Skeleton active />
+            <Skeleton active />
+          </div>
+        )}
       </ExamListBlock>
     </>
   );
