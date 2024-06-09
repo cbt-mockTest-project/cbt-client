@@ -17,7 +17,7 @@ import {
 import { message } from 'antd';
 import { ExamSettingType } from 'customTypes';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReadMockExamCategoryByCategoryIdInput, UserRole } from 'types';
 
 interface CategoryCoreProps {
@@ -32,6 +32,9 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
   const localStorage = new LocalStorage();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isPrivate = useAppSelector(
+    (state) => !state.examCategory.category.isPublic
+  );
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
   const categoryAccessDenied = useAppSelector(
@@ -42,6 +45,10 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
   );
   useEffect(() => {
     if (!meQuery) return;
+    if (!meQuery.me.user && isPrivate) {
+      router.push('/');
+      return;
+    }
     if (meQuery.me.user) {
       updateRecentlyStudiedCategory({
         variables: {

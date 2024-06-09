@@ -1,9 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
 import { Skeleton } from 'antd';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useRouter } from 'next/router';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -22,8 +24,10 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   isAnswerAllHidden,
   isStaticPage,
 }) => {
+  const router = useRouter();
   const [page, setPage] = useState(1);
-
+  const { data: meQuery } = useMeQuery();
+  const [isMyExam, setIsMyExam] = useState(false);
   const serverSideQuestionIds = useAppSelector((state) =>
     state.mockExam.serverSideQuestions?.length
       ? state.mockExam.serverSideQuestions.map((question) => question.id)
@@ -46,6 +50,18 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       return clientSideQuestionIds.slice(0, page * LIMIT);
     }
   }, [serverSideQuestionIds, clientSideQuestionIds, isStaticPage, page]);
+
+  const isPrivate = useAppSelector(
+    (state) =>
+      state.mockExam.serverSideQuestions?.[0]?.mockExam.isPrivate ||
+      state.mockExam.questions?.[0]?.mockExam.isPrivate
+  );
+  const examAuthorId = useAppSelector(
+    (state) =>
+      state.mockExam.serverSideQuestions?.[0]?.user.id ||
+      state.mockExam.questions?.[0]?.user.id
+  );
+
   const { isLoading, loadingRef } = useInfinityScroll({
     loadMore: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -57,16 +73,43 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
         serverSideQuestionIds.length > LIMIT),
     rootMargin: '500px',
   });
+
+  useEffect(() => {
+    if (!meQuery) {
+      return;
+    }
+    if (!meQuery.me.user && isPrivate) {
+      router.replace('/');
+      return;
+    }
+    if (meQuery?.me?.user?.id && examAuthorId) {
+      setIsMyExam(() => meQuery.me.user.id === examAuthorId);
+      console.log(meQuery.me.user.id !== examAuthorId);
+      console.log(isPrivate);
+      if (meQuery.me.user.id !== examAuthorId && isPrivate) {
+        router.push('/');
+        return;
+      }
+    }
+  }, [meQuery, examAuthorId, isPrivate]);
+
   return (
     <SolutionModeCardItemListBlock>
-      {questionIds.map((id, index) => (
-        <SolutionModeCardItem
-          key={id}
-          isAnswerAllHidden={isAnswerAllHidden}
-          index={index}
-          isStaticPage={isStaticPage}
-        />
-      ))}
+      {isPrivate && !isMyExam ? (
+        <div className="flex flex-col gap-4">
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+      ) : (
+        questionIds.map((id, index) => (
+          <SolutionModeCardItem
+            key={id}
+            isAnswerAllHidden={isAnswerAllHidden}
+            index={index}
+            isStaticPage={isStaticPage}
+          />
+        ))
+      )}
       {isLoading && (
         <div className="flex flex-col gap-4">
           <Skeleton active />

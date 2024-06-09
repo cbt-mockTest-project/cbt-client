@@ -1575,6 +1575,7 @@ export type MockExam = {
   isBookmarked?: Maybe<Scalars['Boolean']>;
   isLiked?: Maybe<Scalars['Boolean']>;
   isPremium: Scalars['Boolean'];
+  isPrivate?: Maybe<Scalars['Boolean']>;
   mockExamCategory: Array<MockExamCategory>;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionState: Array<MockExamQuestion>;
@@ -1705,6 +1706,7 @@ export type MockExamInputType = {
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isLiked?: InputMaybe<Scalars['Boolean']>;
   isPremium?: Scalars['Boolean'];
+  isPrivate?: InputMaybe<Scalars['Boolean']>;
   mockExamCategory: Array<MockExamCategoryInputType>;
   mockExamQuestion: Array<MockExamQuestionInputType>;
   mockExamQuestionState: Array<MockExamQuestionInputType>;

@@ -73,7 +73,7 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
         params: { Id: String(el.id) },
       }));
     }
-    return { paths, fallback: 'blocking' };
+    return { paths: [], fallback: 'blocking' };
   } catch (err) {
     return {
       paths,
@@ -112,7 +112,8 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
     );
     const title = questions[0]?.mockExam.title || '';
-    const isNoIndex = !questions[0]?.mockExam.approved;
+    const isNoIndex =
+      !questions[0]?.mockExam.approved || questions[0]?.mockExam.isPrivate;
     const description = questions.reduce(
       (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
       ''
