@@ -36,3 +36,12 @@ export const DELETE_EXAM_CATEGORY_BOOKMARK = gql`
     }
   }
 `;
+
+export const CHECK_IS_ACCESSIBLE_CATEGORY = gql`
+  mutation CheckIsAccessibleCategory($input: CheckIsAccessibleCategoryInput!) {
+    checkIsAccessibleCategory(input: $input) {
+      error
+      ok
+    }
+  }
+`;

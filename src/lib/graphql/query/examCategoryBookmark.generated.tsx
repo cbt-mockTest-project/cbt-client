@@ -24,6 +24,13 @@ export type DeleteExamCategoryBookmarkMutationVariables = Types.Exact<{
 
 export type DeleteExamCategoryBookmarkMutation = { __typename?: 'Mutation', deleteExamCategoryBookmark: { __typename?: 'DeleteExamCategoryBookmarkOutput', error?: string | null, ok: boolean } };
 
+export type CheckIsAccessibleCategoryMutationVariables = Types.Exact<{
+  input: Types.CheckIsAccessibleCategoryInput;
+}>;
+
+
+export type CheckIsAccessibleCategoryMutation = { __typename?: 'Mutation', checkIsAccessibleCategory: { __typename?: 'CheckIsAccessibleCategoryOutput', error?: string | null, ok: boolean } };
+
 
 export const ToggleExamCategorieBookmarkDocument = gql`
     mutation ToggleExamCategorieBookmark($input: ToggleExamCategoryBookmarkInput!) {
@@ -66,4 +73,16 @@ export const DeleteExamCategoryBookmarkDocument = gql`
 
 export function useDeleteExamCategoryBookmarkMutation() {
   return Urql.useMutation<DeleteExamCategoryBookmarkMutation, DeleteExamCategoryBookmarkMutationVariables>(DeleteExamCategoryBookmarkDocument);
+};
+export const CheckIsAccessibleCategoryDocument = gql`
+    mutation CheckIsAccessibleCategory($input: CheckIsAccessibleCategoryInput!) {
+  checkIsAccessibleCategory(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCheckIsAccessibleCategoryMutation() {
+  return Urql.useMutation<CheckIsAccessibleCategoryMutation, CheckIsAccessibleCategoryMutationVariables>(CheckIsAccessibleCategoryDocument);
 };

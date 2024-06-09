@@ -6,6 +6,12 @@ import useInfinityScroll from '@lib/hooks/useInfinityScroll';
 import { Skeleton } from 'antd';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
+import { apolloClient } from '@modules/apollo';
+import {
+  CheckIsAccessibleCategoryMutation,
+  CheckIsAccessibleCategoryMutationVariables,
+} from '@lib/graphql/query/examCategoryBookmark.generated';
+import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -56,6 +62,13 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       state.mockExam.serverSideQuestions?.[0]?.mockExam.isPrivate ||
       state.mockExam.questions?.[0]?.mockExam.isPrivate
   );
+
+  const examId = useAppSelector(
+    (state) =>
+      state.mockExam.serverSideQuestions?.[0]?.mockExam.id ||
+      state.mockExam.questions?.[0]?.mockExam.id
+  );
+
   const examAuthorId = useAppSelector(
     (state) =>
       state.mockExam.serverSideQuestions?.[0]?.user.id ||
@@ -75,22 +88,60 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   });
 
   useEffect(() => {
-    if (!isPrivate) return;
-    if (!meQuery) {
-      return;
-    }
-    if (!meQuery.me.user) {
-      router.replace('/');
-      return;
-    }
-    if (meQuery?.me?.user?.id && examAuthorId) {
-      setIsMyExam(() => meQuery.me.user.id === examAuthorId);
-      if (meQuery.me.user.id !== examAuthorId) {
-        router.push('/');
-        return;
+    (async () => {
+      try {
+        if (!isPrivate) return;
+        if (!meQuery) {
+          return;
+        }
+        if (!meQuery.me.user) {
+          const res = await apolloClient.mutate<
+            CheckIsAccessibleCategoryMutation,
+            CheckIsAccessibleCategoryMutationVariables
+          >({
+            fetchPolicy: 'network-only',
+            mutation: CHECK_IS_ACCESSIBLE_CATEGORY,
+            variables: {
+              input: {
+                examId,
+              },
+            },
+          });
+          if (res.data?.checkIsAccessibleCategory.ok) {
+            setIsMyExam(() => true);
+            return;
+          }
+          router.replace('/');
+          return;
+        }
+        if (meQuery?.me?.user?.id && examAuthorId) {
+          const res = await apolloClient.mutate<
+            CheckIsAccessibleCategoryMutation,
+            CheckIsAccessibleCategoryMutationVariables
+          >({
+            fetchPolicy: 'network-only',
+            mutation: CHECK_IS_ACCESSIBLE_CATEGORY,
+            variables: {
+              input: {
+                examId,
+              },
+            },
+          });
+          if (res.data?.checkIsAccessibleCategory.ok) {
+            setIsMyExam(() => true);
+            return;
+          }
+          setIsMyExam(() => meQuery.me.user.id === examAuthorId);
+          if (meQuery.me.user.id !== examAuthorId) {
+            router.replace('/');
+            return;
+          }
+        }
+      } catch {
+        router.replace('/');
       }
-    }
-  }, [meQuery, examAuthorId, isPrivate]);
+    })();
+  }, [meQuery, examAuthorId, isPrivate, examId]);
 
   return (
     <SolutionModeCardItemListBlock>
