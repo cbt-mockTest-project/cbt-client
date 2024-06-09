@@ -75,18 +75,17 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   });
 
   useEffect(() => {
+    if (!isPrivate) return;
     if (!meQuery) {
       return;
     }
-    if (!meQuery.me.user && isPrivate) {
+    if (!meQuery.me.user) {
       router.replace('/');
       return;
     }
     if (meQuery?.me?.user?.id && examAuthorId) {
       setIsMyExam(() => meQuery.me.user.id === examAuthorId);
-      console.log(meQuery.me.user.id !== examAuthorId);
-      console.log(isPrivate);
-      if (meQuery.me.user.id !== examAuthorId && isPrivate) {
+      if (meQuery.me.user.id !== examAuthorId) {
         router.push('/');
         return;
       }
