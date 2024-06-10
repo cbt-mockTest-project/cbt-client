@@ -1,6 +1,6 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { MenuProps, Modal } from 'antd';
+import { MenuProps, Modal, Skeleton } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ExamSource, ReadMockExamCategoryByCategoryIdInput } from 'types';
@@ -21,6 +21,7 @@ import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import CategoryUtilButtonWrapper from './CategoryUtilButtonWrapper';
 import CategoryHiddenExamList from './CategoryHiddenExamList';
+import useCheckHasCategoryAccess from './hooks/useCheckHasCategoryAccess';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -92,6 +93,10 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const categoryName = useAppSelector(
     (state) => state.examCategory.category.name
+  );
+  const { isCategoryAccess } = useCheckHasCategoryAccess();
+  const isPrivate = useAppSelector(
+    (state) => !state.examCategory.category.isPublic
   );
   const categoryDescription = useAppSelector(
     (state) => state.examCategory.category.description
@@ -167,6 +172,17 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     },
   ];
 
+  if (isPrivate && !isCategoryAccess) {
+    return (
+      <CategoryComponentBlock>
+        <div className="flex flex-col gap-2">
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+      </CategoryComponentBlock>
+    );
+  }
+
   return (
     <CategoryComponentBlock>
       <CategoryUtilButtonWrapper />
@@ -223,7 +239,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onCancel={() => setInviteUserModalOpen(false)}
         />
       )}
-      <CategoryCore categoryQueryInput={categoryQueryInput} />
     </CategoryComponentBlock>
   );
 };

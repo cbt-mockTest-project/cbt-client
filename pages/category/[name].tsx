@@ -1,4 +1,5 @@
 import CategoryComponent from '@components/category/CategoryComponent';
+import CategoryCore from '@components/category/CategoryCore';
 import WithHead from '@components/common/head/WithHead';
 import {
   READ_EXAM_CATEGORY_BY_ID,
@@ -38,6 +39,9 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
       />
       {isExistedCategory && (
         <CategoryComponent categoryQueryInput={categoryQueryInput} />
+      )}
+      {isExistedCategory && (
+        <CategoryCore categoryQueryInput={categoryQueryInput} />
       )}
     </>
   );
