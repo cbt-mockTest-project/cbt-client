@@ -45,3 +45,12 @@ export const CHECK_IS_ACCESSIBLE_CATEGORY = gql`
     }
   }
 `;
+
+export const CHECK_HAS_CATEGORY_ACCESS = gql`
+  mutation CheckHasCategoryAccess($input: CheckHasCategoryAccessInput!) {
+    checkHasCategoryAccess(input: $input) {
+      error
+      ok
+    }
+  }
+`;

@@ -31,6 +31,13 @@ export type CheckIsAccessibleCategoryMutationVariables = Types.Exact<{
 
 export type CheckIsAccessibleCategoryMutation = { __typename?: 'Mutation', checkIsAccessibleCategory: { __typename?: 'CheckIsAccessibleCategoryOutput', error?: string | null, ok: boolean } };
 
+export type CheckHasCategoryAccessMutationVariables = Types.Exact<{
+  input: Types.CheckHasCategoryAccessInput;
+}>;
+
+
+export type CheckHasCategoryAccessMutation = { __typename?: 'Mutation', checkHasCategoryAccess: { __typename?: 'CheckHasCategoryAccessOutput', error?: string | null, ok: boolean } };
+
 
 export const ToggleExamCategorieBookmarkDocument = gql`
     mutation ToggleExamCategorieBookmark($input: ToggleExamCategoryBookmarkInput!) {
@@ -85,4 +92,16 @@ export const CheckIsAccessibleCategoryDocument = gql`
 
 export function useCheckIsAccessibleCategoryMutation() {
   return Urql.useMutation<CheckIsAccessibleCategoryMutation, CheckIsAccessibleCategoryMutationVariables>(CheckIsAccessibleCategoryDocument);
+};
+export const CheckHasCategoryAccessDocument = gql`
+    mutation CheckHasCategoryAccess($input: CheckHasCategoryAccessInput!) {
+  checkHasCategoryAccess(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCheckHasCategoryAccessMutation() {
+  return Urql.useMutation<CheckHasCategoryAccessMutation, CheckHasCategoryAccessMutationVariables>(CheckHasCategoryAccessDocument);
 };

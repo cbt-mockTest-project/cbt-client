@@ -174,6 +174,16 @@ export type CheckDiscountCodeOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type CheckHasCategoryAccessInput = {
+  categoryId: Scalars['Float'];
+};
+
+export type CheckHasCategoryAccessOutput = {
+  __typename?: 'CheckHasCategoryAccessOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type CheckIfCategoryEvaluatedInput = {
   categoryId: Scalars['Float'];
 };
@@ -1976,6 +1986,7 @@ export type Mutation = {
   changeClientRoleAndCreatePayment: ChangeClientRoleAndCreatePaymentOutput;
   changePasswordAfterVerifying: ChangePasswordAfterVerifyingOutput;
   checkDiscountCode: CheckDiscountCodeOutput;
+  checkHasCategoryAccess: CheckHasCategoryAccessOutput;
   checkIfCategoryEvaluated: CheckIfCategoryEvaluatedOutput;
   checkIsAccessibleCategory: CheckIsAccessibleCategoryOutput;
   checkPassword: CheckPasswordOutput;
@@ -2120,6 +2131,11 @@ export type MutationChangePasswordAfterVerifyingArgs = {
 
 export type MutationCheckDiscountCodeArgs = {
   input: CheckDiscountCodeInput;
+};
+
+
+export type MutationCheckHasCategoryAccessArgs = {
+  input: CheckHasCategoryAccessInput;
 };
 
 
