@@ -13,6 +13,10 @@ import {
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
 import { SessionStorage } from '@lib/utils/sessionStorage';
+import {
+  PUBLIC_CATEGORY_ID,
+  PUBLIC_EXAM_ID,
+} from '@lib/constants/sessionStorage';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -97,8 +101,8 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
         if (!meQuery) {
           return;
         }
-        const publicExamId = sessionStorage.get('publicExamId');
-        const publicCategoryId = sessionStorage.get('publicCategoryId');
+        const publicExamId = sessionStorage.get(PUBLIC_EXAM_ID);
+        const publicCategoryId = sessionStorage.get(PUBLIC_CATEGORY_ID);
 
         if (publicExamId && Number(publicExamId) === examId) {
           setIsMyExam(() => true);

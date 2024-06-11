@@ -1,9 +1,9 @@
+import { PUBLIC_EXAM_ID } from '@lib/constants/sessionStorage';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { checkIsEhsMasterExam } from '@lib/utils/utils';
 import { Button, Modal, ModalProps, Radio } from 'antd';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
-import { ParsedUrlQueryInput } from 'querystring';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -30,10 +30,8 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const handleStartExam = () => {
     setMoveLoading(true);
     if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
+    sessionStorage.set(PUBLIC_EXAM_ID, examId);
     if (mode === ExamMode.SOLUTION) {
-      if (isPublicCategory) {
-        sessionStorage.set('publicExamId', examId);
-      }
       return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
     }
     router.push({

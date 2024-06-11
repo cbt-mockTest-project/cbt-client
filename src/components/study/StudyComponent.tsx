@@ -10,6 +10,19 @@ import StudyPaymentGuard from './StudyPaymentGuard';
 import StudyHeaderV2 from './StudyHeaderV2';
 import { responsive } from '@lib/utils/responsive';
 import StudyModeWrapper from './StudyModeWrapper';
+import { useAppSelector } from '@modules/redux/store/configureStore';
+import {
+  PUBLIC_CATEGORY_ID,
+  PUBLIC_EXAM_ID,
+} from '@lib/constants/sessionStorage';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
+import { apolloClient } from '@modules/apollo';
+import {
+  CheckIsAccessibleCategoryMutation,
+  CheckIsAccessibleCategoryMutationVariables,
+} from '@lib/graphql/query/examCategoryBookmark.generated';
+import { SessionStorage } from '@lib/utils/sessionStorage';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
@@ -29,17 +42,38 @@ const StudyComponentBlock = styled.div`
 interface StudyComponentProps {}
 
 const StudyComponent: React.FC<StudyComponentProps> = () => {
+  const sessionStorage = new SessionStorage();
+  const isPrivate = useAppSelector(
+    (state) => state.mockExam.questions?.[0]?.mockExam.isPrivate
+  );
+  const firstQuestionExamId = useAppSelector(
+    (state) => state.mockExam.questions?.[0]?.mockExam.id
+  );
+  const examAuthorId = useAppSelector(
+    (state) => state.mockExam.questions?.[0]?.user.id
+  );
+
+  const { data: meQuery } = useMeQuery();
+  const [isFetchedQuestions, setIsFetchedQuestions] = useState(false);
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
   const { fetchQuestions, resetQuestions } = useQuestions();
+
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
   const router = useRouter();
-  const { order, states, limit, examIds, mode, examId, bookmarked } =
-    router.query;
+  const {
+    order,
+    states,
+    limit,
+    examIds,
+    mode,
+    examId,
+    bookmarked,
+    categoryId,
+  } = router.query;
   useEffect(() => {
     setFetchQuestionsLoading(true);
     if (!router.isReady) return;
-
     // 단일 문제 풀이
     if (examId) {
       const input: ReadQuestionsByExamIdsInput = {
@@ -47,8 +81,8 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         ids: [Number(examId)],
       };
       setQuestionsQueryInput(input);
-      fetchQuestions(input).finally(() => {
-        setFetchQuestionsLoading(false);
+      fetchQuestions(input).then(() => {
+        setIsFetchedQuestions(true);
       });
     }
     // 다중 문제 풀이
@@ -68,8 +102,8 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         input.states = states.split(',') as QuestionState[];
 
       setQuestionsQueryInput(input);
-      fetchQuestions(input).finally(() => {
-        setFetchQuestionsLoading(false);
+      fetchQuestions(input).then(() => {
+        setIsFetchedQuestions(true);
       });
     }
   }, [router.isReady]);
@@ -80,6 +114,96 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
       resetQuestions();
     };
   }, []);
+
+  useEffect(() => {
+    console.log('hi');
+    if (!isFetchedQuestions || !firstQuestionExamId) return;
+    (async () => {
+      try {
+        if (!isPrivate) {
+          setFetchQuestionsLoading(() => false);
+          return;
+        }
+        if (!meQuery) {
+          return;
+        }
+        const publicExamId = sessionStorage.get(PUBLIC_EXAM_ID);
+        const publicCategoryId = sessionStorage.get(PUBLIC_CATEGORY_ID);
+
+        if (publicExamId && Number(publicExamId) === firstQuestionExamId) {
+          setFetchQuestionsLoading(() => false);
+          return;
+        }
+        if (
+          publicCategoryId &&
+          categoryId &&
+          Number(publicCategoryId) === Number(categoryId)
+        ) {
+          setFetchQuestionsLoading(() => false);
+          return;
+        }
+        if (!meQuery.me.user) {
+          console.log('5');
+          const res = await apolloClient.mutate<
+            CheckIsAccessibleCategoryMutation,
+            CheckIsAccessibleCategoryMutationVariables
+          >({
+            fetchPolicy: 'network-only',
+            mutation: CHECK_IS_ACCESSIBLE_CATEGORY,
+            variables: {
+              input: {
+                examId: firstQuestionExamId,
+              },
+            },
+          });
+          if (res.data?.checkIsAccessibleCategory.ok) {
+            console.log('6');
+            setFetchQuestionsLoading(() => false);
+            return;
+          }
+          router.replace('/');
+          return;
+        }
+        if (meQuery?.me?.user?.id && examAuthorId) {
+          console.log('7');
+          const res = await apolloClient.mutate<
+            CheckIsAccessibleCategoryMutation,
+            CheckIsAccessibleCategoryMutationVariables
+          >({
+            fetchPolicy: 'network-only',
+            mutation: CHECK_IS_ACCESSIBLE_CATEGORY,
+            variables: {
+              input: {
+                examId: firstQuestionExamId,
+              },
+            },
+          });
+          if (res.data?.checkIsAccessibleCategory.ok) {
+            console.log('8');
+            setFetchQuestionsLoading(() => false);
+            return;
+          }
+          setFetchQuestionsLoading(() => meQuery.me.user.id !== examAuthorId);
+          console.log('9');
+          if (meQuery.me.user.id !== examAuthorId) {
+            console.log('10');
+            router.replace('/');
+            return;
+          }
+        }
+      } catch (e) {
+        console.log(e);
+        router.replace('/');
+      }
+    })();
+  }, [
+    isFetchedQuestions,
+    meQuery,
+    examAuthorId,
+    isPrivate,
+    firstQuestionExamId,
+    categoryId,
+  ]);
 
   if (!questionsQueryInput || !mode) return null;
   if (fetchQuestionsLoading) return <FullPageLoader />;
