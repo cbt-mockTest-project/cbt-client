@@ -12,6 +12,7 @@ import {
   CheckIsAccessibleCategoryMutationVariables,
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
+import { SessionStorage } from '@lib/utils/sessionStorage';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -30,6 +31,7 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   isAnswerAllHidden,
   isStaticPage,
 }) => {
+  const sessionStorage = new SessionStorage();
   const router = useRouter();
   const [page, setPage] = useState(1);
   const { data: meQuery } = useMeQuery();
@@ -92,6 +94,12 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       try {
         if (!isPrivate) return;
         if (!meQuery) {
+          return;
+        }
+        const publicExamId = sessionStorage.get('publicExamId');
+        if (publicExamId && Number(publicExamId) === examId) {
+          sessionStorage.remove('publicExamId');
+          setIsMyExam(() => true);
           return;
         }
         if (!meQuery.me.user) {

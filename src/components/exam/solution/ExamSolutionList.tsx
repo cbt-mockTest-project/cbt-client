@@ -11,19 +11,12 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
 import { message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import styled, { css } from 'styled-components';
-import dynamic from 'next/dynamic';
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { QuestionFeedbackType, QuestionState } from 'types';
 import { checkboxOption } from 'customTypes';
 import { QuestionListType } from '@modules/redux/slices/exam';
 import EditorStyle from '@styles/editorStyle';
-
-const Bookmark = dynamic(() => import('@components/common/bookmark/Bookmark'), {
-  ssr: false,
-  loading: () => <StarBorderOutlinedIcon />,
-});
 
 type ExamQuestionTypeByQuestionId =
   ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
@@ -47,15 +40,8 @@ interface ExamSolutionListProps {
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
   question,
-  title,
   isSolutionAllHide,
-  commentType = 'modal',
-  hasNewWindowButton = true,
-  hasStateBox = false,
-  isPreview = false,
-  questionSubDescription,
   isDetailPage = false,
-  index,
 }) => {
   const [currentQuestion, setCurrentQuestion] =
     useState<ExamQuestionType>(question);
@@ -76,12 +62,6 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
     content: '',
     type: QuestionFeedbackType.Public,
   });
-  const isSolutionEmpty =
-    question.solution?.replace(/\s+/g, '').includes('사진참고') ||
-    removeHtmlTag(question.solution || '') === '';
-  const isQuestionEmpty =
-    question.question?.replace(/\s+/g, '').includes('사진참고') ||
-    removeHtmlTag(question.question || '') === '';
 
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));

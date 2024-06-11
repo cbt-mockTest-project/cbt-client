@@ -1,3 +1,4 @@
+import { SessionStorage } from '@lib/utils/sessionStorage';
 import { checkIsEhsMasterExam } from '@lib/utils/utils';
 import { Button, Modal, ModalProps, Radio } from 'antd';
 import { ExamMode } from 'customTypes';
@@ -20,6 +21,7 @@ interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
+  const sessionStorage = new SessionStorage();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -27,6 +29,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const handleStartExam = () => {
     setMoveLoading(true);
     if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
+    sessionStorage.set('publicExamId', examId);
     if (mode === ExamMode.SOLUTION)
       return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
     router.push({
