@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useQuestion from '@lib/hooks/useQuestion';
-import { MockExamQuestion, ReadMockExamQuestionInput } from 'types';
+import { MockExamQuestion, ReadMockExamQuestionInput, UserRole } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
@@ -48,16 +48,18 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     removeHtmlTag(question.solution).length < 3
   )
     return null;
-
+  const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
+    question.user.role
+  );
   return (
     <QuestionComponentBlock>
-      {/* {question.mockExam.approved && (
+      {isAdmin && question.mockExam.approved && (
         <div className="question-detail-top-button-wrapper">
           <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
             <Button>{`관련 시험지로 이동 >`}</Button>
           </Link>
         </div>
-      )} */}
+      )}
       <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox
@@ -66,6 +68,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}
+            isVisibleImage={isAdmin}
           />
         </div>
       </BasicCard>
@@ -78,6 +81,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
             editFeedback={handleEditFeedback}
             deleteFeedback={handleDeleteFeedback}
             updateFeedbackRecommendation={handleUpdateFeedbackRecommendation}
+            isVisibleImage={isAdmin}
           />
         </div>
       </BasicCard>

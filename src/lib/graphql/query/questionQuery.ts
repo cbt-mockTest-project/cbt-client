@@ -83,6 +83,7 @@ export const READ_QUESTION = gql`
         }
         user {
           id
+          role
         }
         id
         isBookmarked

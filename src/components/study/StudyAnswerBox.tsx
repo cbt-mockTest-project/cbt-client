@@ -61,6 +61,7 @@ interface StudyAnswerBoxProps {
   isAnswerHidden?: boolean;
   question: MockExamQuestion;
   className?: string;
+  isVisibleImage?: boolean;
   editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
   addFeedback: (editFeedbackInput: AddFeedbackInput) => Promise<void>;
   deleteFeedback: (deleteFeedbackInput: DeleteFeedbackInput) => Promise<void>;
@@ -76,6 +77,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   addFeedback,
   deleteFeedback,
   updateFeedbackRecommendation,
+  isVisibleImage = true,
   className = '',
 }) => {
   const { data: meQuery } = useMeQuery();
@@ -115,7 +117,8 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
             width: 'fit-content',
           }}
         >
-          {question.solution_img &&
+          {isVisibleImage &&
+            question.solution_img &&
             question.solution_img.length > 0 &&
             question.solution_img[0].url && (
               <Image

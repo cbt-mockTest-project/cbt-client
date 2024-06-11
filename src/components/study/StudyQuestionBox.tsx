@@ -94,6 +94,7 @@ interface StudyQuestionBoxProps {
   hasExamTitle?: boolean;
   hasQuestionLink?: boolean;
   onChangeIsFeedbackModalOpen?: (value: boolean) => void;
+  isVisibleImage?: boolean;
 }
 
 const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
@@ -105,6 +106,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   hasExamTitle = true,
   hasQuestionLink = true,
   onChangeIsFeedbackModalOpen,
+  isVisibleImage = true,
 }) => {
   const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -184,7 +186,8 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           e.stopPropagation();
         }}
       >
-        {question.question_img &&
+        {isVisibleImage &&
+          question.question_img &&
           question.question_img?.length > 0 &&
           question.question_img[0].url && (
             <Image
