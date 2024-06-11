@@ -101,7 +101,6 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
         const publicCategoryId = sessionStorage.get('publicCategoryId');
 
         if (publicExamId && Number(publicExamId) === examId) {
-          sessionStorage.remove('publicExamId');
           setIsMyExam(() => true);
           return;
         }
@@ -110,7 +109,6 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
           categoryId &&
           Number(publicCategoryId) === Number(categoryId)
         ) {
-          sessionStorage.remove('publicCategoryId');
           setIsMyExam(() => true);
           return;
         }
