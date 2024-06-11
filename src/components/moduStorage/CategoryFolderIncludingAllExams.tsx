@@ -2,7 +2,6 @@ import BasicCard from '@components/common/card/BasicCard';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';

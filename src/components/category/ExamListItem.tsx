@@ -196,7 +196,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
             handleRemoveExam();
           }}
         >
-          제거하기
+          빼기
         </button>
       ),
     },

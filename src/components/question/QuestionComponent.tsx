@@ -6,11 +6,11 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import useAuth from '@lib/hooks/useAuth';
 import Link from 'next/link';
-import palette from '@styles/palette';
 import { removeHtmlTag } from '@lib/utils/utils';
+import { useRouter } from 'next/router';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -19,8 +19,7 @@ interface QuestionComponentProps {
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQueryInput,
 }) => {
-  const { isLoggedIn } = useAuth();
-  const [isAnswerHidden, setIsAnswerHidden] = useState(false);
+  const router = useRouter();
   const {
     refetchQuestion,
     handleSaveBookmark,
@@ -34,6 +33,13 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   const question = questionQuery?.readMockExamQuestion
     .mockExamQusetion as MockExamQuestion;
+  const { isLoggedIn } = useAuth();
+  const [isAnswerHidden, setIsAnswerHidden] = useState(false);
+  const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
+    question.user.role
+  );
+  const isApproved = question.mockExam.approved;
+  const [isHidden, setIsHidden] = useState(!isAdmin && !isApproved);
 
   useEffect(() => {
     if (!isLoggedIn || !questionQueryInput.questionId) return;
@@ -42,17 +48,26 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     });
   }, [questionQueryInput, isLoggedIn]);
 
+  useEffect(() => {
+    if (!isAdmin && !isApproved) {
+      setIsHidden(true);
+      setTimeout(() => {
+        router.replace('/');
+      }, 2000);
+    }
+  }, [isAdmin]);
+
   if (
     !question ||
     removeHtmlTag(question.question).length < 3 ||
     removeHtmlTag(question.solution).length < 3
   )
     return null;
-  const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
-    question.user.role
-  );
+  if (isHidden) {
+    return <Skeleton active paragraph={{ rows: 10 }} />;
+  }
   return (
-    <QuestionComponentBlock>
+    <QuestionComponentBlock isHidden={isHidden}>
       {isAdmin && question.mockExam?.approved && (
         <div className="question-detail-top-button-wrapper">
           <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
@@ -102,12 +117,12 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
 export default QuestionComponent;
 
-const QuestionComponentBlock = styled.div`
+const QuestionComponentBlock = styled.div<{ isHidden: boolean }>`
   background-color: inherit;
-  display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+  display: ${(props) => (props.isHidden ? 'none' : 'flex')};
   .question-detail-question-card {
     background-color: rgb(240, 243, 243);
   }
