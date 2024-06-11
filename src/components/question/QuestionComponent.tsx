@@ -53,7 +53,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   );
   return (
     <QuestionComponentBlock>
-      {isAdmin && question.mockExam.approved && (
+      {isAdmin && question.mockExam?.approved && (
         <div className="question-detail-top-button-wrapper">
           <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
             <Button>{`관련 시험지로 이동 >`}</Button>
