@@ -38,7 +38,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
     question.user.role
   );
-  const isApproved = question.mockExam.approved;
+  const isApproved = question.mockExam?.approved;
   const [isHidden, setIsHidden] = useState(!isAdmin && !isApproved);
 
   useEffect(() => {
