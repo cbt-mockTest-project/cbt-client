@@ -17,6 +17,7 @@ import {
   setExamSettingHistory,
 } from '@lib/utils/examSettingHistory';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { SessionStorage } from '@lib/utils/sessionStorage';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -55,6 +56,7 @@ interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
+  const sessionStorage = new SessionStorage();
   const examIds = useAppSelector(
     (state) => state.examSetting.examSetting.examIds
   );
@@ -127,6 +129,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
       if (mode === ExamMode.PRINT) {
         pathname = '/exams/pdf';
       }
+      sessionStorage.set('publicCategoryId', categoryId);
       router.push({
         pathname,
         query: {

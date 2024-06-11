@@ -33,6 +33,7 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
 }) => {
   const sessionStorage = new SessionStorage();
   const router = useRouter();
+  const categoryId = router.query.categoryId;
   const [page, setPage] = useState(1);
   const { data: meQuery } = useMeQuery();
   const [isMyExam, setIsMyExam] = useState(false);
@@ -97,8 +98,19 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
           return;
         }
         const publicExamId = sessionStorage.get('publicExamId');
+        const publicCategoryId = sessionStorage.get('publicCategoryId');
+
         if (publicExamId && Number(publicExamId) === examId) {
           sessionStorage.remove('publicExamId');
+          setIsMyExam(() => true);
+          return;
+        }
+        if (
+          publicCategoryId &&
+          categoryId &&
+          Number(publicCategoryId) === Number(categoryId)
+        ) {
+          sessionStorage.remove('publicCategoryId');
           setIsMyExam(() => true);
           return;
         }
@@ -149,7 +161,7 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
         router.replace('/');
       }
     })();
-  }, [meQuery, examAuthorId, isPrivate, examId]);
+  }, [meQuery, examAuthorId, isPrivate, examId, categoryId]);
 
   return (
     <SolutionModeCardItemListBlock>
