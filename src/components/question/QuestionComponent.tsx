@@ -10,6 +10,7 @@ import { Button } from 'antd';
 import useAuth from '@lib/hooks/useAuth';
 import Link from 'next/link';
 import palette from '@styles/palette';
+import { removeHtmlTag } from '@lib/utils/utils';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -41,7 +42,12 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     });
   }, [questionQueryInput, isLoggedIn]);
 
-  if (!question) return null;
+  if (
+    !question ||
+    removeHtmlTag(question.question).length < 3 ||
+    removeHtmlTag(question.solution).length < 3
+  )
+    return null;
 
   return (
     <QuestionComponentBlock>
