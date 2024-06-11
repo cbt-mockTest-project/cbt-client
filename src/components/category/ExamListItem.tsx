@@ -157,6 +157,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
     useExamCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isPublicCategory = useAppSelector(
+    (state) => state.examCategory.category.isPublic
+  );
   const exams = useAppSelector((state) => state.examCategory.category.mockExam);
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { user, handleCheckLogin } = useAuth();
@@ -307,6 +310,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
           categoryId={Number(categoryId)}
+          isPublicCategory={isPublicCategory}
         />
       )}
     </ExamListItemBlock>

@@ -18,6 +18,7 @@ const ExamSelecModalBlock = styled(Modal)`
 interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
   examId: number;
   categoryId?: number;
+  isPublicCategory?: boolean;
 }
 
 const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
@@ -25,13 +26,16 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { categoryId, examId, ...modalProps } = props;
+  const { categoryId, examId, isPublicCategory, ...modalProps } = props;
   const handleStartExam = () => {
     setMoveLoading(true);
     if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
-    sessionStorage.set('publicExamId', examId);
-    if (mode === ExamMode.SOLUTION)
+    if (mode === ExamMode.SOLUTION) {
+      if (isPublicCategory) {
+        sessionStorage.set('publicExamId', examId);
+      }
       return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
+    }
     router.push({
       pathname: '/study',
       query: {
