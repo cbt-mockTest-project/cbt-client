@@ -40,8 +40,6 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
         try {
           const res = await fetchCategories({
             examSource: ExamSource.User,
-            limit: 30,
-            isPick: false,
           });
           const categories = res?.data.getExamCategories.categories || [];
           const categoriesSortedByLikes = [...categories].sort(
