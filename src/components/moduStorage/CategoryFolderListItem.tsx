@@ -68,9 +68,6 @@ const CategoryFolderListItemBlock = styled(Link)`
         align-items: center;
         max-width: 70%;
         gap: 3px;
-        &:hover {
-          text-decoration: underline;
-        }
       }
       .category-user-name {
         overflow: hidden;
@@ -150,13 +147,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
               {category.categoryEvaluations.length}
             </div>
             <div className="category-footer-wrapper">
-              <button
-                className="category-user-info"
-                onClick={(e) => {
-                  router.push(`/user/${category.user.id}`);
-                  e.preventDefault();
-                }}
-              >
+              <div className="category-user-info">
                 <Image
                   className="category-user-profile-image"
                   src={
@@ -170,7 +161,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 <div className="category-user-name">
                   {category.user.nickname}
                 </div>
-              </button>
+              </div>
               <div className="flex gap-2 items-center">
                 {category.mockExam.some((el) => el.isPremium) && (
                   <Tag color="blue">유료</Tag>
