@@ -4,7 +4,7 @@ import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
-import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
+import { removeHtmlTag } from '@lib/utils/utils';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
@@ -18,22 +18,12 @@ interface ExamPdfPageProps {
   approved: boolean;
 }
 
-const ExamPdfPage: React.FC<ExamPdfPageProps> = ({
-  questions,
-  title,
-  description,
-  approved,
-}) => {
+const ExamPdfPage: React.FC<ExamPdfPageProps> = ({ questions, approved }) => {
   return (
     <>
       <WithHead
-        title={
-          approved
-            ? `${convertExamTitle(title)}pdf | 모두CBT`
-            : '암기장 공유서비스 | 모두CBT'
-        }
-        pageHeadingTitle={`${convertExamTitle(title)}pdf 페이지`}
-        description={description}
+        title={'암기장 공유서비스 | 모두CBT'}
+        pageHeadingTitle={'암기장 공유서비스 | 모두CBT'}
         noIndex={approved ? false : true}
       />
       <StudyHeader questions={questions} />
