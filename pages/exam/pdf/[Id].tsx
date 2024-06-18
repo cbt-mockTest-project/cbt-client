@@ -2,8 +2,6 @@ import WithHead from '@components/common/head/WithHead';
 import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
-import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
-import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
 import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
@@ -17,19 +15,26 @@ interface ExamPdfPageProps {
   questions: MockExamQuestion[];
   title: string;
   description: string;
+  approved: boolean;
 }
 
 const ExamPdfPage: React.FC<ExamPdfPageProps> = ({
   questions,
   title,
   description,
+  approved,
 }) => {
   return (
     <>
       <WithHead
-        title={`${convertExamTitle(title)}pdf | 모두CBT`}
+        title={
+          approved
+            ? `${convertExamTitle(title)}pdf | 모두CBT`
+            : '암기장 공유서비스 | 모두CBT'
+        }
         pageHeadingTitle={`${convertExamTitle(title)}pdf 페이지`}
         description={description}
+        noIndex={approved ? false : true}
       />
       <StudyHeader questions={questions} />
       <ExamPrintComponent />
@@ -42,24 +47,8 @@ ExamPdfPage.displayName = EXAM_PDF_PAGE;
 export default ExamPdfPage;
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
-  const apolloClient = initializeApollo({}, '');
   let paths: { params: { Id: string } }[] = [];
   try {
-    // const res = await apolloClient.query<ReadAllMockExamQuery>({
-    //   query: READ_ALL_MOCK_EXAM,
-    //   variables: {
-    //     input: {
-    //       category: '',
-    //       query: '',
-    //       all: true,
-    //     },
-    //   },
-    // });
-    // if (res.data.readAllMockExam.mockExams) {
-    //   paths = res.data.readAllMockExam.mockExams.map((el) => ({
-    //     params: { Id: String(el.id) },
-    //   }));
-    // }
     return { paths, fallback: 'blocking' };
   } catch (err) {
     return {
@@ -98,6 +87,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       mockExamActions.setQuestions(questions as MockExamQuestion[])
     );
     const title = questions[0]?.mockExam.title || '';
+    const approved = questions[0]?.mockExam.approved || false;
     const description = questions.reduce(
       (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
       ''
@@ -107,6 +97,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       props: {
         questionsQueryInput,
         questions,
+        approved,
         title,
         description: removeHtmlTag(description),
       },

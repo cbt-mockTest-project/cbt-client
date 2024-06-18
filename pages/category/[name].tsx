@@ -32,7 +32,9 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
   return (
     <>
       <WithHead
-        title={category.name + ' | 모두CBT'}
+        title={
+          category.isPublic ? category.name : '암기장 공유서비스' + ' | 모두CBT'
+        }
         pageHeadingTitle={`${category.name} 페이지`}
         description={category.description}
         noIndex={category.isPublic ? false : true}
