@@ -106,7 +106,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           />
         </>
       )}
-      <MainViewCount />
 
       {isAppDownloadModalOpen && (
         <AppDownloadInfoModal

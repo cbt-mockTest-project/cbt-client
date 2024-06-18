@@ -335,9 +335,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
             <KakaoIconSVG />
             카카오톡 오픈채팅
           </button>
-          <div className="home-bottom-wrapper">
-            <MainViewCount />
-          </div>
         </div>
       </div>
       <ul className="hidden-title">
