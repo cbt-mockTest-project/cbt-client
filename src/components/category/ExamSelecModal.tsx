@@ -29,8 +29,8 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const { categoryId, examId, isPublicCategory, ...modalProps } = props;
   const handleStartExam = () => {
     setMoveLoading(true);
-    if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
     sessionStorage.set(PUBLIC_EXAM_ID, examId);
+    if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
     if (mode === ExamMode.SOLUTION) {
       return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
     }

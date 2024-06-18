@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import palette from '@styles/palette';
-import { Button, Spin } from 'antd';
+import { Button, Spin, message } from 'antd';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
@@ -16,6 +16,17 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 import ExcelJS from 'exceljs';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import {
+  PUBLIC_CATEGORY_ID,
+  PUBLIC_EXAM_ID,
+} from '@lib/constants/sessionStorage';
+import { apolloClient } from '@modules/apollo';
+import {
+  CheckIsAccessibleCategoryMutation,
+  CheckIsAccessibleCategoryMutationVariables,
+} from '@lib/graphql/query/examCategoryBookmark.generated';
+import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -124,11 +135,14 @@ function transformHtmlString(htmlStr: string) {
 
 const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   const router = useRouter();
+  const sessionStorage = new SessionStorage();
   const examId = Number(router.query.Id);
+  const categoryId = Number(router.query.categoryId);
   const [isPageLoaded, setIsPageLoaded] = useState<boolean>(false);
   const { handleCheckLogin, handleUpdateUserCache } = useAuth();
   const { data: meQuery } = useMeQuery();
   const [editProfileMutation] = useEditProfileMutation();
+  const [hasAccess, setHasAccess] = useState<boolean>(false);
   const [isPrintLimitModalOpen, setIsPrintLimitModalOpen] = useState(false);
   const [isPrintLoading, setIsPrintLoading] = useState<boolean>(false);
   const [isExcelLoading, setIsExcelLoading] = useState<boolean>(false);
@@ -140,6 +154,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   }>({});
 
   const questions = useAppSelector((state) => state.mockExam.questions);
+  const isPrivate = useAppSelector((state) => state.mockExam[0]?.isPrivate);
   const printAreaRef = useRef<HTMLDivElement>(null);
   const handleExportPdf = async () => {
     try {
@@ -295,6 +310,27 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   }, [questions]);
 
   useEffect(() => {
+    try {
+      if (!router.isReady) return;
+      const publicExamId = sessionStorage.get(PUBLIC_EXAM_ID);
+      const publicCategoryId = sessionStorage.get(PUBLIC_CATEGORY_ID);
+      if (publicExamId && Number(publicExamId) === examId) {
+        setHasAccess(true);
+        return;
+      }
+      console.log(publicCategoryId, categoryId);
+      if (publicCategoryId && Number(publicCategoryId) === categoryId) {
+        setHasAccess(true);
+        return;
+      }
+      message.error('잘못된 접근입니다.');
+      router.replace('/');
+    } catch {
+      router.replace('/');
+    }
+  }, [meQuery, isPrivate, examId, categoryId]);
+
+  useEffect(() => {
     if (!isPageLoaded || !printAreaRef.current) return;
     if (prevPageHeight !== printAreaRef.current.clientHeight) {
       setPrevPageHeight(printAreaRef.current.clientHeight);
@@ -326,7 +362,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     setIsContentLoaded(true);
   }, [isPageLoaded, printAreaRef.current?.clientHeight, prevPageHeight]);
 
-  if (questions.length <= 0 || !isPageLoaded) return <Dimmed />;
+  if (questions.length <= 0 || !isPageLoaded || !hasAccess) return <Dimmed />;
   return (
     <ExamPrintComponentBlock>
       <div className="exam-print-button-wrapper">
