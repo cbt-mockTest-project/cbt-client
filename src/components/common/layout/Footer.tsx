@@ -51,7 +51,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           >
             CopyRight
           </Link>
-          <Link href="https://www.buymeacoffee.com/moducbts">후원</Link>
         </section>
         <section className="footer-section-two">
           <div className="footer-section-two-description">상호명: 모두</div>
@@ -60,7 +59,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
             moducbt@gmail.com
           </div>
           <div className="footer-section-two-description">
-            사업장소재지: 서울특별시 구로구 가마산로77
+            사업장소재지: 서울특별시 구로구 가마산로265
           </div>
           <div className="footer-section-two-description">
             통신판매업신고번호: 2023-서울구로-1204
