@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
-import { Skeleton } from 'antd';
+import { Skeleton, message } from 'antd';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import { apolloClient } from '@modules/apollo';
@@ -133,6 +133,7 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
             setIsMyExam(() => true);
             return;
           }
+          message.error('잘못된 접근입니다.');
           router.replace('/');
           return;
         }
@@ -155,11 +156,13 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
           }
           setIsMyExam(() => meQuery.me.user.id === examAuthorId);
           if (meQuery.me.user.id !== examAuthorId) {
+            message.error('잘못된 접근입니다.');
             router.replace('/');
             return;
           }
         }
       } catch {
+        message.error('잘못된 접근입니다.');
         router.replace('/');
       }
     })();
