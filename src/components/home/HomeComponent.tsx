@@ -75,9 +75,9 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       </div>
       <div className="home-wrapper">
         <HomeFolderList
+          subTitle=""
           key="modu-storage"
           title="모두CBT 공식 암기장 👀"
-          subTitle="실기 시험을 효율적으로 준비해보세요."
           link="/modu-storage"
           unikeyKey="modu-storage"
           type={ExamSource.MoudCbt}
@@ -92,8 +92,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         />
         <HomeFolderList
           key="user-storage"
-          title="유저 공유 암기장 📂"
-          subTitle="유저들이 만든 공개 암기장으로 학습해보세요."
+          title="공개 암기장 📂"
+          subTitle=""
           link="/user-storage"
           unikeyKey="user-storage"
           type={ExamSource.User}

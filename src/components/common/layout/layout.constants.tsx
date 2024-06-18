@@ -28,7 +28,7 @@ export const navItems = [
   {
     key: '/user-storage',
     icon: <GlobalOutlined />,
-    label: '유저 공유 암기장',
+    label: '공개 암기장',
   },
   {
     key: '/me/storage',
