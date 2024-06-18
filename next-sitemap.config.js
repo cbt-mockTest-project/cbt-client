@@ -8,6 +8,7 @@ module.exports = {
   sitemapSize: 5000,
   generateRobotsTxt: true, // (optional)
   exclude: [
+    '/exam/pdf/*',
     '/me*',
     '/register/*',
     '/exam/selectedresult',

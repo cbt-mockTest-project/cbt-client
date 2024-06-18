@@ -8,7 +8,6 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
 import { Print } from '@mui/icons-material';
-import useQuestions from '@lib/hooks/useQuestions';
 import { fetchImageAsBase64 } from '@lib/apis/upload';
 import useAuth from '@lib/hooks/useAuth';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
@@ -218,23 +217,23 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
     // 열 설정 조정
     worksheet.columns = [
       { header: '문제', key: 'question', width: 50 },
-      { header: '문제 이미지 URL', key: 'question_img_url', width: 50 }, // URL을 위한 별도의 열
+      // { header: '문제 이미지 URL', key: 'question_img_url', width: 50 }, // URL을 위한 별도의 열
       { header: '정답', key: 'solution', width: 50 },
-      { header: '정답 이미지 URL', key: 'solution_img_url', width: 50 }, // URL을 위한 별도의 열
+      // { header: '정답 이미지 URL', key: 'solution_img_url', width: 50 }, // URL을 위한 별도의 열
     ];
 
     questions.forEach((question, index) => {
       const row = worksheet.addRow({
         question: transformHtmlString(question.question),
-        question_img_url:
-          question.question_img && question.question_img.length >= 1
-            ? question.question_img[0].url
-            : '',
+        // question_img_url:
+        //   question.question_img && question.question_img.length >= 1
+        //     ? question.question_img[0].url
+        //     : '',
         solution: transformHtmlString(question.solution),
-        solution_img_url:
-          question.solution_img && question.solution_img.length >= 1
-            ? question.solution_img[0].url
-            : '',
+        // solution_img_url:
+        //   question.solution_img && question.solution_img.length >= 1
+        //     ? question.solution_img[0].url
+        //     : '',
       });
 
       // 문제 이미지 URL에 하이퍼링크 적용
