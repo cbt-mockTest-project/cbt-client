@@ -42,7 +42,15 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
         <section className="footer-section-one">
           <div>{`© ${year} Moducbt`}</div>
           <a href="mailto:moducbt@gmail.com">Mail</a>
-          <Link href={'/copyright'}>CopyRight</Link>
+          <Link
+            href={
+              'https://spotless-possum-447.notion.site/CBT-0d581bc623724239a4e228ff48b4a757?pvs=4'
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CopyRight
+          </Link>
           <Link href="https://www.buymeacoffee.com/moducbts">후원</Link>
         </section>
         <section className="footer-section-two">
