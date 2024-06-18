@@ -137,6 +137,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   const router = useRouter();
   const sessionStorage = new SessionStorage();
   const examId = Number(router.query.Id);
+  const categoryId = Number(router.query.categoryId);
   const [isPageLoaded, setIsPageLoaded] = useState<boolean>(false);
   const { handleCheckLogin, handleUpdateUserCache } = useAuth();
   const { data: meQuery } = useMeQuery();
@@ -309,21 +310,25 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   }, [questions]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const publicExamId = sessionStorage.get(PUBLIC_EXAM_ID);
-        if (publicExamId && Number(publicExamId) === examId) {
-          setHasAccess(true);
-          return;
-        } else {
-          message.error('잘못된 접근입니다.');
-          router.replace('/');
-        }
-      } catch {
-        router.replace('/');
+    try {
+      if (!router.isReady) return;
+      const publicExamId = sessionStorage.get(PUBLIC_EXAM_ID);
+      const publicCategoryId = sessionStorage.get(PUBLIC_CATEGORY_ID);
+      if (publicExamId && Number(publicExamId) === examId) {
+        setHasAccess(true);
+        return;
       }
-    })();
-  }, [meQuery, isPrivate, examId]);
+      console.log(publicCategoryId, categoryId);
+      if (publicCategoryId && Number(publicCategoryId) === categoryId) {
+        setHasAccess(true);
+        return;
+      }
+      message.error('잘못된 접근입니다.');
+      router.replace('/');
+    } catch {
+      router.replace('/');
+    }
+  }, [meQuery, isPrivate, examId, categoryId]);
 
   useEffect(() => {
     if (!isPageLoaded || !printAreaRef.current) return;
