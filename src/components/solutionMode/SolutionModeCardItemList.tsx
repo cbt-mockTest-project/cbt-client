@@ -68,8 +68,8 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
     (state) =>
       state.mockExam.serverSideQuestions?.[0]?.mockExam.isPrivate ||
       state.mockExam.questions?.[0]?.mockExam.isPrivate ||
-      !state.mockExam.questions?.[0]?.mockExam.approved ||
-      !state.mockExam.serverSideQuestions?.[0]?.mockExam.approved
+      !state.mockExam.serverSideQuestions?.[0]?.mockExam.approved ||
+      !state.mockExam.questions?.[0]?.mockExam.approved
   );
 
   const examId = useAppSelector(
