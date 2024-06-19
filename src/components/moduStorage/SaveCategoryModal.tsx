@@ -113,9 +113,6 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
           * 암기장을 공개하면 모든 사람들이 볼 수 있습니다.
         </div>
       )}
-      <div className="mt-2 text-gray-500">
-        {`* 저작권에 위반되는 암기장을 제작할 경우 책임은 제작자에게 있습니다.`}
-      </div>
     </SaveCategoryModalBlock>
   );
 };
