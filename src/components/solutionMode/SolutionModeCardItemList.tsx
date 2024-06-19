@@ -64,13 +64,12 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
     }
   }, [serverSideQuestionIds, clientSideQuestionIds, isStaticPage, page]);
 
-  const isPrivate = useAppSelector(
-    (state) =>
+  const isPrivate = useAppSelector((state) => {
+    return (
       state.mockExam.serverSideQuestions?.[0]?.mockExam.isPrivate ||
-      state.mockExam.questions?.[0]?.mockExam.isPrivate ||
-      !state.mockExam.serverSideQuestions?.[0]?.mockExam.approved ||
-      !state.mockExam.questions?.[0]?.mockExam.approved
-  );
+      state.mockExam.questions?.[0]?.mockExam.isPrivate
+    );
+  });
 
   const examId = useAppSelector(
     (state) =>
