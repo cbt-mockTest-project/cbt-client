@@ -68,7 +68,7 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
     <SearchQuestionListItemBlock>
       <BasicBox className="search-question-box" maxHeight={1000}>
         <div className="search-question-box-exam-title">
-          {question.mockExam.title}
+          {question.mockExam?.title}
         </div>
         <div className="search-question-box-wrapper">
           <div>
