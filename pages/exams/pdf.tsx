@@ -17,7 +17,7 @@ const ExamsPdfPage: React.FC<ExamsPdfPageProps> = ({}) => {
   const questions = useAppSelector((state) => state.mockExam.questions);
 
   useEffect(() => {
-    if (!order || !limit || !examIds || !mode) return;
+    if (!order || !examIds || !mode) return;
     const input: ReadQuestionsByExamIdsInput = {
       order: order as string,
       limit: Number(limit),
