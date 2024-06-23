@@ -210,6 +210,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
               pathname: '/exam/create',
               query: {
                 examId: exam.id,
+                categoryId,
               },
             });
           }}

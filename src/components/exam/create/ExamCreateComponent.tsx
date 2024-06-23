@@ -83,7 +83,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     },
   });
 
-  const { handleSubmit, setValue, getValues, watch } = methods;
+  const { handleSubmit, setValue, getValues } = methods;
 
   useEffect(() => {
     if (router.query.examId) {
