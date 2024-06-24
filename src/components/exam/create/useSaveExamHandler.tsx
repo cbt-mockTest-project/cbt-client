@@ -35,9 +35,7 @@ const useSaveExamHandler = () => {
             uuid: data.uuid,
             questionOrderIds,
             questions: data.questions,
-            ...(!examId && categoryId
-              ? { categoryId: Number(categoryId) }
-              : {}),
+            ...(categoryId ? { categoryId: Number(categoryId) } : {}),
           },
         },
       });

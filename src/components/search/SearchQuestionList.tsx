@@ -25,7 +25,7 @@ const SearchQuestionList: React.FC<SearchQuestionListProps> = () => {
         <SearchQuestionListItem
           key={question.id}
           question={question as MockExamQuestion}
-          hasEditButton={user?.id === question.user.id}
+          hasEditButton={user?.id === question.user?.id}
           onClickBookmark={() => {
             if (!handleCheckLogin()) return;
             toogleQuestionBookmark({
