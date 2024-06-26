@@ -72,7 +72,10 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
       <Link href={`/user/${user.id}`}>
         <div className="category-creator-info">
           <Image
-            src={user.profileImg || '/png/profile/profile_default.png'}
+            src={
+              user.profileImg ||
+              `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
+            }
             width={30}
             height={30}
             alt="유저이미지"

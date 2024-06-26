@@ -225,7 +225,10 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     <div className="exam-list-item-user-profile-wrapper">
       <Image
         className="exam-list-item-user-profile-image"
-        src={exam.user.profileImg || '/png/profile/profile_default.png'}
+        src={
+          exam.user.profileImg ||
+          `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
+        }
         alt="프로필이미지"
         width={20}
         height={20}

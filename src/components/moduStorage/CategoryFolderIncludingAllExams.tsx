@@ -92,7 +92,10 @@ const CategoryFolderIncludingAllExams: React.FC<
             <div className="category-user-info">
               <Image
                 className="category-user-profile-image"
-                src={user.profileImg || '/png/profile/profile_default.png'}
+                src={
+                  user.profileImg ||
+                  `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
+                }
                 alt="프로필이미지"
                 width={20}
                 height={20}

@@ -59,7 +59,7 @@ const AppDownloadInfoModal: React.FC<AppDownloadInfoModalProps> = (props) => {
       {isIOS && (
         <div className="app-download-info-modal-ios-guide-wrapper">
           <Image
-            src="/png/guide/ios-app-guide01.png"
+            src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT}/app-guide/ios-app-guide01.png`}
             alt="ios-guide-image"
             fill
           />

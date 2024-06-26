@@ -132,7 +132,10 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
         <div className="my-profile-tab-profile-image-update-wrapper">
           <Image
             className="my-profile-tab-profile-image"
-            src={me.profileImg || '/png/profile/profile_default.png'}
+            src={
+              me.profileImg ||
+              `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
+            }
             width={75}
             height={75}
             alt="avatar"

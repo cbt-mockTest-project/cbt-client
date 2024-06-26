@@ -152,7 +152,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                   className="category-user-profile-image"
                   src={
                     category.user.profileImg ||
-                    '/png/profile/profile_default.png'
+                    `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
                   }
                   alt="프로필이미지"
                   width={18}
