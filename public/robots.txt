@@ -3,13 +3,15 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://moducbt.com
+Host: https://www.moducbt.com
 
 # Sitemaps
-Sitemap: https://moducbt.com/sitemap.xml
-Sitemap: https://moducbt.com/sitemap_question_01.xml
-Sitemap: https://moducbt.com/sitemap_question_02.xml
-Sitemap: https://moducbt.com/sitemap_question_03.xml
-Sitemap: https://moducbt.com/sitemap_question_04.xml
-Sitemap: https://moducbt.com/sitemap_category.xml
-Sitemap: https://moducbt.com/sitemap_exam.xml
+Sitemap: https://www.moducbt.com/sitemap.xml
+Sitemap: http://localhost:3000/sitemap_question_01.xml
+Sitemap: http://localhost:3000/sitemap_question_02.xml
+Sitemap: http://localhost:3000/sitemap_question_03.xml
+Sitemap: http://localhost:3000/sitemap_question_04.xml
+Sitemap: http://localhost:3000/sitemap_question_05.xml
+Sitemap: http://localhost:3000/sitemap_question_06.xml
+Sitemap: http://localhost:3000/sitemap_category.xml
+Sitemap: http://localhost:3000/sitemap_exam.xml

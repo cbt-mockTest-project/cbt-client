@@ -2,7 +2,7 @@ import { LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, Empty } from 'antd';
+import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -18,6 +18,7 @@ const HomeFolderListBlock = styled.div`
   flex-direction: column;
   gap: 5px;
   position: relative;
+  height: 170px;
   .home-folder-list-swiper {
     width: 100%;
     margin-top: 15px;
@@ -65,6 +66,7 @@ const HomeFolderListBlock = styled.div`
   .home-folder-list {
     display: flex;
     gap: 10px;
+    height: 120px;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -123,6 +125,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         return [];
     }
   });
+  const isLoading = categories === null;
   const folderListRef = useRef<HTMLUListElement | null>(null);
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
@@ -189,41 +192,43 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
         <span>{subTitle}</span>
       </div>
 
-      <ul className="home-folder-list" ref={folderListRef}>
-        {categories &&
-          categories?.length > 0 &&
-          categories.map((category, index) => (
-            <div className="flex items-center" key={uniqueId(type)}>
-              <CategoryFolderListItem
-                className="home-folder-item"
-                category={category}
-              />
-              {index === categories.length - 1 && (
-                <div className="flex items-center">
-                  <Button
-                    size="large"
-                    className="w-36 h-full"
-                    type="link"
-                    href={link}
-                  >
-                    {`더 보기`}
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))}
-        {!categories &&
-          [ExamSource.MoudCbt, ExamSource.EhsMaster].includes(
-            type as ExamSource
-          ) && <HomeCategoriesRefresh />}
-        {categories && categories.length === 0 && (
-          <Empty
-            className="home-folder-list-empty"
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={emptyDescription}
-          />
-        )}
-      </ul>
+      {isLoading ? (
+        <div className="home-folder-list">
+          <Skeleton active paragraph={{ rows: 4 }} />
+        </div>
+      ) : (
+        <ul className="home-folder-list" ref={folderListRef}>
+          {categories &&
+            categories?.length > 0 &&
+            categories.map((category, index) => (
+              <div className="flex items-center" key={uniqueId(type)}>
+                <CategoryFolderListItem
+                  className="home-folder-item"
+                  category={category}
+                />
+                {index === categories.length - 1 && (
+                  <div className="flex items-center">
+                    <Button
+                      size="large"
+                      className="w-36 h-full"
+                      type="link"
+                      href={link}
+                    >
+                      {`더 보기`}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))}
+          {categories && categories.length === 0 && (
+            <Empty
+              className="home-folder-list-empty"
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={emptyDescription}
+            />
+          )}
+        </ul>
+      )}
       {categories && categories.length > 4 && (
         <>
           <Button

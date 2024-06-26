@@ -1,40 +1,23 @@
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import { handleError } from '@lib/utils/utils';
 import { homeActions } from '@modules/redux/slices/home';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
 import React, { useEffect } from 'react';
 import { ExamSource, MockExamCategory } from 'types';
 
 interface HomeCoreProps {}
 
 const HomeCore: React.FC<HomeCoreProps> = () => {
+  const isNotFetchedUserCategories = useAppSelector(
+    (state) => state.home.userStorageCategories === null
+  );
   const { fetchCategories } = useHomeCategories();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    const fetchPickedCategories = async () => {
-      for (let attempt = 0; attempt < 3; attempt++) {
-        try {
-          const res = await fetchCategories(
-            {
-              limit: 30,
-              examSource: ExamSource.User,
-              isPick: true,
-            },
-            'no-cache'
-          );
-          const categories = res?.data.getExamCategories.categories || [];
-          dispatch(
-            homeActions.setIsPickedCategories({
-              categories: categories as MockExamCategory[],
-            })
-          );
-          break; // 성공 시 반복 중단
-        } catch (err) {
-          if (attempt === 2) handleError(err); // 마지막 시도에서 실패한 경우 에러 처리
-        }
-      }
-    };
-
+    if (!isNotFetchedUserCategories) return;
     const fetchUserCategories = async () => {
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
@@ -73,12 +56,11 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
       }
     };
 
-    try {
+    const interval = setInterval(() => {
       fetchUserCategories();
-    } catch (err) {
-      handleError(err);
-    }
-  }, []);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isNotFetchedUserCategories]);
   return null;
 };
 
