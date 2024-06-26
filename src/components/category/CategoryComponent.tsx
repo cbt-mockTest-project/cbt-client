@@ -82,13 +82,9 @@ const CategoryComponentBlock = styled.div`
     padding: 20px 16px;
   }
 `;
-interface CategoryComponentProps {
-  categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
-}
+interface CategoryComponentProps {}
 
-const CategoryComponent: React.FC<CategoryComponentProps> = ({
-  categoryQueryInput,
-}) => {
+const CategoryComponent: React.FC<CategoryComponentProps> = () => {
   const { handleFilterExams, handleDeleteCategory } = useExamCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const categoryName = useAppSelector(
@@ -188,9 +184,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryUtilButtonWrapper />
       <CategoryProgressAndReview />
       <CategoryHeaderWrapper />
-      <GoogleAd />
       <CategoryHiddenExamList />
-
       {hasOriginalCategoryExams ? (
         <>
           <CategoryControlbar

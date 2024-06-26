@@ -39,9 +39,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         description={category.description}
         noIndex={category.isPublic ? false : true}
       />
-      {isExistedCategory && (
-        <CategoryComponent categoryQueryInput={categoryQueryInput} />
-      )}
+      {isExistedCategory && <CategoryComponent />}
       {isExistedCategory && (
         <CategoryCore categoryQueryInput={categoryQueryInput} />
       )}
