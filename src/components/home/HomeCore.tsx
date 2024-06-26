@@ -59,6 +59,9 @@ const HomeCore: React.FC<HomeCoreProps> = () => {
     const interval = setInterval(() => {
       fetchUserCategories();
     }, 1000);
+    if (!isNotFetchedUserCategories) {
+      clearInterval(interval);
+    }
     return () => clearInterval(interval);
   }, [isNotFetchedUserCategories]);
   return null;
