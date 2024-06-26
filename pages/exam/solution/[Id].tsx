@@ -39,11 +39,6 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         noIndex={isNoIndex}
       />
       <StudyHeader questions={questions} />
-      <GoogleAd
-        style={{
-          margin: '10px auto',
-        }}
-      />
       <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
       <SolutionModeCore />
     </>
