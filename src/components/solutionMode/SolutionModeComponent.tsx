@@ -14,6 +14,7 @@ import SolutionModeCardItemList from './SolutionModeCardItemList';
 import LoopIcon from '@mui/icons-material/Loop';
 
 const SolutionModeComponentBlock = styled.div`
+  padding-top: 20px;
   .solution-mode-body {
     max-width: 1280px;
     margin: 0 auto;
