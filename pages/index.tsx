@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       );
 
       return addApolloState(apolloClient, {
-        revalidate: 60 * 60 * 24,
+        revalidate: 86400,
       });
     } catch (e) {
       console.log(e);

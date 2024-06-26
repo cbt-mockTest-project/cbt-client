@@ -63,67 +63,58 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async (context) => {
-    try {
-      if (!context.params?.Id) {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
-      }
-      const apolloClient = initializeApollo({}, '');
-
-      const [categoryRes, userRes] = await Promise.all([
-        apolloClient
-          .query<GetExamCategoriesQuery>({
-            query: GET_EXAM_CATEGORIES,
-            variables: {
-              input: {
-                categoryMakerId: Number(context.params.Id),
-              },
-            },
-          })
-          .then((res) => res),
-        apolloClient
-          .query<UserProfileQuery>({
-            query: GET_USER,
-            variables: {
-              input: {
-                id: Number(context.params.Id),
-              },
-            },
-          })
-          .then((res) => res),
-      ]);
-      if (
-        !categoryRes.data.getExamCategories.ok ||
-        !userRes.data.userProfile.ok
-      ) {
-        return {
-          notFound: true,
-          revalidate: 1,
-        };
-      }
-      const categories = categoryRes.data.getExamCategories
-        .categories as MockExamCategory[];
-      const sortedCategories = [...categories].sort(
-        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
-      );
-      const user = userRes.data.userProfile.user as User;
-      store.dispatch(
-        storageActions.setUserStorageCategories({
-          categories: sortedCategories,
-        })
-      );
-      return addApolloState(apolloClient, {
-        props: { user },
-        revalidate: 43200,
-      });
-    } catch {
+    if (!context.params?.Id) {
       return {
         notFound: true,
-        revalidate: 1,
       };
     }
+    const apolloClient = initializeApollo({}, '');
+
+    const [categoryRes, userRes] = await Promise.all([
+      apolloClient
+        .query<GetExamCategoriesQuery>({
+          query: GET_EXAM_CATEGORIES,
+          variables: {
+            input: {
+              categoryMakerId: Number(context.params.Id),
+            },
+          },
+        })
+        .then((res) => res),
+      apolloClient
+        .query<UserProfileQuery>({
+          query: GET_USER,
+          variables: {
+            input: {
+              id: Number(context.params.Id),
+            },
+          },
+        })
+        .then((res) => res),
+    ]);
+    if (
+      !categoryRes.data.getExamCategories.ok ||
+      !userRes.data.userProfile.ok
+    ) {
+      return {
+        notFound: true,
+      };
+    }
+    const categories = categoryRes.data.getExamCategories
+      .categories as MockExamCategory[];
+    const sortedCategories = [...categories].sort(
+      (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
+    );
+    const user = userRes.data.userProfile.user as User;
+    store.dispatch(
+      storageActions.setUserStorageCategories({
+        categories: sortedCategories,
+      })
+    );
+    return addApolloState(apolloClient, {
+      props: { user },
+      revalidate: 86400,
+    });
   }
 );
 

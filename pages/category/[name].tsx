@@ -78,7 +78,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     if (!urlSlug || typeof urlSlug !== 'string') {
       return {
         notFound: true,
-        revalidate: 1,
       };
     }
     const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
@@ -110,7 +109,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         },
         category,
       },
-      revalidate: 43200,
+      revalidate: 86400,
     });
   }
 );

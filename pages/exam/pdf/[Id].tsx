@@ -53,7 +53,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     if (!context.params?.Id) {
       return {
         notFound: true,
-        revalidate: 1,
       };
     }
     const apolloClient = initializeApollo({}, '');
@@ -91,7 +90,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         title,
         description: removeHtmlTag(description),
       },
-      revalidate: 43200,
+      revalidate: 86400,
     });
   }
 );

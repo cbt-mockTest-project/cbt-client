@@ -62,7 +62,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   if (!context.params?.Id) {
     return {
       notFound: true,
-      revalidate: 1,
     };
   }
   const apolloClient = initializeApollo({}, '');
@@ -77,6 +76,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const postQueryOnStaticProps = res?.data;
   return addApolloState(apolloClient, {
     props: { postQueryOnStaticProps },
-    revalidate: 43200,
+    revalidate: 86400,
   });
 };
