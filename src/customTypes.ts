@@ -120,10 +120,12 @@ export interface CreateExamForm {
   uuid: string;
 }
 export interface CreateQuestionForm {
+  id?: number;
   question?: string;
   solution?: string;
   question_img?: MockExamQuestionImageInputType[];
   solution_img?: MockExamQuestionImageInputType[];
+  linkedQuestionIds?: number[];
   orderId: string;
 }
 

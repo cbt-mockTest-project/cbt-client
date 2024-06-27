@@ -117,6 +117,8 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
             'question_img',
             'solution',
             'solution_img',
+            'linkedQuestionIds',
+            'id',
           ]);
         });
         if (

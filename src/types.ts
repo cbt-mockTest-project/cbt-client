@@ -376,6 +376,7 @@ export type CreateMockExamQuestionFeedbackOutput = {
 
 export type CreateMockExamQuestionInput = {
   label?: InputMaybe<Scalars['String']>;
+  linkedQuestionIds?: InputMaybe<Array<Scalars['Float']>>;
   mockExamId: Scalars['Float'];
   number: Scalars['Float'];
   question?: InputMaybe<Scalars['String']>;
@@ -1757,6 +1758,7 @@ export type MockExamQuestion = {
   id: Scalars['Float'];
   isBookmarked?: Maybe<Scalars['Boolean']>;
   label?: Maybe<Scalars['String']>;
+  linkedQuestionIds?: Maybe<Array<Scalars['Float']>>;
   lowScore: Scalars['Float'];
   middleScore: Scalars['Float'];
   mockExam?: Maybe<MockExam>;
@@ -1881,6 +1883,7 @@ export type MockExamQuestionInputType = {
   highScore?: Scalars['Float'];
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  linkedQuestionIds?: InputMaybe<Array<Scalars['Float']>>;
   lowScore?: Scalars['Float'];
   middleScore?: Scalars['Float'];
   mockExam?: InputMaybe<MockExamInputType>;
@@ -2703,6 +2706,7 @@ export type PartialMockExamQuestionInput = {
   id?: InputMaybe<Scalars['Float']>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  linkedQuestionIds?: InputMaybe<Array<Scalars['Float']>>;
   lowScore?: InputMaybe<Scalars['Float']>;
   middleScore?: InputMaybe<Scalars['Float']>;
   mockExam?: InputMaybe<MockExamInputType>;
@@ -3945,6 +3949,7 @@ export type SearchMockExamOutput = {
 
 export type SearchQuestionsByKeywordInput = {
   examIds?: Array<Scalars['Float']>;
+  isAll?: Scalars['Boolean'];
   keyword: Scalars['String'];
 };
 

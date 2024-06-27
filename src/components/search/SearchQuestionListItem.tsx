@@ -9,6 +9,7 @@ import palette from '@styles/palette';
 import { EditFilled, LinkOutlined } from '@ant-design/icons';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import Link from 'next/link';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox';
 
 const SearchQuestionListItemBlock = styled.div`
   .search-question {
@@ -67,6 +68,7 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
   return (
     <SearchQuestionListItemBlock>
       <BasicBox className="search-question-box" maxHeight={1000}>
+        <LinkedQuestionIdsBox currentQuestionId={question.id} />
         <div className="search-question-box-exam-title">
           {question.mockExam?.title}
         </div>

@@ -14,6 +14,7 @@ import {
   CreateMockExamQuestionInput,
   MockExamQuestionImageInputType,
 } from 'types';
+import LinkedQuestionIdsBox from '../LinkedQuestionIdsBox';
 
 interface QuestionEditComponentProps {}
 
@@ -42,6 +43,7 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
         const { mockExamQusetion } = res.data.readMockExamQuestion;
         setValue('question', mockExamQusetion.question);
         setValue('solution', mockExamQusetion.solution);
+        setValue('linkedQuestionIds', mockExamQusetion.linkedQuestionIds);
         const newSolutionImage =
           mockExamQusetion.solution_img as MockExamQuestionImageInputType[];
         const newQuestionImage =
@@ -151,7 +153,13 @@ const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
           editorPlaceholder="해설을 입력해주세요."
         />
       </div>
-
+      <LinkedQuestionIdsBox
+        onChange={(value) => {
+          setValue('linkedQuestionIds', value);
+        }}
+        currentQuestionId={Number(String(router.query.Id))}
+        defaultLinkedQuestionIds={mockExamQusetion.linkedQuestionIds}
+      />
       <Button
         type="primary"
         size="large"

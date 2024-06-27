@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { SetStateAction } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
+import { UserRole } from 'types';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox';
 
 const ExamCreateCardItemBlock = styled.div`
   border-radius: 10px;
@@ -204,6 +206,25 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
           editorPlaceholder="정답을 입력해주세요."
         />
       </div>
+      <LinkedQuestionIdsBox
+        currentQuestionId={question.id}
+        defaultLinkedQuestionIds={question.linkedQuestionIds}
+        onChange={(value) => {
+          setValue(
+            'questions',
+            getValues('questions').map((v) => {
+              if (v.orderId === question.orderId) {
+                console.log(value.filter((el) => el > 0));
+                return {
+                  ...v,
+                  linkedQuestionIds: value.filter((el) => el > 0),
+                };
+              }
+              return v;
+            })
+          );
+        }}
+      />
       <Button
         className="exam-create-question-add-button"
         type="dashed"

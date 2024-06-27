@@ -76,6 +76,7 @@ export const READ_QUESTION = gql`
     readMockExamQuestion(input: $input) {
       isCoAuthor
       mockExamQusetion {
+        linkedQuestionIds
         mockExam {
           id
           title

@@ -18,7 +18,6 @@ const useSaveExamHandler = () => {
   const savedTime = useAppSelector((state) => state.examCreate.savedTime);
   const [saveExam, { loading: saveExamLoading }] = useSaveExam();
   const categoryId = router.query.categoryId;
-  const examId = router.query.examId;
   const handleSaveExam = async (
     data: CreateExamForm,
     hasSuccessMessage: boolean = false

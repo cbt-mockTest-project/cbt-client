@@ -417,6 +417,7 @@ export const READ_MOCK_EXAM = gql`
         mockExamQuestion {
           id
           orderId
+          linkedQuestionIds
           question_img {
             url
             name
