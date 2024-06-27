@@ -2,7 +2,7 @@ import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
 import { addApolloState, initializeApollo } from '@modules/apollo';
 import { GetStaticProps, NextPage } from 'next';
-import { ExamSource, MockExamCategory, UserRole } from 'types';
+import { ExamSource, MockExamCategory } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
 import wrapper from '@modules/redux/store/configureStore';
@@ -15,7 +15,7 @@ import UserStorageComponent from '@components/userStorage/UserStorageComponent';
 interface UserStorageProps {}
 
 const UserStorage: NextPage<UserStorageProps> = () => {
-  const { data: meQuery } = useMeQuery();
+  useMeQuery();
   return (
     <>
       <WithHead

@@ -58,8 +58,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         categories: categories as MockExamCategory[],
       })
     );
-    return addApolloState(apolloClient, {
-      revalidate: 86400,
-    });
+    return addApolloState(apolloClient, {});
   }
 );

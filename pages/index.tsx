@@ -81,8 +81,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       })
     );
 
-    return addApolloState(apolloClient, {
-      revalidate: 86400,
-    });
+    return addApolloState(apolloClient, {});
   }
 );
