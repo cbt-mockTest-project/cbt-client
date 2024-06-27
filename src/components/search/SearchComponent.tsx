@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import SearchQuestionList from './SearchQuestionList';
+import useSearchQuestions from '@lib/hooks/useSearchQuestions';
+import QuestionIdListBox from '@components/question/QuestionIdListBox';
 
 const SearchComponentBlock = styled.div`
   padding: 20px;
@@ -20,7 +22,8 @@ interface SearchComponentProps {}
 const SearchComponent: React.FC<SearchComponentProps> = () => {
   const router = useRouter();
   const categoryName = router.query.categoryName as string;
-
+  const { questions } = useSearchQuestions();
+  const questionIds = questions?.map((question) => question.id);
   if (!categoryName) return null;
 
   return (
@@ -37,6 +40,7 @@ const SearchComponent: React.FC<SearchComponentProps> = () => {
           });
         }}
       />
+      <QuestionIdListBox questionIds={questionIds || []} />
       <SearchQuestionList />
     </SearchComponentBlock>
   );

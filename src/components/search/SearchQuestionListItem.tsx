@@ -9,7 +9,7 @@ import palette from '@styles/palette';
 import { EditFilled, LinkOutlined } from '@ant-design/icons';
 import Bookmark from '@components/common/bookmark/Bookmark';
 import Link from 'next/link';
-import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox copy';
 
 const SearchQuestionListItemBlock = styled.div`
   .search-question {

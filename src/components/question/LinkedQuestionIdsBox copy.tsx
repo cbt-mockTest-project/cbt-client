@@ -1,5 +1,5 @@
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { Input } from 'antd';
+import { Button, Input } from 'antd';
 import React from 'react';
 import { UserRole } from 'types';
 
@@ -15,13 +15,21 @@ const LinkedQuestionIdsBox: React.FC<LinkedQuestionIdsBoxProps> = ({
   onChange,
 }) => {
   const { data: meQuery } = useMeQuery();
-  if (meQuery?.me?.user.role !== UserRole.Admin) {
+  if (meQuery?.me?.user?.role !== UserRole.Admin) {
     return null;
   }
 
   return (
     <div className="px-2 flex w-full gap-[2px] flex-col mb-4">
-      <div className="text-sm text-gray-700">ID: {currentQuestionId}</div>
+      <Button
+        type="primary"
+        className="w-fit"
+        onClick={() =>
+          navigator.clipboard.writeText(currentQuestionId.toString())
+        }
+      >
+        {currentQuestionId}
+      </Button>
       {defaultLinkedQuestionIds && (
         <div className="text-sm text-gray-700">LINKED QUESTION IDS:</div>
       )}
