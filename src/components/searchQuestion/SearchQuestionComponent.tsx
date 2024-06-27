@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import { useLzaySearchQuestions } from '@lib/graphql/hook/useExamQuestion';
+import { useRouter } from 'next/router';
 
 const SearchQuestionComponentBlock = styled.div`
   display: flex;
@@ -61,6 +62,8 @@ interface SearchQuestionComponentProps {}
 
 const SearchQuestionComponent: React.FC<SearchQuestionComponentProps> = () => {
   const { value: searchValue, onChange: onSearchChange } = useInput('');
+  const router = useRouter();
+
   const [
     searchQuestions,
     { loading: searchLoading, data: searchedQuestionsQuery },
@@ -72,6 +75,9 @@ const SearchQuestionComponent: React.FC<SearchQuestionComponentProps> = () => {
         variables: {
           input: {
             keyword: searchValue,
+            ...(router.query.isAll === 'eungwang' && {
+              isAll: true,
+            }),
           },
         },
       });

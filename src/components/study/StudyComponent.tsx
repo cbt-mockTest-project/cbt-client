@@ -116,7 +116,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   }, []);
 
   useEffect(() => {
-    console.log('hi');
     if (!isFetchedQuestions || !firstQuestionExamId) return;
     (async () => {
       try {
@@ -143,7 +142,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
           return;
         }
         if (!meQuery.me.user) {
-          console.log('5');
           const res = await apolloClient.mutate<
             CheckIsAccessibleCategoryMutation,
             CheckIsAccessibleCategoryMutationVariables
@@ -157,7 +155,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
             },
           });
           if (res.data?.checkIsAccessibleCategory.ok) {
-            console.log('6');
             setFetchQuestionsLoading(() => false);
             return;
           }
@@ -165,7 +162,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
           return;
         }
         if (meQuery?.me?.user?.id && examAuthorId) {
-          console.log('7');
           const res = await apolloClient.mutate<
             CheckIsAccessibleCategoryMutation,
             CheckIsAccessibleCategoryMutationVariables
@@ -179,14 +175,11 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
             },
           });
           if (res.data?.checkIsAccessibleCategory.ok) {
-            console.log('8');
             setFetchQuestionsLoading(() => false);
             return;
           }
           setFetchQuestionsLoading(() => meQuery.me.user.id !== examAuthorId);
-          console.log('9');
           if (meQuery.me.user.id !== examAuthorId) {
-            console.log('10');
             router.replace('/');
             return;
           }
