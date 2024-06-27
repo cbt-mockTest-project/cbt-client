@@ -1,12 +1,9 @@
-import HomeSearchedQuestionListItem from '@components/home/HomeSearchedQuestionListItem';
-import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 import palette from '@styles/palette';
 import { Input } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import SearchQuestionList from './SearchQuestionList';
-import useQuestions from '@lib/hooks/useQuestions';
 
 const SearchComponentBlock = styled.div`
   padding: 20px;

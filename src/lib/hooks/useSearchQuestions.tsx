@@ -35,6 +35,9 @@ const useSearchQuestions = () => {
           input: {
             keyword: keyword as string,
             examIds: examIds ? examIds.split(',').map((id) => Number(id)) : [],
+            ...(router.query.isAll === 'eungwang' && {
+              isAll: true,
+            }),
           },
         },
       });
