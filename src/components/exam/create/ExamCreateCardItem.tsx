@@ -11,8 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
-import { UserRole } from 'types';
-import LinkedQuestionIdsBox from '@components/question/QuestionIdListBox';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox copy';
 
 const ExamCreateCardItemBlock = styled.div`
   border-radius: 10px;

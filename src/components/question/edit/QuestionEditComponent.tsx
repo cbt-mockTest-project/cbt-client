@@ -14,7 +14,7 @@ import {
   CreateMockExamQuestionInput,
   MockExamQuestionImageInputType,
 } from 'types';
-import LinkedQuestionIdsBox from '../QuestionIdListBox';
+import LinkedQuestionIdsBox from '../LinkedQuestionIdsBox copy';
 
 interface QuestionEditComponentProps {}
 
