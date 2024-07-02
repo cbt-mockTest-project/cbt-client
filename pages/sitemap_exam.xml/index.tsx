@@ -3,22 +3,23 @@ import { GetServerSideProps } from 'next';
 import { initializeApollo } from '@modules/apollo';
 import {
   ReadAllMockExamQuery,
-  ReadMockExamCategoryNamesQuery,
+  ReadAllMockExamQueryVariables,
 } from '@lib/graphql/query/examQuery.generated';
-import {
-  READ_ALL_MOCK_EXAM,
-  READ_EXAM_CATEGORY_NAMES,
-} from '@lib/graphql/query/examQuery';
+import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, '');
-  const res = await client.query<ReadAllMockExamQuery>({
+  const res = await client.query<
+    ReadAllMockExamQuery,
+    ReadAllMockExamQueryVariables
+  >({
     query: READ_ALL_MOCK_EXAM,
     variables: {
       input: {
         category: '',
         query: '',
         all: true,
+        approved: true,
       },
     },
   });

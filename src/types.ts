@@ -891,6 +891,7 @@ export type EditMockExamQuestionFeedbackOutput = {
 export type EditMockExamQuestionInput = {
   id: Scalars['Float'];
   label?: InputMaybe<Scalars['String']>;
+  linkedQuestionIds?: InputMaybe<Array<Scalars['Float']>>;
   question?: InputMaybe<Scalars['String']>;
   question_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   solution?: InputMaybe<Scalars['String']>;
@@ -3440,6 +3441,7 @@ export type ReadAllMockExamQuestionOutput = {
 
 export type ReadAllMockExamsInput = {
   all?: Scalars['Boolean'];
+  approved?: Scalars['Boolean'];
   category?: Scalars['String'];
   query?: Scalars['String'];
 };
