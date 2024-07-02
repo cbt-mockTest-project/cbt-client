@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import React from 'react';
 import CategoryUtilButtonBox from './CategoryUtilButtonBox';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import useAuth from '@lib/hooks/useAuth';
 import { Skeleton } from 'antd';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { apolloClient } from '@modules/apollo';
-import { CHECK_HAS_CATEGORY_ACCESS } from '@lib/graphql/query/examCategoryBookmark';
-import {
-  CheckHasCategoryAccessMutation,
-  CheckHasCategoryAccessMutationVariables,
-} from '@lib/graphql/query/examCategoryBookmark.generated';
 import useCheckHasCategoryAccess from './hooks/useCheckHasCategoryAccess';
 
 interface CategoryUtilButtonWrapperProps {}

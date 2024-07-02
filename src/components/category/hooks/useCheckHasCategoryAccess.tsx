@@ -10,6 +10,9 @@ import {
 
 const useCheckHasCategoryAccess = () => {
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+  const isPublic = useAppSelector(
+    (state) => state.examCategory.category.isPublic
+  );
   const [isCategoryAccess, setIsCategoryAccess] = useState(false);
   const { data: meQuery } = useMeQuery();
   const categoryAuthorId = useAppSelector(
@@ -17,6 +20,10 @@ const useCheckHasCategoryAccess = () => {
   );
 
   useEffect(() => {
+    if (isPublic) {
+      setIsCategoryAccess(true);
+      return;
+    }
     if (meQuery?.me?.user?.id === categoryAuthorId) {
       setIsCategoryAccess(true);
       return;
@@ -38,7 +45,7 @@ const useCheckHasCategoryAccess = () => {
         setIsCategoryAccess(true);
       }
     })();
-  }, [categoryAuthorId, meQuery, categoryId]);
+  }, [categoryAuthorId, meQuery, categoryId, isPublic]);
   return { isCategoryAccess };
 };
 
