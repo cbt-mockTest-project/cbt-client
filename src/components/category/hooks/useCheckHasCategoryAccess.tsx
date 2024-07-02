@@ -7,28 +7,31 @@ import {
   CheckHasCategoryAccessMutation,
   CheckHasCategoryAccessMutationVariables,
 } from '@lib/graphql/query/examCategoryBookmark.generated';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import { message } from 'antd';
+import { useRouter } from 'next/router';
 
 const useCheckHasCategoryAccess = () => {
+  const router = useRouter();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
+
   const isPublic = useAppSelector(
     (state) => state.examCategory.category.isPublic
   );
   const [isCategoryAccess, setIsCategoryAccess] = useState(false);
   const { data: meQuery } = useMeQuery();
+  const sessionStorage = new SessionStorage();
   const categoryAuthorId = useAppSelector(
     (state) => state.examCategory.category.user.id
   );
 
   useEffect(() => {
-    if (isPublic) {
-      setIsCategoryAccess(true);
+    if (!categoryId || !meQuery || isPublic) return;
+    if (!meQuery.me.user) {
+      message.error('잘못된 접근입니다.');
+      router.replace('/');
       return;
     }
-    if (meQuery?.me?.user?.id === categoryAuthorId) {
-      setIsCategoryAccess(true);
-      return;
-    }
-    if (!categoryId) return;
     (async () => {
       const res = await apolloClient.mutate<
         CheckHasCategoryAccessMutation,
@@ -42,8 +45,12 @@ const useCheckHasCategoryAccess = () => {
         },
       });
       if (res.data?.checkHasCategoryAccess.ok) {
+        sessionStorage.remove('isCheckingCategoryAccess');
         setIsCategoryAccess(true);
+        return;
       }
+      message.error('잘못된 접근입니다.');
+      router.replace('/');
     })();
   }, [categoryAuthorId, meQuery, categoryId, isPublic]);
   return { isCategoryAccess };
