@@ -135,3 +135,5 @@ export interface CategoryLearingProgressType {
   lowScoreCount: number;
   totalQuestionCount: number;
 }
+
+export type ThemeValue = 'light' | 'dark';

@@ -40,6 +40,13 @@ export const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
+  const cookies = (pageProps as any)['cookies'];
+  const theme = cookies?.['theme'];
+  const { store, props } = wrapper.useWrappedStore(pageProps);
+  store.dispatch(coreActions.setLanguage(lang as LanguageValue));
+  if (theme) {
+    store.dispatch(coreActions.setTheme(theme as ThemeValue));
+  }
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
