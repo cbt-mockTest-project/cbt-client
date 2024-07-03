@@ -20,6 +20,7 @@ const SaveCategoryModalBlock = styled(Modal)`
   }
   .save-category-modal-description {
     margin-top: 10px;
+    min-height: 200px;
   }
 `;
 

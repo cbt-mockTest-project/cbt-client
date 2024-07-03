@@ -19,13 +19,9 @@ import {
 } from '@lib/hooks/useQuestionFeedback';
 import { useRouter } from 'next/router';
 import { ExamMode } from 'customTypes';
-import StudySolveLimitInfoModal from './StudySolveLimitInfoModal';
-import { checkIsEhsMasterExam, checkRole } from '@lib/utils/utils';
 import useAuth from '@lib/hooks/useAuth';
 import StudySolvedInfoModal from './StudySolvedInfoModal';
 import { isMobile } from 'react-device-detect';
-import useQuestions from '@lib/hooks/useQuestions';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {

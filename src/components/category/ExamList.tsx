@@ -22,7 +22,6 @@ interface ExamListProps {}
 const ExamList: React.FC<ExamListProps> = () => {
   const { handleMoveExamOrder } = useExamCategory();
   const { user } = useAuth();
-  const { isCategoryAccess } = useCheckHasCategoryAccess();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const isPrivate = useAppSelector(
     (state) => !state.examCategory.category.isPublic
@@ -94,46 +93,38 @@ const ExamList: React.FC<ExamListProps> = () => {
         </ExamListBlock>
       </DragDropContextWrapper>
       <ExamListBlock>
-        {!isMyCategory &&
-          ((isCategoryAccess && isPrivate) || !isPrivate) &&
-          exams.map((exam, index) => {
-            const isRecentStudy = () => {
-              if (!user)
-                return {
-                  hasRecentlyStudy: false,
-                  recentlyStudyQuestionNumber: 0,
-                };
-              const recentlyStudyExam = user.recentlyStudiedExams?.find(
-                (el) => el.categoryId === categoryId
-              );
-              const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
-                exam.id
-              );
-              const recentlyStudyQuestionNumber =
-                recentlyStudyExam?.questionIndex || 0;
+        {exams.map((exam, index) => {
+          const isRecentStudy = () => {
+            if (!user)
               return {
-                hasRecentlyStudy,
-                recentlyStudyQuestionNumber,
+                hasRecentlyStudy: false,
+                recentlyStudyQuestionNumber: 0,
               };
-            };
-            const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
-              isRecentStudy();
-            return (
-              <ExamListItem
-                dragHandleProps={null}
-                key={exam.id}
-                exam={exam}
-                hasRecentlyMark={hasRecentlyStudy}
-                recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
-              />
+            const recentlyStudyExam = user.recentlyStudiedExams?.find(
+              (el) => el.categoryId === categoryId
             );
-          })}
-        {!isCategoryAccess && isPrivate && (
-          <div className="flex flex-col gap-2">
-            <Skeleton active />
-            <Skeleton active />
-          </div>
-        )}
+            const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
+              exam.id
+            );
+            const recentlyStudyQuestionNumber =
+              recentlyStudyExam?.questionIndex || 0;
+            return {
+              hasRecentlyStudy,
+              recentlyStudyQuestionNumber,
+            };
+          };
+          const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
+            isRecentStudy();
+          return (
+            <ExamListItem
+              dragHandleProps={null}
+              key={exam.id}
+              exam={exam}
+              hasRecentlyMark={hasRecentlyStudy}
+              recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
+            />
+          );
+        })}
       </ExamListBlock>
     </>
   );

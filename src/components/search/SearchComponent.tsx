@@ -1,11 +1,13 @@
 import palette from '@styles/palette';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import SearchQuestionList from './SearchQuestionList';
 import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 import QuestionIdListBox from '@components/question/QuestionIdListBox';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import { PUBLIC_CATEGORY_NAME } from '@lib/constants/sessionStorage';
 
 const SearchComponentBlock = styled.div`
   padding: 20px;
@@ -24,6 +26,22 @@ const SearchComponent: React.FC<SearchComponentProps> = () => {
   const categoryName = router.query.categoryName as string;
   const { questions } = useSearchQuestions();
   const questionIds = questions?.map((question) => question.id);
+  const sessionStorage = new SessionStorage();
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (!categoryName) {
+        message.error('잘못된 접근입니다.');
+        router.replace('/');
+      }
+      const publicCategoryName = sessionStorage.get(PUBLIC_CATEGORY_NAME);
+      if (publicCategoryName !== categoryName) {
+        message.error('잘못된 접근입니다.');
+        router.replace('/');
+      }
+    }
+  }, [router.isReady, categoryName]);
+
   if (!categoryName) return null;
 
   return (

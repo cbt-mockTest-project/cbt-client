@@ -68,28 +68,6 @@ const CategoryBookmarkOrEditWrapper: React.FC<
       {isMyCategory ? (
         <div className="absolute top-[30px] lg:top-[20px] right-[30px] flex flex-col items-end gap-4">
           <div className="flex gap-2">
-            <Tooltip
-              title={
-                revenueRequestForm?.status === RevenueRequestFormStatus.Pending
-                  ? '승인 까지 1~2일이 소요될 수 있습니다.'
-                  : ''
-              }
-            >
-              <Button
-                type="primary"
-                disabled={[RevenueRequestFormStatus.Pending].includes(
-                  revenueRequestForm?.status
-                )}
-                onClick={() =>
-                  revenueRequestForm?.status ===
-                  RevenueRequestFormStatus.Approved
-                    ? setIsRevenueHistoryModalOpen(true)
-                    : setIsRequestRevenueModalOpen(true)
-                }
-              >
-                {revenueRequestStatusText}
-              </Button>
-            </Tooltip>
             {revenueRequestForm?.status ===
               RevenueRequestFormStatus.Rejected && (
               <button onClick={onClickRejectReasonInfoModal}>

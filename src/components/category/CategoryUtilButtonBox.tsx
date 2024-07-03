@@ -1,4 +1,6 @@
+import { PUBLIC_CATEGORY_NAME } from '@lib/constants/sessionStorage';
 import useAuth from '@lib/hooks/useAuth';
+import { SessionStorage } from '@lib/utils/sessionStorage';
 import { Button, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -17,21 +19,23 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
   categoryId,
 }) => {
   const { handleCheckLogin } = useAuth();
+  const sessionStorage = new SessionStorage();
   const router = useRouter();
   return (
     <div className="mb-5 flex items-center gap-2 xs:flex-col xs:items-start">
       <Tooltip title="암기장 내 문제를 검색할 수 있어요.">
         <Button
           className="category-question-search-button"
-          onClick={() =>
+          onClick={() => {
+            sessionStorage.set(PUBLIC_CATEGORY_NAME, categoryName);
             router.push({
               pathname: '/search',
               query: {
                 examIds: exams.map((exam) => exam.id).join(','),
                 categoryName,
               },
-            })
-          }
+            });
+          }}
         >
           문제 검색
         </Button>

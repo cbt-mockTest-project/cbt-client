@@ -45,10 +45,6 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
   );
   useEffect(() => {
     if (!meQuery) return;
-    if (!meQuery.me.user && isPrivate) {
-      router.push('/');
-      return;
-    }
     if (meQuery.me.user) {
       updateRecentlyStudiedCategory({
         variables: {
@@ -57,20 +53,10 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
           },
         },
       });
-      fetchCategory(categoryQueryInput, 'no-cache').then((res) => {
-        if (!res?.hasAccess && meQuery.me.user.role !== UserRole.Admin) {
-          message.error('접근 권한이 없습니다.');
-          router.push('/');
-        }
-      });
       const examSetting = getExamSettingHistory(categoryId);
       if (!examSetting) return;
       const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId, examIds });
-    }
-    if (categoryAccessDenied) {
-      message.error('접근 권한이 없습니다.');
-      router.push('/');
     }
   }, [meQuery]);
 

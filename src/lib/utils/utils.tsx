@@ -11,6 +11,7 @@ import {
   EHS_AIR_EXAM_IDS,
   EHS_CONSTRUCTION_EXAM_IDS,
   EHS_DANGEROUS_EXAM_IDS,
+  EHS_HUMAN_EXAM_IDS,
   EHS_SAFE_EXAM_IDS,
   EHS_SAFE_INDUSTRIAL_EXAM_IDS,
 } from '@lib/constants/ehsMaster';
@@ -264,6 +265,7 @@ export const checkIsEhsMasterExam = (examIds: number[]) => {
       ...EHS_DANGEROUS_EXAM_IDS,
       ...EHS_SAFE_EXAM_IDS,
       ...EHS_SAFE_INDUSTRIAL_EXAM_IDS,
+      ...EHS_HUMAN_EXAM_IDS,
     ].includes(examId);
   });
 };
