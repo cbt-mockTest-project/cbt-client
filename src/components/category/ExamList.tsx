@@ -93,38 +93,39 @@ const ExamList: React.FC<ExamListProps> = () => {
         </ExamListBlock>
       </DragDropContextWrapper>
       <ExamListBlock>
-        {exams.map((exam, index) => {
-          const isRecentStudy = () => {
-            if (!user)
+        {!isMyCategory &&
+          exams.map((exam, index) => {
+            const isRecentStudy = () => {
+              if (!user)
+                return {
+                  hasRecentlyStudy: false,
+                  recentlyStudyQuestionNumber: 0,
+                };
+              const recentlyStudyExam = user.recentlyStudiedExams?.find(
+                (el) => el.categoryId === categoryId
+              );
+              const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
+                exam.id
+              );
+              const recentlyStudyQuestionNumber =
+                recentlyStudyExam?.questionIndex || 0;
               return {
-                hasRecentlyStudy: false,
-                recentlyStudyQuestionNumber: 0,
+                hasRecentlyStudy,
+                recentlyStudyQuestionNumber,
               };
-            const recentlyStudyExam = user.recentlyStudiedExams?.find(
-              (el) => el.categoryId === categoryId
-            );
-            const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(
-              exam.id
-            );
-            const recentlyStudyQuestionNumber =
-              recentlyStudyExam?.questionIndex || 0;
-            return {
-              hasRecentlyStudy,
-              recentlyStudyQuestionNumber,
             };
-          };
-          const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
-            isRecentStudy();
-          return (
-            <ExamListItem
-              dragHandleProps={null}
-              key={exam.id}
-              exam={exam}
-              hasRecentlyMark={hasRecentlyStudy}
-              recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
-            />
-          );
-        })}
+            const { hasRecentlyStudy, recentlyStudyQuestionNumber } =
+              isRecentStudy();
+            return (
+              <ExamListItem
+                dragHandleProps={null}
+                key={exam.id}
+                exam={exam}
+                hasRecentlyMark={hasRecentlyStudy}
+                recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
+              />
+            );
+          })}
       </ExamListBlock>
     </>
   );
