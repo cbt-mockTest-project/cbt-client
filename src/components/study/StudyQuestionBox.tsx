@@ -13,6 +13,7 @@ import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { LinkOffRounded, LinkRounded } from '@mui/icons-material';
+import HighlightableText from './HighlightableText';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -56,10 +57,6 @@ const StudyQuestionBoxBlock = styled.div`
   .study-question-box-question {
     word-break: break-all;
     white-space: pre-wrap;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     ${EditorStyle}
   }
   .study-question-box-image {
@@ -178,9 +175,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           />
         </div>
       </div>
-      <div className="study-question-box-question">
-        {parse(question.question || '')}
-      </div>
+      <HighlightableText content={question.question} />
       <div
         onClick={(e) => {
           e.stopPropagation();
