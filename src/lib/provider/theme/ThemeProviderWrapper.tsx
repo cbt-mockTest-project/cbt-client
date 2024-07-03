@@ -9,12 +9,10 @@ import { themes } from './themes';
 
 interface ThemeProviderWrapperProps {
   children: React.ReactNode;
-  isLightModePageList: boolean;
 }
 
 const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
   children,
-  isLightModePageList,
 }) => {
   const { theme: mode, setTheme } = useThemeControl();
   useEffect(() => {
@@ -30,7 +28,7 @@ const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
         }}
       >
         <App className="theme-provider-wrapper">
-          <CustomStyleProvider theme={mode}>{children}</CustomStyleProvider>
+          <CustomStyleProvider mode={mode}>{children}</CustomStyleProvider>
         </App>
       </ConfigProvider>
     </ThemeProvider>

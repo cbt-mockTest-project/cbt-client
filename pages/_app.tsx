@@ -35,6 +35,10 @@ import {
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
 import '@styles/global.css';
+import { coreActions } from '@modules/redux/slices/core';
+import { ThemeValue } from 'customTypes';
+import { Provider } from 'react-redux';
+import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
 
 export const queryClient = new QueryClient();
 
@@ -43,7 +47,6 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
   const cookies = (pageProps as any)['cookies'];
   const theme = cookies?.['theme'];
   const { store, props } = wrapper.useWrappedStore(pageProps);
-  store.dispatch(coreActions.setLanguage(lang as LanguageValue));
   if (theme) {
     store.dispatch(coreActions.setTheme(theme as ThemeValue));
   }
@@ -229,25 +232,29 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           `,
         }}
       />
-      <ApolloProvider client={client}>
-        <QueryClientProvider client={queryClient}>
-          <ConfigProvider>
-            <Globalstyles />
-            <CoreContainer />
-            <AppInner />
-            {hasLayout ? (
-              <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
-                <Component {...pageProps} />
-              </MainLayout>
-            ) : (
-              <Component {...pageProps} />
-            )}
-          </ConfigProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </ApolloProvider>
+      <Provider store={store}>
+        <ThemeProviderWrapper>
+          <ApolloProvider client={client}>
+            <QueryClientProvider client={queryClient}>
+              <ConfigProvider>
+                <Globalstyles />
+                <CoreContainer />
+                <AppInner />
+                {hasLayout ? (
+                  <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+                    <Component {...pageProps} />
+                  </MainLayout>
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </ConfigProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </ApolloProvider>
+        </ThemeProviderWrapper>
+      </Provider>
     </>
   );
 };
 
-export default wrapper.withRedux(App);
+export default App;
