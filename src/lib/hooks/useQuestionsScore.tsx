@@ -5,10 +5,11 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { App } from 'antd';
 import { QuestionState } from 'types';
 
 const useQuestionsScore = () => {
+  const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const [resetQuestionStateMutation] = useResetQuestionState();
   const questions = useAppSelector((state) => state.mockExam.questions);

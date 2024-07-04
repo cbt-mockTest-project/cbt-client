@@ -7,7 +7,7 @@ import {
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, List, message } from 'antd';
+import { Button, List, App } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ExamViewer } from 'types';
@@ -68,6 +68,7 @@ const InviteExamModalBlock = styled(Modal)`
 interface InviteExamModalProps extends Omit<ModalProps, 'children'> {}
 
 const InviteExamModal: React.FC<InviteExamModalProps> = (props) => {
+  const { message } = App.useApp();
   const { data: invitedExamsQuery } = useGetInvitedExams();
   const [invitedExams, setInvitedExams] = useState<ExamViewer[]>([]);
   const [deleteExamCategoryViewer] = useDeleteExamCategoryViewer();

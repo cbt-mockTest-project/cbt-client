@@ -1,8 +1,8 @@
 import { useCreateQuestionCard } from '@lib/graphql/hook/useQuestionCard';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import Select, { DefaultOptionType } from 'antd/lib/select';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { QuestionCard } from 'types';
@@ -30,6 +30,7 @@ const AddQuestionCardModal: React.FC<AddQuestionCardModalProps> = ({
   defaultSolution = '',
   mode = 'add',
 }) => {
+  const { message } = App.useApp();
   const isEditMode = mode === 'edit';
   const [selectedCardCategory, setSelectedCardCategory] =
     useState<DefaultOptionType>();

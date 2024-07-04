@@ -10,7 +10,7 @@ import { coreActions } from '@modules/redux/slices/core';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import palette from '@styles/palette';
-import { message } from 'antd';
+import { App } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styled, { css } from 'styled-components';
@@ -39,6 +39,7 @@ const ExamSolutionFeedback: React.FC<ExamSolutionFeedbackProps> = ({
   isBlur = false,
   type = 'others',
 }) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));

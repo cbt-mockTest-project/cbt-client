@@ -1,5 +1,5 @@
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { Button, Input, App } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PDFDocument } from 'pdf-lib';
@@ -13,7 +13,7 @@ import {
   useEditPost,
   useLazyReadPost,
 } from '@lib/graphql/hook/usePost';
-import { CreatePostInput, EditPostInput, PostCategory } from 'types';
+import { CreatePostInput, PostCategory } from 'types';
 import { UploadFile } from '../Data.type';
 import { useRouter } from 'next/router';
 import DataRegisterFileUploadButton from './DataRegisterFileUploadButton';
@@ -96,6 +96,7 @@ const DataRegisterComponentBlock = styled.form`
 interface DataRegisterComponentProps {}
 
 const DataRegisterComponent: React.FC<DataRegisterComponentProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const isEditMode = router.query.id ? true : false;
   const { data: meQuery } = useMeQuery();

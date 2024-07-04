@@ -1,5 +1,5 @@
 import palette from '@styles/palette';
-import { Input, message } from 'antd';
+import { Input, App } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -22,6 +22,7 @@ const SearchComponentBlock = styled.div`
 interface SearchComponentProps {}
 
 const SearchComponent: React.FC<SearchComponentProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const categoryName = router.query.categoryName as string;
   const { questions } = useSearchQuestions();

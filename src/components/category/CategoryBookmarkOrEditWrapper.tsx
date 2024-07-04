@@ -4,7 +4,7 @@ import useAuth from '@lib/hooks/useAuth';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { BookmarkOutlined } from '@mui/icons-material';
-import { Button, Dropdown, MenuProps, Modal, Tooltip } from 'antd';
+import { App, Dropdown, MenuProps } from 'antd';
 import React, { useMemo, useState } from 'react';
 import RequestRevenueModal from './RequestRevenueModal';
 import { RevenueRequestFormStatus } from 'types';
@@ -18,6 +18,7 @@ interface CategoryBookmarkOrEditWrapperProps {
 const CategoryBookmarkOrEditWrapper: React.FC<
   CategoryBookmarkOrEditWrapperProps
 > = ({ dropdownItems }) => {
+  const { modal } = App.useApp();
   const [isRequestRevenueModalOpen, setIsRequestRevenueModalOpen] =
     useState(false);
   const [isRevenueHistoryModalOpen, setIsRevenueHistoryModalOpen] =
@@ -38,18 +39,9 @@ const CategoryBookmarkOrEditWrapper: React.FC<
   const isCategoryBookmarked = useAppSelector(
     (state) => state.examCategory.category.isBookmarked
   );
-  const revenueRequestStatusText = useMemo(() => {
-    if (revenueRequestForm?.status === RevenueRequestFormStatus.Pending)
-      return '승인 대기중';
-    if (revenueRequestForm?.status === RevenueRequestFormStatus.Rejected)
-      return '수익창출 재신청';
-    if (revenueRequestForm?.status === RevenueRequestFormStatus.Approved)
-      return '수익 현황';
-    return '수익창출 신청';
-  }, [revenueRequestForm?.status]);
 
   const onClickRejectReasonInfoModal = () => {
-    Modal.info({
+    modal.info({
       title: '수익창출 신청이 거절되었습니다.',
       content: (
         <div>

@@ -1,4 +1,4 @@
-import { Button, Modal, message } from 'antd';
+import { App, Button, Modal } from 'antd';
 import React, { useState } from 'react';
 import { UseMutationResult } from '@tanstack/react-query';
 import { CreateCategoryInvitationLinkMutation } from '@lib/graphql/query/categoryInvitationLinkQuery.generated';
@@ -19,6 +19,7 @@ const CategoryInviteLinkContent: React.FC<CategoryInviteLinkContentProps> = ({
   defaultInviteCode,
   createCategoryInviteLink,
 }) => {
+  const { message } = App.useApp();
   const [inviteCode, setInviteCode] = useState<string>(defaultInviteCode);
   return (
     <div>

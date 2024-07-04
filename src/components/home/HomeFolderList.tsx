@@ -17,6 +17,7 @@ const HomeFolderListBlock = styled.div`
   gap: 5px;
   position: relative;
   height: 175px;
+  justify-content: flex-end;
   .home-folder-list-swiper {
     width: 100%;
     margin-top: 15px;
@@ -40,7 +41,7 @@ const HomeFolderListBlock = styled.div`
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: 35px;
+    bottom: 40px;
     z-index: 10;
     svg {
       font-size: 20px;

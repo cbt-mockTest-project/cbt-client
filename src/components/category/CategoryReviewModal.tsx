@@ -1,7 +1,7 @@
 import useCategoryEvaluation from '@lib/hooks/useCategoryEvaluation';
 import { Delete, Edit, StarRounded } from '@mui/icons-material';
 import palette from '@styles/palette';
-import { Button, Modal, ModalProps, Rate, Table } from 'antd';
+import { App, Button, Modal, ModalProps, Rate, Table } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -84,6 +84,7 @@ interface CategoryReviewModalProps extends Omit<ModalProps, 'children'> {
 
 const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
   const { categoryId, ...modalProps } = props;
+  const { modal } = App.useApp();
   const {
     categoryEvaluations,
     myEvaluation,
@@ -174,7 +175,7 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
   }, [myEvaluation]);
 
   const onClickDelete = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '리뷰를 삭제하시겠습니까?',
       okText: '삭제',
       cancelText: '취소',

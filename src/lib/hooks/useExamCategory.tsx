@@ -17,7 +17,7 @@ import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { handleError } from '@lib/utils/utils';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import { useRouter } from 'next/router';
-import { message } from 'antd';
+import { App } from 'antd';
 import { debounce } from 'lodash';
 import { useToggleExamBookmark } from '@lib/graphql/hook/useExamBookmark';
 import { WatchQueryFetchPolicy } from '@apollo/client';
@@ -26,6 +26,7 @@ import { DropResult } from 'react-beautiful-dnd';
 import { examSettingActions } from '@modules/redux/slices/examSetting';
 
 const useExamCategory = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [moveExamOrder] = useMoveExamOrder();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();

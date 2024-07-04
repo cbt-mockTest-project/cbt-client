@@ -1,6 +1,6 @@
 import Modal, { ModalProps } from '@components/common/modal/Modal';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
-import { Button, Input, Select, message } from 'antd';
+import { Button, Input, Select, App } from 'antd';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { checkRole, makeMoneyString } from '@lib/utils/utils';
@@ -86,6 +86,7 @@ const categoryOptions = [
 ];
 
 const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
+  const { message } = App.useApp();
   const { price, setPrice, ...modalProps } = props;
   const { handlePayment } = usePayment();
   const { data: meQuery } = useMeQuery();

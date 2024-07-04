@@ -3,7 +3,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, Tag } from 'antd';
+import { App, Dropdown, MenuProps, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -153,6 +153,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   hasRecentlyMark = false,
   recentlyStudyQuestionNumber = 0,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
     useExamCategory();
@@ -172,7 +173,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   );
 
   const handleRemoveExam = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       onOk() {
         handleRemoveExamFromCategory({

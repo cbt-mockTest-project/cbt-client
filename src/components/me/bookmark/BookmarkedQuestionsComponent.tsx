@@ -8,7 +8,7 @@ import {
 } from '@lib/graphql/hook/useQuestionBookmark';
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import { responsive } from '@lib/utils/responsive';
-import { Button, Select, message } from 'antd';
+import { Button, Select, App } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { shuffle } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +20,7 @@ interface BookmarkedQuestionsComponentProps {}
 const BookmarkedQuestionsComponent: React.FC<
   BookmarkedQuestionsComponentProps
 > = () => {
+  const { message } = App.useApp();
   const { data: examTitleAndIdQuery, loading: loadingReadTitleAndId } =
     useReadExamTitleAndIdOfBookmarkedQuestion();
   const [resetBookmark] = useResetMyQuestionBookmark();

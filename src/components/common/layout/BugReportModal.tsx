@@ -1,5 +1,5 @@
 import { useCreateFeedback } from '@lib/graphql/hook/useFeedBack';
-import { Button, Input, Modal, ModalProps, message } from 'antd';
+import { App, Input, Modal, ModalProps } from 'antd';
 import { TextAreaRef } from 'antd/es/input/TextArea';
 import React from 'react';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ const BugReportModalBlock = styled(Modal)`
 interface BugReportModalProps extends Omit<ModalProps, 'children'> {}
 
 const BugReportModal: React.FC<BugReportModalProps> = (props) => {
+  const { message } = App.useApp();
   const { ...modalProps } = props;
   const textAreaRef = React.useRef<TextAreaRef>(null);
   const [createFeedback] = useCreateFeedback();

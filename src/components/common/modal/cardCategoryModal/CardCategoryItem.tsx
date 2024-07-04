@@ -6,8 +6,8 @@ import useInput from '@lib/hooks/useInput';
 import useToggle from '@lib/hooks/useToggle';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
+import { App, Input } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -20,6 +20,7 @@ const CardCategoryItem: React.FC<CardCategoryItemProps> = ({
   category,
   setCardCategories,
 }) => {
+  const { message } = App.useApp();
   const [deleteCategory] = useDeleteQuestionCardCategory();
   const [editCategory] = useUpdateQuestionCardCategory();
   const {
@@ -27,11 +28,8 @@ const CardCategoryItem: React.FC<CardCategoryItemProps> = ({
     setValue: setEditMode,
     onToggle: onToggleEditMode,
   } = useToggle(false);
-  const {
-    value: editCategoryName,
-    setValue: setEditCategoryName,
-    onChange: onChangeEditCategoryName,
-  } = useInput(category.label as string);
+  const { value: editCategoryName, onChange: onChangeEditCategoryName } =
+    useInput(category.label as string);
   const requestDeleteCategory = async () => {
     try {
       const id = category.value as number;

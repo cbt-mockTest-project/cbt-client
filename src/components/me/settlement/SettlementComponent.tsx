@@ -8,13 +8,14 @@ import useMyPointTransactions from '@lib/hooks/useMyPointTransactions.query';
 import { mySettlementRequestQueryOptions } from '@lib/queryOptions/mySettlementRequest';
 import { apolloClient } from '@modules/apollo';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Form, Input, InputNumber, Modal, message } from 'antd';
+import { App, Button, Form, Input, InputNumber } from 'antd';
 import React from 'react';
 import { CreateSettlementRequestInput, TransactionType } from 'types';
 
 interface SettlementComponentProps {}
 
 const SettlementComponent: React.FC<SettlementComponentProps> = () => {
+  const { modal, message } = App.useApp();
   const { data: myPendingSettlementRequestResponse } = useQuery(
     mySettlementRequestQueryOptions
   );
@@ -63,7 +64,7 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
       return;
     }
     if (isExistedSettlementRequest) {
-      Modal.confirm({
+      modal.confirm({
         title: '출금 재요청',
         content: (
           <pre>{`이미 출금 요청이 진행중입니다.\n출금을 재요청하시겠습니까?`}</pre>
@@ -73,7 +74,7 @@ const SettlementComponent: React.FC<SettlementComponentProps> = () => {
         },
       });
     } else {
-      Modal.confirm({
+      modal.confirm({
         title: '출금 요청',
         content: '출금 요청을 하시겠습니까?',
         onOk: () => {

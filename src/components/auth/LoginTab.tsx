@@ -6,18 +6,16 @@ import {
   KAKAO_REST_API,
 } from '@lib/constants';
 import { useLoginMutation } from '@lib/graphql/hook/useUser';
-import { Button, Divider, Input, message } from 'antd';
+import { App, Button, Divider, Input } from 'antd';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { LoginInput } from 'types';
 import GoogleIconSVG from '@mui/icons-material/Google';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
 import Link from 'next/link';
-import palette from '@styles/palette';
 
 const LoginTabBlock = styled.form`
   .login-error-text {
@@ -70,6 +68,7 @@ const LoginTabBlock = styled.form`
 interface LoginTabProps {}
 
 const LoginTab: React.FC<LoginTabProps> = () => {
+  const { message } = App.useApp();
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const router = useRouter();
   const [loginMutation] = useLoginMutation();

@@ -4,8 +4,7 @@ import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { useChangePasswordAfterVerifyingMutation } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +20,7 @@ interface ChangePasswordForm {
 interface PasswordProps {}
 
 const Password: NextPage<PasswordProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [changePasswordMutation] = useChangePasswordAfterVerifyingMutation();
   useInput('');

@@ -2,14 +2,14 @@ import { useSendFindPasswordMail } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
-import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
 interface FindPasswordFormProps {}
 
 const FindPasswordForm: React.FC<FindPasswordFormProps> = () => {
+  const { message } = App.useApp();
   const { value: email, onChange: onEmailChange } = useInput('');
   const [disabledState, setDisabledState] = useState(false);
   const [sendFindPasswordMailMutation] = useSendFindPasswordMail();

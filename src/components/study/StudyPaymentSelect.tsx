@@ -3,7 +3,7 @@ import { useCheckDiscountCode } from '@lib/graphql/hook/useDiscount';
 import useInput from '@lib/hooks/useInput';
 import { makeMoneyString } from '@lib/utils/utils';
 import AttachMoneyIcon from '@assets/svg/won_sign.svg';
-import { Button, Input, Select, message } from 'antd';
+import { Button, Input, Select, App } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -69,6 +69,7 @@ const StudyPaymentSelectBlock = styled.div`
 interface StudyPaymentSelectProps {}
 
 const StudyPaymentSelect: React.FC<StudyPaymentSelectProps> = ({}) => {
+  const { message } = App.useApp();
   const [price, setPrice] = useState(0);
   const { handlePayment } = usePayment();
   const { value: discountCode, onChange: onChangeDiscountCode } = useInput('');

@@ -1,4 +1,4 @@
-import { Modal, message } from 'antd';
+import { Modal, App } from 'antd';
 import { RcFile, UploadProps } from 'antd/es/upload';
 import {
   CloseCircleOutlined,
@@ -84,6 +84,7 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   editorPlaceholder = '',
   defaultImgUrl = '',
 }) => {
+  const { message } = App.useApp();
   const [isImagePreviewModalOpen, setIsImagePreviewModalOpen] = useState(false);
   const [uploadImageLoading, setUploadImageLoading] = useState(false);
   const [imgUrl, setImgUrl] = useState<string>(defaultImgUrl);

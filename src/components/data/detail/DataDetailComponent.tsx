@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Card, message } from 'antd';
+import { Button, Card, App } from 'antd';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
 import { useDeletePost, useLazyReadPost } from '@lib/graphql/hook/usePost';
@@ -96,6 +96,7 @@ const DataDetailComponentBlock = styled.div`
 interface DataDetailComponentProps {}
 
 const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const [readPost] = useLazyReadPost();
   const [editPostLike] = useEditPostLike();

@@ -1,6 +1,6 @@
 import { useEditExam } from '@lib/graphql/hook/useExam';
 import { handleError } from '@lib/utils/utils';
-import { Button, Modal, ModalProps, Switch, message } from 'antd';
+import { Button, Modal, ModalProps, Switch,App } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -25,6 +25,7 @@ interface ExamSettingModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const ExamSettingModal: React.FC<ExamSettingModalProps> = (props) => {
+  const { message } = App.useApp();
   const { setIsApproved, isApproved, examId, handleDeleteExam, ...modalProps } =
     props;
   const [editExam, { loading: editExamLoading }] = useEditExam();

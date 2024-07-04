@@ -4,8 +4,7 @@ import {
   useEmailVerification,
   useRegisterMutation,
 } from '@lib/graphql/hook/useUser';
-import palette from '@styles/palette';
-import { Button, Checkbox, Input, message } from 'antd';
+import { App, Button, Checkbox, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
@@ -16,6 +15,7 @@ import BasicBox from '@components/common/box/BasicBox';
 import { termsCondition } from '@lib/constants/termsCondition';
 
 const Register = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [emailVerificateMutation] = useEmailVerification();
   const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);

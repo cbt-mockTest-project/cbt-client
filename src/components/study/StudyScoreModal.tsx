@@ -1,12 +1,10 @@
-import useQuestions from '@lib/hooks/useQuestions';
-import { Button, Modal } from 'antd';
+import { App, Button, Modal } from 'antd';
 import { ModalProps } from 'antd/lib';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { STUDY_STATE_ICON } from './study';
-import { MockExamQuestion, QuestionState } from 'types';
+import { QuestionState } from 'types';
 import palette from '@styles/palette';
-import SwiperCore from 'swiper';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 
@@ -66,11 +64,12 @@ interface StudyScoreModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const StudyScoreModal: React.FC<StudyScoreModalProps> = (props) => {
+  const { modal } = App.useApp();
   const { onClickItem, ...modalProps } = props;
   const questions = useAppSelector((state) => state.mockExam.questions);
   const { handleResetQuestionState } = useQuestionsScore();
   const handleResetScore = async () => {
-    Modal.confirm({
+    modal.confirm({
       title: '점수 초기화',
       content: '점수를 초기화 하시겠습니까?',
       onOk: handleResetQuestionState,

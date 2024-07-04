@@ -7,10 +7,9 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { Button, Modal, Tooltip } from 'antd';
+import { App, Button, Tooltip } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import StudyScoreModal from './StudyScoreModal';
 import { responsive } from '@lib/utils/responsive';
 import {
@@ -142,6 +141,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   additionalControlButton,
   hasScoreTable = true,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
@@ -248,7 +248,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               type="primary"
               onClick={() => {
                 delete router.query.activeIndex;
-                Modal.confirm({
+                modal.confirm({
                   title: '학습을 종료하시겠습니까?',
                   okText: '종료',
                   cancelText: '취소',

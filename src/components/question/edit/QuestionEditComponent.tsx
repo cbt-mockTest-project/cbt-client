@@ -5,7 +5,7 @@ import {
 } from '@lib/graphql/hook/useExamQuestion';
 import { handleError } from '@lib/utils/utils';
 import EditorStyle from '@styles/editorStyle';
-import { Button, message, UploadFile } from 'antd';
+import { Button, App, UploadFile } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import LinkedQuestionIdsBox from '../LinkedQuestionIdsBox copy';
 interface QuestionEditComponentProps {}
 
 const QuestionEditComponent: React.FC<QuestionEditComponentProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const { handleSubmit, setValue, getValues, register, watch, control } =
     useForm<CreateMockExamQuestionInput>();

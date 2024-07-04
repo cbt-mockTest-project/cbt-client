@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { LoginInput } from 'types';
@@ -22,6 +22,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
+  const { message } = App.useApp();
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const router = useRouter();
   const [loginMutation] = useLoginMutation();

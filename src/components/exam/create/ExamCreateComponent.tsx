@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ExamCreateHeader from './ExamCreateHeader';
-import palette from '@styles/palette';
 import { responsive } from '@lib/utils/responsive';
 import TextInput from '@components/common/input/TextInput';
 import { FormProvider, useForm } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
 import ExamCreateCardList from './ExamCreateCardList';
-import { message } from 'antd';
+import { App } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, pick } from 'lodash';
 import { useLazyReadMockExam } from '@lib/graphql/hook/useExam';
@@ -54,6 +53,7 @@ const ExamCreateComponentBlock = styled.div`
 interface ExamCreateComponentProps {}
 
 const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const { handleSaveExam, handleDeleteExam, saveExamLoading } =
     useSaveExamHandler();

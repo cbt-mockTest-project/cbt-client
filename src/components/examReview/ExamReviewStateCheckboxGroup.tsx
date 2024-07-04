@@ -1,4 +1,4 @@
-import { Button, Checkbox, message } from 'antd';
+import { Button, Checkbox, App } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
@@ -44,6 +44,7 @@ interface ExamReviewStateCheckboxGroupProps {
 const ExamReviewStateCheckboxGroup: React.FC<
   ExamReviewStateCheckboxGroupProps
 > = ({ setFetchQuestionsLoading, fetchQuestions, examIds }) => {
+  const { message } = App.useApp();
   const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
   const router = useRouter();

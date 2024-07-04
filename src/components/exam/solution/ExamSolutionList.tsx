@@ -5,16 +5,13 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { handleError, removeHtmlTag } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import palette from '@styles/palette';
-import { message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
-import { QuestionFeedbackType, QuestionState } from 'types';
-import { checkboxOption } from 'customTypes';
+import { QuestionFeedbackType } from 'types';
 import { QuestionListType } from '@modules/redux/slices/exam';
 import EditorStyle from '@styles/editorStyle';
 
@@ -39,45 +36,12 @@ interface ExamSolutionListProps {
 }
 
 const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
-  question,
-  isSolutionAllHide,
   isDetailPage = false,
 }) => {
-  const [currentQuestion, setCurrentQuestion] =
-    useState<ExamQuestionType>(question);
-  const [editBookmark] = useEditQuestionBookmark();
-  const [isSolutionHide, setIsSolutionHide] = useState<boolean>(false);
-  const [bookmarkState, setBookmarkState] = useState(false);
-  const { value: commentModalState, onToggle: onToggleCommentModal } =
-    useToggle();
-  const { value: shareModalState, onToggle: onToggleShareModal } = useToggle();
-  const {
-    value: reportModalState,
-    setValue: setReportModalState,
-    onToggle: onToggleReportModal,
-  } = useToggle();
-  const [createFeedBack] = useCreateQuestionFeedBack();
-  const [changeQuestionState] = useChangeQuestionState();
-  const reportValue = useRef({
-    content: '',
-    type: QuestionFeedbackType.Public,
-  });
+  const { value: commentModalState } = useToggle();
+  const { value: reportModalState } = useToggle();
 
   const dispatch = useAppDispatch();
-  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
-  const { data: meQuery } = useMeQuery();
-
-  useEffect(() => {
-    setIsSolutionHide(isSolutionAllHide);
-  }, [isSolutionAllHide]);
-
-  // useEffect(() => {
-  //   if (currentQuestion.mockExamQuestionBookmark.length >= 1) {
-  //     setBookmarkState(true);
-  //   } else {
-  //     setBookmarkState(false);
-  //   }
-  // }, [currentQuestion.mockExamQuestionBookmark]);
 
   useEffect(() => {
     if (reportModalState || commentModalState) {
@@ -89,113 +53,6 @@ const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
       document.body.style.overflow = 'unset';
     };
   }, [reportModalState, commentModalState]);
-  const openReportModal = () => {
-    if (!meQuery?.me.ok) {
-      return openLoginModal();
-    }
-    setReportModalState(true);
-  };
-
-  const requestChangeQuestionState = async (state: checkboxOption['value']) => {
-    try {
-      const res = await changeQuestionState({
-        variables: {
-          input: {
-            questionId: currentQuestion.id,
-            state: state as QuestionState,
-          },
-        },
-      });
-      if (res.data?.createOrUpdateMockExamQuestionState.ok) {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  const requestReport = async () => {
-    const content = reportValue.current.content;
-    const type = reportValue.current.type;
-    if (content.length <= 4) {
-      return message.warning('5글자 이상 입력해주세요.');
-    }
-    if (content) {
-      const questionId = currentQuestion.id;
-      const res = await createFeedBack({
-        variables: { input: { type, content, questionId } },
-      });
-      if (res.data?.createMockExamQuestionFeedback.ok) {
-        const newFeedback = res.data.createMockExamQuestionFeedback.feedback;
-        const newQuestion = {
-          ...currentQuestion,
-          mockExamQuestionFeedback: [
-            ...currentQuestion.mockExamQuestionFeedback,
-            newFeedback,
-          ],
-        };
-        message.success('답안에 추가됐습니다.');
-        // refetch();
-        setCurrentQuestion(newQuestion as QuestionListType[number]);
-        setReportModalState(false);
-        return;
-      }
-      return message.error({
-        content: res.data?.createMockExamQuestionFeedback.error,
-      });
-    }
-  };
-  const requestEditBookmark = async () => {
-    const prevBookmarkState = bookmarkState;
-    const rollbackBookmarkState = () => {
-      if (prevBookmarkState) {
-        setBookmarkState(true);
-        message.error('문제 저장에 실패했습니다.');
-      }
-      if (!prevBookmarkState) {
-        setBookmarkState(false);
-        message.error('문제 저장 해제에 실패했습니다.');
-      }
-    };
-    try {
-      if (!meQuery?.me.ok) {
-        return openLoginModal();
-      }
-      if (bookmarkState) {
-        setBookmarkState(false);
-      }
-      if (!bookmarkState) {
-        setBookmarkState(true);
-      }
-      const res = await editBookmark({
-        variables: { input: { questionId: currentQuestion.id } },
-      });
-      if (!res.data?.editMockExamQuestionBookmark.ok) {
-        rollbackBookmarkState();
-        return message.error(res.data?.editMockExamQuestionBookmark.error);
-      }
-    } catch (e) {
-      rollbackBookmarkState();
-      handleError(e);
-    }
-  };
-
-  const onToggleSolutionHide = () => {
-    setIsSolutionHide(!isSolutionHide);
-  };
-
-  const onShareAction = () => {
-    if (window && (window as any)?.Share) {
-      const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${currentQuestion.id}`;
-      return (window as any).Share.postMessage(questionPageLink);
-    }
-    onToggleShareModal();
-  };
-
-  useEffect(() => {
-    setCurrentQuestion(question);
-  }, [question]);
 
   return (
     <ExamSolutionListContainer

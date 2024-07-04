@@ -1,11 +1,10 @@
-import ConfirmModal from '@components/common/modal/ConfirmModal';
 import { useDeleteUser, useLogoutMutation } from '@lib/graphql/hook/useUser';
 import useMyInfo from '@lib/hooks/useMyInfo';
 import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, Input, InputRef, Upload, UploadProps, message } from 'antd';
+import { App, Button, Input, InputRef, Upload, UploadProps } from 'antd';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const MyProfileTabBlock = styled.div`
@@ -61,6 +60,7 @@ const MyProfileTabBlock = styled.div`
 interface MyProfileTabProps {}
 
 const MyProfileTab: React.FC<MyProfileTabProps> = () => {
+  const { message, modal } = App.useApp();
   const {
     me,
     handleCheckPassword,
@@ -70,7 +70,6 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
     handleUpdateProfileImg,
   } = useMyInfo();
   const [deleteUserMutation] = useDeleteUser();
-  const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false);
   const nicknameInputRef = React.useRef<InputRef>(null);
   const [logoutMutation] = useLogoutMutation();
   const checkPasswordInputRef = React.useRef<InputRef>(null);
@@ -121,6 +120,14 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
       await handleUpdateProfileImg(file);
       setUploading(false);
     },
+  };
+
+  const onClickWithdrawal = () => {
+    modal.confirm({
+      title: '탈퇴하시겠습니까?',
+      content: '탈퇴시 데이터는 복구할 수 없습니다.',
+      onOk: () => requestWithdrawal(),
+    });
   };
 
   if (!me) return null;
@@ -222,20 +229,10 @@ const MyProfileTab: React.FC<MyProfileTabProps> = () => {
       <Button onClick={handleLogout}>로그아웃</Button>
       <button
         className="my-profile-tab-withdrawal-button"
-        onClick={() => setIsWithdrawalModalOpen(true)}
+        onClick={onClickWithdrawal}
       >
         탈퇴하기
       </button>
-      <ConfirmModal
-        open={isWithdrawalModalOpen}
-        confirmLabel="탈퇴하기"
-        content={
-          <pre>{`탈퇴시 데이터는 복구할 수 없으며,\n재가입이 불가능합니다.\n탈퇴 하시겠습니까?`}</pre>
-        }
-        onConfirm={requestWithdrawal}
-        onClose={() => setIsWithdrawalModalOpen(false)}
-        onCancel={() => setIsWithdrawalModalOpen(false)}
-      />
     </MyProfileTabBlock>
   );
 };

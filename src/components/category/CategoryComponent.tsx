@@ -1,6 +1,6 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { MenuProps, Modal, Skeleton } from 'antd';
+import { App, MenuProps, Skeleton } from 'antd';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ExamSource } from 'types';
@@ -20,6 +20,7 @@ import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
 import CategoryUtilButtonWrapper from './CategoryUtilButtonWrapper';
 import CategoryHiddenExamList from './CategoryHiddenExamList';
 import useCheckHasCategoryAccess from './hooks/useCheckHasCategoryAccess';
+import Modal from 'antd/lib/modal/Modal';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -80,6 +81,7 @@ const CategoryComponentBlock = styled.div`
 interface CategoryComponentProps {}
 
 const CategoryComponent: React.FC<CategoryComponentProps> = () => {
+  const { modal } = App.useApp();
   const theme = useTheme();
   const { handleFilterExams, handleDeleteCategory } = useExamCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
@@ -130,7 +132,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = () => {
         <button
           style={{ color: theme.color('colorText') }}
           onClick={(e) => {
-            Modal.confirm({
+            modal.confirm({
               title: '정말로 삭제하시겠습니까?',
               onOk: () => handleDeleteCategory(categoryId),
             });

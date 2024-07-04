@@ -7,13 +7,10 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { dataActions } from '@modules/redux/slices/data';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { Clear } from '@mui/icons-material';
 import palette from '@styles/palette';
-import { Button, Card, Input, message } from 'antd';
+import { Button, Card, App } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -85,6 +82,7 @@ const DataDetailComment: React.FC<DataDetailCommentProps> = ({
   commentList,
   postId,
 }) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
   const [commentValue, setCommentValue] = useState('');

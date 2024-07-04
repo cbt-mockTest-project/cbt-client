@@ -14,7 +14,7 @@ import useBootpay from '@lib/hooks/useBootpay';
 import { checkRole } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useRef } from 'react';
 import shortid from 'shortid';
 import { CreateCategoryPointHistoryInput, DiscountCodeStatus } from 'types';
@@ -29,6 +29,7 @@ interface handlePaymentParams {
 }
 
 const usePayment = () => {
+  const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const createdRoleId = useRef(0);

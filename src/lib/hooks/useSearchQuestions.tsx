@@ -11,12 +11,13 @@ import {
 import { handleError } from '@lib/utils/utils';
 import { initializeApollo } from '@modules/apollo';
 import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useRouter } from 'next/router';
 import { EditMockExamQuestionBookmarkInput } from 'types';
 import { queryClient } from '../../../pages/_app';
 
 const useSearchQuestions = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const apolloClient = initializeApollo({}, '');
   const keyword = router.query.q;

@@ -2,8 +2,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import useRoleCheck from '@lib/hooks/useRoleCheck';
 import { responsive } from '@lib/utils/responsive';
 import { Clear, DoneAll } from '@mui/icons-material';
-import palette from '@styles/palette';
-import { Button, Modal } from 'antd';
+import { App, Button } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StudyPaymentSelect from './StudyPaymentSelect';
@@ -89,6 +88,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
   examId,
   examIds,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
   const localStorage = new LocalStorage();
@@ -139,7 +139,7 @@ const StudyPaymentGuard: React.FC<StudyPaymentGuardProps> = ({
             role="button"
             className="study-payment-exit-button"
             onClick={() => {
-              Modal.confirm({
+              modal.confirm({
                 title: '페이지를 나가시겠습니까?',
                 onOk() {
                   const lastVisitedCategory = localStorage.get(

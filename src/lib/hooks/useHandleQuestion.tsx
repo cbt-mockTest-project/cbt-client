@@ -16,7 +16,7 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from './useQuestionFeedback';
-import { message } from 'antd';
+import { App } from 'antd';
 import {
   useDeleteQuestionFeedback,
   useEditQuestionFeedback,
@@ -31,7 +31,7 @@ interface UseHandleQuestionProps {
 }
 
 const useHandleQuestion = ({ defaultQuestion }: UseHandleQuestionProps) => {
-  const dispatch = useDispatch();
+  const { message } = App.useApp();
   const [question, setQuestion] = useState(defaultQuestion);
   const [changeQuestionState] = useChangeQuestionState();
   const [addQuestionFeedbackMutation] = useCreateQuestionFeedBack();

@@ -1,8 +1,7 @@
 import useExamCategory from '@lib/hooks/useExamCategory';
 import useStorage from '@lib/hooks/useStorage';
 import { replaceSpaceSlashAndSpecialCharsToHyphen } from '@lib/utils/utils';
-import palette from '@styles/palette';
-import { Input, Modal, ModalProps, Radio, message } from 'antd';
+import { Input, Modal, ModalProps, Radio, App } from 'antd';
 import { StorageType } from 'customTypes';
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
@@ -32,6 +31,7 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
+  const { message } = App.useApp();
   const theme = useTheme();
   const { createCategoryLoading, handleCreateCategory } = useStorage(
     props.storageType

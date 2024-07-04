@@ -1,5 +1,5 @@
 import { updateRevenueRequestFormMutation } from '@lib/mutation/revenueRequestForm';
-import { Button, Input, Modal } from 'antd';
+import { App, Button, Input } from 'antd';
 import React, { useState } from 'react';
 
 interface RevenueRequestReasonProps {
@@ -11,10 +11,11 @@ const RevenueRequestReason: React.FC<RevenueRequestReasonProps> = ({
   defaultReason,
   id,
 }) => {
+  const { modal } = App.useApp();
   const [isEditing, setIsEditing] = useState(false);
   const [reason, setReason] = useState(defaultReason);
   const onSave = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '수익창출 신청 사유 변경',
       content: '수익창출 신청 사유를 변경하시겠습니까?',
       onOk: async () => {

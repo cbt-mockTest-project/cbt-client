@@ -2,7 +2,7 @@ import { FeedbackTypeMap } from '@lib/constants/feedback';
 import { convertServerTimeToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
-import { Dropdown, MenuProps, Modal, Tag } from 'antd';
+import { App, Dropdown, MenuProps, Tag } from 'antd';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import {
@@ -158,6 +158,7 @@ const SolutionModeFeedbackListItem: React.FC<
   deleteFeedback,
   updateFeedbackRecommendation,
 }) => {
+  const { modal } = App.useApp();
   const theme = useTheme();
   const [currentFeedback, setCurrentFeedback] = useState('');
   const { data: meQuery } = useMeQuery();
@@ -172,7 +173,7 @@ const SolutionModeFeedbackListItem: React.FC<
           style={{ color: theme.color('colorText') }}
           onClick={(e) => {
             e.stopPropagation();
-            Modal.confirm({
+            modal.confirm({
               title: '정말로 삭제하시겠습니까?',
               onOk: () => deleteFeedback({ question, feedback }),
             });

@@ -5,8 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
 import ExamCreateEditor from './ExamCreateEditor';
-import palette from '@styles/palette';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
@@ -98,6 +97,7 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
   question,
   index,
 }) => {
+  const { message } = App.useApp();
   const { setValue, getValues } = useFormContext<CreateExamForm>();
   const handleEditorTextChange = (
     value: string,

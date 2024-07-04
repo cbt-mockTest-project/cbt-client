@@ -1,6 +1,6 @@
 import { useSendFindPasswordMail } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -17,6 +17,7 @@ const FindPasswordTabBlock = styled.div`
 interface FindPasswordTabProps {}
 
 const FindPasswordTab: React.FC<FindPasswordTabProps> = () => {
+  const { message } = App.useApp();
   const { value: email, onChange: onEmailChange } = useInput('');
   const [sendFindPasswordMailMutation, { loading: sendFindPasswordLoading }] =
     useSendFindPasswordMail();

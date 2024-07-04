@@ -9,7 +9,7 @@ import {
 import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
 import useToggle from '@lib/hooks/useToggle';
 import { responsive } from '@lib/utils/responsive';
-import { Button, Checkbox, message } from 'antd';
+import { Button, Checkbox, App } from 'antd';
 import Select, { DefaultOptionType } from 'antd/lib/select';
 import { checkboxOption } from 'customTypes';
 import { shuffle } from 'lodash';
@@ -32,6 +32,7 @@ export const states: checkboxOption[] = [
 ];
 
 const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
+  const { message } = App.useApp();
   const { data: examTitleAndIdQuery, loading: loadingExamTitleAndId } =
     useReadExamTitleAndIdByState();
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([]);
@@ -182,7 +183,7 @@ const ReviewNoteComponent: React.FC<ReviewNoteComponentProps> = () => {
             />
             {(index === 0 || index === 2) && (
               <div className="bookmark-page-google-feed-ad-wrapper">
-                <GoogleAd  />
+                <GoogleAd />
               </div>
             )}
           </div>

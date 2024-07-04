@@ -1,6 +1,6 @@
 import useRevenueRequestForm from '@lib/hooks/useRevenueRequestForm';
 import { handleError } from '@lib/utils/utils';
-import { Modal, ModalProps, message } from 'antd';
+import { App, Modal, ModalProps } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ interface RequestRevenueModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const RequestRevenueModal: React.FC<RequestRevenueModalProps> = (props) => {
+  const { message } = App.useApp();
   const { onClose, categoryId, ...modalProps } = props;
   const { useCreateRevenueRequestForm } = useRevenueRequestForm();
   const createRevenueRequestForm = useCreateRevenueRequestForm(categoryId);

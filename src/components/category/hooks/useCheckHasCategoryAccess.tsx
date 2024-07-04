@@ -8,10 +8,11 @@ import {
   CheckHasCategoryAccessMutationVariables,
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { SessionStorage } from '@lib/utils/sessionStorage';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useRouter } from 'next/router';
 
 const useCheckHasCategoryAccess = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
 

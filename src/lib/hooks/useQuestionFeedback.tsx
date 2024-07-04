@@ -7,7 +7,7 @@ import {
 } from '@lib/graphql/hook/useQuestionFeedback';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { coreActions } from '@modules/redux/slices/core';
-import { message } from 'antd';
+import { App } from 'antd';
 import { cloneDeep } from 'lodash';
 import { useDispatch } from 'react-redux';
 import {
@@ -45,6 +45,7 @@ export interface UpdateFeedbackRecommendationInput extends QuestionAndFeedback {
 }
 
 const useQuestionFeedback = () => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const [deleteFeedbackMutaion] = useDeleteQuestionFeedback();

@@ -10,7 +10,7 @@ import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { message } from 'antd';
+import { App } from 'antd';
 import React, { useState } from 'react';
 import { CommentCardOption, CommentCardProps } from './CommentCard.interface';
 import CommentCardView from './CommentCardView';
@@ -24,6 +24,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
   option,
   className,
 }) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const { value: content, onChange: onChangeContent } = useInput(
     option.content

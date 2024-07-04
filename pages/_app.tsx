@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, message } from 'antd';
+import { ConfigProvider, App as AntApp } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -44,6 +44,7 @@ export const queryClient = new QueryClient();
 
 const App = ({ Component, pageProps }: AppProps<any>) => {
   const router = useRouter();
+  const { message } = AntApp.useApp();
   const cookies = (pageProps as any)['cookies'];
   const theme = cookies?.['theme'];
   const { store, props } = wrapper.useWrappedStore(pageProps);

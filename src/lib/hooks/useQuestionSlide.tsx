@@ -1,9 +1,10 @@
-import { Modal } from 'antd';
+import { App } from 'antd';
 import useCurrentQuestionIndex from './useCurrentQuestionIndex';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 const useQuestionSlide = () => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const activeIndex = useMemo(() => {
     if (router.query.activeIndex === undefined) return 1;
@@ -12,7 +13,7 @@ const useQuestionSlide = () => {
   const { checkIsLastQuestion } = useCurrentQuestionIndex();
   const handleSlideNext = (questionLength: number) => {
     if (checkIsLastQuestion(questionLength)) {
-      Modal.confirm({
+      modal.confirm({
         title: '학습을 종료하시겠습니까?',
         okText: '종료',
         cancelText: '취소',
