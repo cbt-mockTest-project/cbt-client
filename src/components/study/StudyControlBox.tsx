@@ -61,14 +61,14 @@ const StudyControlBoxBlock = styled.div`
       margin: auto 10px;
       font-size: 30px;
       border-style: dashed;
-      border-color: ${palette.colorBorder};
+      border-color: ${({ theme }) => theme.color('colorBorder')};
     }
   }
   .study-control-button {
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.colorBorder};
-    color: ${palette.colorText};
+    border: 2px solid ${({ theme }) => theme.color('colorBorder')};
+    color: ${({ theme }) => theme.color('colorText')};
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -86,8 +86,8 @@ const StudyControlBoxBlock = styled.div`
     gap: 10px;
   }
   .study-control-button.active {
-    border-color: ${palette.antd_blue_02};
-    color: ${palette.antd_blue_02};
+    border-color: ${({ theme }) => theme.color('colorPrimary')};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .study-question-card-answer {
     word-break: break-all;

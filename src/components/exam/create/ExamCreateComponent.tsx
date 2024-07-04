@@ -17,7 +17,7 @@ import { SettingOutlined } from '@ant-design/icons';
 import ExamSettingModal from './ExamSettingModal';
 
 const ExamCreateComponentBlock = styled.div`
-  background-color: ${palette.colorContainerBg};
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
   .exam-create-body {
     max-width: 1280px;
     margin: 0 auto;
@@ -40,7 +40,7 @@ const ExamCreateComponentBlock = styled.div`
     transition: color 0.2s ease;
     font-size: 20px;
     &:hover {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
 

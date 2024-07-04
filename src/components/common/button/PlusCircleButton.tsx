@@ -4,8 +4,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const PlusCircleButtonBlock = styled.div`
-  color: ${palette.gray_700};
-  border: 1px dashed ${palette.gray_700};
+  color: ${({ theme }) => theme.color('colorTextTertiary')};
+  border: 1px dashed ${({ theme }) => theme.color('colorTextTertiary')};
   width: 30px;
   height: 30px;
   display: flex;
@@ -16,8 +16,8 @@ const PlusCircleButtonBlock = styled.div`
   border-radius: 50%;
   transition: 0.2s all ease-in;
   &:hover {
-    border-color: ${palette.antd_blue_02};
-    color: ${palette.antd_blue_02};
+    border-color: ${({ theme }) => theme.color('colorPrimary')};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   svg {
     font-size: 16px;

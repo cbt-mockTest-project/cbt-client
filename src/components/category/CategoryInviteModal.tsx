@@ -19,7 +19,7 @@ const CategoryInviteModalBlock = styled(Modal)`
   }
   .category-invite-modal-desc {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .category-invite-modal-list-item-wrapper {
     display: flex;

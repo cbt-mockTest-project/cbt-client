@@ -40,7 +40,7 @@ const CategoryReviewModalBlock = styled(Modal)`
         font-size: 14px;
         font-weight: 600;
 
-        color: ${palette.colorSubText};
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
       }
       .category-review-modal-my-evaluation-top-wrapper {
         display: flex;
@@ -53,7 +53,7 @@ const CategoryReviewModalBlock = styled(Modal)`
             cursor: pointer;
             transition: color 0.2s linear;
             :hover {
-              color: ${palette.antd_blue_02};
+              color: ${({ theme }) => theme.color('colorPrimary')};
             }
           }
         }

@@ -127,7 +127,7 @@ const ExamHistoryContainer = styled.div`
       border-bottom: 1px solid ${palette.gray_200};
     }
     .mypage-exam-list-date {
-      color: ${palette.gray_700};
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
     }
 
     .mypage-exam-list-button-wrapper {

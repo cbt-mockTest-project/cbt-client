@@ -43,7 +43,7 @@ const DataRegisterComponentBlock = styled.form`
     transition: all 0.2s ease-in-out;
     cursor: pointer;
     font-size: 14px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     :hover {
       border-color: ${palette.antd_blue_01};
       color: ${palette.antd_blue_01};
@@ -85,7 +85,7 @@ const DataRegisterComponentBlock = styled.form`
   }
   .data-register-uploaded-file-page {
     font-size: 14px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 
   @media (max-width: ${responsive.medium}) {

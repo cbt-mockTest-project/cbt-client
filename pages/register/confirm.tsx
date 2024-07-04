@@ -91,7 +91,7 @@ const ConfirmContainer = styled.form`
   .email-confirm-input-label {
     margin-top: 20px;
     margin-bottom: 5px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 
   button {

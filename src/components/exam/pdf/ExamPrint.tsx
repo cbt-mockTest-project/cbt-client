@@ -80,7 +80,7 @@ const ExamPrintComponentBlock = styled.div`
     width: 105px;
     font-size: 20px;
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .exam-print-question-content {
     background-color: ${palette.blue_100};

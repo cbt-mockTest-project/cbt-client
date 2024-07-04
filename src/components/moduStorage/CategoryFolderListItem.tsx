@@ -54,7 +54,7 @@ const CategoryFolderListItemBlock = styled(Link)`
       justify-content: flex-end;
       align-items: center;
       gap: 5px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
       font-size: 13px;
     }
 
@@ -79,14 +79,14 @@ const CategoryFolderListItemBlock = styled(Link)`
 
       .category-user-profile-image {
         border-radius: 50%;
-        background-color: ${palette.gray_200};
+        background-color: ${({ theme }) => theme.color('colorFillAlter')};
         margin-right: 5px;
       }
 
       .category-exam-count {
         font-size: 12px;
         font-weight: bold;
-        color: ${palette.colorSubText};
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
       }
     }
   }
@@ -113,7 +113,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   handleToggleBookmark,
   className = '',
 }) => {
-  const router = useRouter();
   const { handleCheckLogin, user } = useAuth();
   if (!category) return null;
   return (

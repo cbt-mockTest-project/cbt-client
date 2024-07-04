@@ -238,7 +238,7 @@ const ManageFeedbackComponentContainer = styled.div`
   }
   .manage-feedback-label {
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .manage-feedback-filter-like-count-input {
     width: 65px;

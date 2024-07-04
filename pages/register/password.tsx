@@ -142,7 +142,7 @@ const PasswordContainer = styled.form`
     margin-top: 20px;
   }
   .password-label {
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .password-error-text {
     font-size: 0.9rem;

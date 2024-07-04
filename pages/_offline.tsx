@@ -23,7 +23,7 @@ const OffLinePageBlock = styled.div`
     font-size: 30px;
     text-align: center;
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   @media (max-width: ${responsive.small}) {
     p {

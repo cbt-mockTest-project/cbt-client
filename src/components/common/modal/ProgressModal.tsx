@@ -122,7 +122,7 @@ const ProgressModalContainer = styled.div`
     padding-top: 10px;
     text-align: center;
     font-size: 0.9rem;
-    color: ${palette.antd_blue_02};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .progress-modal-achievement-reset-button {
     margin-top: 20px;

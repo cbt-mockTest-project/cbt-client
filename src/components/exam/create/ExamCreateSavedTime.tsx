@@ -12,7 +12,7 @@ const blinkAnimation = keyframes`
 
 const ExamCreateSavedTimeBlock = styled.div`
   font-size: 12px;
-  color: ${palette.colorSubText};
+  color: ${({ theme }) => theme.color('colorTextSecondary')};
   transition: all 0.3s;
   position: absolute;
   right: 100px;

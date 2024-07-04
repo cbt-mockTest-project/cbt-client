@@ -125,7 +125,7 @@ const LoginFormContainer = styled.form`
   }
   .login-form-label {
     margin-top: 20px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   input {
     min-width: 250px;

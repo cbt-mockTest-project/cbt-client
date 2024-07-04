@@ -92,7 +92,7 @@ const MoveQuestionContainer = styled.div`
     justify-content: content;
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    background-color: ${palette.antd_blue_02};
+    background-color: ${({ theme }) => theme.color('colorPrimary')};
     color: white;
     svg {
       width: 23px;

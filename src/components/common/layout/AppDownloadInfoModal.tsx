@@ -19,7 +19,7 @@ const AppDownloadInfoModalBlock = styled(Modal)`
     svg {
       font-size: 16px;
     }
-    color: ${palette.colorText};
+    color: ${({ theme }) => theme.color('colorText')};
   }
   .app-download-info-modal-ios-guide-wrapper {
     position: relative;

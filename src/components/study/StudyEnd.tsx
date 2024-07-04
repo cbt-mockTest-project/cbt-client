@@ -36,7 +36,7 @@ const StudyEndBlock = styled.div`
     }
     .study-end-header-desc {
       font-size: 16px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
   }
   .study-end-result-wrapper {

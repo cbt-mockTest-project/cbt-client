@@ -52,7 +52,7 @@ const StudyPaymentGuardBlock = styled.div`
     .study-payment-guard-period {
       font-size: 14px;
       font-weight: bold;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
     .study-payment-guard-pay-button {
       width: 160px;

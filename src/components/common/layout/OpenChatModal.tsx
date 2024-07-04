@@ -10,7 +10,7 @@ const OpenChatModalBlock = styled(Modal)`
   }
   .open-chat-modal-desc {
     font-size: 13px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
 `;
 

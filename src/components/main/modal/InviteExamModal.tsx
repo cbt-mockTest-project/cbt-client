@@ -51,7 +51,7 @@ const InviteExamModalBlock = styled(Modal)`
     width: 70%;
   }
   .invited-exam-modal-item-title-username {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     width: 30%;
     text-align: right;
   }

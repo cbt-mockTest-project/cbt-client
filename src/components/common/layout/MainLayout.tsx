@@ -10,7 +10,7 @@ import MobileBottomAppbar from './MobileBottomAppbar';
 const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
   overflow-y: auto;
   overflow-x: hidden;
-  color: ${palette.colorText};
+  color: ${({ theme }) => theme.color('colorText')};
   .main-layout-wrapper {
     display: flex;
     position: relative;
@@ -23,19 +23,19 @@ const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: ${palette.colorBg};
+    background-color: ${({ theme }) => theme.color('colorBgLayout')};
   }
   .main-layout-body-wrapper {
     max-width: 1200px;
     ${(props) =>
       props.type === 'default' &&
       css`
-        border: 1px solid ${palette.colorBorderLight};
+        border: 1px solid ${({ theme }) => theme.color('colorSplit')};
         box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
       `}
     min-height: 750px;
     border-radius: 5px;
-    background-color: ${palette.colorContainerBg};
+    background-color: ${({ theme }) => theme.color('colorBgContainer')};
     height: 100%;
     width: 100%;
   }

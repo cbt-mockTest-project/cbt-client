@@ -33,7 +33,7 @@ const SearchQuestionListItemBlock = styled.div`
     .search-question-box-exam-title {
       font-weight: bold;
       font-size: 12px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
     .search-question-box-wrapper {
       display: flex;

@@ -163,7 +163,7 @@ const CardCategoryItemContainer = styled.li`
   }
   .card-category-modal-list-item-button {
     font-size: 0.9rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     transition: 0.2s;
     :hover {
       color: ${palette.antd_blue_01};

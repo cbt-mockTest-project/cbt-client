@@ -36,7 +36,7 @@ const MyProfileTabBlock = styled.div`
   }
   .my-profile-tab-profile-image-control-desc {
     font-size: 0.8rem;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
     margin-top: 5px;
   }
   .my-profile-tab-input-button-wrapper {
@@ -54,7 +54,7 @@ const MyProfileTabBlock = styled.div`
     text-align: left;
     width: fit-content;
     font-size: 13px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
 `;
 

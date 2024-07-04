@@ -135,7 +135,7 @@ const QuestionCommentComponentContainer = styled.div`
     gap: 40px;
   }
   .my-question-comment-list-item-label {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .my-question-comment-list-item-question-wrapper {
     padding: 10px;

@@ -6,7 +6,6 @@ import useAuth from '@lib/hooks/useAuth';
 import useHomeCategories from '@lib/hooks/useHomeCategories';
 import { MockExamCategory } from 'types';
 import { handleError } from '@lib/utils/utils';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const BookmarkedFolderListBlock = styled.div`
   width: 100%;
@@ -53,7 +52,7 @@ const BookmarkedFolderList: React.FC<BookmarkedFolderListProps> = (props) => {
           type="bookmark"
         />
       ) : (
-        <div className="h-[170px]"></div>
+        <div className="h-[175px]"></div>
       )}
     </BookmarkedFolderListBlock>
   );

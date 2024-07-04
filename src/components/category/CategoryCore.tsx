@@ -32,20 +32,13 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
   const localStorage = new LocalStorage();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
-  const isPrivate = useAppSelector(
-    (state) => !state.examCategory.category.isPublic
-  );
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
-  const categoryAccessDenied = useAppSelector(
-    (state) =>
-      !meQuery?.me.user &&
-      state.examCategory.category &&
-      !state.examCategory.category.isPublic
-  );
+
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
+      fetchCategory(categoryQueryInput);
       updateRecentlyStudiedCategory({
         variables: {
           input: {

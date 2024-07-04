@@ -16,7 +16,7 @@ const StudyHeaderV2Block = styled.div`
   align-items: center;
   .study-header-close-button {
     font-size: 28px;
-    color: ${palette.colorText};
+    color: ${({ theme }) => theme.color('colorText')};
     cursor: pointer;
   }
 `;

@@ -32,7 +32,7 @@ const CategoryHeaderBlock = styled.div`
   .category-creator-label {
     font-size: 14px;
     font-weight: bold;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .category-info {
     display: flex;

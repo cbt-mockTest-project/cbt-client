@@ -31,7 +31,7 @@ const StudyScoreModalBlock = styled(Modal)`
     border-radius: 5px;
     transition: background-color 0.3s;
     &:hover {
-      background-color: ${palette.colorBorderLight};
+      background-color: ${({ theme }) => theme.color('colorSplit')};
     }
     svg {
       position: relative;
@@ -40,7 +40,7 @@ const StudyScoreModalBlock = styled(Modal)`
   }
   .study-score-item.high {
     svg {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
   .study-score-item.low {

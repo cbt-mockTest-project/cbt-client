@@ -309,7 +309,7 @@ const ExamSolutionListContainer = styled.li<ExamSolutionListContainerProps>`
   }
   .solution-page-question-label {
     font-size: 14px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .solution-page-question-detail-link {
     svg {

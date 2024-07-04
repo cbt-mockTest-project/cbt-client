@@ -46,13 +46,13 @@ const DataDetailComponentBlock = styled.div`
     margin-top: 25px;
   }
   .data-detail-info {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .data-detail-info-wrapper {
     display: flex;
     gap: 25px;
     margin-top: 15px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     border-bottom: 2px solid ${palette.gray_100};
     padding-bottom: 15px;
   }

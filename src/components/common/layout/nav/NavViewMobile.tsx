@@ -92,7 +92,7 @@ const NavViewMobileContainer = styled.div`
       margin-left: auto;
       margin-right: 30px;
       margin-top: 10px;
-      color: ${palette.gray_700};
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
     }
     .nav-user-content-notice-button-wrapper {
       position: relative;

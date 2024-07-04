@@ -22,7 +22,7 @@ const EditExamsModalBlock = styled(Modal)`
   .edit-exams-make-button {
     margin-top: 20px;
     svg {
-      color: ${palette.colorText};
+      color: ${({ theme }) => theme.color('colorText')};
     }
   }
   .edit-my-exams-list {

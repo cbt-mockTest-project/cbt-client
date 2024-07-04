@@ -5,7 +5,7 @@ import palette from '@styles/palette';
 import { Input, Modal, ModalProps, Radio, message } from 'antd';
 import { StorageType } from 'customTypes';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { CreateMockExamCategoryInput } from 'types';
 
 const SaveCategoryModalBlock = styled(Modal)`
@@ -32,6 +32,7 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
+  const theme = useTheme();
   const { createCategoryLoading, handleCreateCategory } = useStorage(
     props.storageType
   );
@@ -103,14 +104,24 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         onChange={(e) => setDescription(e.target.value)}
       />
       {!isPublic && (
-        <div className="mt-2 text-gray-500">
+        <div
+          className="mt-2"
+          style={{
+            color: theme.color('colorTextTertiary'),
+          }}
+        >
           * 비공개는 모두CBT내에서의 비공개를 말하며,
           <br />
           구글, 네이버등의 검색엔진에 노출 될 수 있습니다.
         </div>
       )}
       {isPublic && (
-        <div className="mt-2 text-gray-500">
+        <div
+          className="mt-2"
+          style={{
+            color: theme.color('colorTextTertiary'),
+          }}
+        >
           * 암기장을 공개하면 모든 사람들이 볼 수 있습니다.
         </div>
       )}

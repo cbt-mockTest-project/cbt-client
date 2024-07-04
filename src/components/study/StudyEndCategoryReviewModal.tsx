@@ -21,7 +21,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
     }
     .study-end-category-review-modal-desc {
       font-size: 14px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
   }
   .study-end-category-review-modal-inner {
@@ -54,7 +54,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
         font-size: 14px;
         font-weight: 600;
 
-        color: ${palette.colorSubText};
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
       }
       .study-end-category-review-modal-my-evaluation-top-wrapper {
         display: flex;
@@ -67,7 +67,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
             cursor: pointer;
             transition: color 0.2s linear;
             :hover {
-              color: ${palette.antd_blue_02};
+              color: ${({ theme }) => theme.color('colorPrimary')};
             }
           }
         }

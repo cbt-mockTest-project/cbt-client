@@ -639,6 +639,6 @@ const CreateExamComponentContainer = styled.div`
   .create-exam-small-label {
     display: block;
     font-size: 0.9rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 `;

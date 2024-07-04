@@ -7,8 +7,8 @@ const AdBannerInfoModalBlock = styled(Modal)`
   .ad-banner-info-modal-inner-title {
     font-size: 14px;
     padding: 5px 20px;
-    border: 1px solid ${palette.antd_blue_02};
-    color: ${palette.antd_blue_02};
+    border: 1px solid ${({ theme }) => theme.color('colorPrimary')};
+    color: ${({ theme }) => theme.color('colorPrimary')};
     width: fit-content;
     border-radius: 50px;
     margin: 0 auto 0px auto;
@@ -18,7 +18,7 @@ const AdBannerInfoModalBlock = styled(Modal)`
   }
   .ad-banner-info-modal-inner {
     a {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
 `;

@@ -1,7 +1,6 @@
 import { LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
@@ -10,7 +9,6 @@ import { ExamSource } from 'types';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { uniqueId } from 'lodash';
-import HomeCategoriesRefresh from './HomeCategoriesRefresh';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -18,7 +16,7 @@ const HomeFolderListBlock = styled.div`
   flex-direction: column;
   gap: 5px;
   position: relative;
-  height: 170px;
+  height: 175px;
   .home-folder-list-swiper {
     width: 100%;
     margin-top: 15px;
@@ -31,7 +29,7 @@ const HomeFolderListBlock = styled.div`
   }
   .home-folder-sub-title {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .home-folder-list-prev-button,
   .home-folder-list-next-button {

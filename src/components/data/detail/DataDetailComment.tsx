@@ -54,7 +54,7 @@ const DataDetailCommentBlock = styled(Card)`
   }
   .data-detail-comment-date {
     font-size: 13px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .data-detail-comment-content {
     margin-top: 5px;
@@ -66,7 +66,7 @@ const DataDetailCommentBlock = styled(Card)`
   }
   .data-detail-comment-delete-button {
     font-size: 13px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     display: flex;
     align-items: center;
     justify-content: center;

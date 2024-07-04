@@ -15,14 +15,14 @@ const MobileHeaderBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: ${palette.colorContainerBg};
-    border-bottom: 1px solid ${palette.colorBorder};
+    background-color: ${({ theme }) => theme.color('colorBgContainer')};
+    border-bottom: 1px solid ${({ theme }) => theme.color('colorBorder')};
     z-index: 500;
     height: 57px;
     width: 100vw;
     padding: 0px 16px;
     .mobile-menu-button {
-      color: ${palette.colorText};
+      color: ${({ theme }) => theme.color('colorText')};
     }
     .mobile-header-title {
       font-size: 16px;

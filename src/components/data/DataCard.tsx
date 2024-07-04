@@ -40,7 +40,7 @@ const DataCardBlock = styled(Card)`
   }
   .data-card-content-option {
     font-size: 12px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .data-card-price-icon {
     svg {
@@ -53,7 +53,7 @@ const DataCardBlock = styled(Card)`
     height: 10px;
     margin: 0 5px;
     position: relative;
-    border-left: 1.5px solid ${palette.gray_700};
+    border-left: 1.5px solid ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .data-card-content-option-like-count {
     margin-left: 5px;

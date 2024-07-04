@@ -17,8 +17,8 @@ const ExamCreateCardItemBlock = styled.div`
   border-radius: 10px;
   list-style: none;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  border: 1px solid ${palette.colorBorder};
-  background-color: ${palette.colorContainerBg};
+  border: 1px solid ${({ theme }) => theme.color('colorBorder')};
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
   .exam-create-item-number {
     font-size: 18px;
     font-weight: bold;

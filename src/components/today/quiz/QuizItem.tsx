@@ -43,8 +43,8 @@ const QuizItemBlock = styled.div`
   .quiz-item-title-label {
     font-size: 18px;
     font-weight: bold;
-    color: ${palette.colorText};
-    border-bottom: 3px solid ${palette.colorBorder};
+    color: ${({ theme }) => theme.color('colorText')};
+    border-bottom: 3px solid ${({ theme }) => theme.color('colorBorder')};
   }
   .quiz-item-my-answer-wrapper {
     display: flex;

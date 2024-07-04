@@ -1,4 +1,3 @@
-import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { navBottomItems, navItems, navSellerItems } from './layout.constants';
@@ -8,12 +7,10 @@ import CustomNavDivider from './CustomNavDivider';
 import UserAuthBox from './UserAuthBox';
 import AppDownloadInfoModal from './AppDownloadInfoModal';
 import { responsive } from '@lib/utils/responsive';
-import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
 import OpenChatModal from './OpenChatModal';
 import useAuth from '@lib/hooks/useAuth';
 import { UserRole } from 'types';
 import BugReportModal from './BugReportModal';
-import MainViewCount from '@components/main/MainViewCount';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
@@ -48,7 +45,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           router.push(e.key.toString());
         }}
         selectedKeys={[router.pathname]}
-        style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
         items={navItems}
       />
@@ -81,7 +77,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             );
           }
         }}
-        style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
         items={navBottomItems}
         selectedKeys={[]}
@@ -99,7 +94,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
                 return;
               }
             }}
-            style={{ backgroundColor: palette.colorContainerBg }}
             mode="inline"
             items={navSellerItems}
             selectedKeys={[]}
