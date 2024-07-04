@@ -1,7 +1,7 @@
 import palette from '@styles/palette';
 import React from 'react';
 import { HashLoader } from 'react-spinners';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 const HistoryLoaderBlock = styled.div`
   display: flex;
@@ -14,9 +14,10 @@ const HistoryLoaderBlock = styled.div`
 interface HistoryLoaderProps {}
 
 const HistoryLoader: React.FC<HistoryLoaderProps> = () => {
+  const theme = useTheme();
   return (
     <HistoryLoaderBlock>
-      <HashLoader color={palette.antd_blue_02} />
+      <HashLoader color={theme.color('colorPrimary')} />
     </HistoryLoaderBlock>
   );
 };

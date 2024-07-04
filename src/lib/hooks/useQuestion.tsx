@@ -1,12 +1,11 @@
 import {
   useDeleteQuestion,
-  useLazyReadQuestion,
   useReadQuestion,
 } from '@lib/graphql/hook/useExamQuestion';
 import useApolloClient from './useApolloCient';
 import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
-import { message } from 'antd';
+import { App } from 'antd';
 import { handleError } from '@lib/utils/utils';
 import {
   MockExamQuestion,
@@ -27,6 +26,7 @@ import useQuestionFeedback, {
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 
 const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
+  const { message } = App.useApp();
   const { updateCache } = useApolloClient();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();

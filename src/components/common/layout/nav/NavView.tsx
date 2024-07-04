@@ -46,7 +46,7 @@ const NavBlock = styled.div<NavBlockProps>`
     `}
   .nav-item {
     font-size: 0.9rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     cursor: pointer;
     transition: color 0.2s ease-in;
     position: relative;
@@ -86,7 +86,7 @@ const NavBlock = styled.div<NavBlockProps>`
     position: relative;
 
     svg {
-      color: ${palette.gray_700};
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
       transition: color 0.2s ease-in;
     }
     position: relative;
@@ -114,7 +114,7 @@ const NavBlock = styled.div<NavBlockProps>`
     display: flex;
     align-items: center;
     gap: 10px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     cursor: pointer;
     transition: color 0.2s ease-in;
     ${(props) =>

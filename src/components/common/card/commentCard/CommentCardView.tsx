@@ -100,7 +100,7 @@ const CommentCardContainer = styled.div`
     .comment-card-time {
       font-size: 0.8rem;
       font-weight: bold;
-      color: ${palette.gray_700};
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
       margin: 0 10px;
     }
     button {
@@ -193,7 +193,7 @@ const CommentCardContainer = styled.div`
       margin-top: 10px;
       font-size: 0.8rem;
       font-weight: bold;
-      color: ${palette.gray_700};
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
     }
   }
 `;

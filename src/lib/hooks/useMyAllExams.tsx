@@ -6,13 +6,14 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { App } from 'antd';
 import { cloneDeep } from 'lodash';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { MockExam } from 'types';
 
 const useMyAllExams = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [getMyExams] = useLazyGetMyExams();
   const dispatch = useAppDispatch();

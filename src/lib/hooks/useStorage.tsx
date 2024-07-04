@@ -10,7 +10,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { App } from 'antd';
 import { StorageType } from 'customTypes';
 import { cloneDeep, debounce, isEqual } from 'lodash';
 import {
@@ -21,6 +21,7 @@ import {
 import useAuth from './useAuth';
 
 const useStorage = (type: StorageType) => {
+  const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const { handleCheckLogin } = useAuth();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();

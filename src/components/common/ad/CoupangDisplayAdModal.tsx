@@ -31,7 +31,7 @@ const CoupangDisplayAdModalBlock = styled(Modal)`
     gap: 20px;
     div {
       font-size: 12px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
   }
 `;

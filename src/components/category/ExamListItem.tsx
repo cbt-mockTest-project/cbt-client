@@ -3,7 +3,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, Tag } from 'antd';
+import { App, Dropdown, MenuProps, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -26,7 +26,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
     css`
       .exam-list-basic-card {
         position: relative;
-        border-color: ${palette.antd_blue_02};
+        border-color: ${({ theme }) => theme.color('colorPrimary')};
       }
     `}
   .exam-list-item-checkbox {
@@ -74,12 +74,12 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
         top: 1px;
         svg {
           font-size: 18px;
-          color: ${palette.colorText};
+          color: ${({ theme }) => theme.color('colorText')};
         }
         &:hover {
           background-color: ${palette.gray_100};
           svg {
-            color: ${palette.antd_blue_02};
+            color: ${({ theme }) => theme.color('colorPrimary')};
           }
         }
       }
@@ -87,7 +87,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   }
 
   .exam-list-item-bookmark-button {
-    color: ${palette.colorText};
+    color: ${({ theme }) => theme.color('colorText')};
   }
   .exam-list-item-bookmark-button-active {
     color: ${palette.yellow_500};
@@ -97,14 +97,14 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
     flex-shrink: 0;
     width: 30px;
     height: 30px;
-    border: 1px solid ${palette.colorBorder};
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
     display: flex;
     justify-content: center;
     align-items: center;
     &:hover {
-      border-color: ${palette.antd_blue_02};
+      border-color: ${({ theme }) => theme.color('colorPrimary')};
       svg {
-        color: ${palette.antd_blue_02};
+        color: ${({ theme }) => theme.color('colorPrimary')};
       }
     }
   }
@@ -153,6 +153,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   hasRecentlyMark = false,
   recentlyStudyQuestionNumber = 0,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
     useExamCategory();
@@ -172,7 +173,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   );
 
   const handleRemoveExam = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       onOk() {
         handleRemoveExamFromCategory({

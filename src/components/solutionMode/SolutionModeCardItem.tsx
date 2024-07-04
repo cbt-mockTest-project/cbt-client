@@ -6,7 +6,6 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import palette from '@styles/palette';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
@@ -22,7 +21,7 @@ const SolutionModeCardItemBlock = styled.div`
     gap: 24px;
   }
   .solution-mode-question-card {
-    background-color: ${palette.colorContainerBgGrey};
+    background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }
 `;
 

@@ -4,7 +4,7 @@ import {
   useGetCategoryInvitations,
 } from '@lib/graphql/hook/useExamCategoryInvitation';
 import { handleError } from '@lib/utils/utils';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useMemo } from 'react';
 import useApolloClient from './useApolloCient';
 import { GET_CATEGORY_INVITATION } from '@lib/graphql/query/examCategoryInvitationQuery';
@@ -13,6 +13,7 @@ import useStorage from './useStorage';
 import { StorageType } from 'customTypes';
 
 const useManageInvitation = () => {
+  const { message } = App.useApp();
   const { data: getCategoryInvitationResponse } = useGetCategoryInvitations();
   const { refetchCategories } = useStorage(StorageType.BOOKMARK);
   const { updateCache } = useApolloClient();

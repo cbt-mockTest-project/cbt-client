@@ -31,6 +31,6 @@ const MainViewCountContainer = styled.div`
   .home-visit-count-box {
     text-align: right;
     font-size: 0.8rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 `;

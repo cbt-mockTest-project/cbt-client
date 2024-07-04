@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import CategoryFolderListItem from './CategoryFolderListItem';
-import CategoryFolderIncludingAllExams from './CategoryFolderIncludingAllExams';
 
 const CategoryFolderListBlock = styled.ul`
   display: flex;

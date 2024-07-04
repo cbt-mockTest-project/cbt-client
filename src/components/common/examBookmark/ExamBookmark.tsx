@@ -7,8 +7,8 @@ const ExamBookmarkBlock = styled.button<{ isBookmarked: boolean }>`
   svg {
     font-size: 26px;
   }
-  color: ${(props) =>
-    props.isBookmarked ? palette.yellow_500 : palette.colorSubText};
+  color: ${({ isBookmarked, theme }) =>
+    isBookmarked ? palette.yellow_500 : theme.color('colorBorder')};
 `;
 
 interface ExamBookmarkProps {

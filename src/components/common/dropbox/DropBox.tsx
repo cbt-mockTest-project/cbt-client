@@ -52,7 +52,7 @@ const DropBoxContainer = styled.ul`
   li {
     padding: 5px 10px;
     cursor: pointer;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-size: 0.85rem;
     :hover {
       background-color: ${palette.gray_100};

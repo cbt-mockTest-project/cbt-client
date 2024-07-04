@@ -10,13 +10,14 @@ import { READ_POST } from '@lib/graphql/query/postQuery';
 import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { message } from 'antd';
+import { App } from 'antd';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const usePostDetail = () => {
   const router = useRouter();
+  const { message } = App.useApp();
   const [readPost, { data: postQueryOnClientSide }] = useLazyReadPost();
   const [viewPost] = useViewPost();
   const [editPostLike] = useEditPostLike();

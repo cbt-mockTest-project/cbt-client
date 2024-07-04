@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
-import { Skeleton, message } from 'antd';
+import { Skeleton, App } from 'antd';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import { apolloClient } from '@modules/apollo';
@@ -35,6 +35,7 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   isAnswerAllHidden,
   isStaticPage,
 }) => {
+  const { message } = App.useApp();
   const sessionStorage = new SessionStorage();
   const router = useRouter();
   const categoryId = router.query.categoryId;

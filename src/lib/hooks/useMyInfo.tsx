@@ -8,12 +8,13 @@ import {
 import { ME_QUERY } from '@lib/graphql/query/userQuery';
 import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { handleError } from '@lib/utils/utils';
-import { message } from 'antd';
+import { App } from 'antd';
 import { RcFile } from 'antd/lib/upload';
 import { User } from 'types';
 import useApolloClient from './useApolloCient';
 
 const useMyInfo = () => {
+  const { message } = App.useApp();
   const { updateCache } = useApolloClient();
   const [logoutMutation] = useLogoutMutation();
   const [checkPasswordMutation] = useCheckPasswordMutation();

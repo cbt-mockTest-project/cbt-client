@@ -7,7 +7,7 @@ import {
 import { useLazyGetUser } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { Clear } from '@mui/icons-material';
-import { Button, Input, List, Select, message } from 'antd';
+import { Button, Input, List, Select, App } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -45,6 +45,7 @@ interface MyExamInviteModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const MyExamInviteModal: React.FC<MyExamInviteModalProps> = (props) => {
+  const { message } = App.useApp();
   const { categories, ...modalProps } = props;
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);

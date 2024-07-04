@@ -126,7 +126,7 @@ const ExamAchievementResultContainer = styled.div`
     width: 80% !important;
     position: relative;
     top: 3px;
-    color: ${palette.antd_blue_02};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .triangle-icon {
     color: ${palette.yellow_500};

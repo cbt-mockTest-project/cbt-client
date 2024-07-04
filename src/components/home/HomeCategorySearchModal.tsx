@@ -13,7 +13,6 @@ const HomeCategorySearchModalBlock = styled(Modal)`
   .ant-modal-content {
     margin-top: 50px;
     background-color: unset !important;
-    /* box-shadow: unset !important; */
     padding: 0 !important;
     .ant-modal-body {
       margin-top: 30px;

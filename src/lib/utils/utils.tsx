@@ -35,10 +35,6 @@ export const convertStateToIcon = (
 };
 
 export const handleError = async (error: any) => {
-  if (error?.message === 'Forbidden resource') {
-    return message.error({ content: '로그인이 필요합니다' });
-  }
-
   if (
     typeof window !== 'undefined' &&
     window.navigator.userAgent.includes('Googlebot')

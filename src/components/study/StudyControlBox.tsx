@@ -7,10 +7,9 @@ import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { MockExamQuestion, QuestionState } from 'types';
-import { Button, Modal, Tooltip } from 'antd';
+import { App, Button, Tooltip } from 'antd';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import palette from '@styles/palette';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import StudyScoreModal from './StudyScoreModal';
 import { responsive } from '@lib/utils/responsive';
 import {
@@ -61,14 +60,14 @@ const StudyControlBoxBlock = styled.div`
       margin: auto 10px;
       font-size: 30px;
       border-style: dashed;
-      border-color: ${palette.colorBorder};
+      border-color: ${({ theme }) => theme.color('colorBorder')};
     }
   }
   .study-control-button {
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.colorBorder};
-    color: ${palette.colorText};
+    border: 2px solid ${({ theme }) => theme.color('colorBorder')};
+    color: ${({ theme }) => theme.color('colorText')};
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -86,8 +85,8 @@ const StudyControlBoxBlock = styled.div`
     gap: 10px;
   }
   .study-control-button.active {
-    border-color: ${palette.antd_blue_02};
-    color: ${palette.antd_blue_02};
+    border-color: ${({ theme }) => theme.color('colorPrimary')};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .study-question-card-answer {
     word-break: break-all;
@@ -142,6 +141,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
   additionalControlButton,
   hasScoreTable = true,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
@@ -248,7 +248,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               type="primary"
               onClick={() => {
                 delete router.query.activeIndex;
-                Modal.confirm({
+                modal.confirm({
                   title: '학습을 종료하시겠습니까?',
                   okText: '종료',
                   cancelText: '취소',

@@ -15,7 +15,7 @@ const ExamBookmarkComponentBlock = styled.div`
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 15px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .exam-review-question-list {
     display: flex;

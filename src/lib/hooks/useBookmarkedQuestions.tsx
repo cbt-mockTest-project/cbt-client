@@ -3,11 +3,12 @@ import {
   useResetMyQuestionBookmark,
 } from '@lib/graphql/hook/useQuestionBookmark';
 import { handleError } from '@lib/utils/utils';
-import { Modal, message } from 'antd';
+import { App } from 'antd';
 import { useMemo } from 'react';
 import useQuestions from './useQuestions';
 
 const useBookmarkedQuestions = () => {
+  const { modal, message } = App.useApp();
   const { resetQuestions } = useQuestions();
   const [resetBookmark] = useResetMyQuestionBookmark();
   const { data: readExamTitlesQuery, loading: getExamTitlesLoading } =
@@ -35,7 +36,7 @@ const useBookmarkedQuestions = () => {
   }, [readExamTitlesQuery]);
 
   const resetQuestionBookmarks = async () => {
-    Modal.confirm({
+    modal.confirm({
       title: '정말로 저장된 문제를 모두 삭제하시겠습니까?',
       content: '삭제된 문제는 복구할 수 없습니다.',
       okText: '삭제',

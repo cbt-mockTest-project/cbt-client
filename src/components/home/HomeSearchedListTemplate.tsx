@@ -15,10 +15,10 @@ const HomeSearchedListTemplateBlock = styled.div`
     gap: 10px;
     .home-searched-list-template-clear-button {
       cursor: pointer;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
       transition: color 0.2s linear;
       &:hover {
-        color: ${palette.antd_blue_02};
+        color: ${({ theme }) => theme.color('colorPrimary')};
       }
     }
     .home-searched-list-template-title {

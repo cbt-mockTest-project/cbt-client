@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { Modal } from 'antd';
+import { App } from 'antd';
 import { LocalStorage } from '@lib/utils/localStorage';
 import {
   IN_PROGRESS_ANSWERS,
@@ -16,6 +15,7 @@ interface StudyModeCoreProps {
 const StudyModeCore: React.FC<StudyModeCoreProps> = ({
   setHasDefaultAnswers,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
   const tab = router.query.tab as string;
   const localStorage = new LocalStorage();
@@ -34,14 +34,13 @@ const StudyModeCore: React.FC<StudyModeCoreProps> = ({
       setToUrl(url);
       history.pushState(null, '', router.asPath);
       router.replace(router.asPath);
-      Modal.confirm({
+      modal.confirm({
         title: '학습을 중단하시겠습니까?',
         onOk: () => {
           router.push(prevVisitedCategoryOrHomePath);
         },
         onCancel: () => {
           setToUrl('');
-          Modal.destroyAll();
         },
       });
       throw 'Abort route change. Please ignore this error.';
@@ -61,7 +60,7 @@ const StudyModeCore: React.FC<StudyModeCoreProps> = ({
       questions.find((question) => question.id === Number(key))
     );
     if (validAnswers.length === 0) return;
-    Modal.confirm({
+    modal.confirm({
       title: '이전에 작성한 답안이 남아 있습니다.',
       content: '작성중인 답안을 삭제하시겠습니까?',
       okText: '네',

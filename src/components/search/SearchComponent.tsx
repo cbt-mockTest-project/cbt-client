@@ -1,5 +1,5 @@
 import palette from '@styles/palette';
-import { Input, message } from 'antd';
+import { Input, App } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
@@ -15,13 +15,14 @@ const SearchComponentBlock = styled.div`
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 15px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
 `;
 
 interface SearchComponentProps {}
 
 const SearchComponent: React.FC<SearchComponentProps> = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const categoryName = router.query.categoryName as string;
   const { questions } = useSearchQuestions();

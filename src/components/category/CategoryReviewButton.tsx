@@ -16,7 +16,7 @@ const CategoryReviewButtonBlock = styled.div`
   cursor: pointer;
   .category-review-button-icon {
     cursor: pointer;
-    color: ${palette.colorBorder};
+    color: ${({ theme }) => theme.color('colorBorder')};
   }
   .category-review-button-icon.active {
     color: ${palette.yellow_500} !important;
@@ -24,7 +24,7 @@ const CategoryReviewButtonBlock = styled.div`
   .category-review-score {
     font-size: 13px;
     font-weight: 700;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
 `;
 

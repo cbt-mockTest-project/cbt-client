@@ -11,7 +11,7 @@ const QuizCommentBlock = styled.div`
   flex-direction: column;
   gap: 10px;
   .quiz-comment {
-    border-bottom: 1px solid ${palette.colorBorder};
+    border-bottom: 1px solid ${({ theme }) => theme.color('colorBorder')};
     padding-bottom: 10px;
   }
   .quiz-comment:last-child {
@@ -25,7 +25,7 @@ const QuizCommentBlock = styled.div`
     .quiz-comment-date {
       font-weight: bold;
       font-size: 13px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
   }
 

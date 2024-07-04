@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { useEffect } from 'react';
 import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
-import { ConfigProvider, message } from 'antd';
+import { ConfigProvider, App as AntApp } from 'antd';
 import Head from 'next/head';
 import AppInner from '@components/common/container/AppInner';
 import { LocalStorage } from '@lib/utils/localStorage';
@@ -35,11 +35,26 @@ import {
 } from '@lib/constants/displayName';
 import { setCookie } from 'cookies-next';
 import '@styles/global.css';
+import { coreActions } from '@modules/redux/slices/core';
+import { ThemeValue } from 'customTypes';
+import { Provider } from 'react-redux';
+import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
 
 export const queryClient = new QueryClient();
 
-const App = ({ Component, pageProps }: AppProps<any>) => {
+export default function App({
+  Component,
+  pageProps,
+  ...customProps
+}: AppProps) {
   const router = useRouter();
+  const { message } = AntApp.useApp();
+  const cookies = (customProps as any)['cookies'];
+  const theme = cookies?.['theme'];
+  const { store } = wrapper.useWrappedStore(pageProps);
+  if (theme) {
+    store.dispatch(coreActions.setTheme(theme as ThemeValue));
+  }
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
@@ -222,25 +237,27 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
           `,
         }}
       />
-      <ApolloProvider client={client}>
-        <QueryClientProvider client={queryClient}>
-          <ConfigProvider>
-            <Globalstyles />
-            <CoreContainer />
-            <AppInner />
-            {hasLayout ? (
-              <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
-                <Component {...pageProps} />
-              </MainLayout>
-            ) : (
-              <Component {...pageProps} />
-            )}
-          </ConfigProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </ApolloProvider>
+      <Provider store={store}>
+        <ThemeProviderWrapper>
+          <ApolloProvider client={client}>
+            <QueryClientProvider client={queryClient}>
+              <ConfigProvider>
+                <Globalstyles />
+                <CoreContainer />
+                <AppInner />
+                {hasLayout ? (
+                  <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+                    <Component {...pageProps} />
+                  </MainLayout>
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </ConfigProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </ApolloProvider>
+        </ThemeProviderWrapper>
+      </Provider>
     </>
   );
-};
-
-export default wrapper.withRedux(App);
+}

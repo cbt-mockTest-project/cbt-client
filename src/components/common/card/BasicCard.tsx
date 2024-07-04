@@ -4,24 +4,21 @@ import styled, { css } from 'styled-components';
 
 type BasicCardType = 'basic' | 'primary';
 
-const getBorderColor = (type: BasicCardType) => {
-  switch (type) {
-    case 'basic':
-      return palette.colorBorderLight;
-    case 'primary':
-      return palette.colorBorder;
-  }
-};
-
 const BasicCardBlock = styled.div<{
   hoverEffect: boolean;
   type: BasicCardType;
 }>`
-  background-color: ${palette.colorContainerBg};
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
   border-radius: 10px;
   padding: 10px 20px;
   list-style: none;
-  border: 1px solid ${(props) => getBorderColor(props.type)};
+  border: 1px solid
+    ${({ type, theme }) => {
+      if (type === 'basic') {
+        return theme.color('colorSplit');
+      }
+      return theme.color('colorBorder');
+    }};
   width: 100%;
   transition: all 0.2s ease-in-out;
   ${(props) =>

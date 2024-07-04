@@ -93,7 +93,7 @@ const SelectedResultComponentContainer = styled.div`
       width: 100% !important;
     }
 
-    color: ${palette.antd_blue_02};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .selected-result-question-top-wrapper {
     display: flex;
@@ -116,7 +116,7 @@ const SelectedResultComponentContainer = styled.div`
   }
   .selected-result-page-sub-title {
     font-size: 0.8rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .selected-result-page-question-solution-header {
     display: flex;

@@ -7,7 +7,7 @@ import Link from 'next/link';
 const FooterContainer = styled.div`
   margin-top: 300px;
   width: 100%;
-  background-color: ${palette.colorBg};
+  background-color: ${({ theme }) => theme.color('colorBgLayout')};
   max-width: 1200px;
   .footer-section-one {
     display: flex;
@@ -16,7 +16,7 @@ const FooterContainer = styled.div`
     gap: 20px;
     a,
     button {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
   .footer-section-two {

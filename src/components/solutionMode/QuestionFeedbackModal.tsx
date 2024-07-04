@@ -131,8 +131,8 @@ const QuestionFeedbackModalBlock = styled(Modal)`
       bottom: 15px;
       width: max-content;
       font-size: 0.8rem;
-      color: ${palette.colorEmphasisText};
-      border: 1px solid ${palette.colorEmphasisText};
+      color: ${({ theme }) => theme.color('colorPrimary')};
+      border: 1px solid ${({ theme }) => theme.color('colorPrimary')};
       padding: 5px 20px;
       border-radius: 50px;
     }

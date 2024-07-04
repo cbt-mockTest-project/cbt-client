@@ -31,7 +31,7 @@ const StudyResultCardBlock = styled.div`
       }
     }
     .study-result-card-content-value {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
 `;

@@ -10,7 +10,7 @@ import {
 import useInput from '@lib/hooks/useInput';
 import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { Button, Input, App } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditComponentSkeleton from './EditComponentSkeleton';
@@ -19,6 +19,7 @@ import { handleError } from '@lib/utils/utils';
 interface EditComponentProps {}
 
 const EditComponent: React.FC<EditComponentProps> = () => {
+  const { message } = App.useApp();
   const client = useApollo({}, '');
   const [editProfileMutation] = useEditProfileMutation();
   const [checkPasswordMutation] = useCheckPasswordMutation();

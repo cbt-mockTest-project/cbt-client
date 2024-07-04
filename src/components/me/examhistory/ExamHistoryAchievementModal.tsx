@@ -4,8 +4,7 @@ import { useReadQuestionsByExamId } from '@lib/graphql/hook/useExamQuestion';
 import { useResetQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { handleError } from '@lib/utils/utils';
 import { QuestionListType } from '@modules/redux/slices/exam';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
@@ -21,6 +20,7 @@ interface ExamHistoryAchievementModalProps
 const ExamHistoryAchievementModal: React.FC<
   ExamHistoryAchievementModalProps
 > = ({ open, onClose, className, examId }) => {
+  const { message } = App.useApp();
   const [resetQuestionStateMutate] = useResetQuestionState();
   const { data: questionQueryData } = useReadQuestionsByExamId(examId);
   const [questionList, setQuestionList] = useState<QuestionListType>([]);

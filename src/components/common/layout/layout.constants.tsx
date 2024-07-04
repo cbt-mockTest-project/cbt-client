@@ -69,11 +69,6 @@ export const navBottomItems = [
     label: '앱 설치',
   },
   {
-    key: 'youtube',
-    icon: <YoutubeOutlined />,
-    label: '공식 유튜브',
-  },
-  {
     key: 'open-chat',
     icon: <WechatOutlined />,
     label: '오픈 채팅',

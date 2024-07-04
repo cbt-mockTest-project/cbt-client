@@ -1,9 +1,9 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { MenuProps, Modal, Skeleton } from 'antd';
+import { App, MenuProps, Skeleton } from 'antd';
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { ExamSource, ReadMockExamCategoryByCategoryIdInput } from 'types';
+import styled, { useTheme } from 'styled-components';
+import { ExamSource } from 'types';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
@@ -15,13 +15,12 @@ import CategoryHeaderWrapper from './CategoryHeaderWrapper';
 import CategoryMultipleSelectModeControlbarWrapper from './CategoryMultipleSelectModeControlbarWrapper';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { StorageType } from 'customTypes';
-import CategoryCore from './CategoryCore';
 import CategoryEmptyWrapper from './CategoryEmptyWrapper';
 import CategoryBookmarkOrEditWrapper from './CategoryBookmarkOrEditWrapper';
-import GoogleAd from '@components/common/ad/GoogleAd';
 import CategoryUtilButtonWrapper from './CategoryUtilButtonWrapper';
 import CategoryHiddenExamList from './CategoryHiddenExamList';
 import useCheckHasCategoryAccess from './hooks/useCheckHasCategoryAccess';
+import Modal from 'antd/lib/modal/Modal';
 
 const CategoryComponentBlock = styled.div`
   padding: 30px;
@@ -46,7 +45,7 @@ const CategoryComponentBlock = styled.div`
     svg {
       transition: 0.2s all ease-in;
       font-size: 36px;
-      color: ${palette.colorBorder};
+      color: ${({ theme }) => theme.color('colorBorder')};
     }
   }
   .category-bookmark-button.active {
@@ -55,26 +54,23 @@ const CategoryComponentBlock = styled.div`
     }
   }
   .category-setting-button-wrapper {
-    /* position: absolute;
-    top: 30px;
-    right: 30px;
-    cursor: pointer; */
     border-radius: 50%;
-    border: 1px solid ${palette.colorBorder};
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
     width: 35px;
     height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: 0.2s all ease-in;
+    cursor: pointer;
     svg {
       font-size: 24px;
-      color: ${palette.colorText};
+      color: ${({ theme }) => theme.color('colorText')};
     }
     &:hover {
-      border-color: ${palette.antd_blue_02};
+      border-color: ${({ theme }) => theme.color('colorPrimary')};
       svg {
-        color: ${palette.antd_blue_02};
+        color: ${({ theme }) => theme.color('colorPrimary')};
       }
     }
   }
@@ -85,6 +81,8 @@ const CategoryComponentBlock = styled.div`
 interface CategoryComponentProps {}
 
 const CategoryComponent: React.FC<CategoryComponentProps> = () => {
+  const { modal } = App.useApp();
+  const theme = useTheme();
   const { handleFilterExams, handleDeleteCategory } = useExamCategory();
   const categoryId = useAppSelector((state) => state.examCategory.category.id);
   const categoryName = useAppSelector(
@@ -121,7 +119,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = () => {
       key: 1,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={() => setSaveCategoryModalOpen(true)}
         >
           수정하기
@@ -132,9 +130,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = () => {
       key: 2,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={(e) => {
-            Modal.confirm({
+            modal.confirm({
               title: '정말로 삭제하시겠습니까?',
               onOk: () => handleDeleteCategory(categoryId),
             });
@@ -148,7 +146,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = () => {
       key: 3,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={() => setEditExamsModalOpen(true)}
         >
           시험지 추가하기
@@ -159,7 +157,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = () => {
       key: 4,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={() => setInviteUserModalOpen(true)}
         >
           유저 초대하기

@@ -34,7 +34,7 @@ const StudyQuestionBoxBlock = styled.div`
         svg {
           font-size: 20px;
           &:hover {
-            color: ${palette.antd_blue_02};
+            color: ${({ theme }) => theme.color('colorPrimary')};
           }
         }
       }
@@ -51,7 +51,7 @@ const StudyQuestionBoxBlock = styled.div`
     font-weight: bold;
     width: fit-content;
     flex-shrink: 0;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .study-question-box-question {
     word-break: break-all;
@@ -71,7 +71,7 @@ const StudyQuestionBoxBlock = styled.div`
   }
   .study-question-exam-title {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .study-question-edit-button {
     margin-left: auto;
@@ -81,7 +81,7 @@ const StudyQuestionBoxBlock = styled.div`
     bottom: 5px;
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 `;
 

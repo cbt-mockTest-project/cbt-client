@@ -1,12 +1,7 @@
-import {
-  useCreateUserRole,
-  useDeleteUserRole,
-  useUpdateAdblockPermission,
-} from '@lib/graphql/hook/useUser';
+import { useCreateUserRole } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
 import { checkRole, handleError } from '@lib/utils/utils';
-import { Checkbox, message } from 'antd';
-import { create } from 'lodash';
+import { Checkbox, App } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { User } from 'types';
@@ -62,6 +57,7 @@ interface PermissionManageUserListItemProps {
 const PermissionManageUserListItem: React.FC<
   PermissionManageUserListItemProps
 > = ({ user }) => {
+  const { message } = App.useApp();
   const [createUserRole] = useCreateUserRole();
   const [isAllowAdblock, setIsAllowAdblock] = useState(
     checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7, 8, 9], user })

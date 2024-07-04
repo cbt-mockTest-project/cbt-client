@@ -3,11 +3,12 @@ import {
   useResetAllQuestionState,
 } from '@lib/graphql/hook/useQuestionState';
 import { handleError } from '@lib/utils/utils';
-import { Modal, message } from 'antd';
+import { App } from 'antd';
 import { useMemo } from 'react';
 import useQuestions from './useQuestions';
 
 const useQuestionScores = () => {
+  const { modal, message } = App.useApp();
   const { resetQuestions } = useQuestions();
   const { data: readExamTitlesQuery, loading: getExamTitlesLoading } =
     useReadExamTitleAndIdByState();
@@ -30,7 +31,7 @@ const useQuestionScores = () => {
   }, [readExamTitlesQuery]);
 
   const resetQuestionScores = async () => {
-    Modal.confirm({
+    modal.confirm({
       title: '정말로 점수를 모두 삭제하시겠습니까?',
       content: '삭제된 점수는 복구할 수 없습니다.',
       okText: '삭제',

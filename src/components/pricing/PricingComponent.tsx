@@ -66,7 +66,7 @@ const PricingComponentBlock = styled.div`
   }
   .pricing-refund-policy-anchor {
     margin-top: 20px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-size: 14px;
     text-decoration: underline;
   }

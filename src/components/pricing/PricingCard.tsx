@@ -91,7 +91,7 @@ const PricingCardBlock = styled.div`
   }
   .pricing-card-before-discount-price-value {
     font-size: 1.2rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-weight: bold;
     text-decoration: line-through;
   }

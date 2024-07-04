@@ -8,7 +8,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
   MockExamQuestion,
@@ -23,6 +23,7 @@ import useQuestionFeedback, {
 } from './useQuestionFeedback';
 
 const useQuestions = () => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
 

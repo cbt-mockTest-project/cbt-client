@@ -1,11 +1,10 @@
 import EditorStyle from '@styles/editorStyle';
-import { Button, Collapse, Image, Input, Modal } from 'antd';
+import { App, Button, Collapse, Image, Modal } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Quiz } from 'types';
 import parse from 'html-react-parser';
 import useAuth from '@lib/hooks/useAuth';
-import palette from '@styles/palette';
 import TextArea from 'antd/lib/input/TextArea';
 import QuizComment from './QuizComment';
 import useQuizs from '@lib/hooks/useQuizs';
@@ -43,8 +42,8 @@ const QuizItemBlock = styled.div`
   .quiz-item-title-label {
     font-size: 18px;
     font-weight: bold;
-    color: ${palette.colorText};
-    border-bottom: 3px solid ${palette.colorBorder};
+    color: ${({ theme }) => theme.color('colorText')};
+    border-bottom: 3px solid ${({ theme }) => theme.color('colorBorder')};
   }
   .quiz-item-my-answer-wrapper {
     display: flex;
@@ -63,6 +62,7 @@ interface QuizItemProps {
 }
 
 const QuizItem: React.FC<QuizItemProps> = ({ number, quiz }) => {
+  const { modal } = App.useApp();
   const { user, handleCheckLogin } = useAuth();
   const [isEditMode, setIsEditMode] = useState(false);
   const [answer, setAnswer] = useState('');
@@ -75,7 +75,7 @@ const QuizItem: React.FC<QuizItemProps> = ({ number, quiz }) => {
   const onClickAnswerSubmitButton = (id: number) => {
     if (!handleCheckLogin()) return;
     const isEditting = myAnswer;
-    Modal.confirm({
+    modal.confirm({
       title: isEditting ? '수정하시겠습니까?' : '제출하시겠습니까?',
       okText: '확인',
       cancelText: '취소',
@@ -99,7 +99,7 @@ const QuizItem: React.FC<QuizItemProps> = ({ number, quiz }) => {
   const onClickDeleteMyAnswerButton = () => {
     if (!handleCheckLogin()) return;
     if (!myAnswer) return;
-    Modal.confirm({
+    modal.confirm({
       title: '정말 삭제하시겠습니까?',
       okText: '확인',
       cancelText: '취소',

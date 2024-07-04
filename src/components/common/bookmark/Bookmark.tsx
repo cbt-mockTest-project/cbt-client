@@ -27,7 +27,7 @@ const BookmarkBlock = styled.div`
   cursor: pointer;
   .star-icon {
     transition: color 0.2s linear;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .star-icon.active {
     color: ${palette.yellow_500};
