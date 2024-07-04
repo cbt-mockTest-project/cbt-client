@@ -37,6 +37,7 @@ const StudyPaymentSelectBlock = styled.div`
     top: 4px;
     left: 4px;
     svg {
+      fill: ${({ theme }) => theme.color('colorText')};
       width: 24px;
       height: 24px;
       font-size: 2rem;

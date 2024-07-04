@@ -42,12 +42,16 @@ import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
 
 export const queryClient = new QueryClient();
 
-const App = ({ Component, pageProps }: AppProps<any>) => {
+export default function App({
+  Component,
+  pageProps,
+  ...customProps
+}: AppProps) {
   const router = useRouter();
   const { message } = AntApp.useApp();
-  const cookies = (pageProps as any)['cookies'];
+  const cookies = (customProps as any)['cookies'];
   const theme = cookies?.['theme'];
-  const { store, props } = wrapper.useWrappedStore(pageProps);
+  const { store } = wrapper.useWrappedStore(pageProps);
   if (theme) {
     store.dispatch(coreActions.setTheme(theme as ThemeValue));
   }
@@ -256,6 +260,4 @@ const App = ({ Component, pageProps }: AppProps<any>) => {
       </Provider>
     </>
   );
-};
-
-export default App;
+}

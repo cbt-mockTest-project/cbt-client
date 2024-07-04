@@ -28,7 +28,7 @@ const StudyPaymentGuardBlock = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 30px;
-    background-color: white;
+    background-color: ${({ theme }) => theme.color('colorBgContainer')};
     display: flex;
     flex-direction: column;
     justify-content: center;

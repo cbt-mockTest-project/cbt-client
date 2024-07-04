@@ -89,7 +89,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
           className="login-error-text"
         />
       )}
-      <Button type="primary" htmlType="submit" disabled={buttonState}>
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={buttonState}
+        loading={buttonState}
+      >
         로그인
       </Button>
       <div className="login-or-line" />

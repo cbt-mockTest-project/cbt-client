@@ -3,11 +3,12 @@ import useAuth from '@lib/hooks/useAuth';
 import { Button, Space, App } from 'antd';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useRouter } from 'next/router';
+import useNotification from 'antd/es/notification/useNotification';
 
 interface HomeNotiProps {}
 
 const HomeNoti: React.FC<HomeNotiProps> = () => {
-  const { notification } = App.useApp();
+  const [notification, context] = useNotification();
   const { user } = useAuth();
   const router = useRouter();
   const openNotification = (placement: NotificationPlacement) => {
@@ -36,10 +37,12 @@ const HomeNoti: React.FC<HomeNotiProps> = () => {
   };
   useEffect(() => {
     if (user && user.recentlyStudiedCategory) {
+      notification.destroy();
       openNotification('bottom');
     }
   }, [user]);
-  return null;
+
+  return <>{context}</>;
 };
 
 export default HomeNoti;

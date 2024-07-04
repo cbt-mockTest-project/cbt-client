@@ -8,7 +8,7 @@ const ExamBookmarkBlock = styled.button<{ isBookmarked: boolean }>`
     font-size: 26px;
   }
   color: ${({ isBookmarked, theme }) =>
-    isBookmarked ? palette.yellow_500 : theme.color('colorBgMask')};
+    isBookmarked ? palette.yellow_500 : theme.color('colorBorder')};
 `;
 
 interface ExamBookmarkProps {
