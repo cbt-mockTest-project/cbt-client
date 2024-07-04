@@ -79,7 +79,7 @@ const StudyEndBlock = styled.div`
       flex-direction: column;
       gap: 10px;
       .solution-mode-question-card {
-        background-color: white;
+        background-color: ${({ theme }) => theme.color('colorFillAlter')};
       }
       .study-control-box {
         margin: 0;

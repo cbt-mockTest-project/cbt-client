@@ -54,7 +54,7 @@ const useBootpay = () => {
   }: BootpayProps) => {
     try {
       let paymentId: number = 0;
-      const Bootpay = window['Bootpay'];
+      const Bootpay = window.Bootpay;
       const response = await Bootpay.requestPayment({
         application_id: process.env.NEXT_PUBLIC_BOOTPAY_APPLICATION_ID,
         order_name,

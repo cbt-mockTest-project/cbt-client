@@ -1,22 +1,19 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import useAuth from '@lib/hooks/useAuth';
-import { Button, Space, notification } from 'antd';
+import { Button, Space, App } from 'antd';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useRouter } from 'next/router';
-
-const HomeNotiBlock = styled.div``;
 
 interface HomeNotiProps {}
 
 const HomeNoti: React.FC<HomeNotiProps> = () => {
-  const [api, contextHolder] = notification.useNotification();
+  const { notification } = App.useApp();
   const { user } = useAuth();
   const router = useRouter();
   const openNotification = (placement: NotificationPlacement) => {
     if (!user) return;
     const key = `open${Date.now()}`;
-    api.open({
+    notification.open({
       duration: 60,
       message: `빠른이동`,
       description: `"${user.recentlyStudiedCategory}" 바로가기`,
@@ -24,7 +21,7 @@ const HomeNoti: React.FC<HomeNotiProps> = () => {
       key,
       btn: (
         <Space>
-          <Button onClick={() => api.destroy(key)}>닫기</Button>
+          <Button onClick={() => notification.destroy(key)}>닫기</Button>
           <Button
             type="primary"
             onClick={() => {
@@ -42,7 +39,7 @@ const HomeNoti: React.FC<HomeNotiProps> = () => {
       openNotification('bottom');
     }
   }, [user]);
-  return <>{contextHolder}</>;
+  return null;
 };
 
 export default HomeNoti;

@@ -21,7 +21,7 @@ const SolutionModeCardItemBlock = styled.div`
     gap: 24px;
   }
   .solution-mode-question-card {
-    background-color: ${({ theme }) => theme.color('colorFillContent')};
+    background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }
 `;
 

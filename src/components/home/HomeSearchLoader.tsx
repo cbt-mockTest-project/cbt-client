@@ -1,7 +1,7 @@
 import palette from '@styles/palette';
 import React from 'react';
 import { HashLoader } from 'react-spinners';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 const HomeSearchLoaderBlock = styled.div`
   width: 100%;
@@ -14,9 +14,10 @@ const HomeSearchLoaderBlock = styled.div`
 interface HomeSearchLoaderProps {}
 
 const HomeSearchLoader: React.FC<HomeSearchLoaderProps> = () => {
+  const theme = useTheme();
   return (
     <HomeSearchLoaderBlock>
-      <HashLoader color={palette.antd_blue_02} />
+      <HashLoader color={theme.color('colorPrimary')} />
     </HomeSearchLoaderBlock>
   );
 };
