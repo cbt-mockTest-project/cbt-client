@@ -73,10 +73,8 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
       />
       <CategoryFolderList
         categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
-        handleToggleBookmark={handleToggleCategoryBookmark}
-        hasAllExamFolder={storageType === StorageType.MY}
       />
-      {setMyCategoriesLoading && (
+      {setMyCategoriesLoading && !categories?.length && (
         <div className="flex justify-center flex-col gap-4">
           <Skeleton active />
           <Skeleton active />

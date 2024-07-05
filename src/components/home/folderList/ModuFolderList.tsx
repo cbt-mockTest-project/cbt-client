@@ -21,8 +21,6 @@ const ModuFolderList: React.FC<ModuFolderListProps> = () => {
     })
   );
 
-  console.log('data', data);
-
   return (
     <HomeFolderList
       categories={data as MockExamCategory[]}

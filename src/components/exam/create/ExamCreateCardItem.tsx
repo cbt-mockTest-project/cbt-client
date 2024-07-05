@@ -213,7 +213,6 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
             'questions',
             getValues('questions').map((v) => {
               if (v.orderId === question.orderId) {
-                console.log(value.filter((el) => el > 0));
                 return {
                   ...v,
                   linkedQuestionIds: value.filter((el) => el > 0),

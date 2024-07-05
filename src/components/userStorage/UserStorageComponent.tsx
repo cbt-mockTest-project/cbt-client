@@ -1,9 +1,15 @@
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useSearchFilterStorage } from '@lib/hooks/useSearchFilterStorage';
 import useStorage from '@lib/hooks/useStorage';
+import {
+  GetCategoriesQueryKey,
+  getCategoriesQueryOption,
+} from '@lib/queryOptions/getCategoriesQueryOption';
 import { storageActions } from '@modules/redux/slices/storage';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { useQuery } from '@tanstack/react-query';
 import { Empty, Pagination, Select } from 'antd';
 import { StorageType } from 'customTypes';
 import React, { useEffect, useState } from 'react';
@@ -28,56 +34,29 @@ interface UserStorageComponentProps {
 
 const LIMIT = 10;
 
-const UserStorageComponent: React.FC<UserStorageComponentProps> = ({
-  type = 'public',
-}) => {
-  const { data: meQuery } = useMeQuery();
-  const [page, setPage] = useState(1);
-  const dispatch = useAppDispatch();
-  const {
-    categories,
-    handleFilterCategories,
-    handleToggleCategoryBookmark,
-    fetchCategories,
-  } = useStorage(StorageType.USER);
+const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
+  const { data } = useQuery(
+    getCategoriesQueryOption({
+      queryKey: GetCategoriesQueryKey.user_storage,
+      input: {
+        examSource: ExamSource.User,
+      },
+    })
+  );
+  const { handleSearch, handleSort, paginatedData, page, setPage } =
+    useSearchFilterStorage({
+      data,
+      limit: LIMIT,
+      hasOrderOption: true,
+    });
 
-  const onChangeOrder = (value: string) => {
-    if (value === 'popular') {
-      const sortedCategories = [...categories].sort(
-        (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
-      );
-      dispatch(
-        storageActions.setUserStorageCategories({
-          categories: sortedCategories,
-        })
-      );
-    } else {
-      const sortedCategories = [...categories].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      dispatch(
-        storageActions.setUserStorageCategories({
-          categories: sortedCategories,
-        })
-      );
-    }
-  };
-
-  useEffect(() => {
-    if (meQuery?.me.ok) {
-      if (type === 'public') {
-        fetchCategories({ examSource: ExamSource.User }, 'popular');
-      }
-    }
-  }, [meQuery]);
   return (
     <UserStorageComponentBlock>
       <TextInput
         className="category-filter-input"
         placeholder="암기장 필터링"
         onChange={(e) => {
-          handleFilterCategories(e.target.value);
+          handleSearch(e.target.value);
         }}
       />
       <div className="mb-6">
@@ -94,22 +73,19 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = ({
               value: 'latest',
             },
           ]}
-          onChange={onChangeOrder}
+          onChange={(value) => handleSort(value as 'popular' | 'latest')}
         />
       </div>
-      {categories.length > 0 && (
-        <CategoryFolderList
-          categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
-          handleToggleBookmark={handleToggleCategoryBookmark}
-        />
+      {paginatedData?.length > 0 && (
+        <CategoryFolderList categories={paginatedData} />
       )}
-      {categories.length <= 0 && (
+      {paginatedData?.length <= 0 && (
         <Empty description="암기장이 존재하지 않습니다.." />
       )}
       <div className="flex items-center mt-5 justify-center">
         <Pagination
           current={page}
-          total={categories?.length || 0}
+          total={paginatedData?.length || 0}
           pageSize={LIMIT}
           onChange={(page) => setPage(page)}
         />

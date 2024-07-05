@@ -1,16 +1,16 @@
 import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
-import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
-import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { GetStaticProps, NextPage } from 'next';
-import { ExamSource, MockExamCategory, UserRole } from 'types';
+import { NextPage } from 'next';
+import { ExamSource, UserRole } from 'types';
 import React from 'react';
 import WithHead from '@components/common/head/WithHead';
-import wrapper from '@modules/redux/store/configureStore';
-import { storageActions } from '@modules/redux/slices/storage';
 import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { StorageType } from 'customTypes';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import {
+  GetCategoriesQueryKey,
+  getCategoriesQueryOption,
+} from '@lib/queryOptions/getCategoriesQueryOption';
 
 interface ModuStorageProps {}
 
@@ -37,27 +37,20 @@ const ModuStorage: NextPage<ModuStorageProps> = () => {
 
 export default ModuStorage;
 
-export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
-  (store) => async (context) => {
-    const apolloClient = initializeApollo({}, '');
-    const res = await apolloClient.query<GetExamCategoriesQuery>({
-      query: GET_EXAM_CATEGORIES,
-      variables: {
-        input: {
-          examSource: ExamSource.MoudCbt,
-        },
+export const getStaticProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(
+    getCategoriesQueryOption({
+      queryKey: GetCategoriesQueryKey.modu_storage,
+      input: {
+        examSource: ExamSource.MoudCbt,
       },
-    });
-    const categories = res.data.getExamCategories.categories;
+    })
+  );
 
-    if (!categories) {
-      throw new Error('No data returned from the query');
-    }
-    store.dispatch(
-      storageActions.setModuStorageCategories({
-        categories: categories as MockExamCategory[],
-      })
-    );
-    return addApolloState(apolloClient, {});
-  }
-);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

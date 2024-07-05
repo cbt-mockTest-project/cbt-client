@@ -8,6 +8,12 @@ import useSaveCategoryModal from '@lib/hooks/usaSaveCategoryModal';
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import { Empty, Pagination } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import {
+  GetCategoriesQueryKey,
+  getCategoriesQueryOption,
+} from '@lib/queryOptions/getCategoriesQueryOption';
+import { useSearchFilterStorage } from '@lib/hooks/useSearchFilterStorage';
 
 const EhsStorageComponentBlock = styled.div`
   .category-filter-input {
@@ -21,21 +27,21 @@ const LIMIT = 10;
 interface EhsStorageComponentProps {}
 
 const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
-  const { data: meQuery } = useMeQuery();
-  const [page, setPage] = useState(1);
   const { placeholder } = useSaveCategoryModal(StorageType.MODU);
-  const {
-    categories,
-    fetchCategories,
-    handleFilterCategories,
-    handleToggleCategoryBookmark,
-  } = useStorage(StorageType.MODU);
-
-  useEffect(() => {
-    if (meQuery?.me.user?.role === UserRole.Admin) {
-      fetchCategories({ examSource: ExamSource.EhsMaster });
+  const { data } = useQuery(
+    getCategoriesQueryOption({
+      queryKey: GetCategoriesQueryKey.ehs_storage,
+      input: {
+        examSource: ExamSource.EhsMaster,
+      },
+    })
+  );
+  const { handleSearch, paginatedData, page, setPage } = useSearchFilterStorage(
+    {
+      data,
+      limit: LIMIT,
     }
-  }, [meQuery]);
+  );
 
   return (
     <EhsStorageComponentBlock>
@@ -43,20 +49,14 @@ const EhsStorageComponent: React.FC<EhsStorageComponentProps> = () => {
         className="category-filter-input"
         placeholder="암기장 필터링"
         onChange={(e) => {
-          handleFilterCategories(e.target.value);
+          handleSearch(e.target.value);
         }}
       />
-      <CategoryFolderList
-        categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
-        handleToggleBookmark={handleToggleCategoryBookmark}
-      />
-      {categories.length === 0 && (
-        <Empty style={{ marginTop: '100px' }} description="준비중입니다." />
-      )}
+      <CategoryFolderList categories={paginatedData} />
       <div className="flex items-center mt-5 justify-center">
         <Pagination
           current={page}
-          total={categories?.length || 0}
+          total={paginatedData?.length || 0}
           pageSize={LIMIT}
           onChange={(page) => setPage(page)}
         />

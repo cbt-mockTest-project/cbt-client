@@ -11,22 +11,15 @@ const CategoryFolderListBlock = styled.ul`
 
 interface CategoryFolderListProps {
   categories: MockExamCategory[] | null;
-  hasAllExamFolder?: boolean;
-  handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
 
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
-  handleToggleBookmark,
 }) => {
   return (
     <CategoryFolderListBlock>
       {categories?.map((category) => (
-        <CategoryFolderListItem
-          key={category.id}
-          category={category}
-          handleToggleBookmark={handleToggleBookmark}
-        />
+        <CategoryFolderListItem key={category.id} category={category} />
       ))}
     </CategoryFolderListBlock>
   );

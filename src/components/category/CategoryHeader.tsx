@@ -66,26 +66,23 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   categoryDescription,
   exams,
 }) => {
-  const router = useRouter();
   return (
     <CategoryHeaderBlock>
-      <Link href={`/user/${user.id}`}>
-        <div className="category-creator-info">
-          <Image
-            src={
-              user.profileImg ||
-              `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
-            }
-            width={30}
-            height={30}
-            alt="유저이미지"
-          />
-          <div className="cateogry-create-info-name-and-label">
-            <span className="category-creator-name">{user.nickname}</span>
-            <span className="category-creator-label">의 암기장</span>
-          </div>
+      <div className="category-creator-info">
+        <Image
+          src={
+            user.profileImg ||
+            `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/user/profile_default.png`
+          }
+          width={30}
+          height={30}
+          alt="유저이미지"
+        />
+        <div className="cateogry-create-info-name-and-label">
+          <span className="category-creator-name">{user.nickname}</span>
+          <span className="category-creator-label">의 암기장</span>
         </div>
-      </Link>
+      </div>
       <div className="category-info">
         <FolderOutlined />
         <span className="category-name">{categoryName}</span>

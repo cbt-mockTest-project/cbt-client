@@ -10,6 +10,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import ModuFolderList from './folderList/ModuFolderList';
 import EhsFolderList from './folderList/EhsFolderList';
+import UserFolderList from './folderList/UserFolderList';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -78,20 +79,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       <div className="home-wrapper">
         <ModuFolderList />
         <EhsFolderList />
+        <UserFolderList />
         <BookmarkedFolderList />
-        {/* <HomeFolderList
-          key="user-storage"
-          title="공개 암기장 📂"
-          subTitle=""
-          link="/user-storage"
-          unikeyKey="user-storage"
-          type={ExamSource.User}
-        />
-        <BookmarkedFolderList
-          key="bookmarked-storage"
-          title="저장된 암기장 📌"
-          subTitle="저장된 암기장을 모아보세요."
-        /> */}
       </div>
     </HomeComponentBlock>
   );
