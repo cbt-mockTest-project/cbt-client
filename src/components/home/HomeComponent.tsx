@@ -4,10 +4,12 @@ import HomeBanner from './HomeBanner';
 import { responsive } from '@lib/utils/responsive';
 import HomeFolderList from './HomeFolderList';
 import { ExamSource } from 'types';
-import BookmarkedFolderList from './BookmarkedFolderList';
+import BookmarkedFolderList from './folderList/BookmarkedFolderList';
 import { Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import ModuFolderList from './folderList/ModuFolderList';
+import EhsFolderList from './folderList/EhsFolderList';
 
 const HomeComponentBlock = styled.div`
   width: 100%;
@@ -74,23 +76,10 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         </Link>
       </div>
       <div className="home-wrapper">
-        <HomeFolderList
-          subTitle=""
-          key="modu-storage"
-          title="모두CBT 공식 암기장 👀"
-          link="/modu-storage"
-          unikeyKey="modu-storage"
-          type={ExamSource.MoudCbt}
-        />
-        <HomeFolderList
-          key="ehs-storage"
-          title="직8딴 암기장(기출문제 중복소거) 📒"
-          subTitle="직8딴 시리즈를 모두CBT에서 학습해보세요."
-          link="/ehs-storage"
-          unikeyKey="modu-storage"
-          type={ExamSource.EhsMaster}
-        />
-        <HomeFolderList
+        <ModuFolderList />
+        <EhsFolderList />
+        <BookmarkedFolderList />
+        {/* <HomeFolderList
           key="user-storage"
           title="공개 암기장 📂"
           subTitle=""
@@ -102,7 +91,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
           key="bookmarked-storage"
           title="저장된 암기장 📌"
           subTitle="저장된 암기장을 모아보세요."
-        />
+        /> */}
       </div>
     </HomeComponentBlock>
   );

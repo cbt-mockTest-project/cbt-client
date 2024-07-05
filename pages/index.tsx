@@ -4,13 +4,17 @@ import HomeCore from '@components/home/HomeCore';
 import { MAIN_PAGE } from '@lib/constants/displayName';
 import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
 import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { homeActions } from '@modules/redux/slices/home';
+import {
+  GetCategoriesQueryKey,
+  getCategoriesQueryOption,
+} from '@lib/queryOptions/getCategoriesQueryOption';
+import { apolloClient } from '@modules/apollo';
 import wrapper from '@modules/redux/store/configureStore';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import React from 'react';
-import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
+import { ExamSource, GetExamCategoriesInput } from 'types';
 
 const HomeNoti = dynamic(() => import('@components/home/HomeNoti'), {
   ssr: false,
@@ -38,49 +42,29 @@ export default IndexPage;
 
 export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   (store) => async () => {
-    const apolloClient = initializeApollo({}, '');
-    const getCategories = async (input: GetExamCategoriesInput) => {
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          const response = await apolloClient.query<GetExamCategoriesQuery>({
-            query: GET_EXAM_CATEGORIES,
-            variables: {
-              input,
-            },
-          });
-          return response.data.getExamCategories.categories || [];
-        } catch (error) {
-          if (attempt === 3) throw error; // 마지막 시도에서 실패하면 에러를 던짐
-        }
-      }
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery(
+      getCategoriesQueryOption({
+        queryKey: GetCategoriesQueryKey.main_modu,
+        input: {
+          examSource: ExamSource.MoudCbt,
+          limit: 30,
+        },
+      })
+    );
+    await queryClient.prefetchQuery(
+      getCategoriesQueryOption({
+        queryKey: GetCategoriesQueryKey.main_ehs,
+        input: {
+          examSource: ExamSource.EhsMaster,
+          limit: 30,
+        },
+      })
+    );
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+      },
     };
-
-    const moduCategories = await getCategories({
-      examSource: ExamSource.MoudCbt,
-      limit: 30,
-    });
-    const ehsCategories = await getCategories({
-      examSource: ExamSource.EhsMaster,
-      limit: 30,
-    });
-    const ModuCategoriesSortedByLikes = [...moduCategories].sort(
-      (a, b) => a.order - b.order
-    );
-    const EhsCategoriesSortedByLikes = [...ehsCategories].sort(
-      (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
-    );
-
-    store.dispatch(
-      homeActions.setModuStorageCategories({
-        categories: ModuCategoriesSortedByLikes as MockExamCategory[],
-      })
-    );
-    store.dispatch(
-      homeActions.setEhsStorageCategories({
-        categories: EhsCategoriesSortedByLikes as MockExamCategory[],
-      })
-    );
-
-    return addApolloState(apolloClient, {});
   }
 );

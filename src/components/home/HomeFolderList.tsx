@@ -5,7 +5,7 @@ import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ExamSource } from 'types';
+import { ExamSource, MockExamCategory } from 'types';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { uniqueId } from 'lodash';
@@ -95,7 +95,7 @@ export interface HomeFolderListProps {
   unikeyKey: string;
   headerButton?: React.ReactNode;
   emptyDescription?: string;
-  type: ExamSource | 'bookmark' | 'isPick';
+  categories: MockExamCategory[] | null;
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
@@ -106,25 +106,9 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   unikeyKey,
   headerButton,
   emptyDescription = '아직 암기장이 없습니다.',
-  type,
+  categories,
 }) => {
-  const categories = useAppSelector((state) => {
-    switch (type) {
-      case ExamSource.MoudCbt:
-        return state.home.moduStorageCategories;
-      case ExamSource.User:
-        return state.home.userStorageCategories;
-      case ExamSource.EhsMaster:
-        return state.home.ehsStorageCategories;
-      case 'bookmark':
-        return state.home.bookmarkedCategories;
-      case 'isPick':
-        return state.home.isPickedCategories;
-      default:
-        return [];
-    }
-  });
-  const isLoading = categories === null;
+  const isLoading = !categories;
   const folderListRef = useRef<HTMLUListElement | null>(null);
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
@@ -200,7 +184,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
           {categories &&
             categories?.length > 0 &&
             categories.map((category, index) => (
-              <div className="flex items-center" key={uniqueId(type)}>
+              <div className="flex items-center" key={index}>
                 <CategoryFolderListItem
                   className="home-folder-item"
                   category={category}

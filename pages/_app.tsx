@@ -18,7 +18,11 @@ import { isServer, someIncludes } from '@lib/utils/utils';
 import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   EXAMS_PDF_PAGE,
@@ -241,19 +245,21 @@ export default function App({
         <ThemeProviderWrapper>
           <ApolloProvider client={client}>
             <QueryClientProvider client={queryClient}>
-              <ConfigProvider>
-                <Globalstyles />
-                <CoreContainer />
-                <AppInner />
-                {hasLayout ? (
-                  <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+              <HydrationBoundary state={pageProps.dehydratedState}>
+                <ConfigProvider>
+                  <Globalstyles />
+                  <CoreContainer />
+                  <AppInner />
+                  {hasLayout ? (
+                    <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+                      <Component {...pageProps} />
+                    </MainLayout>
+                  ) : (
                     <Component {...pageProps} />
-                  </MainLayout>
-                ) : (
-                  <Component {...pageProps} />
-                )}
-              </ConfigProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
+                  )}
+                </ConfigProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </HydrationBoundary>
             </QueryClientProvider>
           </ApolloProvider>
         </ThemeProviderWrapper>
