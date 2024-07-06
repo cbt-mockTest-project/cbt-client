@@ -15,6 +15,7 @@ export const getCategoy = async (
       variables: {
         input,
       },
+      fetchPolicy: 'network-only',
     });
   const category = response.data?.readMockExamCategoryByCategoryId.category;
   return category as MockExamCategory;

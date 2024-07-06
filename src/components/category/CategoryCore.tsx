@@ -36,20 +36,23 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
   const category = queryClient.getQueryData<MockExamCategory>(queryKey);
 
   const dispatch = useAppDispatch();
-  const { data: meQuery } = useMeQuery();
+  const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
   const localStorage = new LocalStorage();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
-
+  const [isRefetched, setIsRefetched] = useState(false);
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
-      queryClient.refetchQueries({
-        queryKey,
-        exact: true,
-      });
-
+      queryClient
+        .refetchQueries({
+          queryKey,
+        })
+        .then(() => {
+          setIsRefetched(true);
+        });
+      refetchMeQuery();
       updateRecentlyStudiedCategory({
         variables: {
           input: {
@@ -62,7 +65,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
       const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId, examIds });
     }
-  }, [meQuery, router.query.name, categoryQueryInput, queryKey]);
+  }, [meQuery?.me.user?.id, router.query.name]);
 
   useEffect(() => {
     const setCategoryExams = (
@@ -78,7 +81,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
     };
     setCategoryExams(category.mockExam || []);
     setCategoryExams(category.mockExam || []);
-  }, [category.mockExam]);
+  }, [category.mockExam, isRefetched]);
 
   useEffect(() => {
     if (!router.asPath) return;
