@@ -8,12 +8,13 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const CategoryProgressAndReviewBlock = styled.div``;
 
-interface CategoryProgressAndReviewProps {}
+interface CategoryProgressAndReviewProps {
+  categoryId: number;
+}
 
-const CategoryProgressAndReview: React.FC<
-  CategoryProgressAndReviewProps
-> = () => {
-  const categoryId = useAppSelector((state) => state.examCategory.category.id);
+const CategoryProgressAndReview: React.FC<CategoryProgressAndReviewProps> = ({
+  categoryId,
+}) => {
   const { user } = useAuth();
   const [
     getExamCategoryLearningProgress,

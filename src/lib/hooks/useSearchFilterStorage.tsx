@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import { useState, useMemo } from 'react';
 import { MockExamCategory } from 'types';
 
@@ -18,8 +19,15 @@ export function useSearchFilterStorage({
 
   const filteredData = useMemo(() => {
     if (!data || searchKeyword.trim() === '') return data;
-    return data.filter((item) =>
-      String(item.name).toLowerCase().includes(searchKeyword.toLowerCase())
+    return data.filter(
+      (item) =>
+        String(item.name).toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        String(item.user.nickname)
+          .toLowerCase()
+          .includes(searchKeyword.toLowerCase()) ||
+        String(item.description)
+          .toLowerCase()
+          .includes(searchKeyword.toLowerCase())
     );
   }, [data, searchKeyword]);
 
@@ -45,13 +53,12 @@ export function useSearchFilterStorage({
       : filteredData?.slice((page - 1) * limit, page * limit) || [];
   }, [page, limit, sortedAndFilteredData]);
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = debounce((keyword: string) => {
     setSearchKeyword(keyword);
     setPage(1);
-  };
+  }, 300);
 
   const handleSort = (order: 'popular' | 'latest') => {
-    console.log('order', order);
     setOrder(order);
     setPage(1);
   };

@@ -1,8 +1,11 @@
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import { StorageType } from 'customTypes';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 const useSaveCategoryModal = (storageType: StorageType) => {
+  const router = useRouter();
+  const urlSlug = router.query.name as string;
   const [isSaveCategoryModalOpen, setIsSaveCategoryModalOpen] = useState(false);
 
   const openSaveCategoryModal = () => {
@@ -14,6 +17,7 @@ const useSaveCategoryModal = (storageType: StorageType) => {
 
   const placeholder = isSaveCategoryModalOpen ? (
     <SaveCategoryModal
+      urlSlug={urlSlug}
       open={isSaveCategoryModalOpen}
       onCancel={closeSaveCategoryModal}
       onClose={closeSaveCategoryModal}

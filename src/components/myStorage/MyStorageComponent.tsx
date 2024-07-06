@@ -43,8 +43,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   const setMyCategoriesLoading = useAppSelector(
     (state) => state.storage.setMyCategoriesLoading
   );
-  const { categories, handleFilterCategories, handleToggleCategoryBookmark } =
-    useStorage(storageType);
+  const { categories, handleFilterCategories } = useStorage(storageType);
   const { openSaveCategoryModal, placeholder } =
     useSaveCategoryModal(storageType);
   return (

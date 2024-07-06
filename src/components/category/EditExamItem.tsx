@@ -1,11 +1,14 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
-import useExamCategory from '@lib/hooks/useExamCategory';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { MockExam } from 'types';
+import { MockExam, MockExamCategory } from 'types';
+import { queryClient } from '../../../pages/_app';
+import { useRouter } from 'next/router';
+import { getCategoryKey } from '@lib/queryOptions/getCategoryQueryOption';
+import useCatgegoryExams from './hooks/useCategoryExamList';
+import { useAppSelector } from '@modules/redux/store/configureStore';
 
 const EditExamItemBlock = styled(BasicCard)`
   display: flex;
@@ -19,12 +22,18 @@ interface EditExamItemProps {
 }
 
 const EditExamItem: React.FC<EditExamItemProps> = ({ exam }) => {
+  const router = useRouter();
+  const urlSlug = router.query.name as string;
   const { handleRemoveExamFromCategory, handleAddExamToCategory } =
-    useExamCategory();
-  const categoryId = useAppSelector((state) => state.examCategory.category.id);
-  const isAdded = useAppSelector((state) =>
-    state.examCategory.category.mockExam.find((e) => e.id === exam.id)
+    useCatgegoryExams();
+  const category = queryClient.getQueryData<MockExamCategory>(
+    getCategoryKey(urlSlug)
   );
+  const isAdded = useAppSelector((state) => {
+    return state.examCategory.originalCategoryExams.find(
+      (e) => e.id === exam.id
+    );
+  });
 
   return (
     <EditExamItemBlock>
@@ -35,7 +44,7 @@ const EditExamItem: React.FC<EditExamItemProps> = ({ exam }) => {
           onClick={() =>
             handleRemoveExamFromCategory({
               examId: exam.id,
-              categoryId,
+              categoryId: category.id,
             })
           }
         >
@@ -46,7 +55,7 @@ const EditExamItem: React.FC<EditExamItemProps> = ({ exam }) => {
           onClick={() =>
             handleAddExamToCategory({
               examId: exam.id,
-              categoryId,
+              categoryId: category.id,
             })
           }
         >

@@ -17,8 +17,7 @@ const SearchCategoriesComponent: React.FC<
 > = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [page, setPage] = useState(1);
-  const { categories, handleToggleCategoryBookmark, fetchCategories } =
-    useStorage(StorageType.SEARCH);
+  const { categories, fetchCategories } = useStorage(StorageType.SEARCH);
 
   return (
     <SearchCategoriesComponentBlock>
@@ -44,7 +43,6 @@ const SearchCategoriesComponent: React.FC<
       {!isSearching && categories?.length > 0 && (
         <CategoryFolderList
           categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
-          handleToggleBookmark={handleToggleCategoryBookmark}
         />
       )}
       {!isSearching && categories && categories.length <= 0 && (
