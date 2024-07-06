@@ -1,4 +1,5 @@
 import useThemeControl from '@lib/hooks/useThemeControl';
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import styled, { css, useTheme } from 'styled-components';
 import tinycolor from 'tinycolor2';
@@ -40,6 +41,10 @@ interface BasicCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const BasicCard: React.FC<BasicCardProps> = (props) => {
+  const router = useRouter();
+  const isStudyPage = ['/exam/solution', '/study', '/exams', '/question/'].some(
+    (path) => router.pathname.startsWith(path)
+  );
   const cardRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const { theme: currentTheme } = useThemeControl();
@@ -70,12 +75,14 @@ const BasicCard: React.FC<BasicCardProps> = (props) => {
   };
 
   useEffect(() => {
-    if (currentTheme === 'light') return;
+    if (!isStudyPage) return;
     const adjustColors = (element: HTMLElement) => {
       const style = window.getComputedStyle(element);
       const color = style.color;
 
-      if (isColorDark(color)) {
+      if (currentTheme === 'light') {
+        element.style.removeProperty('color');
+      } else if (isColorDark(color)) {
         element.style.color = getLighterColor(color);
       }
 
@@ -87,7 +94,7 @@ const BasicCard: React.FC<BasicCardProps> = (props) => {
     if (cardRef.current) {
       adjustColors(cardRef.current);
     }
-  }, [currentTheme]);
+  }, [currentTheme, isStudyPage]);
   return (
     <BasicCardBlock
       {...divProps}
