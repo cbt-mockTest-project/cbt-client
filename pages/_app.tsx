@@ -59,6 +59,7 @@ export default function App({
   if (theme) {
     store.dispatch(coreActions.setTheme(theme as ThemeValue));
   }
+
   const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
@@ -75,8 +76,12 @@ export default function App({
     TODAY_QUIZ_PAGE,
     SEARCH_PAGE,
   ];
+  const isOnlyLightModePage = [EXAM_CREATE_PAGE, QUESTION_EDIT_PAGE];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
   const hasBodyBorder = !papgesWithoutBodyBorder.includes(
+    String(Component.displayName)
+  );
+  const isOnlyLightMode = isOnlyLightModePage.includes(
     String(Component.displayName)
   );
   const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
@@ -242,7 +247,7 @@ export default function App({
         }}
       />
       <Provider store={store}>
-        <ThemeProviderWrapper>
+        <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
           <ApolloProvider client={client}>
             <QueryClientProvider client={queryClient}>
               <HydrationBoundary state={pageProps.dehydratedState}>

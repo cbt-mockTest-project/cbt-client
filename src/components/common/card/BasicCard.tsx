@@ -1,7 +1,7 @@
-import palette from '@styles/palette';
-import React from 'react';
-import styled, { css } from 'styled-components';
-
+import useThemeControl from '@lib/hooks/useThemeControl';
+import React, { useEffect, useRef } from 'react';
+import styled, { css, useTheme } from 'styled-components';
+import tinycolor from 'tinycolor2';
 type BasicCardType = 'basic' | 'primary';
 
 const BasicCardBlock = styled.div<{
@@ -40,6 +40,9 @@ interface BasicCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const BasicCard: React.FC<BasicCardProps> = (props) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme();
+  const { theme: currentTheme } = useThemeControl();
   const {
     type = 'basic',
     className = '',
@@ -47,10 +50,49 @@ const BasicCard: React.FC<BasicCardProps> = (props) => {
     hoverEffect = false,
     ...divProps
   } = props;
+  const isGrayish = (color: string) => {
+    const rgb = tinycolor(color).toRgb();
+    const tolerance = 30; // RGB 값의 차이가 30 이하면 회색으로 간주
+    return (
+      Math.abs(rgb.r - rgb.g) <= tolerance &&
+      Math.abs(rgb.g - rgb.b) <= tolerance &&
+      Math.abs(rgb.r - rgb.b) <= tolerance
+    );
+  };
+  const isColorDark = (color: string) => {
+    return tinycolor(color).getBrightness() < 128;
+  };
+
+  const getLighterColor = (color: string) => {
+    if (isGrayish(color)) {
+      return theme.color('colorText');
+    }
+  };
+
+  useEffect(() => {
+    if (currentTheme === 'light') return;
+    const adjustColors = (element: HTMLElement) => {
+      const style = window.getComputedStyle(element);
+      const color = style.color;
+
+      if (isColorDark(color)) {
+        element.style.color = getLighterColor(color);
+      }
+
+      Array.from(element.children).forEach((child) => {
+        adjustColors(child as HTMLElement);
+      });
+    };
+
+    if (cardRef.current) {
+      adjustColors(cardRef.current);
+    }
+  }, [currentTheme]);
   return (
     <BasicCardBlock
       {...divProps}
       type={type}
+      ref={cardRef}
       hoverEffect={hoverEffect}
       className={className}
     >

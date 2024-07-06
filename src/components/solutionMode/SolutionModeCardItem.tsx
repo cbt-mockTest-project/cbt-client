@@ -41,8 +41,6 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   filterStates = [],
   isStaticPage,
 }) => {
-  const router = useRouter();
-
   const {
     addFeedback,
     deleteFeedback,

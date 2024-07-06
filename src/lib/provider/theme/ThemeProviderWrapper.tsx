@@ -8,11 +8,13 @@ import { ThemeValue } from 'customTypes';
 import { themes } from './themes';
 
 interface ThemeProviderWrapperProps {
+  isOnlyLightMode: boolean;
   children: React.ReactNode;
 }
 
 const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
   children,
+  isOnlyLightMode,
 }) => {
   const { theme: mode, setTheme } = useThemeControl();
   useEffect(() => {
@@ -20,11 +22,14 @@ const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
   }, [mode]);
 
   return (
-    <ThemeProvider theme={themes[mode]}>
+    <ThemeProvider theme={isOnlyLightMode ? themes.light : themes[mode]}>
       <ConfigProvider
         theme={{
-          algorithm:
-            mode === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm,
+          algorithm: isOnlyLightMode
+            ? theme.defaultAlgorithm
+            : mode === 'light'
+            ? theme.defaultAlgorithm
+            : theme.darkAlgorithm,
         }}
       >
         <App className="theme-provider-wrapper">

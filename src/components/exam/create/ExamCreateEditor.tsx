@@ -7,7 +7,7 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import dynamic from 'next/dynamic';
 import SkeletonBox from '@components/common/skeleton/SkeletonBox';
 import Dragger from 'antd/lib/upload/Dragger';
@@ -84,6 +84,7 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   editorPlaceholder = '',
   defaultImgUrl = '',
 }) => {
+  const theme = useTheme();
   const { message } = App.useApp();
   const [isImagePreviewModalOpen, setIsImagePreviewModalOpen] = useState(false);
   const [uploadImageLoading, setUploadImageLoading] = useState(false);
@@ -129,7 +130,13 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   };
 
   const uploadButton = (
-    <div>{uploadImageLoading ? <LoadingOutlined /> : <PlusOutlined />}</div>
+    <div
+      style={{
+        color: theme.color('colorText'),
+      }}
+    >
+      {uploadImageLoading ? <LoadingOutlined /> : <PlusOutlined />}
+    </div>
   );
 
   return (

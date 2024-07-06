@@ -1,5 +1,4 @@
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -17,7 +16,7 @@ const HeaderLayoutBlock = styled.div`
     align-items: center;
     font-size: 18px;
     font-weight: 700;
-    color: ${palette.gray_900};
+    color: ${({ theme }) => theme.color('colorText')};
     padding: 0 20px;
     justify-content: center;
     position: relative;
