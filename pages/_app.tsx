@@ -76,7 +76,12 @@ export default function App({
     TODAY_QUIZ_PAGE,
     SEARCH_PAGE,
   ];
-  const isOnlyLightModePage = [EXAM_CREATE_PAGE, QUESTION_EDIT_PAGE];
+  const isOnlyLightModePage = [
+    EXAM_CREATE_PAGE,
+    QUESTION_EDIT_PAGE,
+    EXAM_PDF_PAGE,
+    EXAMS_PDF_PAGE,
+  ];
   const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
   const hasBodyBorder = !papgesWithoutBodyBorder.includes(
     String(Component.displayName)
