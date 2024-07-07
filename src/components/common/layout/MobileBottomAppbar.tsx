@@ -11,10 +11,23 @@ const MobileBottomAppbarBlock = styled.div`
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.color('colorBgLayout')};
   z-index: 100;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid ${({ theme }) => theme.color('colorBorder')};
   display: none;
+  .mobile-bottom-appbar {
+    background-color: ${({ theme }) => theme.color('colorBgLayout')} !important;
+    svg,
+    button {
+      color: ${({ theme }) => theme.color('colorText')};
+    }
+    .Mui-selected {
+      color: ${({ theme }) => theme.color('colorPrimary')};
+      svg {
+        color: ${({ theme }) => theme.color('colorPrimary')};
+      }
+    }
+  }
   @media (max-width: ${responsive.lsmall}) {
     display: block;
   }
@@ -27,6 +40,7 @@ const MobileBottomAppbar: React.FC<MobileBottomAppbarProps> = () => {
   return (
     <MobileBottomAppbarBlock>
       <BottomNavigation
+        className="mobile-bottom-appbar"
         showLabels
         value={router.pathname}
         onChange={(event, newValue) => {
