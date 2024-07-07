@@ -5,10 +5,8 @@ import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ExamSource, MockExamCategory } from 'types';
+import { MockExamCategory } from 'types';
 import { useRouter } from 'next/router';
-import { useAppSelector } from '@modules/redux/store/configureStore';
-import { uniqueId } from 'lodash';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
