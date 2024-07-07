@@ -66,6 +66,6 @@ const PdfDownloadSelectModalContent: React.FC = () => (
 const PdfDownloadSelectModalContentContainer = styled.div`
   .pdf-download-select-modal-description {
     font-size: 12px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 `;

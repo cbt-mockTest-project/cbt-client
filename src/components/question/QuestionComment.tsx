@@ -9,7 +9,7 @@ import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/quer
 import useInput from '@lib/hooks/useInput';
 import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -20,6 +20,7 @@ interface QuestionCommentProps {
 }
 
 const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
+  const { message } = App.useApp();
   const router = useRouter();
   const client = useApollo({}, '');
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();

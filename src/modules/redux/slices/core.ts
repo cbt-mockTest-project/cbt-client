@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ThemeValue } from 'customTypes';
 
 export interface CoreState {
   modalName: string;
+  theme: ThemeValue;
 }
 
 const coreState: CoreState = {
   modalName: '',
+  theme: 'light',
 };
 
 const coreSlice = createSlice({
@@ -17,6 +20,9 @@ const coreSlice = createSlice({
     },
     closeModal: (state) => {
       state.modalName = '';
+    },
+    setTheme: (state, action: PayloadAction<ThemeValue>) => {
+      state.theme = action.payload;
     },
   },
 });

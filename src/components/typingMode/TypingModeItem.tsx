@@ -27,7 +27,7 @@ const TypingModeItemBlock = styled.div`
     margin-top: 10px;
     font-size: 16px;
     padding: 10px 20px;
-    border-color: ${palette.colorBorder};
+    border-color: ${({ theme }) => theme.color('colorBorder')};
   }
   .typing-mode-answer-visible-toggle-button {
     margin-top: 10px;

@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import Modal, { ModalProps } from './Modal';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import KakaoIconSVG from '@assets/svg/kakao.svg';
-import { Button, Input, InputRef, message } from 'antd';
+import { App, Button, Input, InputRef } from 'antd';
 import { kakaoShare } from '@lib/utils/kakaoShare';
 import useIsMobile from '@lib/hooks/useIsMobile';
-import { isAndroid } from 'react-device-detect';
 
 interface QuestionShareModalProps extends Omit<ModalProps, 'children'> {
   questionId: number;
@@ -24,6 +23,7 @@ const QuestionShareModal: React.FC<QuestionShareModalProps> = ({
   shareTitle,
   shareDescription,
 }) => {
+  const { message } = App.useApp();
   const urlInputRef = useRef<InputRef>(null);
   const isMobile = useIsMobile();
   const questionPageLink = `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${questionId}`;

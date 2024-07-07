@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import SideNavList from './SideNavList';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 
 const SidebarBlock = styled.div`
   max-width: 200px;
   width: 100%;
-  background-color: ${palette.colorContainerBg};
-  border-right: 1px solid ${palette.colorBorderLight};
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
+  border-right: 1px solid ${({ theme }) => theme.color('colorSplit')};
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.085);
   min-height: 100vh;
   position: fixed;

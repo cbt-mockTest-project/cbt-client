@@ -1,19 +1,12 @@
 import ExamAchievementResultList from '@components/exam/common/ExamAchievementResultList';
 import { useResetQuestionState } from '@lib/graphql/hook/useQuestionState';
-import { READ_QUESTIONS_BY_ID } from '@lib/graphql/query/questionQuery';
-import { ReadMockExamQuestionsByMockExamIdQuery } from '@lib/graphql/query/questionQuery.generated';
-import { extractKeysOfCache, handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { handleError } from '@lib/utils/utils';
 import palette from '@styles/palette';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import { useRouter } from 'next/router';
 import React, { ComponentProps } from 'react';
 import styled from 'styled-components';
-import {
-  MockExamQuestionState,
-  QuestionState,
-  ReadMockExamQuestionsByMockExamIdInput,
-} from 'types';
+import { QuestionState, ReadMockExamQuestionsByMockExamIdInput } from 'types';
 import Modal from './Modal';
 import { QuestionListType, examActions } from '@modules/redux/slices/exam';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
@@ -29,6 +22,7 @@ const ProgressModal: React.FC<ProgressModalProps> = ({
   open,
   questionList,
 }) => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [resetQuestionStateMutate] = useResetQuestionState();
   const dispatch = useAppDispatch();
@@ -122,7 +116,7 @@ const ProgressModalContainer = styled.div`
     padding-top: 10px;
     text-align: center;
     font-size: 0.9rem;
-    color: ${palette.antd_blue_02};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .progress-modal-achievement-reset-button {
     margin-top: 20px;

@@ -10,7 +10,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { App } from 'antd';
 import { StorageType } from 'customTypes';
 import { cloneDeep, debounce, isEqual } from 'lodash';
 import {
@@ -21,6 +21,7 @@ import {
 import useAuth from './useAuth';
 
 const useStorage = (type: StorageType) => {
+  const { message } = App.useApp();
   const dispatch = useAppDispatch();
   const { handleCheckLogin } = useAuth();
   const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
@@ -96,42 +97,6 @@ const useStorage = (type: StorageType) => {
       setCategories(
         res.data?.getExamCategories.categories as MockExamCategory[]
       );
-    }
-  };
-
-  const handleToggleCategoryBookmark = async (categoryId: number) => {
-    try {
-      if (!handleCheckLogin()) return;
-      const res = await toggleCategoryBookmark({
-        variables: {
-          input: {
-            categoryId,
-          },
-        },
-      });
-      if (res.data.toggleExamCategorieBookmark.ok) {
-        const newCategories = cloneDeep(categories);
-        if (!newCategories) return;
-        const targetIndex = newCategories.findIndex(
-          (category) => category.id === categoryId
-        );
-        if (targetIndex === -1) return;
-        newCategories[targetIndex].isBookmarked =
-          !newCategories[targetIndex].isBookmarked;
-        setCategories(newCategories);
-
-        if (res.data.toggleExamCategorieBookmark.isBookmarked) {
-          message.success('북마크 되었습니다.');
-          return;
-        } else {
-          message.success('북마크가 해제되었습니다.');
-          return;
-        }
-      }
-      message.error(res.data?.toggleExamCategorieBookmark.error);
-    } catch (e) {
-      handleError(e);
-      message.error('북마크 설정에 실패했습니다.');
     }
   };
 
@@ -266,7 +231,6 @@ const useStorage = (type: StorageType) => {
     handleCreateCategory,
     createCategoryLoading,
     handleFilterCategories,
-    handleToggleCategoryBookmark,
     fetchCategories,
     refetchCategories,
   };

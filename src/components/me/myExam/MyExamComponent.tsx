@@ -5,7 +5,7 @@ import {
 } from '@lib/graphql/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { Button, List, message, Select, Tooltip } from 'antd';
+import { Button, List, App, Select, Tooltip } from 'antd';
 import { DefaultOptionType } from 'antd/lib/cascader';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -21,10 +21,9 @@ import MyExamListItem from './MyExamListItem';
 interface MyExamComponentProps {}
 
 const MyExamComponent: React.FC<MyExamComponentProps> = () => {
+  const { message } = App.useApp();
   const [readTitles] = useReadExamTitles();
   const [updateExamOrder] = useUpdateExamOrder();
-  const { value: previewModalState, onToggle: onToggleExamPreviewModal } =
-    useToggle(false);
   const { value: inviteModalState, onToggle: onToggleInviteModal } =
     useToggle(false);
   const { data: categoriesQuery } = useReadMyExamCategories();

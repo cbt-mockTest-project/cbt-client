@@ -1,15 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import useExamCategory from '@lib/hooks/useExamCategory';
-import palette from '@styles/palette';
 import { Button, Modal, ModalProps, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import EditExamItem from './EditExamItem';
 import TextInput from '@components/common/input/TextInput';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import useSearchFilterMyExamList from './hooks/useSearchFilterMyExamList';
 
 const EditExamsModalBlock = styled(Modal)`
   .edit-exams-filter-select {
@@ -22,7 +19,7 @@ const EditExamsModalBlock = styled(Modal)`
   .edit-exams-make-button {
     margin-top: 20px;
     svg {
-      color: ${palette.colorText};
+      color: ${({ theme }) => theme.color('colorText')};
     }
   }
   .edit-my-exams-list {
@@ -44,18 +41,17 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
-  const { fetchMyExams, handleFilterMyExams } = useExamCategory();
   const myExams = useAppSelector((state) => state.examCategory.myExams);
-  const { data: meQuery } = useMeQuery();
-  const [examType, setExamType] = useState<'me' | 'bookmarked'>('me');
+  const myBookmarkedExams = useAppSelector(
+    (state) => state.examCategory.myBookmarkedExams
+  );
+  const { filteredData, handleSearch, handleSelectType } =
+    useSearchFilterMyExamList({
+      meData: myExams,
+      bookmarkedData: myBookmarkedExams,
+    });
   const { categoryId, ...modalProps } = props;
 
-  useEffect(() => {
-    if (!meQuery?.me.user) return;
-    fetchMyExams({
-      isBookmarked: examType === 'bookmarked',
-    });
-  }, [meQuery, examType]);
   return (
     <EditExamsModalBlock {...modalProps} footer={false}>
       <p className="edit-exams-modal-title">시험지 추가</p>
@@ -77,7 +73,7 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       <div className="edit-exams-filter-box">
         <Select
           className="edit-exams-filter-select"
-          value={examType}
+          defaultValue="me"
           options={[
             {
               label: '내 시험지',
@@ -88,16 +84,16 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
               value: 'bookmarked',
             },
           ]}
-          onChange={setExamType}
+          onChange={(value) => handleSelectType(value as 'me' | 'bookmarked')}
         />
         <TextInput
           placeholder="시험지 필터링"
-          onChange={(e) => handleFilterMyExams(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
 
       <div className="edit-my-exams-list">
-        {myExams.map((exam) => (
+        {filteredData.map((exam) => (
           <EditExamItem key={exam.id} exam={exam} />
         ))}
       </div>

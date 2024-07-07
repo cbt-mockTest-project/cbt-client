@@ -19,7 +19,7 @@ import {
   useEditPost,
   useLazyReadPost,
 } from '@lib/graphql/hook/usePost';
-import { message } from 'antd';
+import { App } from 'antd';
 import { PostCategory, UserRole } from 'types';
 import Select from 'antd/lib/select';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -38,6 +38,7 @@ const ReactQuillWrapper = dynamic(
 
 const PostWriteContainer: React.FC<PostWriteContainerProps> = () => {
   const router = useRouter();
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const [createPost, { loading: createPostLoading }] = useCreatePost();
   const [editPost, { loading: editPostLoading }] = useEditPost();

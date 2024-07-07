@@ -21,7 +21,7 @@ const StudyAnswerBoxBlock = styled.div`
   position: relative;
   .study-answer-box-question-card-answer-label {
     font-weight: bold;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .study-answer-box-question-card-answer {
     word-break: break-all;
@@ -46,7 +46,7 @@ const StudyAnswerBoxBlock = styled.div`
   .study-answer-footer {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid ${palette.colorBorderLight};
+    border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
     display: flex;
     align-items: center;
     gap: 5px;

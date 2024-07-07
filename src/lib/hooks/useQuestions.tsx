@@ -8,7 +8,7 @@ import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
   MockExamQuestion,
@@ -23,6 +23,7 @@ import useQuestionFeedback, {
 } from './useQuestionFeedback';
 
 const useQuestions = () => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
 
@@ -87,7 +88,8 @@ const useQuestions = () => {
 
   const saveQuestionState = async (
     question: MockExamQuestion,
-    state: QuestionState
+    state: QuestionState,
+    updateCacheDelay?: number
   ) => {
     try {
       if (!meQuery?.me.user) {
@@ -98,7 +100,14 @@ const useQuestions = () => {
         ...question,
         myQuestionState: state,
       };
-      dispatch(mockExamActions.setQuestion(newQuestion));
+
+      if (updateCacheDelay) {
+        setTimeout(() => {
+          dispatch(mockExamActions.setQuestion(newQuestion));
+        }, updateCacheDelay);
+      } else {
+        dispatch(mockExamActions.setQuestion(newQuestion));
+      }
       await changeQuestionState({
         variables: {
           input: {

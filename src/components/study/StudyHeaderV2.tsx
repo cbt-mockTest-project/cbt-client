@@ -16,7 +16,7 @@ const StudyHeaderV2Block = styled.div`
   align-items: center;
   .study-header-close-button {
     font-size: 28px;
-    color: ${palette.colorText};
+    color: ${({ theme }) => theme.color('colorText')};
     cursor: pointer;
   }
 `;
@@ -42,12 +42,6 @@ const StudyHeaderV2: React.FC<StudyHeaderV2Props> = () => {
     localStorage.get(LAST_VISITED_CATEGORY) || '/';
   const onClickCloseButton = () => {
     router.push(prevVisitedCategoryOrHomePath);
-    // Modal.confirm({
-    //   title: '학습을 중단하시겠습니까?',
-    //   onOk: () => {
-    //     router.push(prevVisitedCategoryOrHomePath);
-    //   },
-    // });
   };
   return (
     <StudyHeaderV2Block>

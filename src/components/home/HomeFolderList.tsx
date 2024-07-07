@@ -1,16 +1,12 @@
 import { LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
 import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ExamSource } from 'types';
+import { MockExamCategory } from 'types';
 import { useRouter } from 'next/router';
-import { useAppSelector } from '@modules/redux/store/configureStore';
-import { uniqueId } from 'lodash';
-import HomeCategoriesRefresh from './HomeCategoriesRefresh';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -18,7 +14,8 @@ const HomeFolderListBlock = styled.div`
   flex-direction: column;
   gap: 5px;
   position: relative;
-  height: 170px;
+  height: 175px;
+  justify-content: flex-end;
   .home-folder-list-swiper {
     width: 100%;
     margin-top: 15px;
@@ -31,7 +28,7 @@ const HomeFolderListBlock = styled.div`
   }
   .home-folder-sub-title {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .home-folder-list-prev-button,
   .home-folder-list-next-button {
@@ -42,7 +39,7 @@ const HomeFolderListBlock = styled.div`
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: 35px;
+    bottom: 40px;
     z-index: 10;
     svg {
       font-size: 20px;
@@ -96,7 +93,7 @@ export interface HomeFolderListProps {
   unikeyKey: string;
   headerButton?: React.ReactNode;
   emptyDescription?: string;
-  type: ExamSource | 'bookmark' | 'isPick';
+  categories: MockExamCategory[] | null;
 }
 
 const HomeFolderList: React.FC<HomeFolderListProps> = ({
@@ -107,25 +104,9 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   unikeyKey,
   headerButton,
   emptyDescription = '아직 암기장이 없습니다.',
-  type,
+  categories,
 }) => {
-  const categories = useAppSelector((state) => {
-    switch (type) {
-      case ExamSource.MoudCbt:
-        return state.home.moduStorageCategories;
-      case ExamSource.User:
-        return state.home.userStorageCategories;
-      case ExamSource.EhsMaster:
-        return state.home.ehsStorageCategories;
-      case 'bookmark':
-        return state.home.bookmarkedCategories;
-      case 'isPick':
-        return state.home.isPickedCategories;
-      default:
-        return [];
-    }
-  });
-  const isLoading = categories === null;
+  const isLoading = !categories;
   const folderListRef = useRef<HTMLUListElement | null>(null);
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
@@ -201,7 +182,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
           {categories &&
             categories?.length > 0 &&
             categories.map((category, index) => (
-              <div className="flex items-center" key={uniqueId(type)}>
+              <div className="flex items-center" key={index}>
                 <CategoryFolderListItem
                   className="home-folder-item"
                   category={category}

@@ -102,7 +102,7 @@ const ManageExamListItemContainer = styled.li`
     width: 60px;
     text-align: left;
     font-size: 0.9rem;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   @media (max-width: ${responsive.small}) {
     .manage-exam-item-status-and-button-wrapper {

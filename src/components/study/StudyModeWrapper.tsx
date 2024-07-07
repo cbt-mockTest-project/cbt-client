@@ -37,16 +37,16 @@ const StudyModeWrapperBlock = styled.div`
     top: 100px;
     padding: 5px;
     margin: 0;
-    border: 2px solid ${palette.colorBorder};
-    color: ${palette.colorSubText};
+    border: 2px solid ${({ theme }) => theme.color('colorBorder')};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease-in-out;
     &:hover {
-      color: ${palette.antd_blue_02};
-      border-color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
+      border-color: ${({ theme }) => theme.color('colorPrimary')};
     }
     svg {
       font-size: 30px;
@@ -82,7 +82,7 @@ const StudyModeWrapperBlock = styled.div`
     .typing-mode-swiper-button-wrapper {
       z-index: 100;
       box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
-      background-color: white;
+      background-color: ${({ theme }) => theme.color('colorBgLayout')};
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -92,19 +92,19 @@ const StudyModeWrapperBlock = styled.div`
       width: 100%;
       right: 0;
       .typing-mode-control-button {
-        background-color: white;
+        background-color: ${({ theme }) => theme.color('colorBgContainer')};
         padding: 5px;
         width: 40px;
         height: 40px;
-        border: 2px solid ${palette.colorBorder};
-        color: ${palette.colorText};
+        border: 2px solid ${({ theme }) => theme.color('colorBorder')};
+        color: ${({ theme }) => theme.color('colorText')};
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease-in-out;
         &:hover {
-          color: ${palette.antd_blue_02};
+          color: ${({ theme }) => theme.color('colorPrimary')};
         }
         svg {
           font-size: 20px;

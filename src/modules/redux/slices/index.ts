@@ -37,12 +37,7 @@ const rootReducer = (
 ): RootState => {
   switch (action.type) {
     case HYDRATE:
-      const result = cloneDeep(action.payload);
-      if (state) {
-        result.data.dataList = state.data.dataList;
-        result.data.dataListQuery = state.data.dataListQuery;
-      }
-      return result;
+      return action.payload;
     default: {
       const combineReducer = combineReducers({
         core: coreSlice.reducer,

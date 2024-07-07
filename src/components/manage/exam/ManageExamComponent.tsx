@@ -4,7 +4,7 @@ import {
 } from '@lib/graphql/hook/useExam';
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { message, Select } from 'antd';
+import { App, Select } from 'antd';
 import { DefaultOptionType } from 'antd/lib/cascader';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -14,12 +14,12 @@ import { handleError } from '@lib/utils/utils';
 interface ManageExamComponentProps {}
 
 const ManageExamComponent: React.FC<ManageExamComponentProps> = () => {
+  const { message } = App.useApp();
   const [readTitles, { data: examTitlesQuery }] = useReadExamTitles();
   const { data: categoriesQuery } = useReadMyExamCategories();
   const [selectedCategory, setSelectedCategory] =
     useState<DefaultOptionType | null>(null);
   const [categories, setCategories] = useState<DefaultOptionType[]>([]);
-  const [titles, setTitles] = useState<DefaultOptionType[]>([]);
   useEffect(() => {
     if (categoriesQuery && categoriesQuery.readMyMockExamCategories) {
       setCategories(() =>
@@ -39,17 +39,6 @@ const ManageExamComponent: React.FC<ManageExamComponentProps> = () => {
       const res = await readTitles({
         variables: { input: { name: category.label as string, all: true } },
       });
-      if (res.data?.readMockExamTitlesByCateory.ok) {
-        setTitles(() =>
-          res.data
-            ? res.data.readMockExamTitlesByCateory.titles.map((title) => ({
-                value: title.id,
-                label: title.title,
-              }))
-            : []
-        );
-        return;
-      }
       message.error(res.data?.readMockExamTitlesByCateory.error);
     } catch (e) {
       handleError(e);

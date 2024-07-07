@@ -1,16 +1,12 @@
-import {
-  useGetMyCategories,
-  useLazyGetMyExamCategories,
-} from '@lib/graphql/hook/useExam';
+import { useGetMyCategories } from '@lib/graphql/hook/useExam';
 import {
   useDeleteExamCategoryBookmark,
   useGetCategorySubscribers,
-  useLazyGetCategorySubscribers,
 } from '@lib/graphql/hook/useExamCategoryBookmark';
 import { useCreateCategoryInvitation } from '@lib/graphql/hook/useExamCategoryInvitation';
 import { useLazyGetUser } from '@lib/graphql/hook/useUser';
 import { handleError } from '@lib/utils/utils';
-import { message } from 'antd';
+import { App } from 'antd';
 import { User } from 'types';
 import useApolloClient from './useApolloCient';
 import { GET_EXAM_CATEROGY_SUBSCRIBERS } from '@lib/graphql/query/examCategoryBookmark';
@@ -23,6 +19,7 @@ export interface SearchAndInviteUserParams {
 }
 
 const useCategoryInvitation = (categoryId: number) => {
+  const { message } = App.useApp();
   const isInviting = useRef(false);
   const { data: getMyCategoriesResponse } = useGetMyCategories();
   const { updateCache } = useApolloClient();

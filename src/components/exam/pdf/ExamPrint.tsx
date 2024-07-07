@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import palette from '@styles/palette';
-import { Button, Spin, message } from 'antd';
+import { Button, Spin, App } from 'antd';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
@@ -21,12 +21,6 @@ import {
   PUBLIC_CATEGORY_ID,
   PUBLIC_EXAM_ID,
 } from '@lib/constants/sessionStorage';
-import { apolloClient } from '@modules/apollo';
-import {
-  CheckIsAccessibleCategoryMutation,
-  CheckIsAccessibleCategoryMutationVariables,
-} from '@lib/graphql/query/examCategoryBookmark.generated';
-import { CHECK_IS_ACCESSIBLE_CATEGORY } from '@lib/graphql/query/examCategoryBookmark';
 
 const ExamPrintComponentBlock = styled.div`
   display: flex;
@@ -80,7 +74,7 @@ const ExamPrintComponentBlock = styled.div`
     width: 105px;
     font-size: 20px;
     font-weight: bold;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .exam-print-question-content {
     background-color: ${palette.blue_100};
@@ -134,6 +128,7 @@ function transformHtmlString(htmlStr: string) {
 }
 
 const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
+  const { message } = App.useApp();
   const router = useRouter();
   const sessionStorage = new SessionStorage();
   const examId = Number(router.query.Id);
@@ -318,7 +313,6 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         setHasAccess(true);
         return;
       }
-      console.log(publicCategoryId, categoryId);
       if (publicCategoryId && Number(publicCategoryId) === categoryId) {
         setHasAccess(true);
         return;

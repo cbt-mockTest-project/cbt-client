@@ -1,7 +1,6 @@
 import useCategoryEvaluation from '@lib/hooks/useCategoryEvaluation';
-import { Delete, Edit, StarRounded } from '@mui/icons-material';
-import palette from '@styles/palette';
-import { Button, Modal, ModalProps, Rate, Table } from 'antd';
+import { Delete, Edit } from '@mui/icons-material';
+import { App, Button, Modal, ModalProps, Rate } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -21,7 +20,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
     }
     .study-end-category-review-modal-desc {
       font-size: 14px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
     }
   }
   .study-end-category-review-modal-inner {
@@ -54,7 +53,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
         font-size: 14px;
         font-weight: 600;
 
-        color: ${palette.colorSubText};
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
       }
       .study-end-category-review-modal-my-evaluation-top-wrapper {
         display: flex;
@@ -67,7 +66,7 @@ const StudyEndCategoryReviewModalBlock = styled(Modal)`
             cursor: pointer;
             transition: color 0.2s linear;
             :hover {
-              color: ${palette.antd_blue_02};
+              color: ${({ theme }) => theme.color('colorPrimary')};
             }
           }
         }
@@ -93,6 +92,7 @@ interface StudyEndCategoryReviewModalProps
 const StudyEndCategoryReviewModal: React.FC<
   StudyEndCategoryReviewModalProps
 > = (props) => {
+  const { modal } = App.useApp();
   const { categoryId, ...modalProps } = props;
   const {
     myEvaluation,
@@ -123,7 +123,7 @@ const StudyEndCategoryReviewModal: React.FC<
   }, [myEvaluation]);
 
   const onClickDelete = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '리뷰를 삭제하시겠습니까?',
       okText: '삭제',
       cancelText: '취소',

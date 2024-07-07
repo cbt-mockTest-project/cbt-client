@@ -54,7 +54,7 @@ const CategoryFolderListItemBlock = styled(Link)`
       justify-content: flex-end;
       align-items: center;
       gap: 5px;
-      color: ${palette.colorSubText};
+      color: ${({ theme }) => theme.color('colorTextSecondary')};
       font-size: 13px;
     }
 
@@ -79,14 +79,14 @@ const CategoryFolderListItemBlock = styled(Link)`
 
       .category-user-profile-image {
         border-radius: 50%;
-        background-color: ${palette.gray_200};
+        background-color: ${({ theme }) => theme.color('colorFillAlter')};
         margin-right: 5px;
       }
 
       .category-exam-count {
         font-size: 12px;
         font-weight: bold;
-        color: ${palette.colorSubText};
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
       }
     }
   }
@@ -103,18 +103,14 @@ interface MockExamCategoryWithIsNem extends MockExamCategory {
 interface CategoryFolderListItemProps {
   category?: MockExamCategoryWithIsNem;
   isLoading?: boolean;
-  handleToggleBookmark?: (categoryId: number) => Promise<void>;
   className?: string;
 }
 
 const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   category,
   isLoading,
-  handleToggleBookmark,
   className = '',
 }) => {
-  const router = useRouter();
-  const { handleCheckLogin, user } = useAuth();
   if (!category) return null;
   return (
     <CategoryFolderListItemBlock
@@ -129,18 +125,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 <span>{category.isNew && <Tag color="green">NEW</Tag>}</span>
                 <span>{category.name}</span>
               </div>
-              {user?.id !== category.user.id && handleToggleBookmark && (
-                <div className="category-header-bookmark-or-tag">
-                  <ExamBookmark
-                    isBookmarked={category.isBookmarked}
-                    handleToggleBookmark={(e) => {
-                      e.preventDefault();
-                      if (!handleCheckLogin()) return;
-                      handleToggleBookmark(category.id);
-                    }}
-                  />
-                </div>
-              )}
             </div>
             <div className="category-middle-wrapper">
               <HeartTwoTone twoToneColor="#eb2f96" />

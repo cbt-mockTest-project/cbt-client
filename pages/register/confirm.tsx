@@ -2,14 +2,14 @@ import WithHead from '@components/common/head/WithHead';
 import ErrorText from '@components/common/layout/errorText/ErrorText';
 import { useSendVerificationMailMutation } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { SendVerificationMailInput } from 'types';
 
 const Confirm = () => {
+  const { message } = App.useApp();
   const { control, handleSubmit, formState } =
     useForm<SendVerificationMailInput>({ defaultValues: { email: '' } });
   const [sendVerificationMailMutation] = useSendVerificationMailMutation();
@@ -91,7 +91,7 @@ const ConfirmContainer = styled.form`
   .email-confirm-input-label {
     margin-top: 20px;
     margin-bottom: 5px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 
   button {

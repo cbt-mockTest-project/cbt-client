@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useInfinityScroll from '@lib/hooks/useInfinityScroll';
-import { Skeleton, message } from 'antd';
+import { Skeleton, App } from 'antd';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import { apolloClient } from '@modules/apollo';
@@ -35,21 +35,26 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   isAnswerAllHidden,
   isStaticPage,
 }) => {
+  const { message } = App.useApp();
   const sessionStorage = new SessionStorage();
   const router = useRouter();
   const categoryId = router.query.categoryId;
   const [page, setPage] = useState(1);
   const { data: meQuery } = useMeQuery();
   const [isMyExam, setIsMyExam] = useState(false);
-  const serverSideQuestionIds = useAppSelector((state) =>
-    state.mockExam.serverSideQuestions?.length
-      ? state.mockExam.serverSideQuestions.map((question) => question.id)
-      : []
+  const serverSideQuestionIds = useAppSelector(
+    (state) =>
+      state.mockExam.serverSideQuestions?.length
+        ? state.mockExam.serverSideQuestions.map((question) => question.id)
+        : [],
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
   );
-  const clientSideQuestionIds = useAppSelector((state) =>
-    state.mockExam.questions?.length
-      ? state.mockExam.questions.map((question) => question.id)
-      : []
+  const clientSideQuestionIds = useAppSelector(
+    (state) =>
+      state.mockExam.questions?.length
+        ? state.mockExam.questions.map((question) => question.id)
+        : [],
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
   );
   const questionIds = useMemo(() => {
     if (isStaticPage) {

@@ -8,10 +8,11 @@ import { useMemo } from 'react';
 import useAuth from './useAuth';
 import { GetCategoryEvaluationQuery } from '@lib/graphql/query/categoryEvaluationQuery.generated';
 import { GET_CATEGORY_EVALUATION_QUERY } from '@lib/graphql/query/categoryEvaluationQuery';
-import { message } from 'antd';
+import { App } from 'antd';
 import { cloneDeep } from 'lodash';
 
 const useCategoryEvaluation = (categoryId: number) => {
+  const { message } = App.useApp();
   const { user, handleCheckLogin } = useAuth();
   const { data } = useGetCategoryEvaluation({
     categoryId,

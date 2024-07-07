@@ -1,25 +1,31 @@
-import palette from '@styles/palette';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { navBottomItems, navItems, navSellerItems } from './layout.constants';
 import { useRouter } from 'next/router';
-import { Menu } from 'antd';
+import { Menu, Switch } from 'antd';
 import CustomNavDivider from './CustomNavDivider';
 import UserAuthBox from './UserAuthBox';
 import AppDownloadInfoModal from './AppDownloadInfoModal';
 import { responsive } from '@lib/utils/responsive';
-import KakaoOpenChatModal from '../modal/KakaoOpenChatModal';
 import OpenChatModal from './OpenChatModal';
 import useAuth from '@lib/hooks/useAuth';
 import { UserRole } from 'types';
 import BugReportModal from './BugReportModal';
-import MainViewCount from '@components/main/MainViewCount';
+import { MoonFilled } from '@ant-design/icons';
+import useThemeControl from '@lib/hooks/useThemeControl';
 
 const SideNavListBlock = styled.ul`
   .side-nav-list {
     .ant-menu-item {
       height: 36px;
     }
+  }
+  .side-nav-theme-toggle-box {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 30px;
   }
   @media (max-width: ${responsive.medium}) {
     .side-nav-list {
@@ -34,6 +40,7 @@ interface SideNavListProps {}
 
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
+  const { theme, setTheme } = useThemeControl();
   const { isLoggedIn, user, handleCheckLogin } = useAuth();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -48,7 +55,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           router.push(e.key.toString());
         }}
         selectedKeys={[router.pathname]}
-        style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
         items={navItems}
       />
@@ -81,11 +87,17 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             );
           }
         }}
-        style={{ backgroundColor: palette.colorContainerBg }}
         mode="inline"
         items={navBottomItems}
         selectedKeys={[]}
       />
+      <div className="side-nav-theme-toggle-box">
+        <MoonFilled />
+        <Switch
+          checked={theme === 'dark'}
+          onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+        />
+      </div>
       <CustomNavDivider />
       <UserAuthBox className="side-user-auth-box" />
       {isLoggedIn && [UserRole.Admin].includes(user.role) && (
@@ -99,7 +111,6 @@ const SideNavList: React.FC<SideNavListProps> = () => {
                 return;
               }
             }}
-            style={{ backgroundColor: palette.colorContainerBg }}
             mode="inline"
             items={navSellerItems}
             selectedKeys={[]}

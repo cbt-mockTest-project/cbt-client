@@ -21,11 +21,11 @@ const CategoryLearningProgressBlock = styled.div`
     font-size: 14px;
     width: fit-content;
     width: 50px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .ant-progress-text {
     font-size: 12px !important;
-    color: ${palette.colorSubText} !important;
+    color: ${({ theme }) => theme.color('colorTextTertiary')} !important;
   }
   .category-learning-progress-help-icon-tooltip {
     .ant-tooltip-content {

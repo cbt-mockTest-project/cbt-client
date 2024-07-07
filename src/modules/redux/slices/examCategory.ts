@@ -1,18 +1,20 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { SetCategoryPayload, SetMyExamsPayload } from 'customTypes';
-import { cloneDeep, isEqual } from 'lodash';
-import { DropResult } from 'react-beautiful-dnd';
 import {
-  MockExam,
-  MockExamCategory,
-  RevenueRequestForm,
-  RevenueRequestFormStatus,
-} from 'types';
+  SetCategoryExamsPayload,
+  SetCategoryPayload,
+  SetMyBookmarkedExamsPayload,
+  SetMyExamsPayload,
+} from 'customTypes';
+import { isEqual } from 'lodash';
+import { MockExam, MockExamCategory, RevenueRequestForm } from 'types';
 
 export interface ExamCategoryState {
   category: MockExamCategory | null;
   originalCategory: MockExamCategory | null;
+  originalCategoryExams: MockExam[];
+  categoryExams: MockExam[];
   myExams: MockExam[];
+  myBookmarkedExams: MockExam[];
   originalMyExams: MockExam[];
   moveRecoverCategory: MockExamCategory | null;
 }
@@ -20,7 +22,10 @@ export interface ExamCategoryState {
 const examCategoryState: ExamCategoryState = {
   category: null,
   originalCategory: null,
+  originalCategoryExams: null,
+  categoryExams: null,
   myExams: [],
+  myBookmarkedExams: [],
   originalMyExams: [],
   moveRecoverCategory: null,
 };
@@ -47,84 +52,49 @@ const examCategorySlice = createSlice({
       state.myExams = myExams;
       if (shouldUpdateOriginal) state.originalMyExams = myExams;
     },
-    toggleCategoryBookmark: (state) => {
-      if (!state.category) return;
-      state.category.isBookmarked = !state.category.isBookmarked;
-    },
-    editCategory(state, action: PayloadAction<Partial<MockExamCategory>>) {
-      if (!state.category) return;
-      const newCategory = { ...state.category, ...action.payload };
-      state.category = newCategory;
-      state.originalCategory = newCategory;
+    setMyBookmarkedExams: (
+      state,
+      action: PayloadAction<SetMyBookmarkedExamsPayload>
+    ) => {
+      const { myBookmarkedExams, shouldUpdateOriginal = true } = action.payload;
+      if (isEqual(state.myBookmarkedExams, myBookmarkedExams)) return;
+      state.myBookmarkedExams = myBookmarkedExams;
+      if (shouldUpdateOriginal) state.originalMyExams = myBookmarkedExams;
     },
     addExamToCategory(state, action: PayloadAction<number>) {
       const examId = action.payload;
-      if (!state.category) return;
-      const newExam = state.myExams.find((exam) => exam.id === examId);
-      const updatedCategory = {
-        ...state.category,
-        mockExam: [newExam, ...state.category.mockExam],
-      } as MockExamCategory;
-      state.category = updatedCategory;
-      state.originalCategory = updatedCategory;
+      if (!state.categoryExams) return;
+      const newExam =
+        state.myExams.find((exam) => exam.id === examId) ||
+        state.myBookmarkedExams.find((exam) => exam.id === examId);
+      const updatedcategoryExams = [newExam, ...state.categoryExams];
+      state.categoryExams = updatedcategoryExams;
+      state.originalCategoryExams = updatedcategoryExams;
     },
     removeExamFromCategory(state, action: PayloadAction<number>) {
       const examId = action.payload;
-      if (!state.category) return;
-      const updatedCategory = {
-        ...state.category,
-        mockExam: state.category.mockExam.filter((exam) => exam.id !== examId),
-      } as MockExamCategory;
-      state.category = updatedCategory;
-      state.originalCategory = updatedCategory;
-    },
-    filterExams(state, action: PayloadAction<string>) {
-      if (!state.originalCategory) return;
-      const keyword = action.payload;
-      const filteredCategory = {
-        ...state.originalCategory,
-        mockExam: state.originalCategory.mockExam.filter((exam) =>
-          exam.title.includes(keyword)
-        ),
-      };
-      state.category = filteredCategory;
-    },
-    filterMyExams(state, action: PayloadAction<string>) {
-      if (!state.originalMyExams) return;
-      const keyword = action.payload;
-      const filteredExams = state.originalMyExams.filter((exam) =>
-        exam.title.includes(keyword)
+      if (!state.categoryExams) return;
+      const updatedCategoryExams = state.categoryExams.filter(
+        (exam) => exam.id !== examId
       );
-      state.myExams = filteredExams;
+      state.categoryExams = updatedCategoryExams;
+      state.originalCategoryExams = updatedCategoryExams;
     },
     toggleExamBookmark(state, action: PayloadAction<number>) {
-      if (!state.category) return;
       const examId = action.payload;
-      const newExams = state.category.mockExam.map((exam) => {
+      const newExams = state.categoryExams?.map((exam) => {
         if (exam.id === examId) {
           exam.isBookmarked = !exam.isBookmarked;
         }
         return exam;
       });
-      const newCategory = { ...state.category, mockExam: newExams };
-      state.category = newCategory;
-      state.originalCategory = newCategory;
+      state.categoryExams = newExams;
+      state.originalCategoryExams = newExams;
     },
-    moveExamOrder(state, action: PayloadAction<DropResult>) {
-      const { destination, source } = action.payload;
-      if (!destination) return;
-      if (destination.index === source.index) return;
-      if (!state.category) return;
-      state.moveRecoverCategory = cloneDeep(state.category);
-      const newExamList = [...state.category.mockExam];
-      const [removed] = newExamList.splice(source.index, 1);
-      newExamList.splice(destination.index, 0, removed);
-      state.category.mockExam = newExamList;
-    },
-    recoverExamOrder(state) {
-      if (!state.moveRecoverCategory) return;
-      state.category = state.moveRecoverCategory;
-      state.moveRecoverCategory = null;
+    setCategoryExams(state, action: PayloadAction<SetCategoryExamsPayload>) {
+      const { categoryExams, shouldUpdateOriginal = true } = action.payload;
+      state.categoryExams = categoryExams;
+      if (shouldUpdateOriginal) state.originalCategoryExams = categoryExams;
     },
   },
 });

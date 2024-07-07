@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Button, Card, message } from 'antd';
+import { Button, Card, App } from 'antd';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
 import { useDeletePost, useLazyReadPost } from '@lib/graphql/hook/usePost';
@@ -46,13 +46,13 @@ const DataDetailComponentBlock = styled.div`
     margin-top: 25px;
   }
   .data-detail-info {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .data-detail-info-wrapper {
     display: flex;
     gap: 25px;
     margin-top: 15px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     border-bottom: 2px solid ${palette.gray_100};
     padding-bottom: 15px;
   }
@@ -96,6 +96,7 @@ const DataDetailComponentBlock = styled.div`
 interface DataDetailComponentProps {}
 
 const DataDetailComponent: React.FC<DataDetailComponentProps> = ({}) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const [readPost] = useLazyReadPost();
   const [editPostLike] = useEditPostLike();

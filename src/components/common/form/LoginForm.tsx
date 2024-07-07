@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { App, Button, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { LoginInput } from 'types';
@@ -22,6 +22,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
+  const { message } = App.useApp();
   const { control, formState, handleSubmit } = useForm<LoginInput>();
   const router = useRouter();
   const [loginMutation] = useLoginMutation();
@@ -88,7 +89,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ isMobile = false }) => {
           className="login-error-text"
         />
       )}
-      <Button type="primary" htmlType="submit" disabled={buttonState}>
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={buttonState}
+        loading={buttonState}
+      >
         로그인
       </Button>
       <div className="login-or-line" />
@@ -125,7 +131,7 @@ const LoginFormContainer = styled.form`
   }
   .login-form-label {
     margin-top: 20px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   input {
     min-width: 250px;

@@ -28,7 +28,7 @@ const ExamBookmarkStudyModalBlock = styled(Modal)`
   .exam-multiple-select-description {
     margin-top: 5px;
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .exam-multiple-select-score-icon {
     font-size: 16px;

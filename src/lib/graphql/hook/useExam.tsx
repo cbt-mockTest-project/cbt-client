@@ -185,12 +185,6 @@ export const useLazyGetExamCategories = () =>
     GET_EXAM_CATEGORIES
   );
 
-export const useLazyReadCategoryById = () =>
-  useLazyQuery<
-    ReadMockExamCategoryByCategoryIdQuery,
-    ReadMockExamCategoryByCategoryIdQueryVariables
-  >(READ_EXAM_CATEGORY_BY_ID);
-
 export const useGetMyExams = () =>
   useQuery<GetMyExamsQuery, GetMyExamsQueryVariables>(GET_MY_EXAMS);
 

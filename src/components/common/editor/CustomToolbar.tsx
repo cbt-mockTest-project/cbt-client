@@ -35,7 +35,7 @@ const CustomToolbarBlock = styled.div<{
     `}
 
   .custom-tool-bar-button {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-size: 16px;
   }
   .custom-tool-bar-button.formula {

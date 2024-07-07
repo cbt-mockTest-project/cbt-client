@@ -10,7 +10,7 @@ import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/quer
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
 import { useApollo } from '@modules/apollo';
-import { message } from 'antd';
+import { App } from 'antd';
 import React, { useState } from 'react';
 import {
   CommentCardProps,
@@ -22,6 +22,7 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
   option,
   className,
 }) => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const [editState, setEditState] = useState(false);
   const { value: content, onChange: onChangeContent } = useInput(

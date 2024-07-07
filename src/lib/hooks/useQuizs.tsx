@@ -14,13 +14,14 @@ import {
   GetQuizsQueryVariables,
 } from '@lib/graphql/query/quizQuery.generated';
 import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
-import { message } from 'antd';
+import { App } from 'antd';
 import { queryOptions, useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { initializeApollo } from '@modules/apollo';
 import { queryClient } from '../../../pages/_app';
 
 const useQuizs = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const apolloClient = initializeApollo({}, '');
   const categoryId = Number(router.query.categoryId);

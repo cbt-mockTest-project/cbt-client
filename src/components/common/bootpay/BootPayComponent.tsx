@@ -1,8 +1,6 @@
 import { handleError, isServer, loadScript } from '@lib/utils/utils';
-import { Button, message } from 'antd';
-import axios from 'axios';
+import { App, Button } from 'antd';
 import React, { useEffect } from 'react';
-import shortid from 'shortid';
 import styled from 'styled-components';
 
 const BootPayComponentBlock = styled.div``;
@@ -10,6 +8,7 @@ const BootPayComponentBlock = styled.div``;
 interface BootPayComponentProps {}
 
 const BootPayComponent: React.FC<BootPayComponentProps> = () => {
+  const { message } = App.useApp();
   useEffect(() => {
     if (!isServer()) {
       loadScript({

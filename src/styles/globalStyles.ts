@@ -41,7 +41,7 @@ const Globalstyles = createGlobalStyle`
       display: none;
   }
   body {
-    /* background-color: ${palette.colorBg}; */
+    background-color: ${({ theme }) => theme.color('colorBgLayout')};
     overflow-x: hidden !important;
     overflow-y : auto;
   }

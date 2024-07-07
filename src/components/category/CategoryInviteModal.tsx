@@ -1,8 +1,8 @@
 import useCategoryInvitation from '@lib/hooks/useCategoryInvitation';
 import { Clear } from '@mui/icons-material';
-import palette from '@styles/palette';
-import { Button, List, Modal, ModalProps, message } from 'antd';
-import React, { useRef, useState } from 'react';
+
+import { App, Button, List, Modal, ModalProps } from 'antd';
+import React from 'react';
 import styled from 'styled-components';
 import CategoryInviteLinkContent from './CategoryInviteLinkContent';
 import { useCreateCategoryInviteLinkMutation } from '@lib/hooks/useCategoryInviteLink';
@@ -19,7 +19,7 @@ const CategoryInviteModalBlock = styled(Modal)`
   }
   .category-invite-modal-desc {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .category-invite-modal-list-item-wrapper {
     display: flex;
@@ -43,6 +43,7 @@ interface CategoryInviteModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const CategoryInviteModal: React.FC<CategoryInviteModalProps> = (props) => {
+  const { modal, message } = App.useApp();
   const { categoryId, ...modalProps } = props;
   const createCategoryInviteLink = useCreateCategoryInviteLinkMutation();
   const { subscribers, handleDeleteCategorySubscriber } =
@@ -54,7 +55,7 @@ const CategoryInviteModal: React.FC<CategoryInviteModalProps> = (props) => {
       return;
     }
 
-    Modal.success({
+    modal.success({
       title: '초대링크',
       footer: null,
       content: (

@@ -2,17 +2,15 @@ import Bookmark from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Image, Popover } from 'antd';
+import { Button, Image } from 'antd';
 import { MockExamQuestion } from 'types';
-import palette from '@styles/palette';
 import useAuth from '@lib/hooks/useAuth';
-import { EditOutlined, LinkOutlined } from '@ant-design/icons';
+import { LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
-import { LinkOffRounded, LinkRounded } from '@mui/icons-material';
 import HighlightableText from './HighlightableText';
 
 const StudyQuestionBoxBlock = styled.div`
@@ -35,7 +33,7 @@ const StudyQuestionBoxBlock = styled.div`
         svg {
           font-size: 20px;
           &:hover {
-            color: ${palette.antd_blue_02};
+            color: ${({ theme }) => theme.color('colorPrimary')};
           }
         }
       }
@@ -52,7 +50,7 @@ const StudyQuestionBoxBlock = styled.div`
     font-weight: bold;
     width: fit-content;
     flex-shrink: 0;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .study-question-box-question {
     word-break: break-all;
@@ -68,7 +66,7 @@ const StudyQuestionBoxBlock = styled.div`
   }
   .study-question-exam-title {
     font-size: 12px;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .study-question-edit-button {
     margin-left: auto;
@@ -78,7 +76,7 @@ const StudyQuestionBoxBlock = styled.div`
     bottom: 5px;
     font-size: 12px;
     font-weight: bold;
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
 `;
 
@@ -168,7 +166,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             </a>
           )}
           <Bookmark
-            onClick={onClickBookmark}
+            onClick={(e) => onClickBookmark(e)}
             role="button"
             active={!!question?.isBookmarked}
             className="study-question-box-bookmark"

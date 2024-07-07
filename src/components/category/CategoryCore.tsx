@@ -6,46 +6,53 @@ import {
   useMeQuery,
   useUpdateRecentlyStudiedCategory,
 } from '@lib/graphql/hook/useUser';
-import useExamCategory from '@lib/hooks/useExamCategory';
 import { getExamSettingHistory } from '@lib/utils/examSettingHistory';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { examSettingActions } from '@modules/redux/slices/examSetting';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@modules/redux/store/configureStore';
-import { message } from 'antd';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { ExamSettingType } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { ReadMockExamCategoryByCategoryIdInput, UserRole } from 'types';
+import {
+  MockExam,
+  MockExamCategory,
+  ReadMockExamCategoryByCategoryIdInput,
+} from 'types';
+import { queryClient } from '../../../pages/_app';
+import { examCategoryActions } from '@modules/redux/slices/examCategory';
 
 interface CategoryCoreProps {
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
+  categoryId: number;
+  queryKey: string[];
 }
 
-const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
+const CategoryCore: React.FC<CategoryCoreProps> = ({
+  categoryQueryInput,
+  categoryId,
+  queryKey,
+}) => {
   const router = useRouter();
+  const category = queryClient.getQueryData<MockExamCategory>(queryKey);
+
   const dispatch = useAppDispatch();
-  const { fetchCategory } = useExamCategory();
-  const { data: meQuery } = useMeQuery();
+  const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
   const localStorage = new LocalStorage();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
-  const categoryId = useAppSelector((state) => state.examCategory.category.id);
-  const isPrivate = useAppSelector(
-    (state) => !state.examCategory.category.isPublic
-  );
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
-  const categoryAccessDenied = useAppSelector(
-    (state) =>
-      !meQuery?.me.user &&
-      state.examCategory.category &&
-      !state.examCategory.category.isPublic
-  );
+  const [isRefetched, setIsRefetched] = useState(false);
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
+      queryClient
+        .refetchQueries({
+          queryKey,
+        })
+        .then(() => {
+          setIsRefetched(true);
+        });
+      refetchMeQuery();
       updateRecentlyStudiedCategory({
         variables: {
           input: {
@@ -58,7 +65,23 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({ categoryQueryInput }) => {
       const { examIds } = examSetting;
       if (examIds) setExamSetting({ categoryId, examIds });
     }
-  }, [meQuery]);
+  }, [meQuery?.me.user?.id, router.query.name]);
+
+  useEffect(() => {
+    const setCategoryExams = (
+      exams: MockExam[],
+      shouldUpdateOriginal = true
+    ) => {
+      dispatch(
+        examCategoryActions.setCategoryExams({
+          categoryExams: exams,
+          shouldUpdateOriginal,
+        })
+      );
+    };
+    setCategoryExams(category.mockExam || []);
+    setCategoryExams(category.mockExam || []);
+  }, [category.mockExam, isRefetched]);
 
   useEffect(() => {
     if (!router.asPath) return;

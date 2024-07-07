@@ -3,18 +3,18 @@ import BasicCard from '@components/common/card/BasicCard';
 import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import palette from '@styles/palette';
-import { Dropdown, MenuProps, Modal, Tag } from 'antd';
+import { App, Dropdown, MenuProps, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { MockExam } from 'types';
+import { MockExam, MockExamCategory } from 'types';
 import ExamSelecModal from './ExamSelecModal';
 import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import ExamListItemCheckbox from './ExamListItemCheckbox';
-import { useAppSelector } from '@modules/redux/store/configureStore';
+import useCatgegoryExams from './hooks/useCategoryExamList';
 
 const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   width: 100%;
@@ -26,7 +26,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
     css`
       .exam-list-basic-card {
         position: relative;
-        border-color: ${palette.antd_blue_02};
+        border-color: ${({ theme }) => theme.color('colorPrimary')};
       }
     `}
   .exam-list-item-checkbox {
@@ -74,12 +74,12 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
         top: 1px;
         svg {
           font-size: 18px;
-          color: ${palette.colorText};
+          color: ${({ theme }) => theme.color('colorText')};
         }
         &:hover {
           background-color: ${palette.gray_100};
           svg {
-            color: ${palette.antd_blue_02};
+            color: ${({ theme }) => theme.color('colorPrimary')};
           }
         }
       }
@@ -87,7 +87,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   }
 
   .exam-list-item-bookmark-button {
-    color: ${palette.colorText};
+    color: ${({ theme }) => theme.color('colorText')};
   }
   .exam-list-item-bookmark-button-active {
     color: ${palette.yellow_500};
@@ -97,14 +97,14 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
     flex-shrink: 0;
     width: 30px;
     height: 30px;
-    border: 1px solid ${palette.colorBorder};
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
     display: flex;
     justify-content: center;
     align-items: center;
     &:hover {
-      border-color: ${palette.antd_blue_02};
+      border-color: ${({ theme }) => theme.color('colorPrimary')};
       svg {
-        color: ${palette.antd_blue_02};
+        color: ${({ theme }) => theme.color('colorPrimary')};
       }
     }
   }
@@ -141,6 +141,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
 `;
 
 interface ExamListItemProps {
+  category: MockExamCategory;
   exam: MockExam;
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
   hasRecentlyMark?: boolean;
@@ -148,36 +149,31 @@ interface ExamListItemProps {
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
+  category,
   exam,
   dragHandleProps,
   hasRecentlyMark = false,
   recentlyStudyQuestionNumber = 0,
 }) => {
+  const { modal } = App.useApp();
   const router = useRouter();
-  const { handleRemoveExamFromCategory, handleToggleExamBookmark } =
-    useExamCategory();
-  const categoryId = useAppSelector((state) => state.examCategory.category.id);
-  const isPublicCategory = useAppSelector(
-    (state) => state.examCategory.category.isPublic
-  );
-  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
+  const { handleRemoveExamFromCategory } = useCatgegoryExams();
+  const { handleToggleExamBookmark } = useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
   const { user, handleCheckLogin } = useAuth();
   const isMyExam = useMemo(
     () => user && exam.user.id === user.id,
     [exam, user]
   );
-  const isMyCategory = useAppSelector(
-    (state) => state.examCategory.category.user.id === user?.id
-  );
+  const isMyCategory = category.user.id === user?.id;
 
   const handleRemoveExam = () => {
-    Modal.confirm({
+    modal.confirm({
       title: '정말로 삭제하시겠습니까?',
       onOk() {
         handleRemoveExamFromCategory({
           examId: exam.id,
-          categoryId,
+          categoryId: category.id,
         });
       },
     });
@@ -210,7 +206,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
               pathname: '/exam/create',
               query: {
                 examId: exam.id,
-                categoryId,
+                categoryId: category.id,
               },
             });
           }}
@@ -246,8 +242,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   return (
     <ExamListItemBlock hasRecentlyMark={hasRecentlyMark}>
       <ExamListItemCheckbox
-        categoryId={categoryId}
-        exams={exams}
+        categoryId={category.id}
+        exams={category.mockExam}
         examId={exam.id}
       />
       <BasicCard
@@ -313,8 +309,8 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           examId={exam.id}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
-          categoryId={Number(categoryId)}
-          isPublicCategory={isPublicCategory}
+          categoryId={category.id}
+          isPublicCategory={category.isPublic}
         />
       )}
     </ExamListItemBlock>

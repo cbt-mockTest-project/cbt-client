@@ -1,6 +1,6 @@
 import { useUpdatePayment } from '@lib/graphql/hook/usePayment';
 import { isServer, loadScript } from '@lib/utils/utils';
-import { message } from 'antd';
+import { App } from 'antd';
 import { useEffect } from 'react';
 
 export interface ExecuteAfterPaymentParams {
@@ -31,7 +31,7 @@ export interface BootpayProps {
 }
 
 const useBootpay = () => {
-  const [updatePayment] = useUpdatePayment();
+  const { message } = App.useApp();
   useEffect(() => {
     if (!isServer()) {
       loadScript({

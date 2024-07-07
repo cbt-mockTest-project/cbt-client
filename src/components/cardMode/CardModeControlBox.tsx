@@ -22,8 +22,8 @@ const CardModeControlBoxBlock = styled.div`
     .card-mode-control-button {
       padding: 5px;
       margin: 0;
-      border: 2px solid ${palette.colorBorder};
-      color: ${palette.colorText};
+      border: 2px solid ${({ theme }) => theme.color('colorBorder')};
+      color: ${({ theme }) => theme.color('colorText')};
       border-radius: 50%;
       display: flex;
       align-items: center;

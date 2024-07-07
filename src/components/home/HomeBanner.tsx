@@ -50,13 +50,6 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const [isOpenChatModalOpen, setIsOpenChatModalOpen] = React.useState(false);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false);
   const banners = [
-    // {
-    //   img: {
-    //     pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/event-pc.jpeg`,
-    //     mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/event-mobile.jpeg`,
-    //   },
-    //   key: 'https://pinto-buffalo-54c.notion.site/be660af277984f78ac8be42940b61a8c',
-    // },
     {
       img: {
         pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ehs-banner-pc03.png`,

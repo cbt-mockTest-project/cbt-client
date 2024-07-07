@@ -2,9 +2,9 @@ import { FeedbackTypeMap } from '@lib/constants/feedback';
 import { convertServerTimeToKST } from '@lib/utils/utils';
 import palette from '@styles/palette';
 import parse from 'html-react-parser';
-import { Dropdown, MenuProps, Modal, Tag } from 'antd';
+import { App, Dropdown, MenuProps, Tag } from 'antd';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import {
   MockExamQuestion,
   MockExamQuestionFeedback,
@@ -42,7 +42,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
   }
 
   .feedback-user-name {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-size: 14px;
     max-width: 200px;
     width: fit-content;
@@ -56,7 +56,7 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     white-space: pre-wrap;
   }
   .feedback-date {
-    color: ${palette.colorSubText};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     font-size: 12px;
   }
   .feedback-footer {
@@ -76,12 +76,12 @@ const SolutionModeFeedbackListItemBlock = styled.div`
 
   .feedback-control-button-wrapper {
     svg {
-      color: ${palette.colorText};
+      color: ${({ theme }) => theme.color('colorText')};
     }
 
     &:hover {
       svg {
-        color: ${palette.antd_blue_02};
+        color: ${({ theme }) => theme.color('colorPrimary')};
       }
     }
   }
@@ -89,13 +89,13 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     display: flex;
     align-items: center;
     gap: 5px;
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
     cursor: pointer;
     transition: 0.2s all ease-in;
   }
   .feedback-recommendation-icon-and-value.good {
     &:hover {
-      color: ${palette.antd_blue_02};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
   .feedback-recommendation-icon-and-value.bad {
@@ -104,14 +104,14 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     }
   }
   .feedback-recommendation-icon-and-value.good.active {
-    color: ${palette.antd_blue_02};
+    color: ${({ theme }) => theme.color('colorPrimary')};
   }
   .feedback-recommendation-icon-and-value.bad.active {
     color: red;
   }
   .feedback-control-button-wrapper {
     color: ${palette.gray_900};
-    border: 2px solid ${palette.gray_700};
+    border: 2px solid ${({ theme }) => theme.color('colorTextTertiary')};
     width: 22px;
     height: 22px;
     display: flex;
@@ -122,8 +122,8 @@ const SolutionModeFeedbackListItemBlock = styled.div`
     border-radius: 50%;
     transition: 0.2s all ease-in;
     &:hover {
-      border-color: ${palette.antd_blue_02};
-      color: ${palette.antd_blue_02};
+      border-color: ${({ theme }) => theme.color('colorPrimary')};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
     svg {
       font-size: 16px;
@@ -158,6 +158,8 @@ const SolutionModeFeedbackListItem: React.FC<
   deleteFeedback,
   updateFeedbackRecommendation,
 }) => {
+  const { modal } = App.useApp();
+  const theme = useTheme();
   const [currentFeedback, setCurrentFeedback] = useState('');
   const { data: meQuery } = useMeQuery();
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
@@ -168,10 +170,10 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 1,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={(e) => {
             e.stopPropagation();
-            Modal.confirm({
+            modal.confirm({
               title: '정말로 삭제하시겠습니까?',
               onOk: () => deleteFeedback({ question, feedback }),
             });
@@ -185,7 +187,7 @@ const SolutionModeFeedbackListItem: React.FC<
       key: 2,
       label: (
         <button
-          style={{ color: palette.colorText }}
+          style={{ color: theme.color('colorText') }}
           onClick={(e) => {
             e.stopPropagation();
             setCurrentFeedback(feedback.content);

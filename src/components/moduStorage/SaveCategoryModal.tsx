@@ -1,11 +1,11 @@
 import useExamCategory from '@lib/hooks/useExamCategory';
 import useStorage from '@lib/hooks/useStorage';
+import useCategoryMutation from '@lib/mutation/useCategoryMutation';
 import { replaceSpaceSlashAndSpecialCharsToHyphen } from '@lib/utils/utils';
-import palette from '@styles/palette';
-import { Input, Modal, ModalProps, Radio, message } from 'antd';
+import { Input, Modal, ModalProps, Radio, App } from 'antd';
 import { StorageType } from 'customTypes';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { CreateMockExamCategoryInput } from 'types';
 
 const SaveCategoryModalBlock = styled(Modal)`
@@ -29,15 +29,18 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
   storageType: StorageType;
   categoryId?: number;
   onClose: () => void;
+  urlSlug: string;
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
+  const { message } = App.useApp();
+  const theme = useTheme();
   const { createCategoryLoading, handleCreateCategory } = useStorage(
     props.storageType
   );
-  const { handleEditCategory, editCategoryLoading } = useExamCategory();
+  const { editCategoryMutation } = useCategoryMutation(props.urlSlug);
 
-  const { onClose, categoryId, defaultValues, ...modalProps } = props;
+  const { onClose, categoryId, defaultValues, urlSlug, ...modalProps } = props;
   const [isPublic, setIsPublic] = React.useState<boolean>(
     defaultValues ? defaultValues.isPublic : true
   );
@@ -50,15 +53,15 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   const handleSaveFolder = async () => {
     if (!name) return message.error('제목을 입력해주세요.');
     categoryId
-      ? await handleEditCategory(
-          {
+      ? editCategoryMutation.mutate({
+          mutationInput: {
             id: categoryId,
             name,
             description,
             isPublic,
           },
-          onClose
-        )
+          onSuccess: onClose,
+        })
       : await handleCreateCategory(
           {
             name,
@@ -74,7 +77,7 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
       {...modalProps}
       onOk={handleSaveFolder}
       okButtonProps={{
-        loading: createCategoryLoading || editCategoryLoading,
+        loading: createCategoryLoading || editCategoryMutation.isPending,
       }}
     >
       <p className="save-category-modal-title">폴더 만들기</p>
@@ -103,14 +106,24 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         onChange={(e) => setDescription(e.target.value)}
       />
       {!isPublic && (
-        <div className="mt-2 text-gray-500">
+        <div
+          className="mt-2"
+          style={{
+            color: theme.color('colorTextTertiary'),
+          }}
+        >
           * 비공개는 모두CBT내에서의 비공개를 말하며,
           <br />
           구글, 네이버등의 검색엔진에 노출 될 수 있습니다.
         </div>
       )}
       {isPublic && (
-        <div className="mt-2 text-gray-500">
+        <div
+          className="mt-2"
+          style={{
+            color: theme.color('colorTextTertiary'),
+          }}
+        >
           * 암기장을 공개하면 모든 사람들이 볼 수 있습니다.
         </div>
       )}

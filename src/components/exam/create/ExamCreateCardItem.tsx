@@ -5,8 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
 import ExamCreateEditor from './ExamCreateEditor';
-import palette from '@styles/palette';
-import { Button, message } from 'antd';
+import { Button, App } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
@@ -17,8 +16,8 @@ const ExamCreateCardItemBlock = styled.div`
   border-radius: 10px;
   list-style: none;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  border: 1px solid ${palette.colorBorder};
-  background-color: ${palette.colorContainerBg};
+  border: 1px solid ${({ theme }) => theme.color('colorBorder')};
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
   .exam-create-item-number {
     font-size: 18px;
     font-weight: bold;
@@ -98,6 +97,7 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
   question,
   index,
 }) => {
+  const { message } = App.useApp();
   const { setValue, getValues } = useFormContext<CreateExamForm>();
   const handleEditorTextChange = (
     value: string,
@@ -213,7 +213,6 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
             'questions',
             getValues('questions').map((v) => {
               if (v.orderId === question.orderId) {
-                console.log(value.filter((el) => el > 0));
                 return {
                   ...v,
                   linkedQuestionIds: value.filter((el) => el > 0),

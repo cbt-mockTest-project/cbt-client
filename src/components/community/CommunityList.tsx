@@ -142,7 +142,7 @@ const CommunityListBlock = styled.li<CommunityListBlockProps>`
     `}
   }
   .community-board-list-left-contents-bottom-uesrname {
-    color: ${palette.gray_700};
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
   .community-board-list-left-contents-bottom-category {
     color: ${palette.antd_blue_01};

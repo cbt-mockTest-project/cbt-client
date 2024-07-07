@@ -1,17 +1,18 @@
 import { useDeleteExam, useSaveExam } from '@lib/graphql/hook/useExam';
-import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
+import { handleError } from '@lib/utils/utils';
 import { examCreateActions } from '@modules/redux/slices/examCreate';
 import {
   useAppDispatch,
   useAppSelector,
 } from '@modules/redux/store/configureStore';
-import { Modal, message } from 'antd';
+import { App } from 'antd';
 import { CreateExamForm } from 'customTypes';
 import { format } from 'date-fns';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
 
 const useSaveExamHandler = () => {
+  const { modal, message } = App.useApp();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [deleteExam] = useDeleteExam();
@@ -60,7 +61,7 @@ const useSaveExamHandler = () => {
   };
 
   const handleDeleteExam = async (examId: number) => {
-    Modal.confirm({
+    modal.confirm({
       title: '시험지를 삭제하시겠습니까?',
       content: '시험지를 삭제하면 복구할 수 없습니다.',
       onOk: async () => {

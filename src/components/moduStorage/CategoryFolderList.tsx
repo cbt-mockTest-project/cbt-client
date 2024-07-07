@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import CategoryFolderListItem from './CategoryFolderListItem';
-import CategoryFolderIncludingAllExams from './CategoryFolderIncludingAllExams';
 
 const CategoryFolderListBlock = styled.ul`
   display: flex;
@@ -12,22 +11,15 @@ const CategoryFolderListBlock = styled.ul`
 
 interface CategoryFolderListProps {
   categories: MockExamCategory[] | null;
-  hasAllExamFolder?: boolean;
-  handleToggleBookmark: (categoryId: number) => Promise<void>;
 }
 
 const CategoryFolderList: React.FC<CategoryFolderListProps> = ({
   categories,
-  handleToggleBookmark,
 }) => {
   return (
     <CategoryFolderListBlock>
       {categories?.map((category) => (
-        <CategoryFolderListItem
-          key={category.id}
-          category={category}
-          handleToggleBookmark={handleToggleBookmark}
-        />
+        <CategoryFolderListItem key={category.id} category={category} />
       ))}
     </CategoryFolderListBlock>
   );

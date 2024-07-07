@@ -1,14 +1,9 @@
-import {
-  useCreateQuestionCardCategory,
-  useDeleteQuestionCardCategory,
-} from '@lib/graphql/hook/useQuestionCard';
+import { useCreateQuestionCardCategory } from '@lib/graphql/hook/useQuestionCard';
 import useInput from '@lib/hooks/useInput';
-import useToggle from '@lib/hooks/useToggle';
 import { handleError } from '@lib/utils/utils';
-import palette from '@styles/palette';
-import { Button, Input, message } from 'antd';
+import { Button, Input, App } from 'antd';
 import { DefaultOptionType } from 'antd/lib/select';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Modal, { ModalProps } from '../Modal';
 import CardCategoryItem from './CardCategoryItem';
@@ -25,10 +20,11 @@ const CardCategoryModal: React.FC<CardCategoryModalProps> = ({
   cardCategories,
   setCardCategories,
 }) => {
+  const { message } = App.useApp();
   const [createCategory] = useCreateQuestionCardCategory();
   const {
     value: categoryName,
-    setValue: setCategoryName,
+
     onChange: onChangeCategoryName,
   } = useInput('');
   const requestCreateCategory = async () => {

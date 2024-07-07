@@ -70,7 +70,6 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
       });
     }
   }, []);
-
   return (
     <SolutionModeComponentBlock>
       <div className="solution-mode-body">

@@ -6,10 +6,11 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import palette from '@styles/palette';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { useRouter } from 'next/router';
+import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
+import useAuth from '@lib/hooks/useAuth';
+import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ const SolutionModeCardItemBlock = styled.div`
     gap: 24px;
   }
   .solution-mode-question-card {
-    background-color: ${palette.colorContainerBgGrey};
+    background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }
 `;
 
@@ -42,15 +43,13 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   filterStates = [],
   isStaticPage,
 }) => {
-  const router = useRouter();
-
   const {
     addFeedback,
     deleteFeedback,
     editFeedback,
     updateFeedbackRecommendation,
-    saveBookmark,
     saveQuestionState,
+    saveBookmark,
   } = useQuestions();
 
   const serverQuestion = useAppSelector((state) =>
@@ -85,9 +84,9 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
       <BasicCard className="solution-mode-question-card" type="primary">
         <div className="solution-mode-question-content-wrapper">
           <StudyQuestionBox
-            saveBookmark={saveBookmark}
             questionNumber={index + 1}
             question={question}
+            saveBookmark={saveBookmark}
           />
         </div>
       </BasicCard>
