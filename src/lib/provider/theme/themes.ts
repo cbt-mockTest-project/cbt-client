@@ -9,6 +9,7 @@ export interface CustomToken {
   colorPrimaryBase: string;
   colorDisabled: string;
   colorNeutral06: string;
+  colorBgLayout: string;
 }
 
 export interface TokenKeys extends AliasToken, CustomToken {}
@@ -26,6 +27,7 @@ const customTokens: Record<'light' | 'dark', CustomToken> = {
     colorRedTagBg: '#fac8c3',
     colorDisabled: '#272727',
     colorNeutral06: '#BFBFBF',
+    colorBgLayout: '#ffffff',
   },
   dark: {
     colorErrorBase: '#E84749',
@@ -35,6 +37,7 @@ const customTokens: Record<'light' | 'dark', CustomToken> = {
     colorRedTagBg: '#fac8c3',
     colorDisabled: '#272727',
     colorNeutral06: '#BFBFBF',
+    colorBgLayout: '#161616',
   },
 };
 

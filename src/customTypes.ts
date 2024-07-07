@@ -100,6 +100,15 @@ export interface SetMyExamsPayload {
   shouldUpdateOriginal?: boolean;
 }
 
+export interface SetCategoryExamsPayload {
+  categoryExams: MockExam[];
+  shouldUpdateOriginal?: boolean;
+}
+export interface SetMyBookmarkedExamsPayload {
+  myBookmarkedExams: MockExam[];
+  shouldUpdateOriginal?: boolean;
+}
+
 export interface SetStorageCategoriesPayload {
   categories: MockExamCategory[];
   shouldUpdateOriginal?: boolean;

@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useAuth from '@lib/hooks/useAuth';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { MockExam } from 'types';
+import { MockExam, MockExamCategory } from 'types';
 import useExamSetting from '@lib/hooks/useExamSetting';
 import CategoryAllCheckbox from './CategoryAllCheckbox';
+import { queryClient } from '../../../pages/_app';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
   display: flex;
@@ -35,18 +36,16 @@ const CategoryMultipleSelectModeControlbarBlock = styled.div`
 `;
 
 interface CategoryMultipleSelectModeControlbarProps {
-  categoryId: number;
-  exams: MockExam[];
-  isMyAllExams?: boolean;
+  category: MockExamCategory;
 }
 
 const CategoryMultipleSelectModeControlbar: React.FC<
   CategoryMultipleSelectModeControlbarProps
-> = ({ categoryId, isMyAllExams, exams }) => {
+> = ({ category }) => {
   const { handleCheckLogin } = useAuth();
   const { handleAllExamsSelect } = useExamSetting({
-    categoryId,
-    exams,
+    categoryId: category?.id,
+    exams: category?.mockExam,
   });
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
     useState(false);
@@ -57,7 +56,10 @@ const CategoryMultipleSelectModeControlbar: React.FC<
   return (
     <CategoryMultipleSelectModeControlbarBlock>
       <div className="category-exam-all-checkbox-wrapper">
-        <CategoryAllCheckbox categoryId={categoryId} exams={exams} />
+        <CategoryAllCheckbox
+          categoryId={category?.id}
+          exams={category?.mockExam}
+        />
         <span style={{ cursor: 'pointer' }} onClick={handleAllExamsSelect}>
           전체 선택
         </span>
@@ -78,7 +80,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
 
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
-          categoryId={categoryId}
+          categoryId={category?.id}
           open={examMutipleSelectModalOpen}
           onCancel={() => setExamMultipleSelectModalOpen(false)}
         />

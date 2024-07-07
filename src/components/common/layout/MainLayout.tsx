@@ -35,7 +35,7 @@ const MainLayoutBlock = styled.div<{ type: 'default' | 'clean' }>`
       `}
     min-height: 750px;
     border-radius: 5px;
-    background-color: ${({ theme }) => theme.color('colorBgContainer')};
+    background-color: ${({ theme }) => theme.color('colorBgLayout')};
     height: 100%;
     width: 100%;
   }

@@ -8,6 +8,7 @@ const withPWA = require('next-pwa')({
 const settings = {
   reactStrictMode: false,
   swcMinify: true,
+  transpilePackages: ['rc-table','antd', '@ant-design','rc-tree', 'rc-util', 'rc-pagination', 'rc-picker', 'rc-notification', 'rc-tooltip'],
   compiler: {
     styledComponents: true,
   },

@@ -43,8 +43,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
   const setMyCategoriesLoading = useAppSelector(
     (state) => state.storage.setMyCategoriesLoading
   );
-  const { categories, handleFilterCategories, handleToggleCategoryBookmark } =
-    useStorage(storageType);
+  const { categories, handleFilterCategories } = useStorage(storageType);
   const { openSaveCategoryModal, placeholder } =
     useSaveCategoryModal(storageType);
   return (
@@ -73,10 +72,8 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
       />
       <CategoryFolderList
         categories={categories?.slice((page - 1) * LIMIT, page * LIMIT) || []}
-        handleToggleBookmark={handleToggleCategoryBookmark}
-        hasAllExamFolder={storageType === StorageType.MY}
       />
-      {setMyCategoriesLoading && (
+      {setMyCategoriesLoading && !categories?.length && (
         <div className="flex justify-center flex-col gap-4">
           <Skeleton active />
           <Skeleton active />

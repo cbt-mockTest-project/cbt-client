@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import { BookmarkOutlined } from '@mui/icons-material';

@@ -42,15 +42,19 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   const [page, setPage] = useState(1);
   const { data: meQuery } = useMeQuery();
   const [isMyExam, setIsMyExam] = useState(false);
-  const serverSideQuestionIds = useAppSelector((state) =>
-    state.mockExam.serverSideQuestions?.length
-      ? state.mockExam.serverSideQuestions.map((question) => question.id)
-      : []
+  const serverSideQuestionIds = useAppSelector(
+    (state) =>
+      state.mockExam.serverSideQuestions?.length
+        ? state.mockExam.serverSideQuestions.map((question) => question.id)
+        : [],
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
   );
-  const clientSideQuestionIds = useAppSelector((state) =>
-    state.mockExam.questions?.length
-      ? state.mockExam.questions.map((question) => question.id)
-      : []
+  const clientSideQuestionIds = useAppSelector(
+    (state) =>
+      state.mockExam.questions?.length
+        ? state.mockExam.questions.map((question) => question.id)
+        : [],
+    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
   );
   const questionIds = useMemo(() => {
     if (isStaticPage) {

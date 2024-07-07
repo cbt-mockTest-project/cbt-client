@@ -313,7 +313,6 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         setHasAccess(true);
         return;
       }
-      console.log(publicCategoryId, categoryId);
       if (publicCategoryId && Number(publicCategoryId) === categoryId) {
         setHasAccess(true);
         return;

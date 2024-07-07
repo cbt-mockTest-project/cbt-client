@@ -2,6 +2,7 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
+import { MockExam } from 'types';
 
 const CategoryHiddenListExamBlock = styled.div`
   overflow: hidden;
@@ -14,10 +15,13 @@ const CategoryHiddenListExamBlock = styled.div`
   white-space: nowrap;
 `;
 
-interface CategoryHiddenListExamProps {}
+interface CategoryHiddenListExamProps {
+  exams: MockExam[];
+}
 
-const CategoryHiddenListExam: React.FC<CategoryHiddenListExamProps> = () => {
-  const exams = useAppSelector((state) => state.examCategory.category.mockExam);
+const CategoryHiddenListExam: React.FC<CategoryHiddenListExamProps> = ({
+  exams,
+}) => {
   return (
     <CategoryHiddenListExamBlock>
       {exams.map((exam) => (

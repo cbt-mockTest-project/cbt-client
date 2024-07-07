@@ -11,6 +11,11 @@ import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { StorageType } from 'customTypes';
 import UserStorageComponent from '@components/userStorage/UserStorageComponent';
+import {
+  GetCategoriesQueryKey,
+  getCategoriesQueryOption,
+} from '@lib/queryOptions/getCategoriesQueryOption';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 
 interface UserStorageProps {}
 
@@ -35,31 +40,20 @@ const UserStorage: NextPage<UserStorageProps> = () => {
 
 export default UserStorage;
 
-export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
-  (store) => async (context) => {
-    const apolloClient = initializeApollo({}, '');
-    const res = await apolloClient.query<GetExamCategoriesQuery>({
-      query: GET_EXAM_CATEGORIES,
-      variables: {
-        input: {
-          examSource: ExamSource.User,
-        },
+export const getStaticProps = async () => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(
+    getCategoriesQueryOption({
+      queryKey: GetCategoriesQueryKey.user_storage,
+      input: {
+        examSource: ExamSource.User,
       },
-    });
-    const categories = res.data.getExamCategories.categories;
+    })
+  );
 
-    if (!categories) {
-    }
-    const sortedUserCategories = [...categories].sort(
-      (a, b) => b.categoryEvaluations.length - a.categoryEvaluations.length
-    );
-    store.dispatch(
-      storageActions.setUserStorageCategories({
-        categories: sortedUserCategories as MockExamCategory[],
-      })
-    );
-    return addApolloState(apolloClient, {
-      revalidate: 86400,
-    });
-  }
-);
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

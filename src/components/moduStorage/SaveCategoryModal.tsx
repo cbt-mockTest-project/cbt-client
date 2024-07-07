@@ -1,5 +1,6 @@
 import useExamCategory from '@lib/hooks/useExamCategory';
 import useStorage from '@lib/hooks/useStorage';
+import useCategoryMutation from '@lib/mutation/useCategoryMutation';
 import { replaceSpaceSlashAndSpecialCharsToHyphen } from '@lib/utils/utils';
 import { Input, Modal, ModalProps, Radio, App } from 'antd';
 import { StorageType } from 'customTypes';
@@ -28,6 +29,7 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
   storageType: StorageType;
   categoryId?: number;
   onClose: () => void;
+  urlSlug: string;
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
@@ -36,9 +38,9 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   const { createCategoryLoading, handleCreateCategory } = useStorage(
     props.storageType
   );
-  const { handleEditCategory, editCategoryLoading } = useExamCategory();
+  const { editCategoryMutation } = useCategoryMutation(props.urlSlug);
 
-  const { onClose, categoryId, defaultValues, ...modalProps } = props;
+  const { onClose, categoryId, defaultValues, urlSlug, ...modalProps } = props;
   const [isPublic, setIsPublic] = React.useState<boolean>(
     defaultValues ? defaultValues.isPublic : true
   );
@@ -51,15 +53,15 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   const handleSaveFolder = async () => {
     if (!name) return message.error('제목을 입력해주세요.');
     categoryId
-      ? await handleEditCategory(
-          {
+      ? editCategoryMutation.mutate({
+          mutationInput: {
             id: categoryId,
             name,
             description,
             isPublic,
           },
-          onClose
-        )
+          onSuccess: onClose,
+        })
       : await handleCreateCategory(
           {
             name,
@@ -75,7 +77,7 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
       {...modalProps}
       onOk={handleSaveFolder}
       okButtonProps={{
-        loading: createCategoryLoading || editCategoryLoading,
+        loading: createCategoryLoading || editCategoryMutation.isPending,
       }}
     >
       <p className="save-category-modal-title">폴더 만들기</p>

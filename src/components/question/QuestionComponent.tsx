@@ -124,7 +124,7 @@ const QuestionComponentBlock = styled.div<{ isHidden: boolean }>`
   padding: 10px;
   display: ${(props) => (props.isHidden ? 'none' : 'flex')};
   .question-detail-question-card {
-    background-color: rgb(240, 243, 243);
+    background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }
   .question-detail-top-button-wrapper {
     justify-content: space-between;

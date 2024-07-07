@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { apolloClient } from '@modules/apollo';
 import { CHECK_HAS_CATEGORY_ACCESS } from '@lib/graphql/query/examCategoryBookmark';
@@ -10,24 +9,23 @@ import {
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { App } from 'antd';
 import { useRouter } from 'next/router';
+import { MockExamCategory } from 'types';
 
-const useCheckHasCategoryAccess = () => {
+interface UseCheckHasCategoryAccessProps {
+  category: MockExamCategory;
+}
+
+const useCheckHasCategoryAccess = ({
+  category,
+}: UseCheckHasCategoryAccessProps) => {
   const { message } = App.useApp();
   const router = useRouter();
-  const categoryId = useAppSelector((state) => state.examCategory.category.id);
-
-  const isPublic = useAppSelector(
-    (state) => state.examCategory.category.isPublic
-  );
   const [isCategoryAccess, setIsCategoryAccess] = useState(false);
   const { data: meQuery } = useMeQuery();
   const sessionStorage = new SessionStorage();
-  const categoryAuthorId = useAppSelector(
-    (state) => state.examCategory.category.user.id
-  );
 
   useEffect(() => {
-    if (!categoryId || !meQuery || isPublic) return;
+    if (!category.id || !meQuery || category.isPublic) return;
     if (!meQuery.me.user) {
       message.error('잘못된 접근입니다.');
       router.replace('/');
@@ -41,7 +39,7 @@ const useCheckHasCategoryAccess = () => {
         mutation: CHECK_HAS_CATEGORY_ACCESS,
         variables: {
           input: {
-            categoryId,
+            categoryId: category.id,
           },
         },
       });
@@ -53,7 +51,7 @@ const useCheckHasCategoryAccess = () => {
       message.error('잘못된 접근입니다.');
       router.replace('/');
     })();
-  }, [categoryAuthorId, meQuery, categoryId, isPublic]);
+  }, [meQuery, category.isPublic]);
   return { isCategoryAccess };
 };
 
