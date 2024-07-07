@@ -88,7 +88,8 @@ const useQuestions = () => {
 
   const saveQuestionState = async (
     question: MockExamQuestion,
-    state: QuestionState
+    state: QuestionState,
+    updateCacheDelay?: number
   ) => {
     try {
       if (!meQuery?.me.user) {
@@ -99,7 +100,14 @@ const useQuestions = () => {
         ...question,
         myQuestionState: state,
       };
-      dispatch(mockExamActions.setQuestion(newQuestion));
+
+      if (updateCacheDelay) {
+        setTimeout(() => {
+          dispatch(mockExamActions.setQuestion(newQuestion));
+        }, updateCacheDelay);
+      } else {
+        dispatch(mockExamActions.setQuestion(newQuestion));
+      }
       await changeQuestionState({
         variables: {
           input: {

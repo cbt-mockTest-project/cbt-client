@@ -2,17 +2,15 @@ import Bookmark from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Image, Popover } from 'antd';
+import { Button, Image } from 'antd';
 import { MockExamQuestion } from 'types';
-import palette from '@styles/palette';
 import useAuth from '@lib/hooks/useAuth';
-import { EditOutlined, LinkOutlined } from '@ant-design/icons';
+import { LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
-import { LinkOffRounded, LinkRounded } from '@mui/icons-material';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -171,7 +169,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             </a>
           )}
           <Bookmark
-            onClick={onClickBookmark}
+            onClick={(e) => onClickBookmark(e)}
             role="button"
             active={!!question?.isBookmarked}
             className="study-question-box-bookmark"

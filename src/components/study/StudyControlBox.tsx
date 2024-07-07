@@ -21,6 +21,7 @@ import { ExamMode } from 'customTypes';
 import useAuth from '@lib/hooks/useAuth';
 import StudySolvedInfoModal from './StudySolvedInfoModal';
 import { isMobile } from 'react-device-detect';
+import StudyControlStateButtons from './StudyControlStateButtons';
 
 const StudyControlBoxBlock = styled.div`
   .study-question-tool-box-wrapper {
@@ -47,11 +48,11 @@ const StudyControlBoxBlock = styled.div`
     display: flex;
     padding: 10px 20px;
     justify-content: space-between;
-    .study-control-box-score-button-wrapper {
+    /* .study-control-box-score-button-wrapper {
       display: flex;
       gap: 5px;
       align-items: center;
-    }
+    } */
     .study-control-box-progress-button-wrapper {
       display: flex;
       gap: 5px;
@@ -63,7 +64,7 @@ const StudyControlBoxBlock = styled.div`
       border-color: ${({ theme }) => theme.color('colorBorder')};
     }
   }
-  .study-control-button {
+  /* .study-control-button {
     padding: 5px;
     margin: 0;
     border: 2px solid ${({ theme }) => theme.color('colorBorder')};
@@ -76,7 +77,7 @@ const StudyControlBoxBlock = styled.div`
     svg {
       font-size: 20px;
     }
-  }
+  } */
   .study-swiper-button-wrapper {
     display: none;
     justify-content: center;
@@ -84,10 +85,10 @@ const StudyControlBoxBlock = styled.div`
     margin-left: auto;
     gap: 10px;
   }
-  .study-control-button.active {
+  /* .study-control-button.active {
     border-color: ${({ theme }) => theme.color('colorPrimary')};
     color: ${({ theme }) => theme.color('colorPrimary')};
-  }
+  } */
   .study-question-card-answer {
     word-break: break-all;
     white-space: pre-wrap;
@@ -110,14 +111,19 @@ const StudyControlBoxBlock = styled.div`
   }
 `;
 
-interface StudyControlBoxProps {
+export interface StudyControlBoxProps {
   className?: string;
   hasHelpButtonText?: boolean;
   question: MockExamQuestion;
   hasScoreTable?: boolean;
   editFeedback: (editFeedbackInput: EditFeedbackInput) => Promise<void>;
   addFeedback: (addFeedbackInput: AddFeedbackInput) => Promise<void>;
-  saveQuestionState: (question: MockExamQuestion, state: QuestionState) => void;
+  saveQuestionState?: (
+    question: MockExamQuestion,
+    state: QuestionState,
+    updateCacheDelay?: number
+  ) => void;
+  onChangeQuestionState?: (state: QuestionState) => void;
   answerToggleOption?: {
     isAnswerHidden: boolean;
     setIsAnswerHidden: React.Dispatch<React.SetStateAction<boolean>>;
@@ -143,70 +149,25 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
-  const { user, handleUpdateUserCache } = useAuth();
   const mode = router.query.mode as ExamMode;
   const hasFinishButton = useMemo(
     () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
     [mode]
   );
-  const [isSolvedInfoModalOpen, setIsSolvedInfoModalOpen] = useState(false);
   const [isStudyScoreModalOpen, setIsStudyScoreModalOpen] = useState(false);
   const [isQuestionFeedbackModalOpen, setIsQuestionFeedbackModalOpen] =
     useState(false);
 
-  const handleSaveQuestionState = (state: QuestionState) => {
-    const newState =
-      question.myQuestionState !== state ? state : QuestionState.Core;
-    saveQuestionState(question, newState);
-    if (user && !user.hasSolvedBefore) {
-      setIsSolvedInfoModalOpen(true);
-      handleUpdateUserCache({ hasSolvedBefore: true });
-    }
-  };
   if (!question) return null;
   return (
     <StudyControlBoxBlock className={className}>
       <BasicCard className="study-control-box" type="primary">
-        <div className="study-control-box-score-button-wrapper">
-          <Tooltip
-            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + a'}
-          >
-            <button
-              className={`study-control-button ${
-                question.myQuestionState === QuestionState.High ? 'active' : ''
-              } high`}
-              onClick={() => handleSaveQuestionState(QuestionState.High)}
-            >
-              <PanoramaFishEyeIcon />
-            </button>
-          </Tooltip>
-          <Tooltip
-            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + s'}
-          >
-            <button
-              className={`study-control-button ${
-                question.myQuestionState === QuestionState.Middle
-                  ? 'active'
-                  : ''
-              } middle`}
-              onClick={() => handleSaveQuestionState(QuestionState.Middle)}
-            >
-              <ChangeHistoryIcon />
-            </button>
-          </Tooltip>
-          <Tooltip
-            title={isMobile || !hasHelpButtonText ? '' : 'alt + shift + d'}
-          >
-            <button
-              className={`study-control-button ${
-                question.myQuestionState === QuestionState.Row ? 'active' : ''
-              } low`}
-              onClick={() => handleSaveQuestionState(QuestionState.Row)}
-            >
-              <ClearIcon />
-            </button>
-          </Tooltip>
-        </div>
+        <StudyControlStateButtons
+          key={question.myQuestionState}
+          question={question}
+          saveQuestionState={saveQuestionState}
+          hasHelpButtonText={hasHelpButtonText}
+        />
         {answerToggleOption && (
           <Tooltip title="shift + spacebar">
             <Button
@@ -302,13 +263,6 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
           }}
           open={isStudyScoreModalOpen}
           onCancel={() => setIsStudyScoreModalOpen(false)}
-        />
-      )}
-
-      {isSolvedInfoModalOpen && (
-        <StudySolvedInfoModal
-          open={isSolvedInfoModalOpen}
-          onCancel={() => setIsSolvedInfoModalOpen(false)}
         />
       )}
     </StudyControlBoxBlock>
