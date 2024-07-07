@@ -58,6 +58,7 @@ const StudyQuestionBoxBlock = styled.div`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-size: 16px;
     ${EditorStyle}
   }
   .study-question-box-image {

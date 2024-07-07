@@ -24,6 +24,7 @@ const StudyAnswerBoxBlock = styled.div`
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
   .study-answer-box-question-card-answer {
+    font-size: 16px;
     word-break: break-all;
     white-space: pre-wrap;
     -webkit-user-select: none;
