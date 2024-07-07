@@ -82,7 +82,7 @@ const StudyModeWrapperBlock = styled.div`
     .typing-mode-swiper-button-wrapper {
       z-index: 100;
       box-shadow: 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
-      background-color: white;
+      background-color: ${({ theme }) => theme.color('colorBgLayout')};
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -92,7 +92,7 @@ const StudyModeWrapperBlock = styled.div`
       width: 100%;
       right: 0;
       .typing-mode-control-button {
-        background-color: white;
+        background-color: ${({ theme }) => theme.color('colorBgContainer')};
         padding: 5px;
         width: 40px;
         height: 40px;
