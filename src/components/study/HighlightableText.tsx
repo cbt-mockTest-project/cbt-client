@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
-const parentElementId = 'highlightable-text';
+import EditorStyle from '@styles/editorStyle';
+import OuterClick from '@components/common/outerClick/OuterClick';
 
 const HighlightableTextBlock = styled.div`
   * {
@@ -16,140 +17,161 @@ const HighlightableTextBlock = styled.div`
       color: black;
     }
   }
+  font-size: 16px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  position: relative;
+  ${EditorStyle};
 `;
+
+interface Highlight {
+  id: string;
+  startOffset: number;
+  endOffset: number;
+  text: string;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
 
 interface HighlightableTextProps {
   content: string;
 }
 
 const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const uniqueId = useId();
+  const [highlights, setHighlights] = useState<Highlight[]>([]);
+  const [selectedRange, setSelectedRange] = useState<Range | null>(null);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [showPopup, setShowPopup] = useState(false);
+  const [showRemovePopup, setShowRemovePopup] = useState(false);
+  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(
+    null
+  );
+
   const handleMouseUp = () => {
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      highlightText(range);
-      saveHighlights();
-    }
-  };
-
-  const highlightText = (range) => {
-    let startNode = range.startContainer;
-    let endNode = range.endContainer;
-
-    if (startNode.nodeType === 3 && endNode.nodeType === 3) {
-      let startOffset = range.startOffset;
-      let endOffset = range.endOffset;
-      if (startNode === endNode) {
-        const middleNode = startNode.splitText(startOffset);
-        middleNode.splitText(endOffset - startOffset);
-        wrapNodeWithSpan(middleNode);
-      } else {
-        const startMiddleNode = startNode.splitText(startOffset);
-        wrapNodeWithSpan(startMiddleNode);
-
-        const endMiddleNode = endNode.splitText(endOffset);
-        wrapNodeWithSpan(endNode);
-
-        let currentNode = startMiddleNode.nextSibling;
-        while (currentNode && currentNode !== endMiddleNode) {
-          if (currentNode.nodeType === 3) {
-            const nextNode = currentNode.nextSibling;
-            wrapNodeWithSpan(currentNode);
-            currentNode = nextNode;
-          } else {
-            currentNode = currentNode.nextSibling;
-          }
-        }
+      if (range.toString().trim() !== '') {
+        setSelectedRange(range);
+        const rect = range.getBoundingClientRect();
+        setPopupPosition({
+          x: rect.left + rect.width,
+          y: rect.bottom,
+        });
+        setShowPopup(true);
       }
     }
   };
 
-  const wrapNodeWithSpan = (node) => {
-    const span = document.createElement('span');
-    span.className = 'highlighted';
-    span.style.backgroundColor = 'yellow';
-    node.parentNode.insertBefore(span, node);
-    span.appendChild(node);
-  };
+  const addHighlight = () => {
+    if (selectedRange) {
+      const rect = selectedRange.getBoundingClientRect();
+      const parentRect = document
+        .getElementById(uniqueId)
+        .getBoundingClientRect();
 
-  const saveHighlights = () => {
-    const highlights = Array.from(
-      document.querySelectorAll('.highlighted')
-    ).map((span) => {
-      const range = document.createRange();
-      range.selectNodeContents(span);
-      return {
-        startOffset: range.startOffset,
-        endOffset: range.endOffset,
-        text: span.textContent,
+      const newHighlight: Highlight = {
+        id: Date.now().toString(),
+        startOffset: selectedRange.startOffset,
+        endOffset: selectedRange.endOffset,
+        text: selectedRange.toString(),
+        top: rect.top - parentRect.top,
+        left: rect.left - parentRect.left,
+        width: rect.width,
+        height: rect.height,
       };
-    });
-    localStorage.setItem('highlights', JSON.stringify(highlights));
-  };
-  const applySavedHighlights = () => {
-    const highlights = JSON.parse(localStorage.getItem('highlights') || '[]');
-    highlights.forEach(
-      ({
-        startOffset,
-        endOffset,
-        text,
-      }: {
-        startOffset: number;
-        endOffset: number;
-        text: string;
-      }) => {
-        const range = document.createRange();
-        const textNode = findTextNode(
-          document.body,
-          text,
-          startOffset,
-          endOffset
-        );
-        if (textNode) {
-          range.setStart(textNode, startOffset);
-          range.setEnd(textNode, endOffset);
-          highlightText(range);
-        }
-      }
-    );
-  };
 
-  const findTextNode = (
-    node: Node,
-    text: string,
-    startOffset: number,
-    endOffset: number
-  ): Node | null => {
-    if (node.nodeType === 3) {
-      const nodeText = (node as Text).textContent || '';
-      if (nodeText.includes(text) && nodeText.length >= endOffset) {
-        return node;
-      }
+      setHighlights((prevHighlights) => [...prevHighlights, newHighlight]);
+      setShowPopup(false);
+      setSelectedRange(null);
     }
+  };
 
-    for (let i = 0; i < node.childNodes.length; i++) {
-      const result = findTextNode(
-        node.childNodes[i],
-        text,
-        startOffset,
-        endOffset
+  const removeHighlight = () => {
+    if (selectedHighlight) {
+      setHighlights((prevHighlights) =>
+        prevHighlights.filter((h) => h.id !== selectedHighlight.id)
       );
-      if (result) return result;
+      setShowRemovePopup(false);
+      setSelectedHighlight(null);
     }
-
-    return null;
   };
 
-  useEffect(() => {
-    applySavedHighlights();
-    console.log(content);
-    console.log(document.getElementById(parentElementId).textContent);
-  }, []);
+  const handleHighlightClick = (highlight: Highlight) => {
+    setSelectedHighlight(highlight);
+    setPopupPosition({
+      x: highlight.left + highlight.width,
+      y: highlight.top + highlight.height,
+    });
+    setShowRemovePopup(true);
+  };
+
   return (
-    <HighlightableTextBlock id={parentElementId} onMouseUp={handleMouseUp}>
+    <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>
       {parse(content || '')}
+      {highlights.map((highlight) => (
+        <HighlightBox
+          key={highlight.id}
+          style={{
+            position: 'absolute',
+            top: `${highlight.top}px`,
+            left: `${highlight.left}px`,
+            width: `${highlight.width}px`,
+            height: `${highlight.height}px`,
+            backgroundColor: 'yellow',
+            opacity: 0.5,
+            pointerEvents: 'auto',
+            zIndex: 0,
+            mixBlendMode: 'multiply',
+            cursor: 'pointer',
+          }}
+          onClick={() => handleHighlightClick(highlight)}
+        />
+      ))}
+      {showPopup && (
+        <OuterClick callback={() => setShowPopup(false)}>
+          <PopupBox
+            style={{
+              top: popupPosition.y,
+              left: popupPosition.x,
+              position: 'fixed',
+            }}
+          >
+            <button onClick={addHighlight}>형광펜</button>
+          </PopupBox>
+        </OuterClick>
+      )}
+      {showRemovePopup && (
+        <OuterClick callback={() => setShowRemovePopup(false)}>
+          <PopupBox
+            style={{
+              top: popupPosition.y,
+              left: popupPosition.x,
+            }}
+          >
+            <button onClick={removeHighlight}>형광펜 제거</button>
+          </PopupBox>
+        </OuterClick>
+      )}
     </HighlightableTextBlock>
   );
 };
+
+const PopupBox = styled.div`
+  position: absolute;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+`;
+
+const HighlightBox = styled.div``;
 
 export default HighlightableText;

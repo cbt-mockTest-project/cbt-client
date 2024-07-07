@@ -11,11 +11,11 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
-import EditorStyle from '@styles/editorStyle';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useAuth from '@lib/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import HighlightableText from './HighlightableText';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -23,12 +23,7 @@ const StudyAnswerBoxBlock = styled.div`
     font-weight: bold;
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
-  .study-answer-box-question-card-answer {
-    word-break: break-all;
-    white-space: pre-wrap;
-    user-select: none;
-    ${EditorStyle};
-  }
+
   .study-answer-box-question-card-answer-wrapper {
     transition: opacity 0.2s ease-in-out;
   }
@@ -103,9 +98,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           isAnswerHidden ? 'hidden' : ''
         }`}
       >
-        <div className="study-answer-box-question-card-answer">
-          {parse(question.solution || '')}
-        </div>
+        <HighlightableText content={question.solution} />
         <div
           onClick={(e) => {
             e.stopPropagation();
