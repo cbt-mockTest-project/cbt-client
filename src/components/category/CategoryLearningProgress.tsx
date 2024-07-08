@@ -52,7 +52,7 @@ const CategoryLearningProgressBlock = styled.div`
 `;
 
 interface CategoryLearningProgressProps {
-  categoryLearningProgress?: CategoryLearingProgressType;
+  categoryLearningProgress?: CategoryLearingProgressType | null;
 }
 
 const CategoryLearningProgress: React.FC<CategoryLearningProgressProps> = ({

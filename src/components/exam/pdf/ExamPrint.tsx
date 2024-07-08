@@ -154,7 +154,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
   const handleExportPdf = async () => {
     try {
       if (!handleCheckLogin()) return;
-      if (!meQuery.me) return;
+      if (!meQuery?.me) return;
       const isEhsExam = checkIsEhsMasterExam([examId]);
       if (isEhsExam) return;
       const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });

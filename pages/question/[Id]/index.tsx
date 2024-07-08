@@ -1,6 +1,5 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
@@ -9,6 +8,7 @@ import { removeHtmlTag } from '@lib/utils/utils';
 import { ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
 import GoogleAd from '@components/common/ad/GoogleAd';
+import { apolloClient } from '@modules/apollo';
 
 interface QuestionProps {
   title: string;
@@ -56,7 +56,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       notFound: true,
     };
   }
-  const apolloClient = initializeApollo({}, '');
   const questionQueryInput: ReadMockExamQuestionInput = {
     questionId: Number(context.params?.Id),
   };
@@ -68,18 +67,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
   });
   const questionQuery = res ? res.data : null;
   const title = removeHtmlTag(
-    (questionQuery.readMockExamQuestion.mockExamQusetion?.question || '').slice(
-      0,
-      50
-    )
+    (
+      questionQuery?.readMockExamQuestion?.mockExamQusetion?.question || ''
+    ).slice(0, 50)
   );
 
   const description = removeHtmlTag(
-    questionQuery.readMockExamQuestion.mockExamQusetion?.question +
-      questionQuery.readMockExamQuestion.mockExamQusetion.solution || ''
+    (questionQuery?.readMockExamQuestion?.mockExamQusetion?.question || '') +
+      (questionQuery?.readMockExamQuestion?.mockExamQusetion?.solution || '')
   );
-  return addApolloState(apolloClient, {
+  return {
     props: { title, description, questionQueryInput },
     revalidate: 86400,
-  });
+  };
 };

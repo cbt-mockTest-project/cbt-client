@@ -17,10 +17,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   const questionIds = res.data.readAllQuestions.questions
-    .filter((question) => question.question)
-    .map((question) => question.id);
+    ?.filter((question) => question.question)
+    ?.map((question) => question.id);
 
-  const fields = questionIds.map((id) => ({
+  const fields = questionIds?.map((id) => ({
     loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/question/${id}`,
     lastmod: new Date().toISOString(),
     changefreq: 'daily',

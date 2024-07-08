@@ -7,8 +7,13 @@ import {
   getCategoryKey,
   getCategoryQueryOption,
 } from '@lib/queryOptions/getCategoryQueryOption';
-import { initializeApollo } from '@modules/apollo';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { apolloClient } from '@modules/apollo';
+import {
+  DehydratedState,
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from '@tanstack/react-query';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
@@ -18,15 +23,17 @@ interface CategoryPageProps {
   category: MockExamCategory;
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
   queryKey: string[];
+  dehydratedState: DehydratedState;
 }
 
 const CategoryPage: NextPage<CategoryPageProps> = ({
   categoryQueryInput,
   category,
   queryKey,
+  dehydratedState,
 }) => {
   return (
-    <>
+    <HydrationBoundary state={dehydratedState}>
       <WithHead
         title={
           category.isPublic ? category.name : '암기장 공유서비스' + ' | 모두CBT'
@@ -45,13 +52,12 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         categoryQueryInput={categoryQueryInput}
         categoryId={category.id}
       />
-    </>
+    </HydrationBoundary>
   );
 };
 export default CategoryPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apolloClient = initializeApollo({}, '');
   let paths: { params: { name: string } }[] = [];
   try {
     const res = await apolloClient.query<ReadMockExamCategoryNamesQuery>({

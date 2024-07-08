@@ -79,9 +79,9 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
         })
       );
     };
-    setCategoryExams(category.mockExam || []);
-    setCategoryExams(category.mockExam || []);
-  }, [category.mockExam, isRefetched]);
+    setCategoryExams(category?.mockExam || []);
+    setCategoryExams(category?.mockExam || []);
+  }, [category?.mockExam, isRefetched]);
 
   useEffect(() => {
     if (!router.asPath) return;

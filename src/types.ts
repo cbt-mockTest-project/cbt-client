@@ -844,7 +844,6 @@ export type EditMockExamOutput = {
 };
 
 export type EditMockExamQuestionBookmarkInput = {
-  inputState?: InputMaybe<Scalars['Boolean']>;
   questionId: Scalars['Float'];
 };
 

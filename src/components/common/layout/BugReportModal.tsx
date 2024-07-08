@@ -24,7 +24,7 @@ const BugReportModal: React.FC<BugReportModalProps> = (props) => {
   const textAreaRef = React.useRef<TextAreaRef>(null);
   const [createFeedback] = useCreateFeedback();
   const handleOk = async () => {
-    const text = textAreaRef.current?.resizableTextArea.textArea.value;
+    const text = textAreaRef.current?.resizableTextArea?.textArea.value;
     if (!text) {
       message.error('내용을 입력해주세요.');
       return;

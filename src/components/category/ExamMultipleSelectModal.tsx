@@ -94,11 +94,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
 
   const handleStart = () => {
     try {
+      if (!meQuery?.me.user) return;
       if (meQuery.me) {
         const isEhsExam = checkIsEhsMasterExam(examIds);
         const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
         if (
-          meQuery.me.user.randomExamLimit <= 0 &&
+          Number(meQuery.me.user.randomExamLimit) <= 0 &&
           !isEhsExam &&
           !isBasicPlanUser
         ) {
@@ -108,12 +109,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
         editProfileMutation({
           variables: {
             input: {
-              randomExamLimit: meQuery.me.user.randomExamLimit - 1,
+              randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
             },
           },
         });
         handleUpdateUserCache({
-          randomExamLimit: meQuery.me.user.randomExamLimit - 1,
+          randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
         });
       }
 

@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { MockExamCategory } from 'types';
 
 interface UseCheckHasCategoryAccessProps {
-  category: MockExamCategory;
+  category?: MockExamCategory;
 }
 
 const useCheckHasCategoryAccess = ({
@@ -25,7 +25,7 @@ const useCheckHasCategoryAccess = ({
   const sessionStorage = new SessionStorage();
 
   useEffect(() => {
-    if (!category.id || !meQuery || category.isPublic) return;
+    if (!category?.id || !meQuery || category.isPublic) return;
     if (!meQuery.me.user) {
       message.error('잘못된 접근입니다.');
       router.replace('/');
@@ -51,7 +51,7 @@ const useCheckHasCategoryAccess = ({
       message.error('잘못된 접근입니다.');
       router.replace('/');
     })();
-  }, [meQuery, category.isPublic]);
+  }, [meQuery, category?.isPublic]);
   return { isCategoryAccess };
 };
 

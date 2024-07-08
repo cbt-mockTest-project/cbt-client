@@ -192,7 +192,7 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
           }
           onChangeText={(value) => handleEditorTextChange(value, 'question')}
           defaultValue={question.question}
-          defaultImgUrl={question.question_img[0]?.url}
+          defaultImgUrl={question.question_img?.[0]?.url || ''}
           editorPlaceholder="문제를 입력해주세요."
         />
         <ExamCreateEditor
@@ -201,12 +201,12 @@ const ExamCreateCardItem: React.FC<ExamCreateCardItemProps> = ({
           }
           onChangeText={(value) => handleEditorTextChange(value, 'solution')}
           defaultValue={question.solution}
-          defaultImgUrl={question.solution_img[0]?.url || ''}
+          defaultImgUrl={question.solution_img?.[0]?.url || ''}
           editorPlaceholder="정답을 입력해주세요."
         />
       </div>
       <LinkedQuestionIdsBox
-        currentQuestionId={question.id}
+        currentQuestionId={question.id || 0}
         defaultLinkedQuestionIds={question.linkedQuestionIds}
         onChange={(value) => {
           setValue(

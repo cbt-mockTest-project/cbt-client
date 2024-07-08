@@ -30,10 +30,12 @@ const CategoryProgressAndReview: React.FC<CategoryProgressAndReviewProps> = ({
       },
     } = categoryLearningProgressResponse;
     return {
-      learningProgress: Math.round((highScoreCount / totalQuestionCount) * 100),
-      highScoreCount,
-      lowScoreCount,
-      totalQuestionCount,
+      learningProgress: Math.round(
+        (Number(highScoreCount) / Number(totalQuestionCount)) * 100
+      ),
+      highScoreCount: Number(highScoreCount),
+      lowScoreCount: Number(lowScoreCount),
+      totalQuestionCount: Number(totalQuestionCount),
     };
   }, [categoryLearningProgressResponse]);
 

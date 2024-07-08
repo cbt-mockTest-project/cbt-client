@@ -39,7 +39,7 @@ const useSaveExamHandler = () => {
           },
         },
       });
-      if (res.data.saveExam.error) {
+      if (res.data?.saveExam.error) {
         return message.error(res.data.saveExam.error);
       }
       if (!router.query.examId) {
@@ -47,7 +47,7 @@ const useSaveExamHandler = () => {
           pathname: router.pathname,
           query: {
             ...router.query,
-            examId: res.data.saveExam.examId,
+            examId: res.data?.saveExam.examId,
           },
         });
       }
@@ -73,7 +73,7 @@ const useSaveExamHandler = () => {
               },
             },
           });
-          if (res.data.deleteMockExam.error) {
+          if (res.data?.deleteMockExam.error) {
             message.error(res.data.deleteMockExam.error);
             return;
           }

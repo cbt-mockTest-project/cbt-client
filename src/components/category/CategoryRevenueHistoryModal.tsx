@@ -43,7 +43,7 @@ const CategoryRevenueHistoryModal: React.FC<
     created_at: convertServerTimeToKST(pointHistory.created_at),
     description: pointHistory.pointTransaction.description,
     point: pointHistory.pointTransaction.point,
-    buyer: pointHistory.buyer.nickname,
+    buyer: pointHistory.buyer?.nickname,
   }));
 
   const totalPoint = dataSource.reduce((acc, cur) => acc + cur.point, 0);

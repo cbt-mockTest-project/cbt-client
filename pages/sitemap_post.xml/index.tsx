@@ -15,8 +15,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
-  const postIds = res.data.readPosts.posts.map((exam) => exam.id);
-  const fields = postIds.map((id) => ({
+  const postIds = res.data.readPosts.posts?.map((exam) => exam.id);
+  const fields = postIds?.map((id) => ({
     loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/post/${id}`,
     lastmod: new Date().toISOString(),
     changefreq: 'daily',

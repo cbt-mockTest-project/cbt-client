@@ -96,13 +96,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       queryKey,
     })
   );
-  const isMyCategory = category.user.id === user?.id;
+  const isMyCategory = category?.user.id === user?.id;
   const { isCategoryAccess } = useCheckHasCategoryAccess({ category });
-  const storageType = () => {
-    if (category.source === ExamSource.EhsMaster) return StorageType.PREMIUM;
-    if (category.source === ExamSource.MoudCbt) return StorageType.MODU;
-    return StorageType.MY;
-  };
 
   const [editExamsModalOpen, setEditExamsModalOpen] = useState(false);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
@@ -127,7 +122,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
           onClick={(e) => {
             modal.confirm({
               title: '정말로 삭제하시겠습니까?',
-              onOk: () => handleDeleteCategory(category.id),
+              onOk: () => handleDeleteCategory(category!.id),
             });
           }}
         >
@@ -158,6 +153,8 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
+  if (!category) return null;
+
   if (!category.isPublic && !isCategoryAccess) {
     return (
       <CategoryComponentBlock>
@@ -168,6 +165,12 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       </CategoryComponentBlock>
     );
   }
+
+  const storageType = () => {
+    if (category.source === ExamSource.EhsMaster) return StorageType.PREMIUM;
+    if (category.source === ExamSource.MoudCbt) return StorageType.MODU;
+    return StorageType.MY;
+  };
 
   return (
     <CategoryComponentBlock>
@@ -195,7 +198,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       <CategoryBookmarkOrEditWrapper
         dropdownItems={categorySettingDropdownItems}
         category={category}
-        defaultIsBookmarked={category.isBookmarked}
+        defaultIsBookmarked={!!category.isBookmarked}
         key={String(category.isBookmarked)}
       />
       {saveCategoryModalOpen && (

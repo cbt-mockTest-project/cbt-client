@@ -1,10 +1,10 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { addApolloState, initializeApollo } from '@modules/apollo';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import { Image } from 'antd';
+import { apolloClient } from '@modules/apollo';
 
 interface QuestionImageProps {
   questionImageUrl: string;
@@ -31,7 +31,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
-  const apolloClient = initializeApollo({}, '');
   const res = await apolloClient.query<ReadMockExamQuestionQuery>({
     query: READ_QUESTION,
     variables: {
@@ -49,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       notFound: true,
     };
   }
-  return addApolloState(apolloClient, {
+  return {
     props: { questionImageUrl },
-  });
+  };
 };

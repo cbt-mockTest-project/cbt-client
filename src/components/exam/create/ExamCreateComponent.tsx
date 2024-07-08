@@ -97,7 +97,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
         if (res.data?.readMockExam.error) {
           return message.error(res.data.readMockExam.error);
         }
-
+        if (!res.data?.readMockExam.mockExam) return;
         const { title, mockExamQuestion, uuid, approved } =
           res.data.readMockExam.mockExam;
         setIsExamApproved(approved);
@@ -120,7 +120,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
             'linkedQuestionIds',
             'id',
           ]);
-        });
+        }) as CreateQuestionForm[];
         if (
           isEqual(getValues('questions'), newQuestions) &&
           getValues('title') === title
@@ -149,7 +149,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
       <ExamCreateComponentBlock>
         <form
           onSubmit={handleSubmit((data, e) => {
-            e.preventDefault();
+            e?.preventDefault();
             handleSaveExam(data, true);
           })}
           id="exam-create-form"
@@ -182,7 +182,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
         </form>
         <ExamSettingModal
           handleDeleteExam={handleDeleteExam}
-          examId={examId}
+          examId={Number(examId)}
           open={isExamSettingModalOpen}
           isApproved={isExamApproved}
           setIsApproved={setIsExamApproved}

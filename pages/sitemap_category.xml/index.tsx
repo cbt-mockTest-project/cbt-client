@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     query: READ_EXAM_CATEGORY_NAMES,
   });
   const categoryUrlSlugs = res.data.readMockExamCategoryNames.urlSlugs;
-  const fields = categoryUrlSlugs.map((slug) => ({
+  const fields = categoryUrlSlugs?.map((slug) => ({
     loc: `${process.env.NEXT_PUBLIC_CLIENT_URL}/category/${slug}`,
     lastmod: new Date().toISOString(),
     changefreq: 'daily',

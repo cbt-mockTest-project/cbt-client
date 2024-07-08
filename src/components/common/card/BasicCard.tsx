@@ -72,6 +72,7 @@ const BasicCard: React.FC<BasicCardProps> = (props) => {
     if (isGrayish(color)) {
       return theme.color('colorText');
     }
+    return color;
   };
 
   useEffect(() => {

@@ -1,9 +1,9 @@
+import { useState } from 'react';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import useAuth from '@lib/hooks/useAuth';
 import useExamCategory from '@lib/hooks/useExamCategory';
 import { BookmarkOutlined } from '@mui/icons-material';
 import { App, Dropdown, MenuProps } from 'antd';
-import React, { useState } from 'react';
 import { MockExamCategory, RevenueRequestFormStatus } from 'types';
 import palette from '@styles/palette';
 import { useToggleExamCategoryBookmark } from '@lib/graphql/hook/useExamCategoryBookmark';
@@ -48,7 +48,7 @@ const CategoryBookmarkOrEditWrapper: React.FC<
         },
       },
     });
-    if (!res.data.toggleExamCategorieBookmark.ok) {
+    if (!res.data?.toggleExamCategorieBookmark.ok) {
       setIsBookmarked(!isBookmarked);
     }
   };

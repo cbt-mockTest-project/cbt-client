@@ -41,7 +41,7 @@ interface SideNavListProps {}
 const SideNavList: React.FC<SideNavListProps> = () => {
   const router = useRouter();
   const { theme, setTheme } = useThemeControl();
-  const { isLoggedIn, user, handleCheckLogin } = useAuth();
+  const { user, handleCheckLogin } = useAuth();
   const [isAppDownloadModalOpen, setIsAppDownloadModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isKakaoOpenChatModalOpen, setIsKakaoOpenChatModalOpen] =
@@ -100,7 +100,7 @@ const SideNavList: React.FC<SideNavListProps> = () => {
       </div>
       <CustomNavDivider />
       <UserAuthBox className="side-user-auth-box" />
-      {isLoggedIn && [UserRole.Admin].includes(user.role) && (
+      {user && [UserRole.Admin].includes(user.role) && (
         <>
           <CustomNavDivider />
           <Menu

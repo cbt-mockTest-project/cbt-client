@@ -7,8 +7,13 @@ import {
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
 import wrapper from '@modules/redux/store/configureStore';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
-import { GetStaticProps } from 'next';
+import {
+  DehydratedState,
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from '@tanstack/react-query';
+import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { ExamSource } from 'types';
@@ -17,17 +22,21 @@ const HomeNoti = dynamic(() => import('@components/home/HomeNoti'), {
   ssr: false,
 });
 
-interface Props {}
+interface Props {
+  dehydratedState: DehydratedState;
+}
 
-const IndexPage: React.FC<Props> = () => {
+const IndexPage: NextPage<Props> = ({ dehydratedState }) => {
   return (
     <>
       <WithHead
         title="모두CBT | 암기짱 공유 서비스"
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
-      <HomeCore />
-      <HomeComponent />
+      <HydrationBoundary state={dehydratedState}>
+        <HomeCore />
+        <HomeComponent />
+      </HydrationBoundary>
       <HomeNoti />
     </>
   );

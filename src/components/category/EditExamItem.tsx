@@ -35,6 +35,8 @@ const EditExamItem: React.FC<EditExamItemProps> = ({ exam }) => {
     );
   });
 
+  if (!category) return null;
+
   return (
     <EditExamItemBlock>
       <p>{exam.title}</p>

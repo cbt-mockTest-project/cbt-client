@@ -1,4 +1,3 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
 import WithHead from '@components/common/head/WithHead';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import SolutionModeCore from '@components/solutionMode/SolutionModeCore';
@@ -9,7 +8,7 @@ import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
 import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
-import { addApolloState, initializeApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -49,8 +48,7 @@ ExamSolutionPage.displayName = EXAM_SOLUTION_PAGE;
 
 export default ExamSolutionPage;
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
-  const apolloClient = initializeApollo({}, '');
+export const getStaticPaths: GetStaticPaths = async () => {
   let paths: { params: { Id: string } }[] = [];
   try {
     const res = await apolloClient.query<ReadAllMockExamQuery>({
@@ -84,7 +82,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         notFound: true,
       };
     }
-    const apolloClient = initializeApollo({}, '');
     const examId = context.params?.Id;
     const questionsQueryInput: ReadQuestionsByExamIdsInput = {
       ids: [Number(String(examId))],
@@ -105,15 +102,15 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     store.dispatch(
       mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
     );
-    const title = questions[0]?.mockExam.title || '';
+    const title = questions[0]?.mockExam?.title || '';
     const isNoIndex =
-      !questions[0]?.mockExam.approved || questions[0]?.mockExam.isPrivate;
+      !questions[0]?.mockExam?.approved || questions[0]?.mockExam?.isPrivate;
     const description = questions.reduce(
       (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
       ''
     );
 
-    return addApolloState(apolloClient, {
+    return {
       props: {
         questionsQueryInput,
         questions,
@@ -122,6 +119,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         isNoIndex,
       },
       revalidate: 86400,
-    });
+    };
   }
 );

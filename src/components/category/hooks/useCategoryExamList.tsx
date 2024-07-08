@@ -47,9 +47,9 @@ const useCategoryExamList = () => {
   );
 
   const originalCategoryExams =
-    originalCategoryExamsInStore || category.mockExam;
+    originalCategoryExamsInStore || category?.mockExam || [];
 
-  const categoryExams = categoryExamsInStore || category.mockExam;
+  const categoryExams = categoryExamsInStore || category?.mockExam || [];
 
   const handleSearch = debounce((keyword: string) => {
     const trimmedKeyword = keyword.trim().toLowerCase();
@@ -65,7 +65,7 @@ const useCategoryExamList = () => {
 
   const handleMoveExam = (result: DropResult) => {
     const { destination, source } = result;
-    if (!destination || !source) return;
+    if (!destination || !source || !category) return;
     if (destination.index === source.index) return;
     const newExams = [...categoryExams];
     const [removed] = newExams.splice(source.index, 1);

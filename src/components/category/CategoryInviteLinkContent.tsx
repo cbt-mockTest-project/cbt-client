@@ -31,7 +31,7 @@ const CategoryInviteLinkContent: React.FC<CategoryInviteLinkContentProps> = ({
         <Button
           onClick={async () => {
             const res = await createCategoryInviteLink.mutateAsync(categoryId);
-            setInviteCode(() => res.createCategoryInvitationLink.code);
+            setInviteCode(() => res.createCategoryInvitationLink.code || '');
           }}
         >
           재생성

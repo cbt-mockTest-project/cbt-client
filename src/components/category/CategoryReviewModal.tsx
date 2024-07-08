@@ -170,7 +170,7 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
 
   useEffect(() => {
     if (myEvaluation) {
-      setScore(myEvaluation.score);
+      setScore(Number(myEvaluation.score));
     }
   }, [myEvaluation]);
 
@@ -232,7 +232,7 @@ const CategoryReviewModal: React.FC<CategoryReviewModalProps> = (props) => {
                 <TextArea
                   rows={2}
                   name="feedback"
-                  defaultValue={myEvaluation.feedback}
+                  defaultValue={myEvaluation.feedback || ''}
                   placeholder="후기를 남겨주세요 😄"
                 />
                 <Button type="primary" htmlType="submit">

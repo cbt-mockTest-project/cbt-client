@@ -5,7 +5,7 @@ import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
 import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
 import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
 import { removeHtmlTag } from '@lib/utils/utils';
-import { addApolloState, initializeApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
@@ -36,7 +36,7 @@ ExamPdfPage.displayName = EXAM_PDF_PAGE;
 
 export default ExamPdfPage;
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   let paths: { params: { Id: string } }[] = [];
   try {
     return { paths, fallback: 'blocking' };
@@ -55,7 +55,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         notFound: true,
       };
     }
-    const apolloClient = initializeApollo({}, '');
     const examId = context.params?.Id;
     const questionsQueryInput: ReadQuestionsByExamIdsInput = {
       ids: [Number(String(examId))],
@@ -75,14 +74,14 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     store.dispatch(
       mockExamActions.setQuestions(questions as MockExamQuestion[])
     );
-    const title = questions[0]?.mockExam.title || '';
-    const approved = questions[0]?.mockExam.approved || false;
+    const title = questions[0]?.mockExam?.title || '';
+    const approved = questions[0]?.mockExam?.approved || false;
     const description = questions.reduce(
       (acc, cur) => acc + ` ${cur.question} ${cur.solution}`,
       ''
     );
 
-    return addApolloState(apolloClient, {
+    return {
       props: {
         questionsQueryInput,
         questions,
@@ -91,6 +90,6 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
         description: removeHtmlTag(description),
       },
       revalidate: 86400,
-    });
+    };
   }
 );
