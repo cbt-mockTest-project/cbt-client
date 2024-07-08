@@ -10,11 +10,18 @@ import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import {
+  QueryClient,
+  dehydrate,
+  DehydratedState,
+  HydrationBoundary,
+} from '@tanstack/react-query';
 
-interface UserStorageProps {}
+interface UserStorageProps {
+  dehydratedState: DehydratedState;
+}
 
-const UserStorage: NextPage<UserStorageProps> = () => {
+const UserStorage: NextPage<UserStorageProps> = ({ dehydratedState }) => {
   useMeQuery();
   return (
     <>
@@ -22,13 +29,15 @@ const UserStorage: NextPage<UserStorageProps> = () => {
         title="모두CBT | 모두 저장소"
         pageHeadingTitle="모두CBT 서비스 유저 저장소 페이지"
       />
-      <StorageLayout
-        hasOpenSaveCategoryModalButton={false}
-        title="모두CBT 유저  암기장"
-        storageType={StorageType.USER}
-      >
-        <UserStorageComponent />
-      </StorageLayout>
+      <HydrationBoundary state={dehydratedState}>
+        <StorageLayout
+          hasOpenSaveCategoryModalButton={false}
+          title="모두CBT 유저  암기장"
+          storageType={StorageType.USER}
+        >
+          <UserStorageComponent />
+        </StorageLayout>
+      </HydrationBoundary>
     </>
   );
 };

@@ -6,15 +6,22 @@ import WithHead from '@components/common/head/WithHead';
 import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { StorageType } from 'customTypes';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import {
+  QueryClient,
+  dehydrate,
+  DehydratedState,
+  HydrationBoundary,
+} from '@tanstack/react-query';
 import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
 
-interface ModuStorageProps {}
+interface ModuStorageProps {
+  dehydratedState: DehydratedState;
+}
 
-const ModuStorage: NextPage<ModuStorageProps> = () => {
+const ModuStorage: NextPage<ModuStorageProps> = ({ dehydratedState }) => {
   const { data: meQuery } = useMeQuery();
   return (
     <>
@@ -22,15 +29,17 @@ const ModuStorage: NextPage<ModuStorageProps> = () => {
         title="모두CBT | 모두 저장소"
         pageHeadingTitle="모두CBT 서비스 모두 저장소 페이지"
       />
-      <StorageLayout
-        hasOpenSaveCategoryModalButton={
-          meQuery?.me.user?.role === UserRole.Admin
-        }
-        title="모두CBT 공식 암기장"
-        storageType={StorageType.MODU}
-      >
-        <ModuStorageComponent />
-      </StorageLayout>
+      <HydrationBoundary state={dehydratedState}>
+        <StorageLayout
+          hasOpenSaveCategoryModalButton={
+            meQuery?.me.user?.role === UserRole.Admin
+          }
+          title="모두CBT 공식 암기장"
+          storageType={StorageType.MODU}
+        >
+          <ModuStorageComponent />
+        </StorageLayout>
+      </HydrationBoundary>
     </>
   );
 };
