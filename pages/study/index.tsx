@@ -1,6 +1,6 @@
-import StudyComponent from '@components/study/StudyComponent';
-import StudyHeaderWrapper from '@components/study/StudyHeaderWrapper';
-import { STUDY_PAGE } from '@lib/constants/displayName';
+import StudyComponent from '../../app/_components/study/StudyComponent';
+import StudyHeaderWrapper from '../../app/_components/study/StudyHeaderWrapper';
+import { STUDY_PAGE } from '../../app/_lib/constants/displayName';
 import React from 'react';
 
 interface Props {}

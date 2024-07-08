@@ -1,15 +1,19 @@
-import { READ_POST, READ_POSTS } from '@lib/graphql/query/postQuery';
+import { READ_POST, READ_POSTS } from '../../app/_lib/graphql/query/postQuery';
 import {
   ReadPostQuery,
   ReadPostQueryVariables,
   ReadPostsQuery,
-} from '@lib/graphql/query/postQuery.generated';
-import { addApolloState, initializeApollo, useApollo } from '@modules/apollo';
+} from '../../app/_lib/graphql/query/postQuery.generated';
+import {
+  addApolloState,
+  initializeApollo,
+  useApollo,
+} from '../../app/_modules/apollo';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import PostDetailComponent from '@components/post/detail/PostDetailComponent';
-import { PostCategory } from 'types';
+import WithHead from '../../app/_components/common/head/WithHead';
+import PostDetailComponent from '../../app/_components/post/detail/PostDetailComponent';
+import { PostCategory } from '../../app/types';
 interface PostPageProps {
   postQueryOnStaticProps: ReadPostQuery;
 }

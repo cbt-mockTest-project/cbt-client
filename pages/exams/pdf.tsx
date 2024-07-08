@@ -1,12 +1,12 @@
-import WithHead from '@components/common/head/WithHead';
-import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
-import StudyHeader from '@components/study/StudyHeader';
-import { EXAMS_PDF_PAGE } from '@lib/constants/displayName';
-import useQuestions from '@lib/hooks/useQuestions';
-import { useAppSelector } from '@modules/redux/store/configureStore';
+import WithHead from '../../app/_components/common/head/WithHead';
+import ExamPrintComponent from '../../app/_components/exam/pdf/ExamPrint';
+import StudyHeader from '../../app/_components/study/StudyHeader';
+import { EXAMS_PDF_PAGE } from '../../app/_lib/constants/displayName';
+import useQuestions from '../../app/_lib/hooks/useQuestions';
+import { useAppSelector } from '../../app/_modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
+import { QuestionState, ReadQuestionsByExamIdsInput } from '../../app/types';
 
 interface ExamsPdfPageProps {}
 

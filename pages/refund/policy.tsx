@@ -1,5 +1,5 @@
-import WithHead from '@components/common/head/WithHead';
-import RefundPolicyComponent from '@components/refund/policy/RefundPolicyComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import RefundPolicyComponent from '../../app/_components/refund/policy/RefundPolicyComponent';
 import { NextPage } from 'next';
 import React from 'react';
 

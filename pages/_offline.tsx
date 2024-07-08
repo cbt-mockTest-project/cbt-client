@@ -1,5 +1,5 @@
-import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
+import { responsive } from '../app/_lib/utils/responsive';
+import palette from '../app/_styles/palette';
 import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';

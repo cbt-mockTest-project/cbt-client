@@ -1,6 +1,6 @@
-import WithHead from '@components/common/head/WithHead';
-import ExamBookmarkComponent from '@components/examBookmark/ExamBookmarkComponent';
-import ExamReviewComponent from '@components/examReview/ExamReviewComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import ExamBookmarkComponent from '../../app/_components/examBookmark/ExamBookmarkComponent';
+import ExamReviewComponent from '../../app/_components/examReview/ExamReviewComponent';
 import { NextPage } from 'next';
 
 const ExamsBookmarkPage: NextPage = () => {

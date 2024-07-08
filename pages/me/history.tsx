@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import withAuth from '@lib/hocs/withAuth';
-import HistoryComponent from '@components/me/history/HistoryComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import withAuth from '../../app/_lib/hocs/withAuth';
+import HistoryComponent from '../../app/_components/me/history/HistoryComponent';
 
 interface MyHistoryProps {}
 

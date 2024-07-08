@@ -1,9 +1,9 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import withAuth from '@lib/hocs/withAuth';
-import { UserRole } from 'types';
-import SellerComponent from '@components/me/seller/SellerComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import withAuth from '../../app/_lib/hocs/withAuth';
+import { UserRole } from '../../app/types';
+import SellerComponent from '../../app/_components/me/seller/SellerComponent';
 
 interface SellerPageProps {}
 

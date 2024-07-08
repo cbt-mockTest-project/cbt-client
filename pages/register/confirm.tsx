@@ -1,12 +1,12 @@
-import WithHead from '@components/common/head/WithHead';
-import ErrorText from '@components/common/layout/errorText/ErrorText';
-import { useSendVerificationMailMutation } from '@lib/graphql/hook/useUser';
-import { responsive } from '@lib/utils/responsive';
+import WithHead from '../../app/_components/common/head/WithHead';
+import ErrorText from '../../app/_components/common/layout/errorText/ErrorText';
+import { useSendVerificationMailMutation } from '../../app/_lib/graphql/hook/useUser';
+import { responsive } from '../../app/_lib/utils/responsive';
 import { App, Button, Input } from 'antd';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
-import { SendVerificationMailInput } from 'types';
+import { SendVerificationMailInput } from '../../app/types';
 
 const Confirm = () => {
   const { message } = App.useApp();

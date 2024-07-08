@@ -1,23 +1,16 @@
 import type { AppProps } from 'next/app';
-import Globalstyles from '@styles/globalStyles';
+import Globalstyles from '../app/_styles/globalStyles';
 import { ApolloProvider } from '@apollo/client';
-import { APOLLO_STATE_PROP_NAME, useApollo } from '@modules/apollo';
-import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import Script from 'next/script';
 import { useEffect } from 'react';
-import * as gtag from '@lib/ga/gtag';
 import { useRouter } from 'next/router';
 import { ConfigProvider, App as AntApp } from 'antd';
 import Head from 'next/head';
-import AppInner from '@components/common/container/AppInner';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { homeRouteStackKey } from '@lib/constants';
-import { checkHomePage } from '@lib/constants/routes';
-import { isServer, someIncludes } from '@lib/utils/utils';
-import CoreContainer from '@components/common/core/CoreContainer';
-import wrapper from '@modules/redux/store/configureStore';
-import MainLayout from '@components/common/layout/MainLayout';
+import AppInner from '../app/_components/common/container/AppInner';
+import { LocalStorage } from '../app/_lib/utils/localStorage';
+import CoreContainer from '../app/_components/common/core/CoreContainer';
+import MainLayout from '../app/_components/common/layout/MainLayout';
 import {
   HydrationBoundary,
   QueryClient,
@@ -36,13 +29,11 @@ import {
   SEARCH_PAGE,
   STUDY_PAGE,
   TODAY_QUIZ_PAGE,
-} from '@lib/constants/displayName';
-import { setCookie } from 'cookies-next';
-import '@styles/global.css';
-import { coreActions } from '@modules/redux/slices/core';
-import { ThemeValue } from 'customTypes';
-import { Provider } from 'react-redux';
-import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
+} from '../app/_lib/constants/displayName';
+import { coreActions } from '../app/_modules/redux/slices/core';
+import { ThemeValue } from '../app/customTypes';
+import ThemeProviderWrapper from '../app/_lib/provider/theme/ThemeProviderWrapper';
+import { wrapper } from '@modules/redux/store/configureStore';
 
 export const queryClient = new QueryClient();
 
@@ -51,8 +42,6 @@ export default function App({
   pageProps,
   ...customProps
 }: AppProps) {
-  const router = useRouter();
-  const { message } = AntApp.useApp();
   const cookies = (customProps as any)['cookies'];
   const theme = cookies?.['theme'];
   const { store } = wrapper.useWrappedStore(pageProps);
@@ -60,7 +49,6 @@ export default function App({
     store.dispatch(coreActions.setTheme(theme as ThemeValue));
   }
 
-  const localStorage = new LocalStorage();
   const pagesWithoutLayout: string[] = [
     EXAM_SOLUTION_PAGE,
     EXAM_PDF_PAGE,
@@ -89,99 +77,6 @@ export default function App({
   const isOnlyLightMode = isOnlyLightModePage.includes(
     String(Component.displayName)
   );
-  const client = useApollo({ ...pageProps[APOLLO_STATE_PROP_NAME] }, '');
-  useEffect(() => {
-    const excludePath = ['/exam/randomselect', '/exam/solution'];
-    if (!someIncludes(excludePath, router.asPath)) {
-      var ads = document.getElementsByClassName('adsbygoogle').length;
-      for (var i = 0; i < ads; i++) {
-        try {
-          ((window as any).adsbygoogle =
-            (window as any).adsbygoogle || []).push({});
-        } catch (e) {}
-      }
-    }
-
-    // 로그인 후 리다이렉트
-    if (router.asPath === '/auth' || !router.asPath) return;
-    setCookie('auth_redirect', router.asPath, {
-      expires: new Date(Date.now() + 1000 * 60 * 5),
-      path: '/',
-      domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
-    });
-  }, [router.asPath]);
-
-  // 모바일 앱에서, target="_blank"인 링크를 클릭하면 웹뷰에서 열리도록 합니다.
-  useEffect(() => {
-    const excludePath = ['/pricing'];
-    if (
-      isServer() ||
-      window.innerWidth > 720 ||
-      excludePath.some((path) => router.asPath.startsWith(path))
-    ) {
-      return;
-    }
-    const handleClick = (event: any) => {
-      let el = event.target;
-      // 이벤트가 발생한 요소가 <a>가 아닌 경우 가장 가까운 <a>를 찾습니다.
-      while (el && el.tagName !== 'A') {
-        el = el.parentElement;
-      }
-      // <a> 요소를 찾지 못한 경우는 무시합니다.
-      if (!el) return;
-      if (el.tagName === 'A' && el.getAttribute('target') === '_blank') {
-        event.preventDefault();
-        router.push(el.getAttribute('href'));
-      }
-    };
-    window.addEventListener('click', handleClick);
-
-    // Clean up
-    return () => {
-      window.removeEventListener('click', handleClick);
-    };
-  }, [router]);
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      gtag.pageview(url);
-    };
-    const routeChangeStart = () => {
-      const isHome = checkHomePage(router.asPath);
-      if (isHome) {
-        const homeRouteStack = localStorage.get(homeRouteStackKey);
-        if (homeRouteStack) {
-          if (homeRouteStack.length > 10) {
-            homeRouteStack.shift();
-          }
-          homeRouteStack.push({ path: router.asPath, scrollY: window.scrollY });
-          localStorage.set(homeRouteStackKey, homeRouteStack);
-          return;
-        }
-        localStorage.set(homeRouteStackKey, [
-          { path: router.asPath, scrollY: window.scrollY },
-        ]);
-      }
-    };
-    router.events.on('routeChangeStart', routeChangeStart);
-    router.events.on('routeChangeComplete', handleRouteChange);
-    router.events.on('hashChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeStart', routeChangeStart);
-      router.events.off('routeChangeComplete', handleRouteChange);
-      router.events.off('hashChangeComplete', handleRouteChange);
-    };
-  }, [router.events, router.asPath]);
-  useEffect(() => {
-    // 탈퇴유저에 대한 리다이렉트 메시지
-    if (router.query.message) {
-      message.error(router.query.message);
-    }
-  }, [router.query.message]);
-
-  useEffect(() => {
-    window.katex = katex;
-  }, []);
 
   return (
     <>
@@ -191,89 +86,21 @@ export default function App({
           content="width=device-width, initial-scale=1, user-scalable=no"
         />
       </Head>
-      <Script
-        id="clarify-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-          (function(c,l,a,r,i,t,y){
-          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "mnhew0syru");
-        `,
-        }}
-      />
-      <Script
-        id="gtm-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-TXJD2HF');
-          `,
-        }}
-      />
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-      />
-      <noscript>
-        <iframe
-          src="https://www.googletagmanager.com/ns.html?id=GTM-TXJD2HF"
-          height="0"
-          width="0"
-          style={{
-            display: 'none',
-            visibility: 'hidden',
-          }}
-        ></iframe>
-      </noscript>
-      <Script
-        async
-        src="https://fundingchoicesmessages.google.com/i/pub-9145855450425143?ers=1"
-        nonce="Y9YkCp5YFgpFn5oOP3h7zQ"
-      />
-      <Script
-        id="gtag-init"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${gtag.GA_TRACKING_ID}', {
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
-      <Provider store={store}>
-        <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
-          <ApolloProvider client={client}>
-            <QueryClientProvider client={queryClient}>
-              <HydrationBoundary state={pageProps.dehydratedState}>
-                <ConfigProvider>
-                  <Globalstyles />
-                  <CoreContainer />
-                  <AppInner />
-                  {hasLayout ? (
-                    <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
-                      <Component {...pageProps} />
-                    </MainLayout>
-                  ) : (
-                    <Component {...pageProps} />
-                  )}
-                </ConfigProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </HydrationBoundary>
-            </QueryClientProvider>
-          </ApolloProvider>
-        </ThemeProviderWrapper>
-      </Provider>
+      <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
+        <QueryClientProvider client={queryClient}>
+          <ConfigProvider>
+            <CoreContainer />
+            <AppInner />
+            {hasLayout ? (
+              <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
+                <Component {...pageProps} />
+              </MainLayout>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </ConfigProvider>
+        </QueryClientProvider>
+      </ThemeProviderWrapper>
     </>
   );
 }

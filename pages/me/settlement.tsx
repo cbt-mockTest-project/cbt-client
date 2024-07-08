@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import withAuth from '@lib/hocs/withAuth';
-import SettlementComponent from '@components/me/settlement/SettlementComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import withAuth from '../../app/_lib/hocs/withAuth';
+import SettlementComponent from '../../app/_components/me/settlement/SettlementComponent';
 
 interface SettlementPageProps {}
 

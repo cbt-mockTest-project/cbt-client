@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
 import React, { useEffect } from 'react';
-import WithHead from '@components/common/head/WithHead';
-import MyStorageComponent from '@components/myStorage/MyStorageComponent';
-import StorageLayout from '@components/common/layout/storage/StorageLayout';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useStorage from '@lib/hooks/useStorage';
-import { StorageType } from 'customTypes';
-import withAuth from '@lib/hocs/withAuth';
+import WithHead from '../../app/_components/common/head/WithHead';
+import MyStorageComponent from '../../app/_components/myStorage/MyStorageComponent';
+import StorageLayout from '../../app/_components/common/layout/storage/StorageLayout';
+import { useMeQuery } from '../../app/_lib/graphql/hook/useUser';
+import useStorage from '../../app/_lib/hooks/useStorage';
+import { StorageType } from '../../app/customTypes';
+import withAuth from '../../app/_lib/hocs/withAuth';
 import Link from 'next/link';
 
 interface MyStorageProps {}

@@ -1,6 +1,6 @@
-import StorageLayout from '@components/common/layout/storage/StorageLayout';
-import SearchCategoriesComponent from '@components/searchCategories/SearchCategoriesComponent';
-import { StorageType } from 'customTypes';
+import StorageLayout from '../../app/_components/common/layout/storage/StorageLayout';
+import SearchCategoriesComponent from '../../app/_components/searchCategories/SearchCategoriesComponent';
+import { StorageType } from '../../app/customTypes';
 import { NextPage } from 'next';
 
 const SearchCategoriesPage: NextPage = () => {

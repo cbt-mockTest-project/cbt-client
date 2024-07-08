@@ -1,5 +1,5 @@
-import WithHead from '@components/common/head/WithHead';
-import TodayQuizComponent from '@components/today/quiz/TodayQuizComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import TodayQuizComponent from '../../app/_components/today/quiz/TodayQuizComponent';
 import { NextPage } from 'next';
 
 const TodayQuizPage: NextPage = () => {

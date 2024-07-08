@@ -1,5 +1,5 @@
-import WithHead from '@components/common/head/WithHead';
-import ExamReviewComponent from '@components/examReview/ExamReviewComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import ExamReviewComponent from '../../app/_components/examReview/ExamReviewComponent';
 import { NextPage } from 'next';
 
 const ExamsReviewPage: NextPage = () => {

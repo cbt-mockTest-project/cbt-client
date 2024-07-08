@@ -1,19 +1,22 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
-import WithHead from '@components/common/head/WithHead';
-import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
-import SolutionModeCore from '@components/solutionMode/SolutionModeCore';
-import StudyHeader from '@components/study/StudyHeader';
-import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
-import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
-import { ReadAllMockExamQuery } from '@lib/graphql/query/examQuery.generated';
-import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
-import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
-import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
-import wrapper from '@modules/redux/store/configureStore';
+import GoogleAd from '../../../app/_components/common/ad/GoogleAd';
+import WithHead from '../../../app/_components/common/head/WithHead';
+import SolutionModeComponent from '../../../app/_components/solutionMode/SolutionModeComponent';
+import SolutionModeCore from '../../../app/_components/solutionMode/SolutionModeCore';
+import StudyHeader from '../../../app/_components/study/StudyHeader';
+import { EXAM_SOLUTION_PAGE } from '../../../app/_lib/constants/displayName';
+import { READ_ALL_MOCK_EXAM } from '../../../app/_lib/graphql/query/examQuery';
+import { ReadAllMockExamQuery } from '../../../app/_lib/graphql/query/examQuery.generated';
+import { READ_QUESTIONS_BY_EXAM_IDS } from '../../../app/_lib/graphql/query/questionQuery';
+import { ReadQuestionsByExamIdsQuery } from '../../../app/_lib/graphql/query/questionQuery.generated';
+import { convertExamTitle, removeHtmlTag } from '../../../app/_lib/utils/utils';
+import { addApolloState, initializeApollo } from '../../../app/_modules/apollo';
+import { mockExamActions } from '../../../app/_modules/redux/slices/mockExam';
+import wrapper from '../../../app/_modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
+import {
+  MockExamQuestion,
+  ReadQuestionsByExamIdsInput,
+} from '../../../app/types';
 
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;

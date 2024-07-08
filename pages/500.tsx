@@ -1,4 +1,4 @@
-import { revalidatePath } from '@lib/apis/revalidate';
+import { revalidatePath } from '../app/_lib/apis/revalidate';
 import { Button } from 'antd';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

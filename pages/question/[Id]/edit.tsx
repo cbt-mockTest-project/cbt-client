@@ -1,5 +1,5 @@
-import QuestionEditComponent from '@components/question/edit/QuestionEditComponent';
-import { QUESTION_EDIT_PAGE } from '@lib/constants/displayName';
+import QuestionEditComponent from '../../../app/_components/question/edit/QuestionEditComponent';
+import { QUESTION_EDIT_PAGE } from '../../../app/_lib/constants/displayName';
 import React from 'react';
 import styled from 'styled-components';
 

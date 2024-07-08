@@ -1,15 +1,18 @@
-import WithHead from '@components/common/head/WithHead';
-import ExamPrintComponent from '@components/exam/pdf/ExamPrint';
-import StudyHeader from '@components/study/StudyHeader';
-import { EXAM_PDF_PAGE } from '@lib/constants/displayName';
-import { READ_QUESTIONS_BY_EXAM_IDS } from '@lib/graphql/query/questionQuery';
-import { ReadQuestionsByExamIdsQuery } from '@lib/graphql/query/questionQuery.generated';
-import { removeHtmlTag } from '@lib/utils/utils';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { mockExamActions } from '@modules/redux/slices/mockExam';
-import wrapper from '@modules/redux/store/configureStore';
+import WithHead from '../../../app/_components/common/head/WithHead';
+import ExamPrintComponent from '../../../app/_components/exam/pdf/ExamPrint';
+import StudyHeader from '../../../app/_components/study/StudyHeader';
+import { EXAM_PDF_PAGE } from '../../../app/_lib/constants/displayName';
+import { READ_QUESTIONS_BY_EXAM_IDS } from '../../../app/_lib/graphql/query/questionQuery';
+import { ReadQuestionsByExamIdsQuery } from '../../../app/_lib/graphql/query/questionQuery.generated';
+import { removeHtmlTag } from '../../../app/_lib/utils/utils';
+import { addApolloState, initializeApollo } from '../../../app/_modules/apollo';
+import { mockExamActions } from '../../../app/_modules/redux/slices/mockExam';
+import wrapper from '../../../app/_modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
+import {
+  MockExamQuestion,
+  ReadQuestionsByExamIdsInput,
+} from '../../../app/types';
 
 interface ExamPdfPageProps {
   questions: MockExamQuestion[];

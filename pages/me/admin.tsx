@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import withAuth from '@lib/hocs/withAuth';
-import AdminComponent from '@components/me/admin/AdminComponent';
+import WithHead from '../../app/_components/common/head/WithHead';
+import withAuth from '../../app/_lib/hocs/withAuth';
+import AdminComponent from '../../app/_components/me/admin/AdminComponent';
 
 interface AdminPageProps {}
 

@@ -1,6 +1,6 @@
-import WithHead from '@components/common/head/WithHead';
-import SearchComponent from '@components/search/SearchComponent';
-import { SEARCH_PAGE } from '@lib/constants/displayName';
+import WithHead from '../../app/_components/common/head/WithHead';
+import SearchComponent from '../../app/_components/search/SearchComponent';
+import { SEARCH_PAGE } from '../../app/_lib/constants/displayName';
 import { NextPage } from 'next';
 
 const SearchPage: NextPage = () => {

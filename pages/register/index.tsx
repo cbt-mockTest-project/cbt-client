@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import ErrorText from '@components/common/layout/errorText/ErrorText';
+import ErrorText from '../../app/_components/common/layout/errorText/ErrorText';
 import {
   useEmailVerification,
   useRegisterMutation,
-} from '@lib/graphql/hook/useUser';
+} from '../../app/_lib/graphql/hook/useUser';
 import { App, Button, Checkbox, Input } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { RegisterInput } from 'types';
-import WithHead from '@components/common/head/WithHead';
-import { responsive } from '@lib/utils/responsive';
-import BasicBox from '@components/common/box/BasicBox';
-import { termsCondition } from '@lib/constants/termsCondition';
+import { RegisterInput } from '../../app/types';
+import WithHead from '../../app/_components/common/head/WithHead';
+import { responsive } from '../../app/_lib/utils/responsive';
+import BasicBox from '../../app/_components/common/box/BasicBox';
+import { termsCondition } from '../../app/_lib/constants/termsCondition';
 
 const Register = () => {
   const { message } = App.useApp();

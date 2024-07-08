@@ -1,16 +1,16 @@
-import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
+import ModuStorageComponent from '../../app/_components/moduStorage/ModuStorageComponent';
 import { NextPage } from 'next';
-import { ExamSource, UserRole } from 'types';
+import { ExamSource, UserRole } from '../../app/types';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import StorageLayout from '@components/common/layout/storage/StorageLayout';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { StorageType } from 'customTypes';
+import WithHead from '../../app/_components/common/head/WithHead';
+import StorageLayout from '../../app/_components/common/layout/storage/StorageLayout';
+import { useMeQuery } from '../../app/_lib/graphql/hook/useUser';
+import { StorageType } from '../../app/customTypes';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
-} from '@lib/queryOptions/getCategoriesQueryOption';
+} from '../../app/_lib/queryOptions/getCategoriesQueryOption';
 
 interface ModuStorageProps {}
 

@@ -1,13 +1,13 @@
-import ModuStorageComponent from '@components/moduStorage/ModuStorageComponent';
-import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
-import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
-import { addApolloState, initializeApollo } from '@modules/apollo';
+import ModuStorageComponent from '../../app/_components/moduStorage/ModuStorageComponent';
+import { GET_EXAM_CATEGORIES } from '../../app/_lib/graphql/query/examQuery';
+import { GetExamCategoriesQuery } from '../../app/_lib/graphql/query/examQuery.generated';
+import { addApolloState, initializeApollo } from '../../app/_modules/apollo';
 import { GetStaticProps, NextPage } from 'next';
-import { ExamSource, MockExamCategory } from 'types';
+import { ExamSource, MockExamCategory } from '../../app/types';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import wrapper from '@modules/redux/store/configureStore';
-import { storageActions } from '@modules/redux/slices/storage';
+import WithHead from '../../app/_components/common/head/WithHead';
+import wrapper from '../../app/_modules/redux/store/configureStore';
+import { storageActions } from '../../app/_modules/redux/slices/storage';
 
 interface ModuStorageProps {}
 

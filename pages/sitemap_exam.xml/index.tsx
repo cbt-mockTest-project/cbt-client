@@ -1,11 +1,11 @@
 import { ISitemapField, getServerSideSitemap } from 'next-sitemap';
 import { GetServerSideProps } from 'next';
-import { initializeApollo } from '@modules/apollo';
+import { initializeApollo } from '../../app/_modules/apollo';
 import {
   ReadAllMockExamQuery,
   ReadAllMockExamQueryVariables,
-} from '@lib/graphql/query/examQuery.generated';
-import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
+} from '../../app/_lib/graphql/query/examQuery.generated';
+import { READ_ALL_MOCK_EXAM } from '../../app/_lib/graphql/query/examQuery';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, '');

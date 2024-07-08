@@ -1,8 +1,8 @@
 import { ISitemapField, getServerSideSitemap } from 'next-sitemap';
 import { GetServerSideProps } from 'next';
-import { initializeApollo } from '@modules/apollo';
-import { ReadMockExamCategoryNamesQuery } from '@lib/graphql/query/examQuery.generated';
-import { READ_EXAM_CATEGORY_NAMES } from '@lib/graphql/query/examQuery';
+import { initializeApollo } from '../../app/_modules/apollo';
+import { ReadMockExamCategoryNamesQuery } from '../../app/_lib/graphql/query/examQuery.generated';
+import { READ_EXAM_CATEGORY_NAMES } from '../../app/_lib/graphql/query/examQuery';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, '');

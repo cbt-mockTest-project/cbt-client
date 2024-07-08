@@ -1,6 +1,6 @@
-import WithHead from '@components/common/head/WithHead';
-import PricingComponent from '@components/pricing/PricingComponent';
-import { PRICING_PAGE } from '@lib/constants/displayName';
+import WithHead from '../../app/_components/common/head/WithHead';
+import PricingComponent from '../../app/_components/pricing/PricingComponent';
+import { PRICING_PAGE } from '../../app/_lib/constants/displayName';
 import React from 'react';
 
 interface PricingPageProps {}

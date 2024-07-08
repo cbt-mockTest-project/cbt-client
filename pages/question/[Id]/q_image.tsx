@@ -1,9 +1,9 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
-import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
-import WithHead from '@components/common/head/WithHead';
+import { addApolloState, initializeApollo } from '../../../app/_modules/apollo';
+import { ReadMockExamQuestionQuery } from '../../../app/_lib/graphql/query/questionQuery.generated';
+import { READ_QUESTION } from '../../../app/_lib/graphql/query/questionQuery';
+import WithHead from '../../../app/_components/common/head/WithHead';
 import { Image } from 'antd';
 
 interface QuestionImageProps {

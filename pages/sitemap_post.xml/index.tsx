@@ -1,8 +1,8 @@
 import { ISitemapField, getServerSideSitemap } from 'next-sitemap';
 import { GetServerSideProps } from 'next';
-import { initializeApollo } from '@modules/apollo';
-import { ReadPostsQuery } from '@lib/graphql/query/postQuery.generated';
-import { READ_POSTS } from '@lib/graphql/query/postQuery';
+import { initializeApollo } from '../../app/_modules/apollo';
+import { ReadPostsQuery } from '../../app/_lib/graphql/query/postQuery.generated';
+import { READ_POSTS } from '../../app/_lib/graphql/query/postQuery';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const client = initializeApollo({}, '');

@@ -1,14 +1,14 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { addApolloState, initializeApollo } from '@modules/apollo';
-import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
-import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
-import WithHead from '@components/common/head/WithHead';
-import QuestionComponent from '@components/question/QuestionComponent';
-import { removeHtmlTag } from '@lib/utils/utils';
-import { ReadMockExamQuestionInput } from 'types';
-import { QUESTION_PAGE } from '@lib/constants/displayName';
-import GoogleAd from '@components/common/ad/GoogleAd';
+import { addApolloState, initializeApollo } from '../../../app/_modules/apollo';
+import { ReadMockExamQuestionQuery } from '../../../app/_lib/graphql/query/questionQuery.generated';
+import { READ_QUESTION } from '../../../app/_lib/graphql/query/questionQuery';
+import WithHead from '../../../app/_components/common/head/WithHead';
+import QuestionComponent from '../../../app/_components/question/QuestionComponent';
+import { removeHtmlTag } from '../../../app/_lib/utils/utils';
+import { ReadMockExamQuestionInput } from '../../../app/types';
+import { QUESTION_PAGE } from '../../../app/_lib/constants/displayName';
+import GoogleAd from '../../../app/_components/common/ad/GoogleAd';
 
 interface QuestionProps {
   title: string;

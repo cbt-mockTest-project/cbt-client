@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import MyProfileComponent from '@components/me/profile/MyProfileComponent';
-import withAuth from '@lib/hocs/withAuth';
+import WithHead from '../../app/_components/common/head/WithHead';
+import MyProfileComponent from '../../app/_components/me/profile/MyProfileComponent';
+import withAuth from '../../app/_lib/hocs/withAuth';
 
 interface MyProfileProps {}
 

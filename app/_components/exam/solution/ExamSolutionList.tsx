@@ -1,0 +1,234 @@
+import { loginModal } from '../../../_lib/constants';
+import { useCreateQuestionFeedBack } from '../../../_lib/graphql/hook/useFeedBack';
+import { useEditQuestionBookmark } from '../../../_lib/graphql/hook/useQuestionBookmark';
+import { useMeQuery } from '../../../_lib/graphql/hook/useUser';
+import { ReadMockExamQuestionQuery } from '../../../_lib/graphql/query/questionQuery.generated';
+import useToggle from '../../../_lib/hooks/useToggle';
+import { responsive } from '../../../_lib/utils/responsive';
+import { coreActions } from '../../../_modules/redux/slices/core';
+import { useAppDispatch } from '../../../_modules/redux/store/configureStore';
+import palette from '../../../_styles/palette';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
+import { useChangeQuestionState } from '../../../_lib/graphql/hook/useQuestionState';
+import { QuestionFeedbackType } from '../../../types';
+import { QuestionListType } from '../../../_modules/redux/slices/exam';
+import EditorStyle from '../../../_styles/editorStyle';
+
+type ExamQuestionTypeByQuestionId =
+  ReadMockExamQuestionQuery['readMockExamQuestion']['mockExamQusetion'];
+
+export type ExamQuestionType =
+  | QuestionListType[number]
+  | ExamQuestionTypeByQuestionId;
+
+interface ExamSolutionListProps {
+  question: ExamQuestionType;
+  title: string;
+  isSolutionAllHide: boolean;
+  commentType?: 'modal' | 'basic';
+  hasNewWindowButton?: boolean;
+  hasStateBox?: boolean;
+  isPreview?: boolean;
+  questionSubDescription?: string;
+  isDetailPage?: boolean;
+  index?: number;
+}
+
+const ExamSolutionList: React.FC<ExamSolutionListProps> = ({
+  isDetailPage = false,
+}) => {
+  const { value: commentModalState } = useToggle();
+  const { value: reportModalState } = useToggle();
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (reportModalState || commentModalState) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [reportModalState, commentModalState]);
+
+  return (
+    <ExamSolutionListContainer
+      isDetailPage={isDetailPage}
+    ></ExamSolutionListContainer>
+  );
+};
+
+export default ExamSolutionList;
+
+interface ExamSolutionListContainerProps {
+  isDetailPage: boolean;
+}
+
+const ExamSolutionListContainer = styled.li<ExamSolutionListContainerProps>`
+  .hide {
+    filter: blur(10px);
+  }
+  .solution-page-state-select-box-group {
+    margin-top: 10px;
+  }
+
+  .solution-page-question-solution-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .solution-page-solution {
+    white-space: pre-wrap;
+    margin: 20px 0 20px 20px;
+  }
+
+  .solution-page-report-button,
+  .solution-page-comment-button {
+    font-size: 0.8rem;
+    + button {
+      margin-left: 10px;
+    }
+    margin-top: 15px;
+  }
+
+  .solution-page-question {
+    ${EditorStyle}
+    white-space: pre-wrap;
+    b {
+      font-size: 1.1.rem;
+      font-weight: bold;
+    }
+  }
+  .solution-page-question-pre-wrapper {
+    background-color: ${palette.gray_100};
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    padding: 20px;
+    flex: 4;
+  }
+  .solution-page-solution-pre-wrapper {
+    position: relative;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    border: 1px solid ${palette.gray_400};
+    padding: 20px;
+    flex: 4;
+  }
+  .solution-page-question-image-wrapper {
+    flex: 6;
+    padding: 20px;
+    text-align: left;
+    border: 1px solid ${palette.gray_400};
+  }
+  .solution-page-question-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .solution-page-question-wrapper {
+    display: flex;
+    position: relative;
+    margin-top: 65px;
+    gap: 20px;
+    ${(props) =>
+      props.isDetailPage &&
+      css`
+        flex-direction: column;
+        gap: 0px;
+      `}
+  }
+
+  .solution-page-comment-modal {
+    max-width: none;
+    width: 500px;
+    background-color: ${palette.gray_100};
+  }
+  .solution-page-question-bookmark-button-wrapper {
+    display: flex;
+    position: absolute;
+    gap: 5px;
+    top: -35px;
+  }
+  .solution-page-question-bookmark-button {
+    display: flex;
+    gap: 5px;
+    width: 90px;
+    height: 35px;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid ${palette.gray_100};
+    background-color: ${palette.gray_100};
+    font-size: 0.8rem;
+  }
+  .solution-page-question-label {
+    font-size: 14px;
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
+  }
+  .solution-page-question-detail-link {
+    svg {
+      height: 35px;
+      transition: color 0.2s;
+      :hover {
+        color: ${palette.antd_blue_01};
+      }
+    }
+  }
+  .solution-page-question-bookmark-text {
+    flex: 2;
+    text-align: left;
+  }
+  .solution-page-question-bookmark-icon {
+    flex: 1;
+    height: 25px;
+  }
+  .solution-page-solution-hide-button {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    align-items: center;
+    width: 90px;
+    height: 35px;
+    top: -35px;
+    border: 1px solid ${palette.gray_400};
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-width: 0;
+    font-size: 0.8rem;
+  }
+  .solution-page-solution-hide-icon {
+    flex: 1;
+    font-size: 1.2rem;
+  }
+  .solution-page-solution-hide-text {
+    flex: 2;
+    text-align: left;
+  }
+  .solution-page-question-sub-description {
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: ${palette.gray_500};
+  }
+
+  @media (max-width: ${responsive.medium}) {
+    .solution-page-question-wrapper {
+      flex-direction: column;
+      gap: 0px;
+    }
+
+    .solution-page-question-image-wrapper {
+      border-bottom: 1px solid ${palette.gray_400};
+    }
+    pre {
+      font-size: 0.9rem;
+    }
+  }
+  @media (max-width: ${responsive.small}) {
+    .solution-page-comment-modal {
+      width: 100%;
+    }
+  }
+`;

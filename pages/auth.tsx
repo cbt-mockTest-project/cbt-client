@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import React from 'react';
-import WithHead from '@components/common/head/WithHead';
-import AuthComponent from '@components/auth/AuthComponent';
+import WithHead from '../app/_components/common/head/WithHead';
+import AuthComponent from '../app/_components/auth/AuthComponent';
 
 interface AuthProps {}
 

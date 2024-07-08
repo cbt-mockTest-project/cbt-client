@@ -1,18 +1,21 @@
-import CategoryComponent from '@components/category/CategoryComponent';
-import CategoryCore from '@components/category/CategoryCore';
-import WithHead from '@components/common/head/WithHead';
-import { READ_EXAM_CATEGORY_NAMES } from '@lib/graphql/query/examQuery';
-import { ReadMockExamCategoryNamesQuery } from '@lib/graphql/query/examQuery.generated';
+import CategoryComponent from '../../app/_components/category/CategoryComponent';
+import CategoryCore from '../../app/_components/category/CategoryCore';
+import WithHead from '../../app/_components/common/head/WithHead';
+import { READ_EXAM_CATEGORY_NAMES } from '../../app/_lib/graphql/query/examQuery';
+import { ReadMockExamCategoryNamesQuery } from '../../app/_lib/graphql/query/examQuery.generated';
 import {
   getCategoryKey,
   getCategoryQueryOption,
-} from '@lib/queryOptions/getCategoryQueryOption';
-import { initializeApollo } from '@modules/apollo';
+} from '../../app/_lib/queryOptions/getCategoryQueryOption';
+import { initializeApollo } from '../../app/_modules/apollo';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
-import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
+import {
+  MockExamCategory,
+  ReadMockExamCategoryByCategoryIdInput,
+} from '../../app/types';
 
 interface CategoryPageProps {
   category: MockExamCategory;
