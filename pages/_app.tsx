@@ -4,7 +4,6 @@ import { ApolloProvider } from '@apollo/client';
 import { apolloClient } from '@modules/apollo';
 import 'katex/dist/katex.min.css';
 import Script from 'next/script';
-import { ConfigProvider } from 'antd';
 import Head from 'next/head';
 import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
@@ -30,9 +29,31 @@ import { coreActions } from '@modules/redux/slices/core';
 import { ThemeValue } from 'customTypes';
 import { Provider } from 'react-redux';
 import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
+import { useMemo } from 'react';
 
 export const queryClient = new QueryClient();
 
+const pagesWithoutLayout: string[] = [
+  EXAM_SOLUTION_PAGE,
+  EXAM_PDF_PAGE,
+  EXAMS_PDF_PAGE,
+  STUDY_PAGE,
+  EXAM_CREATE_PAGE,
+  NAVER_BLOG_BOT_PAGE,
+];
+const pagesWithoutBodyBorder: string[] = [
+  PRICING_PAGE,
+  QUESTION_PAGE,
+  QUESTION_EDIT_PAGE,
+  TODAY_QUIZ_PAGE,
+  SEARCH_PAGE,
+];
+const isOnlyLightModePage = [
+  EXAM_CREATE_PAGE,
+  QUESTION_EDIT_PAGE,
+  EXAM_PDF_PAGE,
+  EXAMS_PDF_PAGE,
+];
 export default function App({
   Component,
   pageProps,
@@ -44,34 +65,17 @@ export default function App({
   if (theme) {
     store.dispatch(coreActions.setTheme(theme as ThemeValue));
   }
-
-  const pagesWithoutLayout: string[] = [
-    EXAM_SOLUTION_PAGE,
-    EXAM_PDF_PAGE,
-    EXAMS_PDF_PAGE,
-    STUDY_PAGE,
-    EXAM_CREATE_PAGE,
-    NAVER_BLOG_BOT_PAGE,
-  ];
-  const papgesWithoutBodyBorder: string[] = [
-    PRICING_PAGE,
-    QUESTION_PAGE,
-    QUESTION_EDIT_PAGE,
-    TODAY_QUIZ_PAGE,
-    SEARCH_PAGE,
-  ];
-  const isOnlyLightModePage = [
-    EXAM_CREATE_PAGE,
-    QUESTION_EDIT_PAGE,
-    EXAM_PDF_PAGE,
-    EXAMS_PDF_PAGE,
-  ];
-  const hasLayout = !pagesWithoutLayout.includes(String(Component.displayName));
-  const hasBodyBorder = !papgesWithoutBodyBorder.includes(
-    String(Component.displayName)
-  );
-  const isOnlyLightMode = isOnlyLightModePage.includes(
-    String(Component.displayName)
+  const { hasLayout, hasBodyBorder, isOnlyLightMode } = useMemo(
+    () => ({
+      hasLayout: !pagesWithoutLayout.includes(String(Component.displayName)),
+      hasBodyBorder: !pagesWithoutBodyBorder.includes(
+        String(Component.displayName)
+      ),
+      isOnlyLightMode: isOnlyLightModePage.includes(
+        String(Component.displayName)
+      ),
+    }),
+    [Component.displayName]
   );
   return (
     <>
@@ -123,11 +127,6 @@ export default function App({
         ></iframe>
       </noscript>
       <Script
-        async
-        src="https://fundingchoicesmessages.google.com/i/pub-9145855450425143?ers=1"
-        nonce="Y9YkCp5YFgpFn5oOP3h7zQ"
-      />
-      <Script
         id="gtag-init"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
@@ -145,17 +144,15 @@ export default function App({
         <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
           <ApolloProvider client={apolloClient}>
             <QueryClientProvider client={queryClient}>
-              <ConfigProvider>
-                <Globalstyles />
-                <CoreContainer />
-                {hasLayout ? (
-                  <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
-                    <Component {...pageProps} />
-                  </MainLayout>
-                ) : (
+              <Globalstyles />
+              <CoreContainer />
+              {hasLayout ? (
+                <MainLayout type={hasBodyBorder ? 'default' : 'clean'}>
                   <Component {...pageProps} />
-                )}
-              </ConfigProvider>
+                </MainLayout>
+              ) : (
+                <Component {...pageProps} />
+              )}
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </ApolloProvider>

@@ -57,17 +57,6 @@ class MainDocument extends Document {
       <Html lang="ko">
         <Head>
           <script
-            async
-            src="https://fundingchoicesmessages.google.com/i/pub-9145855450425143?ers=1"
-            nonce="jbUWBdFKM2denqwRJFTGyw"
-          ></script>
-          <script
-            nonce="jbUWBdFKM2denqwRJFTGyw"
-            dangerouslySetInnerHTML={{
-              __html: `(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();`,
-            }}
-          ></script>
-          <script
             defer
             src="https://developers.kakao.com/sdk/js/kakao.min.js"
           />
