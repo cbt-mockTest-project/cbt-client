@@ -286,7 +286,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           <ExamCountTag />
         </div>
         {hasRecentlyMark && (
-          <div className="absolute top-[-15px] left-[15px]">
+          <div className="absolute bottom-[-8px] left-[50%] -translate-x-[50%]">
             <Tag color="blue">{`최근 학습${
               recentlyStudyQuestionNumber !== 0
                 ? `- ${recentlyStudyQuestionNumber}번 문제`

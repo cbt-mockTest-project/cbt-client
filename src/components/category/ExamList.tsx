@@ -48,7 +48,7 @@ const ExamList: React.FC<ExamListProps> = ({
   const renderVirtualizedList = () => (
     <List
       className="exam-item-list"
-      height={600}
+      height={500}
       itemCount={categoryExams.length}
       itemSize={100}
       width="100%"
@@ -73,7 +73,7 @@ const ExamList: React.FC<ExamListProps> = ({
 
     return (
       <div style={style}>
-        {isMyCategory ? (
+        {isMyCategory && isOrderChangableMode ? (
           <Draggable key={exam.id} index={index} draggableId={`${exam.id}`}>
             {(provided) => (
               <div
