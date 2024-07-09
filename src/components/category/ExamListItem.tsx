@@ -55,7 +55,7 @@ const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
       .exam-list-item-title {
         max-width: 100%;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -303,6 +303,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
       {isExamSelectModalOpen && (
         <ExamSelecModal
           examId={exam.id}
+          examTitle={exam.title}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
           categoryId={category.id}

@@ -8,6 +8,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ExamSelecModalBlock = styled(Modal)`
+  .exam-select-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
   .exam-select-option-wrapper {
     display: flex;
     flex-direction: column;
@@ -17,6 +21,7 @@ const ExamSelecModalBlock = styled(Modal)`
 
 interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
   examId: number;
+  examTitle: string;
   categoryId?: number;
   isPublicCategory?: boolean;
 }
@@ -26,7 +31,8 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { categoryId, examId, isPublicCategory, ...modalProps } = props;
+  const { categoryId, examId, isPublicCategory, examTitle, ...modalProps } =
+    props;
   const handleStartExam = () => {
     setMoveLoading(true);
     sessionStorage.set(PUBLIC_EXAM_ID, examId);
@@ -46,7 +52,7 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   return (
     <ExamSelecModalBlock {...modalProps} footer={false}>
       <div className="exam-select-option-wrapper">
-        <label className="exam-select-label">* 학습 형태를 선택해주세요.</label>
+        <div className="exam-select-title">{examTitle}</div>
         <Radio.Group
           className="exam-select-radio-group"
           size="large"
