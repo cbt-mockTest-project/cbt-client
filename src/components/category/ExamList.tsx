@@ -8,7 +8,7 @@ import { MockExamCategory } from 'types';
 import useCategoryExamList from './hooks/useCategoryExamList';
 
 const ExamListBlock = styled.ul`
-  margin-top: 10px;
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 20px;

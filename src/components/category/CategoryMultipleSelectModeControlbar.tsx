@@ -50,6 +50,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
       <Button
         className="category-study-button"
         type="primary"
+        size="large"
         onClick={() => {
           if (!handleCheckLogin()) return;
           setExamMultipleSelectModalOpen(true);
