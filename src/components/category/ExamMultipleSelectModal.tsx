@@ -1,12 +1,20 @@
-import { Button, Checkbox, InputNumber, Modal, ModalProps, Radio } from 'antd';
-import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Checkbox,
+  InputNumber,
+  Modal,
+  ModalProps,
+  Radio,
+  Select,
+} from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import palette from '@styles/palette';
 import { ExamMode, ExamSettingType } from 'customTypes';
-import { QuestionState } from 'types';
+import { MockExam, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
@@ -19,6 +27,8 @@ import {
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { PUBLIC_CATEGORY_ID } from '@lib/constants/sessionStorage';
+import useExamSetting from '@lib/hooks/useExamSetting';
+import { isDesktop } from 'react-device-detect';
 
 const ExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -52,11 +62,13 @@ const ExamMultipleSelectModalBlock = styled(Modal)`
 
 interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
   categoryId: number;
+  exams: MockExam[];
 }
 
 const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   props
 ) => {
+  const selectRef = useRef<HTMLDivElement>(null);
   const sessionStorage = new SessionStorage();
   const examIds = useAppSelector(
     (state) => state.examSetting.examSetting.examIds
@@ -66,7 +78,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   const [isRandomExamLimitModalOpen, setIsRandomExamLimitModalOpen] =
     useState(false);
   const [editProfileMutation] = useEditProfileMutation();
-  const { categoryId, ...modalProps } = props;
+  const { categoryId, exams, ...modalProps } = props;
+  const { handleAllExamsSelect, handleExamSelect, handleSetExamsSelect } =
+    useExamSetting({
+      categoryId,
+      exams,
+    });
   const router = useRouter();
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [isRandom, setIsRandom] = useState<boolean>(true);
@@ -158,14 +175,56 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     if (limit) setLimit(limit);
   }, []);
 
+  useEffect(() => {
+    // 모바일 환경에서 검색 막기
+    if (!selectRef.current) return;
+    const inputElement = selectRef.current.querySelector('input');
+    if (inputElement) {
+      inputElement.setAttribute('readonly', 'true');
+    }
+  }, [selectRef]);
+
+  const options = [
+    {
+      label: examIds.length === exams.length ? '전체 취소' : '전체 선택',
+      value: 0,
+    },
+    ...exams.map((exam) => ({
+      label: exam.title,
+      value: exam.id,
+    })),
+  ];
+
+  const handleSelectChange = (value: number[]) => {
+    if (value.includes(0)) {
+      handleAllExamsSelect();
+    } else {
+      handleSetExamsSelect(value);
+    }
+  };
+
   return (
     <ExamMultipleSelectModalBlock
       {...modalProps}
-      title="학습 설정하기"
+      title="랜덤 모의고사"
       footer={false}
     >
       <div>
         <div className="exam-multiple-select-option-wrapper">
+          <div ref={selectRef}>
+            <Select
+              className="mb-4"
+              size="large"
+              mode="tags"
+              allowClear
+              maxTagCount={2}
+              style={{ width: '100%' }}
+              placeholder="과목을 선택해주세요."
+              value={examIds}
+              options={options}
+              onChange={handleSelectChange}
+            />
+          </div>
           <label className="exam-multiple-select-label">
             * 학습 형태를 선택해주세요.
           </label>
@@ -243,6 +302,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           className="exam-start-button"
           type="primary"
           size="large"
+          disabled={!examIds.length}
           onClick={handleStart}
         >
           시작하기

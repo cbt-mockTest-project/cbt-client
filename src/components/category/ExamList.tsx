@@ -5,11 +5,10 @@ import DragDropContextWrapper from '@components/common/dragDrop/DragDropContextW
 import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
 import { MockExamCategory } from 'types';
-import useCategoryMutation from '@lib/mutation/useCategoryMutation';
 import useCategoryExamList from './hooks/useCategoryExamList';
 
 const ExamListBlock = styled.ul`
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 20px;

@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useAuth from '@lib/hooks/useAuth';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { MockExam, MockExamCategory } from 'types';
+import { MockExamCategory } from 'types';
 import useExamSetting from '@lib/hooks/useExamSetting';
-import CategoryAllCheckbox from './CategoryAllCheckbox';
-import { queryClient } from '../../../pages/_app';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
   display: flex;
@@ -43,45 +41,27 @@ const CategoryMultipleSelectModeControlbar: React.FC<
   CategoryMultipleSelectModeControlbarProps
 > = ({ category }) => {
   const { handleCheckLogin } = useAuth();
-  const { handleAllExamsSelect } = useExamSetting({
-    categoryId: category?.id,
-    exams: category?.mockExam,
-  });
+
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
     useState(false);
-  const isButtonDisabled = useAppSelector(
-    (state) => state.examSetting.examSetting.examIds.length === 0
-  );
 
   return (
     <CategoryMultipleSelectModeControlbarBlock>
-      <div className="category-exam-all-checkbox-wrapper">
-        <CategoryAllCheckbox
-          categoryId={category?.id}
-          exams={category?.mockExam}
-        />
-        <span style={{ cursor: 'pointer' }} onClick={handleAllExamsSelect}>
-          전체 선택
-        </span>
-      </div>
-      <Tooltip title={isButtonDisabled ? '과목을 선택해주세요.' : ''}>
-        <Button
-          className="category-study-button"
-          type="primary"
-          disabled={isButtonDisabled}
-          onClick={() => {
-            if (!handleCheckLogin()) return;
-            setExamMultipleSelectModalOpen(true);
-          }}
-        >
-          랜덤 모의고사
-        </Button>
-      </Tooltip>
-
+      <Button
+        className="category-study-button"
+        type="primary"
+        onClick={() => {
+          if (!handleCheckLogin()) return;
+          setExamMultipleSelectModalOpen(true);
+        }}
+      >
+        랜덤 모의고사
+      </Button>
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
-          categoryId={category?.id}
+          categoryId={category.id}
           open={examMutipleSelectModalOpen}
+          exams={category.mockExam}
           onCancel={() => setExamMultipleSelectModalOpen(false)}
         />
       )}

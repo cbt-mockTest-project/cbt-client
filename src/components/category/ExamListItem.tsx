@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
-import ExamListItemCheckbox from './ExamListItemCheckbox';
 import useCatgegoryExams from './hooks/useCategoryExamList';
 
 const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
@@ -241,11 +240,6 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 
   return (
     <ExamListItemBlock hasRecentlyMark={hasRecentlyMark}>
-      <ExamListItemCheckbox
-        categoryId={category.id}
-        exams={category.mockExam}
-        examId={exam.id}
-      />
       <BasicCard
         className="exam-list-basic-card"
         onClick={handleExamClick}

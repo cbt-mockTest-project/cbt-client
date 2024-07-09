@@ -142,7 +142,7 @@ const StudySolveLimitInfoModal: React.FC<StudySolveLimitInfoModalProps> = (
         ) : (
           <>
             <div className="text-base font-bold mb-4">{title}</div>
-            <pre className="mb-4 text-base  text-gray-600">{`제한 없는 학습을 원하신다면\n베이직 플랜에 가입해보세요!`}</pre>
+            <pre className="mb-4">{`제한 없는 학습을 원하신다면\n베이직 플랜에 가입해보세요!`}</pre>
             <Button
               type="primary"
               size="large"

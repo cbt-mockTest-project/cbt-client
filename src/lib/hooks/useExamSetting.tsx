@@ -21,6 +21,14 @@ const useExamSetting = ({ categoryId, exams }: UseExamSettingProps) => {
   const handleExamSelect = (examId: number) =>
     dispatch(examSettingActions.toggleExamSelect({ examId, categoryId }));
 
+  const handleSetExamsSelect = (examIds: number[]) =>
+    dispatch(
+      examSettingActions.setExamsSelect({
+        categoryId,
+        examIds,
+      })
+    );
+
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
     dispatch(examSettingActions.setExamSetting(examSetting));
 
@@ -28,6 +36,7 @@ const useExamSetting = ({ categoryId, exams }: UseExamSettingProps) => {
     setExamSetting,
     handleAllExamsSelect,
     handleExamSelect,
+    handleSetExamsSelect,
   };
 };
 

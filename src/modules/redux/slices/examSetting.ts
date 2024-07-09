@@ -2,6 +2,7 @@ import { setExamSettingHistory } from '@lib/utils/examSettingHistory';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   ExamSettingType,
+  SetExamsSelectPayload,
   ToggleExamAllSelectPayload,
   ToggleExamSelectPayload,
 } from 'customTypes';
@@ -73,6 +74,15 @@ const examSettingSlice = createSlice({
       setExamSettingHistory({
         categoryId,
         examIds: newSelectedExamIds,
+      });
+    },
+    setExamsSelect(state, action: PayloadAction<SetExamsSelectPayload>) {
+      const { examIds, categoryId } = action.payload;
+      state.examSetting.examIds = examIds;
+      state.examSetting.categoryId = categoryId;
+      setExamSettingHistory({
+        categoryId,
+        examIds,
       });
     },
   },

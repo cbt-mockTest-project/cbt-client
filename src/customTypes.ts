@@ -82,6 +82,11 @@ export interface ToggleExamSelectPayload {
   categoryId: number;
 }
 
+export interface SetExamsSelectPayload {
+  examIds: number[];
+  categoryId: number;
+}
+
 export interface StudyQuery {
   order: 'random' | 'normal';
   states: string;
