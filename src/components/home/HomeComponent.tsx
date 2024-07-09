@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { Button, Skeleton } from 'antd';
+import { Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import ModuFolderList from './folderList/ModuFolderList';
 import EhsFolderList from './folderList/EhsFolderList';
-import dynamic from 'next/dynamic';
 import UserFolderList from './folderList/UserFolderList';
 import BookmarkedFolderList from './folderList/BookmarkedFolderList';
 import HomeBanner from './HomeBanner';
@@ -66,22 +65,10 @@ const HomeComponentBlock = styled.div`
 interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
-  const [isLazyLoadingComponentVisible, setIsLazyLoadingComponentVisible] =
-    useState(false);
-
-  useEffect(() => {
-    setIsLazyLoadingComponentVisible(true);
-  }, []);
   return (
     <HomeComponentBlock>
-      {isLazyLoadingComponentVisible ? (
-        <HomeBanner />
-      ) : (
-        <Skeleton.Button
-          active
-          className="banner-skeletoon aspect-[1024/180] w-full lg:aspect-[2000/650] h-full"
-        />
-      )}
+      <HomeBanner />
+
       <div className="ml-[30px] mt-4 lg:ml-[20px]">
         <Link href="/search-categories">
           <Button type="primary">
@@ -95,8 +82,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       <div className="home-wrapper">
         <ModuFolderList />
         <EhsFolderList />
-        {isLazyLoadingComponentVisible && <UserFolderList />}
-        {isLazyLoadingComponentVisible && <BookmarkedFolderList />}
+        <UserFolderList />
+        <BookmarkedFolderList />
       </div>
     </HomeComponentBlock>
   );
