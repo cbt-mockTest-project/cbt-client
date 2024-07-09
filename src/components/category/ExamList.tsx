@@ -1,51 +1,52 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ExamListItem from './ExamListItem';
-import { FixedSizeList as List } from 'react-window';
 import DragDropContextWrapper from '@components/common/dragDrop/DragDropContextWrapper';
 import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
-import { MockExamCategory } from 'types';
+import { MockExamCategory, User } from 'types';
 import useCategoryExamList from './hooks/useCategoryExamList';
+import { responsive } from '@lib/utils/responsive';
+import { useInView } from 'react-intersection-observer';
+import { Skeleton, Spin } from 'antd';
+import { isMobile } from 'react-device-detect';
 
-const ExamListBlock = styled.div`
-  * {
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
-    .exam-item-list {
-      & > div {
-        position: relative;
-        overflow-y: scroll;
-        opacity: 0.99;
-        transform: translate3d(0, 0, 0);
-        -webkit-overflow-scrolling: touch;
-        will-change: scroll-position;
-      }
-    }
+const ExamListBlock = styled.ul`
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  & > div {
+    margin-bottom: 15px;
+  }
+  @media (max-width: ${responsive.medium}) {
+    padding: 0 16px;
   }
 `;
+
 interface ExamListProps {
   category: MockExamCategory;
   isOrderChangableMode?: boolean;
 }
+
+const isRecentStudy = (
+  user: User,
+  category: MockExamCategory,
+  examId: number
+) => {
+  if (!user) return { hasRecentlyStudy: false, recentlyStudyQuestionNumber: 0 };
+
+  const recentlyStudyExam = user.recentlyStudiedExams?.find(
+    (el) => el.categoryId === category.id
+  );
+
+  return {
+    hasRecentlyStudy: recentlyStudyExam?.examIds.includes(examId) || false,
+    recentlyStudyQuestionNumber: recentlyStudyExam?.questionIndex || 0,
+  };
+};
+
+const ITEMS_PER_PAGE = 10;
 
 const ExamList: React.FC<ExamListProps> = ({
   category,
@@ -54,124 +55,90 @@ const ExamList: React.FC<ExamListProps> = ({
   const { user } = useAuth();
   const isMyCategory = category.user.id === user?.id;
   const { categoryExams, handleMoveExam } = useCategoryExamList();
+  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
 
-  const renderVirtualizedList = () => (
-    <List
-      className="exam-item-list"
-      height={500}
-      itemCount={categoryExams.length}
-      itemSize={100}
-      width="100%"
-    >
-      {renderExamItem}
-    </List>
-  );
+  React.useEffect(() => {
+    if (inView) {
+      setVisibleItems((prevItems) =>
+        Math.min(prevItems + ITEMS_PER_PAGE, categoryExams.length)
+      );
+    }
+  }, [inView, categoryExams.length]);
 
-  const renderNormalList = () => (
-    <div className="exam-item-list">
-      {categoryExams.map((exam, index) => renderExamItem({ index, style: {} }))}
-    </div>
-  );
-
-  const renderExamItem = ({ index, style }) => {
-    const exam = categoryExams[index];
+  const renderExamItem = (exam: any, index: number, isDraggable: boolean) => {
     const { hasRecentlyStudy, recentlyStudyQuestionNumber } = isRecentStudy(
-      user,
+      user as User,
       category,
-      exam
+      exam.id
     );
 
-    return (
-      <div style={style}>
-        {isMyCategory && isOrderChangableMode ? (
-          <Draggable key={exam.id} index={index} draggableId={`${exam.id}`}>
-            {(provided) => (
-              <div
-                {...provided.draggableProps}
-                ref={provided.innerRef}
-                style={{
-                  ...provided.draggableProps.style,
-                }}
-              >
-                <div className="mx-[20px] h-[100px] md:mx-[16px]">
-                  <ExamListItem
-                    category={category}
-                    exam={exam}
-                    isOrderChangableMode={isOrderChangableMode}
-                    dragHandleProps={provided.dragHandleProps}
-                    hasRecentlyMark={hasRecentlyStudy}
-                    recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
-                  />
-                </div>
-              </div>
-            )}
-          </Draggable>
-        ) : (
-          <div className="mx-[20px] h-[100px] md:mx-[16px]">
-            <ExamListItem
-              category={category}
-              dragHandleProps={null}
-              key={exam.id}
-              exam={exam}
-              hasRecentlyMark={hasRecentlyStudy}
-              recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
-            />
+    const examItem = (
+      <ExamListItem
+        category={category}
+        exam={exam}
+        isOrderChangableMode={isOrderChangableMode}
+        dragHandleProps={null}
+        hasRecentlyMark={hasRecentlyStudy}
+        recentlyStudyQuestionNumber={recentlyStudyQuestionNumber}
+      />
+    );
+
+    return isDraggable ? (
+      <Draggable key={exam.id} index={index} draggableId={`${exam.id}`}>
+        {(provided) => (
+          <div
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            style={{ ...provided.draggableProps.style }}
+          >
+            {React.cloneElement(examItem, {
+              dragHandleProps: provided.dragHandleProps,
+            })}
           </div>
         )}
-      </div>
+      </Draggable>
+    ) : (
+      <React.Fragment key={exam.id}>{examItem}</React.Fragment>
     );
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const examList = document.querySelector(
-        '.exam-item-list > div'
-      ) as HTMLDivElement;
-      if (examList) {
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        const scrollTop =
-          window.pageYOffset || document.documentElement.scrollTop;
-
-        if (documentHeight - (scrollTop + windowHeight) < 1) {
-          examList.style.overflowY = 'auto';
-        } else {
-          examList.style.overflowY = 'hidden !important';
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const examItems = categoryExams
+    .slice(0, visibleItems)
+    .map((exam, index) => renderExamItem(exam, index, isMyCategory));
 
   return (
-    <ExamListBlock>
-      <DragDropContextWrapper
-        droppableId="exam-create-droppable"
-        onDragEnd={handleMoveExam}
-      >
-        {isOrderChangableMode ? renderNormalList() : renderVirtualizedList()}
-      </DragDropContextWrapper>
-    </ExamListBlock>
+    <>
+      {isMyCategory ? (
+        <DragDropContextWrapper
+          droppableId="exam-create-droppable"
+          onDragEnd={handleMoveExam}
+        >
+          <ExamListBlock>
+            {examItems}
+            {visibleItems < categoryExams.length ? (
+              <>
+                <div ref={ref} style={{ height: '1px' }} />
+                <Skeleton active />
+              </>
+            ) : null}
+          </ExamListBlock>
+        </DragDropContextWrapper>
+      ) : (
+        <ExamListBlock>
+          {examItems}
+          {visibleItems < categoryExams.length ? (
+            <>
+              <div ref={ref} style={{ height: '1px' }} />
+              <Skeleton active />
+            </>
+          ) : null}
+        </ExamListBlock>
+      )}
+    </>
   );
-};
-
-const isRecentStudy = (user, category, exam) => {
-  if (!user)
-    return {
-      hasRecentlyStudy: false,
-      recentlyStudyQuestionNumber: 0,
-    };
-  const recentlyStudyExam = user.recentlyStudiedExams?.find(
-    (el) => el.categoryId === category.id
-  );
-  const hasRecentlyStudy = recentlyStudyExam?.examIds.includes(exam.id);
-  const recentlyStudyQuestionNumber = recentlyStudyExam?.questionIndex || 0;
-  return {
-    hasRecentlyStudy,
-    recentlyStudyQuestionNumber,
-  };
 };
 
 export default ExamList;

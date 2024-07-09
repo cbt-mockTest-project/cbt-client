@@ -7,6 +7,7 @@ import React, { useDeferredValue, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 import { useRouter } from 'next/router';
+import { isMobile } from 'react-device-detect';
 
 const HomeFolderListBlock = styled.div`
   width: 100%;
@@ -62,7 +63,6 @@ const HomeFolderListBlock = styled.div`
   }
   .home-folder-list {
     display: flex;
-    gap: 10px;
     height: 120px;
     overflow-x: scroll;
     opacity: 0.99;
@@ -71,6 +71,11 @@ const HomeFolderListBlock = styled.div`
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    > div {
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
+    }
     ::-webkit-scrollbar {
       display: none;
     }
@@ -115,6 +120,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   const [listScrollLeft, setListScrollLeft] = useState(0);
   const deferredListScrollLeft = useDeferredValue(listScrollLeft);
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
   const handleMoreViewTrigger = (trigger: string) => {
     if (trigger === 'user-storage') {
       router.push({
@@ -147,6 +153,10 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
       list.removeEventListener('scroll', handleScroll);
     };
   }, [folderListRef]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <HomeFolderListBlock>
@@ -182,7 +192,11 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
           <Skeleton active paragraph={{ rows: 4 }} />
         </div>
       ) : (
-        <ul className="home-folder-list" ref={folderListRef}>
+        <ul
+          className="home-folder-list"
+          ref={folderListRef}
+          key={isMobile ? String(isMounted) : 'exam-list'}
+        >
           {categories &&
             categories?.length > 0 &&
             categories.map((category, index) => (
