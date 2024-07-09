@@ -30,6 +30,11 @@ const ExamListBlock = styled.div`
 
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
+    .exam-item-list {
+      & > div {
+        transform: translateZ(0);
+      }
+    }
   }
 `;
 interface ExamListProps {

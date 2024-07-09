@@ -65,6 +65,7 @@ const HomeFolderListBlock = styled.div`
     gap: 10px;
     height: 120px;
     overflow-x: auto;
+    transform: translateZ(0);
     scrollbar-width: none;
     -ms-overflow-style: none;
     ::-webkit-scrollbar {
