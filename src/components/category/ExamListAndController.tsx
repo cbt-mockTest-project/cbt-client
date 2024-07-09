@@ -13,12 +13,7 @@ interface ExamListAndControllerProps {
 const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
   category,
 }) => {
-  const [isLazyLoadingComponentVisible, setIsLazyLoadingComponentVisible] =
-    useState(false);
   const { handleSearch } = useCategoryExamList();
-  useEffect(() => {
-    setIsLazyLoadingComponentVisible(true);
-  }, []);
   return (
     <>
       <CategoryControlbar
@@ -27,11 +22,7 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
         }}
       />
       <CategoryMultipleSelectModeControlbar category={category} />
-      {isLazyLoadingComponentVisible ? (
-        <ExamList category={category} />
-      ) : (
-        <Skeleton active paragraph={{ rows: 5 }} className="mt-[20px]" />
-      )}
+      <ExamList category={category} />
     </>
   );
 };

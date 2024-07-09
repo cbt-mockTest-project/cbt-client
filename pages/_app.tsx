@@ -10,11 +10,7 @@ import CoreContainer from '@components/common/core/CoreContainer';
 import wrapper from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import * as gtag from '@lib/ga/gtag';
-import {
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   EXAMS_PDF_PAGE,
