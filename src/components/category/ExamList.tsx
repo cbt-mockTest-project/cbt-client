@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import ExamListItem from './ExamListItem';
 import { FixedSizeList as List } from 'react-window';
@@ -32,7 +32,12 @@ const ExamListBlock = styled.div`
     scrollbar-color: #888 #f1f1f1;
     .exam-item-list {
       & > div {
-        transform: translateZ(0);
+        position: relative;
+        overflow-y: scroll;
+        opacity: 0.99;
+        transform: translate3d(0, 0, 0);
+        -webkit-overflow-scrolling: touch;
+        will-change: scroll-position;
       }
     }
   }
@@ -116,6 +121,29 @@ const ExamList: React.FC<ExamListProps> = ({
       </div>
     );
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const examList = document.querySelector(
+        '.exam-item-list > div'
+      ) as HTMLDivElement;
+      if (examList) {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (documentHeight - (scrollTop + windowHeight) < 1) {
+          examList.style.overflowY = 'auto';
+        } else {
+          examList.style.overflowY = 'hidden !important';
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <ExamListBlock>

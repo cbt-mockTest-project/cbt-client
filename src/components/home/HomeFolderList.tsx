@@ -64,8 +64,11 @@ const HomeFolderListBlock = styled.div`
     display: flex;
     gap: 10px;
     height: 120px;
-    overflow-x: auto;
-    transform: translateZ(0);
+    overflow-x: scroll;
+    opacity: 0.99;
+    transform: translate3d(0, 0, 0);
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
     ::-webkit-scrollbar {
