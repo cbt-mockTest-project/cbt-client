@@ -67,7 +67,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
     `}
 
   position: fixed;
-  background-color: white;
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
   padding: 30px 50px;
   border-radius: 5px;
   margin: auto;
@@ -94,7 +94,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
     cursor: pointer;
     transition: color 0.2s ease-in;
     :hover {
-      color: ${palette.antd_blue_01};
+      color: ${({ theme }) => theme.color('colorPrimary')};
     }
   }
 `;

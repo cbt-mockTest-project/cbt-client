@@ -39,6 +39,9 @@ const PricingCardBlock = styled.div`
       width: 24px;
       height: 24px;
       font-size: 2rem;
+      * {
+        fill: ${({ theme }) => theme.color('colorText')};
+      }
     }
   }
   .pricing-card-price-value {

@@ -42,6 +42,10 @@ const PricingSelectModalBlock = styled(Modal)`
       width: 24px;
       height: 24px;
       font-size: 2rem;
+      color: ${({ theme }) => theme.color('colorText')};
+      * {
+        fill: ${({ theme }) => theme.color('colorText')};
+      }
     }
   }
   .pricing-select-modal-price-value {
