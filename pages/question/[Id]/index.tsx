@@ -9,20 +9,32 @@ import { ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import { apolloClient } from '@modules/apollo';
+import {
+  dehydrate,
+  DehydratedState,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
+import {
+  getQuestionKey,
+  getQuestionQueryOption,
+} from '@lib/queryOptions/getQuestionQueryOption';
 
 interface QuestionProps {
   title: string;
   description: string;
   questionQueryInput: ReadMockExamQuestionInput;
+  dehydratedState: DehydratedState;
 }
 
 const Question: NextPage<QuestionProps> = ({
   questionQueryInput,
   title,
   description,
+  dehydratedState,
 }) => {
   return (
-    <>
+    <HydrationBoundary state={dehydratedState}>
       <WithHead
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
@@ -30,7 +42,7 @@ const Question: NextPage<QuestionProps> = ({
       />
       <GoogleAd />
       <QuestionComponent questionQueryInput={questionQueryInput} />
-    </>
+    </HydrationBoundary>
   );
 };
 
@@ -59,25 +71,23 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const questionQueryInput: ReadMockExamQuestionInput = {
     questionId: Number(context.params?.Id),
   };
-  const res = await apolloClient.query<ReadMockExamQuestionQuery>({
-    query: READ_QUESTION,
-    variables: {
+
+  const queryClient = new QueryClient();
+  const queryKey = getQuestionKey(questionQueryInput.questionId);
+  const question = await queryClient.fetchQuery(
+    getQuestionQueryOption({
+      queryKey: queryKey as string[],
       input: questionQueryInput,
-    },
-  });
-  const questionQuery = res ? res.data : null;
-  const title = removeHtmlTag(
-    (
-      questionQuery?.readMockExamQuestion?.mockExamQusetion?.question || ''
-    ).slice(0, 50)
+    })
   );
+  const title = removeHtmlTag((question.question || '').slice(0, 50));
 
   const description = removeHtmlTag(
-    (questionQuery?.readMockExamQuestion?.mockExamQusetion?.question || '') +
-      (questionQuery?.readMockExamQuestion?.mockExamQusetion?.solution || '')
+    (question.question || '') + (question.solution || '')
   );
+  const dehydratedState = dehydrate(queryClient);
   return {
-    props: { title, description, questionQueryInput },
+    props: { title, description, questionQueryInput, dehydratedState },
     revalidate: 86400,
   };
 };

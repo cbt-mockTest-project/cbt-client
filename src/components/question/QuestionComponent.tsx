@@ -11,6 +11,11 @@ import useAuth from '@lib/hooks/useAuth';
 import Link from 'next/link';
 import { removeHtmlTag } from '@lib/utils/utils';
 import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
+import {
+  getQuestionKey,
+  getQuestionQueryOption,
+} from '@lib/queryOptions/getQuestionQueryOption';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -23,16 +28,20 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   const {
     refetchQuestion,
     handleSaveBookmark,
-    questionQuery,
     handleAddFeedback,
     handleEditFeedback,
     handleSaveQuestionState,
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
   } = useQuestion(questionQueryInput);
-
-  const question = questionQuery?.readMockExamQuestion
-    .mockExamQusetion as MockExamQuestion;
+  const { data: question } = useQuery(
+    getQuestionQueryOption({
+      queryKey: getQuestionKey(questionQueryInput.questionId) as string[],
+      input: questionQueryInput,
+    })
+  );
+  // const question = questionQuery?.readMockExamQuestion
+  //   .mockExamQusetion as MockExamQuestion;
   const { isLoggedIn } = useAuth();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
