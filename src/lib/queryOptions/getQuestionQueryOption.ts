@@ -1,5 +1,3 @@
-import { READ_EXAM_CATEGORY_BY_ID } from '@lib/graphql/query/examQuery';
-import { ReadMockExamCategoryByCategoryIdQuery } from '@lib/graphql/query/examQuery.generated';
 import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { apolloClient } from '@modules/apollo';

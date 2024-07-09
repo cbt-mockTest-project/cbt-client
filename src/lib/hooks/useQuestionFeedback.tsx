@@ -24,14 +24,14 @@ export interface QuestionAndFeedback {
 }
 
 export interface DeleteFeedbackInput extends QuestionAndFeedback {
-  setQuestion: (question: MockExamQuestion) => void;
+  setQuestion?: (question: MockExamQuestion) => void;
 }
 
 export interface AddFeedbackInput {
   question: MockExamQuestion;
   selectedType: QuestionFeedbackType;
   content: string;
-  setQuestion: (question: MockExamQuestion) => void;
+  setQuestion?: (question: MockExamQuestion) => void;
 }
 
 export interface EditFeedbackInput extends AddFeedbackInput {
@@ -41,7 +41,7 @@ export interface EditFeedbackInput extends AddFeedbackInput {
 export interface UpdateFeedbackRecommendationInput extends QuestionAndFeedback {
   type: QuestionFeedbackRecommendationType;
   myRecommendationStatus: MyRecommedationStatus;
-  setQuestion: (question: MockExamQuestion) => void;
+  setQuestion?: (question: MockExamQuestion) => void;
 }
 
 const useQuestionFeedback = () => {

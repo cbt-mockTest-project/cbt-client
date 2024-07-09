@@ -1,12 +1,5 @@
-import {
-  useDeleteQuestion,
-  useReadQuestion,
-} from '@lib/graphql/hook/useExamQuestion';
 import useApolloClient from './useApolloCient';
-import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
-import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { App } from 'antd';
-import { handleError } from '@lib/utils/utils';
 import {
   MockExamQuestion,
   QuestionState,
@@ -24,15 +17,22 @@ import useQuestionFeedback, {
   UpdateFeedbackRecommendationInput,
 } from './useQuestionFeedback';
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
+import { useQuery } from '@tanstack/react-query';
+import {
+  getQuestionKey,
+  getQuestionQueryOption,
+} from '@lib/queryOptions/getQuestionQueryOption';
 
 const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   const { message } = App.useApp();
-  const { updateCache } = useApolloClient();
   const { data: meQuery } = useMeQuery();
   const dispatch = useAppDispatch();
-  const { data: questionQuery, refetch: refetchQuestion } =
-    useReadQuestion(questionQueryInput);
-  const [deleteQuestion] = useDeleteQuestion();
+  const { refetch } = useQuery(
+    getQuestionQueryOption({
+      queryKey: getQuestionKey(questionQueryInput.questionId) as string[],
+      input: questionQueryInput,
+    })
+  );
   const [changeQuestionState] = useChangeQuestionState();
   const [editBookmarkMutaion] = useEditQuestionBookmark();
 
@@ -49,11 +49,6 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
         dispatch(coreActions.openModal(loginModal));
         return;
       }
-      const newQuestion = {
-        ...question,
-        isBookmarked: !question.isBookmarked,
-      };
-      updateQuestionCache(newQuestion);
       await editBookmarkMutaion({
         variables: {
           input: {
@@ -61,8 +56,8 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
           },
         },
       });
+      refetch();
     } catch {
-      updateQuestionCache(question);
       message.error('북마크 저장에 실패했습니다.');
     }
   };
@@ -76,11 +71,6 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
         dispatch(coreActions.openModal(loginModal));
         return;
       }
-      const newQuestion = {
-        ...question,
-        myQuestionState: state,
-      };
-      updateQuestionCache(newQuestion);
       await changeQuestionState({
         variables: {
           input: {
@@ -89,28 +79,9 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
           },
         },
       });
+      refetch();
     } catch {
-      updateQuestionCache(question);
       message.error('문제 상태 저장에 실패했습니다.');
-    }
-  };
-
-  const handleDeleteQuestion = async (questionId: number) => {
-    try {
-      const confirmed = confirm('정말 삭제하시겠습니까?');
-      if (confirmed) {
-        const res = await deleteQuestion({
-          variables: {
-            input: { id: questionId },
-          },
-        });
-        if (res.data?.deleteMockExamQuestion.ok) {
-          message.success('문제가 삭제되었습니다.');
-          updateQuestionCache(null);
-        }
-      }
-    } catch (err) {
-      handleError(err);
     }
   };
 
@@ -121,8 +92,8 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
     deleteFeedback({
       question,
       feedback,
-      setQuestion: updateQuestionCache,
     });
+    refetch();
   };
   const handleUpdateFeedbackRecommendation = async ({
     type,
@@ -135,8 +106,8 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
       myRecommendationStatus,
       question,
       feedback,
-      setQuestion: updateQuestionCache,
     });
+    refetch();
   };
 
   const handleAddFeedback = async (
@@ -144,8 +115,8 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   ) => {
     addFeedback({
       ...addFeedbackInput,
-      setQuestion: updateQuestionCache,
     });
+    refetch();
   };
 
   const handleEditFeedback = async (
@@ -153,40 +124,17 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   ) => {
     editFeedback({
       ...editFeedbackInput,
-      setQuestion: updateQuestionCache,
     });
-  };
-
-  const updateQuestionCache = (newQuestion: MockExamQuestion) => {
-    updateCache<ReadMockExamQuestionQuery>(
-      {
-        query: READ_QUESTION,
-        variables: {
-          input: questionQueryInput,
-        },
-      },
-      (data) => {
-        return {
-          ...data,
-          readMockExamQuestion: {
-            ...data.readMockExamQuestion,
-            mockExamQusetion: newQuestion,
-          },
-        };
-      }
-    );
+    refetch();
   };
 
   return {
-    refetchQuestion,
-    handleDeleteQuestion,
     handleSaveBookmark,
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
     handleAddFeedback,
     handleSaveQuestionState,
     handleEditFeedback,
-    questionQuery,
   };
 };
 

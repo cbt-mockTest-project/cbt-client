@@ -26,7 +26,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 }) => {
   const router = useRouter();
   const {
-    refetchQuestion,
     handleSaveBookmark,
     handleAddFeedback,
     handleEditFeedback,
@@ -40,22 +39,12 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       input: questionQueryInput,
     })
   );
-  // const question = questionQuery?.readMockExamQuestion
-  //   .mockExamQusetion as MockExamQuestion;
-  const { isLoggedIn } = useAuth();
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
     question.user.role
   );
   const isApproved = question.mockExam?.approved;
   const [isHidden, setIsHidden] = useState(!isAdmin && !isApproved);
-
-  useEffect(() => {
-    if (!isLoggedIn || !questionQueryInput.questionId) return;
-    refetchQuestion({
-      input: questionQueryInput,
-    });
-  }, [questionQueryInput, isLoggedIn]);
 
   useEffect(() => {
     if (!isAdmin && !isApproved) {
