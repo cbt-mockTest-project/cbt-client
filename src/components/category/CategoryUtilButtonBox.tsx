@@ -23,7 +23,7 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
   const sessionStorage = new SessionStorage();
   const router = useRouter();
   return (
-    <div className="mb-5 flex items-center gap-2">
+    <div className="mb-5 flex items-center gap-2 px-[20px] md:px-[16px]">
       <Tooltip title="암기장 내 문제를 검색할 수 있어요.">
         <Button
           icon={<SearchOutlined />}

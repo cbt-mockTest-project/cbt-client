@@ -4,9 +4,14 @@ import CategoryLearningProgress from './CategoryLearningProgress';
 import CategoryReviewButton from './CategoryReviewButton';
 import { useLazyGetExamCategoryLearningProgress } from '@lib/graphql/hook/useExam';
 import useAuth from '@lib/hooks/useAuth';
-import { useAppSelector } from '@modules/redux/store/configureStore';
+import { responsive } from '@lib/utils/responsive';
 
-const CategoryProgressAndReviewBlock = styled.div``;
+const CategoryProgressAndReviewBlock = styled.div`
+  padding: 0 20px;
+  @media (max-width: ${responsive.medium}) {
+    padding: 0 16px;
+  }
+`;
 
 interface CategoryProgressAndReviewProps {
   categoryId: number;

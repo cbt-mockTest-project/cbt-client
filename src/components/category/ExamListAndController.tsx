@@ -27,6 +27,7 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
         isOrderChangableMode={isOrderChangableMode}
       />
       <ExamList
+        key={String(isOrderChangableMode)}
         category={category}
         isOrderChangableMode={isOrderChangableMode}
       />

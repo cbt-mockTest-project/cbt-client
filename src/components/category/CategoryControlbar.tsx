@@ -1,9 +1,14 @@
 import TextInput from '@components/common/input/TextInput';
+import { responsive } from '@lib/utils/responsive';
 import { Switch } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
 const CategoryControlbarBlock = styled.div`
+  padding: 0 20px;
+  @media (max-width: ${responsive.medium}) {
+    padding: 0 16px;
+  }
   .category-multiple-select-toggle-switch-wrapper {
     margin-top: 20px;
     display: flex;

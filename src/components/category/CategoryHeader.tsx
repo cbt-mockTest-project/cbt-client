@@ -1,16 +1,17 @@
 import { FolderOutlined } from '@ant-design/icons';
+import { responsive } from '@lib/utils/responsive';
 import { linkify } from '@lib/utils/utils';
-import palette from '@styles/palette';
-import { Button } from 'antd';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 import { MockExam, User } from 'types';
 
 const CategoryHeaderBlock = styled.div`
   width: fit-content;
+  padding: 0 20px;
+  @media (max-width: ${responsive.medium}) {
+    padding: 0 16px;
+  }
   .category-creator-info {
     display: flex;
     gap: 5px;

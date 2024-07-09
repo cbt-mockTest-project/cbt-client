@@ -22,7 +22,7 @@ import ExamListAndController from './ExamListAndController';
 import useCategoryExamList from './hooks/useCategoryExamList';
 
 const CategoryComponentBlock = styled.div`
-  padding: 30px;
+  padding: 20px 0;
   position: relative;
 
   .category-all-checkbox-and-study-button-wrapper {
@@ -74,7 +74,7 @@ const CategoryComponentBlock = styled.div`
     }
   }
   @media (max-width: ${responsive.medium}) {
-    padding: 20px 16px;
+    padding: 16px 0;
   }
 `;
 interface CategoryComponentProps {
