@@ -16,9 +16,13 @@ const ExamListBlock = styled.ul`
 
 interface ExamListProps {
   category: MockExamCategory;
+  isOrderChangableMode?: boolean;
 }
 
-const ExamList: React.FC<ExamListProps> = ({ category }) => {
+const ExamList: React.FC<ExamListProps> = ({
+  category,
+  isOrderChangableMode,
+}) => {
   const { user } = useAuth();
   const isMyCategory = category.user.id === user?.id;
 
@@ -70,6 +74,7 @@ const ExamList: React.FC<ExamListProps> = ({ category }) => {
                       <ExamListItem
                         category={category}
                         exam={exam}
+                        isOrderChangableMode={isOrderChangableMode}
                         dragHandleProps={provided.dragHandleProps}
                         hasRecentlyMark={hasRecentlyStudy}
                         recentlyStudyQuestionNumber={

@@ -4,7 +4,6 @@ import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeCo
 import ExamList from './ExamList';
 import { MockExamCategory } from 'types';
 import useCategoryExamList from './hooks/useCategoryExamList';
-import { Skeleton } from 'antd';
 
 interface ExamListAndControllerProps {
   category: MockExamCategory;
@@ -14,6 +13,7 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
   category,
 }) => {
   const { handleSearch } = useCategoryExamList();
+  const [isOrderChangableMode, setIsOrderChangableMode] = useState(false);
   return (
     <>
       <CategoryControlbar
@@ -21,8 +21,15 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
           onChangeText: (v) => handleSearch(v),
         }}
       />
-      <CategoryMultipleSelectModeControlbar category={category} />
-      <ExamList category={category} />
+      <CategoryMultipleSelectModeControlbar
+        category={category}
+        setIsOrderChangableMode={setIsOrderChangableMode}
+        isOrderChangableMode={isOrderChangableMode}
+      />
+      <ExamList
+        category={category}
+        isOrderChangableMode={isOrderChangableMode}
+      />
     </>
   );
 };

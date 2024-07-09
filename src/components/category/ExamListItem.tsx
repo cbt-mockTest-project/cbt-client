@@ -145,6 +145,7 @@ interface ExamListItemProps {
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
   hasRecentlyMark?: boolean;
   recentlyStudyQuestionNumber?: number;
+  isOrderChangableMode?: boolean;
 }
 
 const ExamListItem: React.FC<ExamListItemProps> = ({
@@ -153,6 +154,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
   dragHandleProps,
   hasRecentlyMark = false,
   recentlyStudyQuestionNumber = 0,
+  isOrderChangableMode,
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
@@ -293,7 +295,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           </div>
         )}
       </BasicCard>
-      {isMyCategory && (
+      {isMyCategory && isOrderChangableMode && (
         <div {...dragHandleProps}>
           <DragIndicatorIcon className="exam-list-item-drag-handle" />
         </div>

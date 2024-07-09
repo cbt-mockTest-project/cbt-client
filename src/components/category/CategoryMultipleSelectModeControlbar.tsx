@@ -1,4 +1,4 @@
-import { Button, Tooltip } from 'antd';
+import { Button, Switch, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
@@ -22,9 +22,7 @@ const CategoryMultipleSelectModeControlbarBlock = styled.div`
       height: 14px;
     }
   }
-  .category-study-button {
-    margin-top: 20px;
-  }
+
   .category-exam-all-checkbox-wrapper {
     margin-top: 20px;
     display: flex;
@@ -35,11 +33,13 @@ const CategoryMultipleSelectModeControlbarBlock = styled.div`
 
 interface CategoryMultipleSelectModeControlbarProps {
   category: MockExamCategory;
+  setIsOrderChangableMode: React.Dispatch<React.SetStateAction<boolean>>;
+  isOrderChangableMode: boolean;
 }
 
 const CategoryMultipleSelectModeControlbar: React.FC<
   CategoryMultipleSelectModeControlbarProps
-> = ({ category }) => {
+> = ({ category, setIsOrderChangableMode, isOrderChangableMode }) => {
   const { handleCheckLogin } = useAuth();
 
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
@@ -47,17 +47,27 @@ const CategoryMultipleSelectModeControlbar: React.FC<
 
   return (
     <CategoryMultipleSelectModeControlbarBlock>
-      <Button
-        className="category-study-button"
-        type="primary"
-        size="large"
-        onClick={() => {
-          if (!handleCheckLogin()) return;
-          setExamMultipleSelectModalOpen(true);
-        }}
-      >
-        랜덤 모의고사
-      </Button>
+      <div className="w-full flex justify-between items-center mb-3 mt-4">
+        <Button
+          className="category-study-button"
+          type="primary"
+          size="large"
+          onClick={() => {
+            if (!handleCheckLogin()) return;
+            setExamMultipleSelectModalOpen(true);
+          }}
+        >
+          랜덤 모의고사
+        </Button>
+        <div className="ml-auto flex items-center gap-2">
+          <span>순서 변경 모드</span>
+          <Switch
+            className="category-order-changable-switch"
+            checked={isOrderChangableMode}
+            onChange={(value) => setIsOrderChangableMode(value)}
+          />
+        </div>
+      </div>
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
           categoryId={category.id}
