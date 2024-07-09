@@ -1,9 +1,6 @@
-import GoogleAd from '@components/common/ad/GoogleAd';
-import Modal from '@components/common/modal/Modal';
 import { useReadExamHistories } from '@lib/graphql/hook/useExamHistory';
 import { responsive } from '@lib/utils/responsive';
 import { convertServerTimeToKST } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button } from 'antd';
 import Link from 'next/link';

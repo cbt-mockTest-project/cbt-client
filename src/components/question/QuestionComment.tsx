@@ -8,7 +8,7 @@ import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { convertServerTimeToKST, handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { Button, App } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useRouter } from 'next/router';
@@ -22,7 +22,6 @@ interface QuestionCommentProps {
 const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
   const { message } = App.useApp();
   const router = useRouter();
-  const client = useApollo({}, '');
   const [createCommentMutation, { loading }] = useCreateQuestionCommnet();
   const [submitButtonState, setSubmitButtonState] = useState(false);
   const [readQuestionComment, { data: commentQuery }] =
@@ -56,16 +55,18 @@ const QuestionComment: React.FC<QuestionCommentProps> = ({ questionId }) => {
         setContent('');
         const newComment = res.data.createMockExamQuestionComment.comment;
         const queryResult =
-          client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
-            query: READ_QUESTION_COMMENT,
-            variables: {
-              input: { questionId },
-            },
-          });
+          apolloClient.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>(
+            {
+              query: READ_QUESTION_COMMENT,
+              variables: {
+                input: { questionId },
+              },
+            }
+          );
         const prevComments =
           queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
         if (queryResult && prevComments) {
-          client.writeQuery({
+          apolloClient.writeQuery({
             query: READ_QUESTION_COMMENT,
             data: {
               readMockExamQuestionCommentsByQuestionId: {

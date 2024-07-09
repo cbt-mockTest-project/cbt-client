@@ -8,19 +8,18 @@ import {
   useMeQuery,
 } from '@lib/graphql/hook/useUser';
 import useInput from '@lib/hooks/useInput';
-import { useApollo } from '@modules/apollo';
 import palette from '@styles/palette';
 import { Button, Input, App } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditComponentSkeleton from './EditComponentSkeleton';
 import { handleError } from '@lib/utils/utils';
+import { apolloClient } from '@modules/apollo';
 
 interface EditComponentProps {}
 
 const EditComponent: React.FC<EditComponentProps> = () => {
   const { message } = App.useApp();
-  const client = useApollo({}, '');
   const [editProfileMutation] = useEditProfileMutation();
   const [checkPasswordMutation] = useCheckPasswordMutation();
   const [deleteUserMutation] = useDeleteUser();
@@ -45,7 +44,7 @@ const EditComponent: React.FC<EditComponentProps> = () => {
         variables: { input: { nickname } },
       });
       if (res.data?.editProfile.ok) {
-        client.cache.modify({
+        apolloClient.cache.modify({
           id: 'ROOT_QUERY',
           fields: {
             me(me) {

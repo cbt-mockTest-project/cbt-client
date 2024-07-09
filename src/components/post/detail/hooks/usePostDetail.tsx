@@ -9,7 +9,7 @@ import { FULL_POST_FRAGMENT } from '@lib/graphql/query/postFragment';
 import { READ_POST } from '@lib/graphql/query/postQuery';
 import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import { handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { App } from 'antd';
 import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
@@ -22,7 +22,6 @@ const usePostDetail = () => {
   const [viewPost] = useViewPost();
   const [editPostLike] = useEditPostLike();
   const [deletePost] = useDeletePost();
-  const client = useApollo({}, '');
 
   const requestDeletePost = async (data: ReadPostQuery) => {
     try {
@@ -53,7 +52,7 @@ const usePostDetail = () => {
           variables: { input: { postId: post.id } },
         });
         if (res.data?.editPostLike.ok) {
-          client.writeFragment({
+          apolloClient.writeFragment({
             id: `Post:${post.id}`,
             fragment: FULL_POST_FRAGMENT,
             data: {
@@ -92,7 +91,7 @@ const usePostDetail = () => {
           variables: { input: { id } },
         });
         if (res.data?.readPost.ok) {
-          client.writeQuery<ReadPostQuery>({
+          apolloClient.writeQuery<ReadPostQuery>({
             query: READ_POST,
             data: {
               readPost: res.data.readPost,

@@ -9,7 +9,7 @@ import { READ_QUESTION_COMMENT } from '@lib/graphql/query/questionCommentQuery';
 import { ReadMockExamQuestionCommentsByQuestionIdQuery } from '@lib/graphql/query/questionCommentQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { App } from 'antd';
 import React, { useState } from 'react';
 import {
@@ -33,7 +33,6 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
     useEditQuestionCommnet();
   const [editCommentLike, { loading: likeLoading }] =
     useEditQuestionCommentLike();
-  const client = useApollo({}, '');
   const requestDelete = async () => {
     try {
       const confirmed = confirm('삭제하시겠습니까?');
@@ -43,19 +42,21 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
         });
         if (res.data?.deleteMockExamQuestionComment.ok) {
           let queryResult =
-            client.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>({
-              query: READ_QUESTION_COMMENT,
-              variables: {
-                input: { questionId: option.parrentId },
-              },
-            });
+            apolloClient.readQuery<ReadMockExamQuestionCommentsByQuestionIdQuery>(
+              {
+                query: READ_QUESTION_COMMENT,
+                variables: {
+                  input: { questionId: option.parrentId },
+                },
+              }
+            );
           const prevComments =
             queryResult?.readMockExamQuestionCommentsByQuestionId.comments;
           if (queryResult && prevComments) {
             const newComments = prevComments.filter(
               (el) => el.id !== option.id
             );
-            client.writeQuery({
+            apolloClient.writeQuery({
               query: READ_QUESTION_COMMENT,
               data: {
                 readMockExamQuestionCommentsByQuestionId: {
@@ -85,11 +86,11 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
           variables: { input: { content, id: option.id } },
         });
         if (res.data?.editMockExamQuestionComment.ok) {
-          const currentComment = client.readFragment({
+          const currentComment = apolloClient.readFragment({
             id: `MockExamQuestionComment:${option.id}`,
             fragment: FULL_QUESTION_COMMENT_FRAGMENT,
           });
-          client.writeFragment({
+          apolloClient.writeFragment({
             id: `MockExamQuestionComment:${option.id}`,
             fragment: FULL_QUESTION_COMMENT_FRAGMENT,
             data: {
@@ -115,11 +116,11 @@ const QuestionCommentContainer: React.FC<QuestionCommentContainerProps> = ({
         variables: { input: { commentId: option.id } },
       });
       if (res.data?.editMockExamQuestionCommentLike.ok) {
-        const currentComment = client.readFragment({
+        const currentComment = apolloClient.readFragment({
           id: `MockExamQuestionComment:${option.id}`,
           fragment: FULL_QUESTION_COMMENT_FRAGMENT,
         });
-        client.writeFragment({
+        apolloClient.writeFragment({
           id: `MockExamQuestionComment:${option.id}`,
           fragment: FULL_QUESTION_COMMENT_FRAGMENT,
           data: {

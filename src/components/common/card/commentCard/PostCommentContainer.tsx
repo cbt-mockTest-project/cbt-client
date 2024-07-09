@@ -9,7 +9,7 @@ import { READ_POST } from '@lib/graphql/query/postQuery';
 import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 import { App } from 'antd';
 import React, { useState } from 'react';
 import { CommentCardOption, CommentCardProps } from './CommentCard.interface';
@@ -32,7 +32,6 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
   const [deleteComment] = useDeletePostComment();
   const [editComment, { loading: editLoading }] = useEditPostComment();
   const [editCommentLike, { loading: likeLoading }] = useEditPostCommentLike();
-  const client = useApollo({}, '');
   const [editState, setEditState] = useState(false);
   const toggleEdit = () => {
     setEditState(!editState);
@@ -45,7 +44,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
           variables: { input: { id: option.id } },
         });
         if (res.data?.deletePostComment.ok) {
-          let queryResult = client.readQuery<ReadPostQuery>({
+          let queryResult = apolloClient.readQuery<ReadPostQuery>({
             query: READ_POST,
             variables: {
               input: { id: option.parrentId },
@@ -57,7 +56,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
               (el) => el.id !== option.id
             );
             const prevCommentsCount = queryResult.readPost.post?.commentsCount;
-            client.writeQuery({
+            apolloClient.writeQuery({
               query: READ_POST,
               data: {
                 readPost: {
@@ -85,7 +84,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
           variables: { input: { content, id: option.id } },
         });
         if (res.data?.editPostComment.ok) {
-          client.writeFragment({
+          apolloClient.writeFragment({
             id: `PostComment:${option.id}`,
             fragment: FULL_POST_COMMENT_FRAGMENT,
             data: {
@@ -107,7 +106,7 @@ const PostCommentContainer: React.FC<PostCommentContainerProps> = ({
         variables: { input: { commentId: option.id } },
       });
       if (res.data?.editPostCommentLike.ok) {
-        client.writeFragment({
+        apolloClient.writeFragment({
           id: `PostComment:${option.id}`,
           fragment: FULL_POST_COMMENT_FRAGMENT,
           data: {

@@ -3,14 +3,13 @@ import { READ_POST } from '@lib/graphql/query/postQuery';
 import { ReadPostQuery } from '@lib/graphql/query/postQuery.generated';
 import useInput from '@lib/hooks/useInput';
 import { handleError } from '@lib/utils/utils';
-import { useApollo } from '@modules/apollo';
+import { apolloClient } from '@modules/apollo';
 
 interface UsePostCommentProps {
   postQuery: ReadPostQuery;
 }
 
 const usePostComment = ({ postQuery }: UsePostCommentProps) => {
-  const client = useApollo({}, '');
   const {
     value: commentValue,
     onChange: onChangeCommentValue,
@@ -31,14 +30,14 @@ const usePostComment = ({ postQuery }: UsePostCommentProps) => {
         if (res.data?.createPostComment.ok) {
           setCommentValue('');
           const newComment = res.data.createPostComment.comment;
-          const queryResult = client.readQuery<ReadPostQuery>({
+          const queryResult = apolloClient.readQuery<ReadPostQuery>({
             query: READ_POST,
             variables: { input: { id: post.id } },
           });
           const prevComments = queryResult?.readPost.post?.comment;
           const prevCommentsCount = queryResult?.readPost.post?.commentsCount;
           if (queryResult && prevComments) {
-            client.writeQuery({
+            apolloClient.writeQuery({
               query: READ_POST,
               data: {
                 readPost: {

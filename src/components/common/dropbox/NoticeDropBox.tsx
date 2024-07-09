@@ -8,12 +8,12 @@ import {
   useDeleteNotice,
   useEditNotice,
 } from '@lib/graphql/hook/useNotice';
-import { useApollo } from '@modules/apollo';
 import { MeQuery } from '@lib/graphql/query/userQuery.generated';
 import { ME_QUERY } from '@lib/graphql/query/userQuery';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import { handleError } from '@lib/utils/utils';
+import { apolloClient } from '@modules/apollo';
 
 export interface NoticeDropBoxOption extends DropBoxOption {
   confirmed: boolean;
@@ -29,14 +29,13 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
   const [editNotice] = useEditNotice();
   const [deleteNotice] = useDeleteNotice();
   const [deleteAllNotices] = useDeleteAllNotices();
-  const client = useApollo({}, '');
   const requestNoticeClick = async (noticeId: number) => {
     try {
       const res = await editNotice({
         variables: { input: { noticeId, confirm: true } },
       });
       if (res.data?.editNotice.ok) {
-        client.cache.modify({
+        apolloClient.cache.modify({
           id: `Notice:${noticeId}`,
           fields: {
             confirm() {
@@ -54,7 +53,7 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
     try {
       const res = await deleteNotice({ variables: { input: { noticeId } } });
       if (res.data?.deleteNotice.ok) {
-        const queryResult = client.readQuery<MeQuery>({
+        const queryResult = apolloClient.readQuery<MeQuery>({
           query: ME_QUERY,
         });
 
@@ -63,7 +62,7 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
           const newNotices = prevNotices?.filter(
             (notice) => notice.id !== noticeId
           );
-          client.writeQuery({
+          apolloClient.writeQuery({
             query: ME_QUERY,
             data: {
               ...queryResult,
@@ -83,11 +82,11 @@ const NoticeDropBox: React.FC<NoticeDropBoxProps> = ({ isOpen, options }) => {
     try {
       const res = await deleteAllNotices();
       if (res.data?.deleteAllNoticesOfMe.ok) {
-        const queryResult = client.readQuery<MeQuery>({
+        const queryResult = apolloClient.readQuery<MeQuery>({
           query: ME_QUERY,
         });
         if (queryResult) {
-          client.writeQuery({
+          apolloClient.writeQuery({
             query: ME_QUERY,
             data: {
               ...queryResult,

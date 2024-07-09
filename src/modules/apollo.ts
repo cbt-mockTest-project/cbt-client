@@ -4,13 +4,11 @@ import {
   NormalizedCacheObject,
   createHttpLink,
   from,
-  split,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { PUSH_TO_TELEGRAM } from '@lib/graphql/query/telegramQuery';
 import { isServer } from '@lib/utils/utils';
-import React from 'react';
 
 let _apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
@@ -39,7 +37,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
 
   if (networkError) {
     const message = `[Network Error]: ${networkError}`;
-    // sendErrorToTelegram(message);
+    sendErrorToTelegram(message);
   }
 });
 
@@ -73,43 +71,17 @@ const createApolloClient = (Cookie: string) => {
 
 export const initializeApollo = (initialState = {}, Cookie: string) => {
   const client = _apolloClient ?? createApolloClient(Cookie);
-
   if (initialState) {
     const existCache = client.extract();
     client.cache.restore({ ...existCache, ...initialState });
   }
-
   if (isServer()) {
     return client;
   }
-
   if (!_apolloClient) {
     _apolloClient = client;
   }
-
   return _apolloClient;
-};
-
-export const useApollo = (
-  initialState: NormalizedCacheObject,
-  token: string
-) => {
-  const store = React.useMemo(
-    () => initializeApollo(initialState, token),
-    [initialState, token]
-  );
-  return store;
-};
-
-export const addApolloState = (
-  client: ApolloClient<NormalizedCacheObject>,
-  pageProps: any
-) => {
-  if (pageProps?.props) {
-    pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
-  }
-
-  return pageProps;
 };
 
 export const apolloClient = initializeApollo({}, '');
