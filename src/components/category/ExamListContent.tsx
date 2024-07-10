@@ -6,7 +6,7 @@ import useAuth from '@lib/hooks/useAuth';
 import { MockExamCategory, User } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import { useInView } from 'react-intersection-observer';
-import { Skeleton } from 'antd';
+import { Spin } from 'antd';
 
 const ExamListContentBlock = styled.ul`
   margin-top: 15px;
@@ -109,7 +109,7 @@ const ExamListContent = ({
       {visibleItems < categoryExams.length ? (
         <>
           <div ref={ref} style={{ height: '1px' }} />
-          <Skeleton active />
+          <Spin />
         </>
       ) : null}
     </ExamListContentBlock>

@@ -1,7 +1,8 @@
+import Portal from '@components/common/portal/Portal';
 import { PUBLIC_EXAM_ID } from '@lib/constants/sessionStorage';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { checkIsEhsMasterExam } from '@lib/utils/utils';
-import { Button, Modal, ModalProps, Radio } from 'antd';
+import { Button, Modal, ModalProps, Radio, Spin } from 'antd';
 import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -28,6 +29,7 @@ interface ExamSelecModalProps extends Omit<ModalProps, 'children'> {
 
 const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const sessionStorage = new SessionStorage();
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
   const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
   const [moveLoading, setMoveLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -36,8 +38,12 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
   const handleStartExam = () => {
     setMoveLoading(true);
     sessionStorage.set(PUBLIC_EXAM_ID, examId);
-    if (mode === ExamMode.PRINT) return router.push(`/exam/pdf/${examId}`);
+    if (mode === ExamMode.PRINT) {
+      setIsRouteLoading(true);
+      return router.push(`/exam/pdf/${examId}`);
+    }
     if (mode === ExamMode.SOLUTION) {
+      setIsRouteLoading(true);
       return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
     }
     router.push({
@@ -77,6 +83,11 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
           시작하기
         </Button>
       </div>
+      {isRouteLoading && (
+        <Portal>
+          <Spin fullscreen size="large" />
+        </Portal>
+      )}
     </ExamSelecModalBlock>
   );
 };

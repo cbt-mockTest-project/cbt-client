@@ -1,18 +1,14 @@
 import { HeartTwoTone } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
-import ExamBookmark from '@components/common/examBookmark/ExamBookmark';
-import SkeletonBox from '@components/common/skeleton/SkeletonBox';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
-import useAuth from '@lib/hooks/useAuth';
+import Portal from '@components/common/portal/Portal';
+
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Tag } from 'antd';
+import { Spin, Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MockExamCategory, MockExamCategoryTypes } from 'types';
+import { MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
@@ -111,10 +107,12 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   isLoading,
   className = '',
 }) => {
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
   if (!category) return null;
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category.urlSlug}`}
+      onClick={() => setIsRouteLoading(true)}
       className={className}
     >
       {category && !isLoading && (
@@ -157,6 +155,11 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
             </div>
           </div>
         </BasicCard>
+      )}
+      {isRouteLoading && (
+        <Portal>
+          <Spin fullscreen size="large" />
+        </Portal>
       )}
     </CategoryFolderListItemBlock>
   );
