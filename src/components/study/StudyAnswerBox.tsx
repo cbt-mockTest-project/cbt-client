@@ -87,10 +87,10 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
   const hasAddAnswerButton =
     router.query.rel !== 'q' && router.pathname !== '/question/[Id]';
   const { handleCheckLogin } = useAuth();
-  const myFeedbackList = question.mockExamQuestionFeedback.filter(
+  const myFeedbackList = question?.mockExamQuestionFeedback?.filter(
     (feedback) => feedback.user?.id === meQuery?.me?.user?.id
   );
-  const feedbackListExceptMe = question.mockExamQuestionFeedback.filter(
+  const feedbackListExceptMe = question?.mockExamQuestionFeedback?.filter(
     (feedback) => feedback.user?.id !== meQuery?.me?.user?.id
   );
   const onClickOpenFeedbackModal = () => {
