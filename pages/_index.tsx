@@ -6,7 +6,6 @@ import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
-import wrapper from '@modules/redux/store/configureStore';
 import {
   DehydratedState,
   HydrationBoundary,

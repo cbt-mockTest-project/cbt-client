@@ -18,22 +18,28 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
       "@components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "@lib/*": [
-        "lib/*"
+        "./src/lib/*"
       ],
       "@styles/*": [
-        "styles/*"
+        "./src/styles/*"
       ],
       "@modules/*": [
-        "modules/*"
+        "./src/modules/*"
       ],
       "@assets/*": [
-        "assets/*"
+        "./src/assets/*"
+      ],
+      "#app/*": [
+        "./app/*"
+      ],
+      "*": [
+        "./src/*"
       ]
     },
     "plugins": [
