@@ -102,7 +102,7 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
             )}
             {onClickBookmark && (
               <Bookmark
-                active={question.isBookmarked}
+                defaultActive={question.isBookmarked}
                 onClick={onClickBookmark}
               />
             )}
