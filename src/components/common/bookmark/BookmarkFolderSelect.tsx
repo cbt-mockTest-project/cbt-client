@@ -17,9 +17,10 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
       <Select
         className="bookmark-folder-select"
         options={[
-          { label: '폴더1', value: 'folder1' },
-          { label: '폴더2', value: 'folder2' },
-          { label: '폴더3', value: 'folder3' },
+          { label: '분류 없음', value: 0 },
+          { label: '폴더1', value: 1 },
+          { label: '폴더2', value: 2 },
+          { label: '폴더3', value: 3 },
         ]}
         {...props}
       />

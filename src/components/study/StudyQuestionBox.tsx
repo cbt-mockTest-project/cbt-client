@@ -170,6 +170,9 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             </a>
           )}
           <Bookmark
+            onBookmarkChange={(active, folderId) => {
+              console.log(active, folderId);
+            }}
             onClick={(e) => onClickBookmark(e)}
             role="button"
             defaultActive={!!question?.isBookmarked}
