@@ -16,21 +16,14 @@ class MainDocument extends Document {
     const cache = createCache();
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
-    const parseCookies = (cookieString: string | undefined) => {
-      return cookieString?.split(';').reduce((acc, cookie) => {
-        const [key, value] = cookie.split('=').map((c) => c.trim());
-        acc[key] = value;
-        return acc;
-      }, {} as Record<string, string>);
-    };
-    const cookies = { cookies: parseCookies(ctx.req?.headers.cookie) };
+
     try {
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App) => (props) =>
             sheet.collectStyles(
               <StyleProvider cache={cache}>
-                <App {...props} {...cookies} />
+                <App {...props} />
               </StyleProvider>
             ),
         });

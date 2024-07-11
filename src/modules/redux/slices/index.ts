@@ -6,7 +6,6 @@ import {
 import coreSlice, { CoreState } from './core';
 import dataSlice, { DataState } from './data';
 import { HYDRATE } from 'next-redux-wrapper';
-import { cloneDeep } from 'lodash';
 import examSlice, { ExamState } from './exam';
 import mockExamSlice, { MockExamState } from './mockExam';
 import examSettingSlice, { ExamSettingState } from './examSetting';

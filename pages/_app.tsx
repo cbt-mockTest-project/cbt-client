@@ -6,7 +6,7 @@ import 'katex/dist/katex.min.css';
 import Script from 'next/script';
 import Head from 'next/head';
 import CoreContainer from '@components/common/core/CoreContainer';
-import wrapper from '@modules/redux/store/configureStore';
+import wrapper, { store } from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import * as gtag from '@lib/ga/gtag';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -25,8 +25,6 @@ import {
   TODAY_QUIZ_PAGE,
 } from '@lib/constants/displayName';
 import '@styles/global.css';
-import { coreActions } from '@modules/redux/slices/core';
-import { ThemeValue } from 'customTypes';
 import { Provider } from 'react-redux';
 import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
 import { useMemo } from 'react';
@@ -49,22 +47,13 @@ const pagesWithoutBodyBorder: string[] = [
   SEARCH_PAGE,
 ];
 const isOnlyLightModePage = [
+  EXAM_SOLUTION_PAGE,
   EXAM_CREATE_PAGE,
   QUESTION_EDIT_PAGE,
   EXAM_PDF_PAGE,
   EXAMS_PDF_PAGE,
 ];
-export default function App({
-  Component,
-  pageProps,
-  ...customProps
-}: AppProps) {
-  const cookies = (customProps as any)['cookies'];
-  const theme = cookies?.['theme'];
-  const { store } = wrapper.useWrappedStore(pageProps);
-  if (theme) {
-    store.dispatch(coreActions.setTheme(theme as ThemeValue));
-  }
+function App({ Component, pageProps, ...customProps }: AppProps) {
   const { hasLayout, hasBodyBorder, isOnlyLightMode } = useMemo(
     () => ({
       hasLayout: !pagesWithoutLayout.includes(String(Component.displayName)),
@@ -141,9 +130,9 @@ export default function App({
         }}
       />
       <Provider store={store}>
-        <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
+        <QueryClientProvider client={queryClient}>
           <ApolloProvider client={apolloClient}>
-            <QueryClientProvider client={queryClient}>
+            <ThemeProviderWrapper isOnlyLightMode={isOnlyLightMode}>
               <Globalstyles />
               <CoreContainer />
               {hasLayout ? (
@@ -154,10 +143,12 @@ export default function App({
                 <Component {...pageProps} />
               )}
               <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
+            </ThemeProviderWrapper>
           </ApolloProvider>
-        </ThemeProviderWrapper>
+        </QueryClientProvider>
       </Provider>
     </>
   );
 }
+
+export default wrapper.withRedux(App);

@@ -26,6 +26,10 @@ const SideNavListBlock = styled.ul`
     align-items: center;
     gap: 8px;
     padding: 0 30px;
+    .side-nav-theme-toggle-box-beta {
+      font-size: 12px;
+      color: ${({ theme }) => theme.color('colorPrimary')};
+    }
   }
   @media (max-width: ${responsive.medium}) {
     .side-nav-list {
@@ -97,6 +101,7 @@ const SideNavList: React.FC<SideNavListProps> = () => {
           checked={theme === 'dark'}
           onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
         />
+        <div className="side-nav-theme-toggle-box-beta">Beta</div>
       </div>
       <CustomNavDivider />
       <UserAuthBox className="side-user-auth-box" />
