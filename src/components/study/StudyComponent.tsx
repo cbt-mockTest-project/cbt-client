@@ -23,6 +23,8 @@ import {
   CheckIsAccessibleCategoryMutationVariables,
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { SessionStorage } from '@lib/utils/sessionStorage';
+import Portal from '@components/common/portal/Portal';
+import { Spin } from 'antd';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
@@ -74,7 +76,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   useEffect(() => {
     setFetchQuestionsLoading(true);
     if (!router.isReady) return;
-    // 단일 문제 풀이
     if (examId) {
       const input: ReadQuestionsByExamIdsInput = {
         order: 'normal',
@@ -199,7 +200,12 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   ]);
 
   if (!questionsQueryInput || !mode) return null;
-  if (fetchQuestionsLoading) return <FullPageLoader />;
+  if (fetchQuestionsLoading)
+    return (
+      <Portal>
+        <Spin size="large" fullscreen />
+      </Portal>
+    );
 
   return (
     <StudyComponentBlock>
