@@ -28,6 +28,27 @@ export type ResetMyQuestionBookmarkMutationVariables = Types.Exact<{ [key: strin
 
 export type ResetMyQuestionBookmarkMutation = { __typename?: 'Mutation', resetMyQuestionBookmark: { __typename?: 'CoreOutput', error?: string | null, ok: boolean } };
 
+export type MoveQuestionBookmarkMutationVariables = Types.Exact<{
+  input: Types.MoveQuestionBookmarkInput;
+}>;
+
+
+export type MoveQuestionBookmarkMutation = { __typename?: 'Mutation', moveQuestionBookmark: { __typename?: 'moveQuestionBookmarkOutput', error?: string | null, ok: boolean } };
+
+export type CreateQuestionBookmarkMutationVariables = Types.Exact<{
+  input: Types.CreateQuestionBookmarkInput;
+}>;
+
+
+export type CreateQuestionBookmarkMutation = { __typename?: 'Mutation', createQuestionBookmark: { __typename?: 'CreateQuestionBookmarkOutput', error?: string | null, ok: boolean } };
+
+export type DeleteQuestionBookmarkMutationVariables = Types.Exact<{
+  input: Types.DeleteQuestionBookmarkInput;
+}>;
+
+
+export type DeleteQuestionBookmarkMutation = { __typename?: 'Mutation', deleteQuestionBookmark: { __typename?: 'DeleteQuestionBookmarkOutput', error?: string | null, ok: boolean } };
+
 
 export const EditMockExamQuestionBookmarkDocument = gql`
     mutation EditMockExamQuestionBookmark($input: EditMockExamQuestionBookmarkInput!) {
@@ -84,4 +105,40 @@ export const ResetMyQuestionBookmarkDocument = gql`
 
 export function useResetMyQuestionBookmarkMutation() {
   return Urql.useMutation<ResetMyQuestionBookmarkMutation, ResetMyQuestionBookmarkMutationVariables>(ResetMyQuestionBookmarkDocument);
+};
+export const MoveQuestionBookmarkDocument = gql`
+    mutation MoveQuestionBookmark($input: MoveQuestionBookmarkInput!) {
+  moveQuestionBookmark(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useMoveQuestionBookmarkMutation() {
+  return Urql.useMutation<MoveQuestionBookmarkMutation, MoveQuestionBookmarkMutationVariables>(MoveQuestionBookmarkDocument);
+};
+export const CreateQuestionBookmarkDocument = gql`
+    mutation CreateQuestionBookmark($input: CreateQuestionBookmarkInput!) {
+  createQuestionBookmark(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useCreateQuestionBookmarkMutation() {
+  return Urql.useMutation<CreateQuestionBookmarkMutation, CreateQuestionBookmarkMutationVariables>(CreateQuestionBookmarkDocument);
+};
+export const DeleteQuestionBookmarkDocument = gql`
+    mutation DeleteQuestionBookmark($input: DeleteQuestionBookmarkInput!) {
+  deleteQuestionBookmark(input: $input) {
+    error
+    ok
+  }
+}
+    `;
+
+export function useDeleteQuestionBookmarkMutation() {
+  return Urql.useMutation<DeleteQuestionBookmarkMutation, DeleteQuestionBookmarkMutationVariables>(DeleteQuestionBookmarkDocument);
 };

@@ -5,6 +5,45 @@ import {
   FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT,
 } from './questionFragment';
 
+export const READ_BOOKMARKED_QUESTIONS = gql`
+  query ReadBookmarkedQuestions($input: ReadBookmarkedQuestionsInput!) {
+    readBookmarkedQuestions(input: $input) {
+      error
+      ok
+      questions {
+        ...FullQuestionIncludingExamIdParts
+        mockExamQuestionComment {
+          ...QusetionCommentParts
+        }
+        mockExam {
+          title
+        }
+        mockExamQuestionFeedback {
+          id
+          content
+          type
+          user {
+            nickname
+            id
+          }
+          recommendationCount {
+            good
+            bad
+          }
+          myRecommedationStatus {
+            isGood
+            isBad
+          }
+          created_at
+          updated_at
+        }
+      }
+    }
+  }
+  ${FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT}
+  ${FULL_QUESTION_COMMENT_FRAGMENT}
+`;
+
 export const READ_QUESTIONS_BY_ID = gql`
   query ReadMockExamQuestionsByMockExamId(
     $input: ReadMockExamQuestionsByMockExamIdInput!
