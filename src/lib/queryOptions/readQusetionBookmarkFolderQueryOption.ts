@@ -14,6 +14,7 @@ export const readQuestionBookmarkFolderQueryOption = queryOptions({
       ReadQuestionBookmarkFoldersQueryVariables
     >({
       query: READ_QUESTION_BOOKMARK_FOLDERS,
+      fetchPolicy: 'network-only',
     });
     return data;
   },
