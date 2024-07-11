@@ -1,6 +1,6 @@
 import { App, ConfigProvider, theme } from 'antd';
 import { getCookie } from 'cookies-next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { CustomStyleProvider } from './CustomStyleProvider';
 import useThemeControl from '@lib/hooks/useThemeControl';
@@ -18,24 +18,28 @@ const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
 }) => {
   const { theme: mode, setTheme } = useThemeControl();
   useEffect(() => {
-    setTheme((getCookie('theme') as ThemeValue) || 'light');
-  }, [mode]);
+    if (['light', 'dark'].includes(getCookie('theme') as ThemeValue)) {
+      setTheme(getCookie('theme') as ThemeValue);
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={isOnlyLightMode ? themes.light : themes[mode]}>
-      <ConfigProvider
-        theme={{
-          algorithm: isOnlyLightMode
-            ? theme.defaultAlgorithm
-            : mode === 'light'
-            ? theme.defaultAlgorithm
-            : theme.darkAlgorithm,
-        }}
-      >
-        <App className="theme-provider-wrapper">
-          <CustomStyleProvider mode={mode}>{children}</CustomStyleProvider>
-        </App>
-      </ConfigProvider>
+      <App className="theme-provider-wrapper">
+        <CustomStyleProvider mode={mode}>
+          <ConfigProvider
+            theme={{
+              algorithm: isOnlyLightMode
+                ? theme.defaultAlgorithm
+                : mode === 'light'
+                ? theme.defaultAlgorithm
+                : theme.darkAlgorithm,
+            }}
+          >
+            {children}
+          </ConfigProvider>
+        </CustomStyleProvider>
+      </App>
     </ThemeProvider>
   );
 };

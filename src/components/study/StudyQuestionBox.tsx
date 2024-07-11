@@ -119,7 +119,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     saveBookmark(question);
-    if (!user.hasBookmarkedBefore) {
+    if (!user?.hasBookmarkedBefore) {
       setIsBookmarkInfoModalOpen(true);
       handleUpdateUserCache({ hasBookmarkedBefore: true });
     }
