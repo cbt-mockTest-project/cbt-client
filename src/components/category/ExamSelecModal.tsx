@@ -43,8 +43,14 @@ const ExamSelecModal: React.FC<ExamSelecModalProps> = (props) => {
       return router.push(`/exam/pdf/${examId}`);
     }
     if (mode === ExamMode.SOLUTION) {
-      setIsRouteLoading(true);
-      return router.push(`/exam/solution/${examId}?cid=${categoryId}`);
+      router.push({
+        pathname: '/study',
+        query: {
+          mode,
+          examId,
+          ...(categoryId ? { categoryId } : {}),
+        },
+      });
     }
     router.push({
       pathname: '/study',
