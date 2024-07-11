@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ExamListItem from './ExamListItem';
 import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
 import { MockExamCategory, User } from 'types';
 import { responsive } from '@lib/utils/responsive';
-import { useInView } from 'react-intersection-observer';
-import { Spin } from 'antd';
 
 const ExamListContentBlock = styled.ul`
   margin-top: 15px;
@@ -21,8 +19,6 @@ const ExamListContentBlock = styled.ul`
   }
 `;
 
-export const ITEMS_PER_PAGE = 10;
-
 const ExamListContent = ({
   category,
   isMyCategory,
@@ -30,11 +26,6 @@ const ExamListContent = ({
   categoryExams,
 }) => {
   const { user } = useAuth();
-  const [visibleItems, setVisibleItems] = useState(ITEMS_PER_PAGE);
-  const { ref, inView } = useInView({
-    threshold: 0,
-    rootMargin: '100px 0px',
-  });
 
   const isRecentStudy = (
     user: User,
@@ -53,14 +44,6 @@ const ExamListContent = ({
       recentlyStudyQuestionNumber: recentlyStudyExam?.questionIndex || 0,
     };
   };
-
-  useEffect(() => {
-    if (inView) {
-      setVisibleItems((prevItems) =>
-        Math.min(prevItems + ITEMS_PER_PAGE, categoryExams.length)
-      );
-    }
-  }, [inView, categoryExams.length]);
 
   const renderExamItem = (exam: any, index: number, isDraggable: boolean) => {
     const { hasRecentlyStudy, recentlyStudyQuestionNumber } = isRecentStudy(
@@ -99,21 +82,11 @@ const ExamListContent = ({
     );
   };
 
-  const examItems = categoryExams
-    .slice(0, visibleItems)
-    .map((exam, index) => renderExamItem(exam, index, isMyCategory));
-
-  return (
-    <ExamListContentBlock>
-      {examItems}
-      {visibleItems < categoryExams.length ? (
-        <>
-          <div ref={ref} style={{ height: '1px' }} />
-          <Spin />
-        </>
-      ) : null}
-    </ExamListContentBlock>
+  const examItems = categoryExams.map((exam, index) =>
+    renderExamItem(exam, index, isMyCategory)
   );
+
+  return <ExamListContentBlock>{examItems}</ExamListContentBlock>;
 };
 
 export default ExamListContent;

@@ -55,12 +55,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     }
   }, [isAdmin]);
 
-  if (
-    !question ||
-    removeHtmlTag(question.question).length < 3 ||
-    removeHtmlTag(question.solution).length < 3
-  )
-    return null;
+  if (!question) return null;
   if (isHidden) {
     return <Skeleton active paragraph={{ rows: 10 }} />;
   }

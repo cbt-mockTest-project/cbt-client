@@ -1,4 +1,5 @@
 import WithHead from '@components/common/head/WithHead';
+import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import SolutionModeCore from '@components/solutionMode/SolutionModeCore';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
@@ -10,16 +11,9 @@ import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
 import { apolloClient } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
-import { Spin } from 'antd';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import dynamic from 'next/dynamic';
 import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
-const DynamicSolutionModeComponent = dynamic(
-  () => import('@components/solutionMode/SolutionModeComponent'),
-  {
-    loading: () => <Spin fullscreen size="large" />,
-  }
-);
+
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;
   questions: MockExamQuestion[];
@@ -44,7 +38,7 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         noIndex={isNoIndex}
       />
       <StudyHeader questions={questions} />
-      <DynamicSolutionModeComponent questionsQueryInput={questionsQueryInput} />
+      <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
       <SolutionModeCore />
     </>
   );

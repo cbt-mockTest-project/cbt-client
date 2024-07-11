@@ -3,17 +3,7 @@ import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { MockExamCategory } from 'types';
 import useCategoryExamList from './hooks/useCategoryExamList';
-import dynamic from 'next/dynamic';
-import { Spin } from 'antd';
-import Portal from '@components/common/portal/Portal';
-
-const DynamicExamList = dynamic(() => import('./ExamList'), {
-  loading: () => (
-    <Portal>
-      <Spin fullscreen size="large" />
-    </Portal>
-  ),
-});
+import ExamList from './ExamList';
 
 interface ExamListAndControllerProps {
   category: MockExamCategory;
@@ -37,7 +27,7 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
         setIsOrderChangableMode={setIsOrderChangableMode}
         isOrderChangableMode={isOrderChangableMode}
       />
-      <DynamicExamList
+      <ExamList
         key={String(isOrderChangableMode)}
         category={category}
         isOrderChangableMode={isOrderChangableMode}
