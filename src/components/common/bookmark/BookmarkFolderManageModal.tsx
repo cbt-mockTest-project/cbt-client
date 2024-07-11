@@ -2,6 +2,14 @@ import { App, Modal, ModalProps } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import BookmarkFolderItem from './BookmarkFolderItem';
+import {
+  useCreateQuestionBookmarkFolderMutation,
+  useDeleteQuestionBookmarkFolderMutation,
+  useUpdateQuestionBookmarkFolderMutation,
+} from '@lib/mutation/questionBookmarkMutation';
+import BookmarkFolderAddButton from './BookmarkFolderAddButton';
+import { useQuery } from '@tanstack/react-query';
+import { readQuestionBookmarkFolderQueryOption } from '@lib/queryOptions/readQusetionBookmarkFolderQueryOption';
 
 const BookmarkFolderManageModalBlock = styled(Modal)``;
 
@@ -11,29 +19,20 @@ const BookmarkFolderManageModal: React.FC<BookmarkFolderManageModalProps> = (
   props
 ) => {
   const { ...modalProps } = props;
-
+  const { data } = useQuery(readQuestionBookmarkFolderQueryOption);
   const { modal } = App.useApp();
-  const bookmarkFolders = [
-    {
-      id: 1,
-      title: '즐겨찾기 폴더 1',
-    },
-    {
-      id: 2,
-      title: '즐겨찾기 폴더 2',
-    },
-  ];
-
-  const onDelete = () => {
+  const updateFolderMutation = useUpdateQuestionBookmarkFolderMutation();
+  const deleteFolderMutation = useDeleteQuestionBookmarkFolderMutation();
+  const onDelete = (id: number) => {
     modal.confirm({
       title: '삭제',
       content: '삭제하시겠습니까?',
-      onOk: () => alert('삭제'),
+      onOk: () => deleteFolderMutation.mutate({ id }),
     });
   };
 
-  const onEdit = (title: string) => {
-    console.log(title);
+  const onEdit = (id: number, name: string) => {
+    updateFolderMutation.mutate({ id, name });
   };
 
   return (
@@ -42,12 +41,13 @@ const BookmarkFolderManageModal: React.FC<BookmarkFolderManageModalProps> = (
       footer={null}
       title="북마크 폴더 관리"
     >
-      {bookmarkFolders.map((folder) => (
+      <BookmarkFolderAddButton />
+      {data?.readQuestionBookmarkFolders.folders.map((folder) => (
         <BookmarkFolderItem
           key={folder.id}
-          defaultTitle={folder.title}
-          onDelete={onDelete}
-          onEdit={onEdit}
+          defaultName={folder.name}
+          onDelete={() => onDelete(folder.id)}
+          onEdit={(name) => onEdit(folder.id, name)}
         />
       ))}
     </BookmarkFolderManageModalBlock>

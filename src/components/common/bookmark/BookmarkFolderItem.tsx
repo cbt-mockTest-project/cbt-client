@@ -1,3 +1,4 @@
+import { useCreateQuestionBookmarkFolderMutation } from '@lib/mutation/questionBookmarkMutation';
 import { Button, Input } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -6,7 +7,6 @@ const BookmarkFolderItemBlock = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;
   border-bottom: 1px solid ${({ theme }) => theme.color('colorBorder')};
   button {
     color: ${({ theme }) => theme.color('colorTextTertiary')};
@@ -16,6 +16,8 @@ const BookmarkFolderItemBlock = styled.div`
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    padding: 10px 0px;
+    width: 100%;
   }
   .bookmark-folder-item-actions {
     flex-shrink: 0;
@@ -23,21 +25,21 @@ const BookmarkFolderItemBlock = styled.div`
 `;
 
 interface BookmarkFolderItemProps {
-  defaultTitle: string;
+  defaultName: string;
   onDelete: () => void;
-  onEdit: (title: string) => void;
+  onEdit: (name: string) => void;
 }
 
 const BookmarkFolderItem: React.FC<BookmarkFolderItemProps> = ({
-  defaultTitle,
+  defaultName,
   onDelete,
   onEdit,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(defaultTitle);
+  const [name, setName] = useState(defaultName);
   const onClickEditButton = () => {
     if (isEditing) {
-      onEdit(title);
+      onEdit(name);
       setIsEditing(false);
     } else {
       setIsEditing(true);
@@ -49,12 +51,11 @@ const BookmarkFolderItem: React.FC<BookmarkFolderItemProps> = ({
         {isEditing ? (
           <Input
             className="w-full"
-            key={title}
-            defaultValue={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         ) : (
-          title
+          name
         )}
       </div>
       <div className="bookmark-folder-item-actions">
