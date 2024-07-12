@@ -39,9 +39,9 @@ export const sortHomeUserCategories = (
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )
-    .map((category) => ({
+    .map((category, index) => ({
       ...category,
-      isNew: true,
+      isNew: index === 0,
     }));
   return [
     ...categoriesSortedByCreatedAt.slice(0, 1),
@@ -68,6 +68,11 @@ export const getHomeCategories = async (
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {
+    console.log('before', categories);
+    console.log(
+      'after',
+      sortHomeUserCategories(categories as MockExamCategory[])
+    );
     return sortHomeUserCategories(categories as MockExamCategory[]);
   }
   return categories as MockExamCategory[];
