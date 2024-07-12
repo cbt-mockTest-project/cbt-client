@@ -1,6 +1,5 @@
 import WithHead from '@components/common/head/WithHead';
 import HomeComponent from '@components/home/HomeComponent';
-import HomeCore from '@components/home/HomeCore';
 import { MAIN_PAGE } from '@lib/constants/displayName';
 import {
   GetCategoriesQueryKey,
@@ -34,7 +33,6 @@ const IndexPage: NextPage<Props> = ({ dehydratedState }) => {
         pageHeadingTitle="모두CBT 서비스 메인페이지"
       />
       <HydrationBoundary state={dehydratedState}>
-        <HomeCore />
         <HomeComponent />
       </HydrationBoundary>
       <HomeNoti />

@@ -43,7 +43,6 @@ export const sortHomeUserCategories = (
       ...category,
       isNew: true,
     }));
-
   return [
     ...categoriesSortedByCreatedAt.slice(0, 1),
     ...categoriesSortedByLikes.filter((category) => !category['isNew']),
@@ -65,6 +64,7 @@ export const getHomeCategories = async (
     variables: {
       input,
     },
+    fetchPolicy: 'network-only',
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {
@@ -81,6 +81,7 @@ export const getStorageCategories = async (
     variables: {
       input,
     },
+    fetchPolicy: 'network-only',
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {
