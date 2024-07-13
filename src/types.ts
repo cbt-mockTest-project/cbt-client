@@ -1586,6 +1586,7 @@ export type MeOutput = {
 
 export type MockExam = {
   __typename?: 'MockExam';
+  accesibleRoleIds: Array<Scalars['Float']>;
   approved: Scalars['Boolean'];
   created_at: Scalars['DateTime'];
   examBookmarks: Array<MockExamBookmark>;
@@ -1719,6 +1720,7 @@ export type MockExamImageType = {
 };
 
 export type MockExamInputType = {
+  accesibleRoleIds?: Array<Scalars['Float']>;
   approved?: Scalars['Boolean'];
   examBookmarks: Array<MockExamBookmarkInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
