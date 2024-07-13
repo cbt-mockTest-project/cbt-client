@@ -60,7 +60,7 @@ const PermissionManageUserListItem: React.FC<
   const { message } = App.useApp();
   const [createUserRole] = useCreateUserRole();
   const [isAllowAdblock, setIsAllowAdblock] = useState(
-    checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7, 8, 9], user })
+    checkRole({ roleIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], user })
   );
   const handleAllowAdblock = async () => {
     try {
