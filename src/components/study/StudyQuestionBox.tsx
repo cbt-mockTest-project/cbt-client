@@ -11,6 +11,7 @@ import useQuestions from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
+import { responsive } from '@lib/utils/responsive';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -62,11 +63,15 @@ const StudyQuestionBoxBlock = styled.div`
     ${EditorStyle}
   }
   .study-question-box-image {
-    width: 100%;
-    max-height: 400px;
+    max-width: 60% !important;
     object-fit: contain;
     margin-top: 10px;
     border-radius: 5px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    @media (max-width: ${responsive.medium}) {
+      max-width: 100% !important;
+    }
   }
   .study-question-exam-title {
     font-size: 12px;
