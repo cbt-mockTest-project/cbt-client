@@ -154,14 +154,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
-  if (!category) return null;
 
   if (!category.isPublic && !isCategoryAccess) {
-    return (
-      <Portal>
-        <Spin size="large" fullscreen />
-      </Portal>
-    );
+    return <Spin size="large" fullscreen />;
   }
 
   const storageType = () => {
