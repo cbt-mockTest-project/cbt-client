@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { setCookie } from 'cookies-next';
 import { LocalStorage } from '@lib/utils/localStorage';
 import * as gtag from '@lib/ga/gtag';
-import * as katex from 'katex';
+import katex from 'katex';
 
 import { App } from 'antd';
 import { checkHomePage } from '@lib/constants/routes';
