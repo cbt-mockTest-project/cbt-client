@@ -14,3 +14,7 @@ export const EHS_AIR_EXAM_IDS = [
   1051, 1052, 1075, 1076, 1863, 1040, 1041, 1042,
 ];
 export const EHS_HUMAN_EXAM_IDS = [3551, 3604, 3605, 3606, 3607];
+// 위생기사
+export const EHS_SAFETY_EXAM_IDS = [
+  3971, 3979, 3980, 3981, 3982, 3934, 3935, 3936,
+];
