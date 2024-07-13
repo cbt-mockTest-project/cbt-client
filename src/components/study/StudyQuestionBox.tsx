@@ -63,7 +63,7 @@ const StudyQuestionBoxBlock = styled.div`
     ${EditorStyle}
   }
   .study-question-box-image {
-    max-width: 60% !important;
+    max-width: 730px !important;
     object-fit: contain;
     margin-top: 10px;
     border-radius: 5px;

@@ -42,7 +42,7 @@ const StudyAnswerBoxBlock = styled.div`
   }
 
   .study-answer-box-box-image {
-    max-width: 60% !important;
+    max-width: 730px !important;
     object-fit: contain;
     margin-top: 10px;
     border-radius: 5px;
