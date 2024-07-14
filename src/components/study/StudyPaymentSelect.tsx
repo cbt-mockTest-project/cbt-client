@@ -191,5 +191,5 @@ const categoryOptions = [
   { label: '대기환경기사', value: 7 },
   { label: '건설안전기사', value: 8 },
   { label: '인간공학기사', value: 9 },
-  { label: '산업위생기사', value: 10 },
+  { label: '산업위생관리기사', value: 10 },
 ];

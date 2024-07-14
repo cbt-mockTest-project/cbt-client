@@ -36,7 +36,9 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
     });
 
   if (networkError) {
-    const message = `[Network Error]: ${networkError}`;
+    const message = `
+    UserAgent: ${userAgent}\nIP: ${ip}\nCurrentPagePath: ${currentPagePath}\n
+    [Network Error]: ${networkError}`;
     sendErrorToTelegram(message);
   }
 });
