@@ -112,23 +112,22 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   onChangeIsFeedbackModalOpen,
   isVisibleImage = true,
 }) => {
-  const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
-  const { user, handleUpdateUserCache } = useAuth();
+  const { user } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
     return user.id === question?.user.id;
   }, [user, question]);
 
-  const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    saveBookmark(question);
-    if (!user?.hasBookmarkedBefore) {
-      setIsBookmarkInfoModalOpen(true);
-      handleUpdateUserCache({ hasBookmarkedBefore: true });
-    }
-  };
+  // const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  //   e.stopPropagation();
+  //   saveBookmark(question);
+  //   if (!user?.hasBookmarkedBefore) {
+  //     setIsBookmarkInfoModalOpen(true);
+  //     handleUpdateUserCache({ hasBookmarkedBefore: true });
+  //   }
+  // };
 
   useEffect(() => {
     if (onChangeIsFeedbackModalOpen) {
@@ -178,7 +177,6 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             onBookmarkChange={(active, folderId) => {
               console.log(active, folderId);
             }}
-            onClick={(e) => onClickBookmark(e)}
             role="button"
             defaultActive={!!question?.isBookmarked}
             className="study-question-box-bookmark"
@@ -215,12 +213,6 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           title={`${String(question.mockExam?.title)}\n${
             question.number
           }번 문제`}
-        />
-      )}
-      {isBookmarkInfoModalOpen && (
-        <StudyBookmarkInfoModal
-          open={isBookmarkInfoModalOpen}
-          onCancel={() => setIsBookmarkInfoModalOpen(false)}
         />
       )}
     </StudyQuestionBoxBlock>

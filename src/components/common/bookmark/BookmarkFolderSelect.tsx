@@ -28,6 +28,7 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
   return (
     <BookmarkFolderSelectBlock>
       <Select
+        placeholder="폴더 선택"
         className="bookmark-folder-select"
         options={options}
         dropdownRender={(menu) => (
