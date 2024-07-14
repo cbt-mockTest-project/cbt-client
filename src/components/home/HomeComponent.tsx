@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { Button } from 'antd';
+import { App, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import ModuFolderList from './folderList/ModuFolderList';
@@ -65,19 +65,45 @@ const HomeComponentBlock = styled.div`
 interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
+  const { modal } = App.useApp();
+  const onClickFindPartner = () => {
+    modal.success({
+      title: '협업 제안서를 받아보시겠습니까?',
+      content: '실기시험 시장을 혁신할 파트너를 찾습니다.',
+      okText: '제안서 보기',
+      onOk: () => {
+        window.open(
+          'https://moducbt-seoul.s3.ap-northeast-2.amazonaws.com/proposal/%E1%84%86%E1%85%A9%E1%84%83%E1%85%AECBT_%E1%84%92%E1%85%A7%E1%86%B8%E1%84%8B%E1%85%A5%E1%86%B8%E1%84%8C%E1%85%A6%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%89%E1%85%A5.pdf',
+          '_blank',
+          'noreferrer'
+        );
+      },
+      closable: true,
+      cancelText: '아니오',
+    });
+  };
   return (
     <HomeComponentBlock>
       <HomeBanner />
 
-      <div className="ml-[30px] mt-4 lg:ml-[20px]">
+      <div className="ml-[30px] mt-4 lg:ml-[20px] flex justify-between items-center">
         <Link href="/search-categories">
           <Button type="primary">
             <div className="flex gap-2 items-center">
-              암기장 통합검색
+              암기장 검색
               <SearchOutlined />
             </div>
           </Button>
         </Link>
+        <div className="md:hidden mr-[30px] ">
+          <Button
+            type="text"
+            className="underline"
+            onClick={onClickFindPartner}
+          >
+            협업 파트너를 찾습니다.
+          </Button>
+        </div>
       </div>
       <div className="home-wrapper">
         <ModuFolderList />

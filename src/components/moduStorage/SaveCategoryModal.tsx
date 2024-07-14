@@ -105,18 +105,6 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      {!isPublic && (
-        <div
-          className="mt-2"
-          style={{
-            color: theme.color('colorTextTertiary'),
-          }}
-        >
-          * 비공개는 모두CBT내에서의 비공개를 말하며,
-          <br />
-          구글, 네이버등의 검색엔진에 노출 될 수 있습니다.
-        </div>
-      )}
       {isPublic && (
         <div
           className="mt-2"

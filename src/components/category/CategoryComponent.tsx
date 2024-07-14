@@ -1,6 +1,6 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { App, MenuProps, Skeleton } from 'antd';
+import { App, MenuProps, Skeleton, Spin } from 'antd';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { ExamSource, ReadMockExamCategoryByCategoryIdInput } from 'types';
@@ -20,6 +20,7 @@ import CategoryEmpty from './CategoryEmpty';
 import useAuth from '@lib/hooks/useAuth';
 import ExamListAndController from './ExamListAndController';
 import useCategoryExamList from './hooks/useCategoryExamList';
+import Portal from '@components/common/portal/Portal';
 
 const CategoryComponentBlock = styled.div`
   padding: 20px 0;
@@ -153,17 +154,9 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       ),
     },
   ];
-  if (!category) return null;
 
   if (!category.isPublic && !isCategoryAccess) {
-    return (
-      <CategoryComponentBlock>
-        <div className="flex flex-col gap-2">
-          <Skeleton active />
-          <Skeleton active />
-        </div>
-      </CategoryComponentBlock>
-    );
+    return <Spin size="large" fullscreen />;
   }
 
   const storageType = () => {

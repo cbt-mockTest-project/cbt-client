@@ -16,6 +16,7 @@ import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModa
 import useAuth from '@lib/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { responsive } from '@lib/utils/responsive';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -41,11 +42,15 @@ const StudyAnswerBoxBlock = styled.div`
   }
 
   .study-answer-box-box-image {
-    width: 100%;
-    max-height: 400px;
+    max-width: 730px !important;
     object-fit: contain;
     margin-top: 10px;
     border-radius: 5px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    @media (max-width: ${responsive.medium}) {
+      max-width: 100% !important;
+    }
   }
   .study-answer-footer {
     margin-top: 10px;

@@ -291,6 +291,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           slug
           title
           id
+          accesibleRoleIds
           mockExamQuestion {
             id
           }

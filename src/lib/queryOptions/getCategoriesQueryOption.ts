@@ -39,11 +39,10 @@ export const sortHomeUserCategories = (
       (a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )
-    .map((category) => ({
+    .map((category, index) => ({
       ...category,
-      isNew: true,
+      isNew: index === 0,
     }));
-
   return [
     ...categoriesSortedByCreatedAt.slice(0, 1),
     ...categoriesSortedByLikes.filter((category) => !category['isNew']),
@@ -65,9 +64,15 @@ export const getHomeCategories = async (
     variables: {
       input,
     },
+    fetchPolicy: 'network-only',
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {
+    console.log('before', categories);
+    console.log(
+      'after',
+      sortHomeUserCategories(categories as MockExamCategory[])
+    );
     return sortHomeUserCategories(categories as MockExamCategory[]);
   }
   return categories as MockExamCategory[];
@@ -81,6 +86,7 @@ export const getStorageCategories = async (
     variables: {
       input,
     },
+    fetchPolicy: 'network-only',
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {

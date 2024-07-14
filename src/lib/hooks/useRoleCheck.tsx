@@ -3,6 +3,7 @@ import {
   EHS_CONSTRUCTION_EXAM_IDS,
   EHS_DANGEROUS_EXAM_IDS,
   EHS_HUMAN_EXAM_IDS,
+  EHS_SAFETY_EXAM_IDS,
   EHS_SAFE_EXAM_IDS,
   EHS_SAFE_INDUSTRIAL_EXAM_IDS,
 } from '@lib/constants/ehsMaster';
@@ -40,6 +41,8 @@ const useRoleCheck = () => {
       return handleRoleCheck([8]);
     if (currentExamIds.some((id) => EHS_HUMAN_EXAM_IDS.includes(id)))
       return handleRoleCheck([9]);
+    if (currentExamIds.some((id) => EHS_SAFETY_EXAM_IDS.includes(id)))
+      return handleRoleCheck([10]);
     return true;
   };
 
