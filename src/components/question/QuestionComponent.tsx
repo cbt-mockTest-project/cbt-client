@@ -6,7 +6,7 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import { Button, Skeleton } from 'antd';
+import { Button, Skeleton, Spin } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
+import Portal from '@components/common/portal/Portal';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -56,7 +57,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   if (!question) return null;
   if (isHidden) {
-    return <Skeleton active paragraph={{ rows: 10 }} />;
+    return (
+      <Portal>
+        <Spin size="large" fullscreen />
+      </Portal>
+    );
   }
   return (
     <QuestionComponentBlock isHidden={isHidden}>

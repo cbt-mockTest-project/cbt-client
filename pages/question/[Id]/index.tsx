@@ -25,6 +25,7 @@ interface QuestionProps {
   description: string;
   questionQueryInput: ReadMockExamQuestionInput;
   dehydratedState: DehydratedState;
+  noIndex: boolean;
 }
 
 const Question: NextPage<QuestionProps> = ({
@@ -32,6 +33,7 @@ const Question: NextPage<QuestionProps> = ({
   title,
   description,
   dehydratedState,
+  noIndex,
 }) => {
   return (
     <HydrationBoundary state={dehydratedState}>
@@ -39,6 +41,7 @@ const Question: NextPage<QuestionProps> = ({
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
         description={description}
+        noIndex={noIndex}
       />
       <GoogleAd />
       <QuestionComponent questionQueryInput={questionQueryInput} />
@@ -87,7 +90,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
   const dehydratedState = dehydrate(queryClient);
   return {
-    props: { title, description, questionQueryInput, dehydratedState },
+    props: {
+      title,
+      description,
+      questionQueryInput,
+      dehydratedState,
+      noIndex: !question.mockExam.approved,
+    },
     revalidate: 86400,
   };
 };
