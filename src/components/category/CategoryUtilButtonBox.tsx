@@ -60,24 +60,6 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
           오답
         </Button>
       </Tooltip>
-      <Tooltip title="북마크한 문제들을 모아 볼 수 있어요.">
-        <Button
-          className="category-question-search-button"
-          onClick={() =>
-            handleCheckLogin() &&
-            router.push({
-              pathname: '/exams/bookmark',
-              query: {
-                ...(categoryId && { categoryId }),
-                examIds: exams.map((exam) => exam.id).join(','),
-                categoryName,
-              },
-            })
-          }
-        >
-          북마크
-        </Button>
-      </Tooltip>
     </div>
   );
 };
