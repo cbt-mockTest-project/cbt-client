@@ -25,7 +25,9 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   };
 
   const onCancel = () => {
-    onChangeBookmark?.(false, selectedFolderId);
+    if (isActive) {
+      onChangeBookmark?.(false, selectedFolderId);
+    }
   };
 
   const onChangeFolder = (folderId: number) => {

@@ -39,7 +39,7 @@ const MyBookmarkQuestionComponent: React.FC<
       <div className="mb-3 flex justify-between gap-6">
         <BookmarkFolderSelect
           size="large"
-          defaultValue={isUndefined(folderId) ? null : Number(folderId)}
+          value={isUndefined(folderId) ? null : Number(folderId)}
           onChange={async (value) => {
             router.push({ query: { folderId: value } }, undefined, {
               shallow: true,
