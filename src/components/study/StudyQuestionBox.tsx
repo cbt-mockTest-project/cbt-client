@@ -13,7 +13,6 @@ import useQuestions, {
   HandleDeleteBookmark,
   HandleSaveBookmark,
 } from '@lib/hooks/useQuestions';
-import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
@@ -95,8 +94,8 @@ const StudyQuestionBoxBlock = styled.div`
 `;
 
 interface StudyQuestionBoxProps {
-  saveBookmark: HandleSaveBookmark;
-  deleteBookmark: HandleDeleteBookmark;
+  saveBookmark?: HandleSaveBookmark;
+  deleteBookmark?: HandleDeleteBookmark;
   questionNumber?: number;
   question: MockExamQuestion;
   className?: string;
@@ -126,15 +125,6 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
     if (!user) return false;
     return user.id === question?.user.id;
   }, [user, question]);
-
-  // const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  //   e.stopPropagation();
-  //   saveBookmark(question);
-  //   if (!user?.hasBookmarkedBefore) {
-  //     setIsBookmarkInfoModalOpen(true);
-  //     handleUpdateUserCache({ hasBookmarkedBefore: true });
-  //   }
-  // };
 
   const onChangeBookmark: BookmarkChangeHandler = (active, folderId) => {
     if (active) {
@@ -189,13 +179,15 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               </Button>
             </a>
           )}
-          <Bookmark
-            onChangeBookmark={onChangeBookmark}
-            defaultFolderId={question?.myBookmark?.bookmarkFolder?.id}
-            role="button"
-            defaultActive={!!question?.myBookmark}
-            className="study-question-box-bookmark"
-          />
+          {deleteBookmark && saveBookmark && (
+            <Bookmark
+              onChangeBookmark={onChangeBookmark}
+              defaultFolderId={question?.myBookmark?.bookmarkFolder?.id}
+              role="button"
+              defaultActive={!!question?.myBookmark}
+              className="study-question-box-bookmark"
+            />
+          )}
         </div>
       </div>
       <div className="study-question-box-question">

@@ -5,7 +5,6 @@ import {
   QuestionState,
   ReadMockExamQuestionInput,
 } from 'types';
-import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
@@ -22,7 +21,6 @@ import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
-import { HandleSaveBookmark } from './useQuestions';
 
 const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   const { message } = App.useApp();
@@ -35,7 +33,6 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
     })
   );
   const [changeQuestionState] = useChangeQuestionState();
-  const [editBookmarkMutaion] = useEditQuestionBookmark();
 
   const {
     handleAddFeedback: addFeedback,
@@ -43,26 +40,6 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
     handleEditFeedback: editFeedback,
     handleUpdateFeedbackRecommendation: updateFeedbackRecommendation,
   } = useQuestionFeedback();
-
-  const handleSaveBookmark: HandleSaveBookmark = async (question, folderId) => {
-    try {
-      if (!meQuery?.me.user) {
-        dispatch(coreActions.openModal(loginModal));
-        return;
-      }
-      await editBookmarkMutaion({
-        variables: {
-          input: {
-            questionId: question.id,
-          },
-        },
-      });
-      refetch();
-    } catch {
-      message.error('북마크 저장에 실패했습니다.');
-    }
-  };
-  const handleDeleteBookmark = async (question: MockExamQuestion) => {};
 
   const handleSaveQuestionState = async (
     question: MockExamQuestion,
@@ -131,13 +108,11 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   };
 
   return {
-    handleSaveBookmark,
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
     handleAddFeedback,
     handleSaveQuestionState,
     handleEditFeedback,
-    handleDeleteBookmark,
   };
 };
 

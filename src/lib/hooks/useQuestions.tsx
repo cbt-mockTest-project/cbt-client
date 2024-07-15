@@ -1,16 +1,22 @@
-import { WatchQueryFetchPolicy } from '@apollo/client';
+import { FetchPolicy, WatchQueryFetchPolicy } from '@apollo/client';
 import { loginModal } from '@lib/constants';
 import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
 import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { READ_BOOKMARKED_QUESTIONS } from '@lib/graphql/query/questionQuery';
+import {
+  ReadBookmarkedQuestionsQuery,
+  ReadBookmarkedQuestionsQueryVariables,
+} from '@lib/graphql/query/questionQuery.generated';
 import {
   createQuestionBookmarkMutationFn,
   deleteQuestionBookmarkMutationFn,
   moveQuestionBookmarkMutationFn,
 } from '@lib/mutation/questionBookmarkMutation';
 import { handleError } from '@lib/utils/utils';
+import { apolloClient } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import { App } from 'antd';
@@ -18,6 +24,7 @@ import { useDispatch } from 'react-redux';
 import {
   MockExamQuestion,
   QuestionState,
+  ReadBookmarkedQuestionsInput,
   ReadQuestionsByExamIdsInput,
 } from 'types';
 import useQuestionFeedback, {
@@ -42,7 +49,6 @@ const useQuestions = () => {
   const dispatch = useDispatch();
 
   const [readQuestionsQuery] = useLazyReadQuestionsByExamIds();
-  const [editBookmarkMutaion] = useEditQuestionBookmark();
   const [changeQuestionState] = useChangeQuestionState();
 
   const {
@@ -68,6 +74,33 @@ const useQuestions = () => {
         dispatch(
           mockExamActions.setQuestions(
             res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
+          )
+        );
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const fetchBookmarkedQuestions = async (
+    input: ReadBookmarkedQuestionsInput,
+    fetchPolicy: FetchPolicy = 'network-only'
+  ) => {
+    try {
+      const res = await apolloClient.query<
+        ReadBookmarkedQuestionsQuery,
+        ReadBookmarkedQuestionsQueryVariables
+      >({
+        fetchPolicy,
+        query: READ_BOOKMARKED_QUESTIONS,
+        variables: {
+          input,
+        },
+      });
+      if (res.data?.readBookmarkedQuestions.questions) {
+        dispatch(
+          mockExamActions.setQuestions(
+            res.data.readBookmarkedQuestions.questions as MockExamQuestion[]
           )
         );
       }
@@ -267,6 +300,7 @@ const useQuestions = () => {
     resetQuestions,
     shuffleQuestions,
     filterQuestions,
+    fetchBookmarkedQuestions,
   };
 };
 

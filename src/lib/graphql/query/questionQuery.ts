@@ -11,37 +11,62 @@ export const READ_BOOKMARKED_QUESTIONS = gql`
       error
       ok
       questions {
-        ...FullQuestionIncludingExamIdParts
-        mockExamQuestionComment {
-          ...QusetionCommentParts
-        }
+        highScore
+        middleScore
+        lowScore
         mockExam {
+          id
           title
+          approved
+          isPrivate
+        }
+        user {
+          id
+        }
+        id
+        isBookmarked
+
+        myQuestionState
+        commentCount
+        number
+        question
+        question_img {
+          url
+          uid
+        }
+        solution
+        solution_img {
+          uid
+          url
+        }
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
         }
         mockExamQuestionFeedback {
-          id
-          content
-          type
-          user {
-            nickname
-            id
-          }
           recommendationCount {
-            good
             bad
+            good
           }
           myRecommedationStatus {
-            isGood
             isBad
+            isGood
           }
+          user {
+            id
+            nickname
+          }
+          id
+          type
+          content
           created_at
-          updated_at
         }
       }
     }
   }
-  ${FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT}
-  ${FULL_QUESTION_COMMENT_FRAGMENT}
 `;
 
 export const READ_QUESTIONS_BY_ID = gql`

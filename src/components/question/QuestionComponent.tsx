@@ -25,13 +25,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 }) => {
   const router = useRouter();
   const {
-    handleSaveBookmark,
     handleAddFeedback,
     handleEditFeedback,
     handleSaveQuestionState,
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
-    handleDeleteBookmark,
   } = useQuestion(questionQueryInput);
   const { data: question } = useQuery(
     getQuestionQueryOption({
@@ -77,8 +75,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
           <StudyQuestionBox
             hasQuestionLink={false}
             hasExamTitle={false}
-            deleteBookmark={handleDeleteBookmark}
-            saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}
             isVisibleImage={isAdmin}

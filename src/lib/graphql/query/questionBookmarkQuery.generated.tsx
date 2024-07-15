@@ -40,7 +40,7 @@ export type CreateQuestionBookmarkMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateQuestionBookmarkMutation = { __typename?: 'Mutation', createQuestionBookmark: { __typename?: 'CreateQuestionBookmarkOutput', error?: string | null, ok: boolean, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number } | null } };
+export type CreateQuestionBookmarkMutation = { __typename?: 'Mutation', createQuestionBookmark: { __typename?: 'CreateQuestionBookmarkOutput', error?: string | null, ok: boolean, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number } | null } | null } };
 
 export type DeleteQuestionBookmarkMutationVariables = Types.Exact<{
   input: Types.DeleteQuestionBookmarkInput;
@@ -125,6 +125,9 @@ export const CreateQuestionBookmarkDocument = gql`
     ok
     myBookmark {
       id
+      bookmarkFolder {
+        id
+      }
     }
   }
 }
