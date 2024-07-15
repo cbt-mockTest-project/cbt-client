@@ -6,6 +6,10 @@ import { Popconfirm } from 'antd';
 import BookmarkFolderSelect from './BookmarkFolderSelect';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { BOOKMARK_FOLDER_ID } from '@lib/constants/localStorage';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
 
 export type BookmarkChangeHandler = (active: boolean, folderId: number) => void;
 
@@ -17,6 +21,8 @@ interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Bookmark: React.FC<BookmarkProps> = (props) => {
+  const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
   const { isActive, onChangeBookmark, defaultFolderId, ...divProps } = props;
   const localStorage = new LocalStorage();
   const [selectedFolderId, setSelectedFolderId] = useState<number>(
@@ -36,6 +42,16 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
     setSelectedFolderId(folderId);
     localStorage.set(BOOKMARK_FOLDER_ID, folderId);
   };
+  if (!meQuery?.me?.user)
+    return (
+      <BookmarkBlock
+        onClick={() => {
+          dispatch(coreActions.openModal(loginModal));
+        }}
+      >
+        <BookmarkOutlined className="star-icon" />
+      </BookmarkBlock>
+    );
   return (
     <Popconfirm
       title={isActive ? '북마크 수정' : '북마크 추가'}

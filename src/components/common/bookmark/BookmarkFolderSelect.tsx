@@ -45,6 +45,7 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
           </>
         )}
         {...props}
+        value={options.find((option) => option.value === props.value)?.value}
         defaultValue={
           options.find((option) => option.value === props.defaultValue)?.value
         }
