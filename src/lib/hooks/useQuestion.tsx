@@ -22,6 +22,7 @@ import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
+import { HandleSaveBookmark } from './useQuestions';
 
 const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   const { message } = App.useApp();
@@ -43,7 +44,7 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
     handleUpdateFeedbackRecommendation: updateFeedbackRecommendation,
   } = useQuestionFeedback();
 
-  const handleSaveBookmark = async (question: MockExamQuestion) => {
+  const handleSaveBookmark: HandleSaveBookmark = async (question, folderId) => {
     try {
       if (!meQuery?.me.user) {
         dispatch(coreActions.openModal(loginModal));
@@ -61,6 +62,7 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
       message.error('북마크 저장에 실패했습니다.');
     }
   };
+  const handleDeleteBookmark = async (question: MockExamQuestion) => {};
 
   const handleSaveQuestionState = async (
     question: MockExamQuestion,
@@ -135,6 +137,7 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
     handleAddFeedback,
     handleSaveQuestionState,
     handleEditFeedback,
+    handleDeleteBookmark,
   };
 };
 

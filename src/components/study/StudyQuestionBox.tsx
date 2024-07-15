@@ -1,4 +1,6 @@
-import Bookmark from '@components/common/bookmark/Bookmark';
+import Bookmark, {
+  BookmarkChangeHandler,
+} from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -7,7 +9,10 @@ import { MockExamQuestion } from 'types';
 import useAuth from '@lib/hooks/useAuth';
 import { LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
-import useQuestions from '@lib/hooks/useQuestions';
+import useQuestions, {
+  HandleDeleteBookmark,
+  HandleSaveBookmark,
+} from '@lib/hooks/useQuestions';
 import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
@@ -90,7 +95,8 @@ const StudyQuestionBoxBlock = styled.div`
 `;
 
 interface StudyQuestionBoxProps {
-  saveBookmark: (question: MockExamQuestion) => void;
+  saveBookmark: HandleSaveBookmark;
+  deleteBookmark: HandleDeleteBookmark;
   questionNumber?: number;
   question: MockExamQuestion;
   className?: string;
@@ -111,6 +117,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   hasQuestionLink = true,
   onChangeIsFeedbackModalOpen,
   isVisibleImage = true,
+  deleteBookmark,
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
@@ -128,6 +135,15 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   //     handleUpdateUserCache({ hasBookmarkedBefore: true });
   //   }
   // };
+
+  const onChangeBookmark: BookmarkChangeHandler = (active, folderId) => {
+    if (active) {
+      saveBookmark(question, folderId || null);
+    }
+    if (!active) {
+      deleteBookmark(question);
+    }
+  };
 
   useEffect(() => {
     if (onChangeIsFeedbackModalOpen) {
@@ -174,11 +190,10 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             </a>
           )}
           <Bookmark
-            onBookmarkChange={(active, folderId) => {
-              console.log(active, folderId);
-            }}
+            onChangeBookmark={onChangeBookmark}
+            defaultFolderId={question?.myBookmark?.bookmarkFolder?.id}
             role="button"
-            defaultActive={!!question?.isBookmarked}
+            defaultActive={!!question?.myBookmark}
             className="study-question-box-bookmark"
           />
         </div>

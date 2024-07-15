@@ -1,55 +1,41 @@
 import React, { useState } from 'react';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import palette from '@styles/palette';
 import { BookmarkOutlined } from '@mui/icons-material';
-import { Popconfirm, Select } from 'antd';
-import { CheckCircleFilled } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
 import BookmarkFolderSelect from './BookmarkFolderSelect';
-import OuterClick from '../outerClick/OuterClick';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { BOOKMARK_FOLDER_ID } from '@lib/constants/localStorage';
 
+export type BookmarkChangeHandler = (active: boolean, folderId: number) => void;
+
 interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultActive: boolean;
+  defaultFolderId?: number;
   className?: string;
-  onBookmarkChange?: (active: boolean, folderId: number) => void;
+  onChangeBookmark?: BookmarkChangeHandler;
 }
 
 const Bookmark: React.FC<BookmarkProps> = (props) => {
-  const { defaultActive, onBookmarkChange, ...divProps } = props;
+  const { defaultActive, onChangeBookmark, defaultFolderId, ...divProps } =
+    props;
   const [active, setActive] = useState(defaultActive);
   const [selectedFolderId, setSelectedFolderId] = useState<number>(0);
   const localStorage = new LocalStorage();
   const onConfirm = () => {
-    if (active) {
-      setActive(true);
-      onBookmarkChange?.(true, selectedFolderId);
-      // 수정
-    }
-    if (!active) {
-      setActive(true);
-      // 추가
-    }
+    setActive(true);
+    onChangeBookmark?.(true, selectedFolderId);
   };
 
   const onCancel = () => {
-    if (active) {
-      // 삭제
-      setActive(false);
-      onBookmarkChange?.(false, selectedFolderId);
-    }
-    if (!active) {
-      // 수정
-      setActive(true);
-      onBookmarkChange?.(true, selectedFolderId);
-    }
+    setActive(false);
+    onChangeBookmark?.(false, selectedFolderId);
   };
 
   const onChangeFolder = (folderId: number) => {
     setSelectedFolderId(folderId);
     localStorage.set(BOOKMARK_FOLDER_ID, folderId);
   };
-
   return (
     <Popconfirm
       title={active ? '북마크 수정' : '북마크 추가'}
@@ -58,7 +44,11 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
       description={
         <BookmarkFolderSelect
           size="large"
-          defaultValue={localStorage.get(BOOKMARK_FOLDER_ID) || 0}
+          defaultValue={
+            defaultActive
+              ? defaultFolderId || 0
+              : localStorage.get(BOOKMARK_FOLDER_ID) || 0
+          }
           onChange={onChangeFolder}
         />
       }
@@ -70,7 +60,13 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
       onConfirm={onConfirm}
       onCancel={onCancel}
     >
-      <BookmarkBlock {...divProps}>
+      <BookmarkBlock
+        {...divProps}
+        onClick={(e) => {
+          e.stopPropagation();
+          props.onClick?.(e);
+        }}
+      >
         {active ? (
           <BookmarkOutlined className="star-icon active" />
         ) : (

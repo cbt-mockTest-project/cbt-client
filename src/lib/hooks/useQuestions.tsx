@@ -5,6 +5,11 @@ import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import {
+  createQuestionBookmarkMutationFn,
+  deleteQuestionBookmarkMutationFn,
+  moveQuestionBookmarkMutationFn,
+} from '@lib/mutation/questionBookmarkMutation';
 import { handleError } from '@lib/utils/utils';
 import { coreActions } from '@modules/redux/slices/core';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
@@ -21,6 +26,15 @@ import useQuestionFeedback, {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from './useQuestionFeedback';
+
+export type HandleSaveBookmark = (
+  question: MockExamQuestion,
+  folderId: number | null
+) => Promise<void>;
+
+export type HandleDeleteBookmark = (
+  question: MockExamQuestion
+) => Promise<void>;
 
 const useQuestions = () => {
   const { message } = App.useApp();
@@ -62,27 +76,78 @@ const useQuestions = () => {
     }
   };
 
-  const saveBookmark = async (question: MockExamQuestion) => {
+  const saveBookmark: HandleSaveBookmark = async (question, folderId) => {
     try {
       if (!meQuery?.me.user) {
         dispatch(coreActions.openModal(loginModal));
         return;
       }
-      const newQuestion = {
-        ...question,
-        isBookmarked: !question.isBookmarked,
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      await editBookmarkMutaion({
-        variables: {
-          input: {
-            questionId: question.id,
-          },
-        },
-      });
+
+      if (question.myBookmark) {
+        const res = await moveQuestionBookmarkMutationFn({
+          bookmarkId: question.myBookmark.id,
+          bookmarkFolderId: folderId,
+        });
+        if (res.data.moveQuestionBookmark) {
+          const newQuestion = {
+            ...question,
+            myBookmark: {
+              ...question.myBookmark,
+              bookmarkFolder: {
+                id: folderId,
+              },
+            },
+          };
+          dispatch(
+            mockExamActions.setQuestion(
+              newQuestion as unknown as MockExamQuestion
+            )
+          );
+        }
+      } else {
+        const res = await createQuestionBookmarkMutationFn({
+          questionId: question.id,
+          questionBookmarkFolderId: folderId,
+        });
+        if (res.data.createQuestionBookmark) {
+          const newQuestion = {
+            ...question,
+            myBookmark: res.data.createQuestionBookmark.myBookmark,
+            isBookmarked: true,
+          };
+          dispatch(
+            mockExamActions.setQuestion(
+              newQuestion as unknown as MockExamQuestion
+            )
+          );
+        }
+      }
     } catch {
       dispatch(mockExamActions.setQuestion(question));
       message.error('북마크 저장에 실패했습니다.');
+    }
+  };
+
+  const deleteBookmark: HandleDeleteBookmark = async (
+    question: MockExamQuestion
+  ) => {
+    try {
+      if (!question.myBookmark) {
+        message.error('북마크가 존재하지 않습니다.');
+        return;
+      }
+      const newQuestion = {
+        ...question,
+        myBookmark: null,
+        isBookmarked: false,
+      };
+      dispatch(mockExamActions.setQuestion(newQuestion));
+      await deleteQuestionBookmarkMutationFn({
+        questionBookmarkId: question.myBookmark.id,
+      });
+    } catch {
+      dispatch(mockExamActions.setQuestion(question));
+      message.error('북마크 삭제에 실패했습니다.');
     }
   };
 
@@ -192,6 +257,7 @@ const useQuestions = () => {
     setServerSideQuestions,
     setQuestions,
     saveBookmark,
+    deleteBookmark,
     fetchQuestions,
     saveQuestionState,
     deleteFeedback,

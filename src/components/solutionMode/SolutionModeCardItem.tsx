@@ -50,6 +50,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
     updateFeedbackRecommendation,
     saveQuestionState,
     saveBookmark,
+    deleteBookmark,
   } = useQuestions();
 
   const serverQuestion = useAppSelector((state) =>
@@ -87,6 +88,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             questionNumber={index + 1}
             question={question}
             saveBookmark={saveBookmark}
+            deleteBookmark={deleteBookmark}
           />
         </div>
       </BasicCard>

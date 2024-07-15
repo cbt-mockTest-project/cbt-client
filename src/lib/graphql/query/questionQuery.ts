@@ -292,6 +292,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         }
         id
         isBookmarked
+
         myQuestionState
         commentCount
         number
@@ -304,6 +305,13 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         solution_img {
           uid
           url
+        }
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
         }
         mockExamQuestionFeedback {
           recommendationCount {

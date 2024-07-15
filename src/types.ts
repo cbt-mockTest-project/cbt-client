@@ -528,6 +528,7 @@ export type CreateQuestionBookmarkInput = {
 export type CreateQuestionBookmarkOutput = {
   __typename?: 'CreateQuestionBookmarkOutput';
   error?: Maybe<Scalars['String']>;
+  myBookmark?: Maybe<MockExamQuestionBookmark>;
   ok: Scalars['Boolean'];
 };
 
@@ -1810,6 +1811,7 @@ export type MockExamQuestion = {
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   multipleChoice: Array<MockExamQuestionMultipleChoice>;
+  myBookmark?: Maybe<MockExamQuestionBookmark>;
   myQuestionState?: Maybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: Maybe<ObjectiveData>;
@@ -1953,6 +1955,7 @@ export type MockExamQuestionInputType = {
   mockExamQuestionComment: Array<MockExamQuestionCommentInputType>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedbackInputType>;
   multipleChoice: Array<MockExamQuestionMultipleChoiceInputType>;
+  myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
   myQuestionState?: InputMaybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -2043,7 +2046,7 @@ export type MoveExamOrderOutput = {
 };
 
 export type MoveQuestionBookmarkInput = {
-  bookmarkFolderId: Scalars['Float'];
+  bookmarkFolderId?: InputMaybe<Scalars['Float']>;
   bookmarkId: Scalars['Float'];
 };
 
@@ -2823,6 +2826,7 @@ export type PartialMockExamQuestionInput = {
   mockExamQuestionComment?: InputMaybe<Array<MockExamQuestionCommentInputType>>;
   mockExamQuestionFeedback?: InputMaybe<Array<MockExamQuestionFeedbackInputType>>;
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
+  myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;

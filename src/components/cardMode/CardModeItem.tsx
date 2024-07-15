@@ -13,6 +13,10 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
+import {
+  HandleDeleteBookmark,
+  HandleSaveBookmark,
+} from '@lib/hooks/useQuestions';
 
 const CardModeItemBlock = styled.div`
   .card-basic-wrapper {
@@ -83,7 +87,8 @@ interface CardModeItemProps {
     question,
     feedback,
   }: Omit<UpdateFeedbackRecommendationInput, 'setQuestion'>) => Promise<void>;
-  handleSaveBookmark: (question: MockExamQuestion) => Promise<void>;
+  handleSaveBookmark: HandleSaveBookmark;
+  handleDeleteBookmark: HandleDeleteBookmark;
   handleSaveQuestionState: (
     question: MockExamQuestion,
     state: QuestionState
@@ -99,6 +104,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
   handleUpdateFeedbackRecommendation,
   handleSaveBookmark,
   handleSaveQuestionState,
+  handleDeleteBookmark,
   number,
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -112,6 +118,7 @@ const CardModeItem: React.FC<CardModeItemProps> = ({
           <BasicCard className="card-basic-wrapper" type="primary">
             <div className="card-container">
               <StudyQuestionBox
+                deleteBookmark={handleDeleteBookmark}
                 className="study-question-box"
                 question={question}
                 saveBookmark={handleSaveBookmark}

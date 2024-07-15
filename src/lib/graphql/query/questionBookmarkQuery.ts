@@ -68,6 +68,12 @@ export const CREATE_QUESTION_BOOKMARK = gql`
     createQuestionBookmark(input: $input) {
       error
       ok
+      myBookmark {
+        id
+        bookmarkFolder {
+          id
+        }
+      }
     }
   }
 `;

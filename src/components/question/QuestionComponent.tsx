@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useQuestion from '@lib/hooks/useQuestion';
-import { MockExamQuestion, ReadMockExamQuestionInput, UserRole } from 'types';
+import { ReadMockExamQuestionInput, UserRole } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import { Button, Skeleton } from 'antd';
-import useAuth from '@lib/hooks/useAuth';
 import Link from 'next/link';
-import { removeHtmlTag } from '@lib/utils/utils';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -32,6 +30,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     handleSaveQuestionState,
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
+    handleDeleteBookmark,
   } = useQuestion(questionQueryInput);
   const { data: question } = useQuery(
     getQuestionQueryOption({
@@ -73,6 +72,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
           <StudyQuestionBox
             hasQuestionLink={false}
             hasExamTitle={false}
+            deleteBookmark={handleDeleteBookmark}
             saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}

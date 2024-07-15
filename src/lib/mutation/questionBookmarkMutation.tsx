@@ -16,11 +16,27 @@ import { apolloClient } from '@modules/apollo';
 import { useMutation } from '@tanstack/react-query';
 import {
   CreateQuestionBookmarkFolderInput,
+  CreateQuestionBookmarkInput,
   DeleteQuestionBookmarkFolderInput,
+  DeleteQuestionBookmarkInput,
+  MoveQuestionBookmarkInput,
   UpdateQuestionBookmarkFolderInput,
 } from 'types';
 import { queryClient } from '../../../pages/_app';
 import { App } from 'antd';
+import {
+  CreateQuestionBookmarkMutation,
+  CreateQuestionBookmarkMutationVariables,
+  DeleteQuestionBookmarkMutation,
+  DeleteQuestionBookmarkMutationVariables,
+  MoveQuestionBookmarkMutation,
+  MoveQuestionBookmarkMutationVariables,
+} from '@lib/graphql/query/questionBookmarkQuery.generated';
+import {
+  CREATE_QUESTION_BOOKMARK,
+  DELETE_QUESTION_BOOKMARK,
+  MOVE_QUESTION_BOOKMARK,
+} from '@lib/graphql/query/questionBookmarkQuery';
 
 export const createQuestionBookmarkFolderMutationFn = (
   input: CreateQuestionBookmarkFolderInput
@@ -56,6 +72,45 @@ export const deleteQuestionBookmarkFolderMutationFn = (
     DeleteQuestionBookmarkFolderMutationVariables
   >({
     mutation: DELETE_QUESTION_BOOKMARK_FOLDER,
+    variables: {
+      input,
+    },
+  });
+
+export const deleteQuestionBookmarkMutationFn = (
+  input: DeleteQuestionBookmarkInput
+) =>
+  apolloClient.mutate<
+    DeleteQuestionBookmarkMutation,
+    DeleteQuestionBookmarkMutationVariables
+  >({
+    mutation: DELETE_QUESTION_BOOKMARK,
+    variables: {
+      input,
+    },
+  });
+
+export const createQuestionBookmarkMutationFn = (
+  input: CreateQuestionBookmarkInput
+) =>
+  apolloClient.mutate<
+    CreateQuestionBookmarkMutation,
+    CreateQuestionBookmarkMutationVariables
+  >({
+    mutation: CREATE_QUESTION_BOOKMARK,
+    variables: {
+      input,
+    },
+  });
+
+export const moveQuestionBookmarkMutationFn = (
+  input: MoveQuestionBookmarkInput
+) =>
+  apolloClient.mutate<
+    MoveQuestionBookmarkMutation,
+    MoveQuestionBookmarkMutationVariables
+  >({
+    mutation: MOVE_QUESTION_BOOKMARK,
     variables: {
       input,
     },
