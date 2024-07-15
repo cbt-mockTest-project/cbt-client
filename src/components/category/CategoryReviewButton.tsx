@@ -37,8 +37,7 @@ const CategoryReviewButton: React.FC<CategoryReviewButtonProps> = ({
 }) => {
   const [isCategoryReviewModalOpen, setIsCategoryReviewModalOpen] =
     useState(false);
-  const { scoreAverage, scoreCount, myEvaluation, categoryEvaluations } =
-    useCategoryEvaluation(categoryId);
+  const { scoreAverage, scoreCount } = useCategoryEvaluation(categoryId);
   return (
     <>
       <CategoryReviewButtonBlock

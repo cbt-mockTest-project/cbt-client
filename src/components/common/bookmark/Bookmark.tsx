@@ -18,8 +18,10 @@ interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Bookmark: React.FC<BookmarkProps> = (props) => {
   const { isActive, onChangeBookmark, defaultFolderId, ...divProps } = props;
-  const [selectedFolderId, setSelectedFolderId] = useState<number>(0);
   const localStorage = new LocalStorage();
+  const [selectedFolderId, setSelectedFolderId] = useState<number>(
+    isActive ? defaultFolderId || 0 : localStorage.get(BOOKMARK_FOLDER_ID) || 0
+  );
   const onConfirm = () => {
     onChangeBookmark?.(true, selectedFolderId);
   };
@@ -42,11 +44,7 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
       description={
         <BookmarkFolderSelect
           size="large"
-          defaultValue={
-            isActive
-              ? defaultFolderId || 0
-              : localStorage.get(BOOKMARK_FOLDER_ID) || 0
-          }
+          value={selectedFolderId}
           onChange={onChangeFolder}
         />
       }
