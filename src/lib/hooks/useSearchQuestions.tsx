@@ -16,9 +16,10 @@ import {
   deleteQuestionBookmarkMutationFn,
   moveQuestionBookmarkMutationFn,
 } from '@lib/mutation/questionBookmarkMutation';
-import { message } from 'antd';
+import { App, message } from 'antd';
 
 const useSearchQuestions = () => {
+  const { message } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -70,6 +71,7 @@ const useSearchQuestions = () => {
           message.error(res.data.moveQuestionBookmark.error);
           return;
         }
+        message.success('북마크 이동 완료');
       } else {
         const res = await createQuestionBookmarkMutationFn({
           questionId: question.id,
@@ -79,6 +81,7 @@ const useSearchQuestions = () => {
           message.error(res.data.createQuestionBookmark.error);
           return;
         }
+        message.success('북마크 저장 완료');
         refetch();
       }
     } catch {
@@ -99,6 +102,7 @@ const useSearchQuestions = () => {
         message.error(res.data.deleteQuestionBookmark.error);
         return;
       }
+      message.success('북마크 삭제 완료');
       refetch();
     } catch {
       message.error('북마크 삭제에 실패했습니다.');

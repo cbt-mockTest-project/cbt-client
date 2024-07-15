@@ -135,6 +135,7 @@ const useQuestions = () => {
               newQuestion as unknown as MockExamQuestion
             )
           );
+          message.success('북마크 이동 완료');
           return;
         }
         message.error(res.data.moveQuestionBookmark.error);
@@ -155,6 +156,7 @@ const useQuestions = () => {
               newQuestion as unknown as MockExamQuestion
             )
           );
+          message.success('북마크 저장 완료');
           return;
         }
         message.error(res.data.createQuestionBookmark.error);
@@ -183,6 +185,7 @@ const useQuestions = () => {
           isBookmarked: false,
         };
         dispatch(mockExamActions.setQuestion(newQuestion));
+        message.success('북마크 삭제 완료');
         return;
       }
       message.error(res.data.deleteQuestionBookmark.error);
