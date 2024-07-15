@@ -45,6 +45,7 @@ const BookmarkFolderManageModal: React.FC<BookmarkFolderManageModalProps> = (
       {data?.readQuestionBookmarkFolders.folders.map((folder) => (
         <BookmarkFolderItem
           key={folder.id}
+          folderId={folder.id}
           defaultName={folder.name}
           onDelete={() => onDelete(folder.id)}
           onEdit={(name) => onEdit(folder.id, name)}

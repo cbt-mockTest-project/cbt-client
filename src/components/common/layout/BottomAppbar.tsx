@@ -75,7 +75,7 @@ const BottomAppbar: React.FC<BottomAppbarProps> = ({ className }) => {
         <span
           className={`bottom-app-bar-item-text ${isRecordPage && 'active'}`}
         >
-          기록
+          북마크
         </span>
       </button>
       <button

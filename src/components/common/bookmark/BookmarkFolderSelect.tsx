@@ -36,6 +36,7 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
             {menu}
             <Divider style={{ margin: '8px 0' }} />
             <Button
+              size="large"
               className="w-full"
               onClick={() => setBookmarkFolderManageModalOpen(true)}
             >
@@ -44,6 +45,9 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
           </>
         )}
         {...props}
+        defaultValue={
+          options.find((option) => option.value === props.defaultValue)?.value
+        }
       />
       <BookmarkFolderManageModal
         open={bookmarkFolderManageModalOpen}

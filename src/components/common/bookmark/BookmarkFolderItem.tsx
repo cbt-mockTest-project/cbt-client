@@ -1,4 +1,5 @@
 import { useCreateQuestionBookmarkFolderMutation } from '@lib/mutation/questionBookmarkMutation';
+import { responsive } from '@lib/utils/responsive';
 import { Button, Input } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -11,6 +12,10 @@ const BookmarkFolderItemBlock = styled.div`
   button {
     color: ${({ theme }) => theme.color('colorTextTertiary')};
   }
+  @media (max-width: ${responsive.lsmall}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
   .bookmark-folder-item-title {
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -18,6 +23,11 @@ const BookmarkFolderItemBlock = styled.div`
     overflow: hidden;
     padding: 10px 0px;
     width: 100%;
+    @media (max-width: ${responsive.lsmall}) {
+      span {
+        padding-left: 12px;
+      }
+    }
   }
   .bookmark-folder-item-actions {
     flex-shrink: 0;
@@ -26,12 +36,14 @@ const BookmarkFolderItemBlock = styled.div`
 
 interface BookmarkFolderItemProps {
   defaultName: string;
+  folderId: number;
   onDelete: () => void;
   onEdit: (name: string) => void;
 }
 
 const BookmarkFolderItem: React.FC<BookmarkFolderItemProps> = ({
   defaultName,
+  folderId,
   onDelete,
   onEdit,
 }) => {
@@ -45,6 +57,9 @@ const BookmarkFolderItem: React.FC<BookmarkFolderItemProps> = ({
       setIsEditing(true);
     }
   };
+  const onClickMoveButton = () => {
+    window.open(`/me/bookmark?folderId=${folderId}`, '_blank', 'noreferrer');
+  };
   return (
     <BookmarkFolderItemBlock>
       <div className="bookmark-folder-item-title">
@@ -55,15 +70,18 @@ const BookmarkFolderItem: React.FC<BookmarkFolderItemProps> = ({
             onChange={(e) => setName(e.target.value)}
           />
         ) : (
-          name
+          <span>{name}</span>
         )}
       </div>
       <div className="bookmark-folder-item-actions">
         <Button type="text" onClick={onClickEditButton}>
-          수정
+          {isEditing ? '저장' : '수정'}
         </Button>
         <Button type="text" onClick={onDelete}>
           삭제
+        </Button>
+        <Button type="text" onClick={onClickMoveButton}>
+          이동
         </Button>
       </div>
     </BookmarkFolderItemBlock>

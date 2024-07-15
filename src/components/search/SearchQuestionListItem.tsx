@@ -7,9 +7,12 @@ import { MockExamQuestion } from 'types';
 import parse from 'html-react-parser';
 import palette from '@styles/palette';
 import { EditFilled, LinkOutlined } from '@ant-design/icons';
-import Bookmark from '@components/common/bookmark/Bookmark';
+import Bookmark, {
+  BookmarkChangeHandler,
+} from '@components/common/bookmark/Bookmark';
 import Link from 'next/link';
 import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox copy';
+import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 
 const SearchQuestionListItemBlock = styled.div`
   .search-question {
@@ -57,14 +60,21 @@ const SearchQuestionListItemBlock = styled.div`
 interface SearchQuestionListItemProps {
   question: MockExamQuestion;
   hasEditButton: boolean;
-  onClickBookmark?: () => void;
 }
 
 const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
   question,
   hasEditButton,
-  onClickBookmark,
 }) => {
+  const { saveBookmark, deleteBookmark } = useSearchQuestions();
+  const onChangeBookmark: BookmarkChangeHandler = (active, folderId) => {
+    if (active) {
+      saveBookmark(question, folderId || null);
+    }
+    if (!active) {
+      deleteBookmark(question);
+    }
+  };
   return (
     <SearchQuestionListItemBlock>
       <BasicBox className="search-question-box" maxHeight={1000}>
@@ -100,12 +110,10 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
                 <EditFilled className="search-question-tool-edit-icon" />
               </Link>
             )}
-            {onClickBookmark && (
-              <Bookmark
-                defaultActive={question.isBookmarked}
-                onClick={onClickBookmark}
-              />
-            )}
+            <Bookmark
+              isActive={question.isBookmarked}
+              onChangeBookmark={onChangeBookmark}
+            />
           </div>
         </div>
       </BasicBox>

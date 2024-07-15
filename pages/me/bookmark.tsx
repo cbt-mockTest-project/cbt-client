@@ -10,7 +10,7 @@ const MyBookmark: NextPage<MyBookmarkProps> = () => {
   return (
     <>
       <WithHead
-        title="기록 페이지 | 모두CBT"
+        title="문제 북마크 페이지 | 모두CBT"
         pageHeadingTitle="모두CBT 기록 페이지"
       />
       <MyBookmarkQuestionComponent />

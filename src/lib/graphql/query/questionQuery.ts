@@ -278,6 +278,13 @@ export const SEARCH_QEUSTIONS = gql`
         solution
         number
         isBookmarked
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
+        }
         user {
           id
           nickname

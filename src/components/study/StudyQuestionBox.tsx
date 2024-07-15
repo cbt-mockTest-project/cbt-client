@@ -184,7 +184,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               onChangeBookmark={onChangeBookmark}
               defaultFolderId={question?.myBookmark?.bookmarkFolder?.id}
               role="button"
-              defaultActive={!!question?.myBookmark}
+              isActive={!!question?.myBookmark}
               className="study-question-box-bookmark"
             />
           )}

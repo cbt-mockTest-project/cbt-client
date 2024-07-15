@@ -10,25 +10,21 @@ import { BOOKMARK_FOLDER_ID } from '@lib/constants/localStorage';
 export type BookmarkChangeHandler = (active: boolean, folderId: number) => void;
 
 interface BookmarkProps extends React.HTMLAttributes<HTMLDivElement> {
-  defaultActive: boolean;
+  isActive: boolean;
   defaultFolderId?: number;
   className?: string;
   onChangeBookmark?: BookmarkChangeHandler;
 }
 
 const Bookmark: React.FC<BookmarkProps> = (props) => {
-  const { defaultActive, onChangeBookmark, defaultFolderId, ...divProps } =
-    props;
-  const [active, setActive] = useState(defaultActive);
+  const { isActive, onChangeBookmark, defaultFolderId, ...divProps } = props;
   const [selectedFolderId, setSelectedFolderId] = useState<number>(0);
   const localStorage = new LocalStorage();
   const onConfirm = () => {
-    setActive(true);
     onChangeBookmark?.(true, selectedFolderId);
   };
 
   const onCancel = () => {
-    setActive(false);
     onChangeBookmark?.(false, selectedFolderId);
   };
 
@@ -38,14 +34,14 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   };
   return (
     <Popconfirm
-      title={active ? '북마크 수정' : '북마크 추가'}
-      okText={active ? '수정' : '추가'}
-      cancelText={active ? '삭제' : '취소'}
+      title={isActive ? '북마크 수정' : '북마크 추가'}
+      okText={isActive ? '수정' : '추가'}
+      cancelText={isActive ? '삭제' : '취소'}
       description={
         <BookmarkFolderSelect
           size="large"
           defaultValue={
-            defaultActive
+            isActive
               ? defaultFolderId || 0
               : localStorage.get(BOOKMARK_FOLDER_ID) || 0
           }
@@ -67,7 +63,7 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
           props.onClick?.(e);
         }}
       >
-        {active ? (
+        {isActive ? (
           <BookmarkOutlined className="star-icon active" />
         ) : (
           <BookmarkOutlined className="star-icon" />

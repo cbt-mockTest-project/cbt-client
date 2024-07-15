@@ -4,8 +4,11 @@ import { ExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { QuestionState, ReadQuestionsByExamIdsInput } from 'types';
-import FullPageLoader from '@components/common/loader/FullPageLoader';
+import {
+  QuestionState,
+  ReadBookmarkedQuestionsInput,
+  ReadQuestionsByExamIdsInput,
+} from 'types';
 import StudyPaymentGuard from './StudyPaymentGuard';
 import StudyHeaderV2 from './StudyHeaderV2';
 import { responsive } from '@lib/utils/responsive';
@@ -58,7 +61,8 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   const { data: meQuery } = useMeQuery();
   const [isFetchedQuestions, setIsFetchedQuestions] = useState(false);
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
-  const { fetchQuestions, resetQuestions } = useQuestions();
+  const { fetchQuestions, fetchBookmarkedQuestions, resetQuestions } =
+    useQuestions();
 
   const [questionsQueryInput, setQuestionsQueryInput] =
     useState<ReadQuestionsByExamIdsInput | null>(null);
@@ -72,10 +76,22 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     examId,
     bookmarked,
     categoryId,
+    folderId,
   } = router.query;
   useEffect(() => {
     setFetchQuestionsLoading(true);
     if (!router.isReady) return;
+    if (bookmarked === 'true') {
+      const input: ReadBookmarkedQuestionsInput = {
+        order: order as string,
+        limit: Number(limit),
+        folderId: Number(folderId),
+      };
+      fetchBookmarkedQuestions(input).then(() => {
+        setIsFetchedQuestions(true);
+      });
+      return;
+    }
     if (examId) {
       const input: ReadQuestionsByExamIdsInput = {
         order: 'normal',
@@ -199,7 +215,6 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     categoryId,
   ]);
 
-  if (!questionsQueryInput || !mode) return null;
   if (fetchQuestionsLoading)
     return (
       <Portal>

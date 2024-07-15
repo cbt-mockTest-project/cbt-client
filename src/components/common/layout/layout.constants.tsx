@@ -13,7 +13,10 @@ import {
   YoutubeOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { AdminPanelSettingsOutlined } from '@mui/icons-material';
+import {
+  AdminPanelSettingsOutlined,
+  BookmarkOutlined,
+} from '@mui/icons-material';
 export const navItems = [
   {
     key: '/modu-storage',
@@ -56,9 +59,9 @@ export const navItems = [
     label: '내 정보',
   },
   {
-    key: '/me/history',
-    icon: <HistoryOutlined />,
-    label: '기록',
+    key: '/me/bookmark',
+    icon: <BookmarkOutlined />,
+    label: '북마크',
   },
 ];
 

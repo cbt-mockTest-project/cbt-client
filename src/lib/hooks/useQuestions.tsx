@@ -1,7 +1,6 @@
 import { FetchPolicy, WatchQueryFetchPolicy } from '@apollo/client';
 import { loginModal } from '@lib/constants';
 import { useLazyReadQuestionsByExamIds } from '@lib/graphql/hook/useExamQuestion';
-import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
 
 import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
@@ -121,7 +120,7 @@ const useQuestions = () => {
           bookmarkId: question.myBookmark.id,
           bookmarkFolderId: folderId,
         });
-        if (res.data.moveQuestionBookmark) {
+        if (res.data.moveQuestionBookmark.ok) {
           const newQuestion = {
             ...question,
             myBookmark: {
@@ -136,13 +135,16 @@ const useQuestions = () => {
               newQuestion as unknown as MockExamQuestion
             )
           );
+          return;
         }
+        message.error(res.data.moveQuestionBookmark.error);
+        return;
       } else {
         const res = await createQuestionBookmarkMutationFn({
           questionId: question.id,
           questionBookmarkFolderId: folderId,
         });
-        if (res.data.createQuestionBookmark) {
+        if (res.data.createQuestionBookmark.ok) {
           const newQuestion = {
             ...question,
             myBookmark: res.data.createQuestionBookmark.myBookmark,
@@ -153,10 +155,12 @@ const useQuestions = () => {
               newQuestion as unknown as MockExamQuestion
             )
           );
+          return;
         }
+        message.error(res.data.createQuestionBookmark.error);
+        return;
       }
     } catch {
-      dispatch(mockExamActions.setQuestion(question));
       message.error('북마크 저장에 실패했습니다.');
     }
   };
@@ -169,17 +173,21 @@ const useQuestions = () => {
         message.error('북마크가 존재하지 않습니다.');
         return;
       }
-      const newQuestion = {
-        ...question,
-        myBookmark: null,
-        isBookmarked: false,
-      };
-      dispatch(mockExamActions.setQuestion(newQuestion));
-      await deleteQuestionBookmarkMutationFn({
+      const res = await deleteQuestionBookmarkMutationFn({
         questionBookmarkId: question.myBookmark.id,
       });
+      if (res.data.deleteQuestionBookmark.ok) {
+        const newQuestion = {
+          ...question,
+          myBookmark: null,
+          isBookmarked: false,
+        };
+        dispatch(mockExamActions.setQuestion(newQuestion));
+        return;
+      }
+      message.error(res.data.deleteQuestionBookmark.error);
+      return;
     } catch {
-      dispatch(mockExamActions.setQuestion(question));
       message.error('북마크 삭제에 실패했습니다.');
     }
   };

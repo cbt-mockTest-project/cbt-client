@@ -2148,6 +2148,7 @@ export type Mutation = {
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
   resetMyQuestionBookmarks: ResetMyQuestionBookmarksOutput;
+  resetQuestionBookmark: ResetQuestionBookmarkOutput;
   restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
@@ -2611,6 +2612,11 @@ export type MutationResetMyExamQuestionStateArgs = {
 
 export type MutationResetMyQuestionBookmarksArgs = {
   input: ResetMyQuestionBookmarksInput;
+};
+
+
+export type MutationResetQuestionBookmarkArgs = {
+  input: ResetQuestionBookmarkInput;
 };
 
 
@@ -3586,6 +3592,8 @@ export type ReadAllQuestionsOutput = {
 
 export type ReadBookmarkedQuestionsInput = {
   folderId?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  order?: Scalars['String'];
 };
 
 export type ReadBookmarkedQuestionsOutput = {
@@ -3983,6 +3991,16 @@ export type ResetMyQuestionBookmarksInput = {
 
 export type ResetMyQuestionBookmarksOutput = {
   __typename?: 'ResetMyQuestionBookmarksOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type ResetQuestionBookmarkInput = {
+  questionBookmarkFolderId: Scalars['Float'];
+};
+
+export type ResetQuestionBookmarkOutput = {
+  __typename?: 'ResetQuestionBookmarkOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };

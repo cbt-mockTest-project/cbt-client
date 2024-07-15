@@ -17,6 +17,7 @@ import {
   PUBLIC_CATEGORY_ID,
   PUBLIC_EXAM_ID,
 } from '@lib/constants/sessionStorage';
+import { shallowEqual } from 'react-redux';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -47,14 +48,14 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       state.mockExam.serverSideQuestions?.length
         ? state.mockExam.serverSideQuestions.map((question) => question.id)
         : [],
-    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
+    shallowEqual
   );
   const clientSideQuestionIds = useAppSelector(
     (state) =>
       state.mockExam.questions?.length
         ? state.mockExam.questions.map((question) => question.id)
         : [],
-    (prev, next) => JSON.stringify(prev) === JSON.stringify(next)
+    shallowEqual
   );
   const questionIds = useMemo(() => {
     if (isStaticPage) {
