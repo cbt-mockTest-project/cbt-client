@@ -16,8 +16,8 @@ const SearchQuestionListBlock = styled.div`
 interface SearchQuestionListProps {}
 
 const SearchQuestionList: React.FC<SearchQuestionListProps> = () => {
-  const { user, handleCheckLogin } = useAuth();
-  const { questions, isLoading, toogleQuestionBookmark } = useSearchQuestions();
+  const { user } = useAuth();
+  const { questions, isLoading } = useSearchQuestions();
 
   return (
     <SearchQuestionListBlock>
@@ -26,12 +26,6 @@ const SearchQuestionList: React.FC<SearchQuestionListProps> = () => {
           key={question.id}
           question={question as MockExamQuestion}
           hasEditButton={user?.id === question.user?.id}
-          onClickBookmark={() => {
-            if (!handleCheckLogin()) return;
-            toogleQuestionBookmark({
-              questionId: question.id,
-            });
-          }}
         />
       ))}
       {isLoading && <Skeleton active />}

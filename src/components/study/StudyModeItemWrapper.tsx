@@ -1,12 +1,10 @@
 import CardModeItem from '@components/cardMode/CardModeItem';
 import TypingModeItem from '@components/typingMode/TypingModeItem';
-import useHandleQuestion from '@lib/hooks/useHandleQuestion';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { MockExamQuestion } from 'types';
 
 const StudyModeItemWrapperBlock = styled.div``;
 
@@ -31,6 +29,7 @@ const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
     editFeedback,
     updateFeedbackRecommendation,
     saveBookmark,
+    deleteBookmark,
     saveQuestionState,
   } = useQuestions();
 
@@ -44,6 +43,7 @@ const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
           handleEditFeedback={editFeedback}
           handleUpdateFeedbackRecommendation={updateFeedbackRecommendation}
           handleSaveBookmark={saveBookmark}
+          handleDeleteBookmark={deleteBookmark}
           handleSaveQuestionState={saveQuestionState}
           number={number}
         />
@@ -57,6 +57,7 @@ const StudyModeItemWrapper: React.FC<StudyModeItemWrapperProps> = ({
           handleEditFeedback={editFeedback}
           handleUpdateFeedbackRecommendation={updateFeedbackRecommendation}
           handleSaveBookmark={saveBookmark}
+          handleDeleteBookmark={deleteBookmark}
           handleSaveQuestionState={saveQuestionState}
           clearTextAreaTrigger={false}
           number={number}

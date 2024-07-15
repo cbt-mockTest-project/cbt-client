@@ -144,25 +144,36 @@ const Globalstyles = createGlobalStyle`
         white-space: pre-wrap !important;
       }
 
-  /* .ant-modal-content {
-    background: #1F1F1F !important;
-    color : rgba(255, 255, 255, 0.85) !important;;
-  }
-  .ant-modal-confirm-title, .ant-modal-confirm-content {
-    color : rgba(255, 255, 255, 0.85) !important;;
-  }
-  .ant-message-notice-content {
-    background: #1F1F1F !important;
-    color : rgba(255, 255, 255, 0.85) !important;;
-  }
-  .ant-btn-default {
-    background-color: #141414;
-    border-color: #424242;
-    color: #FFFFFFD9;
-  } */
+
   a {
     :hover{
       color : unset ;
+    }
+  }
+
+  .bookmark-popconfirm {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: ${({ theme }) =>
+      theme.color('colorPrimaryBg')} !important;
+    .ant-popconfirm-message, .ant-popconfirm-message-text {
+      width: 100% !important;
+
+    }
+    .ant-popover-content {
+      background-color: ${({ theme }) =>
+        theme.color('colorPrimaryBg')} !important;
+      width: 250px !important;
+    }
+    .ant-popover-inner, .ant-popover-content, .ant-popconfirm-message, .ant-popconfirm-message-text {
+      background-color: ${({ theme }) =>
+        theme.color('colorPrimaryBg')} !important;
+    }
+    .ant-popover-arrow {
+      &::before {
+        background-color: ${({ theme }) =>
+          theme.color('colorPrimaryBg')} !important;
+      }
     }
   }
 

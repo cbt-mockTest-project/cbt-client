@@ -5,6 +5,70 @@ import {
   FULL_QUESTION_INCLUDING_EXAMID_FRAGMENT,
 } from './questionFragment';
 
+export const READ_BOOKMARKED_QUESTIONS = gql`
+  query ReadBookmarkedQuestions($input: ReadBookmarkedQuestionsInput!) {
+    readBookmarkedQuestions(input: $input) {
+      error
+      ok
+      questions {
+        highScore
+        middleScore
+        lowScore
+        mockExam {
+          id
+          title
+          approved
+          isPrivate
+        }
+        user {
+          id
+        }
+        id
+        isBookmarked
+
+        myQuestionState
+        commentCount
+        number
+        question
+        question_img {
+          url
+          uid
+        }
+        solution
+        solution_img {
+          uid
+          url
+        }
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
+        }
+        mockExamQuestionFeedback {
+          recommendationCount {
+            bad
+            good
+          }
+          myRecommedationStatus {
+            isBad
+            isGood
+          }
+          user {
+            id
+            nickname
+          }
+          id
+          type
+          content
+          created_at
+        }
+      }
+    }
+  }
+`;
+
 export const READ_QUESTIONS_BY_ID = gql`
   query ReadMockExamQuestionsByMockExamId(
     $input: ReadMockExamQuestionsByMockExamIdInput!
@@ -214,6 +278,13 @@ export const SEARCH_QEUSTIONS = gql`
         solution
         number
         isBookmarked
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
+        }
         user {
           id
           nickname
@@ -253,6 +324,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         }
         id
         isBookmarked
+
         myQuestionState
         commentCount
         number
@@ -265,6 +337,13 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         solution_img {
           uid
           url
+        }
+        myBookmark {
+          id
+          bookmarkFolder {
+            id
+            name
+          }
         }
         mockExamQuestionFeedback {
           recommendationCount {

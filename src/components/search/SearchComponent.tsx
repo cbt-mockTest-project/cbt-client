@@ -25,10 +25,7 @@ const SearchComponent: React.FC<SearchComponentProps> = () => {
   const { message } = App.useApp();
   const router = useRouter();
   const categoryName = router.query.categoryName as string;
-  const { questions } = useSearchQuestions();
-  const questionIds = questions?.map((question) => question.id);
   const sessionStorage = new SessionStorage();
-
   useEffect(() => {
     if (router.isReady) {
       if (!categoryName) {
@@ -59,7 +56,7 @@ const SearchComponent: React.FC<SearchComponentProps> = () => {
           });
         }}
       />
-      <QuestionIdListBox questionIds={questionIds || []} />
+      <QuestionIdListBox />
       <SearchQuestionList />
     </SearchComponentBlock>
   );

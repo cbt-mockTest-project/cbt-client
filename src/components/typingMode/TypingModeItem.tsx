@@ -1,4 +1,3 @@
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
@@ -10,11 +9,13 @@ import {
   EditFeedbackInput,
   UpdateFeedbackRecommendationInput,
 } from '@lib/hooks/useQuestionFeedback';
-import useQuestionSlide from '@lib/hooks/useQuestionSlide';
-import useQuestions from '@lib/hooks/useQuestions';
+import {
+  HandleDeleteBookmark,
+  HandleSaveBookmark,
+} from '@lib/hooks/useQuestions';
+
 import { LocalStorage } from '@lib/utils/localStorage';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
 import { Button, Input, Tooltip } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
@@ -71,7 +72,8 @@ interface TypingModeItemProps {
     question,
     feedback,
   }: Omit<UpdateFeedbackRecommendationInput, 'setQuestion'>) => Promise<void>;
-  handleSaveBookmark: (question: MockExamQuestion) => Promise<void>;
+  handleSaveBookmark: HandleSaveBookmark;
+  handleDeleteBookmark: HandleDeleteBookmark;
   handleSaveQuestionState: (
     question: MockExamQuestion,
     state: QuestionState
@@ -88,6 +90,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
   handleEditFeedback,
   handleUpdateFeedbackRecommendation,
   handleSaveBookmark,
+  handleDeleteBookmark,
   handleSaveQuestionState,
   number,
 }) => {
@@ -135,6 +138,7 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
         <StudyQuestionBox
           question={question}
           saveBookmark={handleSaveBookmark}
+          deleteBookmark={handleDeleteBookmark}
           questionNumber={number}
         />
       </BasicCard>

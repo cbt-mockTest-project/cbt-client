@@ -6,6 +6,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import HomeIcon from '@mui/icons-material/Home';
 import { responsive } from '@lib/utils/responsive';
 import { useRouter } from 'next/router';
+import { BookmarkOutlined } from '@mui/icons-material';
 
 const MobileBottomAppbarBlock = styled.div`
   position: fixed;
@@ -54,9 +55,9 @@ const MobileBottomAppbar: React.FC<MobileBottomAppbarProps> = () => {
           icon={<FolderIcon />}
         />
         <BottomNavigationAction
-          value={'/me/history'}
-          label="기록"
-          icon={<HistoryIcon />}
+          value={'/me/bookmark'}
+          label="북마크"
+          icon={<BookmarkOutlined />}
         />
       </BottomNavigation>
     </MobileBottomAppbarBlock>

@@ -8,9 +8,6 @@ import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { useEditQuestionBookmark } from '@lib/graphql/hook/useQuestionBookmark';
-import useAuth from '@lib/hooks/useAuth';
-import { useChangeQuestionState } from '@lib/graphql/hook/useQuestionState';
 
 const SolutionModeCardItemBlock = styled.div`
   display: flex;
@@ -50,6 +47,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
     updateFeedbackRecommendation,
     saveQuestionState,
     saveBookmark,
+    deleteBookmark,
   } = useQuestions();
 
   const serverQuestion = useAppSelector((state) =>
@@ -87,6 +85,7 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
             questionNumber={index + 1}
             question={question}
             saveBookmark={saveBookmark}
+            deleteBookmark={deleteBookmark}
           />
         </div>
       </BasicCard>

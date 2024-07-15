@@ -1,4 +1,6 @@
-import Bookmark from '@components/common/bookmark/Bookmark';
+import Bookmark, {
+  BookmarkChangeHandler,
+} from '@components/common/bookmark/Bookmark';
 import parse from 'html-react-parser';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -7,8 +9,10 @@ import { MockExamQuestion } from 'types';
 import useAuth from '@lib/hooks/useAuth';
 import { LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
-import useQuestions from '@lib/hooks/useQuestions';
-import StudyBookmarkInfoModal from './StudyBookmarkInfoModal';
+import useQuestions, {
+  HandleDeleteBookmark,
+  HandleSaveBookmark,
+} from '@lib/hooks/useQuestions';
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
@@ -90,7 +94,8 @@ const StudyQuestionBoxBlock = styled.div`
 `;
 
 interface StudyQuestionBoxProps {
-  saveBookmark: (question: MockExamQuestion) => void;
+  saveBookmark?: HandleSaveBookmark;
+  deleteBookmark?: HandleDeleteBookmark;
   questionNumber?: number;
   question: MockExamQuestion;
   className?: string;
@@ -111,22 +116,22 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   hasQuestionLink = true,
   onChangeIsFeedbackModalOpen,
   isVisibleImage = true,
+  deleteBookmark,
 }) => {
-  const [isBookmarkInfoModalOpen, setIsBookmarkInfoModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
-  const { user, handleUpdateUserCache } = useAuth();
+  const { user } = useAuth();
   const isMyQuestion = useMemo(() => {
     if (!user) return false;
     return user.id === question?.user.id;
   }, [user, question]);
 
-  const onClickBookmark = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    saveBookmark(question);
-    if (!user?.hasBookmarkedBefore) {
-      setIsBookmarkInfoModalOpen(true);
-      handleUpdateUserCache({ hasBookmarkedBefore: true });
+  const onChangeBookmark: BookmarkChangeHandler = (active, folderId) => {
+    if (active) {
+      saveBookmark(question, folderId || null);
+    }
+    if (!active) {
+      deleteBookmark(question);
     }
   };
 
@@ -174,12 +179,15 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               </Button>
             </a>
           )}
-          <Bookmark
-            onClick={(e) => onClickBookmark(e)}
-            role="button"
-            active={!!question?.isBookmarked}
-            className="study-question-box-bookmark"
-          />
+          {deleteBookmark && saveBookmark && (
+            <Bookmark
+              onChangeBookmark={onChangeBookmark}
+              defaultFolderId={question?.myBookmark?.bookmarkFolder?.id}
+              role="button"
+              isActive={!!question?.myBookmark}
+              className="study-question-box-bookmark"
+            />
+          )}
         </div>
       </div>
       <div className="study-question-box-question">
@@ -212,12 +220,6 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           title={`${String(question.mockExam?.title)}\n${
             question.number
           }번 문제`}
-        />
-      )}
-      {isBookmarkInfoModalOpen && (
-        <StudyBookmarkInfoModal
-          open={isBookmarkInfoModalOpen}
-          onCancel={() => setIsBookmarkInfoModalOpen(false)}
         />
       )}
     </StudyQuestionBoxBlock>

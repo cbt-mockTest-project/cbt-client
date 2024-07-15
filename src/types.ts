@@ -510,6 +510,28 @@ export type CreatePostOutput = {
   postId?: Maybe<Scalars['Float']>;
 };
 
+export type CreateQuestionBookmarkFolderInput = {
+  name: Scalars['String'];
+};
+
+export type CreateQuestionBookmarkFolderOutput = {
+  __typename?: 'CreateQuestionBookmarkFolderOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type CreateQuestionBookmarkInput = {
+  questionBookmarkFolderId?: InputMaybe<Scalars['Float']>;
+  questionId: Scalars['Float'];
+};
+
+export type CreateQuestionBookmarkOutput = {
+  __typename?: 'CreateQuestionBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  myBookmark?: Maybe<MockExamQuestionBookmark>;
+  ok: Scalars['Boolean'];
+};
+
 export type CreateQuestionCardCategoryInput = {
   name: Scalars['String'];
 };
@@ -750,6 +772,26 @@ export type DeletePostInput = {
 
 export type DeletePostOutput = {
   __typename?: 'DeletePostOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteQuestionBookmarkFolderInput = {
+  id: Scalars['Float'];
+};
+
+export type DeleteQuestionBookmarkFolderOutput = {
+  __typename?: 'DeleteQuestionBookmarkFolderOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteQuestionBookmarkInput = {
+  questionBookmarkId: Scalars['Float'];
+};
+
+export type DeleteQuestionBookmarkOutput = {
+  __typename?: 'DeleteQuestionBookmarkOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -1769,6 +1811,7 @@ export type MockExamQuestion = {
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   multipleChoice: Array<MockExamQuestionMultipleChoice>;
+  myBookmark?: Maybe<MockExamQuestionBookmark>;
   myQuestionState?: Maybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: Maybe<ObjectiveData>;
@@ -1786,6 +1829,7 @@ export type MockExamQuestion = {
 
 export type MockExamQuestionBookmark = {
   __typename?: 'MockExamQuestionBookmark';
+  bookmarkFolder?: Maybe<MockExamQuestionBookmarkFolder>;
   created_at: Scalars['DateTime'];
   id: Scalars['Float'];
   question: MockExamQuestion;
@@ -1793,7 +1837,24 @@ export type MockExamQuestionBookmark = {
   user: User;
 };
 
+export type MockExamQuestionBookmarkFolder = {
+  __typename?: 'MockExamQuestionBookmarkFolder';
+  created_at: Scalars['DateTime'];
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  questionBookmark: Array<MockExamQuestionBookmark>;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type MockExamQuestionBookmarkFolderInputType = {
+  name: Scalars['String'];
+  questionBookmark: Array<MockExamQuestionBookmarkInputType>;
+  user: UserInputType;
+};
+
 export type MockExamQuestionBookmarkInputType = {
+  bookmarkFolder?: InputMaybe<MockExamQuestionBookmarkFolderInputType>;
   question: MockExamQuestionInputType;
   user: UserInputType;
 };
@@ -1894,6 +1955,7 @@ export type MockExamQuestionInputType = {
   mockExamQuestionComment: Array<MockExamQuestionCommentInputType>;
   mockExamQuestionFeedback: Array<MockExamQuestionFeedbackInputType>;
   multipleChoice: Array<MockExamQuestionMultipleChoiceInputType>;
+  myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
   myQuestionState?: InputMaybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -1983,6 +2045,11 @@ export type MoveExamOrderOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type MoveQuestionBookmarkInput = {
+  bookmarkFolderId?: InputMaybe<Scalars['Float']>;
+  bookmarkId: Scalars['Float'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   acceptExamCategoryInvitation: AcceptExamCategoryInvitationOutput;
@@ -2020,6 +2087,8 @@ export type Mutation = {
   createPointTransactionForAdmin: CreatePointTransactionForAdminOutput;
   createPost: CreatePostOutput;
   createPostComment: CreatePostCommentOutput;
+  createQuestionBookmark: CreateQuestionBookmarkOutput;
+  createQuestionBookmarkFolder: CreateQuestionBookmarkFolderOutput;
   createQuestionCard: CreateQuestionCardOutput;
   createQuestionCardCategory: CreateQuestionCardCategoryOutput;
   createQuiz: CreateQuizOutput;
@@ -2045,6 +2114,8 @@ export type Mutation = {
   deletePayment: DeletePaymentOutput;
   deletePost: DeletePostOutput;
   deletePostComment: DeletePostCommentOutput;
+  deleteQuestionBookmark: DeleteQuestionBookmarkOutput;
+  deleteQuestionBookmarkFolder: DeleteQuestionBookmarkFolderOutput;
   deleteQuestionCardCategory: DeleteQuestionCardCategoryOutput;
   deleteQuestionCards: DeleteQuestionCardsOutput;
   deleteQuizComment: DeleteQuizCommentOutput;
@@ -2070,11 +2141,14 @@ export type Mutation = {
   login: LoginOutput;
   logout: CoreOutput;
   moveExamOrder: MoveExamOrderOutput;
+  moveQuestionBookmark: MoveQuestionBookmarkOutput;
   naverBlogViewMacro: NaverBlogViewMacroOutput;
   register: RegisterOutput;
   removeExamFromCategory: RemoveExamFromCategoryOutput;
   resetMyExamQuestionState: ResetMyExamQuestionStateOutput;
   resetMyQuestionBookmark: CoreOutput;
+  resetMyQuestionBookmarks: ResetMyQuestionBookmarksOutput;
+  resetQuestionBookmark: ResetQuestionBookmarkOutput;
   restMyAllQuestionStates: CoreOutput;
   restoreUser: CoreOutput;
   revalidate: RevalidateOutput;
@@ -2094,6 +2168,7 @@ export type Mutation = {
   updateExamViewerApproveState: UpdateExamViewerApproveStateOutput;
   updateMockExamQuestionFeedbackRecommendation: UpdateMockExamQuestionFeedbackRecommendationOutput;
   updatePayment: UpdatePaymentOutput;
+  updateQuestionBookmarkFolder: UpdateQuestionBookmarkFolderOutput;
   updateQuestionCard: UpdateQuestionCardOutput;
   updateQuestionCardCategory: UpdateQuestionCardCategoryOutput;
   updateQuestionStatesToCore: CoreOutput;
@@ -2270,6 +2345,16 @@ export type MutationCreatePostCommentArgs = {
 };
 
 
+export type MutationCreateQuestionBookmarkArgs = {
+  input: CreateQuestionBookmarkInput;
+};
+
+
+export type MutationCreateQuestionBookmarkFolderArgs = {
+  input: CreateQuestionBookmarkFolderInput;
+};
+
+
 export type MutationCreateQuestionCardArgs = {
   input: CreateQuestionCardInput;
 };
@@ -2377,6 +2462,16 @@ export type MutationDeletePostArgs = {
 
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
+};
+
+
+export type MutationDeleteQuestionBookmarkArgs = {
+  input: DeleteQuestionBookmarkInput;
+};
+
+
+export type MutationDeleteQuestionBookmarkFolderArgs = {
+  input: DeleteQuestionBookmarkFolderInput;
 };
 
 
@@ -2490,6 +2585,11 @@ export type MutationMoveExamOrderArgs = {
 };
 
 
+export type MutationMoveQuestionBookmarkArgs = {
+  input: MoveQuestionBookmarkInput;
+};
+
+
 export type MutationNaverBlogViewMacroArgs = {
   input: NaverBlogViewMacroInput;
 };
@@ -2507,6 +2607,16 @@ export type MutationRemoveExamFromCategoryArgs = {
 
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
+};
+
+
+export type MutationResetMyQuestionBookmarksArgs = {
+  input: ResetMyQuestionBookmarksInput;
+};
+
+
+export type MutationResetQuestionBookmarkArgs = {
+  input: ResetQuestionBookmarkInput;
 };
 
 
@@ -2592,6 +2702,11 @@ export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
 
 export type MutationUpdatePaymentArgs = {
   input: UpdatePaymentInput;
+};
+
+
+export type MutationUpdateQuestionBookmarkFolderArgs = {
+  input: UpdateQuestionBookmarkFolderInput;
 };
 
 
@@ -2717,6 +2832,7 @@ export type PartialMockExamQuestionInput = {
   mockExamQuestionComment?: InputMaybe<Array<MockExamQuestionCommentInputType>>;
   mockExamQuestionFeedback?: InputMaybe<Array<MockExamQuestionFeedbackInputType>>;
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
+  myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -3006,6 +3122,7 @@ export type Query = {
   readAllMockExamQuestion: ReadAllMockExamQuestionOutput;
   readAllMockExamQuestionFeedback: ReadAllMockExamQuestionFeedbackOutput;
   readAllQuestions: ReadAllQuestionsOutput;
+  readBookmarkedQuestions: ReadBookmarkedQuestionsOutput;
   readExamTitleAndIdByQuestionComment: ReadExamTitleAndIdByQuestionCommentOutput;
   readExamTitleAndIdByQuestionState: ReadExamTitleAndIdByQuestionStateOutput;
   readExamTitleAndIdOfBookmarkedQuestion: ReadExamTitleAndIdOfBookmarkedQuestionOutput;
@@ -3031,6 +3148,7 @@ export type Query = {
   readMyQuestionComments: ReadMyQuestionCommentsOutput;
   readPost: ReadPostOutput;
   readPosts: ReadPostsOutput;
+  readQuestionBookmarkFolders: ReadQuestionBookmarkFoldersOutput;
   readQuestionCard: ReadQuestionCardOutput;
   readQuestionsByExamIds: ReadQuestionsByExamIdsOutput;
   readVisitCount: ReadVisitCountOutput;
@@ -3173,6 +3291,11 @@ export type QueryReadAllMockExamCategoriesArgs = {
 
 export type QueryReadAllQuestionsArgs = {
   input: ReadAllQuestionsInput;
+};
+
+
+export type QueryReadBookmarkedQuestionsArgs = {
+  input: ReadBookmarkedQuestionsInput;
 };
 
 
@@ -3467,6 +3590,19 @@ export type ReadAllQuestionsOutput = {
   questions?: Maybe<Array<MockExamQuestion>>;
 };
 
+export type ReadBookmarkedQuestionsInput = {
+  folderId?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  order?: Scalars['String'];
+};
+
+export type ReadBookmarkedQuestionsOutput = {
+  __typename?: 'ReadBookmarkedQuestionsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  questions: Array<MockExamQuestion>;
+};
+
 export type ReadExamTitleAndIdByQuestionCommentOutput = {
   __typename?: 'ReadExamTitleAndIdByQuestionCommentOutput';
   error?: Maybe<Scalars['String']>;
@@ -3742,6 +3878,13 @@ export type ReadPostsOutput = {
   posts?: Maybe<Array<Post>>;
 };
 
+export type ReadQuestionBookmarkFoldersOutput = {
+  __typename?: 'ReadQuestionBookmarkFoldersOutput';
+  error?: Maybe<Scalars['String']>;
+  folders?: Maybe<Array<MockExamQuestionBookmarkFolder>>;
+  ok: Scalars['Boolean'];
+};
+
 export type ReadQuestionCardInput = {
   id: Scalars['Float'];
 };
@@ -3838,6 +3981,26 @@ export type ResetMyExamQuestionStateInput = {
 
 export type ResetMyExamQuestionStateOutput = {
   __typename?: 'ResetMyExamQuestionStateOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type ResetMyQuestionBookmarksInput = {
+  questionBookmarkFolderId?: InputMaybe<Scalars['Float']>;
+};
+
+export type ResetMyQuestionBookmarksOutput = {
+  __typename?: 'ResetMyQuestionBookmarksOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type ResetQuestionBookmarkInput = {
+  questionBookmarkFolderId: Scalars['Float'];
+};
+
+export type ResetQuestionBookmarkOutput = {
+  __typename?: 'ResetQuestionBookmarkOutput';
   error?: Maybe<Scalars['String']>;
   ok: Scalars['Boolean'];
 };
@@ -4207,6 +4370,17 @@ export type UpdatePaymentOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type UpdateQuestionBookmarkFolderInput = {
+  id: Scalars['Float'];
+  name: Scalars['String'];
+};
+
+export type UpdateQuestionBookmarkFolderOutput = {
+  __typename?: 'UpdateQuestionBookmarkFolderOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type UpdateQuestionCardCategoryInput = {
   id: Scalars['Float'];
   name: Scalars['String'];
@@ -4308,6 +4482,7 @@ export type User = {
   mockExamHistory: Array<MockExamHistory>;
   mockExamQuestion: Array<MockExamQuestion>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmark>;
+  mockExamQuestionBookmarkFolder: Array<MockExamQuestionBookmarkFolder>;
   mockExamQuestionComment: Array<MockExamQuestionComment>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLike>;
   mockExamQuestionState: Array<MockExamQuestionState>;
@@ -4380,6 +4555,7 @@ export type UserInputType = {
   mockExamHistory: Array<MockExamHistoryInputType>;
   mockExamQuestion: Array<MockExamQuestionInputType>;
   mockExamQuestionBookmark: Array<MockExamQuestionBookmarkInputType>;
+  mockExamQuestionBookmarkFolder: Array<MockExamQuestionBookmarkFolderInputType>;
   mockExamQuestionComment: Array<MockExamQuestionCommentInputType>;
   mockExamQuestionCommentLike: Array<MockExamQuestionCommentLikeInputType>;
   mockExamQuestionState: Array<MockExamQuestionStateInputType>;
@@ -4523,6 +4699,12 @@ export type ZepUser = {
   zepComment: Array<ZepComment>;
   zepPost: Array<ZepPost>;
   zep_id: Scalars['String'];
+};
+
+export type MoveQuestionBookmarkOutput = {
+  __typename?: 'moveQuestionBookmarkOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
 };
 
 export type SendMessageToTelegramInput = {

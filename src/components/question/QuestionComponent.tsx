@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useQuestion from '@lib/hooks/useQuestion';
-import { MockExamQuestion, ReadMockExamQuestionInput, UserRole } from 'types';
+import { ReadMockExamQuestionInput, UserRole } from 'types';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import { Button, Skeleton } from 'antd';
-import useAuth from '@lib/hooks/useAuth';
+import { Button, Skeleton, Spin } from 'antd';
 import Link from 'next/link';
-import { removeHtmlTag } from '@lib/utils/utils';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
+import Portal from '@components/common/portal/Portal';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -26,7 +25,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 }) => {
   const router = useRouter();
   const {
-    handleSaveBookmark,
     handleAddFeedback,
     handleEditFeedback,
     handleSaveQuestionState,
@@ -57,7 +55,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
   if (!question) return null;
   if (isHidden) {
-    return <Skeleton active paragraph={{ rows: 10 }} />;
+    return (
+      <Portal>
+        <Spin size="large" fullscreen />
+      </Portal>
+    );
   }
   return (
     <QuestionComponentBlock isHidden={isHidden}>
@@ -73,7 +75,6 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
           <StudyQuestionBox
             hasQuestionLink={false}
             hasExamTitle={false}
-            saveBookmark={handleSaveBookmark}
             questionNumber={question.number}
             question={question}
             isVisibleImage={isAdmin}
