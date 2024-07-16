@@ -191,7 +191,11 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           )}
         </div>
       </div>
-      <HighlightableText content={question.question} />
+      <HighlightableText
+        content={question.question}
+        questionId={question.id}
+        type="question"
+      />
       <div
         onClick={(e) => {
           e.stopPropagation();

@@ -113,7 +113,11 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           isAnswerHidden ? 'hidden' : ''
         }`}
       >
-        <HighlightableText content={question.solution || ''} />
+        <HighlightableText
+          content={question.solution || ''}
+          questionId={question.id}
+          type="answer"
+        />
         <div
           onClick={(e) => {
             e.stopPropagation();

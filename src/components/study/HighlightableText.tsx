@@ -45,9 +45,15 @@ export type EditMemo = (id: string, memo: string) => void;
 
 interface HighlightableTextProps {
   content: string;
+  questionId: number;
+  type: 'question' | 'answer';
 }
 
-const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
+const HighlightableText: React.FC<HighlightableTextProps> = ({
+  content,
+  questionId,
+  type,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const localStorage = new LocalStorage();
   const uniqueId = useId();
@@ -119,7 +125,11 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
         memo,
       };
       const newHighlights = [...highlights, newHighlight];
-      localStorage.set(HIGHLIGHTS, newHighlights);
+      const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
+      localStorage.set(HIGHLIGHTS, [
+        ...prevHighlights,
+        ...newHighlights.map((el) => ({ ...el, questionId, type })),
+      ]);
       setHighlights(newHighlights);
       setShowPopup(false);
       setSelectedRange(null);
@@ -130,7 +140,11 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
     const newHighlights = highlights.map((h) =>
       h.id === id ? { ...h, memo } : h
     );
-    localStorage.set(HIGHLIGHTS, newHighlights);
+    const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
+    localStorage.set(HIGHLIGHTS, [
+      ...prevHighlights,
+      ...newHighlights.map((el) => ({ ...el, questionId, type })),
+    ]);
     setHighlights(newHighlights);
   };
 
@@ -139,7 +153,11 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
       const newHighlights = highlights.filter(
         (h) => h.id !== selectedHighlight.id
       );
-      localStorage.set(HIGHLIGHTS, newHighlights);
+      const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
+      localStorage.set(HIGHLIGHTS, [
+        ...prevHighlights,
+        ...newHighlights.map((el) => ({ ...el, questionId, type })),
+      ]);
       setHighlights(newHighlights);
       setShowEditPopup(false);
       setSelectedHighlight(null);
@@ -309,9 +327,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
   };
 
   useEffect(() => {
-    const storedHighlights = localStorage.get(HIGHLIGHTS);
-    if (storedHighlights) {
-      setHighlights(storedHighlights);
+    const storedHighlights = localStorage.get(HIGHLIGHTS) || [];
+    const filteredHighlights = storedHighlights?.filter(
+      (el) => el.questionId === questionId && el.type === type
+    );
+    if (filteredHighlights) {
+      setHighlights(filteredHighlights);
     }
   }, []);
 
