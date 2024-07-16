@@ -162,20 +162,28 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
         setIsPrintLimitModalOpen(true);
         return;
       }
-
       setIsPrintLoading(true);
       if (!printAreaRef.current) return;
-      console.log('1');
-      const canvas = await html2canvas(printAreaRef.current, { useCORS: true });
-      console.log('2');
+      await Promise.all(
+        Array.from(document.images)
+          .filter((img) => !img.complete)
+          .map(
+            (img) =>
+              new Promise((resolve) => {
+                img.onload = img.onerror = resolve;
+              })
+          )
+      );
+      const canvas = await html2canvas(printAreaRef.current, {
+        useCORS: true,
+        allowTaint: true,
+      });
       const imgData = canvas.toDataURL('image/png');
-      console.log('3');
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4',
       });
-      console.log('4');
 
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -184,22 +192,18 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
       let position = 0;
-      console.log('5');
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       const pageCount = Math.ceil(imgHeight / pdfHeight);
       let currentPage = 1;
-      console.log('6');
       while (currentPage < pageCount) {
         position = -(pdfHeight * currentPage);
         pdf.addPage();
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         currentPage += 1;
       }
-      console.log('7');
       const pdfBlob = pdf.output('blob');
       const url = URL.createObjectURL(pdfBlob);
       window.open(url, '_blank');
-      console.log('8');
       editProfileMutation({
         variables: {
           input: {
@@ -207,7 +211,6 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
           },
         },
       });
-      console.log('9');
     } catch (e) {
       console.log('pdf-error', e);
       handleError(e);
