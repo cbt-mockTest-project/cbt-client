@@ -9,7 +9,7 @@ import { StorageType } from 'customTypes';
 import { DehydratedState } from '@tanstack/react-query';
 
 import withAuth from '@lib/hocs/withAuth';
-import AdminStorageComponent from '@components/userStorage/AdminStorageComponent';
+import AdminStorageComponent from '@components/adminStorage/AdminStorageComponent';
 
 interface UserStorageProps {
   dehydratedState: DehydratedState;

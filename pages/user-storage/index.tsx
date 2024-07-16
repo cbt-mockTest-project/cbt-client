@@ -5,7 +5,6 @@ import WithHead from '@components/common/head/WithHead';
 import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { StorageType } from 'customTypes';
-import UserStorageComponent from '@components/userStorage/AdminStorageComponent';
 import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
@@ -16,6 +15,7 @@ import {
   DehydratedState,
   HydrationBoundary,
 } from '@tanstack/react-query';
+import UserStorageComponent from '@components/userStorage/UserStorageComponent';
 
 interface UserStorageProps {
   dehydratedState: DehydratedState;

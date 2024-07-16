@@ -1,17 +1,13 @@
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
 import { useSearchFilterStorage } from '@lib/hooks/useSearchFilterStorage';
-import {
-  GetCategoriesQueryKey,
-  getCategoriesQueryOption,
-} from '@lib/queryOptions/getCategoriesQueryOption';
+import { getCategoriesForAdminQueryOption } from '@lib/queryOptions/getCategoriesForAdminQueryOption';
 import { useQuery } from '@tanstack/react-query';
 import { Empty, Pagination, Select } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { ExamSource } from 'types';
 
-const UserStorageComponentBlock = styled.div`
+const AdminStorageComponentBlock = styled.div`
   .category-filter-input {
     max-width: 500px;
     margin-bottom: 20px;
@@ -23,21 +19,14 @@ const UserStorageComponentBlock = styled.div`
   }
 `;
 
-interface UserStorageComponentProps {
+interface AdminStorageComponentProps {
   type?: 'user' | 'public';
 }
 
 const LIMIT = 10;
 
-const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
-  const { data } = useQuery(
-    getCategoriesQueryOption({
-      queryKey: GetCategoriesQueryKey.user_storage,
-      input: {
-        examSource: ExamSource.User,
-      },
-    })
-  );
+const AdminStorageComponent: React.FC<AdminStorageComponentProps> = () => {
+  const { data, isLoading } = useQuery(getCategoriesForAdminQueryOption);
   const { handleSearch, handleSort, paginatedData, page, setPage } =
     useSearchFilterStorage({
       data,
@@ -45,8 +34,9 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
       hasOrderOption: true,
     });
 
+  if (isLoading) return <div>로딩중...</div>;
   return (
-    <UserStorageComponentBlock>
+    <AdminStorageComponentBlock>
       <TextInput
         className="category-filter-input"
         placeholder="암기장 필터링"
@@ -67,6 +57,10 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
               label: '최신순',
               value: 'latest',
             },
+            {
+              label: '세트 많은 순',
+              value: 'setCount',
+            },
           ]}
           onChange={(value) => handleSort(value as 'popular' | 'latest')}
         />
@@ -85,8 +79,8 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
           onChange={(page) => setPage(page)}
         />
       </div>
-    </UserStorageComponentBlock>
+    </AdminStorageComponentBlock>
   );
 };
 
-export default UserStorageComponent;
+export default AdminStorageComponent;
