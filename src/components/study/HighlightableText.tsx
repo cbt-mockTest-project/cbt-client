@@ -31,13 +31,11 @@ const HighlightableTextBlock = styled.div`
 
 export interface TextHighlight {
   id: string;
+  startContainer: number[];
   startOffset: number;
+  endContainer: number[];
   endOffset: number;
   text: string;
-  top: number;
-  left: number;
-  width: number;
-  height: number;
   memo: string;
 }
 
@@ -78,21 +76,42 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
     }
   };
 
+  const getNodePath = (node: Node): number[] => {
+    const path = [];
+    let current = node;
+    while (current && current !== ref.current) {
+      const parent = current.parentNode;
+      if (parent) {
+        path.unshift(
+          Array.from(parent.childNodes).indexOf(current as ChildNode)
+        );
+      }
+      current = parent;
+    }
+    return path;
+  };
+
+  const getNodeFromPath = (path: number[]): Node | null => {
+    let current: Node | null = ref.current;
+    for (const index of path) {
+      if (current && current.childNodes[index]) {
+        current = current.childNodes[index];
+      } else {
+        return null;
+      }
+    }
+    return current;
+  };
+
   const addHighlight: AddHighlight = (memo: string = '') => {
     if (selectedRange) {
-      const rect = selectedRange.getBoundingClientRect();
-      const parentRect = document
-        .getElementById(uniqueId)
-        .getBoundingClientRect();
       const newHighlight: TextHighlight = {
         id: uuidv4(),
+        startContainer: getNodePath(selectedRange.startContainer),
         startOffset: selectedRange.startOffset,
+        endContainer: getNodePath(selectedRange.endContainer),
         endOffset: selectedRange.endOffset,
         text: selectedRange.toString(),
-        top: rect.top - parentRect.top,
-        left: rect.left - parentRect.left,
-        width: rect.width,
-        height: rect.height,
         memo,
       };
       const newHighlights = [...highlights, newHighlight];
@@ -123,44 +142,168 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
     }
   };
 
-  const handleHighlightClick = (highlight: TextHighlight) => {
+  const handleHighlightClick = (highlightId: string) => {
+    const highlight = highlights.find((h) => h.id === highlightId);
+    if (!highlight) return;
+
     setSelectedHighlight(highlight);
-    setPopupPosition({
-      x: highlight.left + highlight.width,
-      y: highlight.top + highlight.height,
-    });
+
+    try {
+      const range = document.createRange();
+      const startNode = getNodeFromPath(highlight.startContainer);
+      const endNode = getNodeFromPath(highlight.endContainer);
+
+      if (startNode && endNode) {
+        range.setStart(startNode, highlight.startOffset);
+        range.setEnd(endNode, highlight.endOffset);
+
+        const rects = range.getClientRects();
+        if (rects.length > 0) {
+          const rect = rects[rects.length - 1]; // 마지막 rect 사용
+          const containerRect = ref.current?.getBoundingClientRect();
+
+          if (containerRect) {
+            setPopupPosition({
+              x: rect.right - containerRect.left,
+              y: rect.bottom - containerRect.top,
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to set range for popup positioning', error);
+      // fallback: 클릭된 요소의 위치 사용
+      const clickedElement = document.querySelector(
+        `[data-highlight-id="${highlightId}"]`
+      ) as HTMLElement;
+      if (clickedElement) {
+        const rect = clickedElement.getBoundingClientRect();
+        const containerRect = ref.current?.getBoundingClientRect();
+        if (containerRect) {
+          setPopupPosition({
+            x: rect.right - containerRect.left,
+            y: rect.bottom - containerRect.top,
+          });
+        }
+      }
+    }
+
     setShowEditPopup(true);
+  };
+  const renderHighlights = () => {
+    if (!ref.current) return;
+
+    ref.current
+      .querySelectorAll('.highlight-overlay')
+      .forEach((el) => el.remove());
+
+    const containerRect = ref.current.getBoundingClientRect();
+
+    highlights.forEach((highlight) => {
+      try {
+        let range = document.createRange();
+        const startNode = getNodeFromPath(highlight.startContainer);
+        const endNode = getNodeFromPath(highlight.endContainer);
+
+        if (startNode && endNode) {
+          try {
+            range.setStart(startNode, highlight.startOffset);
+            range.setEnd(endNode, highlight.endOffset);
+          } catch (error) {
+            console.warn(
+              'Failed to set range, attempting text-based recovery',
+              error
+            );
+            // 텍스트 기반 복구 시도
+            const textContent = ref.current.textContent || '';
+            const startIndex = textContent.indexOf(highlight.text);
+            if (startIndex !== -1) {
+              const endIndex = startIndex + highlight.text.length;
+              const tempRange = document.createRange();
+              const [newStartNode, newStartOffset] = findNodeAndOffsetFromIndex(
+                ref.current,
+                startIndex
+              );
+              const [newEndNode, newEndOffset] = findNodeAndOffsetFromIndex(
+                ref.current,
+                endIndex
+              );
+              if (newStartNode && newEndNode) {
+                tempRange.setStart(newStartNode, newStartOffset);
+                tempRange.setEnd(newEndNode, newEndOffset);
+                range = tempRange;
+              }
+            }
+          }
+
+          const rects = range.getClientRects();
+          for (let i = 0; i < rects.length; i++) {
+            const rect = rects[i];
+            const highlightEl = document.createElement('div');
+            highlightEl.classList.add('highlight-overlay');
+            highlightEl.setAttribute('data-highlight-id', highlight.id);
+            highlightEl.style.position = 'absolute';
+            highlightEl.style.top = `${rect.top - containerRect.top}px`;
+            highlightEl.style.left = `${rect.left - containerRect.left}px`;
+            highlightEl.style.width = `${rect.width}px`;
+            highlightEl.style.height = `${rect.height}px`;
+            highlightEl.style.backgroundColor = 'yellow';
+            highlightEl.style.opacity = '0.5';
+            highlightEl.style.pointerEvents = 'auto';
+            highlightEl.style.zIndex = '1';
+            highlightEl.style.mixBlendMode = 'multiply';
+            ref.current.appendChild(highlightEl);
+            highlightEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              handleHighlightClick(highlight.id);
+            });
+            ref.current.appendChild(highlightEl);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to render highlight', error);
+      }
+    });
+  };
+
+  // 텍스트 인덱스로부터 노드와 오프셋을 찾는 헬퍼 함수
+  const findNodeAndOffsetFromIndex = (
+    container: Node,
+    index: number
+  ): [Node | null, number] => {
+    const treeWalker = document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_TEXT
+    );
+    let currentIndex = 0;
+    let currentNode = treeWalker.nextNode();
+
+    while (currentNode) {
+      if (currentIndex + currentNode.textContent!.length > index) {
+        return [currentNode, index - currentIndex];
+      }
+      currentIndex += currentNode.textContent!.length;
+      currentNode = treeWalker.nextNode();
+    }
+
+    return [null, 0];
   };
 
   useEffect(() => {
-    const highlights = localStorage.get(HIGHLIGHTS);
-    setHighlights(highlights);
+    const storedHighlights = localStorage.get(HIGHLIGHTS);
+    if (storedHighlights) {
+      setHighlights(storedHighlights);
+    }
   }, []);
+
+  useEffect(() => {
+    renderHighlights();
+  }, [highlights]);
 
   return (
     <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>
       {parse(content || '')}
-      {highlights.map((highlight) => (
-        <Tooltip title={highlight.memo} key={highlight.id}>
-          <HighlightBox
-            id={highlight.id}
-            style={{
-              position: 'absolute',
-              top: `${highlight.top}px`,
-              left: `${highlight.left}px`,
-              width: `${highlight.width}px`,
-              height: `${highlight.height}px`,
-              backgroundColor: 'yellow',
-              opacity: 0.5,
-              pointerEvents: 'auto',
-              zIndex: 0,
-              mixBlendMode: 'multiply',
-              cursor: 'pointer',
-            }}
-            onClick={() => handleHighlightClick(highlight)}
-          />
-        </Tooltip>
-      ))}
+
       {showPopup && (
         <OuterClick callback={() => setShowPopup(false)}>
           <PopupBox
