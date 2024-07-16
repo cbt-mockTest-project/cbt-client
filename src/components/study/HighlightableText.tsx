@@ -8,6 +8,7 @@ import { LocalStorage } from '@lib/utils/localStorage';
 import { HIGHLIGHTS } from '@lib/constants/localStorage';
 import { Button, Tooltip } from 'antd';
 import HighlighMemoModalModal from './HighlightMemoModal';
+import ReactDOM from 'react-dom';
 
 const HighlightableTextBlock = styled.div`
   * {
@@ -51,6 +52,9 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
   const localStorage = new LocalStorage();
   const uniqueId = useId();
   const [highlights, setHighlights] = useState<TextHighlight[]>([]);
+  const [highlightElements, setHighlightElements] = useState<
+    React.ReactPortal[]
+  >([]);
   const [selectedRange, setSelectedRange] = useState<Range | null>(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [showPopup, setShowPopup] = useState(false);
@@ -198,6 +202,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
       .forEach((el) => el.remove());
 
     const containerRect = ref.current.getBoundingClientRect();
+    const newHighlightElements: React.ReactPortal[] = [];
 
     highlights.forEach((highlight) => {
       try {
@@ -239,31 +244,45 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
           const rects = range.getClientRects();
           for (let i = 0; i < rects.length; i++) {
             const rect = rects[i];
-            const highlightEl = document.createElement('div');
-            highlightEl.classList.add('highlight-overlay');
-            highlightEl.setAttribute('data-highlight-id', highlight.id);
-            highlightEl.style.position = 'absolute';
-            highlightEl.style.top = `${rect.top - containerRect.top}px`;
-            highlightEl.style.left = `${rect.left - containerRect.left}px`;
-            highlightEl.style.width = `${rect.width}px`;
-            highlightEl.style.height = `${rect.height}px`;
-            highlightEl.style.backgroundColor = 'yellow';
-            highlightEl.style.opacity = '0.5';
-            highlightEl.style.pointerEvents = 'auto';
-            highlightEl.style.zIndex = '1';
-            highlightEl.style.mixBlendMode = 'multiply';
-            ref.current.appendChild(highlightEl);
-            highlightEl.addEventListener('click', (e) => {
-              e.stopPropagation();
-              handleHighlightClick(highlight.id);
-            });
-            ref.current.appendChild(highlightEl);
+            const HighlightEl = document.createElement('div');
+            HighlightEl.classList.add('highlight-overlay');
+            HighlightEl.setAttribute('data-highlight-id', highlight.id);
+            HighlightEl.style.position = 'absolute';
+            HighlightEl.style.top = `${rect.top - containerRect.top}px`;
+            HighlightEl.style.left = `${rect.left - containerRect.left}px`;
+            HighlightEl.style.width = `${rect.width}px`;
+            HighlightEl.style.height = `${rect.height}px`;
+            HighlightEl.style.backgroundColor = 'yellow';
+            HighlightEl.style.opacity = '0.5';
+            HighlightEl.style.pointerEvents = 'auto';
+            HighlightEl.style.zIndex = '1';
+            HighlightEl.style.mixBlendMode = 'multiply';
+            ref.current.appendChild(HighlightEl);
+            const portal = ReactDOM.createPortal(
+              <Tooltip title={highlight.memo || ''}>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    cursor: 'pointer',
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleHighlightClick(highlight.id);
+                  }}
+                />
+              </Tooltip>,
+              HighlightEl
+            );
+
+            newHighlightElements.push(portal);
           }
         }
       } catch (error) {
         console.error('Failed to render highlight', error);
       }
     });
+    setHighlightElements(newHighlightElements);
   };
 
   // 텍스트 인덱스로부터 노드와 오프셋을 찾는 헬퍼 함수
@@ -303,7 +322,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({ content }) => {
   return (
     <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>
       {parse(content || '')}
-
+      {highlightElements}
       {showPopup && (
         <OuterClick callback={() => setShowPopup(false)}>
           <PopupBox
