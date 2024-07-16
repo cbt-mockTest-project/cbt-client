@@ -17,6 +17,7 @@ import useAuth from '@lib/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
+import HighlightableText from './HighlightableText';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -112,9 +113,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           isAnswerHidden ? 'hidden' : ''
         }`}
       >
-        <div className="study-answer-box-question-card-answer">
-          {parse(question.solution || '')}
-        </div>
+        <HighlightableText content={question.solution || ''} />
         <div
           onClick={(e) => {
             e.stopPropagation();

@@ -16,6 +16,7 @@ import useQuestions, {
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
+import HighlightableText from './HighlightableText';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -190,9 +191,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           )}
         </div>
       </div>
-      <div className="study-question-box-question">
-        {parse(question.question || '')}
-      </div>
+      <HighlightableText content={question.question} />
       <div
         onClick={(e) => {
           e.stopPropagation();
