@@ -204,72 +204,54 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
       });
       handleUpdateUserCache({ printLimit: meQuery.me.user.printLimit - 1 });
     } catch (e) {
+      console.log(e);
       handleError(e);
     }
   };
 
   const handleExportExcel = async () => {
-    if (!handleCheckLogin()) return;
-    if (!meQuery.me) return;
-    const isEhsExam = checkIsEhsMasterExam([examId]);
-    if (isEhsExam) return;
-    const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
+    try {
+      if (!handleCheckLogin()) return;
+      if (!meQuery.me) return;
+      const isEhsExam = checkIsEhsMasterExam([examId]);
+      if (isEhsExam) return;
+      const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
 
-    if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
-      setIsPrintLimitModalOpen(true);
-      return;
-    }
+      if (meQuery.me.user.printLimit <= -1 && !isBasicPlanUser) {
+        setIsPrintLimitModalOpen(true);
+        return;
+      }
 
-    setIsExcelLoading(true);
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('sheet1');
+      setIsExcelLoading(true);
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('sheet1');
 
-    // 열 설정 조정
-    worksheet.columns = [
-      { header: '문제', key: 'question', width: 50 },
-      // { header: '문제 이미지 URL', key: 'question_img_url', width: 50 }, // URL을 위한 별도의 열
-      { header: '정답', key: 'solution', width: 50 },
-      // { header: '정답 이미지 URL', key: 'solution_img_url', width: 50 }, // URL을 위한 별도의 열
-    ];
+      // 열 설정 조정
+      worksheet.columns = [
+        { header: '문제', key: 'question', width: 50 },
+        { header: '정답', key: 'solution', width: 50 },
+      ];
 
-    questions.forEach((question, index) => {
-      const row = worksheet.addRow({
-        question: transformHtmlString(question.question),
-        // question_img_url:
-        //   question.question_img && question.question_img.length >= 1
-        //     ? question.question_img[0].url
-        //     : '',
-        solution: transformHtmlString(question.solution),
-        // solution_img_url:
-        //   question.solution_img && question.solution_img.length >= 1
-        //     ? question.solution_img[0].url
-        //     : '',
+      await Promise.all(
+        questions.map(async (question, index) => {
+          await worksheet.addRow({
+            question: transformHtmlString(question.question),
+            solution: transformHtmlString(question.solution),
+          });
+        })
+      );
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-
-      // 문제 이미지 URL에 하이퍼링크 적용
-      if (row.getCell('question_img_url').value) {
-        worksheet.getCell(`B${row.number}`).value = {
-          text: String(row.getCell('question_img_url').value),
-          hyperlink: String(row.getCell('question_img_url').value),
-        };
-      }
-
-      // 정답 이미지 URL에 하이퍼링크 적용
-      if (row.getCell('solution_img_url').value) {
-        worksheet.getCell(`D${row.number}`).value = {
-          text: String(row.getCell('solution_img_url').value),
-          hyperlink: String(row.getCell('solution_img_url').value),
-        };
-      }
-    });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    setIsExcelLoading(false);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      setIsExcelLoading(false);
+    } catch (e) {
+      console.log(e);
+      handleError(e);
+    }
   };
 
   useEffect(() => {
