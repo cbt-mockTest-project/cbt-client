@@ -29,17 +29,7 @@ const ExamPrintComponentBlock = styled.div`
   margin: 0 auto;
   width: 210mm;
   .hide {
-    position: relative;
-    ::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: white;
-      top: 0;
-      left: 0;
-      z-index: 9999;
-    }
+    opacity: 0;
   }
   .exam-print-button-wrapper {
     display: flex;
@@ -394,7 +384,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
               <img
                 src={base64Images[question.question_img[0].url]}
                 alt="문제이미지"
-                style={{ maxWidth: '50%', height: 'auto' }}
+                style={{ maxWidth: '730px', height: 'auto' }}
               />
             )}
             <div className="exam-print-solution-label">정답</div>
@@ -411,7 +401,7 @@ const ExamPrintComponent: React.FC<ExamPrintComponentProps> = ({}) => {
                 <img
                   src={base64Images[question.solution_img[0].url]}
                   alt="정답이미지"
-                  style={{ maxWidth: '50%', height: 'auto' }}
+                  style={{ maxWidth: '730px', height: 'auto' }}
                 />
               )}
             </div>
