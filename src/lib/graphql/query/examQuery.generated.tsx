@@ -151,6 +151,11 @@ export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
 
 export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', hasAccess?: boolean | null, isBookmarked?: boolean | null, id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, urlSlug: string, revenueRequestForm?: { __typename?: 'RevenueRequestForm', status: Types.RevenueRequestFormStatus, reason?: string | null } | null, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, accesibleRoleIds: Array<number>, isBookmarked?: boolean | null, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
 
+export type GetExamCategoriesForAdminQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetExamCategoriesForAdminQuery = { __typename?: 'Query', getExamCategoriesForAdmin: { __typename?: 'GetExamCategoriesOutput', error?: string | null, ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', order: number, created_at: any, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number, isPremium: boolean }> }> | null } };
+
 export type GetExamCategoriesQueryVariables = Types.Exact<{
   input: Types.GetExamCategoriesInput;
 }>;
@@ -591,6 +596,40 @@ export const ReadMockExamCategoryByCategoryIdDocument = gql`
 
 export function useReadMockExamCategoryByCategoryIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamCategoryByCategoryIdQueryVariables>, 'query'>) {
   return Urql.useQuery<ReadMockExamCategoryByCategoryIdQuery, ReadMockExamCategoryByCategoryIdQueryVariables>({ query: ReadMockExamCategoryByCategoryIdDocument, ...options });
+};
+export const GetExamCategoriesForAdminDocument = gql`
+    query GetExamCategoriesForAdmin {
+  getExamCategoriesForAdmin {
+    error
+    ok
+    categories {
+      order
+      created_at
+      categoryEvaluations {
+        score
+      }
+      isBookmarked
+      id
+      urlSlug
+      name
+      isPublic
+      source
+      user {
+        profileImg
+        id
+        nickname
+      }
+      mockExam {
+        id
+        isPremium
+      }
+    }
+  }
+}
+    `;
+
+export function useGetExamCategoriesForAdminQuery(options?: Omit<Urql.UseQueryArgs<GetExamCategoriesForAdminQueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamCategoriesForAdminQuery, GetExamCategoriesForAdminQueryVariables>({ query: GetExamCategoriesForAdminDocument, ...options });
 };
 export const GetExamCategoriesDocument = gql`
     query GetExamCategories($input: GetExamCategoriesInput!) {

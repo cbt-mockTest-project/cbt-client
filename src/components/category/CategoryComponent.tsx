@@ -3,7 +3,11 @@ import palette from '@styles/palette';
 import { App, MenuProps, Skeleton, Spin } from 'antd';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import { ExamSource, ReadMockExamCategoryByCategoryIdInput } from 'types';
+import {
+  ExamSource,
+  ReadMockExamCategoryByCategoryIdInput,
+  UserRole,
+} from 'types';
 import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import CategoryInviteModal from './CategoryInviteModal';
@@ -155,7 +159,11 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
     },
   ];
 
-  if (!category.isPublic && !isCategoryAccess) {
+  if (
+    !category.isPublic &&
+    !isCategoryAccess &&
+    user?.role !== UserRole.Admin
+  ) {
     return <Spin size="large" fullscreen />;
   }
 

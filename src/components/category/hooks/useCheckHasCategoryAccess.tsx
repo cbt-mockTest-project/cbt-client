@@ -9,7 +9,7 @@ import {
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { App } from 'antd';
 import { useRouter } from 'next/router';
-import { MockExamCategory } from 'types';
+import { MockExamCategory, UserRole } from 'types';
 
 interface UseCheckHasCategoryAccessProps {
   category?: MockExamCategory;
@@ -29,6 +29,10 @@ const useCheckHasCategoryAccess = ({
     if (!meQuery.me.user) {
       message.error('잘못된 접근입니다.');
       router.replace('/');
+      return;
+    }
+    if (meQuery.me.user.role === UserRole.Admin) {
+      setIsCategoryAccess(true);
       return;
     }
     (async () => {

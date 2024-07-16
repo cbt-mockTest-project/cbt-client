@@ -3085,6 +3085,7 @@ export type Query = {
   getCategoryEvaluation: GetCategoryEvaluationOutput;
   getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
+  getExamCategoriesForAdmin: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
   getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
   getExamCategorySubscribers: GetExamCategorySubscribersOutput;

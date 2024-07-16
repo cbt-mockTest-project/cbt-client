@@ -5,7 +5,7 @@ import WithHead from '@components/common/head/WithHead';
 import StorageLayout from '@components/common/layout/storage/StorageLayout';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { StorageType } from 'customTypes';
-import UserStorageComponent from '@components/userStorage/UserStorageComponent';
+import UserStorageComponent from '@components/userStorage/AdminStorageComponent';
 import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,

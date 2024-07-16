@@ -68,11 +68,6 @@ export const getHomeCategories = async (
   });
   const categories = response.data.getExamCategories.categories || [];
   if (input.examSource === ExamSource.User) {
-    console.log('before', categories);
-    console.log(
-      'after',
-      sortHomeUserCategories(categories as MockExamCategory[])
-    );
     return sortHomeUserCategories(categories as MockExamCategory[]);
   }
   return categories as MockExamCategory[];

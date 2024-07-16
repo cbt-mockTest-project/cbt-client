@@ -15,7 +15,9 @@ export function useSearchFilterStorage({
 }: SearchFilterStorageOptions<MockExamCategory>) {
   const [page, setPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [order, setOrder] = useState<'popular' | 'latest'>('popular');
+  const [order, setOrder] = useState<'popular' | 'latest' | 'setCount'>(
+    'popular'
+  );
 
   const filteredData = useMemo(() => {
     if (!data || searchKeyword.trim() === '') return data;
@@ -39,10 +41,12 @@ export function useSearchFilterStorage({
           (b.categoryEvaluations.length || 0) -
           (a.categoryEvaluations.length || 0)
         );
-      } else {
+      } else if (order === 'latest') {
         return (
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
+      } else if (order === 'setCount') {
+        return b.mockExam.length - a.mockExam.length;
       }
     });
   }, [filteredData, order]);
@@ -58,7 +62,7 @@ export function useSearchFilterStorage({
     setPage(1);
   }, 300);
 
-  const handleSort = (order: 'popular' | 'latest') => {
+  const handleSort = (order: 'popular' | 'latest' | 'setCount') => {
     setOrder(order);
     setPage(1);
   };

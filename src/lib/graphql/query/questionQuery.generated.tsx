@@ -79,7 +79,7 @@ export type SearchQuestionsByKeywordQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null, number: number, isBookmarked?: boolean | null, user: { __typename?: 'User', id: number, nickname: string, profileImg: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
+export type SearchQuestionsByKeywordQuery = { __typename?: 'Query', searchQuestionsByKeyword: { __typename?: 'SearchQuestionsByKeywordOutput', error?: string | null, ok: boolean, questions?: Array<{ __typename?: 'MockExamQuestion', id: number, question?: string | null, solution?: string | null, number: number, isBookmarked?: boolean | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, user: { __typename?: 'User', id: number, nickname: string, profileImg: string }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, mockExam?: { __typename?: 'MockExam', title: string } | null }> | null } };
 
 export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
   input: Types.ReadQuestionsByExamIdsInput;
@@ -383,6 +383,13 @@ export const SearchQuestionsByKeywordDocument = gql`
       solution
       number
       isBookmarked
+      myBookmark {
+        id
+        bookmarkFolder {
+          id
+          name
+        }
+      }
       user {
         id
         nickname

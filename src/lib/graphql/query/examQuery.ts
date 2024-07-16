@@ -314,6 +314,37 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
   }
 `;
 
+export const GET_EXAM_CATEGORIES_FOR_ADMIN = gql`
+  query GetExamCategoriesForAdmin {
+    getExamCategoriesForAdmin {
+      error
+      ok
+      categories {
+        order
+        created_at
+        categoryEvaluations {
+          score
+        }
+        isBookmarked
+        id
+        urlSlug
+        name
+        isPublic
+        source
+        user {
+          profileImg
+          id
+          nickname
+        }
+        mockExam {
+          id
+          isPremium
+        }
+      }
+    }
+  }
+`;
+
 export const GET_EXAM_CATEGORIES = gql`
   query GetExamCategories($input: GetExamCategoriesInput!) {
     getExamCategories(input: $input) {
