@@ -1,20 +1,15 @@
 import TextInput from '@components/common/input/TextInput';
 import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
-import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useSearchFilterStorage } from '@lib/hooks/useSearchFilterStorage';
-import useStorage from '@lib/hooks/useStorage';
 import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
-import { storageActions } from '@modules/redux/slices/storage';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { useQuery } from '@tanstack/react-query';
 import { Empty, Pagination, Select } from 'antd';
-import { StorageType } from 'customTypes';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ExamSource, MockExamCategory, UserRole } from 'types';
+import { ExamSource } from 'types';
 
 const UserStorageComponentBlock = styled.div`
   .category-filter-input {
@@ -85,7 +80,7 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
       <div className="flex items-center mt-5 justify-center">
         <Pagination
           current={page}
-          total={paginatedData?.length || 0}
+          total={data?.length || 0}
           pageSize={LIMIT}
           onChange={(page) => setPage(page)}
         />
