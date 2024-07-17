@@ -44,12 +44,14 @@ interface HighlightableTextProps {
   content: string;
   question: MockExamQuestion;
   type: 'question' | 'answer';
+  textHighlights: TextHighlight[];
 }
 
 const HighlightableText: React.FC<HighlightableTextProps> = ({
   content,
   question,
   type,
+  textHighlights,
 }) => {
   const { insertTextHighlight, removeTextHighlight } = useQuestions();
   const ref = useRef<HTMLDivElement>(null);
@@ -132,7 +134,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const editMemo = (id: string, memo: string) => {
-    const found = question.textHighlight.find((h) => h.id === id);
+    const found = textHighlights.find((h) => h.id === id);
     if (!found) return;
     const input: InsertTextHighlightInput = {
       textHighlightId: found.id,
@@ -161,7 +163,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const handleHighlightClick = (highlightId: string) => {
-    const highlight = question.textHighlight.find((h) => h.id === highlightId);
+    const highlight = textHighlights.find((h) => h.id === highlightId);
     if (!highlight) return;
 
     setSelectedHighlight(highlight);
@@ -215,7 +217,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
       .forEach((el) => el.remove());
     const containerRect = ref.current.getBoundingClientRect();
     const newHighlightElements: React.ReactPortal[] = [];
-    question.textHighlight.forEach((highlight) => {
+    textHighlights.forEach((highlight) => {
       try {
         let range = document.createRange();
         const startNode = getNodeFromPath(highlight.data.startContainer);
@@ -320,7 +322,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
     if (ref.current) {
       renderHighlights();
     }
-  }, [question.textHighlight, ref]);
+  }, [textHighlights, ref]);
 
   useEffect(() => {
     const handleCopy = (e: ClipboardEvent) => {

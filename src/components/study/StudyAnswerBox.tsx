@@ -121,6 +121,9 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           <HighlightableText
             question={question}
             content={question.solution || ''}
+            textHighlights={question.textHighlight.filter(
+              (h) => h.data.type === 'answer'
+            )}
             type="answer"
           />
         ) : (
@@ -128,6 +131,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
             {parse(question.solution || '')}
           </div>
         )}
+
         <div
           onClick={(e) => {
             e.stopPropagation();

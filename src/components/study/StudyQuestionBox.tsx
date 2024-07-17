@@ -13,10 +13,10 @@ import useQuestions, {
   HandleDeleteBookmark,
   HandleSaveBookmark,
 } from '@lib/hooks/useQuestions';
-import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import HighlightableText from './HighlightableText';
+import EditorStyle from '@styles/editorStyle';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -198,6 +198,9 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
         <HighlightableText
           question={question}
           content={question.question}
+          textHighlights={question.textHighlight.filter(
+            (h) => h.data.type === 'question'
+          )}
           type="question"
         />
       ) : (
@@ -205,6 +208,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {parse(question.question || '')}
         </div>
       )}
+
       <div
         onClick={(e) => {
           e.stopPropagation();
