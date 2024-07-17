@@ -25,16 +25,7 @@ const StudyAnswerBoxBlock = styled.div`
     font-weight: bold;
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
-  .study-answer-box-question-card-answer {
-    font-size: 16px;
-    word-break: break-all;
-    white-space: pre-wrap;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    ${EditorStyle};
-  }
+
   .study-answer-box-question-card-answer-wrapper {
     transition: opacity 0.2s ease-in-out;
   }

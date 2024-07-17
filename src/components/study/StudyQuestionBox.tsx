@@ -57,16 +57,7 @@ const StudyQuestionBoxBlock = styled.div`
     flex-shrink: 0;
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
-  .study-question-box-question {
-    word-break: break-all;
-    white-space: pre-wrap;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-size: 16px;
-    ${EditorStyle}
-  }
+
   .study-question-box-image {
     max-width: 730px !important;
     object-fit: contain;
