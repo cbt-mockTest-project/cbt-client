@@ -99,12 +99,8 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const getNodeFromPath = (path: number[]): Node | null => {
-    console.log('getNodeFromPath');
-
     let current: Node | null = ref.current;
     for (const index of path) {
-      console.log('current', current);
-      console.log('index', index);
       if (current && current.childNodes[index]) {
         current = current.childNodes[index];
       } else {
@@ -116,7 +112,6 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
 
   const addHighlight: AddHighlight = (memo: string = '') => {
     if (selectedRange) {
-      console.log('들어오자');
       const newHighlight: InsertTextHighlightInput = {
         textHighlightId: uuidv4(),
         questionId: question.id,
@@ -327,6 +322,29 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
       renderHighlights();
     }
   }, [question.textHighlight, ref]);
+
+  useEffect(() => {
+    const handleCopy = (e: ClipboardEvent) => {
+      e.preventDefault();
+    };
+
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    const element = ref.current;
+    if (element) {
+      element.addEventListener('copy', handleCopy);
+      element.addEventListener('contextmenu', handleContextMenu);
+    }
+
+    return () => {
+      if (element) {
+        element.removeEventListener('copy', handleCopy);
+        element.removeEventListener('contextmenu', handleContextMenu);
+      }
+    };
+  }, [ref]);
 
   return (
     <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>

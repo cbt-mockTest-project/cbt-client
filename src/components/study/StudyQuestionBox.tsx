@@ -44,6 +44,16 @@ const StudyQuestionBoxBlock = styled.div`
       }
     }
   }
+  .study-question-box-question {
+    word-break: break-all;
+    white-space: pre-wrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 16px;
+    ${EditorStyle}
+  }
   .study-question-box-bookmark {
     height: 30px;
     svg {
@@ -96,6 +106,7 @@ interface StudyQuestionBoxProps {
   hasQuestionLink?: boolean;
   onChangeIsFeedbackModalOpen?: (value: boolean) => void;
   isVisibleImage?: boolean;
+  canHighlight?: boolean;
 }
 
 const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
@@ -109,6 +120,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   onChangeIsFeedbackModalOpen,
   isVisibleImage = true,
   deleteBookmark,
+  canHighlight = true,
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
@@ -182,11 +194,17 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           )}
         </div>
       </div>
-      <HighlightableText
-        question={question}
-        content={question.question}
-        type="question"
-      />
+      {canHighlight ? (
+        <HighlightableText
+          question={question}
+          content={question.question}
+          type="question"
+        />
+      ) : (
+        <div className="study-question-box-question">
+          {parse(question.question || '')}
+        </div>
+      )}
       <div
         onClick={(e) => {
           e.stopPropagation();

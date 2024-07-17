@@ -33,6 +33,17 @@ const StudyAnswerBoxBlock = styled.div`
     opacity: 0;
   }
 
+  .study-answer-box-answer {
+    word-break: break-all;
+    white-space: pre-wrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 16px;
+    ${EditorStyle}
+  }
+
   .study-answer-box-box-image {
     max-width: 730px !important;
     object-fit: contain;
@@ -56,6 +67,7 @@ const StudyAnswerBoxBlock = styled.div`
 `;
 
 interface StudyAnswerBoxProps {
+  canHighlight?: boolean;
   isAnswerHidden?: boolean;
   question: MockExamQuestion;
   className?: string;
@@ -69,6 +81,7 @@ interface StudyAnswerBoxProps {
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
+  canHighlight = true,
   isAnswerHidden = false,
   question,
   editFeedback,
@@ -104,11 +117,17 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           isAnswerHidden ? 'hidden' : ''
         }`}
       >
-        <HighlightableText
-          question={question}
-          content={question.solution || ''}
-          type="answer"
-        />
+        {canHighlight ? (
+          <HighlightableText
+            question={question}
+            content={question.solution || ''}
+            type="answer"
+          />
+        ) : (
+          <div className="study-answer-box-answer">
+            {parse(question.solution || '')}
+          </div>
+        )}
         <div
           onClick={(e) => {
             e.stopPropagation();
