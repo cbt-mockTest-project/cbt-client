@@ -21,7 +21,6 @@ const HighlightableTextBlock = styled.div`
       background: yellow;
     }
 
-    /* Firefox용 드래그 색상 변경 */
     &::-moz-selection {
       color: black;
       background: yellow;

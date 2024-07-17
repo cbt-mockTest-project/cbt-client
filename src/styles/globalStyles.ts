@@ -179,8 +179,8 @@ const Globalstyles = createGlobalStyle`
 
   @media (max-width: ${responsive.lsmall}) {
     * {
-      /* -webkit-user-select: none; */
-      /* user-select: none; */
+      -webkit-user-select: none;
+      user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
   }
