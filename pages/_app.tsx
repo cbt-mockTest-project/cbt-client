@@ -142,7 +142,7 @@ function App({ Component, pageProps, ...customProps }: AppProps) {
               ) : (
                 <Component {...pageProps} />
               )}
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </ThemeProviderWrapper>
           </ApolloProvider>
         </QueryClientProvider>

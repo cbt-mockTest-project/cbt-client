@@ -11,7 +11,7 @@ export type ReadBookmarkedQuestionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadBookmarkedQuestionsQuery = { __typename?: 'Query', readBookmarkedQuestions: { __typename?: 'ReadBookmarkedQuestionsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
+export type ReadBookmarkedQuestionsQuery = { __typename?: 'Query', readBookmarkedQuestions: { __typename?: 'ReadBookmarkedQuestionsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, text: string, type: string } | null }>, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
 
 export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByMockExamIdInput;
@@ -86,7 +86,7 @@ export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
+export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, text: string, type: string } | null }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
 
 
 export const ReadBookmarkedQuestionsDocument = gql`
@@ -98,6 +98,18 @@ export const ReadBookmarkedQuestionsDocument = gql`
       highScore
       middleScore
       lowScore
+      textHighlight {
+        id
+        data {
+          memo
+          startOffset
+          endOffset
+          startContainer
+          endOffset
+          text
+          type
+        }
+      }
       mockExam {
         id
         title
@@ -450,6 +462,18 @@ export const ReadQuestionsByExamIdsDocument = gql`
         bookmarkFolder {
           id
           name
+        }
+      }
+      textHighlight {
+        id
+        data {
+          memo
+          startOffset
+          endOffset
+          startContainer
+          endOffset
+          text
+          type
         }
       }
       mockExamQuestionFeedback {

@@ -183,8 +183,8 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
         </div>
       </div>
       <HighlightableText
+        question={question}
         content={question.question}
-        questionId={question.id}
         type="question"
       />
       <div

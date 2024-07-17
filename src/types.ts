@@ -826,6 +826,26 @@ export type DeleteQuizCommentOutput = {
   ok: Scalars['Boolean'];
 };
 
+export type DeleteTextHighlightInput = {
+  textHighlightId: Scalars['String'];
+};
+
+export type DeleteTextHighlightOutput = {
+  __typename?: 'DeleteTextHighlightOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
+export type DeleteTextHighlightsInput = {
+  questionId: Scalars['Float'];
+};
+
+export type DeleteTextHighlightsOutput = {
+  __typename?: 'DeleteTextHighlightsOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+};
+
 export type DeleteUserRoleInput = {
   id: Scalars['Float'];
 };
@@ -1599,6 +1619,19 @@ export type InfluencerInfo = {
   url: Scalars['String'];
 };
 
+export type InsertTextHighlightInput = {
+  data?: InputMaybe<TextHighlightDataInput>;
+  questionId: Scalars['Float'];
+  textHighlightId: Scalars['String'];
+};
+
+export type InsertTextHighlightOutput = {
+  __typename?: 'InsertTextHighlightOutput';
+  error?: Maybe<Scalars['String']>;
+  ok: Scalars['Boolean'];
+  textHighlight?: Maybe<TextHighlight>;
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -1823,6 +1856,7 @@ export type MockExamQuestion = {
   solution?: Maybe<Scalars['String']>;
   solution_img?: Maybe<Array<MockExamImageType>>;
   state: Array<MockExamQuestionState>;
+  textHighlight: Array<TextHighlight>;
   updated_at: Scalars['DateTime'];
   user: User;
 };
@@ -1967,6 +2001,7 @@ export type MockExamQuestionInputType = {
   solution?: InputMaybe<Scalars['String']>;
   solution_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   state: Array<MockExamQuestionStateInputType>;
+  textHighlight: Array<TextHighlightInput>;
   user: UserInputType;
 };
 
@@ -2120,6 +2155,8 @@ export type Mutation = {
   deleteQuestionCards: DeleteQuestionCardsOutput;
   deleteQuizComment: DeleteQuizCommentOutput;
   deleteRecentlyStudiedExams: CoreOutput;
+  deleteTextHighlight: DeleteTextHighlightOutput;
+  deleteTextHighlights: DeleteTextHighlightsOutput;
   deleteUser: CoreOutput;
   deleteUserRole: DeleteUserRoleOutput;
   editMockExam: EditMockExamOutput;
@@ -2138,6 +2175,7 @@ export type Mutation = {
   editQuizComment: EditQuizCommentOutput;
   editQuizCommentLike: EditQuizCommentLikeOutput;
   emailVerification: EmailVerificationOutput;
+  insertTextHighlight: InsertTextHighlightOutput;
   login: LoginOutput;
   logout: CoreOutput;
   moveExamOrder: MoveExamOrderOutput;
@@ -2490,6 +2528,16 @@ export type MutationDeleteQuizCommentArgs = {
 };
 
 
+export type MutationDeleteTextHighlightArgs = {
+  input: DeleteTextHighlightInput;
+};
+
+
+export type MutationDeleteTextHighlightsArgs = {
+  input: DeleteTextHighlightsInput;
+};
+
+
 export type MutationDeleteUserRoleArgs = {
   input: DeleteUserRoleInput;
 };
@@ -2572,6 +2620,11 @@ export type MutationEditQuizCommentLikeArgs = {
 
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
+};
+
+
+export type MutationInsertTextHighlightArgs = {
+  input: InsertTextHighlightInput;
 };
 
 
@@ -2844,6 +2897,7 @@ export type PartialMockExamQuestionInput = {
   solution?: InputMaybe<Scalars['String']>;
   solution_img?: InputMaybe<Array<MockExamQuestionImageInputType>>;
   state?: InputMaybe<Array<MockExamQuestionStateInputType>>;
+  textHighlight?: InputMaybe<Array<TextHighlightInput>>;
   updated_at?: InputMaybe<Scalars['DateTime']>;
   user?: InputMaybe<UserInputType>;
 };
@@ -4213,6 +4267,44 @@ export enum SettlementRequestStatus {
   Rejected = 'Rejected'
 }
 
+export type TextHighlight = {
+  __typename?: 'TextHighlight';
+  created_at: Scalars['DateTime'];
+  data?: Maybe<TextHighlightData>;
+  id: Scalars['String'];
+  question: MockExamQuestion;
+  updated_at: Scalars['DateTime'];
+  user: User;
+};
+
+export type TextHighlightData = {
+  __typename?: 'TextHighlightData';
+  endContainer: Array<Scalars['Float']>;
+  endOffset: Scalars['Float'];
+  memo: Scalars['String'];
+  startContainer: Array<Scalars['Float']>;
+  startOffset: Scalars['Float'];
+  text: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type TextHighlightDataInput = {
+  endContainer: Array<Scalars['Float']>;
+  endOffset: Scalars['Float'];
+  memo: Scalars['String'];
+  startContainer: Array<Scalars['Float']>;
+  startOffset: Scalars['Float'];
+  text: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type TextHighlightInput = {
+  data?: InputMaybe<TextHighlightDataInput>;
+  id: Scalars['String'];
+  question: MockExamQuestionInputType;
+  user: UserInputType;
+};
+
 export type TitleAndId = {
   __typename?: 'TitleAndId';
   id?: Maybe<Scalars['Float']>;
@@ -4512,6 +4604,7 @@ export type User = {
   settlementRequests: Array<SettlementRequest>;
   solveLimit?: Maybe<Scalars['Float']>;
   solvedProblemCount?: Maybe<Scalars['Float']>;
+  textHighlight: Array<TextHighlight>;
   todos: Array<Todo>;
   updated_at: Scalars['DateTime'];
   usedFreeTrial: Scalars['Boolean'];
@@ -4585,6 +4678,7 @@ export type UserInputType = {
   settlementRequests: Array<SettlementRequestInputType>;
   solveLimit?: InputMaybe<Scalars['Float']>;
   solvedProblemCount?: InputMaybe<Scalars['Float']>;
+  textHighlight: Array<TextHighlightInput>;
   todos: Array<TodoInputType>;
   usedFreeTrial: Scalars['Boolean'];
   userRoles: Array<UserRoleInputType>;

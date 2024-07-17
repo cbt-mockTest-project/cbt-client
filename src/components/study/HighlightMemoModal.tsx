@@ -1,7 +1,8 @@
 import { Button, Input, Modal, ModalProps } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { AddHighlight, EditMemo, TextHighlight } from './HighlightableText';
+import { TextHighlight } from 'types';
+import { AddHighlight, EditMemo } from './HighlightableText';
 
 const HighlighMemoModalModalBlock = styled(Modal)``;
 
@@ -15,8 +16,8 @@ const HighlighMemoModalModal: React.FC<HighlighMemoModalModalProps> = (
   props
 ) => {
   const { highlight, addHighlight, editMemo, ...modalProps } = props;
-  const [isEditing, setIsEditing] = useState(!highlight?.memo);
-  const [memo, setMemo] = useState(highlight?.memo || '');
+  const [isEditing, setIsEditing] = useState(!highlight?.data.memo);
+  const [memo, setMemo] = useState(highlight?.data.memo || '');
   console.log('highlight', highlight);
   return (
     <HighlighMemoModalModalBlock {...modalProps} footer={null}>

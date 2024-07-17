@@ -4,24 +4,32 @@ import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import OuterClick from '@components/common/outerClick/OuterClick';
 import { v4 as uuidv4 } from 'uuid';
-import { LocalStorage } from '@lib/utils/localStorage';
-import { HIGHLIGHTS } from '@lib/constants/localStorage';
 import { Button, Tooltip } from 'antd';
 import HighlighMemoModalModal from './HighlightMemoModal';
 import ReactDOM from 'react-dom';
+import {
+  InsertTextHighlightInput,
+  MockExamQuestion,
+  TextHighlight,
+} from 'types';
+import useQuestions from '@lib/hooks/useQuestions';
 
 const HighlightableTextBlock = styled.div`
   * {
     &::selection {
-      background: yellow; /* 배경색 */
-      color: black; /* 텍스트 색상 */
+      color: black;
+      background: yellow;
     }
 
     /* Firefox용 드래그 색상 변경 */
     &::-moz-selection {
-      background: yellow;
       color: black;
+      background: yellow;
     }
+  }
+  .highlight-overlay {
+    opacity: 0.5;
+    background-color: yellow;
   }
   font-size: 16px;
   white-space: pre-wrap;
@@ -30,34 +38,23 @@ const HighlightableTextBlock = styled.div`
   ${EditorStyle};
 `;
 
-export interface TextHighlight {
-  id: string;
-  startContainer: number[];
-  startOffset: number;
-  endContainer: number[];
-  endOffset: number;
-  text: string;
-  memo: string;
-}
-
 export type AddHighlight = (memo?: string) => void;
 export type EditMemo = (id: string, memo: string) => void;
 
 interface HighlightableTextProps {
   content: string;
-  questionId: number;
+  question: MockExamQuestion;
   type: 'question' | 'answer';
 }
 
 const HighlightableText: React.FC<HighlightableTextProps> = ({
   content,
-  questionId,
+  question,
   type,
 }) => {
+  const { insertTextHighlight, removeTextHighlight } = useQuestions();
   const ref = useRef<HTMLDivElement>(null);
-  const localStorage = new LocalStorage();
   const uniqueId = useId();
-  const [highlights, setHighlights] = useState<TextHighlight[]>([]);
   const [highlightElements, setHighlightElements] = useState<
     React.ReactPortal[]
   >([]);
@@ -102,8 +99,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const getNodeFromPath = (path: number[]): Node | null => {
+    console.log('getNodeFromPath');
+
     let current: Node | null = ref.current;
     for (const index of path) {
+      console.log('current', current);
+      console.log('index', index);
       if (current && current.childNodes[index]) {
         current = current.childNodes[index];
       } else {
@@ -115,69 +116,70 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
 
   const addHighlight: AddHighlight = (memo: string = '') => {
     if (selectedRange) {
-      const newHighlight: TextHighlight = {
-        id: uuidv4(),
-        startContainer: getNodePath(selectedRange.startContainer),
-        startOffset: selectedRange.startOffset,
-        endContainer: getNodePath(selectedRange.endContainer),
-        endOffset: selectedRange.endOffset,
-        text: selectedRange.toString(),
-        memo,
+      console.log('들어오자');
+      const newHighlight: InsertTextHighlightInput = {
+        textHighlightId: uuidv4(),
+        questionId: question.id,
+        data: {
+          type,
+          startContainer: getNodePath(selectedRange.startContainer),
+          endContainer: getNodePath(selectedRange.endContainer),
+          startOffset: selectedRange.startOffset,
+          endOffset: selectedRange.endOffset,
+          text: selectedRange.toString(),
+          memo,
+        },
       };
-      const newHighlights = [...highlights, newHighlight];
-      const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
-      localStorage.set(HIGHLIGHTS, [
-        ...prevHighlights,
-        ...newHighlights.map((el) => ({ ...el, questionId, type })),
-      ]);
-      setHighlights(newHighlights);
+      insertTextHighlight(question, newHighlight);
+
       setShowPopup(false);
       setSelectedRange(null);
     }
   };
 
   const editMemo = (id: string, memo: string) => {
-    const newHighlights = highlights.map((h) =>
-      h.id === id ? { ...h, memo } : h
-    );
-    const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
-    localStorage.set(HIGHLIGHTS, [
-      ...prevHighlights,
-      ...newHighlights.map((el) => ({ ...el, questionId, type })),
-    ]);
-    setHighlights(newHighlights);
+    const found = question.textHighlight.find((h) => h.id === id);
+    if (!found) return;
+    const input: InsertTextHighlightInput = {
+      textHighlightId: found.id,
+      questionId: question.id,
+      data: {
+        endContainer: found.data.endContainer,
+        startOffset: found.data.startOffset,
+        endOffset: found.data.endOffset,
+        startContainer: found.data.startContainer,
+        text: found.data.text,
+        type: found.data.type,
+        memo,
+      },
+    };
+    insertTextHighlight(question, input);
   };
 
   const removeHighlight = () => {
     if (selectedHighlight) {
-      const newHighlights = highlights.filter(
-        (h) => h.id !== selectedHighlight.id
-      );
-      const prevHighlights = localStorage.get(HIGHLIGHTS) || [];
-      localStorage.set(HIGHLIGHTS, [
-        ...prevHighlights,
-        ...newHighlights.map((el) => ({ ...el, questionId, type })),
-      ]);
-      setHighlights(newHighlights);
-      setShowEditPopup(false);
-      setSelectedHighlight(null);
+      removeTextHighlight(question, {
+        textHighlightId: selectedHighlight.id,
+      });
     }
+    setShowEditPopup(false);
+    setSelectedHighlight(null);
   };
 
   const handleHighlightClick = (highlightId: string) => {
-    const highlight = highlights.find((h) => h.id === highlightId);
+    const highlight = question.textHighlight.find((h) => h.id === highlightId);
     if (!highlight) return;
 
     setSelectedHighlight(highlight);
 
     try {
       const range = document.createRange();
-      const startNode = getNodeFromPath(highlight.startContainer);
-      const endNode = getNodeFromPath(highlight.endContainer);
+      const startNode = getNodeFromPath(highlight.data.startContainer);
+      const endNode = getNodeFromPath(highlight.data.endContainer);
 
       if (startNode && endNode) {
-        range.setStart(startNode, highlight.startOffset);
-        range.setEnd(endNode, highlight.endOffset);
+        range.setStart(startNode, highlight.data.startOffset);
+        range.setEnd(endNode, highlight.data.endOffset);
 
         const rects = range.getClientRects();
         if (rects.length > 0) {
@@ -214,24 +216,20 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
   const renderHighlights = () => {
     if (!ref.current) return;
-
     ref.current
       .querySelectorAll('.highlight-overlay')
       .forEach((el) => el.remove());
-
     const containerRect = ref.current.getBoundingClientRect();
     const newHighlightElements: React.ReactPortal[] = [];
-
-    highlights.forEach((highlight) => {
+    question.textHighlight.forEach((highlight) => {
       try {
         let range = document.createRange();
-        const startNode = getNodeFromPath(highlight.startContainer);
-        const endNode = getNodeFromPath(highlight.endContainer);
-
+        const startNode = getNodeFromPath(highlight.data.startContainer);
+        const endNode = getNodeFromPath(highlight.data.endContainer);
         if (startNode && endNode) {
           try {
-            range.setStart(startNode, highlight.startOffset);
-            range.setEnd(endNode, highlight.endOffset);
+            range.setStart(startNode, highlight.data.startOffset);
+            range.setEnd(endNode, highlight.data.endOffset);
           } catch (error) {
             console.warn(
               'Failed to set range, attempting text-based recovery',
@@ -239,9 +237,9 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
             );
             // 텍스트 기반 복구 시도
             const textContent = ref.current.textContent || '';
-            const startIndex = textContent.indexOf(highlight.text);
+            const startIndex = textContent.indexOf(highlight.data.text);
             if (startIndex !== -1) {
-              const endIndex = startIndex + highlight.text.length;
+              const endIndex = startIndex + highlight.data.text.length;
               const tempRange = document.createRange();
               const [newStartNode, newStartOffset] = findNodeAndOffsetFromIndex(
                 ref.current,
@@ -270,14 +268,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
             HighlightEl.style.left = `${rect.left - containerRect.left}px`;
             HighlightEl.style.width = `${rect.width}px`;
             HighlightEl.style.height = `${rect.height}px`;
-            HighlightEl.style.backgroundColor = 'yellow';
-            HighlightEl.style.opacity = '0.5';
             HighlightEl.style.pointerEvents = 'auto';
             HighlightEl.style.zIndex = '1';
             HighlightEl.style.mixBlendMode = 'multiply';
             ref.current.appendChild(HighlightEl);
             const portal = ReactDOM.createPortal(
-              <Tooltip title={highlight.memo || ''}>
+              <Tooltip title={highlight.data.memo || ''}>
                 <div
                   style={{
                     width: '100%',
@@ -327,18 +323,10 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   useEffect(() => {
-    const storedHighlights = localStorage.get(HIGHLIGHTS) || [];
-    const filteredHighlights = storedHighlights?.filter(
-      (el) => el.questionId === questionId && el.type === type
-    );
-    if (filteredHighlights) {
-      setHighlights(filteredHighlights);
+    if (ref.current) {
+      renderHighlights();
     }
-  }, []);
-
-  useEffect(() => {
-    renderHighlights();
-  }, [highlights]);
+  }, [question.textHighlight, ref]);
 
   return (
     <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>
@@ -420,14 +408,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
 const PopupBox = styled.div`
   position: absolute;
   transform: translateX(-50%);
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: ${({ theme }) => theme.color('colorBgContainer')};
+  border: 1px solid ${({ theme }) => theme.color('colorBorder')};
   padding: 5px;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 `;
-
-const HighlightBox = styled.div``;
 
 export default HighlightableText;

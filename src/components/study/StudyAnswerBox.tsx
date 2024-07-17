@@ -105,8 +105,8 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
         }`}
       >
         <HighlightableText
+          question={question}
           content={question.solution || ''}
-          questionId={question.id}
           type="answer"
         />
         <div

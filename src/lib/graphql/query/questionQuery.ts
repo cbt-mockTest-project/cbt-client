@@ -14,6 +14,18 @@ export const READ_BOOKMARKED_QUESTIONS = gql`
         highScore
         middleScore
         lowScore
+        textHighlight {
+          id
+          data {
+            memo
+            startOffset
+            endOffset
+            startContainer
+            endContainer
+            text
+            type
+          }
+        }
         mockExam {
           id
           title
@@ -343,6 +355,18 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
           bookmarkFolder {
             id
             name
+          }
+        }
+        textHighlight {
+          id
+          data {
+            memo
+            startOffset
+            endOffset
+            startContainer
+            endContainer
+            text
+            type
           }
         }
         mockExamQuestionFeedback {
