@@ -13,6 +13,7 @@ import {
   TextHighlight,
 } from 'types';
 import useQuestions from '@lib/hooks/useQuestions';
+import useAuth from '@lib/hooks/useAuth';
 
 const HighlightableTextBlock = styled.div`
   * {
@@ -53,6 +54,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   type,
   textHighlights,
 }) => {
+  const { handleCheckLogin } = useAuth();
   const { insertTextHighlight, removeTextHighlight } = useQuestions();
   const ref = useRef<HTMLDivElement>(null);
   const uniqueId = useId();
@@ -365,7 +367,10 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={() => addHighlight()}
+              onClick={() => {
+                if (!handleCheckLogin()) return;
+                addHighlight();
+              }}
             >
               형광펜
             </Button>
@@ -373,7 +378,10 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={() => setShowMemoModal(true)}
+              onClick={() => {
+                if (!handleCheckLogin()) return;
+                setShowMemoModal(true);
+              }}
             >
               메모
             </Button>
