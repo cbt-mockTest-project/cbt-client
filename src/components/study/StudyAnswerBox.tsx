@@ -17,6 +17,7 @@ import useAuth from '@lib/hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { responsive } from '@lib/utils/responsive';
+import HighlightableText from './HighlightableText';
 
 const StudyAnswerBoxBlock = styled.div`
   position: relative;
@@ -24,21 +25,23 @@ const StudyAnswerBoxBlock = styled.div`
     font-weight: bold;
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
-  .study-answer-box-question-card-answer {
-    font-size: 16px;
+
+  .study-answer-box-question-card-answer-wrapper {
+    transition: opacity 0.2s ease-in-out;
+  }
+  .study-answer-box-question-card-anwswer-wrapper.hidden {
+    opacity: 0;
+  }
+
+  .study-answer-box-answer {
     word-break: break-all;
     white-space: pre-wrap;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    ${EditorStyle};
-  }
-  .study-answer-box-question-card-answer-wrapper {
-    transition: opacity 0.2s ease-in-out;
-  }
-  .study-answer-box-question-card-anwswer-wrapper.hidden {
-    opacity: 0;
+    font-size: 16px;
+    ${EditorStyle}
   }
 
   .study-answer-box-box-image {
@@ -64,6 +67,7 @@ const StudyAnswerBoxBlock = styled.div`
 `;
 
 interface StudyAnswerBoxProps {
+  canHighlight?: boolean;
   isAnswerHidden?: boolean;
   question: MockExamQuestion;
   className?: string;
@@ -77,6 +81,7 @@ interface StudyAnswerBoxProps {
 }
 
 const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
+  canHighlight = true,
   isAnswerHidden = false,
   question,
   editFeedback,
@@ -112,9 +117,17 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
           isAnswerHidden ? 'hidden' : ''
         }`}
       >
-        <div className="study-answer-box-question-card-answer">
-          {parse(question.solution || '')}
-        </div>
+        {canHighlight ? (
+          <HighlightableText
+            question={question}
+            content={question.solution || ''}
+            type="answer"
+          />
+        ) : (
+          <div className="study-answer-box-answer">
+            {parse(question.solution || '')}
+          </div>
+        )}
         <div
           onClick={(e) => {
             e.stopPropagation();

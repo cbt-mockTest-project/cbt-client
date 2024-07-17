@@ -14,6 +14,10 @@ import {
   deleteQuestionBookmarkMutationFn,
   moveQuestionBookmarkMutationFn,
 } from '@lib/mutation/questionBookmarkMutation';
+import {
+  deleteTextHighlightMutationFn,
+  insertTextHighlightMutationFn,
+} from '@lib/mutation/textHighlightMutation';
 import { handleError } from '@lib/utils/utils';
 import { apolloClient } from '@modules/apollo';
 import { coreActions } from '@modules/redux/slices/core';
@@ -21,10 +25,13 @@ import { mockExamActions } from '@modules/redux/slices/mockExam';
 import { App } from 'antd';
 import { useDispatch } from 'react-redux';
 import {
+  DeleteTextHighlightInput,
+  InsertTextHighlightInput,
   MockExamQuestion,
   QuestionState,
   ReadBookmarkedQuestionsInput,
   ReadQuestionsByExamIdsInput,
+  TextHighlight,
 } from 'types';
 import useQuestionFeedback, {
   AddFeedbackInput,
@@ -297,6 +304,51 @@ const useQuestions = () => {
     dispatch(mockExamActions.setServerSideQuestions(questions));
   };
 
+  const insertTextHighlight = async (
+    question: MockExamQuestion,
+    input: InsertTextHighlightInput
+  ) => {
+    try {
+      const res = await insertTextHighlightMutationFn(input);
+      if (res.data.insertTextHighlight.ok) {
+        const newTextHighlight = question.textHighlight.filter(
+          (textHighlight) =>
+            textHighlight.id !== res.data.insertTextHighlight.textHighlight.id
+        );
+        const newQuestion: MockExamQuestion = {
+          ...question,
+          textHighlight: [
+            ...newTextHighlight,
+            res.data.insertTextHighlight.textHighlight as TextHighlight,
+          ],
+        };
+        dispatch(mockExamActions.setQuestion(newQuestion));
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const removeTextHighlight = async (
+    question: MockExamQuestion,
+    input: DeleteTextHighlightInput
+  ) => {
+    try {
+      const res = await deleteTextHighlightMutationFn(input);
+      if (res.data.deleteTextHighlight.ok) {
+        const newQuestion = {
+          ...question,
+          textHighlight: question.textHighlight.filter(
+            (textHighlight) => textHighlight.id !== input.textHighlightId
+          ),
+        };
+        dispatch(mockExamActions.setQuestion(newQuestion));
+      }
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   return {
     setServerSideQuestions,
     setQuestions,
@@ -312,6 +364,8 @@ const useQuestions = () => {
     shuffleQuestions,
     filterQuestions,
     fetchBookmarkedQuestions,
+    insertTextHighlight,
+    removeTextHighlight,
   };
 };
 

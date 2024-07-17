@@ -73,6 +73,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <BasicCard className="question-detail-question-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyQuestionBox
+            canHighlight={false}
             hasQuestionLink={false}
             hasExamTitle={false}
             questionNumber={question.number}
@@ -84,6 +85,7 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
       <BasicCard className="question-detail-answer-card" type="primary">
         <div className="question-detail-content-wrapper">
           <StudyAnswerBox
+            canHighlight={false}
             question={question}
             isAnswerHidden={isAnswerHidden}
             addFeedback={handleAddFeedback}

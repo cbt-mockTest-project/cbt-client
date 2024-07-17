@@ -16,6 +16,7 @@ import useQuestions, {
 import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
+import HighlightableText from './HighlightableText';
 
 const StudyQuestionBoxBlock = styled.div`
   .study-question-box-header {
@@ -43,6 +44,16 @@ const StudyQuestionBoxBlock = styled.div`
       }
     }
   }
+  .study-question-box-question {
+    word-break: break-all;
+    white-space: pre-wrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 16px;
+    ${EditorStyle}
+  }
   .study-question-box-bookmark {
     height: 30px;
     svg {
@@ -56,16 +67,7 @@ const StudyQuestionBoxBlock = styled.div`
     flex-shrink: 0;
     color: ${({ theme }) => theme.color('colorTextSecondary')};
   }
-  .study-question-box-question {
-    word-break: break-all;
-    white-space: pre-wrap;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    font-size: 16px;
-    ${EditorStyle}
-  }
+
   .study-question-box-image {
     max-width: 730px !important;
     object-fit: contain;
@@ -104,6 +106,7 @@ interface StudyQuestionBoxProps {
   hasQuestionLink?: boolean;
   onChangeIsFeedbackModalOpen?: (value: boolean) => void;
   isVisibleImage?: boolean;
+  canHighlight?: boolean;
 }
 
 const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
@@ -117,6 +120,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   onChangeIsFeedbackModalOpen,
   isVisibleImage = true,
   deleteBookmark,
+  canHighlight = true,
 }) => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
@@ -190,9 +194,17 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           )}
         </div>
       </div>
-      <div className="study-question-box-question">
-        {parse(question.question || '')}
-      </div>
+      {canHighlight ? (
+        <HighlightableText
+          question={question}
+          content={question.question}
+          type="question"
+        />
+      ) : (
+        <div className="study-question-box-question">
+          {parse(question.question || '')}
+        </div>
+      )}
       <div
         onClick={(e) => {
           e.stopPropagation();
