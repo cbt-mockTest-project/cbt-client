@@ -13,7 +13,6 @@ import useQuestions, {
   HandleDeleteBookmark,
   HandleSaveBookmark,
 } from '@lib/hooks/useQuestions';
-import EditorStyle from '@styles/editorStyle';
 import Link from 'next/link';
 import { responsive } from '@lib/utils/responsive';
 import HighlightableText from './HighlightableText';
@@ -184,6 +183,9 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
       </div>
       <HighlightableText
         question={question}
+        textHighlights={question.textHighlight.filter(
+          (h) => h.data.type === 'question'
+        )}
         content={question.question}
         type="question"
       />

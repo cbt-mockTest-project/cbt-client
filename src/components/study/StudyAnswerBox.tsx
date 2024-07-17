@@ -107,6 +107,9 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
         <HighlightableText
           question={question}
           content={question.solution || ''}
+          textHighlights={question.textHighlight.filter(
+            (h) => h.data.type === 'answer'
+          )}
           type="answer"
         />
         <div
