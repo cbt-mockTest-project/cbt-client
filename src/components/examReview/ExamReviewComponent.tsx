@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ExamReviewStateCheckboxGroup from './ExamReviewStateCheckboxGroup';
 import { useAppSelector } from '@modules/redux/store/configureStore';
+import { shallowEqual } from 'react-redux';
 
 const ExamReviewComponentBlock = styled.div`
   padding: 20px;
@@ -31,7 +32,10 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
   const categoryName = router.query.categoryName as string;
   const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
   const { fetchQuestions, resetQuestions } = useQuestions();
-  const questions = useAppSelector((state) => state.mockExam.questions);
+  const questionIds = useAppSelector(
+    (state) => state.mockExam.questions.map((question) => question.id),
+    shallowEqual
+  );
   useEffect(() => {
     resetQuestions();
   }, []);
@@ -48,14 +52,14 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
       />
       <div className="exam-review-question-list">
         {!fetchQuestionsLoading &&
-          questions.map((question, index) => (
+          questionIds.map((questionId, index) => (
             <SolutionModeCardItem
-              key={question.id}
+              key={questionId}
               index={index}
               isAnswerAllHidden={false}
             />
           ))}
-        {!fetchQuestionsLoading && questions.length === 0 && (
+        {!fetchQuestionsLoading && questionIds.length === 0 && (
           <Empty description="문제가 없습니다." />
         )}
         {fetchQuestionsLoading && (
