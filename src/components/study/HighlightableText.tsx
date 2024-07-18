@@ -4,7 +4,7 @@ import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import OuterClick from '@components/common/outerClick/OuterClick';
 import { v4 as uuidv4 } from 'uuid';
-import { Button, Tooltip } from 'antd';
+import { Button, Drawer, Tooltip } from 'antd';
 import HighlighMemoModalModal from './HighlightMemoModal';
 import ReactDOM from 'react-dom';
 import {
@@ -15,6 +15,8 @@ import {
 import useQuestions from '@lib/hooks/useQuestions';
 import useAuth from '@lib/hooks/useAuth';
 import { isMobile } from 'react-device-detect';
+import HighlightMobileDrawerContent from './HighlightMobileDrawerContent';
+import { useLongPress } from 'use-long-press';
 
 const HighlightableTextBlock = styled.div`
   * {
@@ -55,6 +57,17 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   type,
   textHighlights,
 }) => {
+  const bind = useLongPress(
+    (event, { context }) => {
+      if (isMobile && context) {
+        handleHighlightClick(context as string);
+      }
+    },
+    {
+      threshold: 500, // 롱프레스로 인식할 시간 (밀리초)
+      cancelOnMovement: true,
+    }
+  );
   const { handleCheckLogin } = useAuth();
   const { insertTextHighlight, removeTextHighlight } = useQuestions();
   const ref = useRef<HTMLDivElement>(null);
@@ -65,6 +78,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   const [selectedRange, setSelectedRange] = useState<Range | null>(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [showPopup, setShowPopup] = useState(false);
+  const [showMobilePopup, setShowMobilePopup] = useState(false);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showMemoModal, setShowMemoModal] = useState(false);
   const [selectedHighlight, setSelectedHighlight] =
@@ -89,18 +103,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    e.stopPropagation();
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       if (range.toString().trim() !== '') {
         setSelectedRange(range);
-        const rect = range.getBoundingClientRect();
-        setPopupPosition({
-          x: rect.left + rect.width,
-          y: rect.bottom,
-        });
-        setShowPopup(true);
+        setShowMobilePopup(true);
         setSelectedHighlight(null);
       }
     }
@@ -229,7 +237,6 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
         }
       }
     }
-
     setShowEditPopup(true);
   };
   const renderHighlights = () => {
@@ -298,10 +305,17 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
                     height: '100%',
                     cursor: 'pointer',
                   }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleHighlightClick(highlight.id);
+                    if (!isMobile) {
+                      handleHighlightClick(highlight.id);
+                    }
                   }}
+                  {...bind(highlight.id)}
                 />
               </Tooltip>,
               HighlightEl
@@ -496,6 +510,23 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
           addHighlight={addHighlight}
           editMemo={editMemo}
         />
+      )}
+      {isMobile && (
+        <Drawer
+          title={null}
+          closable={false}
+          placement="bottom"
+          open={showMobilePopup}
+          onClose={() => setShowMobilePopup(false)}
+          height={150}
+        >
+          <HighlightMobileDrawerContent
+            highlight={selectedHighlight}
+            addHighlight={addHighlight}
+            editMemo={editMemo}
+            onClose={() => setShowMobilePopup(false)}
+          />
+        </Drawer>
       )}
     </HighlightableTextBlock>
   );
