@@ -109,6 +109,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       if (range.toString().trim() !== '') {
+        e.preventDefault();
         setSelectedRange(range);
         // 선택된 텍스트의 위치를 기반으로 팝업 위치 설정
         const rect = range.getBoundingClientRect();
