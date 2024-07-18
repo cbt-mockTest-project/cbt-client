@@ -119,6 +119,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
         });
         setShowMobilePopup(true);
         setSelectedHighlight(null);
+        removeSelection();
       }
     }
   };
