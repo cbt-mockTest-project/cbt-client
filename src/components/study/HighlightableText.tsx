@@ -14,6 +14,7 @@ import {
 } from 'types';
 import useQuestions from '@lib/hooks/useQuestions';
 import useAuth from '@lib/hooks/useAuth';
+import { isMobile } from 'react-device-detect';
 
 const HighlightableTextBlock = styled.div`
   * {
@@ -69,7 +70,26 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   const [selectedHighlight, setSelectedHighlight] =
     useState<TextHighlight | null>(null);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      if (range.toString().trim() !== '') {
+        setSelectedRange(range);
+        const rect = range.getBoundingClientRect();
+        setPopupPosition({
+          x: rect.left + rect.width,
+          y: rect.bottom,
+        });
+        setShowPopup(true);
+        setSelectedHighlight(null);
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation();
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
@@ -297,6 +317,13 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
     setHighlightElements(newHighlightElements);
   };
 
+  const removeSelection = () => {
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+    }
+  };
+
   // 텍스트 인덱스로부터 노드와 오프셋을 찾는 헬퍼 함수
   const findNodeAndOffsetFromIndex = (
     container: Node,
@@ -350,7 +377,12 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   }, [ref]);
 
   return (
-    <HighlightableTextBlock id={uniqueId} onMouseUp={handleMouseUp} ref={ref}>
+    <HighlightableTextBlock
+      id={uniqueId}
+      onMouseUp={handleMouseUp}
+      onTouchEnd={handleTouchEnd}
+      ref={ref}
+    >
       {parse(content || '')}
       {highlightElements}
       {showPopup && (
@@ -367,9 +399,11 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 if (!handleCheckLogin()) return;
                 addHighlight();
+                removeSelection();
               }}
             >
               형광펜
@@ -378,13 +412,29 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 if (!handleCheckLogin()) return;
                 setShowMemoModal(true);
+                removeSelection();
               }}
             >
               메모
             </Button>
+            {isMobile && (
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPopup(false);
+                  removeSelection();
+                }}
+              >
+                닫기
+              </Button>
+            )}
           </PopupBox>
         </OuterClick>
       )}
@@ -401,7 +451,10 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={removeHighlight}
+              onClick={(e) => {
+                e.stopPropagation();
+                removeHighlight();
+              }}
             >
               제거
             </Button>
@@ -409,10 +462,26 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               className="w-full"
               type="text"
               size="large"
-              onClick={() => setShowMemoModal(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMemoModal(true);
+              }}
             >
               메모
             </Button>
+            {isMobile && (
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowEditPopup(false);
+                }}
+              >
+                닫기
+              </Button>
+            )}
           </PopupBox>
         </OuterClick>
       )}
