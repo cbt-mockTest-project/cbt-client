@@ -103,15 +103,30 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
+    console.log(';gigig');
+    e.preventDefault(); // 기본 동작 방지
+
+    // 약간의 지연 후 텍스트 선택 확인
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       if (range.toString().trim() !== '') {
         setSelectedRange(range);
+        // 선택된 텍스트의 위치를 기반으로 팝업 위치 설정
+        const rect = range.getBoundingClientRect();
+        setPopupPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.bottom,
+        });
         setShowMobilePopup(true);
         setSelectedHighlight(null);
       }
     }
+  };
+
+  const handleTouchStart = () => {
+    // 터치 시작 시 기존 팝업 닫기
+    setShowMobilePopup(false);
   };
 
   const getNodePath = (node: Node): number[] => {
@@ -142,6 +157,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const addHighlight: AddHighlight = (memo: string = '') => {
+    if (!handleCheckLogin()) return;
     if (selectedRange) {
       const newHighlight: InsertTextHighlightInput = {
         textHighlightId: uuidv4(),
@@ -164,6 +180,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const editMemo = (id: string, memo: string) => {
+    if (!handleCheckLogin()) return;
     const found = textHighlights.find((h) => h.id === id);
     if (!found) return;
     const input: InsertTextHighlightInput = {
@@ -391,126 +408,8 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   }, [ref]);
 
   return (
-    <HighlightableTextBlock
-      id={uniqueId}
-      onMouseUp={handleMouseUp}
-      onTouchEnd={handleTouchEnd}
-      ref={ref}
-    >
-      {parse(content || '')}
-      {highlightElements}
-      {showPopup && (
-        <OuterClick callback={() => setShowPopup(false)}>
-          <PopupBox
-            style={{
-              top: popupPosition.y,
-              left: popupPosition.x - 50,
-              position: 'fixed',
-            }}
-            className="flex flex-col gap-2 items-center"
-          >
-            <Button
-              className="w-full"
-              type="text"
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!handleCheckLogin()) return;
-                addHighlight();
-                removeSelection();
-              }}
-            >
-              형광펜
-            </Button>
-            <Button
-              className="w-full"
-              type="text"
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!handleCheckLogin()) return;
-                setShowMemoModal(true);
-                removeSelection();
-              }}
-            >
-              메모
-            </Button>
-            {isMobile && (
-              <Button
-                className="w-full"
-                type="text"
-                size="large"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPopup(false);
-                  removeSelection();
-                }}
-              >
-                닫기
-              </Button>
-            )}
-          </PopupBox>
-        </OuterClick>
-      )}
-      {showEditPopup && (
-        <OuterClick callback={() => setShowEditPopup(false)}>
-          <PopupBox
-            style={{
-              top: popupPosition.y,
-              left: popupPosition.x - 50,
-            }}
-            className="flex flex-col gap-2 items-center"
-          >
-            <Button
-              className="w-full"
-              type="text"
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                removeHighlight();
-              }}
-            >
-              제거
-            </Button>
-            <Button
-              className="w-full"
-              type="text"
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMemoModal(true);
-              }}
-            >
-              메모
-            </Button>
-            {isMobile && (
-              <Button
-                className="w-full"
-                type="text"
-                size="large"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowEditPopup(false);
-                }}
-              >
-                닫기
-              </Button>
-            )}
-          </PopupBox>
-        </OuterClick>
-      )}
-      {showMemoModal && (
-        <HighlighMemoModalModal
-          title="메모"
-          key={selectedHighlight?.id}
-          open={showMemoModal}
-          highlight={selectedHighlight}
-          onOk={() => setShowMemoModal(false)}
-          onCancel={() => setShowMemoModal(false)}
-          addHighlight={addHighlight}
-          editMemo={editMemo}
-        />
-      )}
+    <>
+      {' '}
       {isMobile && (
         <Drawer
           title={null}
@@ -528,7 +427,129 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
           />
         </Drawer>
       )}
-    </HighlightableTextBlock>
+      <HighlightableTextBlock
+        id={uniqueId}
+        onMouseUp={handleMouseUp}
+        onTouchEnd={handleTouchEnd}
+        onTouchStart={handleTouchStart}
+        ref={ref}
+      >
+        {parse(content || '')}
+        {highlightElements}
+        {showPopup && (
+          <OuterClick callback={() => setShowPopup(false)}>
+            <PopupBox
+              style={{
+                top: popupPosition.y,
+                left: popupPosition.x - 50,
+                position: 'fixed',
+              }}
+              className="flex flex-col gap-2 items-center"
+            >
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!handleCheckLogin()) return;
+                  addHighlight();
+                  removeSelection();
+                }}
+              >
+                형광펜
+              </Button>
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!handleCheckLogin()) return;
+                  setShowMemoModal(true);
+                  removeSelection();
+                }}
+              >
+                메모
+              </Button>
+              {isMobile && (
+                <Button
+                  className="w-full"
+                  type="text"
+                  size="large"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowPopup(false);
+                    removeSelection();
+                  }}
+                >
+                  닫기
+                </Button>
+              )}
+            </PopupBox>
+          </OuterClick>
+        )}
+        {showEditPopup && (
+          <OuterClick callback={() => setShowEditPopup(false)}>
+            <PopupBox
+              style={{
+                top: popupPosition.y,
+                left: popupPosition.x - 50,
+              }}
+              className="flex flex-col gap-2 items-center"
+            >
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeHighlight();
+                }}
+              >
+                제거
+              </Button>
+              <Button
+                className="w-full"
+                type="text"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMemoModal(true);
+                }}
+              >
+                메모
+              </Button>
+              {isMobile && (
+                <Button
+                  className="w-full"
+                  type="text"
+                  size="large"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowEditPopup(false);
+                  }}
+                >
+                  닫기
+                </Button>
+              )}
+            </PopupBox>
+          </OuterClick>
+        )}
+        {showMemoModal && (
+          <HighlighMemoModalModal
+            title="메모"
+            key={selectedHighlight?.id}
+            open={showMemoModal}
+            highlight={selectedHighlight}
+            onOk={() => setShowMemoModal(false)}
+            onCancel={() => setShowMemoModal(false)}
+            addHighlight={addHighlight}
+            editMemo={editMemo}
+          />
+        )}
+      </HighlightableTextBlock>
+    </>
   );
 };
 
