@@ -18,7 +18,6 @@ const HighlighMemoModalModal: React.FC<HighlighMemoModalModalProps> = (
   const { highlight, addHighlight, editMemo, ...modalProps } = props;
   const [isEditing, setIsEditing] = useState(!highlight?.data.memo);
   const [memo, setMemo] = useState(highlight?.data.memo || '');
-  console.log('highlight', highlight);
   return (
     <HighlighMemoModalModalBlock {...modalProps} footer={null}>
       {isEditing ? (

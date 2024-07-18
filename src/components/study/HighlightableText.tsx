@@ -103,9 +103,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    console.log(';gigig');
-    e.preventDefault(); // 기본 동작 방지
-
+    if (showEditPopup || showMemoModal) return;
     // 약간의 지연 후 텍스트 선택 확인
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
@@ -197,6 +195,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
       },
     };
     insertTextHighlight(question, input);
+    removeSelection();
   };
 
   const removeHighlight = () => {
@@ -255,6 +254,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
       }
     }
     setShowEditPopup(true);
+    removeSelection();
   };
   const renderHighlights = () => {
     if (!ref.current) return;
@@ -409,7 +409,6 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
 
   return (
     <>
-      {' '}
       {isMobile && (
         <Drawer
           title={null}
