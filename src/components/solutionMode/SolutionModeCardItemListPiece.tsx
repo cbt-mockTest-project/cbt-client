@@ -20,7 +20,7 @@ const SolutionModeCardItemListPiece: React.FC<
   const [isVisible, setIsVisible] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0.5,
-    rootMargin: '2000px 0px',
+    rootMargin: '3000px 0px',
   });
   const isAccessiblePage = useAppSelector(
     (state) => state.questionCardList.page >= page
