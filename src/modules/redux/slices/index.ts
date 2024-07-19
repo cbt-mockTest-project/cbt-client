@@ -14,6 +14,9 @@ import storageSlice, { StorageState } from './storage';
 import examCreateSlice, { ExamCreateState } from './examCreate';
 import myAllExamsSlice, { MyAllExamsState } from './myAllExams';
 import homeSlice, { HomeState } from './home';
+import questionCardListSlice, {
+  QuestionCardListState,
+} from './questionCardList';
 
 export interface RootState {
   data: DataState;
@@ -26,6 +29,7 @@ export interface RootState {
   examCreate: ExamCreateState;
   myAllExams: MyAllExamsState;
   home: HomeState;
+  questionCardList: QuestionCardListState;
 }
 
 type TCombinedState = CombinedState<RootState> | undefined;
@@ -49,6 +53,7 @@ const rootReducer = (
         examCreate: examCreateSlice.reducer,
         myAllExams: myAllExamsSlice.reducer,
         home: homeSlice.reducer,
+        questionCardList: questionCardListSlice.reducer,
       });
       return combineReducer(state, action);
     }

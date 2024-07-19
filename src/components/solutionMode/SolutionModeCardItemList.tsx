@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import SolutionModeCardItem from './SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import useInfinityScroll from '@lib/hooks/useInfinityScroll';
-import { Skeleton, App } from 'antd';
+import { App, Spin } from 'antd';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { useRouter } from 'next/router';
 import { apolloClient } from '@modules/apollo';
@@ -18,6 +16,8 @@ import {
   PUBLIC_EXAM_ID,
 } from '@lib/constants/sessionStorage';
 import { shallowEqual } from 'react-redux';
+import SolutionModeCardItemListPiece from './SolutionModeCardItemListPiece';
+import Portal from '@components/common/portal/Portal';
 
 const SolutionModeCardItemListBlock = styled.ul`
   display: flex;
@@ -40,7 +40,6 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   const sessionStorage = new SessionStorage();
   const router = useRouter();
   const categoryId = router.query.categoryId;
-  const [page, setPage] = useState(1);
   const { data: meQuery } = useMeQuery();
   const [isMyExam, setIsMyExam] = useState(false);
   const serverSideQuestionIds = useAppSelector(
@@ -60,15 +59,15 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   const questionIds = useMemo(() => {
     if (isStaticPage) {
       if (clientSideQuestionIds.length > 0) {
-        return clientSideQuestionIds.slice(0, page * LIMIT);
+        return clientSideQuestionIds;
       }
       if (serverSideQuestionIds.length > 0) {
-        return serverSideQuestionIds.slice(0, page * LIMIT);
+        return serverSideQuestionIds;
       }
     } else {
-      return clientSideQuestionIds.slice(0, page * LIMIT);
+      return clientSideQuestionIds;
     }
-  }, [serverSideQuestionIds, clientSideQuestionIds, isStaticPage, page]);
+  }, [serverSideQuestionIds, clientSideQuestionIds, isStaticPage]);
 
   const isPrivate = useAppSelector((state) => {
     return (
@@ -88,18 +87,6 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
       state.mockExam.serverSideQuestions?.[0]?.user.id ||
       state.mockExam.questions?.[0]?.user.id
   );
-
-  const { isLoading, loadingRef } = useInfinityScroll({
-    loadMore: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setPage((prev) => prev + 1);
-    },
-    hasMore:
-      questionIds.length > (page - 1) * LIMIT &&
-      (clientSideQuestionIds.length > LIMIT ||
-        serverSideQuestionIds.length > LIMIT),
-    rootMargin: '500px',
-  });
 
   useEffect(() => {
     (async () => {
@@ -178,27 +165,23 @@ const SolutionModeCardItemList: React.FC<SolutionModeCardItemListProps> = ({
   return (
     <SolutionModeCardItemListBlock>
       {isPrivate && !isMyExam ? (
-        <div className="flex flex-col gap-4">
-          <Skeleton active />
-          <Skeleton active />
-        </div>
+        <Portal>
+          <Spin size="large" fullscreen />
+        </Portal>
       ) : (
-        questionIds.map((id, index) => (
-          <SolutionModeCardItem
-            key={id}
-            isAnswerAllHidden={isAnswerAllHidden}
-            index={index}
-            isStaticPage={isStaticPage}
-          />
-        ))
+        Array.from({ length: questionIds.length / LIMIT + 1 }).map(
+          (_, index) => (
+            <SolutionModeCardItemListPiece
+              key={index}
+              page={index}
+              questionIds={questionIds}
+              isAnswerAllHidden={isAnswerAllHidden}
+              isStaticPage={isStaticPage}
+              limit={LIMIT}
+            />
+          )
+        )
       )}
-      {isLoading && (
-        <div className="flex flex-col gap-4">
-          <Skeleton active />
-          <Skeleton active />
-        </div>
-      )}
-      <div className="h-2 w-2" ref={loadingRef} />
     </SolutionModeCardItemListBlock>
   );
 };
