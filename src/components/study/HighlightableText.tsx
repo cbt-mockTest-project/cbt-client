@@ -17,23 +17,25 @@ import useAuth from '@lib/hooks/useAuth';
 import { isMobile } from 'react-device-detect';
 import HighlightMobileDrawerContent from './HighlightMobileDrawerContent';
 import { useLongPress } from 'use-long-press';
+import HighlightColorSelect, {
+  HIGHLIGHT_COLOR_KEY,
+  HIGHLIGHT_YELLOW,
+} from './HighlightColorSelect';
+import { LocalStorage } from '@lib/utils/localStorage';
 
-const HighlightableTextBlock = styled.div`
+const HighlightableTextBlock = styled.div<{ currentColor: string }>`
   * {
     &::selection {
       color: black;
-      background: yellow;
+      background: ${({ currentColor }) => currentColor};
     }
 
     &::-moz-selection {
       color: black;
-      background: yellow;
+      background: ${({ currentColor }) => currentColor};
     }
   }
-  .highlight-overlay {
-    opacity: 0.5;
-    background-color: yellow;
-  }
+
   font-size: 16px;
   white-space: pre-wrap;
   word-break: break-all;
@@ -57,6 +59,8 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
   type,
   textHighlights,
 }) => {
+  const localStorage = new LocalStorage();
+  const [selectedColor, setSelectedColor] = useState(HIGHLIGHT_YELLOW);
   const bind = useLongPress(
     (event, { context }) => {
       if (isMobile && context) {
@@ -169,6 +173,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
           startOffset: selectedRange.startOffset,
           endOffset: selectedRange.endOffset,
           text: selectedRange.toString(),
+          color: selectedColor,
           memo,
         },
       };
@@ -177,6 +182,28 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
       setShowPopup(false);
       setSelectedRange(null);
     }
+  };
+  const editHighlightColor = (color: string) => {
+    if (!handleCheckLogin()) return;
+
+    const found = textHighlights.find((h) => h.id === selectedHighlight?.id);
+    if (!found) return;
+    const input: InsertTextHighlightInput = {
+      textHighlightId: found.id,
+      questionId: question.id,
+      data: {
+        endContainer: found.data.endContainer,
+        startOffset: found.data.startOffset,
+        endOffset: found.data.endOffset,
+        startContainer: found.data.startContainer,
+        text: found.data.text,
+        type: found.data.type,
+        memo: found.data.memo,
+        color,
+      },
+    };
+    insertTextHighlight(question, input);
+    removeSelection();
   };
 
   const editMemo = (id: string, memo: string) => {
@@ -215,6 +242,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
     if (!highlight) return;
 
     setSelectedHighlight(highlight);
+    setSelectedColor(highlight.data.color);
 
     try {
       const range = document.createRange();
@@ -300,12 +328,13 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               }
             }
           }
-
           const rects = range.getClientRects();
           for (let i = 0; i < rects.length; i++) {
             const rect = rects[i];
             const HighlightEl = document.createElement('div');
             HighlightEl.classList.add('highlight-overlay');
+            HighlightEl.style.backgroundColor =
+              highlight.data.color || HIGHLIGHT_YELLOW;
             HighlightEl.setAttribute('data-highlight-id', highlight.id);
             HighlightEl.style.position = 'absolute';
             HighlightEl.style.top = `${rect.top - containerRect.top}px`;
@@ -409,6 +438,13 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
     };
   }, [ref]);
 
+  useEffect(() => {
+    const color = localStorage.get(HIGHLIGHT_COLOR_KEY);
+    if (color) {
+      setSelectedColor(color);
+    }
+  }, []);
+
   return (
     <>
       {isMobile && (
@@ -429,6 +465,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
         </Drawer>
       )}
       <HighlightableTextBlock
+        currentColor={selectedColor}
         id={uniqueId}
         onMouseUp={handleMouseUp}
         onTouchEnd={handleTouchEnd}
@@ -447,6 +484,10 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               }}
               className="flex flex-col gap-2 items-center"
             >
+              <HighlightColorSelect
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
               <Button
                 className="w-full"
                 type="text"
@@ -499,6 +540,11 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
               }}
               className="flex flex-col gap-2 items-center"
             >
+              <HighlightColorSelect
+                onSelectColor={editHighlightColor}
+                selectedColor={selectedColor}
+                setSelectedColor={setSelectedColor}
+              />
               <Button
                 className="w-full"
                 type="text"

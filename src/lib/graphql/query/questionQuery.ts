@@ -22,6 +22,7 @@ export const READ_BOOKMARKED_QUESTIONS = gql`
             endOffset
             startContainer
             endContainer
+            color
             text
             type
           }
@@ -365,6 +366,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
             endOffset
             startContainer
             endContainer
+            color
             text
             type
           }

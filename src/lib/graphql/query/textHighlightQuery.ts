@@ -10,6 +10,7 @@ export const INSERT_TEXT_HIGHLIGHT = gql`
           memo
           endOffset
           endContainer
+          color
           startContainer
           startOffset
           text

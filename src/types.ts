@@ -4279,6 +4279,7 @@ export type TextHighlight = {
 
 export type TextHighlightData = {
   __typename?: 'TextHighlightData';
+  color?: Maybe<Scalars['String']>;
   endContainer: Array<Scalars['Float']>;
   endOffset: Scalars['Float'];
   memo: Scalars['String'];
@@ -4289,6 +4290,7 @@ export type TextHighlightData = {
 };
 
 export type TextHighlightDataInput = {
+  color?: InputMaybe<Scalars['String']>;
   endContainer: Array<Scalars['Float']>;
   endOffset: Scalars['Float'];
   memo: Scalars['String'];
