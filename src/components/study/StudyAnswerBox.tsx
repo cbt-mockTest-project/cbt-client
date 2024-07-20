@@ -29,7 +29,7 @@ const StudyAnswerBoxBlock = styled.div`
   .study-answer-box-question-card-answer-wrapper {
     transition: opacity 0.2s ease-in-out;
   }
-  .study-answer-box-question-card-anwswer-wrapper.hidden {
+  .study-answer-box-question-card-anwswer-wrapper.answer-hidden {
     opacity: 0;
   }
 
@@ -114,7 +114,7 @@ const StudyAnswerBox: React.FC<StudyAnswerBoxProps> = ({
     <StudyAnswerBoxBlock className={className}>
       <div
         className={`study-answer-box-question-card-anwswer-wrapper ${
-          isAnswerHidden ? 'hidden' : ''
+          isAnswerHidden ? 'answer-hidden' : ''
         }`}
       >
         {canHighlight ? (
