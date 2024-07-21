@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { EllipsisOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import useAuth from '@lib/hooks/useAuth';
-import useExamCategory from '@lib/hooks/useExamCategory';
 import { BookmarkOutlined } from '@mui/icons-material';
 import { App, Dropdown, MenuProps } from 'antd';
 import { MockExamCategory, RevenueRequestFormStatus } from 'types';
@@ -56,7 +55,7 @@ const CategoryBookmarkOrEditWrapper: React.FC<
   return (
     <>
       {isMyCategory ? (
-        <div className="absolute top-[30px] lg:top-[20px] right-[30px] flex flex-col items-end gap-4">
+        <div className="absolute top-[30px] lg:top-[46px] right-[30px] flex flex-col items-end gap-4">
           <div className="flex gap-2">
             {category.revenueRequestForm?.status ===
               RevenueRequestFormStatus.Rejected && (

@@ -37,7 +37,7 @@ const CategoryComponentBlock = styled.div`
   }
   .category-bookmark-button {
     position: absolute;
-    top: 20px;
+    top: 62px;
     right: 30px;
     cursor: pointer;
     width: 35px;
