@@ -11,14 +11,11 @@ import ExamReviewStudyModal from './ExamReviewStudyModal';
 import { LeftOutlined } from '@ant-design/icons';
 
 const ExamReviewStateCheckboxGroupBlock = styled.div`
+  padding-top: 10px;
   display: flex;
   align-items: center;
   gap: 20px;
-  position: sticky;
   justify-content: space-between;
-  top: 0px;
-  z-index: 10;
-  margin-bottom: 10px;
   .exam-review-state-checkbox-group {
     flex-shrink: 0;
     .ant-checkbox-wrapper {
