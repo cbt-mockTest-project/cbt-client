@@ -11,8 +11,8 @@ const useAuth = () => {
   const dispatch = useAppDispatch();
   const { data: meQuery } = useMeQuery();
   const { updateCache } = useApolloClient();
-  const isLoggedIn = useMemo(() => !!meQuery?.me.user, [meQuery]);
-  const user = useMemo(() => meQuery?.me.user, [meQuery]);
+  const user = meQuery?.me.user;
+  const isLoggedIn = !!user;
   const handleCheckLogin = () => {
     if (!isLoggedIn) {
       dispatch(coreActions.openModal(loginModal));

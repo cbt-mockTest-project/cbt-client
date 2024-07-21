@@ -1,9 +1,7 @@
 import { useUpsertRecentlyStudiedExams } from '@lib/graphql/hook/useUser';
 import useAuth from '@lib/hooks/useAuth';
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 
 interface SolutionModeCoreProps {}
 

@@ -8,13 +8,19 @@ import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
 import ExamReviewStudyModal from './ExamReviewStudyModal';
+import { LeftOutlined } from '@ant-design/icons';
 
 const ExamReviewStateCheckboxGroupBlock = styled.div`
-  margin: 20px 0;
   display: flex;
   align-items: center;
   gap: 20px;
+  position: sticky;
+  justify-content: space-between;
+  top: 0px;
+  z-index: 10;
+  margin-bottom: 10px;
   .exam-review-state-checkbox-group {
+    flex-shrink: 0;
     .ant-checkbox-wrapper {
       align-items: center;
       .ant-checkbox-inner {
@@ -91,6 +97,9 @@ const ExamReviewStateCheckboxGroup: React.FC<
 
   return (
     <ExamReviewStateCheckboxGroupBlock>
+      <Button size="large" type="text" onClick={() => router.back()}>
+        <LeftOutlined />
+      </Button>
       <Checkbox.Group
         className="exam-review-state-checkbox-group"
         options={ScoreCheckboxOptions}
@@ -98,6 +107,7 @@ const ExamReviewStateCheckboxGroup: React.FC<
         onChange={handleStateCheck}
       />
       <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button>
+
       {isStudyModalOpen && (
         <ExamReviewStudyModal
           open={isStudyModalOpen}

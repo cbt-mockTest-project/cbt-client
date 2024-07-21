@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   EXAMS_PDF_PAGE,
+  EXAMS_REVIEW_PAGE,
   EXAM_CREATE_PAGE,
   EXAM_PDF_PAGE,
   EXAM_SOLUTION_PAGE,
@@ -38,6 +39,7 @@ const pagesWithoutLayout: string[] = [
   STUDY_PAGE,
   EXAM_CREATE_PAGE,
   NAVER_BLOG_BOT_PAGE,
+  EXAMS_REVIEW_PAGE,
 ];
 const pagesWithoutBodyBorder: string[] = [
   PRICING_PAGE,

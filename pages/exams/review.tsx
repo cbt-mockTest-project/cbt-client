@@ -1,5 +1,6 @@
 import WithHead from '@components/common/head/WithHead';
 import ExamReviewComponent from '@components/examReview/ExamReviewComponent';
+import { EXAMS_REVIEW_PAGE } from '@lib/constants/displayName';
 import { NextPage } from 'next';
 
 const ExamsReviewPage: NextPage = () => {
@@ -13,5 +14,7 @@ const ExamsReviewPage: NextPage = () => {
     </>
   );
 };
+
+ExamsReviewPage.displayName = EXAMS_REVIEW_PAGE;
 
 export default ExamsReviewPage;
