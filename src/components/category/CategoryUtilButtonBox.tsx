@@ -60,6 +60,24 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
           오답
         </Button>
       </Tooltip>
+      <Tooltip title="형광펜으로 체크한 문제들을 모아 볼 수 있어요.">
+        <Button
+          className="category-question-search-button"
+          onClick={() =>
+            handleCheckLogin() &&
+            router.push({
+              pathname: '/exams/highlight',
+              query: {
+                ...(categoryId && { categoryId }),
+                examIds: exams.map((exam) => exam.id).join(','),
+                categoryName,
+              },
+            })
+          }
+        >
+          형광펜
+        </Button>
+      </Tooltip>
     </div>
   );
 };

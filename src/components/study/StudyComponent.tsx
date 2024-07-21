@@ -77,6 +77,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     bookmarked,
     categoryId,
     folderId,
+    highlighted,
   } = router.query;
   useEffect(() => {
     setFetchQuestionsLoading(true);
@@ -115,6 +116,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
       if (bookmarked && bookmarked === 'true') {
         input.bookmarked = true;
       }
+      if (highlighted && highlighted === 'true') input.highlighted = true;
       if (states && typeof states === 'string')
         input.states = states.split(',') as QuestionState[];
 

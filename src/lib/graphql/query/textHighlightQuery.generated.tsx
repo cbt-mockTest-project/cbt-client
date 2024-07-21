@@ -8,7 +8,7 @@ export type InsertTextHighlightMutationVariables = Types.Exact<{
 }>;
 
 
-export type InsertTextHighlightMutation = { __typename?: 'Mutation', insertTextHighlight: { __typename?: 'InsertTextHighlightOutput', error?: string | null, ok: boolean, textHighlight?: { __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, endOffset: number, endContainer: Array<number>, startContainer: Array<number>, startOffset: number, text: string, type: string } | null } | null } };
+export type InsertTextHighlightMutation = { __typename?: 'Mutation', insertTextHighlight: { __typename?: 'InsertTextHighlightOutput', error?: string | null, ok: boolean, textHighlight?: { __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, endOffset: number, endContainer: Array<number>, color?: string | null, startContainer: Array<number>, startOffset: number, text: string, type: string } | null } | null } };
 
 export type DeleteTextHighlightMutationVariables = Types.Exact<{
   input: Types.DeleteTextHighlightInput;
@@ -35,6 +35,7 @@ export const InsertTextHighlightDocument = gql`
         memo
         endOffset
         endContainer
+        color
         startContainer
         startOffset
         text

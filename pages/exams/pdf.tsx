@@ -15,6 +15,7 @@ const ExamsPdfPage: React.FC<ExamsPdfPageProps> = ({}) => {
   const { order, states, limit, examIds, mode, examId } = router.query;
   const { fetchQuestions } = useQuestions();
   const questions = useAppSelector((state) => state.mockExam.questions);
+  const highlighted = !!router.query.highlighted;
 
   useEffect(() => {
     if (!order || !examIds || !mode) return;
@@ -27,6 +28,7 @@ const ExamsPdfPage: React.FC<ExamsPdfPageProps> = ({}) => {
     };
     if (states && typeof states === 'string')
       input.states = states.split(',') as QuestionState[];
+    if (highlighted) input.highlighted = true;
     fetchQuestions(input);
   }, [router.isReady]);
 

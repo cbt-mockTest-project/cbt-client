@@ -237,9 +237,6 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           >
             <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
             <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
-            {!checkIsEhsMasterExam(examIds) && (
-              <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
-            )}
           </Radio.Group>
         </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">

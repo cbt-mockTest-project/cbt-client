@@ -7,7 +7,7 @@ import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
-import ExamReviewStudyModal from './ExamReviewStudyModal';
+import ExamSimpleStudyModal from './ExamSimpleStudyModal';
 import { LeftOutlined } from '@ant-design/icons';
 
 const ExamReviewStateCheckboxGroupBlock = styled.div`
@@ -106,7 +106,7 @@ const ExamReviewStateCheckboxGroup: React.FC<
       <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button>
 
       {isStudyModalOpen && (
-        <ExamReviewStudyModal
+        <ExamSimpleStudyModal
           open={isStudyModalOpen}
           onCancel={() => setIsStudyModalOpen(false)}
           questionStates={checkedStates}
