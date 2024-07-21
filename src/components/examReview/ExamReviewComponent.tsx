@@ -56,11 +56,7 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
     page,
     LIMIT,
     (questionId, index) => (
-      <SolutionModeCardItem
-        key={questionId}
-        index={index}
-        isAnswerAllHidden={false}
-      />
+      <SolutionModeCardItem key={questionId} index={index} />
     )
   );
 

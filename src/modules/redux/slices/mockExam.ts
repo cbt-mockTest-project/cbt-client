@@ -5,12 +5,14 @@ export interface MockExamState {
   questions: MockExamQuestion[];
   serverSideQuestions: MockExamQuestion[] | null;
   questionsForScore: MockExamQuestion[];
+  isAnswerAllHidden: boolean;
   mockExam: MockExam | null;
 }
 
 const mockExamState: MockExamState = {
   questions: [],
   questionsForScore: [],
+  isAnswerAllHidden: false,
   serverSideQuestions: null,
   mockExam: null,
 };
@@ -47,6 +49,9 @@ const mockExamSlice = createSlice({
       action: PayloadAction<MockExamQuestion[]>
     ) => {
       state.serverSideQuestions = action.payload;
+    },
+    setIsAnswerAllHidden: (state, action: PayloadAction<boolean>) => {
+      state.isAnswerAllHidden = action.payload;
     },
   },
 });

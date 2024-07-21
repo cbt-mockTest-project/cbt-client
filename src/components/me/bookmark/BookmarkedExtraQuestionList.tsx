@@ -25,11 +25,7 @@ const BookmarkedExtraQuestionList: React.FC<
         questionIds
           .slice(30)
           .map((questionId, index) => (
-            <SolutionModeCardItem
-              key={questionId}
-              index={30 + index}
-              isAnswerAllHidden={false}
-            />
+            <SolutionModeCardItem key={questionId} index={30 + index} />
           ))
       ) : (
         <Button

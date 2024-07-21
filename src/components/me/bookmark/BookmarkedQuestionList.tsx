@@ -80,11 +80,7 @@ const BookmarkedQuestionList: React.FC<BookmarkedQuestionListProps> = () => {
         )}
         <div className="flex flex-col gap-[50px]">
           {questionIds.slice(0, 30).map((questionId, index) => (
-            <SolutionModeCardItem
-              key={questionId}
-              index={index}
-              isAnswerAllHidden={false}
-            />
+            <SolutionModeCardItem key={questionId} index={index} />
           ))}
           {questionIds.length === 0 && (
             <div className="flex justify-center items-center">

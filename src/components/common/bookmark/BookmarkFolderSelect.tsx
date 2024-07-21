@@ -4,6 +4,7 @@ import { Button, Divider, Select, SelectProps } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import BookmarkFolderManageModal from './BookmarkFolderManageModal';
+import { DefaultOptionType } from 'antd/es/select';
 
 const BookmarkFolderSelectBlock = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const BookmarkFolderSelect: React.FC<BookmarkFolderSelectProps> = (props) => {
   const { data } = useQuery(readQuestionBookmarkFolderQueryOption);
   const [bookmarkFolderManageModalOpen, setBookmarkFolderManageModalOpen] =
     useState(false);
-  const options = [
+  const options: DefaultOptionType[] = [
     { label: '분류 없음', value: 0 },
     ...(data?.readQuestionBookmarkFolders.folders.map((folder) => ({
       label: folder.name,

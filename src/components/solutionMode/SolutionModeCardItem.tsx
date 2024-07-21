@@ -27,7 +27,6 @@ const SolutionModeCardItemBlock = styled.div`
 interface SolutionModeCardItemProps
   extends React.HTMLAttributes<HTMLDivElement> {
   index: number;
-  isAnswerAllHidden: boolean;
   hasScoreTable?: boolean;
   filterStates?: QuestionState[];
   isStaticPage?: boolean;
@@ -35,7 +34,6 @@ interface SolutionModeCardItemProps
 
 const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   index,
-  isAnswerAllHidden,
   hasScoreTable = true,
   filterStates = [],
   isStaticPage,
@@ -49,7 +47,9 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
     saveBookmark,
     deleteBookmark,
   } = useQuestions();
-
+  const isAnswerAllHidden = useAppSelector(
+    (state) => state.mockExam.isAnswerAllHidden
+  );
   const serverQuestion = useAppSelector((state) =>
     state.mockExam.serverSideQuestions &&
     state.mockExam.serverSideQuestions.length

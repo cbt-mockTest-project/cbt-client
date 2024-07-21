@@ -199,7 +199,6 @@ const StudyEnd: React.FC<StudyEndProps> = () => {
                 key={uniqueId('question-')}
                 filterStates={[QuestionState.Row, QuestionState.Middle]}
                 index={index}
-                isAnswerAllHidden={false}
                 hasScoreTable={false}
               />
             )
