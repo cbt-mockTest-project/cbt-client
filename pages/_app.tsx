@@ -6,11 +6,9 @@ import 'katex/dist/katex.min.css';
 import Script from 'next/script';
 import Head from 'next/head';
 import CoreContainer from '@components/common/core/CoreContainer';
-import wrapper, { store } from '@modules/redux/store/configureStore';
 import MainLayout from '@components/common/layout/MainLayout';
 import * as gtag from '@lib/ga/gtag';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   EXAMS_PDF_PAGE,
   EXAMS_REVIEW_PAGE,
@@ -29,6 +27,7 @@ import '@styles/global.css';
 import { Provider } from 'react-redux';
 import ThemeProviderWrapper from '@lib/provider/theme/ThemeProviderWrapper';
 import { useMemo } from 'react';
+import wrapper from '@modules/redux/store/configureStore';
 
 export const queryClient = new QueryClient();
 
@@ -55,7 +54,8 @@ const isOnlyLightModePage = [
   EXAM_PDF_PAGE,
   EXAMS_PDF_PAGE,
 ];
-function App({ Component, pageProps, ...customProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  const { store, props } = wrapper.useWrappedStore(pageProps);
   const { hasLayout, hasBodyBorder, isOnlyLightMode } = useMemo(
     () => ({
       hasLayout: !pagesWithoutLayout.includes(String(Component.displayName)),
@@ -153,4 +153,4 @@ function App({ Component, pageProps, ...customProps }: AppProps) {
   );
 }
 
-export default wrapper.withRedux(App);
+export default App;
