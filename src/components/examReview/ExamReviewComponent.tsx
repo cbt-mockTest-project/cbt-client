@@ -17,7 +17,7 @@ const ExamReviewComponentBlock = styled.div`
     position: sticky;
     top: 0;
     background-color: ${({ theme }) => theme.color('colorBgLayout')};
-    z-index: 1;
+    z-index: 99999;
     border-bottom: 1px solid ${({ theme }) => theme.color('colorBorder')};
     margin-bottom: 20px;
     .exam-review-header-pagination {
