@@ -12,6 +12,7 @@ import { LeftOutlined } from '@ant-design/icons';
 
 const ExamReviewStateCheckboxGroupBlock = styled.div`
   padding-top: 10px;
+  padding-right: 10px;
   display: flex;
   align-items: center;
   gap: 20px;

@@ -41,10 +41,11 @@ const ExamSimpleStudyModalBlock = styled(Modal)`
 interface ExamSimpleStudyModalProps extends Omit<ModalProps, 'children'> {
   questionStates?: QuestionState[];
   highlighted?: boolean;
+  feedbacked?: boolean;
 }
 
 const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
-  const { questionStates, highlighted, ...modalProps } = props;
+  const { questionStates, highlighted, feedbacked, ...modalProps } = props;
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
 
@@ -79,6 +80,7 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
             ? { states: questionStates.join(',') }
             : {}),
           ...(highlighted ? { highlighted: true } : {}),
+          ...(feedbacked ? { feedbacked: true } : {}),
           order: isRandom ? 'random' : 'normal',
           limit: limit ? limit.toString() : '',
           examIds: examIds.join(','),

@@ -3953,6 +3953,7 @@ export type ReadQuestionCardOutput = {
 
 export type ReadQuestionsByExamIdsInput = {
   bookmarked?: InputMaybe<Scalars['Boolean']>;
+  feedbacked?: InputMaybe<Scalars['Boolean']>;
   highlighted?: InputMaybe<Scalars['Boolean']>;
   ids?: InputMaybe<Array<Scalars['Float']>>;
   limit?: InputMaybe<Scalars['Float']>;
