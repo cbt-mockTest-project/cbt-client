@@ -27,7 +27,7 @@ import {
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import Portal from '@components/common/portal/Portal';
-import { Spin } from 'antd';
+import { Button, Empty, Spin } from 'antd';
 
 const StudyComponentBlock = styled.div`
   min-height: 100vh;
@@ -51,6 +51,9 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
   const isPrivate = useAppSelector(
     (state) => state.mockExam.questions?.[0]?.mockExam.isPrivate
   );
+  const isEmptyQuestions = useAppSelector(
+    (state) => state.mockExam.questions?.length === 0
+  );
   const firstQuestionExamId = useAppSelector(
     (state) => state.mockExam.questions?.[0]?.mockExam.id
   );
@@ -60,7 +63,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
 
   const { data: meQuery } = useMeQuery();
   const [isFetchedQuestions, setIsFetchedQuestions] = useState(false);
-  const [fetchQuestionsLoading, setFetchQuestionsLoading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const { fetchQuestions, fetchBookmarkedQuestions, resetQuestions } =
     useQuestions();
 
@@ -81,7 +84,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     feedbacked,
   } = router.query;
   useEffect(() => {
-    setFetchQuestionsLoading(true);
+    setIsVerifying(true);
     if (!router.isReady) return;
     if (bookmarked === 'true') {
       const input: ReadBookmarkedQuestionsInput = {
@@ -141,7 +144,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     (async () => {
       try {
         if (!isPrivate) {
-          setFetchQuestionsLoading(() => false);
+          setIsVerifying(() => false);
           return;
         }
         if (!meQuery) {
@@ -151,7 +154,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
         const publicCategoryId = sessionStorage.get(PUBLIC_CATEGORY_ID);
 
         if (publicExamId && Number(publicExamId) === firstQuestionExamId) {
-          setFetchQuestionsLoading(() => false);
+          setIsVerifying(() => false);
           return;
         }
         if (
@@ -159,7 +162,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
           categoryId &&
           Number(publicCategoryId) === Number(categoryId)
         ) {
-          setFetchQuestionsLoading(() => false);
+          setIsVerifying(() => false);
           return;
         }
         if (!meQuery.me.user) {
@@ -176,7 +179,7 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
             },
           });
           if (res.data?.checkIsAccessibleCategory.ok) {
-            setFetchQuestionsLoading(() => false);
+            setIsVerifying(() => false);
             return;
           }
           router.replace('/');
@@ -196,10 +199,10 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
             },
           });
           if (res.data?.checkIsAccessibleCategory.ok) {
-            setFetchQuestionsLoading(() => false);
+            setIsVerifying(() => false);
             return;
           }
-          setFetchQuestionsLoading(() => meQuery.me.user.id !== examAuthorId);
+          setIsVerifying(() => meQuery.me.user.id !== examAuthorId);
           if (meQuery.me.user.id !== examAuthorId) {
             router.replace('/');
             return;
@@ -218,8 +221,16 @@ const StudyComponent: React.FC<StudyComponentProps> = () => {
     firstQuestionExamId,
     categoryId,
   ]);
-
-  if (fetchQuestionsLoading)
+  if (isFetchedQuestions && isEmptyQuestions)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <Empty description="문제가 없습니다." />
+        <Button type="primary" size="large" onClick={() => router.back()}>
+          뒤로가기
+        </Button>
+      </div>
+    );
+  if (isVerifying)
     return (
       <Portal>
         <Spin size="large" fullscreen />

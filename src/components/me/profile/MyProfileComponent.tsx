@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import MyProfileTab from './MyProfileTab';
 import MyPaymentTab from './MyPaymentTab';
 import MyPointHistoryTab from './MyPointHistoryTab';
+import MyTicketTab from './\bMyTicketTab';
 
 const MyProfileComponentBlock = styled.div`
   padding: 20px 30px 30px 30px;
@@ -34,12 +35,17 @@ const tabItems: TabsProps['items'] = [
   },
   {
     key: '2',
-    label: '결제 내역',
-    children: <MyPaymentTab />,
+    label: '이용권',
+    children: <MyTicketTab />,
   },
   {
     key: '3',
-    label: '포인트 내역',
-    children: <MyPointHistoryTab />,
+    label: '결제 내역',
+    children: <MyPaymentTab />,
   },
+  // {
+  //   key: '3',
+  //   label: '포인트 내역',
+  //   children: <MyPointHistoryTab />,
+  // },
 ];

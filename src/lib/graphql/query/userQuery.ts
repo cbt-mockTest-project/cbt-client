@@ -72,6 +72,8 @@ export const ME_QUERY = gql`
         userRoles {
           created_at
           role {
+            period
+            endDate
             name
             id
           }
