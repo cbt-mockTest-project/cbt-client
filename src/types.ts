@@ -4101,17 +4101,21 @@ export enum RevenueRequestFormStatus {
 export type Role = {
   __typename?: 'Role';
   created_at: Scalars['DateTime'];
+  endDate?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
   mockExamCategories: Array<MockExamCategory>;
   name: Scalars['String'];
+  period?: Maybe<Scalars['Float']>;
   seller?: Maybe<Seller>;
   updated_at: Scalars['DateTime'];
   userRoles: Array<UserAndRole>;
 };
 
 export type RoleInputType = {
+  endDate?: InputMaybe<Scalars['String']>;
   mockExamCategories: Array<MockExamCategoryInputType>;
   name: Scalars['String'];
+  period?: InputMaybe<Scalars['Float']>;
   seller?: InputMaybe<SellerInputType>;
   userRoles: Array<UserRoleInputType>;
 };
