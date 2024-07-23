@@ -32,15 +32,6 @@ const Question: NextPage<QuestionProps> = ({
   dehydratedState,
   noIndex,
 }) => {
-  useEffect(() => {
-    const userAgent = window.navigator.userAgent;
-    if (userAgent.toUpperCase().includes('KAKAO')) {
-      const currentUrl = window.location.href;
-      window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(
-        currentUrl
-      )}`;
-    }
-  }, []);
   return (
     <HydrationBoundary state={dehydratedState}>
       <WithHead

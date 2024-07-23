@@ -95,6 +95,14 @@ const CoreContainer: React.FC<CoreContainerProps> = () => {
 
   useEffect(() => {
     window.katex = katex;
+    const userAgent = window.navigator.userAgent;
+    if (userAgent.toUpperCase().includes('KAKAO')) {
+      // 카카오 인앱브라우저에서 현재 링크 띄우기
+      const currentUrl = window.location.href;
+      window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(
+        currentUrl
+      )}`;
+    }
   }, []);
 
   useEffect(() => {
