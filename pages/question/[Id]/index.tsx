@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
-import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
 import { removeHtmlTag } from '@lib/utils/utils';
 import { ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
 import GoogleAd from '@components/common/ad/GoogleAd';
-import { apolloClient } from '@modules/apollo';
 import {
   dehydrate,
   DehydratedState,
@@ -35,6 +32,15 @@ const Question: NextPage<QuestionProps> = ({
   dehydratedState,
   noIndex,
 }) => {
+  useEffect(() => {
+    const userAgent = window.navigator.userAgent;
+    if (userAgent.toUpperCase().includes('KAKAO')) {
+      const currentUrl = window.location.href;
+      window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(
+        currentUrl
+      )}`;
+    }
+  }, []);
   return (
     <HydrationBoundary state={dehydratedState}>
       <WithHead
