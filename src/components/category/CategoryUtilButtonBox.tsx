@@ -1,11 +1,13 @@
+import { AlertTwoTone } from '@ant-design/icons';
 import { PUBLIC_CATEGORY_NAME } from '@lib/constants/sessionStorage';
 import useAuth from '@lib/hooks/useAuth';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { Button, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { useTheme } from 'styled-components';
 import { MockExam } from 'types';
+import CategoryReportModal from './CatogoryReportModal';
 
 const CategoryUtilButtonBoxBlock = styled.div`
   width: 100vw;
@@ -32,7 +34,9 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
   categoryName,
   categoryId,
 }) => {
+  const theme = useTheme();
   const { handleCheckLogin } = useAuth();
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const sessionStorage = new SessionStorage();
   const router = useRouter();
 
@@ -102,7 +106,27 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
             </Button>
           </Tooltip>
         ))}
+        <Tooltip title="암기장 신고">
+          <Button
+            type="text"
+            onClick={() => {
+              if (!handleCheckLogin()) return;
+              setIsReportModalOpen(true);
+            }}
+          >
+            <AlertTwoTone
+              className="text-2xl"
+              twoToneColor={theme.color('colorBorder')}
+            />
+          </Button>
+        </Tooltip>
       </div>
+      {isReportModalOpen && (
+        <CategoryReportModal
+          open={isReportModalOpen}
+          onCancel={() => setIsReportModalOpen(false)}
+        />
+      )}
     </CategoryUtilButtonBoxBlock>
   );
 };
