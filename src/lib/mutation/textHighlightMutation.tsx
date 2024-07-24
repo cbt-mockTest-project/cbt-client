@@ -27,6 +27,7 @@ export const insertTextHighlightMutationFn = (
   >({
     mutation: INSERT_TEXT_HIGHLIGHT,
     variables: { input },
+    fetchPolicy: 'no-cache',
   });
 };
 
