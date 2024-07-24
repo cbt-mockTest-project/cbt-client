@@ -218,6 +218,7 @@ const HighlightableText: React.FC<HighlightableTextProps> = ({
         startOffset: found.data.startOffset,
         endOffset: found.data.endOffset,
         startContainer: found.data.startContainer,
+        color: found.data.color,
         text: found.data.text,
         type: found.data.type,
         memo,
