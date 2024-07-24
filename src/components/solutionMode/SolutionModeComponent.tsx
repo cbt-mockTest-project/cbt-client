@@ -1,19 +1,19 @@
 import { Button, Tooltip, Pagination, Skeleton } from 'antd';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import ShuffleIcon from '@mui/icons-material/Shuffle';
+
 import { ReadQuestionsByExamIdsInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
 import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
-import LoopIcon from '@mui/icons-material/Loop';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { shallowEqual } from 'react-redux';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDeferredRederingForPaginationItemList';
 import ToggleAnswerAllHiddenButton from './ToggleAnswerAllHiddenButton';
+import SolutionModeControlButtons from './SolutionModeControlButtons';
 
 const LIMIT = 20;
 
@@ -36,18 +36,6 @@ const SolutionModeComponentBlock = styled.div`
     margin: 0 auto;
   }
 
-  .solution-mode-control-button-wrapper {
-    margin-bottom: 15px;
-    display: flex;
-    gap: 10px;
-    .solution-mode-control-button-inner {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-    }
-  }
-
   @media (max-width: ${responsive.medium}) {
     .solution-mode-body {
       padding: 10px;
@@ -64,8 +52,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
 }) => {
   const [page, setPage] = useState(1);
   const isStaticPage = !!questionsQueryInput;
-  const { shuffleQuestions, fetchQuestions, setServerSideQuestions } =
-    useQuestions();
+  const { fetchQuestions, setServerSideQuestions } = useQuestions();
 
   const serverSideQuestionIds = useAppSelector(
     (state) =>
@@ -96,8 +83,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   const totalQuestionCount = questionIds.length;
   const router = useRouter();
   const examIdsQuery = router.query.examIds;
-  const [isSelectStudyModeModalOpen, setIsSelectStudyModeModalOpen] =
-    useState(false);
+
   const examIds = useMemo(() => {
     if (questionsQueryInput) return questionsQueryInput.ids;
     if (typeof examIdsQuery === 'string') {
@@ -151,25 +137,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
         </div>
       )}
       <div className="solution-mode-body">
-        <div className="solution-mode-control-button-wrapper">
-          <ToggleAnswerAllHiddenButton />
-          <Tooltip title="문제 순서를 섞습니다.">
-            <Button onClick={shuffleQuestions}>
-              <div className="solution-mode-control-button-inner">
-                <ShuffleIcon />
-                섞기
-              </div>
-            </Button>
-          </Tooltip>
-          <Tooltip title="학습 형태를 변경합니다.">
-            <Button onClick={() => setIsSelectStudyModeModalOpen(true)}>
-              <div className="solution-mode-control-button-inner">
-                <LoopIcon />
-                형태
-              </div>
-            </Button>
-          </Tooltip>
-        </div>
+        <SolutionModeControlButtons />
         <ul className="solution-mode-solution-card-list">
           {isStaticPage ? (
             StaticItemList
@@ -180,12 +148,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
           )}
         </ul>
       </div>
-      {isSelectStudyModeModalOpen && (
-        <SelectStudyModeModal
-          open={isSelectStudyModeModalOpen}
-          onCancel={() => setIsSelectStudyModeModalOpen(false)}
-        />
-      )}
+
       {examIds && <StudyPaymentGuard examIds={examIds} />}
     </SolutionModeComponentBlock>
   );
