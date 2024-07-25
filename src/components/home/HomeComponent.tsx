@@ -77,7 +77,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
   const onClickFindPartner = () => {
     modal.success({
       title: '협업 제안서를 받아보시겠습니까?',
-      content: '실기시험 시장을 혁신할 파트너를 찾습니다.',
+      content: '모두CBT와 함께 할 파트너를 찾습니다.',
       okText: '제안서 보기',
       onOk: () => {
         window.open(
