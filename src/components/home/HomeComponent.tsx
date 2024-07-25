@@ -1,14 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { App, Button } from 'antd';
+import { App, Button, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import ModuFolderList from './folderList/ModuFolderList';
 import EhsFolderList from './folderList/EhsFolderList';
-import UserFolderList from './folderList/UserFolderList';
-import BookmarkedFolderList from './folderList/BookmarkedFolderList';
 import HomeBanner from './HomeBanner';
+import dynamic from 'next/dynamic';
+const UserFolderList = dynamic(() => import('./folderList/UserFolderList'), {
+  loading: () => <Spin size="large" />,
+});
+const BookmarkedFolderList = dynamic(
+  () => import('./folderList/BookmarkedFolderList'),
+  {
+    loading: () => <Spin size="large" />,
+  }
+);
 
 const HomeComponentBlock = styled.div`
   width: 100%;

@@ -187,7 +187,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         categoryDescription={category.description}
         exams={category.mockExam}
       />
-      <CategoryHiddenExamList exams={category.mockExam} />
       {category.mockExam.length > 0 ? (
         <ExamListAndController category={category} />
       ) : (

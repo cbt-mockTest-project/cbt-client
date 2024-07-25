@@ -15,7 +15,7 @@ const UserFolderList: React.FC<UserFolderListProps> = () => {
       queryKey: GetCategoriesQueryKey.main_user,
       input: {
         examSource: ExamSource.User,
-        limit: 30,
+        limit: 15,
       },
     })
   );
