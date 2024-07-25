@@ -107,12 +107,10 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   isLoading,
   className = '',
 }) => {
-  const [isRouteLoading, setIsRouteLoading] = useState(false);
   if (!category) return null;
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category.urlSlug}`}
-      onClick={() => setIsRouteLoading(true)}
       className={className}
     >
       {category && !isLoading && (
@@ -155,11 +153,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
             </div>
           </div>
         </BasicCard>
-      )}
-      {isRouteLoading && (
-        <Portal>
-          <Spin fullscreen size="large" />
-        </Portal>
       )}
     </CategoryFolderListItemBlock>
   );

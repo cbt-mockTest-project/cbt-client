@@ -5,7 +5,6 @@ import { Draggable } from 'react-beautiful-dnd';
 import useAuth from '@lib/hooks/useAuth';
 import { MockExamCategory, User } from 'types';
 import { responsive } from '@lib/utils/responsive';
-import ExamListContentViewMore from './ExamListContentViewMore';
 
 const ExamListContentBlock = styled.ul`
   margin-top: 15px;
@@ -20,14 +19,24 @@ const ExamListContentBlock = styled.ul`
   }
 `;
 
+interface ExamListContentProps {
+  category: MockExamCategory;
+  isMyCategory: boolean;
+  isOrderChangableMode: boolean;
+  categoryExams: any[];
+  page: number;
+  pageSize: number;
+}
+
 const ExamListContent = ({
   category,
   isMyCategory,
   isOrderChangableMode,
   categoryExams,
-}) => {
+  page,
+  pageSize,
+}: ExamListContentProps) => {
   const { user } = useAuth();
-  const [isViewMode, setIsViewMode] = useState(false);
   const isRecentStudy = (
     user: User,
     category: MockExamCategory,
@@ -84,21 +93,10 @@ const ExamListContent = ({
   };
 
   const examItems = categoryExams
-    .slice(0, 10)
+    .slice((page - 1) * pageSize, page * pageSize)
     .map((exam, index) => renderExamItem(exam, index, isMyCategory));
 
-  return (
-    <ExamListContentBlock>
-      {examItems}
-      {categoryExams?.length > 10 && (
-        <ExamListContentViewMore
-          categoryExams={categoryExams}
-          isMyCategory={isMyCategory}
-          renderExamItem={renderExamItem}
-        />
-      )}
-    </ExamListContentBlock>
-  );
+  return <ExamListContentBlock>{examItems}</ExamListContentBlock>;
 };
 
 export default ExamListContent;

@@ -14,7 +14,8 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
 }) => {
   const { handleSearch } = useCategoryExamList();
   const [isOrderChangableMode, setIsOrderChangableMode] = useState(false);
-
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
   return (
     <>
       <CategoryControlbar
@@ -26,11 +27,16 @@ const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
         category={category}
         setIsOrderChangableMode={setIsOrderChangableMode}
         isOrderChangableMode={isOrderChangableMode}
+        page={page}
+        setPage={setPage}
+        pageSize={pageSize}
       />
       <ExamList
+        page={page}
         key={String(isOrderChangableMode)}
         category={category}
         isOrderChangableMode={isOrderChangableMode}
+        pageSize={pageSize}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { Button, Switch, Tooltip } from 'antd';
+import { Button, Pagination, Switch, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
@@ -7,30 +7,14 @@ import { MockExamCategory } from 'types';
 import { responsive } from '@lib/utils/responsive';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 17px;
   padding: 0 20px;
-  @media (max-width: ${responsive.medium}) {
-    padding: 0 16px;
-  }
-  .category-exam-all-checkbox {
-    text-align: center;
-    .ant-checkbox-inner {
-      width: 25px;
-      height: 25px;
+  .category-mutiple-select-pagination {
+    @media (max-width: ${responsive.medium}) {
+      position: sticky;
+      top: 57px;
+      background-color: white;
+      z-index: 10;
     }
-    .ant-checkbox-inner::after {
-      width: 10px;
-      height: 14px;
-    }
-  }
-
-  .category-exam-all-checkbox-wrapper {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 17px;
   }
 `;
 
@@ -38,11 +22,21 @@ interface CategoryMultipleSelectModeControlbarProps {
   category: MockExamCategory;
   setIsOrderChangableMode: React.Dispatch<React.SetStateAction<boolean>>;
   isOrderChangableMode: boolean;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  pageSize: number;
 }
 
 const CategoryMultipleSelectModeControlbar: React.FC<
   CategoryMultipleSelectModeControlbarProps
-> = ({ category, setIsOrderChangableMode, isOrderChangableMode }) => {
+> = ({
+  category,
+  setIsOrderChangableMode,
+  isOrderChangableMode,
+  page,
+  setPage,
+  pageSize,
+}) => {
   const { handleCheckLogin, user } = useAuth();
   const isMyCategory = category.user.id === user?.id;
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
@@ -73,6 +67,15 @@ const CategoryMultipleSelectModeControlbar: React.FC<
           </div>
         )}
       </div>
+      {category.mockExam.length > pageSize && (
+        <Pagination
+          align="center"
+          current={page}
+          total={category.mockExam.length}
+          pageSize={pageSize}
+          onChange={(v) => setPage(v)}
+        />
+      )}
       {examMutipleSelectModalOpen && (
         <ExamMultipleSelectModal
           categoryId={category.id}

@@ -9,6 +9,8 @@ import { uniqueId } from 'lodash';
 interface ExamListProps {
   category: MockExamCategory;
   isOrderChangableMode?: boolean;
+  page: number;
+  pageSize: number;
 }
 
 export const ITEMS_PER_PAGE = 10;
@@ -16,6 +18,8 @@ export const ITEMS_PER_PAGE = 10;
 const ExamList: React.FC<ExamListProps> = ({
   category,
   isOrderChangableMode,
+  page,
+  pageSize,
 }) => {
   const { user } = useAuth();
   const isMyCategory = category.user.id === user?.id;
@@ -32,6 +36,8 @@ const ExamList: React.FC<ExamListProps> = ({
             isMyCategory={isMyCategory}
             isOrderChangableMode={isOrderChangableMode}
             categoryExams={categoryExams}
+            page={page}
+            pageSize={pageSize}
           />
         </DragDropContextWrapper>
       ) : (
@@ -41,6 +47,8 @@ const ExamList: React.FC<ExamListProps> = ({
           isMyCategory={isMyCategory}
           isOrderChangableMode={isOrderChangableMode}
           categoryExams={categoryExams}
+          page={page}
+          pageSize={pageSize}
         />
       )}
     </>
