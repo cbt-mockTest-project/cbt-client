@@ -1,21 +1,19 @@
-import { Button, Tooltip, Pagination, Skeleton } from 'antd';
+import { Pagination, Skeleton } from 'antd';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { ReadQuestionsByExamIdsInput } from 'types';
 import { responsive } from '@lib/utils/responsive';
 import useQuestions from '@lib/hooks/useQuestions';
-import SelectStudyModeModal from './SelectStudyModeModal';
 import StudyPaymentGuard from '@components/study/StudyPaymentGuard';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { shallowEqual } from 'react-redux';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDeferredRederingForPaginationItemList';
-import ToggleAnswerAllHiddenButton from './ToggleAnswerAllHiddenButton';
 import SolutionModeControlButtons from './SolutionModeControlButtons';
 
-const LIMIT = 20;
+const pageSize = 20;
 
 const SolutionModeComponentBlock = styled.div`
   .solution-mode-solution-card-list {
@@ -95,7 +93,7 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   const AsyncItemList = useDeferredRederingForPaginationItemList(
     questionIds,
     page,
-    LIMIT,
+    pageSize,
     (questionId, index) => (
       <SolutionModeCardItem
         key={questionId}
@@ -124,12 +122,12 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = ({
   }, []);
   return (
     <SolutionModeComponentBlock>
-      {!isStaticPage && (
+      {!isStaticPage && totalQuestionCount > pageSize && (
         <div className="solution-mode-pagination-wrapper">
           <Pagination
             align="end"
             total={totalQuestionCount}
-            pageSize={LIMIT}
+            pageSize={pageSize}
             current={page}
             onChange={(page, pageSize) => setPage(page)}
             showSizeChanger={false}
