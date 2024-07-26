@@ -43,11 +43,11 @@ const HomeComponentBlock = styled.div`
         gap: 5px;
         align-items: center;
       }
-      .home-header-find-partner-button-wrapper {
-        margin-right: 30px;
-        @media (max-width: ${responsive.medium}) {
-          display: none;
-        }
+    }
+    .home-header-find-partner-button-wrapper {
+      margin-right: 30px;
+      @media (max-width: ${responsive.medium}) {
+        display: none;
       }
     }
   }
