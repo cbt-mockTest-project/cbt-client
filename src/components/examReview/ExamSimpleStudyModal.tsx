@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import StudySolveLimitInfoModal from '@components/study/StudySolveLimitInfoModal';
 import { checkIsEhsMasterExam, checkRole, handleError } from '@lib/utils/utils';
+import { SessionStorage } from '@lib/utils/sessionStorage';
+import { PUBLIC_CATEGORY_ID } from '@lib/constants/sessionStorage';
 
 const ExamSimpleStudyModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
@@ -45,6 +47,7 @@ interface ExamSimpleStudyModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
+  const sessionStorage = new SessionStorage();
   const { questionStates, highlighted, feedbacked, ...modalProps } = props;
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
@@ -72,6 +75,7 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
           return;
         }
       }
+      sessionStorage.set(PUBLIC_CATEGORY_ID, categoryId);
       router.push({
         pathname: '/study',
         query: {
