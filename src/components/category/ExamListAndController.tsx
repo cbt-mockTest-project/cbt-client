@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import CategoryControlbar from './CategoryControlbar';
 import CategoryMultipleSelectModeControlbar from './CategoryMultipleSelectModeControlbar';
 import { MockExamCategory } from 'types';
-import useCategoryExamList from './hooks/useCategoryExamList';
 import ExamList from './ExamList';
 
 interface ExamListAndControllerProps {
@@ -12,17 +10,11 @@ interface ExamListAndControllerProps {
 const ExamListAndController: React.FC<ExamListAndControllerProps> = ({
   category,
 }) => {
-  const { handleSearch } = useCategoryExamList();
   const [isOrderChangableMode, setIsOrderChangableMode] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 6;
   return (
     <>
-      <CategoryControlbar
-        textInput={{
-          onChangeText: (v) => handleSearch(v),
-        }}
-      />
       <CategoryMultipleSelectModeControlbar
         category={category}
         setIsOrderChangableMode={setIsOrderChangableMode}

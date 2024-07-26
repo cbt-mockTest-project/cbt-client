@@ -58,14 +58,12 @@ interface CategoryHeaderProps {
   user: User;
   categoryName: string;
   categoryDescription: string;
-  exams: MockExam[];
 }
 
 const CategoryHeader: React.FC<CategoryHeaderProps> = ({
   user,
   categoryName,
   categoryDescription,
-  exams,
 }) => {
   return (
     <CategoryHeaderBlock>

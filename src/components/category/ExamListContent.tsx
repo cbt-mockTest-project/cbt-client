@@ -74,7 +74,11 @@ const ExamListContent = ({
     );
 
     return isDraggable ? (
-      <Draggable key={exam.id} index={index} draggableId={`${exam.id}`}>
+      <Draggable
+        key={exam.id}
+        index={index + (page - 1) * pageSize}
+        draggableId={`${exam.id}`}
+      >
         {(provided) => (
           <div
             {...provided.draggableProps}

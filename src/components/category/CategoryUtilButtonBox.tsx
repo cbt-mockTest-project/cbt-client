@@ -1,6 +1,7 @@
 import { AlertTwoTone } from '@ant-design/icons';
 import { PUBLIC_CATEGORY_NAME } from '@lib/constants/sessionStorage';
 import useAuth from '@lib/hooks/useAuth';
+import { responsive } from '@lib/utils/responsive';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { Button, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
@@ -13,6 +14,17 @@ const CategoryUtilButtonBoxBlock = styled.div`
   width: 100vw;
   overflow-x: auto;
   scrollbar-width: none;
+  .category-util-button-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    padding: 0 20px;
+    width: fit-content;
+    @media (max-width: ${responsive.medium}) {
+      padding: 0 16px;
+    }
+  }
 `;
 
 interface CategoryUtilButtonBoxProps {
@@ -94,7 +106,7 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
 
   return (
     <CategoryUtilButtonBoxBlock>
-      <div className="mb-5 flex items-center gap-2 px-[20px] md:px-[16px] w-fit">
+      <div className="category-util-button-box">
         {buttonConfigs.map((config, index) => (
           <Tooltip key={index} title={config.title}>
             <Button

@@ -7,7 +7,17 @@ import { MockExamCategory } from 'types';
 import { responsive } from '@lib/utils/responsive';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
-  padding: 0 20px;
+  border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
+  margin-top: 15px;
+  padding: 5px 20px;
+  .category-multiple-select-mode-controlbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
   .category-mutiple-select-pagination {
     @media (max-width: ${responsive.medium}) {
       position: sticky;
@@ -44,7 +54,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
 
   return (
     <CategoryMultipleSelectModeControlbarBlock>
-      <div className="w-full flex justify-between items-center mb-3 mt-4">
+      <div className="category-multiple-select-mode-controlbar">
         <Button
           className="category-study-button"
           type="primary"

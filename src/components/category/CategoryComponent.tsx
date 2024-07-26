@@ -1,6 +1,6 @@
 import { responsive } from '@lib/utils/responsive';
 import palette from '@styles/palette';
-import { App, MenuProps, Skeleton, Spin } from 'antd';
+import { App, MenuProps, Spin } from 'antd';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import {
@@ -24,7 +24,6 @@ import CategoryEmpty from './CategoryEmpty';
 import useAuth from '@lib/hooks/useAuth';
 import ExamListAndController from './ExamListAndController';
 import useCategoryExamList from './hooks/useCategoryExamList';
-import Portal from '@components/common/portal/Portal';
 
 const CategoryComponentBlock = styled.div`
   padding: 20px 0;
@@ -185,7 +184,6 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
         user={category.user}
         categoryName={category.name}
         categoryDescription={category.description}
-        exams={category.mockExam}
       />
       <CategoryHiddenExamList exams={category.mockExam.slice(0, 6)} />
       {category.mockExam.length > 0 ? (
