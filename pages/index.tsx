@@ -5,7 +5,6 @@ import {
   GetCategoriesQueryKey,
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
-import wrapper from '@modules/redux/store/configureStore';
 import {
   DehydratedState,
   HydrationBoundary,
@@ -16,10 +15,6 @@ import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { ExamSource } from 'types';
-
-const HomeNoti = dynamic(() => import('@components/home/HomeNoti'), {
-  ssr: false,
-});
 
 interface Props {
   dehydratedState: DehydratedState;
@@ -35,7 +30,6 @@ const IndexPage: NextPage<Props> = ({ dehydratedState }) => {
       <HydrationBoundary state={dehydratedState}>
         <HomeComponent />
       </HydrationBoundary>
-      <HomeNoti />
     </>
   );
 };

@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import { App, Button, Spin } from 'antd';
+import { App, Button, Spin, Tooltip } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import ModuFolderList from './folderList/ModuFolderList';
 import EhsFolderList from './folderList/EhsFolderList';
 import HomeBanner from './HomeBanner';
 import dynamic from 'next/dynamic';
+import useAuth from '@lib/hooks/useAuth';
+import { useRouter } from 'next/router';
 const UserFolderList = dynamic(() => import('./folderList/UserFolderList'), {
   loading: () => <Spin size="large" />,
 });
@@ -24,13 +26,38 @@ const HomeComponentBlock = styled.div`
     width: 100% !important;
     height: 100% !important;
   }
+  .home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 30px;
+    margin-top: 15px;
+    @media (max-width: ${responsive.medium}) {
+      margin-left: 20px;
+    }
+    .home-header-left-buttons {
+      display: flex;
+      gap: 10px;
+      .home-header-left-buttons-search-button {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .home-header-find-partner-button-wrapper {
+        margin-right: 30px;
+        @media (max-width: ${responsive.medium}) {
+          display: none;
+        }
+      }
+    }
+  }
   .home-wrapper {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    gap: 50px;
-    padding: 20px 30px 30px 30px;
+    gap: 40px;
+    padding: 0px 30px 30px 30px;
     height: 900px;
     .home-folder-search-input-and-radio {
       display: flex;
@@ -57,7 +84,7 @@ const HomeComponentBlock = styled.div`
   }
   @media (max-width: ${responsive.medium}) {
     .home-wrapper {
-      padding: 20px 16px;
+      padding: 0px 16px;
       .home-folder-search-input-and-radio {
         width: 100%;
 
@@ -73,7 +100,9 @@ const HomeComponentBlock = styled.div`
 interface HomeComponentProps {}
 
 const HomeComponent: React.FC<HomeComponentProps> = () => {
+  const router = useRouter();
   const { modal } = App.useApp();
+  const { user } = useAuth();
   const onClickFindPartner = () => {
     modal.success({
       title: '협업 제안서를 받아보시겠습니까?',
@@ -93,17 +122,30 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
   return (
     <HomeComponentBlock>
       <HomeBanner />
-
-      <div className="ml-[30px] mt-4 lg:ml-[20px] flex justify-between items-center">
-        <Link href="/search-categories">
-          <Button type="primary">
-            <div className="flex gap-2 items-center">
-              암기장 검색
-              <SearchOutlined />
-            </div>
-          </Button>
-        </Link>
-        <div className="md:hidden mr-[30px] ">
+      <div className="home-header">
+        <div className="home-header-left-buttons">
+          <Link href="/search-categories">
+            <Button type="primary">
+              <div className="home-header-left-buttons-search-button">
+                암기장 검색
+                <SearchOutlined />
+              </div>
+            </Button>
+          </Link>
+          {user && user.recentlyStudiedCategory && (
+            <Tooltip title="최근 공부한 암기장으로 이동합니다.">
+              <Button
+                onClick={() =>
+                  router.push(`/category/${user.recentlyStudiedCategory}`)
+                }
+                type="dashed"
+              >
+                빠른 이동
+              </Button>
+            </Tooltip>
+          )}
+        </div>
+        <div className="home-header-find-partner-button-wrapper">
           <Button
             type="text"
             className="underline"
