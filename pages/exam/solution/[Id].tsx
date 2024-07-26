@@ -1,6 +1,7 @@
 import WithHead from '@components/common/head/WithHead';
 import SolutionModeComponent from '@components/solutionMode/SolutionModeComponent';
 import SolutionModeCore from '@components/solutionMode/SolutionModeCore';
+import SolutionModeForStaticPageComponent from '@components/solutionMode/SolutionModeForStaticPageComponent';
 import StudyHeader from '@components/study/StudyHeader';
 import { EXAM_SOLUTION_PAGE } from '@lib/constants/displayName';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
@@ -38,7 +39,9 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
         noIndex={isNoIndex}
       />
       <StudyHeader questions={questions} />
-      <SolutionModeComponent questionsQueryInput={questionsQueryInput} />
+      <SolutionModeForStaticPageComponent
+        questionsQueryInput={questionsQueryInput}
+      />
       <SolutionModeCore />
     </>
   );
