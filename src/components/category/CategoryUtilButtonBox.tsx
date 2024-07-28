@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { MockExam } from 'types';
 import CategoryReportModal from './CatogoryReportModal';
+import Link from 'next/link';
 
 const CategoryUtilButtonBoxBlock = styled.div`
   width: 100vw;
@@ -47,7 +48,8 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
   categoryId,
 }) => {
   const theme = useTheme();
-  const { handleCheckLogin } = useAuth();
+
+  const { handleCheckLogin, user } = useAuth();
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const sessionStorage = new SessionStorage();
   const router = useRouter();
@@ -132,7 +134,13 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
             />
           </Button>
         </Tooltip>
+        {user.role === 'ADMIN' && (
+          <Link href={`/admin/feedback-filter?categoryId=${categoryId}`}>
+            <Button type="primary">피드백필터</Button>
+          </Link>
+        )}
       </div>
+
       {isReportModalOpen && (
         <CategoryReportModal
           open={isReportModalOpen}

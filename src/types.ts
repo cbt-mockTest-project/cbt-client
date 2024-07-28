@@ -1372,10 +1372,11 @@ export type GetFeedbacksByRecommendationCountOutput = {
 };
 
 export type GetFeedbacksWithFilterInput = {
-  badCount: Scalars['Float'];
-  examId: Scalars['Float'];
-  goodCount: Scalars['Float'];
-  types: Array<QuestionFeedbackType>;
+  badCount?: InputMaybe<Scalars['Float']>;
+  categoryId?: InputMaybe<Scalars['Float']>;
+  examId?: InputMaybe<Scalars['Float']>;
+  goodCount?: InputMaybe<Scalars['Float']>;
+  types?: InputMaybe<Array<QuestionFeedbackType>>;
 };
 
 export type GetFeedbacksWithFilterOutput = {
