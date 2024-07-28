@@ -70,6 +70,7 @@ const useQuestion = (questionQueryInput: ReadMockExamQuestionInput) => {
   }: Omit<DeleteFeedbackInput, 'setQuestion'>) => {
     deleteFeedback({
       question,
+      setQuestion: () => {},
       feedback,
     });
     refetch();
