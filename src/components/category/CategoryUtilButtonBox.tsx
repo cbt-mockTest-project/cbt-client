@@ -134,7 +134,7 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
             />
           </Button>
         </Tooltip>
-        {user.role === 'ADMIN' && (
+        {user && user.role === 'ADMIN' && (
           <Link href={`/admin/feedback-filter?categoryId=${categoryId}`}>
             <Button type="primary">피드백필터</Button>
           </Link>
