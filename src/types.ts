@@ -1296,6 +1296,7 @@ export type GetExamCategoriesInput = {
   keyword?: InputMaybe<Scalars['String']>;
   limit?: InputMaybe<Scalars['Float']>;
   page?: InputMaybe<Scalars['Float']>;
+  sort?: InputMaybe<Scalars['String']>;
 };
 
 export type GetExamCategoriesOutput = {
