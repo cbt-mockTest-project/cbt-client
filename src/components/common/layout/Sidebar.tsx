@@ -52,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   return (
     <SidebarBlock>
       <div className="sider-logo">
-        <Link href="/">
+        <Link href="/" prefetch={false}>
           <div className="sider-logo-image-wrapper">
             <Image src="/png/logo02.png" alt="logo" fill />
           </div>

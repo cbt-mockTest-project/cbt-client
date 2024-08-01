@@ -167,6 +167,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               href={`/question/${question.id}`}
               target="_blank"
               rel="noreferrer noopener"
+              prefetch={false}
             >
               <LinkOutlined />
             </Link>

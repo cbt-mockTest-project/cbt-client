@@ -111,6 +111,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   return (
     <CategoryFolderListItemBlock
       href={`/category/${category.urlSlug}`}
+      prefetch={false}
       className={className}
     >
       {category && !isLoading && (

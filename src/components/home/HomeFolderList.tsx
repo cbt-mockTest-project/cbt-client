@@ -161,7 +161,7 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
   return (
     <HomeFolderListBlock>
       {link ? (
-        <Link className="home-folder-title" href={link}>
+        <Link className="home-folder-title" href={link} prefetch={false}>
           <span>{title}</span>
           <span>
             <RightOutlined />

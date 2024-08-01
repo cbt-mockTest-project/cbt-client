@@ -97,7 +97,7 @@ const SearchQuestionListItem: React.FC<SearchQuestionListItemProps> = ({
           </div>
           <div className="search-question-tool-box">
             {
-              <Link href={`/question/${question.id}`}>
+              <Link href={`/question/${question.id}`} prefetch={false}>
                 <LinkOutlined />
               </Link>
             }

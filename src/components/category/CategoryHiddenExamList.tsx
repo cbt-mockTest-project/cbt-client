@@ -25,7 +25,7 @@ const CategoryHiddenListExam: React.FC<CategoryHiddenListExamProps> = ({
   return (
     <CategoryHiddenListExamBlock>
       {exams.map((exam) => (
-        <Link key={exam.id} href={`/exam/solution/${exam.id}`}>
+        <Link key={exam.id} href={`/exam/solution/${exam.id}`} prefetch={false}>
           {exam.title}
         </Link>
       ))}
