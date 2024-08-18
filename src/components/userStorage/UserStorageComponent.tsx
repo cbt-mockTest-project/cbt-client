@@ -49,7 +49,7 @@ const UserStorageComponent: React.FC<UserStorageComponentProps> = () => {
     <UserStorageComponentBlock>
       <TextInput
         className="category-filter-input"
-        placeholder="암기장 필터링"
+        placeholder="암기장을 검색해보세요."
         onChange={(e) => {
           handleSearch(e.target.value);
         }}

@@ -65,7 +65,7 @@ const MyStorageComponent: React.FC<MyStorageComponentProps> = ({}) => {
       />
       <TextInput
         className="my-storage-category-filter-input"
-        placeholder="암기장 필터링"
+        placeholder="암기장을 검색해보세요."
         onChange={(e) => {
           handleFilterCategories(e.target.value);
         }}
