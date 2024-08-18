@@ -356,6 +356,7 @@ export const GET_EXAM_CATEGORIES = gql`
         categoryEvaluations {
           score
         }
+        examType
         isBookmarked
         id
         urlSlug
