@@ -31,9 +31,7 @@ const ModuStorage: NextPage<ModuStorageProps> = ({ dehydratedState }) => {
       />
       <HydrationBoundary state={dehydratedState}>
         <StorageLayout
-          hasOpenSaveCategoryModalButton={
-            meQuery?.me.user?.role === UserRole.Admin
-          }
+          hasOpenSaveCategoryModalButton={false}
           title="직8딴 공식 암기장"
           storageType={StorageType.MODU}
         >
