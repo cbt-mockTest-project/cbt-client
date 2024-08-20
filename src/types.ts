@@ -316,6 +316,7 @@ export type CreateFreeTrialRoleOutput = {
 
 export type CreateMockExamCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
+  examType?: InputMaybe<ExamType>;
   isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
@@ -887,6 +888,7 @@ export type Discountcode = {
 
 export type EditMockExamCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
+  examType?: InputMaybe<ExamType>;
   id: Scalars['Float'];
   isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
