@@ -11,14 +11,14 @@ export type ReadBookmarkedQuestionsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadBookmarkedQuestionsQuery = { __typename?: 'Query', readBookmarkedQuestions: { __typename?: 'ReadBookmarkedQuestionsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, endContainer: Array<number>, color?: string | null, text: string, type: string } | null }>, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
+export type ReadBookmarkedQuestionsQuery = { __typename?: 'Query', readBookmarkedQuestions: { __typename?: 'ReadBookmarkedQuestionsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, myObjectiveAnswer?: number | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, endContainer: Array<number>, color?: string | null, text: string, type: string } | null }>, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
 
 export type ReadMockExamQuestionsByMockExamIdQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionsByMockExamIdInput;
 }>;
 
 
-export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, title: string, author: string, isPremium: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, label?: string | null, id: number, number: number, approved: boolean, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExam?: { __typename?: 'MockExam', title: string } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, created_at: any, updated_at: any, user?: { __typename?: 'User', nickname: string, id: number } | null, recommendationCount: { __typename?: 'RecommendationCount', good: number, bad: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean } }>, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> }> } };
+export type ReadMockExamQuestionsByMockExamIdQuery = { __typename?: 'Query', readMockExamQuestionsByMockExamId: { __typename?: 'ReadMockExamQuestionsByMockExamIdOutput', count: number, error?: string | null, ok: boolean, title: string, author: string, isPremium: boolean, questions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, label?: string | null, id: number, number: number, approved: boolean, mockExamQuestionComment: Array<{ __typename?: 'MockExamQuestionComment', created_at: any, content: string, likeState: boolean, likesCount: number, id: number, user: { __typename?: 'User', nickname: string, id: number, role: Types.UserRole } }>, mockExam?: { __typename?: 'MockExam', title: string } | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, content: string, type: Types.QuestionFeedbackType, created_at: any, updated_at: any, user?: { __typename?: 'User', nickname: string, id: number } | null, recommendationCount: { __typename?: 'RecommendationCount', good: number, bad: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isGood: boolean, isBad: boolean } }>, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, question_video?: Array<{ __typename?: 'MockExamVideoType', url: string, size: number }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: number, exam: { __typename?: 'MockExam', id: number } }>, mockExamQuestionBookmark: Array<{ __typename?: 'MockExamQuestionBookmark', user: { __typename?: 'User', id: number } }> }> } };
 
 export type ReadAllQuestionsQueryVariables = Types.Exact<{
   input: Types.ReadAllQuestionsInput;
@@ -32,7 +32,7 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', linkedQuestionIds?: Array<number> | null, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean } | null, user: { __typename?: 'User', id: number, role: Types.UserRole }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> } } };
+export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', linkedQuestionIds?: Array<number> | null, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, myObjectiveAnswer?: number | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean } | null, user: { __typename?: 'User', id: number, role: Types.UserRole }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> } } };
 
 export type EditMockExamQuestionMutationVariables = Types.Exact<{
   input: Types.EditMockExamQuestionInput;
@@ -51,7 +51,7 @@ export type DeleteMockExamQuestionMutation = { __typename?: 'Mutation', deleteMo
 export type ReadAllMockExamQuestionQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type ReadAllMockExamQuestionQuery = { __typename?: 'Query', readAllMockExamQuestion: { __typename?: 'ReadAllMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQuestions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }> } };
+export type ReadAllMockExamQuestionQuery = { __typename?: 'Query', readAllMockExamQuestion: { __typename?: 'ReadAllMockExamQuestionOutput', error?: string | null, ok: boolean, mockExamQuestions: Array<{ __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: number }> }> } };
 
 export type CreateMockExamQuestionMutationVariables = Types.Exact<{
   input: Types.CreateMockExamQuestionInput;
@@ -65,7 +65,7 @@ export type ReadMockExamQuestionsByStateQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, question: { __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: string }> }, exam: { __typename?: 'MockExam', title: string } }> } };
+export type ReadMockExamQuestionsByStateQuery = { __typename?: 'Query', readMockExamQuestionsByState: { __typename?: 'ReadMockExamQuestionsByStateOutput', error?: string | null, ok: boolean, mockExamQusetions: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, question: { __typename?: 'MockExamQuestion', question?: string | null, solution?: string | null, id: number, number: number, approved: boolean, question_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', url: string }> | null, state: Array<{ __typename?: 'MockExamQuestionState', state: Types.QuestionState, answer: number }> }, exam: { __typename?: 'MockExam', title: string } }> } };
 
 export type ReadMockExamQuestionNumbersQueryVariables = Types.Exact<{
   input: Types.ReadMockExamQuestionNumbersInput;
@@ -86,7 +86,7 @@ export type ReadQuestionsByExamIdsQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, endContainer: Array<number>, color?: string | null, text: string, type: string } | null }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
+export type ReadQuestionsByExamIdsQuery = { __typename?: 'Query', readQuestionsByExamIds: { __typename?: 'ReadQuestionsByExamIdsOutput', error?: string | null, ok: boolean, questions: Array<{ __typename?: 'MockExamQuestion', highScore: number, middleScore: number, lowScore: number, id: number, isBookmarked?: boolean | null, myObjectiveAnswer?: number | null, myQuestionState?: Types.QuestionState | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, isPrivate?: boolean | null } | null, user: { __typename?: 'User', id: number }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null, myBookmark?: { __typename?: 'MockExamQuestionBookmark', id: number, bookmarkFolder?: { __typename?: 'MockExamQuestionBookmarkFolder', id: number, name: string } | null } | null, textHighlight: Array<{ __typename?: 'TextHighlight', id: string, data?: { __typename?: 'TextHighlightData', memo: string, startOffset: number, endOffset: number, startContainer: Array<number>, endContainer: Array<number>, color?: string | null, text: string, type: string } | null }>, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> }> } };
 
 
 export const ReadBookmarkedQuestionsDocument = gql`
@@ -123,12 +123,20 @@ export const ReadBookmarkedQuestionsDocument = gql`
       id
       isBookmarked
       myQuestionState
+      myObjectiveAnswer
       commentCount
       number
       question
       question_img {
         url
         uid
+      }
+      objectiveData {
+        answer
+        content {
+          content
+          url
+        }
       }
       solution
       solution_img {
@@ -255,12 +263,20 @@ export const ReadMockExamQuestionDocument = gql`
       id
       isBookmarked
       myQuestionState
+      myObjectiveAnswer
       commentCount
       number
       question
       question_img {
         url
         uid
+      }
+      objectiveData {
+        answer
+        content {
+          content
+          url
+        }
       }
       solution
       solution_img {
@@ -445,6 +461,7 @@ export const ReadQuestionsByExamIdsDocument = gql`
       }
       id
       isBookmarked
+      myObjectiveAnswer
       myQuestionState
       commentCount
       number
@@ -457,6 +474,13 @@ export const ReadQuestionsByExamIdsDocument = gql`
       solution_img {
         uid
         url
+      }
+      objectiveData {
+        answer
+        content {
+          content
+          url
+        }
       }
       myBookmark {
         id

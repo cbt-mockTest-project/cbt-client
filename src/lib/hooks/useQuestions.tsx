@@ -204,8 +204,7 @@ const useQuestions = () => {
 
   const saveQuestionState = async (
     question: MockExamQuestion,
-    state: QuestionState,
-    updateCacheDelay?: number
+    state: QuestionState
   ) => {
     try {
       if (!meQuery?.me.user) {
@@ -217,17 +216,50 @@ const useQuestions = () => {
         myQuestionState: state,
       };
 
-      if (updateCacheDelay) {
-        setTimeout(() => {
-          dispatch(mockExamActions.setQuestion(newQuestion));
-        }, updateCacheDelay);
-      } else {
-        dispatch(mockExamActions.setQuestion(newQuestion));
-      }
+      dispatch(mockExamActions.setQuestion(newQuestion));
       await changeQuestionState({
         variables: {
           input: {
             questionId: question.id,
+            state,
+          },
+        },
+      });
+    } catch {
+      dispatch(mockExamActions.setQuestion(question));
+      message.error('문제 상태 저장에 실패했습니다.');
+    }
+  };
+
+  const saveQuestionStateAndObjectiveAnswer = async (
+    question: MockExamQuestion,
+    selectedAnswer: number
+  ) => {
+    try {
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
+      const currentMyObjectiveAnswer = question.myObjectiveAnswer;
+      if (currentMyObjectiveAnswer === selectedAnswer) {
+        return;
+      }
+      const currentQuestionAnswer = question.objectiveData.answer;
+      const state =
+        currentQuestionAnswer === selectedAnswer
+          ? QuestionState.High
+          : QuestionState.Row;
+      const newQuestion: MockExamQuestion = {
+        ...question,
+        myQuestionState: state,
+        myObjectiveAnswer: selectedAnswer,
+      };
+      dispatch(mockExamActions.setQuestion(newQuestion));
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId: question.id,
+            answer: selectedAnswer,
             state,
           },
         },
@@ -366,6 +398,7 @@ const useQuestions = () => {
     fetchBookmarkedQuestions,
     insertTextHighlight,
     removeTextHighlight,
+    saveQuestionStateAndObjectiveAnswer,
   };
 };
 

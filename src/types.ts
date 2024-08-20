@@ -420,6 +420,7 @@ export type CreateNoticeOutput = {
 };
 
 export type CreateOrUpdateMockExamQuestionStateInput = {
+  answer?: InputMaybe<Scalars['Float']>;
   questionId: Scalars['Float'];
   state: QuestionState;
 };
@@ -1865,6 +1866,7 @@ export type MockExamQuestion = {
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   multipleChoice: Array<MockExamQuestionMultipleChoice>;
   myBookmark?: Maybe<MockExamQuestionBookmark>;
+  myObjectiveAnswer?: Maybe<Scalars['Float']>;
   myQuestionState?: Maybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: Maybe<ObjectiveData>;
@@ -2010,6 +2012,7 @@ export type MockExamQuestionInputType = {
   mockExamQuestionFeedback: Array<MockExamQuestionFeedbackInputType>;
   multipleChoice: Array<MockExamQuestionMultipleChoiceInputType>;
   myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
+  myObjectiveAnswer?: InputMaybe<Scalars['Float']>;
   myQuestionState?: InputMaybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -2059,7 +2062,7 @@ export type MockExamQuestionObjectiveInputType = {
 
 export type MockExamQuestionState = {
   __typename?: 'MockExamQuestionState';
-  answer: Scalars['String'];
+  answer: Scalars['Float'];
   created_at: Scalars['DateTime'];
   exam: MockExam;
   id: Scalars['Float'];
@@ -2070,7 +2073,7 @@ export type MockExamQuestionState = {
 };
 
 export type MockExamQuestionStateInputType = {
-  answer: Scalars['String'];
+  answer: Scalars['Float'];
   exam: MockExamInputType;
   question: MockExamQuestionInputType;
   state: QuestionState;
@@ -2906,6 +2909,7 @@ export type PartialMockExamQuestionInput = {
   mockExamQuestionFeedback?: InputMaybe<Array<MockExamQuestionFeedbackInputType>>;
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
   myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
+  myObjectiveAnswer?: InputMaybe<Scalars['Float']>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -4149,10 +4153,10 @@ export type RoleInputType = {
 
 export type SaveExamInput = {
   categoryId?: InputMaybe<Scalars['Float']>;
+  examType?: InputMaybe<ExamType>;
   questionOrderIds: Array<Scalars['String']>;
   questions?: InputMaybe<Array<PartialMockExamQuestionInput>>;
   title: Scalars['String'];
-  type?: InputMaybe<ExamType>;
   uuid: Scalars['String'];
 };
 

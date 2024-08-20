@@ -1,6 +1,6 @@
 import WithHead from '@components/common/head/WithHead';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { ExamMode, ObjectiveExamMode } from 'customTypes';
+import { ObjectiveExamMode } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 

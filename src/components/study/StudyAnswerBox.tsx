@@ -4,7 +4,6 @@ import parse from 'html-react-parser';
 import { MockExamQuestion } from 'types';
 import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
 import { Button, Image } from 'antd';
-import palette from '@styles/palette';
 import {
   AddFeedbackInput,
   DeleteFeedbackInput,

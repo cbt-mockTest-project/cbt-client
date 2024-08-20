@@ -7,7 +7,6 @@ import {
   ReadBookmarkedQuestionsInput,
   ReadQuestionsByExamIdsInput,
 } from 'types';
-import { responsive } from '@lib/utils/responsive';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import {
   PUBLIC_CATEGORY_ID,
@@ -22,22 +21,55 @@ import {
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import Portal from '@components/common/portal/Portal';
-import { Button, Empty, Spin } from 'antd';
+import { Button, Divider, Empty, Pagination, Spin } from 'antd';
 import StudyPaymentGuard from '../StudyPaymentGuard';
-import ObjectiveStudyTestMode from './ObjectiveStudyTestMode';
-import ObjectiveStudyAutoMode from './ObjectiveStudyAutoMode';
+import ObjectiveStudyTestMode from './testMode/ObjectiveStudyTestMode';
+import ObjectiveStudyAutoMode from './autoMode/ObjectiveStudyAutoMode';
+import Clear from '@mui/icons-material/Clear';
+import { ObjectiveExamMode } from 'customTypes';
+import ObjectiveStudyFooter from './ObjectiveStudyFooter';
+import ObjectiveStudyResult from './result/ObjectiveStudyResult';
 
 const ObjectiveStudyComponentBlock = styled.div`
-  min-height: 100vh;
-  .study-component-wrapper {
+  height: 100vh;
+  color: ${({ theme }) => theme.color('colorText')};
+
+  .objective-study-component-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     padding: 10px 20px;
     position: relative;
-    max-width: 1280px;
+    max-width: 1440px;
     margin: 0 auto;
-  }
-  @media (max-width: ${responsive.medium}) {
-    .study-component-wrapper {
-      padding: 10px;
+    .objective-study-header-wrapper {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      svg {
+        font-size: 30px;
+      }
+
+      .objective-study-header-title-wrapper {
+        display: flex;
+        align-items: center;
+
+        .objective-study-header-title-divider {
+          height: 30px;
+          border-color: ${({ theme }) => theme.color('colorBorder')};
+        }
+
+        .objective-study-header-title-mode {
+          color: ${({ theme }) => theme.color('colorTextTertiary')};
+        }
+
+        .objective-study-header-title {
+          font-size: 20px;
+          font-weight: 600;
+        }
+      }
     }
   }
 `;
@@ -46,6 +78,9 @@ interface ObjectiveStudyComponentProps {}
 
 const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
   const sessionStorage = new SessionStorage();
+  const examTitle = useAppSelector(
+    (state) => state.mockExam.questions?.[0]?.mockExam.title
+  );
   const isPrivate = useAppSelector(
     (state) => state.mockExam.questions?.[0]?.mockExam.isPrivate
   );
@@ -78,7 +113,9 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
     folderId,
     highlighted,
     feedbacked,
+    step,
   } = router.query;
+
   useEffect(() => {
     setIsVerifying(true);
     if (!router.isReady) return;
@@ -233,13 +270,42 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
 
   return (
     <ObjectiveStudyComponentBlock>
-      <div className="study-component-wrapper">
-        {mode === 'test' && <ObjectiveStudyTestMode />}
-        {mode === 'auto' && <ObjectiveStudyAutoMode />}
+      <div className="objective-study-component-wrapper">
+        <div className="objective-study-header-wrapper">
+          <Button type="text" onClick={() => router.back()}>
+            <Clear />
+          </Button>
+          <div className="objective-study-header-title-wrapper">
+            <div className="objective-study-header-title">{examTitle}</div>
+            <Divider
+              type="vertical"
+              className="objective-study-header-title-divider"
+            />
+            <span className="objective-study-header-title-mode">
+              {step === 'end' ? (
+                '결과'
+              ) : (
+                <>
+                  {mode === ObjectiveExamMode.TEST && '시험모드'}
+                  {mode === ObjectiveExamMode.AUTO && '자동모드'}
+                </>
+              )}
+            </span>
+          </div>
+        </div>
+        {step === 'end' ? (
+          <ObjectiveStudyResult />
+        ) : (
+          <>
+            {mode === ObjectiveExamMode.TEST && <ObjectiveStudyTestMode />}
+            {mode === ObjectiveExamMode.AUTO && <ObjectiveStudyAutoMode />}
+          </>
+        )}
         <StudyPaymentGuard
           {...(examId ? { examId: String(examId) } : {})}
           {...(examIds ? { examIds: String(examIds) } : {})}
         />
+        {step !== 'end' && <ObjectiveStudyFooter />}
       </div>
     </ObjectiveStudyComponentBlock>
   );

@@ -27,6 +27,7 @@ const useQuestionsScore = () => {
         const newQuestions = questions.map((question) => ({
           ...question,
           myQuestionState: QuestionState.Core,
+          myObjectiveAnswer: 0,
         }));
         dispatch(mockExamActions.setQuestions(newQuestions));
         return;

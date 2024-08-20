@@ -56,6 +56,7 @@ export enum ExamMode {
 export enum ObjectiveExamMode {
   AUTO = 'auto',
   TEST = 'test',
+  RESULT = 'result',
 }
 
 export interface SetQuestionFeedbackPayload {
