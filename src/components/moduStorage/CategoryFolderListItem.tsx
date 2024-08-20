@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MockExamCategory } from 'types';
+import { ExamType, MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
@@ -47,11 +47,22 @@ const CategoryFolderListItemBlock = styled(Link)`
     }
     .category-middle-wrapper {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      gap: 5px;
       color: ${({ theme }) => theme.color('colorTextSecondary')};
       font-size: 13px;
+      margin: 2px 0;
+
+      .category-info-tag-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      .category-like-count {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
     }
 
     .category-footer-wrapper {
@@ -110,7 +121,11 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
   if (!category) return null;
   return (
     <CategoryFolderListItemBlock
-      href={`/category/${category.urlSlug}`}
+      href={
+        category.examType === ExamType.Objective
+          ? `/mcq/category/${category.urlSlug}`
+          : `/category/${category.urlSlug}`
+      }
       prefetch={false}
       className={className}
     >
@@ -124,8 +139,20 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
               </div>
             </div>
             <div className="category-middle-wrapper">
-              <HeartTwoTone twoToneColor="#eb2f96" />
-              {category.categoryEvaluations.length}
+              <div className="category-info-tag-wrapper">
+                <Tag>
+                  {category.examType === ExamType.Subjective
+                    ? '주관식'
+                    : '객관식'}
+                </Tag>
+                {category.mockExam.some((el) => el.isPremium) && (
+                  <Tag>유료</Tag>
+                )}
+              </div>
+              <div className="category-like-count">
+                <HeartTwoTone twoToneColor="#eb2f96" />
+                {category.categoryEvaluations.length}
+              </div>
             </div>
             <div className="category-footer-wrapper">
               <div className="category-user-info">
@@ -144,9 +171,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                {category.mockExam.some((el) => el.isPremium) && (
-                  <Tag color="blue">유료</Tag>
-                )}
                 <div className="category-exam-count">
                   {category.mockExam.length} 세트
                 </div>

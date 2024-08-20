@@ -132,6 +132,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
               </div>
             </Button>
           </Link>
+          {/* TODO: 객관식고려해서 코드 수정필요 */}
           {user && user.recentlyStudiedCategory && (
             <Tooltip title="최근 공부한 암기장으로 이동합니다.">
               <Button

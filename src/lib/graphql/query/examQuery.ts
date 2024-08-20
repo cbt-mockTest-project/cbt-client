@@ -258,13 +258,13 @@ export const READ_EXAM_CATEGORY_IDS = gql`
   }
 `;
 
-export const READ_EXAM_CATEGORY_NAMES = gql`
-  query ReadMockExamCategoryNames {
-    readMockExamCategoryNames {
+export const GET_CATEGORY_NAMES_AND_SLUGS = gql`
+  query GetCategoryNamesAndSlugs($input: GetCategoryNamesAndSlugsInput!) {
+    getCategoryNamesAndSlugs(input: $input) {
       urlSlugs
-      error
-      names
       ok
+      names
+      error
     }
   }
 `;

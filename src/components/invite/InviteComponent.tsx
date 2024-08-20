@@ -3,6 +3,7 @@ import { useApproveCategoryInviteLinkMutation } from '@lib/hooks/useCategoryInvi
 import { Button, Result, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { ExamType } from 'types';
 
 interface InviteComponentProps {}
 
@@ -14,6 +15,7 @@ const InviteComponent: React.FC<InviteComponentProps> = () => {
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [urlSlug, setUrlSlug] = useState<string>('');
+  const [examType, setExamType] = useState<ExamType | null>(null);
   const approveCategoryInviteLink = useApproveCategoryInviteLinkMutation();
   useEffect(() => {
     if (!code) return;
@@ -21,6 +23,7 @@ const InviteComponent: React.FC<InviteComponentProps> = () => {
       if (res.approveCategoryInvitationLink.ok) {
         setResult('success');
         setUrlSlug(res.approveCategoryInvitationLink.urlSlug);
+        setExamType(res.approveCategoryInvitationLink.examType);
       } else {
         setErrorMessage(res.approveCategoryInvitationLink.error);
         setResult('error');
@@ -41,7 +44,11 @@ const InviteComponent: React.FC<InviteComponentProps> = () => {
                 type="primary"
                 key="console"
                 onClick={() => {
-                  router.push(`/category/${urlSlug}`);
+                  router.push(
+                    examType == ExamType.Objective
+                      ? `/mcq/category/${urlSlug}`
+                      : `/category/${urlSlug}`
+                  );
                 }}
               >
                 암기장으로 이동

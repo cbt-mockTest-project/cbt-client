@@ -74,7 +74,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       query: GET_CATEGORY_NAMES_AND_SLUGS,
       variables: {
         input: {
-          examType: ExamType.Subjective,
+          examType: ExamType.Objective,
         },
       },
     });

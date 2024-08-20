@@ -42,6 +42,7 @@ export type ApproveCategoryInvitationLinkOutput = {
   __typename?: 'ApproveCategoryInvitationLinkOutput';
   categoryName?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
+  examType?: Maybe<ExamType>;
   ok: Scalars['Boolean'];
   urlSlug?: Maybe<Scalars['String']>;
 };
@@ -888,7 +889,6 @@ export type Discountcode = {
 
 export type EditMockExamCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
-  examType?: InputMaybe<ExamType>;
   id: Scalars['Float'];
   isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
@@ -1275,6 +1275,18 @@ export type GetCategoryEvaluationOutput = {
   error?: Maybe<Scalars['String']>;
   isEvaluated?: Maybe<Scalars['Boolean']>;
   ok: Scalars['Boolean'];
+};
+
+export type GetCategoryNamesAndSlugsInput = {
+  examType: ExamType;
+};
+
+export type GetCategoryNamesAndSlugsOutput = {
+  __typename?: 'GetCategoryNamesAndSlugsOutput';
+  error?: Maybe<Scalars['String']>;
+  names?: Maybe<Array<Scalars['String']>>;
+  ok: Scalars['Boolean'];
+  urlSlugs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type GetCategoryPointHistoriesInput = {
@@ -3142,6 +3154,7 @@ export type Query = {
   getBlogPostDetail: GetBlogPostDetailOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
+  getCategoryNamesAndSlugs: GetCategoryNamesAndSlugsOutput;
   getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoriesForAdmin: GetExamCategoriesOutput;
@@ -3246,6 +3259,11 @@ export type QueryGetBlogPostDetailArgs = {
 
 export type QueryGetCategoryEvaluationArgs = {
   input: GetCategoryEvaluationInput;
+};
+
+
+export type QueryGetCategoryNamesAndSlugsArgs = {
+  input: GetCategoryNamesAndSlugsInput;
 };
 
 
