@@ -27,8 +27,11 @@ import ObjectiveStudyTestMode from './testMode/ObjectiveStudyTestMode';
 import ObjectiveStudyAutoMode from './autoMode/ObjectiveStudyAutoMode';
 import Clear from '@mui/icons-material/Clear';
 import { ObjectiveExamMode } from 'customTypes';
-import ObjectiveStudyFooter from './ObjectiveStudyFooter';
+import ObjectiveStudyTestModeFooterPc from './testMode/ObjectiveStudyTestModeFooterPc';
 import ObjectiveStudyResult from './result/ObjectiveStudyResult';
+import useIsMobile from '@lib/hooks/useIsMobile';
+import ObjectiveStudyTestModeFooterMobile from './testMode/ObjectiveStudyTestModeFooterMobile';
+import { responsive } from '@lib/utils/responsive';
 
 const ObjectiveStudyComponentBlock = styled.div`
   height: 100vh;
@@ -59,15 +62,24 @@ const ObjectiveStudyComponentBlock = styled.div`
         .objective-study-header-title-divider {
           height: 30px;
           border-color: ${({ theme }) => theme.color('colorBorder')};
+          @media (max-width: ${responsive.medium}) {
+            display: none;
+          }
         }
 
         .objective-study-header-title-mode {
           color: ${({ theme }) => theme.color('colorTextTertiary')};
+          @media (max-width: ${responsive.medium}) {
+            display: none;
+          }
         }
 
         .objective-study-header-title {
-          font-size: 20px;
+          font-size: 18px;
           font-weight: 600;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -78,6 +90,7 @@ interface ObjectiveStudyComponentProps {}
 
 const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
   const sessionStorage = new SessionStorage();
+  const isMobile = useIsMobile();
   const examTitle = useAppSelector(
     (state) => state.mockExam.questions?.[0]?.mockExam.title
   );
@@ -305,7 +318,11 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
           {...(examId ? { examId: String(examId) } : {})}
           {...(examIds ? { examIds: String(examIds) } : {})}
         />
-        {step !== 'end' && <ObjectiveStudyFooter />}
+        {step !== 'end' && isMobile ? (
+          <ObjectiveStudyTestModeFooterMobile />
+        ) : (
+          <ObjectiveStudyTestModeFooterPc />
+        )}
       </div>
     </ObjectiveStudyComponentBlock>
   );

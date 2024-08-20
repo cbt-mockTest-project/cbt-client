@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import styled from 'styled-components';
 
-const ObjectiveStudyFooterBlock = styled.div`
+const ObjectiveStudyTestModeFooterPcBlock = styled.div`
   height: 50px;
   width: 100%;
   display: flex;
@@ -16,9 +16,11 @@ const ObjectiveStudyFooterBlock = styled.div`
   gap: 20px;
 `;
 
-interface ObjectiveStudyFooterProps {}
+interface ObjectiveStudyTestModeFooterPcProps {}
 
-const ObjectiveStudyFooter: React.FC<ObjectiveStudyFooterProps> = () => {
+const ObjectiveStudyTestModeFooterPc: React.FC<
+  ObjectiveStudyTestModeFooterPcProps
+> = () => {
   const { modal } = App.useApp();
   const totalQuestions = useAppSelector(
     (state) => state.mockExam.questions?.length
@@ -58,7 +60,7 @@ const ObjectiveStudyFooter: React.FC<ObjectiveStudyFooterProps> = () => {
   };
 
   return (
-    <ObjectiveStudyFooterBlock>
+    <ObjectiveStudyTestModeFooterPcBlock>
       <Pagination
         simple
         total={totalQuestions}
@@ -71,15 +73,11 @@ const ObjectiveStudyFooter: React.FC<ObjectiveStudyFooterProps> = () => {
         }}
         current={Number(page)}
       />
-      <Button
-        className="objective-study-footer-submit-button"
-        type="primary"
-        onClick={handleSubmit}
-      >
+      <Button type="primary" onClick={handleSubmit}>
         제출
       </Button>
-    </ObjectiveStudyFooterBlock>
+    </ObjectiveStudyTestModeFooterPcBlock>
   );
 };
 
-export default ObjectiveStudyFooter;
+export default ObjectiveStudyTestModeFooterPc;
