@@ -1465,6 +1465,7 @@ export type GetMyExamCategoriesOutput = {
 };
 
 export type GetMyExamsInput = {
+  examType?: InputMaybe<ExamType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1684,6 +1685,7 @@ export type MockExam = {
   examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examLikes: Array<ExamLike>;
+  examType: ExamType;
   examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
@@ -1817,6 +1819,7 @@ export type MockExamInputType = {
   examBookmarks: Array<MockExamBookmarkInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
   examLikes: Array<ExamLikeInputType>;
+  examType: ExamType;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   history: Array<MockExamHistoryInputType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -3714,6 +3717,7 @@ export type ReadMockExamCategoriesOutput = {
 };
 
 export type ReadMockExamCategoryByCategoryIdInput = {
+  examType?: InputMaybe<ExamType>;
   id?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
   urlSlug?: InputMaybe<Scalars['String']>;

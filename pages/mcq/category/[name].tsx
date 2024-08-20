@@ -101,6 +101,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
   const categoryQueryInput: ReadMockExamCategoryByCategoryIdInput = {
     urlSlug,
+    examType: ExamType.Objective,
   };
   const queryClient = new QueryClient();
   const queryKey = getCategoryKey(urlSlug);

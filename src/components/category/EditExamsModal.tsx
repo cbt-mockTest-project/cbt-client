@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Modal, ModalProps, Select } from 'antd';
-import React from 'react';
+import { Button, Modal, ModalProps, Pagination, Select } from 'antd';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import EditExamItem from './EditExamItem';
 import TextInput from '@components/common/input/TextInput';
@@ -34,6 +34,9 @@ const EditExamsModalBlock = styled(Modal)`
     align-items: flex-end;
     gap: 10px;
   }
+  .edit-exams-pagination {
+    margin-top: 30px;
+  }
 `;
 
 interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
@@ -41,6 +44,7 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
+  const [page, setPage] = useState(1);
   const myExams = useAppSelector((state) => state.examCategory.myExams);
   const myBookmarkedExams = useAppSelector(
     (state) => state.examCategory.myBookmarkedExams
@@ -93,10 +97,17 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       </div>
 
       <div className="edit-my-exams-list">
-        {filteredData.map((exam) => (
+        {filteredData.slice((page - 1) * 10, page * 10).map((exam) => (
           <EditExamItem key={exam.id} exam={exam} />
         ))}
       </div>
+      <Pagination
+        simple
+        className="edit-exams-pagination"
+        current={page}
+        total={filteredData.length}
+        onChange={(page) => setPage(page)}
+      />
     </EditExamsModalBlock>
   );
 };
