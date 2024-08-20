@@ -8,14 +8,14 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { MockExam } from 'types';
-import CategoryReportModal from './CatogoryReportModal';
 import Link from 'next/link';
+import CategoryReportModal from '../CatogoryReportModal';
 
-const CategoryUtilButtonBoxBlock = styled.div`
+const ObjectiveCategoryUtilButtonBoxBlock = styled.div`
   width: 100vw;
   overflow-x: auto;
   scrollbar-width: none;
-  .category-util-button-box {
+  .objective-category-util-button-box {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -28,7 +28,7 @@ const CategoryUtilButtonBoxBlock = styled.div`
   }
 `;
 
-interface CategoryUtilButtonBoxProps {
+interface ObjectiveCategoryUtilButtonBoxProps {
   exams: MockExam[];
   categoryName: string;
   categoryId?: number;
@@ -42,11 +42,9 @@ interface ButtonConfig {
   needLogin?: boolean;
 }
 
-const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
-  exams,
-  categoryName,
-  categoryId,
-}) => {
+const ObjectiveCategoryUtilButtonBox: React.FC<
+  ObjectiveCategoryUtilButtonBoxProps
+> = ({ exams, categoryName, categoryId }) => {
   const theme = useTheme();
 
   const { handleCheckLogin, user } = useAuth();
@@ -85,7 +83,6 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
       url: '/exams/review',
       needLogin: true,
     },
-
     {
       title: '형광펜으로 체크한 문제들을 모아 볼 수 있어요.',
       label: '형광펜 문제',
@@ -107,13 +104,13 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
   ];
 
   return (
-    <CategoryUtilButtonBoxBlock>
-      <div className="category-util-button-box">
+    <ObjectiveCategoryUtilButtonBoxBlock>
+      <div className="objective-category-util-button-box">
         {buttonConfigs.map((config, index) => (
           <Tooltip key={index} title={config.title}>
             <Button
               icon={config.icon}
-              className="category-question-search-button"
+              className="objective-category-question-search-button"
               onClick={() => handleButtonClick(config)}
             >
               {config.label}
@@ -147,8 +144,8 @@ const CategoryUtilButtonBox: React.FC<CategoryUtilButtonBoxProps> = ({
           onCancel={() => setIsReportModalOpen(false)}
         />
       )}
-    </CategoryUtilButtonBoxBlock>
+    </ObjectiveCategoryUtilButtonBoxBlock>
   );
 };
 
-export default CategoryUtilButtonBox;
+export default ObjectiveCategoryUtilButtonBox;

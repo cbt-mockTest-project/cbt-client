@@ -7,6 +7,7 @@ import TextInput from '@components/common/input/TextInput';
 import Link from 'next/link';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import useSearchFilterMyExamList from './hooks/useSearchFilterMyExamList';
+import { useRouter } from 'next/router';
 
 const EditExamsModalBlock = styled(Modal)`
   .edit-exams-filter-select {
@@ -44,6 +45,8 @@ interface EditExamsModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
+  const router = useRouter();
+  const isObjective = router.pathname.includes('mcq');
   const [page, setPage] = useState(1);
   const myExams = useAppSelector((state) => state.examCategory.myExams);
   const myBookmarkedExams = useAppSelector(
@@ -61,7 +64,7 @@ const EditExamsModal: React.FC<EditExamsModalProps> = (props) => {
       <p className="edit-exams-modal-title">시험지 추가</p>
       <Link
         href={{
-          pathname: '/exam/create',
+          pathname: isObjective ? '/mcq/exam/create' : '/exam/create',
           query: categoryId
             ? {
                 categoryId,

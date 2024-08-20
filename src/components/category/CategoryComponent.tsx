@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import {
   ExamSource,
+  ExamType,
   ReadMockExamCategoryByCategoryIdInput,
   UserRole,
 } from 'types';
@@ -18,12 +19,13 @@ import CategoryHiddenExamList from './CategoryHiddenExamList';
 import useCheckHasCategoryAccess from './hooks/useCheckHasCategoryAccess';
 import { useQuery } from '@tanstack/react-query';
 import { getCategoryQueryOption } from '@lib/queryOptions/getCategoryQueryOption';
-import CategoryUtilButtonBox from './CategoryUtilButtonBox';
 import CategoryHeader from './CategoryHeader';
 import CategoryEmpty from './CategoryEmpty';
 import useAuth from '@lib/hooks/useAuth';
 import ExamListAndController from './ExamListAndController';
 import useCategoryExamList from './hooks/useCategoryExamList';
+import SubjectiveCategoryUtilButtonBox from './SubjectiveCategoryUtilButtonBox';
+import ObjectiveCategoryUtilButtonBox from './objective/ObjectiveCategoryUtilButtonBox';
 
 const CategoryComponentBlock = styled.div`
   padding: 20px 0;
@@ -174,11 +176,19 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
 
   return (
     <CategoryComponentBlock>
-      <CategoryUtilButtonBox
-        exams={category.mockExam}
-        categoryName={category.name}
-        categoryId={category.id}
-      />
+      {category.examType === ExamType.Subjective ? (
+        <SubjectiveCategoryUtilButtonBox
+          exams={category.mockExam}
+          categoryName={category.name}
+          categoryId={category.id}
+        />
+      ) : (
+        <ObjectiveCategoryUtilButtonBox
+          exams={category.mockExam}
+          categoryName={category.name}
+          categoryId={category.id}
+        />
+      )}
       <CategoryProgressAndReview categoryId={category.id} />
       <CategoryHeader
         user={category.user}

@@ -463,6 +463,13 @@ export const READ_MOCK_EXAM = gql`
           }
           question
           solution
+          objectiveData {
+            answer
+            content {
+              content
+              url
+            }
+          }
         }
       }
     }

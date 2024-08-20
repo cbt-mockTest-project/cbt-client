@@ -6,6 +6,10 @@ import ExamCreateCardItem from './ExamCreateCardItem';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
 import useSaveExamHandler from './useSaveExamHandler';
+import { useRouter } from 'next/router';
+import Portal from '@components/common/portal/Portal';
+import { Spin } from 'antd';
+import ExamCreateObjectiveCardItem from './objective/ExamCreateObjectiveCardItem';
 
 const ExamCreateCardListBlock = styled.div`
   margin-top: 30px;
@@ -21,6 +25,8 @@ interface ExamCreateCardListProps {
 const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
   defaultQuestions,
 }) => {
+  const router = useRouter();
+  const isObjective = router.pathname.includes('mcq');
   const { setValue, getValues } = useFormContext<CreateExamForm>();
   const [questions, setQuestions] = useState<CreateQuestionForm[]>([]);
   const onDragEnd = (result: DropResult) => {
@@ -38,6 +44,14 @@ const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
   useEffect(() => {
     setQuestions(defaultQuestions);
   }, [defaultQuestions]);
+
+  if (!router.isReady) {
+    return (
+      <Portal>
+        <Spin size="large" fullscreen />
+      </Portal>
+    );
+  }
 
   return (
     <DragDropContextWrapper
@@ -60,12 +74,23 @@ const ExamCreateCardList: React.FC<ExamCreateCardListProps> = ({
                     ...provided.draggableProps.style,
                   }}
                 >
-                  <ExamCreateCardItem
-                    index={index}
-                    question={question}
-                    setQuestions={setQuestions}
-                    dragHandleProps={provided.dragHandleProps}
-                  />
+                  {isObjective ? (
+                    <ExamCreateObjectiveCardItem
+                      key="objective"
+                      index={index}
+                      question={question}
+                      setQuestions={setQuestions}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  ) : (
+                    <ExamCreateCardItem
+                      key="subjective"
+                      index={index}
+                      question={question}
+                      setQuestions={setQuestions}
+                      dragHandleProps={provided.dragHandleProps}
+                    />
+                  )}
                 </div>
               )}
             </Draggable>

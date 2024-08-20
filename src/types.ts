@@ -4152,6 +4152,7 @@ export type SaveExamInput = {
   questionOrderIds: Array<Scalars['String']>;
   questions?: InputMaybe<Array<PartialMockExamQuestionInput>>;
   title: Scalars['String'];
+  type?: InputMaybe<ExamType>;
   uuid: Scalars['String'];
 };
 

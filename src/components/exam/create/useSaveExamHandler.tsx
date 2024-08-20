@@ -10,11 +10,13 @@ import { CreateExamForm } from 'customTypes';
 import { format } from 'date-fns';
 import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
+import { ExamType } from 'types';
 
 const useSaveExamHandler = () => {
   const { modal, message } = App.useApp();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const isObjective = router.pathname.includes('mcq');
   const [deleteExam] = useDeleteExam();
   const savedTime = useAppSelector((state) => state.examCreate.savedTime);
   const [saveExam, { loading: saveExamLoading }] = useSaveExam();
@@ -36,6 +38,7 @@ const useSaveExamHandler = () => {
             questionOrderIds,
             questions: data.questions,
             ...(categoryId ? { categoryId: Number(categoryId) } : {}),
+            ...(isObjective ? { examType: ExamType.Objective } : {}),
           },
         },
       });

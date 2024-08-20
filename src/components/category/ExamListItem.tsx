@@ -14,6 +14,7 @@ import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import useCatgegoryExams from './hooks/useCategoryExamList';
+import ObjectiveExamSelectModal from './objective/ObjectiveExamSelectModal';
 
 const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   width: 100%;
@@ -158,9 +159,12 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
+  const isObjective = router.pathname.includes('mcq');
   const { handleRemoveExamFromCategory } = useCatgegoryExams();
   const { handleToggleExamBookmark } = useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
+  const [isObjectiveExamSelectModalOpen, setIsObjectiveExamSelectModalOpen] =
+    useState(false);
   const { user, handleCheckLogin } = useAuth();
   const isMyExam = useMemo(
     () => user && exam.user.id === user.id,
@@ -180,7 +184,11 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     });
   };
   const handleExamClick = () => {
-    setIsExamSelectModalOpen(true);
+    if (isObjective) {
+      setIsObjectiveExamSelectModalOpen(true);
+    } else {
+      setIsExamSelectModalOpen(true);
+    }
   };
 
   const examSettingDropdownItems: MenuProps['items'] = [
@@ -204,7 +212,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           onClick={(e) => {
             e.stopPropagation();
             router.push({
-              pathname: '/exam/create',
+              pathname: isObjective ? '/mcq/exam/create' : '/exam/create',
               query: {
                 examId: exam.id,
                 categoryId: category.id,
@@ -306,6 +314,16 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           examTitle={exam.title}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
+          categoryId={category.id}
+          isPublicCategory={category.isPublic}
+        />
+      )}
+      {isObjectiveExamSelectModalOpen && (
+        <ObjectiveExamSelectModal
+          examId={exam.id}
+          examTitle={exam.title}
+          open={isObjectiveExamSelectModalOpen}
+          onCancel={() => setIsObjectiveExamSelectModalOpen(false)}
           categoryId={category.id}
           isPublicCategory={category.isPublic}
         />
