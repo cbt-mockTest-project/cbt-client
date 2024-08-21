@@ -19,6 +19,7 @@ interface SolutionModeFeedbackListProps {
     updateFeedbackRecommendationInput: UpdateFeedbackRecommendationInput
   ) => Promise<void>;
   type?: 'collapse' | 'list';
+  title?: string;
 }
 
 const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
@@ -29,12 +30,13 @@ const SolutionModeFeedbackList: React.FC<SolutionModeFeedbackListProps> = ({
   updateFeedbackRecommendation,
   feedbackList,
   type = 'collapse',
+  title = '추가답안',
 }) => {
   return (
     <div className="mt-5">
       {type === 'collapse' && (
         <Collapse>
-          <Collapse.Panel header={`추가답안 (${feedbackList.length})`} key="1">
+          <Collapse.Panel header={`${title} (${feedbackList.length})`} key="1">
             {feedbackList.map((feedback, index) => (
               <>
                 {feedback.user && (

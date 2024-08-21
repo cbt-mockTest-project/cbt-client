@@ -42,10 +42,11 @@ const ObjectiveStudyComponentBlock = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    padding: 10px 20px;
+    padding: 10px 0px;
     position: relative;
     max-width: 1440px;
     margin: 0 auto;
+
     .objective-study-header-wrapper {
       height: 50px;
       display: flex;

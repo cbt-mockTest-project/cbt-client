@@ -1,13 +1,15 @@
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
-import { uniqueId } from 'lodash';
 import { Button, Image } from 'antd';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import ObjectiveStudyTestModeObjectiveItem from './ObjectiveStudyTestModeObjectiveItem';
+import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 
 const ObjectiveStudyTestModeItemBlock = styled.div<{
   status: ObjectiveStudyTestModeItemStatus;
@@ -88,10 +90,25 @@ const ObjectiveStudyTestModeItemBlock = styled.div<{
 
   .objective-study-test-mode-item-answer-wrapper {
     padding-top: 15px;
-    border-top: 1px solid ${({ theme }) => theme.color('colorBorder')};
+    border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
+
     .objective-study-test-mode-item-answer-title {
       font-size: 16px;
       color: ${({ theme }) => theme.color('colorTextTertiary')};
+    }
+
+    .objective-study-test-mode-item-answer-feedback-list-wrapper {
+      margin-top: 10px;
+      border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
+    }
+
+    .objective-study-test-mode-item-answer-add-button-wrapper {
+      margin-top: 10px;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
     }
   }
 `;
@@ -112,24 +129,30 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
   index,
   readOnly = false,
 }) => {
+  const { data: meQuery } = useMeQuery();
   const question = useAppSelector((state) =>
     state.mockExam.questions.find((question) => question.id === questionId)
   );
-
+  const myFeedbackList = question?.mockExamQuestionFeedback?.filter(
+    (feedback) => feedback.user?.id === meQuery?.me?.user?.id
+  );
+  const feedbackListExceptMe = question?.mockExamQuestionFeedback?.filter(
+    (feedback) => feedback.user?.id !== meQuery?.me?.user?.id
+  );
   const contentsLength = question.objectiveData.content?.length;
-
-  const { saveQuestionStateAndObjectiveAnswer, saveBookmark } = useQuestions();
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const {
+    addFeedback,
+    deleteFeedback,
+    editFeedback,
+    updateFeedbackRecommendation,
+  } = useQuestions();
 
   const status = readOnly
     ? question.myObjectiveAnswer === question.objectiveData.answer
       ? 'correct'
       : 'incorrect'
     : 'default';
-
-  const onClickObjective = (index: number) => {
-    if (readOnly) return;
-    saveQuestionStateAndObjectiveAnswer(question, index + 1);
-  };
 
   if (!question) return null;
   return (
@@ -175,7 +198,53 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
               alt="문제 이미지"
             />
           )}
+          <div>
+            {!!myFeedbackList.length && (
+              <div className="objective-study-test-mode-item-answer-feedback-list-wrapper">
+                <SolutionModeFeedbackList
+                  question={question}
+                  editFeedback={editFeedback}
+                  addFeedback={addFeedback}
+                  deleteFeedback={deleteFeedback}
+                  updateFeedbackRecommendation={updateFeedbackRecommendation}
+                  feedbackList={myFeedbackList}
+                  type="list"
+                />
+              </div>
+            )}
+            {!!feedbackListExceptMe.length && (
+              <SolutionModeFeedbackList
+                title="추가 해설"
+                question={question}
+                editFeedback={editFeedback}
+                addFeedback={addFeedback}
+                deleteFeedback={deleteFeedback}
+                updateFeedbackRecommendation={updateFeedbackRecommendation}
+                feedbackList={feedbackListExceptMe}
+              />
+            )}
+          </div>
+          <div
+            className="objective-study-test-mode-item-answer-add-button-wrapper"
+            onClick={() => setIsFeedbackModalOpen(true)}
+          >
+            <Button shape="circle">➕</Button>
+            <div>해설 추가</div>
+          </div>
         </div>
+      )}
+      {isFeedbackModalOpen && (
+        <QuestionFeedbackModal
+          addFeedback={addFeedback}
+          editFeedback={editFeedback}
+          question={question}
+          open={isFeedbackModalOpen}
+          onCancel={() => setIsFeedbackModalOpen(false)}
+          onClose={() => setIsFeedbackModalOpen(false)}
+          title={`${String(question.mockExam?.title)}\n${
+            question.number
+          }번 문제`}
+        />
       )}
     </ObjectiveStudyTestModeItemBlock>
   );

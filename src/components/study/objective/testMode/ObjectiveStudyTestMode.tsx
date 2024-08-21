@@ -22,6 +22,10 @@ const ObjectiveStudyTestModeBlock = styled.div`
       flex: 1;
       &:first-child {
         border-right: 1px solid ${({ theme }) => theme.color('colorBorder')};
+
+        @media (max-width: ${responsive.medium}) {
+          border-right: none;
+        }
       }
 
       @media (max-width: ${responsive.medium}) {
