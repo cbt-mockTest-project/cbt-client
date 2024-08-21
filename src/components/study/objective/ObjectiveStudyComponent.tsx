@@ -318,11 +318,12 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
           {...(examId ? { examId: String(examId) } : {})}
           {...(examIds ? { examIds: String(examIds) } : {})}
         />
-        {step !== 'end' && isMobile ? (
-          <ObjectiveStudyTestModeFooterMobile />
-        ) : (
-          <ObjectiveStudyTestModeFooterPc />
-        )}
+        {step !== 'end' &&
+          (isMobile ? (
+            <ObjectiveStudyTestModeFooterMobile />
+          ) : (
+            <ObjectiveStudyTestModeFooterPc />
+          ))}
       </div>
     </ObjectiveStudyComponentBlock>
   );

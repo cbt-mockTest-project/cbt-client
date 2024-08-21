@@ -7,6 +7,7 @@ import { uniqueId } from 'lodash';
 import { Button, Image } from 'antd';
 import useQuestions from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
+import ObjectiveStudyTestModeObjectiveItem from './ObjectiveStudyTestModeObjectiveItem';
 
 const ObjectiveStudyTestModeItemBlock = styled.div<{
   status: ObjectiveStudyTestModeItemStatus;
@@ -84,6 +85,15 @@ const ObjectiveStudyTestModeItemBlock = styled.div<{
       }
     }
   }
+
+  .objective-study-test-mode-item-answer-wrapper {
+    padding-top: 15px;
+    border-top: 1px solid ${({ theme }) => theme.color('colorBorder')};
+    .objective-study-test-mode-item-answer-title {
+      font-size: 16px;
+      color: ${({ theme }) => theme.color('colorTextTertiary')};
+    }
+  }
 `;
 
 export type ObjectiveStudyTestModeItemStatus =
@@ -106,7 +116,9 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
     state.mockExam.questions.find((question) => question.id === questionId)
   );
 
-  const { saveQuestionStateAndObjectiveAnswer } = useQuestions();
+  const contentsLength = question.objectiveData.content?.length;
+
+  const { saveQuestionStateAndObjectiveAnswer, saveBookmark } = useQuestions();
 
   const status = readOnly
     ? question.myObjectiveAnswer === question.objectiveData.answer
@@ -139,57 +151,32 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
         />
       )}
       <div className="objective-study-test-mode-item-objective-list">
-        {question.objectiveData.content?.map((objective, index) => {
-          const isUserAnswer = question.myObjectiveAnswer === index + 1;
-          const isCorrectAnswer = question.objectiveData.answer === index + 1;
-
-          const getDangerStatus = () => {
-            return status === 'incorrect' && isUserAnswer;
-          };
-
-          const getButtonType = () => {
-            if (status === 'default') {
-              return isUserAnswer ? 'primary' : 'default';
-            }
-            return isCorrectAnswer || isUserAnswer ? 'primary' : 'default';
-          };
-
-          return (
-            <div
-              key={`${question.id}-${uniqueId()}`}
-              className="objective-study-test-mode-item-objective-wrapper"
-            >
-              <div
-                className={`objective-study-test-mode-item-objective ${
-                  question.myObjectiveAnswer === index + 1 ? 'active' : ''
-                }`}
-                onClick={() => {
-                  onClickObjective(index);
-                }}
-              >
-                <Button
-                  shape="circle"
-                  danger={getDangerStatus()}
-                  type={getButtonType()}
-                >
-                  {index + 1}
-                </Button>
-                <pre className="objective-study-test-mode-item-objective-content">
-                  {parse(objective.content)}
-                </pre>
-              </div>
-
-              {objective.url && (
-                <Image
-                  className="objective-study-test-mode-item-objective-image"
-                  src={objective.url}
-                  alt="선택지 이미지"
-                />
-              )}
-            </div>
-          );
-        })}
+        {Array.from({ length: contentsLength }).map((_, index) => (
+          <ObjectiveStudyTestModeObjectiveItem
+            key={index}
+            status={status}
+            questionId={questionId}
+            index={index}
+          />
+        ))}
       </div>
+      {readOnly && (
+        <div className="objective-study-test-mode-item-answer-wrapper">
+          <div className="objective-study-test-mode-item-answer-title">
+            해설
+          </div>
+          <pre className="objective-study-test-mode-item-question">
+            {parse(question.solution)}
+          </pre>
+          {question.solution_img && question.solution_img.length > 0 && (
+            <Image
+              className="objective-study-test-mode-item-question-image"
+              src={question.solution_img[0].url}
+              alt="문제 이미지"
+            />
+          )}
+        </div>
+      )}
     </ObjectiveStudyTestModeItemBlock>
   );
 };
