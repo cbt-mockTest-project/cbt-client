@@ -3,19 +3,18 @@ import {
   FolderOutlined,
   GoldOutlined,
   CloudOutlined,
-  HistoryOutlined,
   MobileOutlined,
   WechatOutlined,
-  ClearOutlined,
   CrownOutlined,
   AlertOutlined,
   GlobalOutlined,
-  YoutubeOutlined,
   SearchOutlined,
+  GiftOutlined,
 } from '@ant-design/icons';
 import {
   AdminPanelSettingsOutlined,
   BookmarkOutlined,
+  SailingOutlined,
 } from '@mui/icons-material';
 export const navItems = [
   {
@@ -77,9 +76,9 @@ export const navBottomItems = [
     label: '오픈 채팅',
   },
   {
-    key: '/pricing',
-    icon: <ClearOutlined />,
-    label: '광고 제거',
+    key: 'mall',
+    icon: <GiftOutlined />,
+    label: '모두 상점',
   },
   {
     key: 'report',

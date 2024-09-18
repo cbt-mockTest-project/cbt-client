@@ -75,8 +75,8 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             setIsKakaoOpenChatModalOpen(true);
             return;
           }
-          if (e.key === '/pricing') {
-            router.push(e.key);
+          if (e.key === 'mall') {
+            window.open('https://shop.moducbt.com', '_blank', 'noopener');
             return;
           }
           if (e.key === 'report') {
