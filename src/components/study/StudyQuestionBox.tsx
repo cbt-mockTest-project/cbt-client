@@ -4,10 +4,10 @@ import Bookmark, {
 import parse from 'html-react-parser';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Image } from 'antd';
+import { App, Button, Image } from 'antd';
 import { MockExamQuestion } from 'types';
 import useAuth from '@lib/hooks/useAuth';
-import { LinkOutlined } from '@ant-design/icons';
+import { AlertOutlined, CloseOutlined, LinkOutlined } from '@ant-design/icons';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
 import useQuestions, {
   HandleDeleteBookmark,
@@ -122,6 +122,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   deleteBookmark,
   canHighlight = true,
 }) => {
+  const { modal } = App.useApp();
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const { addFeedback, editFeedback } = useQuestions();
   const { user } = useAuth();
@@ -162,7 +163,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
           {title && <div className="study-question-exam-title">{title}</div>}
         </div>
         <div className="study-question-box-header-rignt-button-wrapper">
-          {hasQuestionLink && (
+          {/* {hasQuestionLink && (
             <Link
               href={`/question/${question.id}`}
               target="_blank"
@@ -171,6 +172,34 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
             >
               <LinkOutlined />
             </Link>
+          )} */}
+          {question.mockExam.isPremium && (
+            <Button
+              type="text"
+              onClick={() => {
+                modal.confirm({
+                  title: '문제 오류 제보',
+                  content: (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        window.open(
+                          `https://open.kakao.com/o/sgTDOzqf`,
+                          '_blank',
+                          'noreferrer noopener'
+                        );
+                      }}
+                    >
+                      저자님께 제보하기
+                    </Button>
+                  ),
+                  footer: false,
+                  closable: true,
+                });
+              }}
+            >
+              <AlertOutlined />
+            </Button>
           )}
           {isMyQuestion && (
             <a
