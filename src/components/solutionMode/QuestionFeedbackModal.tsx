@@ -97,7 +97,13 @@ const QuestionFeedbackModal: React.FC<QuestionFeedbackModalProps> = (props) => {
             onChange={(e) => {
               setSelectedType(e.target.value);
             }}
-            options={feedbackOptions}
+            options={
+              question.mockExam.isPremium
+                ? feedbackOptions.filter(
+                    (el) => el.value === QuestionFeedbackType.Private
+                  )
+                : feedbackOptions
+            }
           />
           <CreateQuestionEditor
             content={content}

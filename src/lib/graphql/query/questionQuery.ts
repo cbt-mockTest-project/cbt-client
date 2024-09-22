@@ -331,6 +331,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
           title
           approved
           isPrivate
+          isPremium
         }
         user {
           id

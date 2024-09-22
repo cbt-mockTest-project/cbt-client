@@ -1713,9 +1713,11 @@ export type MockExamCategory = {
   categoryPointHistories?: Maybe<Array<CategoryPointHistory>>;
   created_at: Scalars['DateTime'];
   description: Scalars['String'];
+  evaluationCount?: Maybe<Scalars['Float']>;
   examCategoryBookmarks: Array<ExamCategoryBookmark>;
   examCategoryInvitations: Array<ExamCategoryInvitation>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
+  examCount?: Maybe<Scalars['Float']>;
   examOrderIds: Array<Scalars['Float']>;
   examType: ExamType;
   examViewer?: Maybe<Array<ExamViewer>>;
@@ -1746,9 +1748,11 @@ export type MockExamCategoryInputType = {
   categoryInvitationLinks: Array<CategoryInvitationLinkInputType>;
   categoryPointHistories?: InputMaybe<Array<CategoryPointHistoryInputType>>;
   description?: Scalars['String'];
+  evaluationCount?: InputMaybe<Scalars['Float']>;
   examCategoryBookmarks: Array<ExamCategoryBookmarkInputType>;
   examCategoryInvitations: Array<ExamCategoryInvitationInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
+  examCount?: InputMaybe<Scalars['Float']>;
   examOrderIds?: Array<Scalars['Float']>;
   examType: ExamType;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
@@ -4152,7 +4156,8 @@ export type SearchCounts = {
 };
 
 export type SearchMockExamCategoriesInput = {
-  isPublic: Scalars['Boolean'];
+  hasExamCount?: Scalars['Boolean'];
+  isPublic?: Scalars['Boolean'];
   keyword: Scalars['String'];
   limit: Scalars['Float'];
   page: Scalars['Float'];
