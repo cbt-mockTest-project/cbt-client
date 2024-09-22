@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MockExamCategory } from 'types';
 
-const CategoryFolderListItemBlock = styled(Link)`
+const HomeSearchResultItemBlock = styled(Link)`
   width: calc(50% - 10px);
   position: relative;
   .category-folder-list-item-pc-skeletion,
@@ -96,20 +96,20 @@ interface MockExamCategoryWithIsNem extends MockExamCategory {
   isNew?: boolean;
 }
 
-interface CategoryFolderListItemProps {
+interface HomeSearchResultItemProps {
   category?: MockExamCategoryWithIsNem;
   isLoading?: boolean;
   className?: string;
 }
 
-const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
+const HomeSearchResultItem: React.FC<HomeSearchResultItemProps> = ({
   category,
   isLoading,
   className = '',
 }) => {
   if (!category) return null;
   return (
-    <CategoryFolderListItemBlock
+    <HomeSearchResultItemBlock
       href={`/category/${category.urlSlug}`}
       prefetch={false}
       className={className}
@@ -155,8 +155,8 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
           </div>
         </BasicCard>
       )}
-    </CategoryFolderListItemBlock>
+    </HomeSearchResultItemBlock>
   );
 };
 
-export default CategoryFolderListItem;
+export default HomeSearchResultItem;
