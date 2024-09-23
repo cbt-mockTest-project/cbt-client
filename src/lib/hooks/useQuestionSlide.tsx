@@ -18,7 +18,7 @@ const useQuestionSlide = () => {
         okText: '종료',
         cancelText: '취소',
         onOk: () => {
-          router.replace({
+          router.push({
             pathname: router.pathname,
             query: { ...router.query, tab: 'end' },
           });
@@ -26,13 +26,13 @@ const useQuestionSlide = () => {
       });
       return;
     }
-    router.replace({
+    router.push({
       query: { ...router.query, activeIndex: activeIndex + 1 },
     });
   };
   const handleSlidePrev = () => {
     if (activeIndex === 1) return;
-    router.replace({
+    router.push({
       query: { ...router.query, activeIndex: activeIndex - 1 },
     });
   };

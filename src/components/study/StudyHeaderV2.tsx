@@ -33,9 +33,9 @@ const StudyHeaderV2: React.FC<StudyHeaderV2Props> = () => {
   }, [router.query.mode]);
   const handleChangeMode = (mode: 'card' | 'typing') => {
     if (mode === 'card') {
-      router.replace({ query: { ...router.query, mode: 'card' } });
+      router.push({ query: { ...router.query, mode: 'card' } });
     } else {
-      router.replace({ query: { ...router.query, mode: 'typing' } });
+      router.push({ query: { ...router.query, mode: 'typing' } });
     }
   };
   const prevVisitedCategoryOrHomePath =
