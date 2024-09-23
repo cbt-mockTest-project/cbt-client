@@ -156,6 +156,13 @@ export type GetExamCategoriesForAdminQueryVariables = Types.Exact<{ [key: string
 
 export type GetExamCategoriesForAdminQuery = { __typename?: 'Query', getExamCategoriesForAdmin: { __typename?: 'GetExamCategoriesOutput', error?: string | null, ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', order: number, created_at: any, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number, isPremium: boolean }> }> | null } };
 
+export type GetExamCategoriesV2QueryVariables = Types.Exact<{
+  input: Types.GetExamCategoriesInputV2;
+}>;
+
+
+export type GetExamCategoriesV2Query = { __typename?: 'Query', getExamCategoriesV2: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', examCount?: number | null, evaluationCount?: number | null, order: number, created_at: any, examType: Types.ExamType, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
+
 export type GetExamCategoriesQueryVariables = Types.Exact<{
   input: Types.GetExamCategoriesInput;
 }>;
@@ -630,6 +637,39 @@ export const GetExamCategoriesForAdminDocument = gql`
 
 export function useGetExamCategoriesForAdminQuery(options?: Omit<Urql.UseQueryArgs<GetExamCategoriesForAdminQueryVariables>, 'query'>) {
   return Urql.useQuery<GetExamCategoriesForAdminQuery, GetExamCategoriesForAdminQueryVariables>({ query: GetExamCategoriesForAdminDocument, ...options });
+};
+export const GetExamCategoriesV2Document = gql`
+    query GetExamCategoriesV2($input: GetExamCategoriesInputV2!) {
+  getExamCategoriesV2(input: $input) {
+    ok
+    error
+    categories {
+      examCount
+      evaluationCount
+      order
+      created_at
+      categoryEvaluations {
+        score
+      }
+      examType
+      isBookmarked
+      id
+      urlSlug
+      name
+      isPublic
+      source
+      user {
+        profileImg
+        id
+        nickname
+      }
+    }
+  }
+}
+    `;
+
+export function useGetExamCategoriesV2Query(options: Omit<Urql.UseQueryArgs<GetExamCategoriesV2QueryVariables>, 'query'>) {
+  return Urql.useQuery<GetExamCategoriesV2Query, GetExamCategoriesV2QueryVariables>({ query: GetExamCategoriesV2Document, ...options });
 };
 export const GetExamCategoriesDocument = gql`
     query GetExamCategories($input: GetExamCategoriesInput!) {

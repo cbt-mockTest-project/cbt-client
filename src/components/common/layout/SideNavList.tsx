@@ -75,10 +75,10 @@ const SideNavList: React.FC<SideNavListProps> = () => {
             setIsKakaoOpenChatModalOpen(true);
             return;
           }
-          if (e.key === 'mall') {
-            window.open('https://shop.moducbt.com', '_blank', 'noopener');
-            return;
-          }
+          // if (e.key === 'mall') {
+          //   window.open('https://shop.moducbt.com', '_blank', 'noopener');
+          //   return;
+          // }
           if (e.key === 'report') {
             if (!handleCheckLogin()) return;
             setIsReportModalOpen(true);

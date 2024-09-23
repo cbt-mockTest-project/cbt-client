@@ -23,8 +23,6 @@ import useAuth from './useAuth';
 const useStorage = (type: StorageType) => {
   const { message } = App.useApp();
   const dispatch = useAppDispatch();
-  const { handleCheckLogin } = useAuth();
-  const [toggleCategoryBookmark] = useToggleExamCategoryBookmark();
   const [getExamCategories, { data: getExamCategoriesQuery, refetch }] =
     useLazyGetExamCategories();
 

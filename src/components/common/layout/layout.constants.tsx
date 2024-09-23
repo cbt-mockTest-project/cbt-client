@@ -45,11 +45,11 @@ export const navBottomItems = [
     icon: <WechatOutlined />,
     label: '오픈 채팅',
   },
-  {
-    key: 'mall',
-    icon: <GiftOutlined />,
-    label: '모두 상점',
-  },
+  // {
+  //   key: 'mall',
+  //   icon: <GiftOutlined />,
+  //   label: '모두 상점',
+  // },
   {
     key: 'report',
     icon: <AlertOutlined />,

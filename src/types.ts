@@ -1289,6 +1289,20 @@ export type GetCategoryPointHistoriesOutput = {
 export type GetExamCategoriesInput = {
   categoryIds?: InputMaybe<Array<Scalars['Float']>>;
   categoryMakerId?: InputMaybe<Scalars['Float']>;
+  examSource?: InputMaybe<ExamSource>;
+  examType?: InputMaybe<ExamType>;
+  isBookmarked?: InputMaybe<Scalars['Boolean']>;
+  isPick?: InputMaybe<Scalars['Boolean']>;
+  isPublicOnly?: InputMaybe<Scalars['Boolean']>;
+  keyword?: InputMaybe<Scalars['String']>;
+  limit?: InputMaybe<Scalars['Float']>;
+  page?: InputMaybe<Scalars['Float']>;
+  sort?: InputMaybe<Scalars['String']>;
+};
+
+export type GetExamCategoriesInputV2 = {
+  categoryIds?: InputMaybe<Array<Scalars['Float']>>;
+  categoryMakerId?: InputMaybe<Scalars['Float']>;
   examSources?: InputMaybe<Array<ExamSource>>;
   examType?: InputMaybe<ExamType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -3147,6 +3161,7 @@ export type Query = {
   getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoriesForAdmin: GetExamCategoriesOutput;
+  getExamCategoriesV2: GetExamCategoriesOutput;
   getExamCategoryInvitations: GetExamCategoryInvitationsOutput;
   getExamCategoryLearningProgress: GetExamCategoryLearningProgressOutput;
   getExamCategorySubscribers: GetExamCategorySubscribersOutput;
@@ -3258,6 +3273,11 @@ export type QueryGetCategoryPointHistoriesArgs = {
 
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
+};
+
+
+export type QueryGetExamCategoriesV2Args = {
+  input: GetExamCategoriesInputV2;
 };
 
 

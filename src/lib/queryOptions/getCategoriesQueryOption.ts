@@ -1,8 +1,16 @@
-import { GET_EXAM_CATEGORIES } from '@lib/graphql/query/examQuery';
-import { GetExamCategoriesQuery } from '@lib/graphql/query/examQuery.generated';
+import {
+  GET_EXAM_CATEGORIES,
+  GET_EXAM_CATEGORIES_V2,
+} from '@lib/graphql/query/examQuery';
+import { GetExamCategoriesV2Query } from '@lib/graphql/query/examQuery.generated';
 import { apolloClient } from '@modules/apollo';
 import { queryOptions } from '@tanstack/react-query';
-import { ExamSource, GetExamCategoriesInput, MockExamCategory } from 'types';
+import {
+  ExamSource,
+  GetExamCategoriesInput,
+  GetExamCategoriesInputV2,
+  MockExamCategory,
+} from 'types';
 
 export const GetCategoriesQueryKey = {
   premium: ['premiumCategories'],
@@ -13,20 +21,20 @@ export const GetCategoriesQueryKey = {
 export const getCategories = async (
   input: GetExamCategoriesInput
 ): Promise<MockExamCategory[]> => {
-  const response = await apolloClient.query<GetExamCategoriesQuery>({
-    query: GET_EXAM_CATEGORIES,
+  const response = await apolloClient.query<GetExamCategoriesV2Query>({
+    query: GET_EXAM_CATEGORIES_V2,
     variables: {
       input,
     },
     fetchPolicy: 'network-only',
   });
-  const categories = response.data.getExamCategories.categories || [];
+  const categories = response.data.getExamCategoriesV2.categories || [];
   return categories as MockExamCategory[];
 };
 
 export interface GetCategoriesQueryOptionProps {
   queryKey: string[];
-  input: GetExamCategoriesInput;
+  input: GetExamCategoriesInputV2;
   enabled?: boolean;
 }
 
