@@ -351,6 +351,8 @@ export const GET_EXAM_CATEGORIES = gql`
       ok
       error
       categories {
+        examCount
+        evaluationCount
         order
         created_at
         categoryEvaluations {
@@ -367,10 +369,6 @@ export const GET_EXAM_CATEGORIES = gql`
           profileImg
           id
           nickname
-        }
-        mockExam {
-          id
-          isPremium
         }
       }
     }

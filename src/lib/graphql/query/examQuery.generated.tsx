@@ -161,7 +161,7 @@ export type GetExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', order: number, created_at: any, examType: Types.ExamType, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string }, mockExam: Array<{ __typename?: 'MockExam', id: number, isPremium: boolean }> }> | null } };
+export type GetExamCategoriesQuery = { __typename?: 'Query', getExamCategories: { __typename?: 'GetExamCategoriesOutput', ok: boolean, error?: string | null, categories?: Array<{ __typename?: 'MockExamCategory', examCount?: number | null, evaluationCount?: number | null, order: number, created_at: any, examType: Types.ExamType, isBookmarked?: boolean | null, id: number, urlSlug: string, name: string, isPublic: boolean, source: Types.ExamSource, categoryEvaluations?: Array<{ __typename?: 'CategoryEvaluation', score?: number | null }> | null, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }> | null } };
 
 export type GetMyExamsQueryVariables = Types.Exact<{
   input: Types.GetMyExamsInput;
@@ -637,6 +637,8 @@ export const GetExamCategoriesDocument = gql`
     ok
     error
     categories {
+      examCount
+      evaluationCount
       order
       created_at
       categoryEvaluations {
@@ -653,10 +655,6 @@ export const GetExamCategoriesDocument = gql`
         profileImg
         id
         nickname
-      }
-      mockExam {
-        id
-        isPremium
       }
     }
   }

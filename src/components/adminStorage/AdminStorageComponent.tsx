@@ -1,5 +1,5 @@
 import TextInput from '@components/common/input/TextInput';
-import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
+import CategoryFolderList from '@components/common/category/CategoryFolderList';
 import { useSearchFilterStorage } from '@lib/hooks/useSearchFilterStorage';
 import { getCategoriesForAdminQueryOption } from '@lib/queryOptions/getCategoriesForAdminQueryOption';
 import { useQuery } from '@tanstack/react-query';

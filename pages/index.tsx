@@ -1,5 +1,5 @@
 import WithHead from '@components/common/head/WithHead';
-import HomeComponentV2 from '@components/home/HomeComponentV2';
+import HomeComponentV2 from '@components/home/HomeComponent';
 import { MAIN_PAGE } from '@lib/constants/displayName';
 import {
   GetCategoriesQueryKey,
@@ -41,18 +41,18 @@ export const getStaticProps = async () => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(
     getCategoriesQueryOption({
-      queryKey: GetCategoriesQueryKey.main_modu,
+      queryKey: GetCategoriesQueryKey.popular,
       input: {
-        examSource: ExamSource.MoudCbt,
+        examSources: [ExamSource.MoudCbt, ExamSource.User],
         limit: 30,
       },
     })
   );
   await queryClient.prefetchQuery(
     getCategoriesQueryOption({
-      queryKey: GetCategoriesQueryKey.main_ehs,
+      queryKey: GetCategoriesQueryKey.premium,
       input: {
-        examSource: ExamSource.EhsMaster,
+        examSources: [ExamSource.EhsMaster],
         limit: 30,
       },
     })

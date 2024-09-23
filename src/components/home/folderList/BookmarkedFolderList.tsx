@@ -15,7 +15,7 @@ const BookmarkedFolderList: React.FC<BookmarkedFolderListProps> = (props) => {
   const { isLoggedIn } = useAuth();
   const { data } = useQuery(
     getCategoriesQueryOption({
-      queryKey: GetCategoriesQueryKey.main_bookmarked,
+      queryKey: GetCategoriesQueryKey.bookmarked,
       input: {
         isBookmarked: true,
       },

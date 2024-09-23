@@ -19,7 +19,10 @@ export const searchCategories = async (
       input,
     },
   });
-  return response.data.searchMockExamCategories.categories;
+  return {
+    categories: response.data.searchMockExamCategories.categories,
+    totalCount: response.data.searchMockExamCategories.totalCount,
+  };
 };
 
 export interface SearchCategoriesQueryOptionProps {

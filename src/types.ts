@@ -1289,7 +1289,7 @@ export type GetCategoryPointHistoriesOutput = {
 export type GetExamCategoriesInput = {
   categoryIds?: InputMaybe<Array<Scalars['Float']>>;
   categoryMakerId?: InputMaybe<Scalars['Float']>;
-  examSource?: InputMaybe<ExamSource>;
+  examSources?: InputMaybe<Array<ExamSource>>;
   examType?: InputMaybe<ExamType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
   isPick?: InputMaybe<Scalars['Boolean']>;
@@ -4161,6 +4161,7 @@ export type SearchMockExamCategoriesInput = {
   keyword: Scalars['String'];
   limit: Scalars['Float'];
   page: Scalars['Float'];
+  sort?: InputMaybe<Scalars['String']>;
 };
 
 export type SearchMockExamCategoriesOutput = {

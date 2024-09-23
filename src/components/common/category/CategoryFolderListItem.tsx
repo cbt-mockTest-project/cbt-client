@@ -1,14 +1,12 @@
 import { HeartTwoTone } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
-import Portal from '@components/common/portal/Portal';
-
 import { responsive } from '@lib/utils/responsive';
-import { Spin, Tag } from 'antd';
+import { Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { MockExamCategory } from 'types';
+import { ExamSource, MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
@@ -144,9 +142,9 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                {/* {category.mockExam.some((el) => el.isPremium) && (
+                {category.source === ExamSource.EhsMaster && (
                   <Tag color="blue">유료</Tag>
-                )} */}
+                )}
                 <div className="category-exam-count">
                   {category.examCount} 세트
                 </div>

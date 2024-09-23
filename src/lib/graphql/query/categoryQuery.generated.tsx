@@ -8,13 +8,14 @@ export type SearchMockExamCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchMockExamCategoriesQuery = { __typename?: 'Query', searchMockExamCategories: { __typename?: 'SearchMockExamCategoriesOutput', ok: boolean, categories?: Array<{ __typename?: 'MockExamCategory', urlSlug: string, examType: Types.ExamType, id: number, source: Types.ExamSource, evaluationCount?: number | null, name: string, examCount?: number | null, user: { __typename?: 'User', nickname: string, profileImg: string } }> | null } };
+export type SearchMockExamCategoriesQuery = { __typename?: 'Query', searchMockExamCategories: { __typename?: 'SearchMockExamCategoriesOutput', ok: boolean, totalCount?: number | null, categories?: Array<{ __typename?: 'MockExamCategory', urlSlug: string, examType: Types.ExamType, id: number, source: Types.ExamSource, evaluationCount?: number | null, name: string, examCount?: number | null, user: { __typename?: 'User', nickname: string, profileImg: string } }> | null } };
 
 
 export const SearchMockExamCategoriesDocument = gql`
     query SearchMockExamCategories($input: SearchMockExamCategoriesInput!) {
   searchMockExamCategories(input: $input) {
     ok
+    totalCount
     categories {
       user {
         nickname

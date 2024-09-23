@@ -4,6 +4,7 @@ export const SEARCH_CATEGORIES_QUERY = gql`
   query SearchMockExamCategories($input: SearchMockExamCategoriesInput!) {
     searchMockExamCategories(input: $input) {
       ok
+      totalCount
       categories {
         user {
           nickname
