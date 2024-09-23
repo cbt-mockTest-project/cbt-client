@@ -7,14 +7,14 @@ import {
   getCategoriesQueryOption,
 } from '@lib/queryOptions/getCategoriesQueryOption';
 
-interface ModuFolderListProps {}
+interface PopularFolderListProps {}
 
-const ModuFolderList: React.FC<ModuFolderListProps> = () => {
+const PopularFolderList: React.FC<PopularFolderListProps> = () => {
   const { data } = useQuery(
     getCategoriesQueryOption({
-      queryKey: GetCategoriesQueryKey.main_modu,
+      queryKey: GetCategoriesQueryKey.popular,
       input: {
-        examSource: ExamSource.MoudCbt,
+        examSources: [ExamSource.MoudCbt, ExamSource.User],
         limit: 30,
       },
       enabled: false,
@@ -25,11 +25,10 @@ const ModuFolderList: React.FC<ModuFolderListProps> = () => {
     <HomeFolderList
       categories={data as MockExamCategory[]}
       subTitle=""
-      title="모두CBT 공식 암기장 👀"
-      link="/modu-storage"
+      title="인기 암기장 🔥"
       unikeyKey="modu-storage"
     />
   );
 };
 
-export default ModuFolderList;
+export default PopularFolderList;

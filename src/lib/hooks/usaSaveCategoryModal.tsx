@@ -1,4 +1,4 @@
-import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
+import SaveCategoryModal from '@components/common/category/SaveCategoryModal';
 import { StorageType } from 'customTypes';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

@@ -1,5 +1,5 @@
 import TextInput from '@components/common/input/TextInput';
-import CategoryFolderList from '@components/moduStorage/CategoryFolderList';
+import CategoryFolderList from '@components/common/category/CategoryFolderList';
 import useStorage from '@lib/hooks/useStorage';
 import { Button, Empty, Pagination, Select, Skeleton, Tooltip } from 'antd';
 import { StorageType } from 'customTypes';

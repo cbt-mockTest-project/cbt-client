@@ -42,17 +42,6 @@ const KakaoOpenChatModalContent: React.FC<
         </div>
       </a>
       <a
-        href="https://open.kakao.com/o/gmGo0ROf"
-        target="_blank"
-        rel="noreferrer"
-        className="kakao-open-chat-modal-safe-room-link"
-      >
-        <div className="kakao-open-chat-modal-safe-room-link-box">
-          <ScienceIcon />
-          <span>위험물산업기사 실기방</span>
-        </div>
-      </a>
-      <a
         href="https://open.kakao.com/o/gfNXScDf"
         target="_blank"
         rel="noreferrer"

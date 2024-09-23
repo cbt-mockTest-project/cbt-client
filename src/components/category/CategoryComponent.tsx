@@ -8,7 +8,7 @@ import {
   ReadMockExamCategoryByCategoryIdInput,
   UserRole,
 } from 'types';
-import SaveCategoryModal from '@components/moduStorage/SaveCategoryModal';
+import SaveCategoryModal from '@components/common/category/SaveCategoryModal';
 import EditExamsModal from './EditExamsModal';
 import CategoryInviteModal from './CategoryInviteModal';
 import CategoryProgressAndReview from './CategoryProgressAndReview';
