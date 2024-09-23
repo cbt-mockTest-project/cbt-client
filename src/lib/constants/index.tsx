@@ -27,7 +27,6 @@ export const loginModal = 'loginModal';
 export const widhDrawalModal = 'widhDrawalModal';
 export const selectedCategoryHistory = 'selectedCategoryHistory';
 export const selectedTitleHistory = 'selectedTitleHistory';
-export const homeRouteStackKey = 'homeRouteStackKey';
 export const EXAM_SETTINGS = 'EXAM_SETTINGS';
 
 export const CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL;
