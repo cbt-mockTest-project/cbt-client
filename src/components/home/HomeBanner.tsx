@@ -11,6 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import InquiryModal from './InquiryModal';
 
 const HomeBannerBlock = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.color('colorSplit')};
   .home-banner-image-swiper {
     .home-banner-image-wrapper {
       position: relative;
@@ -50,6 +51,13 @@ const HomeBanner: React.FC<HomeBannerProps> = () => {
   const [isOpenChatModalOpen, setIsOpenChatModalOpen] = React.useState(false);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = React.useState(false);
   const banners = [
+    {
+      img: {
+        pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/modu-shop-banner-pc01.png`,
+        mobile: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/modu-shop-banner-mobile01.png`,
+      },
+      key: 'https://shop.moducbt.com',
+    },
     {
       img: {
         pc: `${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/ehs-banner-pc03.png`,

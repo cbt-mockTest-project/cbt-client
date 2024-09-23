@@ -345,12 +345,14 @@ export const GET_EXAM_CATEGORIES_FOR_ADMIN = gql`
   }
 `;
 
-export const GET_EXAM_CATEGORIES = gql`
-  query GetExamCategories($input: GetExamCategoriesInput!) {
-    getExamCategories(input: $input) {
+export const GET_EXAM_CATEGORIES_V2 = gql`
+  query GetExamCategoriesV2($input: GetExamCategoriesInputV2!) {
+    getExamCategoriesV2(input: $input) {
       ok
       error
       categories {
+        examCount
+        evaluationCount
         order
         created_at
         categoryEvaluations {
@@ -368,9 +370,35 @@ export const GET_EXAM_CATEGORIES = gql`
           id
           nickname
         }
-        mockExam {
+      }
+    }
+  }
+`;
+
+export const GET_EXAM_CATEGORIES = gql`
+  query GetExamCategories($input: GetExamCategoriesInput!) {
+    getExamCategories(input: $input) {
+      ok
+      error
+      categories {
+        examCount
+        evaluationCount
+        order
+        created_at
+        categoryEvaluations {
+          score
+        }
+        examType
+        isBookmarked
+        id
+        urlSlug
+        name
+        isPublic
+        source
+        user {
+          profileImg
           id
-          isPremium
+          nickname
         }
       }
     }

@@ -1,5 +1,5 @@
 import { LeftOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
-import CategoryFolderListItem from '@components/moduStorage/CategoryFolderListItem';
+import CategoryFolderListItem from '@components/common/category/CategoryFolderListItem';
 import { responsive } from '@lib/utils/responsive';
 import { Button, Empty, Skeleton } from 'antd';
 import Link from 'next/link';
@@ -205,18 +205,6 @@ const HomeFolderList: React.FC<HomeFolderListProps> = ({
                   className="home-folder-item"
                   category={category}
                 />
-                {index === categories.length - 1 && (
-                  <div className="flex items-center">
-                    <Button
-                      size="large"
-                      className="w-36 h-full"
-                      type="link"
-                      href={link}
-                    >
-                      {`더 보기`}
-                    </Button>
-                  </div>
-                )}
               </div>
             ))}
           {categories && categories.length === 0 && (

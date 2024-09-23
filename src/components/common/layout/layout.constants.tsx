@@ -2,16 +2,10 @@ import {
   UserOutlined,
   FolderOutlined,
   GoldOutlined,
-  CloudOutlined,
-  HistoryOutlined,
   MobileOutlined,
   WechatOutlined,
-  ClearOutlined,
-  CrownOutlined,
   AlertOutlined,
-  GlobalOutlined,
-  YoutubeOutlined,
-  SearchOutlined,
+  GiftOutlined,
 } from '@ant-design/icons';
 import {
   AdminPanelSettingsOutlined,
@@ -19,40 +13,15 @@ import {
 } from '@mui/icons-material';
 export const navItems = [
   {
-    key: '/modu-storage',
-    icon: <CloudOutlined />,
-    label: '모두CBT 암기장',
-  },
-  {
-    key: '/ehs-storage',
-    icon: <CrownOutlined />,
-    label: '직8딴 암기장',
-  },
-  {
-    key: '/user-storage',
-    icon: <GlobalOutlined />,
-    label: '공개 암기장',
-  },
-  {
     key: '/me/storage',
     icon: <FolderOutlined />,
     label: '내 암기장',
-  },
-  {
-    key: '/search-categories',
-    icon: <SearchOutlined />,
-    label: '암기장 통합검색',
   },
   {
     key: '/pricing',
     icon: <GoldOutlined />,
     label: '이용권',
   },
-  // {
-  //   key: '/store',
-  //   icon: <StarOutlined />,
-  //   label: '자료 스토어',
-  // },
   {
     key: '/me',
     icon: <UserOutlined />,
@@ -76,11 +45,11 @@ export const navBottomItems = [
     icon: <WechatOutlined />,
     label: '오픈 채팅',
   },
-  {
-    key: '/pricing',
-    icon: <ClearOutlined />,
-    label: '광고 제거',
-  },
+  // {
+  //   key: 'mall',
+  //   icon: <GiftOutlined />,
+  //   label: '모두 상점',
+  // },
   {
     key: 'report',
     icon: <AlertOutlined />,

@@ -149,6 +149,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
+  const isEndTab = router.query.tab === 'end';
   const mode = router.query.mode as ExamMode;
   const hasFinishButton = useMemo(
     () => [ExamMode.CARD, ExamMode.TYPYING].includes(mode),
@@ -203,7 +204,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
               이동 & 점수
             </Button>
           )}
-          {hasFinishButton && (
+          {hasFinishButton && !isEndTab && (
             <Button
               className="study-control-finish-button"
               type="primary"
@@ -214,7 +215,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
                   okText: '종료',
                   cancelText: '취소',
                   onOk: () => {
-                    router.replace({
+                    router.push({
                       pathname: router.pathname,
                       query: { ...router.query, tab: 'end' },
                     });
@@ -245,7 +246,7 @@ const StudyControlBox: React.FC<StudyControlBoxProps> = ({
         <StudyScoreModal
           onClickItem={(index) => {
             if ([ExamMode.CARD, ExamMode.TYPYING].includes(mode)) {
-              router.replace({
+              router.push({
                 query: {
                   ...router.query,
                   activeIndex: index + 1,
