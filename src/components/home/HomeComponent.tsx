@@ -25,12 +25,12 @@ const HomeComponentBlock = styled.div`
     align-items: center;
     flex-direction: column;
     gap: 40px;
-    padding: 0px 30px 30px 30px;
+    padding: 30px 30px 30px 30px;
     height: 900px;
   }
   @media (max-width: ${responsive.medium}) {
     .home-wrapper {
-      padding: 0px 16px;
+      padding: 20px 16px;
     }
   }
 `;

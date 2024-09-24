@@ -6,11 +6,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { ExamSource, ExamType, MockExamCategory } from 'types';
+import {
+  ExamSource,
+  ExamType,
+  MockExamCategory,
+  MockExamCategoryTypes,
+} from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
   position: relative;
+  /* .category-card {
+    padding: 0;
+  } */
+
   .category-folder-list-item-pc-skeletion,
   .category-folder-list-item-mobile-skeletion {
     border-radius: 6px;
@@ -18,7 +27,7 @@ const CategoryFolderListItemBlock = styled(Link)`
   .category-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     .category-header-wrapper {
       display: flex;
       justify-content: space-between;
@@ -43,22 +52,8 @@ const CategoryFolderListItemBlock = styled(Link)`
         }
       }
     }
+
     .category-middle-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      color: ${({ theme }) => theme.color('colorTextSecondary')};
-      font-size: 13px;
-      margin: 2px 0;
-
-      .category-like-count {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-    }
-
-    .category-footer-wrapper {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -67,27 +62,45 @@ const CategoryFolderListItemBlock = styled(Link)`
         display: flex;
         align-items: center;
         max-width: 70%;
-        gap: 3px;
-      }
-      .category-user-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 12px;
-        font-weight: bold;
+
+        .category-user-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 12px;
+          color: ${({ theme }) => theme.color('colorTextTertiary')};
+          font-weight: bold;
+        }
+
+        .category-user-profile-image {
+          border-radius: 50%;
+          background-color: ${({ theme }) => theme.color('colorFillAlter')};
+          margin-right: 5px;
+        }
       }
 
-      .category-user-profile-image {
-        border-radius: 50%;
-        background-color: ${({ theme }) => theme.color('colorFillAlter')};
-        margin-right: 5px;
-      }
+      .category-middle-right-wrapper {
+        display: flex;
+        align-items: center;
 
-      .category-exam-count {
-        font-size: 12px;
-        font-weight: bold;
-        color: ${({ theme }) => theme.color('colorTextSecondary')};
+        .category-like-count {
+          display: flex;
+          align-items: center;
+          color: ${({ theme }) => theme.color('colorTextTertiary')};
+          font-size: 12px;
+          gap: 3px;
+        }
       }
+    }
+  }
+  .category-bottom-wrapper {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    .ant-tag {
+      margin: 0;
     }
   }
 
@@ -123,7 +136,7 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
       className={className}
     >
       {category && !isLoading && (
-        <BasicCard hoverEffect type="primary">
+        <BasicCard hoverEffect type="primary" className="category-card">
           <div className="category-wrapper">
             <div className="category-header-wrapper">
               <div className="category-name">
@@ -131,13 +144,12 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                 <span>{category.name}</span>
               </div>
             </div>
-            <div className="category-middle-wrapper">
-              <div className="category-like-count">
-                <HeartTwoTone twoToneColor="#eb2f96" />
-                {category.evaluationCount}
-              </div>
+            <div className="category-bottom-wrapper">
+              {category.examType === ExamType.Objective && <Tag>객관식</Tag>}
+              {category.examType === ExamType.Subjective && <Tag>주관식</Tag>}
+              {/* {category.source === ExamSource.EhsMaster && <Tag>유료</Tag>} */}
             </div>
-            <div className="category-footer-wrapper">
+            <div className="category-middle-wrapper">
               <div className="category-user-info">
                 <Image
                   className="category-user-profile-image"
@@ -153,12 +165,10 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                   {category.user.nickname}
                 </div>
               </div>
-              <div className="flex gap-2 items-center">
-                {category.source === ExamSource.EhsMaster && (
-                  <Tag color="blue">유료</Tag>
-                )}
-                <div className="category-exam-count">
-                  {category.examCount} 세트
+              <div className="category-middle-right-wrapper">
+                <div className="category-like-count">
+                  <HeartTwoTone twoToneColor="#eb2f96" />
+                  {category.evaluationCount}
                 </div>
               </div>
             </div>
