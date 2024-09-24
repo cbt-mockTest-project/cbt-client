@@ -1,3 +1,4 @@
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { App, Button, Pagination } from 'antd';
 import { ObjectiveExamMode } from 'customTypes';
@@ -14,6 +15,15 @@ const ObjectiveStudyTestModeFooterPcBlock = styled.div`
   border-top: 1px solid ${({ theme }) => theme.color('colorBorder')};
   background-color: ${({ theme }) => theme.color('colorFillAlter')};
   gap: 20px;
+  .objective-study-footer-pagination {
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100%;
+    .ant-pagination-next,
+    .ant-pagination-prev {
+      height: 100% !important;
+    }
+  }
 `;
 
 interface ObjectiveStudyTestModeFooterPcProps {}
@@ -21,61 +31,29 @@ interface ObjectiveStudyTestModeFooterPcProps {}
 const ObjectiveStudyTestModeFooterPc: React.FC<
   ObjectiveStudyTestModeFooterPcProps
 > = () => {
-  const { modal } = App.useApp();
   const totalQuestions = useAppSelector(
     (state) => state.mockExam.questions?.length
   );
-  const isExistNotSolvedQuestion = useAppSelector(
-    (state) =>
-      !!state.mockExam.questions.find((question) => !question.myObjectiveAnswer)
-  );
-
   const router = useRouter();
   const page = router.query.p || 1;
-
-  const handleSubmit = () => {
-    if (isExistNotSolvedQuestion) {
-      modal.confirm({
-        title: '알림',
-        content: '풀지 않은 문제가 있습니다. 제출하시겠습니까?',
-        cancelText: '계속 풀기',
-        okText: '제출',
-        onOk: () => {
-          router.replace({
-            query: { ...router.query, step: 'end' },
-          });
-        },
-      });
-    } else {
-      modal.confirm({
-        title: '알림',
-        content: '제출하시겠습니까?',
-        onOk: () => {
-          router.replace({
-            query: { ...router.query, step: 'end' },
-          });
-        },
-      });
-    }
-  };
 
   return (
     <ObjectiveStudyTestModeFooterPcBlock>
       <Pagination
+        className="objective-study-footer-pagination"
         simple
         total={totalQuestions}
+        nextIcon={<Button icon={<RightOutlined />} size="large"></Button>}
+        prevIcon={<Button icon={<LeftOutlined />} size="large"></Button>}
         pageSize={2}
         onChange={(page) => {
-          router.replace({
+          router.push({
             pathname: router.pathname,
             query: { ...router.query, p: page },
           });
         }}
         current={Number(page)}
       />
-      <Button type="primary" onClick={handleSubmit}>
-        제출
-      </Button>
     </ObjectiveStudyTestModeFooterPcBlock>
   );
 };

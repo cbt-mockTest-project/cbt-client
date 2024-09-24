@@ -21,17 +21,18 @@ import {
 } from '@lib/graphql/query/examCategoryBookmark.generated';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import Portal from '@components/common/portal/Portal';
-import { Button, Divider, Empty, Pagination, Spin } from 'antd';
+import { Button, Empty, Spin } from 'antd';
 import StudyPaymentGuard from '../StudyPaymentGuard';
 import ObjectiveStudyTestMode from './testMode/ObjectiveStudyTestMode';
 import ObjectiveStudyAutoMode from './autoMode/ObjectiveStudyAutoMode';
-import Clear from '@mui/icons-material/Clear';
 import { ObjectiveExamMode } from 'customTypes';
 import ObjectiveStudyTestModeFooterPc from './testMode/ObjectiveStudyTestModeFooterPc';
 import ObjectiveStudyResult from './result/ObjectiveStudyResult';
 import useIsMobile from '@lib/hooks/useIsMobile';
 import ObjectiveStudyTestModeFooterMobile from './testMode/ObjectiveStudyTestModeFooterMobile';
 import { responsive } from '@lib/utils/responsive';
+import useObjectiveStudyHandler from '../hooks/useObjectiveStudyHandler';
+import OmrModal from './OmrModal';
 
 const ObjectiveStudyComponentBlock = styled.div`
   height: 100vh;
@@ -48,39 +49,36 @@ const ObjectiveStudyComponentBlock = styled.div`
     margin: 0 auto;
 
     .objective-study-header-wrapper {
-      height: 50px;
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      height: 50px;
       svg {
         font-size: 30px;
       }
 
       .objective-study-header-title-wrapper {
+        width: 100%;
         display: flex;
         align-items: center;
-
-        .objective-study-header-title-divider {
-          height: 30px;
-          border-color: ${({ theme }) => theme.color('colorBorder')};
-          @media (max-width: ${responsive.medium}) {
-            display: none;
-          }
-        }
-
-        .objective-study-header-title-mode {
-          color: ${({ theme }) => theme.color('colorTextTertiary')};
-          @media (max-width: ${responsive.medium}) {
-            display: none;
-          }
-        }
+        justify-content: space-between;
+        padding: 0 20px;
 
         .objective-study-header-title {
           font-size: 18px;
+          color: ${({ theme }) => theme.color('colorTextSecondary')};
+
           font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+
+        .objective-study-header-title-right-wrapper {
+          display: none;
+          @media (max-width: ${responsive.medium}) {
+            display: flex;
+            gap: 10px;
+          }
         }
       }
     }
@@ -90,11 +88,10 @@ const ObjectiveStudyComponentBlock = styled.div`
 interface ObjectiveStudyComponentProps {}
 
 const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
+  const { submitAnswers } = useObjectiveStudyHandler();
   const sessionStorage = new SessionStorage();
   const isMobile = useIsMobile();
-  const examTitle = useAppSelector(
-    (state) => state.mockExam.questions?.[0]?.mockExam.title
-  );
+
   const isPrivate = useAppSelector(
     (state) => state.mockExam.questions?.[0]?.mockExam.isPrivate
   );
@@ -115,6 +112,23 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
     useQuestions();
 
   const router = useRouter();
+  const isOmrModalOpen = router.query.dialog === 'omr';
+  const openOmrModal = () => {
+    router.push({
+      query: {
+        ...router.query,
+        dialog: 'omr',
+      },
+    });
+  };
+  const closeOmrModal = () => {
+    delete router.query.dialog;
+    router.push({
+      query: {
+        ...router.query,
+      },
+    });
+  };
   const {
     order,
     states,
@@ -285,28 +299,20 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
   return (
     <ObjectiveStudyComponentBlock>
       <div className="objective-study-component-wrapper">
-        <div className="objective-study-header-wrapper">
-          <Button type="text" onClick={() => router.back()}>
-            <Clear />
-          </Button>
-          <div className="objective-study-header-title-wrapper">
-            <div className="objective-study-header-title">{examTitle}</div>
-            <Divider
-              type="vertical"
-              className="objective-study-header-title-divider"
-            />
-            <span className="objective-study-header-title-mode">
-              {step === 'end' ? (
-                '결과'
-              ) : (
-                <>
-                  {mode === ObjectiveExamMode.TEST && '시험모드'}
-                  {mode === ObjectiveExamMode.AUTO && '자동모드'}
-                </>
-              )}
-            </span>
+        {step !== 'end' && (
+          <div className="objective-study-header-wrapper">
+            <div className="objective-study-header-title-wrapper">
+              <div className="objective-study-header-title">
+                {mode === ObjectiveExamMode.TEST && '시험모드'}
+                {mode === ObjectiveExamMode.AUTO && '자동모드'}
+              </div>
+              <div className="objective-study-header-title-right-wrapper">
+                <Button onClick={openOmrModal}>OMR</Button>
+                <Button onClick={submitAnswers}>제출</Button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
         {step === 'end' ? (
           <ObjectiveStudyResult />
         ) : (
@@ -326,6 +332,13 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
             <ObjectiveStudyTestModeFooterPc />
           ))}
       </div>
+      {isOmrModalOpen && (
+        <OmrModal
+          open={isOmrModalOpen}
+          onCancel={closeOmrModal}
+          onClose={closeOmrModal}
+        />
+      )}
     </ObjectiveStudyComponentBlock>
   );
 };

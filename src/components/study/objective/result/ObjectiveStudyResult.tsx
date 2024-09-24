@@ -3,14 +3,13 @@ import { Button, Card } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { QuestionState } from 'types';
-import ObjectiveStudyTestModeItem from '../testMode/ObjectiveStudyTestModeItem';
 import { useRouter } from 'next/router';
-import { ObjectiveExamMode } from 'customTypes';
 import ObjectiveStudyResultQuestionCard from './ObjectiveStudyResultQuestionCard';
 
 const ObjectiveStudyResultBlock = styled.div`
   margin-bottom: auto;
   padding-bottom: 30px;
+  padding: 0 20px;
   .objective-study-result-title {
     font-size: 20px;
     font-weight: 700;

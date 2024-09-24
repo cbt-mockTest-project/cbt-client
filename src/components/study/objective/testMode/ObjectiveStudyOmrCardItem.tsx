@@ -1,3 +1,4 @@
+import useIsMobile from '@lib/hooks/useIsMobile';
 import useQuestions from '@lib/hooks/useQuestions';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { Button } from 'antd';
@@ -38,14 +39,25 @@ const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
   index,
   questionId,
 }) => {
+  const isMobile = useIsMobile();
   const router = useRouter();
   const currentQuestion = useAppSelector((state) =>
     state.mockExam.questions.find((question) => question.id === questionId)
   );
   const { saveQuestionStateAndObjectiveAnswer } = useQuestions();
   const movePage = () => {
+    if (isMobile) {
+      if (index === Number(router.query.p)) return;
+      router.push({
+        query: {
+          ...router.query,
+          p: index,
+        },
+      });
+      return;
+    }
     if (Math.ceil(index / 2) === Number(router.query.p)) return;
-    router.replace({
+    router.push({
       query: {
         ...router.query,
         p: Math.ceil(index / 2),
@@ -66,7 +78,10 @@ const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
         {index}
       </button>
       <div className="objective-study-omr-card-item-question-answer-number-list">
-        {[1, 2, 3, 4, 5].map((value) => (
+        {Array.from(
+          { length: currentQuestion.objectiveData.content.length },
+          (_, index) => index + 1
+        ).map((value) => (
           <Button
             shape="circle"
             key={`${questionId}-${uniqueId()}`}

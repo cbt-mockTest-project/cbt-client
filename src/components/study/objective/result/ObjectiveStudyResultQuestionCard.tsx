@@ -38,6 +38,7 @@ const ObjectiveStudyResultQuestionCard: React.FC<
       <ObjectiveStudyTestModeItem
         questionId={questionId}
         index={index}
+        isSolutionVisible
         readOnly
       />
     </ObjectiveStudyResultQuestionCardBlock>

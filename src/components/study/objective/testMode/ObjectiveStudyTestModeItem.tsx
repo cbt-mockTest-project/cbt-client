@@ -121,13 +121,17 @@ export type ObjectiveStudyTestModeItemStatus =
 interface ObjectiveStudyTestModeItemProps {
   questionId: number;
   index: number;
+  isSolutionVisible?: boolean;
   readOnly?: boolean;
+  autoMode?: boolean;
 }
 
 const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
   questionId,
   index,
+  isSolutionVisible = false,
   readOnly = false,
+  autoMode = false,
 }) => {
   const { data: meQuery } = useMeQuery();
   const question = useAppSelector((state) =>
@@ -148,15 +152,24 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
     updateFeedbackRecommendation,
   } = useQuestions();
 
-  const status = readOnly
-    ? question.myObjectiveAnswer === question.objectiveData.answer
-      ? 'correct'
-      : 'incorrect'
-    : 'default';
+  const status = () => {
+    if (autoMode) {
+      if (!question.myObjectiveAnswer) return 'default';
+      return question.myObjectiveAnswer !== question.objectiveData.answer
+        ? 'incorrect'
+        : 'correct';
+    }
+    if (readOnly) {
+      return question.myObjectiveAnswer !== question.objectiveData.answer
+        ? 'incorrect'
+        : 'correct';
+    }
+    return 'default';
+  };
 
   if (!question) return null;
   return (
-    <ObjectiveStudyTestModeItemBlock status={status}>
+    <ObjectiveStudyTestModeItemBlock status={status()}>
       <div className="objective-study-test-mode-item-question-title-wrapper">
         <span>{index}. </span>
         <span className="objective-study-test-mode-item-question-title">
@@ -177,13 +190,14 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
         {Array.from({ length: contentsLength }).map((_, index) => (
           <ObjectiveStudyTestModeObjectiveItem
             key={index}
-            status={status}
+            status={status()}
             questionId={questionId}
             index={index}
+            autoMode={autoMode}
           />
         ))}
       </div>
-      {readOnly && (
+      {(readOnly || !!(isSolutionVisible && question.myObjectiveAnswer)) && (
         <div className="objective-study-test-mode-item-answer-wrapper">
           <div className="objective-study-test-mode-item-answer-title">
             해설
@@ -229,7 +243,7 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
             onClick={() => setIsFeedbackModalOpen(true)}
           >
             <Button shape="circle">➕</Button>
-            <div>해설 추가</div>
+            <div>메모</div>
           </div>
         </div>
       )}

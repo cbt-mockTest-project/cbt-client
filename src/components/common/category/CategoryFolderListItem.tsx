@@ -45,16 +45,11 @@ const CategoryFolderListItemBlock = styled(Link)`
     }
     .category-middle-wrapper {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       color: ${({ theme }) => theme.color('colorTextSecondary')};
       font-size: 13px;
       margin: 2px 0;
-
-      .category-info-tag-wrapper {
-        display: flex;
-        align-items: center;
-      }
 
       .category-like-count {
         display: flex;
@@ -137,16 +132,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
               </div>
             </div>
             <div className="category-middle-wrapper">
-              <div className="category-info-tag-wrapper">
-                <Tag>
-                  {category.examType === ExamType.Subjective
-                    ? '주관식'
-                    : '객관식'}
-                </Tag>
-                {category.mockExam.some((el) => el.isPremium) && (
-                  <Tag>유료</Tag>
-                )}
-              </div>
               <div className="category-like-count">
                 <HeartTwoTone twoToneColor="#eb2f96" />
                 {category.evaluationCount}

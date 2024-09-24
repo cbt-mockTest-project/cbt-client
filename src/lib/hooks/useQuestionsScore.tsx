@@ -32,7 +32,6 @@ const useQuestionsScore = () => {
         dispatch(mockExamActions.setQuestions(newQuestions));
         return;
       }
-      message.error(res.data?.resetMyExamQuestionState.error);
     } catch (e) {
       message.error('문제 상태 초기화에 실패했습니다.');
       handleError(e);

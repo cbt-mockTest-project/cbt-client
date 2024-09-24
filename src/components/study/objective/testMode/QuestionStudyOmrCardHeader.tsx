@@ -1,3 +1,4 @@
+import useObjectiveStudyHandler from '@components/study/hooks/useObjectiveStudyHandler';
 import useQuestionsScore from '@lib/hooks/useQuestionsScore';
 import { App, Button } from 'antd';
 import React from 'react';
@@ -16,6 +17,11 @@ const QuestionStudyOmrCardHeaderBlock = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .objective-study-omr-card-header-title-right-wrapper {
+      display: flex;
+      gap: 10px;
+    }
   }
 `;
 
@@ -24,19 +30,16 @@ interface QuestionStudyOmrCardHeaderProps {}
 const QuestionStudyOmrCardHeader: React.FC<
   QuestionStudyOmrCardHeaderProps
 > = () => {
-  const { modal } = App.useApp();
-  const { handleResetQuestionState } = useQuestionsScore();
-  const onClickReset = () => {
-    modal.confirm({
-      title: '초기화 하시겠습니까?',
-      onOk: handleResetQuestionState,
-    });
-  };
+  const { submitAnswers, resetAnswers } = useObjectiveStudyHandler();
+
   return (
     <QuestionStudyOmrCardHeaderBlock>
       <div className="objective-study-omr-card-header-title">
         <span>답안지</span>
-        <Button onClick={onClickReset}>초기화</Button>
+        <div className="objective-study-omr-card-header-title-right-wrapper">
+          <Button onClick={resetAnswers}>초기화</Button>
+          <Button onClick={submitAnswers}>제출</Button>
+        </div>
       </div>
     </QuestionStudyOmrCardHeaderBlock>
   );

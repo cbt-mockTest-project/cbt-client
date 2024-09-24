@@ -1,3 +1,4 @@
+import { responsive } from '@lib/utils/responsive';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import React from 'react';
 import styled from 'styled-components';
@@ -10,6 +11,11 @@ const ObjectiveStudyOmrCardBlock = styled.div`
   background-color: ${({ theme }) => theme.color('colorFillSecondary')};
   overflow-y: auto;
   height: calc(100vh - 200px);
+
+  @media (max-width: ${responsive.medium}) {
+    min-height: calc(100vh - 200px);
+    height: 100%;
+  }
 `;
 
 interface ObjectiveStudyOmrCardProps {}

@@ -37,6 +37,12 @@ const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
           background-color: ${({ theme }) => theme.color('colorErrorBgHover')};
         `;
       }
+      if (status === 'correct') {
+        return css`
+          background-color: ${({ theme }) =>
+            theme.color('colorPrimaryBgHover')};
+        `;
+      }
     }}
   }
 
@@ -57,11 +63,12 @@ interface ObjectiveStudyTestModeObjectiveItemProps {
   status: ObjectiveStudyTestModeItemStatus;
   questionId: number;
   index: number;
+  autoMode?: boolean;
 }
 
 const ObjectiveStudyTestModeObjectiveItem: React.FC<
   ObjectiveStudyTestModeObjectiveItemProps
-> = ({ status, questionId, index }) => {
+> = ({ status, questionId, index, autoMode }) => {
   const { saveQuestionStateAndObjectiveAnswer, saveBookmark } = useQuestions();
   const question = useAppSelector((state) =>
     state.mockExam.questions.find((question) => question.id === questionId)
@@ -82,8 +89,12 @@ const ObjectiveStudyTestModeObjectiveItem: React.FC<
   };
 
   const onClickObjective = (index: number) => {
-    if (status !== 'default') return;
-    saveQuestionStateAndObjectiveAnswer(question, index + 1);
+    if (status !== 'default' && !autoMode) return;
+    if (question.myObjectiveAnswer === index + 1) {
+      saveQuestionStateAndObjectiveAnswer(question, 0);
+    } else {
+      saveQuestionStateAndObjectiveAnswer(question, index + 1);
+    }
   };
 
   return (
