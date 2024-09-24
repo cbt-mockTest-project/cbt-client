@@ -39,8 +39,8 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
     props.storageType
   );
   const { editCategoryMutation } = useCategoryMutation(props.urlSlug);
-
   const { onClose, categoryId, defaultValues, urlSlug, ...modalProps } = props;
+  const isEditMode = !!categoryId;
   const [isPublic, setIsPublic] = React.useState<boolean>(
     defaultValues ? defaultValues.isPublic : true
   );
@@ -80,7 +80,9 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
         loading: createCategoryLoading || editCategoryMutation.isPending,
       }}
     >
-      <p className="save-category-modal-title">폴더 만들기</p>
+      <p className="save-category-modal-title">
+        {isEditMode ? '폴더 수정' : '폴더 만들기'}
+      </p>
 
       <Radio.Group
         className="save-category-access-radio-group"

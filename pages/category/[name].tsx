@@ -136,10 +136,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       dehydratedState: dehydrate(queryClient),
       queryKey,
-      categoryQueryInput: {
-        ...categoryQueryInput,
-        name: category.name,
-      },
+      categoryQueryInput,
       category,
     },
     revalidate: 86400,
