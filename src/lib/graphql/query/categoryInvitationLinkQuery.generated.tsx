@@ -7,8 +7,15 @@ export type CreateCategoryInvitationLinkMutationVariables = Types.Exact<{
   input: Types.CreateCategoryInvitationLinkInput;
 }>;
 
-
-export type CreateCategoryInvitationLinkMutation = { __typename?: 'Mutation', createCategoryInvitationLink: { __typename?: 'CreateCategoryInvitationLinkOutput', code?: string | null, error?: string | null, ok: boolean } };
+export type CreateCategoryInvitationLinkMutation = {
+  __typename?: 'Mutation';
+  createCategoryInvitationLink: {
+    __typename?: 'CreateCategoryInvitationLinkOutput';
+    code?: string | null;
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export type ApproveCategoryInvitationLinkMutationVariables = Types.Exact<{
   input: Types.ApproveCategoryInvitationLinkInput;
@@ -19,14 +26,16 @@ export type ApproveCategoryInvitationLinkMutation = { __typename?: 'Mutation', a
 
 
 export const CreateCategoryInvitationLinkDocument = gql`
-    mutation CreateCategoryInvitationLink($input: CreateCategoryInvitationLinkInput!) {
-  createCategoryInvitationLink(input: $input) {
-    code
-    error
-    ok
+  mutation CreateCategoryInvitationLink(
+    $input: CreateCategoryInvitationLinkInput!
+  ) {
+    createCategoryInvitationLink(input: $input) {
+      code
+      error
+      ok
+    }
   }
-}
-    `;
+`;
 
 export function useCreateCategoryInvitationLinkMutation() {
   return Urql.useMutation<CreateCategoryInvitationLinkMutation, CreateCategoryInvitationLinkMutationVariables>(CreateCategoryInvitationLinkDocument);
@@ -41,8 +50,22 @@ export const ApproveCategoryInvitationLinkDocument = gql`
     examType
   }
 }
-    `;
+export const ApproveCategoryInvitationLinkDocument = gql`
+  mutation ApproveCategoryInvitationLink(
+    $input: ApproveCategoryInvitationLinkInput!
+  ) {
+    approveCategoryInvitationLink(input: $input) {
+      error
+      ok
+      categoryName
+      urlSlug
+    }
+  }
+`;
 
 export function useApproveCategoryInvitationLinkMutation() {
-  return Urql.useMutation<ApproveCategoryInvitationLinkMutation, ApproveCategoryInvitationLinkMutationVariables>(ApproveCategoryInvitationLinkDocument);
-};
+  return Urql.useMutation<
+    ApproveCategoryInvitationLinkMutation,
+    ApproveCategoryInvitationLinkMutationVariables
+  >(ApproveCategoryInvitationLinkDocument);
+}

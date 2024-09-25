@@ -1,14 +1,12 @@
 [
-    {
-      "relation": [
-        "delegate_permission/common.handle_all_urls"
-      ],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.moducbt",
-        "sha256_cert_fingerprints": [
-          "8D:62:5A:CD:96:97:55:ED:0C:B6:CB:2E:0D:58:43:75:93:C5:2A:86:2A:87:4F:17:C3:E7:2D:29:EE:50:56:44"
-        ]
-      }
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.moducbt",
+      "sha256_cert_fingerprints": [
+        "8D:62:5A:CD:96:97:55:ED:0C:B6:CB:2E:0D:58:43:75:93:C5:2A:86:2A:87:4F:17:C3:E7:2D:29:EE:50:56:44"
+      ]
     }
-  ]
+  }
+]

@@ -71,7 +71,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         noIndex={category.isPublic ? false : true}
       />
       <CategoryPageBlock>
-        {/* <Link
+        <Link
           className="category-banner-wrapper"
           href="https://shop.moducbt.com"
           target="_blank"
@@ -82,7 +82,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
             src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/modu-shop-banner-pc01.png`}
             alt="category-banner"
           />
-        </Link> */}
+        </Link>
         <CategoryComponent
           queryKey={queryKey}
           categoryQueryInput={categoryQueryInput}
@@ -151,10 +151,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       dehydratedState: dehydrate(queryClient),
       queryKey,
-      categoryQueryInput: {
-        ...categoryQueryInput,
-        name: category.name,
-      },
+      categoryQueryInput,
       category,
     },
     revalidate: 86400,

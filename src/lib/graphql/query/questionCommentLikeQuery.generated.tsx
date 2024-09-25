@@ -7,40 +7,69 @@ export type EditMockExamQuestionCommentLikeMutationVariables = Types.Exact<{
   input: Types.EditMockExamQuestionCommentLikeInput;
 }>;
 
+export type EditMockExamQuestionCommentLikeMutation = {
+  __typename?: 'Mutation';
+  editMockExamQuestionCommentLike: {
+    __typename?: 'EditMockExamQuestionCommentLikeOutput';
+    error?: string | null;
+    ok: boolean;
+    currentState: boolean;
+  };
+};
 
-export type EditMockExamQuestionCommentLikeMutation = { __typename?: 'Mutation', editMockExamQuestionCommentLike: { __typename?: 'EditMockExamQuestionCommentLikeOutput', error?: string | null, ok: boolean, currentState: boolean } };
+export type ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables =
+  Types.Exact<{
+    input: Types.ReadMockExamQuestionCommentLikesByQuestinIdInput;
+  }>;
 
-export type ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables = Types.Exact<{
-  input: Types.ReadMockExamQuestionCommentLikesByQuestinIdInput;
-}>;
-
-
-export type ReadMockExamQuestionCommentLikesByQuestinIdQuery = { __typename?: 'Query', readMockExamQuestionCommentLikesByQuestinId: { __typename?: 'ReadMockExamQuestionCommentLikesByQuestinIdOutput', count: number, error?: string | null, ok: boolean } };
-
+export type ReadMockExamQuestionCommentLikesByQuestinIdQuery = {
+  __typename?: 'Query';
+  readMockExamQuestionCommentLikesByQuestinId: {
+    __typename?: 'ReadMockExamQuestionCommentLikesByQuestinIdOutput';
+    count: number;
+    error?: string | null;
+    ok: boolean;
+  };
+};
 
 export const EditMockExamQuestionCommentLikeDocument = gql`
-    mutation EditMockExamQuestionCommentLike($input: EditMockExamQuestionCommentLikeInput!) {
-  editMockExamQuestionCommentLike(input: $input) {
-    error
-    ok
-    currentState
+  mutation EditMockExamQuestionCommentLike(
+    $input: EditMockExamQuestionCommentLikeInput!
+  ) {
+    editMockExamQuestionCommentLike(input: $input) {
+      error
+      ok
+      currentState
+    }
   }
-}
-    `;
+`;
 
 export function useEditMockExamQuestionCommentLikeMutation() {
-  return Urql.useMutation<EditMockExamQuestionCommentLikeMutation, EditMockExamQuestionCommentLikeMutationVariables>(EditMockExamQuestionCommentLikeDocument);
-};
-export const ReadMockExamQuestionCommentLikesByQuestinIdDocument = gql`
-    query ReadMockExamQuestionCommentLikesByQuestinId($input: ReadMockExamQuestionCommentLikesByQuestinIdInput!) {
-  readMockExamQuestionCommentLikesByQuestinId(input: $input) {
-    count
-    error
-    ok
-  }
+  return Urql.useMutation<
+    EditMockExamQuestionCommentLikeMutation,
+    EditMockExamQuestionCommentLikeMutationVariables
+  >(EditMockExamQuestionCommentLikeDocument);
 }
-    `;
+export const ReadMockExamQuestionCommentLikesByQuestinIdDocument = gql`
+  query ReadMockExamQuestionCommentLikesByQuestinId(
+    $input: ReadMockExamQuestionCommentLikesByQuestinIdInput!
+  ) {
+    readMockExamQuestionCommentLikesByQuestinId(input: $input) {
+      count
+      error
+      ok
+    }
+  }
+`;
 
-export function useReadMockExamQuestionCommentLikesByQuestinIdQuery(options: Omit<Urql.UseQueryArgs<ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables>, 'query'>) {
-  return Urql.useQuery<ReadMockExamQuestionCommentLikesByQuestinIdQuery, ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables>({ query: ReadMockExamQuestionCommentLikesByQuestinIdDocument, ...options });
-};
+export function useReadMockExamQuestionCommentLikesByQuestinIdQuery(
+  options: Omit<
+    Urql.UseQueryArgs<ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables>,
+    'query'
+  >
+) {
+  return Urql.useQuery<
+    ReadMockExamQuestionCommentLikesByQuestinIdQuery,
+    ReadMockExamQuestionCommentLikesByQuestinIdQueryVariables
+  >({ query: ReadMockExamQuestionCommentLikesByQuestinIdDocument, ...options });
+}

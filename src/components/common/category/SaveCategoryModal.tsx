@@ -45,15 +45,14 @@ interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
 }
 
 const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
-  const isEditMode = !!props.categoryId;
   const { message } = App.useApp();
   const theme = useTheme();
   const { createCategoryLoading, handleCreateCategory } = useStorage(
     props.storageType
   );
   const { editCategoryMutation } = useCategoryMutation(props.urlSlug);
-
   const { onClose, categoryId, defaultValues, urlSlug, ...modalProps } = props;
+  const isEditMode = !!categoryId;
   const [isPublic, setIsPublic] = React.useState<boolean>(
     defaultValues ? defaultValues.isPublic : true
   );

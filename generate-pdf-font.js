@@ -24,4 +24,3 @@ files.forEach(function (file) {
 
 const vfsFileContent = vfsBefore + JSON.stringify(vfs, null, 2) + vfsAfter;
 fs.writeFileSync(vfsFilename, vfsFileContent);
-
