@@ -8,6 +8,9 @@ import usePayment from './usePayment';
 import { useCheckDiscountCode } from '@lib/graphql/hook/useDiscount';
 import useInput from '@lib/hooks/useInput';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
 
 const PricingSelectModalBlock = styled(Modal)`
   padding: 30px 20px;
@@ -95,8 +98,10 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
   const { price, setPrice, ...modalProps } = props;
   const { handlePayment } = usePayment();
   const { data: meQuery } = useMeQuery();
+  const dispatch = useAppDispatch();
   const { value: discountCode, onChange: onChangeDiscountCode } = useInput('');
   const [isUsedDiscountCode, setIsUsedDiscountCode] = useState<boolean>(false);
+  const openLoginModal = () => dispatch(coreActions.openModal(loginModal));
   const [checkDiscountCode, { loading: checkDiscountCodeLoading }] =
     useCheckDiscountCode();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(0);
@@ -115,6 +120,10 @@ const PricingSelectModal: React.FC<PricingSelectModalProps> = (props) => {
   };
 
   const handleApplyDiscount = async () => {
+    if (!meQuery?.me.user) {
+      openLoginModal();
+      return;
+    }
     const res = await checkDiscountCode({
       variables: {
         input: {
