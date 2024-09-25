@@ -7,28 +7,20 @@ export type EditPostLikeMutationVariables = Types.Exact<{
   input: Types.EditPostLikeInput;
 }>;
 
-export type EditPostLikeMutation = {
-  __typename?: 'Mutation';
-  editPostLike: {
-    __typename?: 'EditPostLikeOutput';
-    currentState: boolean;
-    error?: string | null;
-    ok: boolean;
-  };
-};
+
+export type EditPostLikeMutation = { __typename?: 'Mutation', editPostLike: { __typename?: 'EditPostLikeOutput', currentState: boolean, error?: string | null, ok: boolean } };
+
 
 export const EditPostLikeDocument = gql`
-  mutation EditPostLike($input: EditPostLikeInput!) {
-    editPostLike(input: $input) {
-      currentState
-      error
-      ok
-    }
+    mutation EditPostLike($input: EditPostLikeInput!) {
+  editPostLike(input: $input) {
+    currentState
+    error
+    ok
   }
-`;
+}
+    `;
 
 export function useEditPostLikeMutation() {
-  return Urql.useMutation<EditPostLikeMutation, EditPostLikeMutationVariables>(
-    EditPostLikeDocument
-  );
-}
+  return Urql.useMutation<EditPostLikeMutation, EditPostLikeMutationVariables>(EditPostLikeDocument);
+};

@@ -7,29 +7,20 @@ export type ToggleExamBookmarkMutationVariables = Types.Exact<{
   input: Types.ToggleExamBookmarkInput;
 }>;
 
-export type ToggleExamBookmarkMutation = {
-  __typename?: 'Mutation';
-  toggleExamBookmark: {
-    __typename?: 'ToggleExamBookmarkOutput';
-    error?: string | null;
-    ok: boolean;
-    isBookmarked?: boolean | null;
-  };
-};
+
+export type ToggleExamBookmarkMutation = { __typename?: 'Mutation', toggleExamBookmark: { __typename?: 'ToggleExamBookmarkOutput', error?: string | null, ok: boolean, isBookmarked?: boolean | null } };
+
 
 export const ToggleExamBookmarkDocument = gql`
-  mutation ToggleExamBookmark($input: ToggleExamBookmarkInput!) {
-    toggleExamBookmark(input: $input) {
-      error
-      ok
-      isBookmarked
-    }
+    mutation ToggleExamBookmark($input: ToggleExamBookmarkInput!) {
+  toggleExamBookmark(input: $input) {
+    error
+    ok
+    isBookmarked
   }
-`;
+}
+    `;
 
 export function useToggleExamBookmarkMutation() {
-  return Urql.useMutation<
-    ToggleExamBookmarkMutation,
-    ToggleExamBookmarkMutationVariables
-  >(ToggleExamBookmarkDocument);
-}
+  return Urql.useMutation<ToggleExamBookmarkMutation, ToggleExamBookmarkMutationVariables>(ToggleExamBookmarkDocument);
+};
