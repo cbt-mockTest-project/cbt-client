@@ -1,6 +1,6 @@
 import { useEditExam } from '@lib/graphql/hook/useExam';
 import { handleError } from '@lib/utils/utils';
-import { Button, Modal, ModalProps, Switch,App } from 'antd';
+import { Button, Modal, ModalProps, Switch, App } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 

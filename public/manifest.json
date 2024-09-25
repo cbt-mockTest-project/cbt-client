@@ -63,8 +63,5 @@
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
-  "categories": [
-    "education",
-    "social"
-  ]
+  "categories": ["education", "social"]
 }

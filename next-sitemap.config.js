@@ -29,7 +29,7 @@ module.exports = {
     '/sitemap_*',
     '/post/*',
     '/study*',
-    '/admin*'
+    '/admin*',
   ],
   // ...other options
   transform: async (config, path) => {
@@ -42,7 +42,7 @@ module.exports = {
     };
   },
   robotsTxtOptions: {
-    additionalSitemaps :[
+    additionalSitemaps: [
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_01.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_02.xml`,
       `${process.env.NEXT_PUBLIC_CLIENT_URL}/sitemap_question_03.xml`,
