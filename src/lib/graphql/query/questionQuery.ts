@@ -307,6 +307,13 @@ export const SEARCH_QEUSTIONS = gql`
         solution
         number
         isBookmarked
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
+        }
         myBookmark {
           id
           bookmarkFolder {

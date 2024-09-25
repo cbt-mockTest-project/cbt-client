@@ -4,23 +4,37 @@ import styled, { css } from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
 import { Button, Image } from 'antd';
-import useQuestions from '@lib/hooks/useQuestions';
+import useQuestions, {
+  HandleDeleteBookmark,
+  HandleSaveBookmark,
+} from '@lib/hooks/useQuestions';
 import { responsive } from '@lib/utils/responsive';
 import ObjectiveStudyTestModeObjectiveItem from './ObjectiveStudyTestModeObjectiveItem';
 import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
+import { MockExamQuestion } from 'types';
+import Bookmark, {
+  BookmarkChangeHandler,
+} from '@components/common/bookmark/Bookmark';
 
 const ObjectiveStudyTestModeItemBlock = styled.div<{
   status: ObjectiveStudyTestModeItemStatus;
 }>`
   padding: 0px 20px;
-
   font-size: 16px;
-  .objective-study-test-mode-item-question-title-wrapper {
-    .objective-study-test-mode-item-question-title {
-      font-size: 14px;
-      color: ${({ theme }) => theme.color('colorTextTertiary')};
+
+  .objective-study-test-mode-item-question-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .objective-study-test-mode-item-question-header-left {
+      .objective-study-test-mode-item-question-title-wrapper {
+        .objective-study-test-mode-item-question-title {
+          font-size: 14px;
+          color: ${({ theme }) => theme.color('colorTextTertiary')};
+        }
+      }
     }
   }
 
@@ -119,24 +133,33 @@ export type ObjectiveStudyTestModeItemStatus =
   | 'default';
 
 interface ObjectiveStudyTestModeItemProps {
-  questionId: number;
+  question?: MockExamQuestion;
+  questionId?: number;
   index: number;
   isSolutionVisible?: boolean;
   readOnly?: boolean;
   autoMode?: boolean;
+  hasAddMemoButton?: boolean;
+  handleSaveBookmark?: HandleSaveBookmark;
+  handleDeleteBookmark?: HandleDeleteBookmark;
 }
 
 const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
+  question: externalQuestion,
   questionId,
   index,
   isSolutionVisible = false,
   readOnly = false,
   autoMode = false,
+  hasAddMemoButton = true,
+  handleSaveBookmark,
+  handleDeleteBookmark,
 }) => {
   const { data: meQuery } = useMeQuery();
-  const question = useAppSelector((state) =>
-    state.mockExam.questions.find((question) => question.id === questionId)
-  );
+  const question =
+    useAppSelector((state) =>
+      state.mockExam.questions.find((question) => question.id === questionId)
+    ) || externalQuestion;
   const myFeedbackList = question?.mockExamQuestionFeedback?.filter(
     (feedback) => feedback.user?.id === meQuery?.me?.user?.id
   );
@@ -167,18 +190,35 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
     return 'default';
   };
 
+  const onChangeBookmark: BookmarkChangeHandler = (active, folderId) => {
+    if (active) {
+      handleSaveBookmark?.(question, folderId || null);
+    }
+    if (!active) {
+      handleDeleteBookmark?.(question);
+    }
+  };
+
   if (!question) return null;
   return (
     <ObjectiveStudyTestModeItemBlock status={status()}>
-      <div className="objective-study-test-mode-item-question-title-wrapper">
-        <span>{index}. </span>
-        <span className="objective-study-test-mode-item-question-title">
-          {question.mockExam.title}
-        </span>
+      <div className="objective-study-test-mode-item-question-header">
+        <div className="objective-study-test-mode-item-question-header-left">
+          <div className="objective-study-test-mode-item-question-title-wrapper">
+            <span>{index}. </span>
+            <span className="objective-study-test-mode-item-question-title">
+              {question.mockExam.title}
+            </span>
+          </div>
+          <pre className="objective-study-test-mode-item-question">
+            {parse(question.question)}
+          </pre>
+        </div>
+        <Bookmark
+          isActive={question.isBookmarked}
+          onChangeBookmark={onChangeBookmark}
+        />
       </div>
-      <pre className="objective-study-test-mode-item-question">
-        {parse(question.question)}
-      </pre>
       {question.question_img && question.question_img.length > 0 && (
         <Image
           className="objective-study-test-mode-item-question-image"
@@ -193,6 +233,7 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
             status={status()}
             questionId={questionId}
             index={index}
+            question={question}
             autoMode={autoMode}
           />
         ))}
@@ -213,7 +254,7 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
             />
           )}
           <div>
-            {!!myFeedbackList.length && (
+            {!!myFeedbackList?.length && (
               <div className="objective-study-test-mode-item-answer-feedback-list-wrapper">
                 <SolutionModeFeedbackList
                   question={question}
@@ -226,7 +267,7 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
                 />
               </div>
             )}
-            {!!feedbackListExceptMe.length && (
+            {!!feedbackListExceptMe?.length && (
               <SolutionModeFeedbackList
                 title="추가 해설"
                 question={question}
@@ -238,13 +279,15 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
               />
             )}
           </div>
-          <div
-            className="objective-study-test-mode-item-answer-add-button-wrapper"
-            onClick={() => setIsFeedbackModalOpen(true)}
-          >
-            <Button shape="circle">➕</Button>
-            <div>메모</div>
-          </div>
+          {hasAddMemoButton && (
+            <div
+              className="objective-study-test-mode-item-answer-add-button-wrapper"
+              onClick={() => setIsFeedbackModalOpen(true)}
+            >
+              <Button shape="circle">➕</Button>
+              <div>메모</div>
+            </div>
+          )}
         </div>
       )}
       {isFeedbackModalOpen && (

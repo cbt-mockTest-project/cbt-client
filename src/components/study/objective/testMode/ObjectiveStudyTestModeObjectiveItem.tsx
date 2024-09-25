@@ -7,6 +7,7 @@ import parse from 'html-react-parser';
 import styled, { css } from 'styled-components';
 import { ObjectiveStudyTestModeItemStatus } from './ObjectiveStudyTestModeItem';
 import { responsive } from '@lib/utils/responsive';
+import { MockExamQuestion } from 'types';
 
 const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
   status: ObjectiveStudyTestModeItemStatus;
@@ -61,18 +62,20 @@ const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
 
 interface ObjectiveStudyTestModeObjectiveItemProps {
   status: ObjectiveStudyTestModeItemStatus;
-  questionId: number;
+  question?: MockExamQuestion;
+  questionId?: number;
   index: number;
   autoMode?: boolean;
 }
 
 const ObjectiveStudyTestModeObjectiveItem: React.FC<
   ObjectiveStudyTestModeObjectiveItemProps
-> = ({ status, questionId, index, autoMode }) => {
+> = ({ status, question: externalQuestion, questionId, index, autoMode }) => {
   const { saveQuestionStateAndObjectiveAnswer, saveBookmark } = useQuestions();
-  const question = useAppSelector((state) =>
-    state.mockExam.questions.find((question) => question.id === questionId)
-  );
+  const question =
+    useAppSelector((state) =>
+      state.mockExam.questions.find((question) => question.id === questionId)
+    ) || externalQuestion;
   const objective = question.objectiveData.content[index];
   const isUserAnswer = question.myObjectiveAnswer === index + 1;
   const isCorrectAnswer = question.objectiveData.answer === index + 1;
