@@ -57,7 +57,7 @@ export type CreateMockExamCategoryMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string, description: string, isPublic: boolean, urlSlug: string } | null } };
+export type CreateMockExamCategoryMutation = { __typename?: 'Mutation', createMockExamCategory: { __typename?: 'CreateMockExamCategoryOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', id: number, name: string, description: string, isPublic: boolean, urlSlug: string, examType: Types.ExamType } | null } };
 
 export type ReadMockExamTitlesByCateoryQueryVariables = Types.Exact<{
   input: Types.ReadMockExamTitlesByCateoryInput;
@@ -151,7 +151,7 @@ export type ReadMockExamCategoryByCategoryIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', hasAccess?: boolean | null, isBookmarked?: boolean | null, id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, urlSlug: string, revenueRequestForm?: { __typename?: 'RevenueRequestForm', status: Types.RevenueRequestFormStatus, reason?: string | null } | null, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, accesibleRoleIds: Array<number>, isBookmarked?: boolean | null, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
+export type ReadMockExamCategoryByCategoryIdQuery = { __typename?: 'Query', readMockExamCategoryByCategoryId: { __typename?: 'ReadMockExamCategoryByCategoryIdOutput', error?: string | null, ok: boolean, category?: { __typename?: 'MockExamCategory', hasAccess?: boolean | null, isBookmarked?: boolean | null, id: number, source: Types.ExamSource, name: string, description: string, isPublic: boolean, urlSlug: string, revenueRequestForm?: { __typename?: 'RevenueRequestForm', status: Types.RevenueRequestFormStatus, reason?: string | null } | null, mockExam: Array<{ __typename?: 'MockExam', slug?: string | null, title: string, id: number, examType: Types.ExamType, accesibleRoleIds: Array<number>, isBookmarked?: boolean | null, mockExamQuestion: Array<{ __typename?: 'MockExamQuestion', id: number }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } }>, user: { __typename?: 'User', profileImg: string, id: number, nickname: string } } | null } };
 
 export type GetExamCategoriesForAdminQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -344,6 +344,7 @@ export const CreateMockExamCategoryDocument = gql`
       description
       isPublic
       urlSlug
+      examType
     }
     error
     ok
@@ -580,6 +581,7 @@ export const ReadMockExamCategoryByCategoryIdDocument = gql`
         slug
         title
         id
+        examType
         accesibleRoleIds
         mockExamQuestion {
           id

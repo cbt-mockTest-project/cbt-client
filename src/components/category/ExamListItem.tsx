@@ -7,7 +7,7 @@ import { App, Dropdown, MenuProps, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { MockExam, MockExamCategory } from 'types';
+import { ExamType, MockExam, MockExamCategory } from 'types';
 import ExamSelecModal from './ExamSelecModal';
 import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
@@ -159,7 +159,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
-  const isObjective = router.pathname.includes('mcq');
+  const isObjective = exam.examType === ExamType.Objective;
   const { handleRemoveExamFromCategory } = useCatgegoryExams();
   const { handleToggleExamBookmark } = useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);

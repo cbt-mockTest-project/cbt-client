@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import ObjectiveStudyResultQuestionCard from './ObjectiveStudyResultQuestionCard';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import { LocalStorage } from '@lib/utils/localStorage';
 
 const ObjectiveStudyResultBlock = styled.div`
   margin-bottom: auto;
@@ -71,6 +73,7 @@ const ObjectiveStudyResultBlock = styled.div`
 interface ObjectiveStudyResultProps {}
 
 const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
+  const localStorage = new LocalStorage();
   const router = useRouter();
   const totalQuestionCount = useAppSelector(
     (state) => state.mockExam.questions.length
@@ -95,7 +98,12 @@ const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
     });
   };
   const handleClickEnd = () => {
-    router.back();
+    const lastVisitedCategory = localStorage.get(LAST_VISITED_CATEGORY);
+    if (lastVisitedCategory) {
+      router.push(lastVisitedCategory);
+    } else {
+      router.push('/');
+    }
   };
   return (
     <ObjectiveStudyResultBlock>
@@ -134,10 +142,10 @@ const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
           </div>
           <div className="objective-study-result-card-button-container">
             <Button size="large" onClick={handleClickRestart}>
-              다시 풀기
+              다시풀기
             </Button>
             <Button size="large" onClick={handleClickEnd} type="primary">
-              종료 하기
+              종료하기
             </Button>
           </div>
         </div>

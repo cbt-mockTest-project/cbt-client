@@ -292,6 +292,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           slug
           title
           id
+          examType
           accesibleRoleIds
           mockExamQuestion {
             id
@@ -414,6 +415,7 @@ export const GET_MY_EXAMS = gql`
         id
         slug
         title
+        examType
         isBookmarked
         mockExamQuestion {
           id
