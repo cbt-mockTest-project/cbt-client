@@ -8,8 +8,9 @@ import ObjectiveStudyResultQuestionCard from './ObjectiveStudyResultQuestionCard
 
 const ObjectiveStudyResultBlock = styled.div`
   margin-bottom: auto;
-  padding-bottom: 30px;
-  padding: 0 20px;
+
+  padding: 0 20px 30px 20px;
+
   .objective-study-result-title {
     font-size: 20px;
     font-weight: 700;
@@ -106,7 +107,7 @@ const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
               총 문제수
             </div>
             <div className="objective-study-result-card-row-value">
-              {totalQuestionCount}
+              {totalQuestionCount} 문제
             </div>
           </div>
           <div className="objective-study-result-card-row">
@@ -114,7 +115,7 @@ const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
               맞은 문제 수
             </div>
             <div className="objective-study-result-card-row-value success">
-              {correctQuestionCount}
+              {correctQuestionCount} 문제
             </div>
           </div>
           <div className="objective-study-result-card-row">
@@ -122,7 +123,13 @@ const ObjectiveStudyResult: React.FC<ObjectiveStudyResultProps> = () => {
               틀린 문제 수
             </div>
             <div className="objective-study-result-card-row-value danger">
-              {totalQuestionCount - correctQuestionCount}
+              {totalQuestionCount - correctQuestionCount} 문제
+            </div>
+          </div>
+          <div className="objective-study-result-card-row">
+            <div className="objective-study-result-card-row-title">점수</div>
+            <div className="objective-study-result-card-row-value">
+              {Math.round((correctQuestionCount / totalQuestionCount) * 100)} 점
             </div>
           </div>
           <div className="objective-study-result-card-button-container">
