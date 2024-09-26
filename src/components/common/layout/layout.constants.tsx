@@ -40,11 +40,11 @@ export const navBottomItems = [
     icon: <MobileOutlined />,
     label: '앱 설치',
   },
-  {
-    key: 'mall',
-    icon: <GiftOutlined />,
-    label: '모두 상점',
-  },
+  // {
+  //   key: 'mall',
+  //   icon: <GiftOutlined />,
+  //   label: '모두 상점',
+  // },
   {
     key: 'open-chat',
     icon: <WechatOutlined />,

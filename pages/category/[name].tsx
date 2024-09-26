@@ -64,18 +64,6 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         noIndex={category.isPublic ? false : true}
       />
       <CategoryPageBlock>
-        <Link
-          className="category-banner-wrapper"
-          href="https://shop.moducbt.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            fill
-            src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT}/banner/modu-shop-banner-pc01.png`}
-            alt="category-banner"
-          />
-        </Link>
         <CategoryComponent
           queryKey={queryKey}
           categoryQueryInput={categoryQueryInput}
