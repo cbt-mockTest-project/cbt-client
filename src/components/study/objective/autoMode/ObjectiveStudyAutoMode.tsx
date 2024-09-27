@@ -6,6 +6,7 @@ import useIsMobile from '@lib/hooks/useIsMobile';
 import { responsive } from '@lib/utils/responsive';
 import ObjectiveStudyTestModeItem from '../testMode/ObjectiveStudyTestModeItem';
 import ObjectiveStudyOmrCard from '../testMode/ObjectiveStudyOmrCard';
+import ObjectiveStudyAutoModeItem from './ObjectiveStudyAutoModeItem';
 
 const ObjectiveStudyAutoModeBlock = styled.div`
   display: flex;
@@ -55,11 +56,9 @@ const ObjectiveStudyAutoMode: React.FC<ObjectiveStudyAutoModeProps> = () => {
                   key={id}
                   className="objective-study-test-mode-item-wrapper"
                 >
-                  <ObjectiveStudyTestModeItem
+                  <ObjectiveStudyAutoModeItem
                     questionId={id}
                     index={index + (Number(page) - 1) * 1 + 1}
-                    isSolutionVisible
-                    autoMode
                   />
                 </div>
               ))
@@ -70,11 +69,9 @@ const ObjectiveStudyAutoMode: React.FC<ObjectiveStudyAutoModeProps> = () => {
                   key={id}
                   className="objective-study-test-mode-item-wrapper"
                 >
-                  <ObjectiveStudyTestModeItem
+                  <ObjectiveStudyAutoModeItem
                     questionId={id}
                     index={index + (Number(page) - 1) * 2 + 1}
-                    isSolutionVisible
-                    autoMode
                   />
                 </div>
               ))}

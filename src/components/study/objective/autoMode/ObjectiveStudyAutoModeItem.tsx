@@ -1,28 +1,17 @@
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import React from 'react';
-import useQuestions, {
-  HandleDeleteBookmark,
-  HandleSaveBookmark,
-} from '@lib/hooks/useQuestions';
+import useQuestions from '@lib/hooks/useQuestions';
 
 import ObjectiveStudyItem from '../ObjectiveStudyItem';
 
-interface ObjectiveStudyTestModeItemProps {
+interface ObjectiveStudyAutoModeItemProps {
   questionId?: number;
   index: number;
-  isSolutionVisible?: boolean;
-  readOnly?: boolean;
-  autoMode?: boolean;
-  hasAddMemoButton?: boolean;
 }
 
-const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
+const ObjectiveStudyAutoModeItem: React.FC<ObjectiveStudyAutoModeItemProps> = ({
   questionId,
   index,
-  isSolutionVisible = false,
-  readOnly = false,
-  autoMode = false,
-  hasAddMemoButton = true,
 }) => {
   const { saveBookmark, deleteBookmark } = useQuestions();
   const question = useAppSelector((state) =>
@@ -34,14 +23,13 @@ const ObjectiveStudyTestModeItem: React.FC<ObjectiveStudyTestModeItemProps> = ({
     <ObjectiveStudyItem
       question={question}
       index={index}
-      autoMode={autoMode}
-      hasAddMemoButton={hasAddMemoButton}
       handleSaveBookmark={saveBookmark}
       handleDeleteBookmark={deleteBookmark}
-      isSolutionVisible={isSolutionVisible}
-      readOnly={readOnly}
+      hasAddMemoButton
+      isSolutionVisible
+      autoMode
     />
   );
 };
 
-export default ObjectiveStudyTestModeItem;
+export default ObjectiveStudyAutoModeItem;

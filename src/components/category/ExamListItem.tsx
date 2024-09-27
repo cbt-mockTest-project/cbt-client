@@ -296,7 +296,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         {hasRecentlyMark && (
           <div className="absolute bottom-[-8px] left-[50%] -translate-x-[50%]">
             <Tag color="blue">{`최근 학습${
-              recentlyStudyQuestionNumber !== 0
+              exam.examType === ExamType.Objective
+                ? ''
+                : recentlyStudyQuestionNumber !== 0
                 ? `- ${recentlyStudyQuestionNumber}번 문제`
                 : '- 해설모드'
             }`}</Tag>

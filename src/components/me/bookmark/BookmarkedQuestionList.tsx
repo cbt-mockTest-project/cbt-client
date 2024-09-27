@@ -1,9 +1,8 @@
 import SolutionModeCardItem from '@components/solutionMode/SolutionModeCardItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
-import { App, Button, Empty, Spin, message } from 'antd';
+import { App, Button, Empty, message } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { shallowEqual } from 'react-redux';
 import { ClearOutlined } from '@ant-design/icons';
 import ExamBookmarkStudyModal from './ExamBookmarkStudyModal';
 import { useRouter } from 'next/router';
@@ -14,8 +13,15 @@ import {
   ResetQuestionBookmarkMutationVariables,
 } from '@lib/graphql/query/questionBookmarkQuery.generated';
 import useQuestions from '@lib/hooks/useQuestions';
+import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
 
-const BookmarkedQuestionListBlock = styled.div``;
+const BookmarkedQuestionListBlock = styled.div`
+  .objective-study-mode-item-wrapper {
+    padding: 16px 10px;
+    border-radius: 16px;
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
+  }
+`;
 
 interface BookmarkedQuestionListProps {}
 
@@ -26,8 +32,14 @@ const BookmarkedQuestionList: React.FC<BookmarkedQuestionListProps> = () => {
   const { resetQuestions } = useQuestions();
   const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
   const questionIds = useAppSelector(
-    (state) => state.mockExam.questions.map((question) => question.id),
-    shallowEqual
+    (state) =>
+      state.mockExam.questions.map((question) => ({
+        id: question.id,
+        isObjective: question.objectiveData ? true : false,
+      })),
+    (left, right) =>
+      left.length === right.length &&
+      left.every((item, index) => item.id === right[index].id)
   );
   const handleClearBookmark = () => {
     modal.confirm({
@@ -79,9 +91,15 @@ const BookmarkedQuestionList: React.FC<BookmarkedQuestionListProps> = () => {
           </div>
         )}
         <div className="flex flex-col gap-[50px]">
-          {questionIds.slice(0, 30).map((questionId, index) => (
-            <SolutionModeCardItem key={questionId} index={index} />
-          ))}
+          {questionIds.slice(0, 30).map(({ id, isObjective }, index) =>
+            isObjective ? (
+              <div key={id} className="objective-study-mode-item-wrapper">
+                <ObjectiveStudyAutoModeItem questionId={id} index={index + 1} />
+              </div>
+            ) : (
+              <SolutionModeCardItem key={id} index={index} />
+            )
+          )}
           {questionIds.length === 0 && (
             <div className="flex justify-center items-center">
               <Empty description="북마크한 문제가 없습니다." />

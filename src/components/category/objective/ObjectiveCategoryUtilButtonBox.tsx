@@ -84,12 +84,6 @@ const ObjectiveCategoryUtilButtonBox: React.FC<
       needLogin: true,
     },
     {
-      title: '형광펜으로 체크한 문제들을 모아 볼 수 있어요.',
-      label: '형광펜 문제',
-      url: '/exams/highlight',
-      needLogin: true,
-    },
-    {
       title: '북마크한 문제들을 모아 볼 수 있어요.',
       label: '북마크',
       url: '/me/bookmark',

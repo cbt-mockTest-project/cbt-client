@@ -5,12 +5,12 @@ import { Button, Image } from 'antd';
 import React from 'react';
 import parse from 'html-react-parser';
 import styled, { css } from 'styled-components';
-import { ObjectiveStudyTestModeItemStatus } from './ObjectiveStudyTestModeItem';
 import { responsive } from '@lib/utils/responsive';
 import { MockExamQuestion } from 'types';
+import { ObjectiveStudyItemStatus } from '../ObjectiveStudyItem';
 
 const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
-  status: ObjectiveStudyTestModeItemStatus;
+  status: ObjectiveStudyItemStatus;
 }>`
   .objective-study-test-mode-item-objective-content {
     ${EditorStyle}
@@ -61,21 +61,17 @@ const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
 `;
 
 interface ObjectiveStudyTestModeObjectiveItemProps {
-  status: ObjectiveStudyTestModeItemStatus;
+  status: ObjectiveStudyItemStatus;
   question?: MockExamQuestion;
-  questionId?: number;
   index: number;
   autoMode?: boolean;
 }
 
 const ObjectiveStudyTestModeObjectiveItem: React.FC<
   ObjectiveStudyTestModeObjectiveItemProps
-> = ({ status, question: externalQuestion, questionId, index, autoMode }) => {
-  const { saveQuestionStateAndObjectiveAnswer, saveBookmark } = useQuestions();
-  const question =
-    useAppSelector((state) =>
-      state.mockExam.questions.find((question) => question.id === questionId)
-    ) || externalQuestion;
+> = ({ status, question, index, autoMode }) => {
+  const { saveQuestionStateAndObjectiveAnswer } = useQuestions();
+
   const objective = question.objectiveData.content[index];
   const isUserAnswer = question.myObjectiveAnswer === index + 1;
   const isCorrectAnswer = question.objectiveData.answer === index + 1;

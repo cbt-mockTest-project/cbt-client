@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ObjectiveStudyTestModeItem from '../testMode/ObjectiveStudyTestModeItem';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { responsive } from '@lib/utils/responsive';
+import ObjectiveStudyResultModeItem from './ObjectiveStudyResultModeItem';
 
 const ObjectiveStudyResultQuestionCardBlock = styled(Card)<{
   status: 'correct' | 'incorrect';
@@ -35,12 +36,7 @@ const ObjectiveStudyResultQuestionCard: React.FC<
       : 'incorrect';
   return (
     <ObjectiveStudyResultQuestionCardBlock status={status}>
-      <ObjectiveStudyTestModeItem
-        questionId={questionId}
-        index={index}
-        isSolutionVisible
-        readOnly
-      />
+      <ObjectiveStudyResultModeItem questionId={questionId} index={index} />
     </ObjectiveStudyResultQuestionCardBlock>
   );
 };

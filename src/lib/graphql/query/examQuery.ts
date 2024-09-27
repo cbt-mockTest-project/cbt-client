@@ -289,10 +289,10 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           reason
         }
         mockExam {
+          examType
           slug
           title
           id
-          examType
           accesibleRoleIds
           mockExamQuestion {
             id

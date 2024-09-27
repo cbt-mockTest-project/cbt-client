@@ -6,6 +6,7 @@ import { MockExamQuestion } from 'types';
 import useAuth from '@lib/hooks/useAuth';
 import { Empty, Skeleton } from 'antd';
 import ObjectiveStudyTestModeItem from '@components/study/objective/testMode/ObjectiveStudyTestModeItem';
+import ObjectiveStudyItem from '@components/study/objective/ObjectiveStudyItem';
 
 const SearchQuestionListBlock = styled.div`
   margin-top: 20px;
@@ -35,7 +36,7 @@ const SearchQuestionList: React.FC<SearchQuestionListProps> = () => {
             className="search-objective-question-list-item"
             key={question.id}
           >
-            <ObjectiveStudyTestModeItem
+            <ObjectiveStudyItem
               hasAddMemoButton={false}
               handleSaveBookmark={saveBookmark}
               handleDeleteBookmark={deleteBookmark}
