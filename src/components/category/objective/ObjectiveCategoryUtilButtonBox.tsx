@@ -59,6 +59,7 @@ const ObjectiveCategoryUtilButtonBox: React.FC<
       ...(categoryId && { categoryId }),
       examIds: exams.map((exam) => exam.id).join(','),
       categoryName,
+      type: 'objective',
     };
 
     if (config.url === '/search') {

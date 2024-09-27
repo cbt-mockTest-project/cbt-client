@@ -8,10 +8,16 @@ import ExamReviewStateCheckboxGroup from './ExamReviewStateCheckboxGroup';
 import { useAppSelector } from '@modules/redux/store/configureStore';
 import { shallowEqual } from 'react-redux';
 import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDeferredRederingForPaginationItemList';
+import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
 
 const ExamReviewComponentBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  .objective-study-mode-item-wrapper {
+    padding: 16px 10px;
+    border-radius: 16px;
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
+  }
   .exam-review-header {
     padding: 10px 10px 0px 10px;
     position: sticky;
@@ -48,16 +54,31 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
     shallowEqual
   );
   const questionIds = useAppSelector(
-    (state) => state.mockExam.questions.map((question) => question.id),
-    shallowEqual
+    (state) =>
+      state.mockExam.questions.map((question) => ({
+        id: question.id,
+        isObjective: question.objectiveData ? true : false,
+      })),
+    (left, right) =>
+      left.length === right.length &&
+      left.every((item, index) => item.id === right[index].id)
   );
   const AsyncItemList = useDeferredRederingForPaginationItemList(
     questionIds,
     page,
     LIMIT,
-    (questionId, index) => (
-      <SolutionModeCardItem key={questionId} index={index} />
-    )
+    (questionId, index) =>
+      questionId.isObjective ? (
+        <div className="objective-study-mode-item-wrapper">
+          <ObjectiveStudyAutoModeItem
+            key={questionId.id}
+            index={index}
+            questionId={questionId.id}
+          />
+        </div>
+      ) : (
+        <SolutionModeCardItem key={questionId.id} index={index} />
+      )
   );
 
   if (!categoryName) return null;

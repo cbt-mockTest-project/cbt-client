@@ -52,6 +52,8 @@ const ExamReviewStateCheckboxGroup: React.FC<
   const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
   const router = useRouter();
+  const isObjectiveExam = router.query.type === 'objective';
+
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([
     QuestionState.Row,
   ]);
@@ -98,12 +100,14 @@ const ExamReviewStateCheckboxGroup: React.FC<
       <Button size="large" type="text" onClick={() => router.back()}>
         <LeftOutlined />
       </Button>
-      <Checkbox.Group
-        className="exam-review-state-checkbox-group"
-        options={ScoreCheckboxOptions}
-        value={checkedStates}
-        onChange={handleStateCheck}
-      />
+      {!isObjectiveExam && (
+        <Checkbox.Group
+          className="exam-review-state-checkbox-group"
+          options={ScoreCheckboxOptions}
+          value={checkedStates}
+          onChange={handleStateCheck}
+        />
+      )}
       <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button>
 
       {isStudyModalOpen && (
