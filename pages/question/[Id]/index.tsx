@@ -30,7 +30,6 @@ const Question: NextPage<QuestionProps> = ({
   title,
   description,
   dehydratedState,
-  noIndex,
 }) => {
   return (
     <HydrationBoundary state={dehydratedState}>
@@ -38,7 +37,6 @@ const Question: NextPage<QuestionProps> = ({
         title={`${title} | 모두CBT`}
         pageHeadingTitle={`${title} 상세 페이지`}
         description={description}
-        noIndex={noIndex}
       />
       <GoogleAd />
       <QuestionComponent questionQueryInput={questionQueryInput} />
@@ -85,6 +83,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const description = removeHtmlTag(
     (question.question || '') + (question.solution || '')
   );
+  if (description.trim().length === 0) return { notFound: true };
   const dehydratedState = dehydrate(queryClient);
   return {
     props: {
@@ -92,7 +91,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
       description,
       questionQueryInput,
       dehydratedState,
-      noIndex: !question.mockExam.approved,
     },
     revalidate: 86400,
   };

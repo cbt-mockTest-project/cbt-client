@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import useQuestion from '@lib/hooks/useQuestion';
 import { ReadMockExamQuestionInput, UserRole } from 'types';
@@ -6,15 +6,14 @@ import BasicCard from '@components/common/card/BasicCard';
 import StudyQuestionBox from '@components/study/StudyQuestionBox';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
-import { Button, Skeleton, Spin } from 'antd';
+import { Button } from 'antd';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
-import Portal from '@components/common/portal/Portal';
+import { removeHtmlTag } from '@lib/utils/utils';
 
 interface QuestionComponentProps {
   questionQueryInput: ReadMockExamQuestionInput;
@@ -23,7 +22,6 @@ interface QuestionComponentProps {
 const QuestionComponent: React.FC<QuestionComponentProps> = ({
   questionQueryInput,
 }) => {
-  const router = useRouter();
   const {
     handleAddFeedback,
     handleEditFeedback,
@@ -41,29 +39,17 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
   const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
     question.user.role
   );
-  const isApproved = question.mockExam?.approved;
-  const [isHidden, setIsHidden] = useState(!isAdmin && !isApproved);
 
-  useEffect(() => {
-    if (!isAdmin && !isApproved) {
-      setIsHidden(true);
-      setTimeout(() => {
-        router.replace('/');
-      }, 2000);
-    }
-  }, [isAdmin]);
+  if (
+    !question ||
+    (removeHtmlTag(question.question).trim().length === 0 &&
+      removeHtmlTag(question.solution).trim().length === 0)
+  )
+    return null;
 
-  if (!question) return null;
-  if (isHidden) {
-    return (
-      <Portal>
-        <Spin size="large" fullscreen />
-      </Portal>
-    );
-  }
   return (
-    <QuestionComponentBlock isHidden={isHidden}>
-      {isAdmin && question.mockExam?.approved && (
+    <QuestionComponentBlock>
+      {(isAdmin || question.mockExam?.approved) && (
         <div className="question-detail-top-button-wrapper">
           <Link href={`/exam/solution/${question.mockExam.id}?rel=q`}>
             <Button>{`관련 시험지로 이동 >`}</Button>
@@ -113,12 +99,11 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
 
 export default QuestionComponent;
 
-const QuestionComponentBlock = styled.div<{ isHidden: boolean }>`
+const QuestionComponentBlock = styled.div`
   background-color: inherit;
   flex-direction: column;
   gap: 10px;
   padding: 10px;
-  display: ${(props) => (props.isHidden ? 'none' : 'flex')};
   .question-detail-question-card {
     background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }
