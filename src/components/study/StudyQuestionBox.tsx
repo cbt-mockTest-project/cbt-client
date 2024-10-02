@@ -147,6 +147,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
   }, [onChangeIsFeedbackModalOpen]);
 
   if (!question) return null;
+  if (!question.mockExam) return null;
 
   return (
     <StudyQuestionBoxBlock className={className}>
@@ -173,7 +174,7 @@ const StudyQuestionBox: React.FC<StudyQuestionBoxProps> = ({
               <LinkOutlined />
             </Link>
           )} */}
-          {question.mockExam.isPremium && (
+          {question.mockExam?.isPremium && (
             <Button
               type="text"
               onClick={() => {
