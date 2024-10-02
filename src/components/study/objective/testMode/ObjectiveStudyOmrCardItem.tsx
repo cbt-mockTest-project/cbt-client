@@ -67,7 +67,11 @@ const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
   const handleClickAnswer = (value: number) => {
     if (!currentQuestion) return;
     movePage();
-    saveQuestionStateAndObjectiveAnswer(currentQuestion, value);
+    if (currentQuestion.myObjectiveAnswer === value) {
+      saveQuestionStateAndObjectiveAnswer(currentQuestion, 0);
+    } else {
+      saveQuestionStateAndObjectiveAnswer(currentQuestion, value);
+    }
   };
   return (
     <ObjectiveStudyOmrCardItemBlock>

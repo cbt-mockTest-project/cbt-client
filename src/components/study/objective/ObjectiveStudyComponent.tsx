@@ -33,6 +33,10 @@ import ObjectiveStudyTestModeFooterMobile from './testMode/ObjectiveStudyTestMod
 import { responsive } from '@lib/utils/responsive';
 import useObjectiveStudyHandler from '../hooks/useObjectiveStudyHandler';
 import OmrModal from './OmrModal';
+import { CloseOutlined } from '@ant-design/icons';
+import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
+import { LocalStorage } from '@lib/utils/localStorage';
+import ObjectiveStudyHistoryConfirm from './ObjectiveStudyHistoryConfirm';
 
 const ObjectiveStudyComponentBlock = styled.div`
   height: 100vh;
@@ -52,8 +56,18 @@ const ObjectiveStudyComponentBlock = styled.div`
       display: flex;
       align-items: center;
       height: 50px;
+      background-color: ${({ theme }) => theme.color('colorSplit')};
+      margin-bottom: 10px;
       svg {
         font-size: 30px;
+      }
+
+      .objective-study-header-close-button {
+        font-size: 20px;
+        svg {
+          color: ${({ theme }) => theme.color('colorTextSecondary')};
+          font-size: 20px;
+        }
       }
 
       .objective-study-header-title-wrapper {
@@ -61,7 +75,7 @@ const ObjectiveStudyComponentBlock = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 20px;
+        padding-right: 20px;
 
         .objective-study-header-title {
           font-size: 18px;
@@ -89,6 +103,7 @@ interface ObjectiveStudyComponentProps {}
 
 const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
   const { submitAnswers } = useObjectiveStudyHandler();
+  const localStorage = new LocalStorage();
   const sessionStorage = new SessionStorage();
   const isMobile = useIsMobile();
 
@@ -105,9 +120,12 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
     (state) => state.mockExam.questions?.[0]?.user.id
   );
 
+  const [isHistoryConfirmVisible, setIsHistoryConfirmVisible] = useState(false);
+
   const { data: meQuery } = useMeQuery();
   const [isFetchedQuestions, setIsFetchedQuestions] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+
   const { fetchQuestions, fetchBookmarkedQuestions, resetQuestions } =
     useQuestions();
 
@@ -153,7 +171,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
         limit: Number(limit),
         folderId: Number(folderId),
       };
-      fetchBookmarkedQuestions(input).then(() => {
+      fetchBookmarkedQuestions(input).then((data) => {
         setIsFetchedQuestions(true);
       });
       return;
@@ -163,8 +181,13 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
         order: 'normal',
         ids: [Number(examId)],
       };
-      fetchQuestions(input).then(() => {
+      fetchQuestions(input).then((data) => {
         setIsFetchedQuestions(true);
+        setIsHistoryConfirmVisible(
+          data.some(
+            (question) => question.myQuestionState !== QuestionState.Core
+          )
+        );
       });
     }
     // 다중 문제 풀이
@@ -185,8 +208,13 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
       if (states && typeof states === 'string')
         input.states = states.split(',') as QuestionState[];
 
-      fetchQuestions(input).then(() => {
+      fetchQuestions(input).then((data) => {
         setIsFetchedQuestions(true);
+        setIsHistoryConfirmVisible(
+          data.some(
+            (question) => question.myQuestionState !== QuestionState.Core
+          )
+        );
       });
     }
   }, [router.isReady]);
@@ -280,6 +308,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
     firstQuestionExamId,
     categoryId,
   ]);
+
   if (isFetchedQuestions && isEmptyQuestions)
     return (
       <div className="flex flex-col items-center justify-center h-screen gap-4">
@@ -289,6 +318,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
         </Button>
       </div>
     );
+
   if (isVerifying)
     return (
       <Portal>
@@ -296,11 +326,32 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
       </Portal>
     );
 
+  if (isHistoryConfirmVisible)
+    return (
+      <ObjectiveStudyHistoryConfirm
+        setIsHistoryConfirmVisible={setIsHistoryConfirmVisible}
+      />
+    );
+
+  const prevVisitedCategoryOrHomePath =
+    localStorage.get(LAST_VISITED_CATEGORY) || '/';
+
+  const onClickCloseButton = () => {
+    router.push(prevVisitedCategoryOrHomePath);
+  };
+
   return (
     <ObjectiveStudyComponentBlock>
       <div className="objective-study-component-wrapper">
         {step !== 'end' && (
           <div className="objective-study-header-wrapper">
+            <Button
+              className="objective-study-header-close-button"
+              type="text"
+              onClick={onClickCloseButton}
+            >
+              <CloseOutlined />
+            </Button>
             <div className="objective-study-header-title-wrapper">
               <div className="objective-study-header-title">
                 {mode === ObjectiveExamMode.TEST && '시험모드'}

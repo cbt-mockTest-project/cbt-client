@@ -82,6 +82,7 @@ const useQuestions = () => {
             res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
           )
         );
+        return res.data.readQuestionsByExamIds.questions;
       }
     } catch (e) {
       handleError(e);
@@ -109,6 +110,7 @@ const useQuestions = () => {
             res.data.readBookmarkedQuestions.questions as MockExamQuestion[]
           )
         );
+        return res.data.readBookmarkedQuestions.questions;
       }
     } catch (e) {
       handleError(e);
