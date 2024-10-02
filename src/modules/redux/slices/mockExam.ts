@@ -34,7 +34,7 @@ const mockExamSlice = createSlice({
       );
     },
     shuffleQuestions: (state) => {
-      state.questions = state.questions.sort(() => Math.random() - 0.5);
+      state.questions = [...state.questions].sort(() => Math.random() - 0.5);
     },
     setQuestion(state, action: PayloadAction<MockExamQuestion>) {
       state.questions = state.questions.map((question) => {

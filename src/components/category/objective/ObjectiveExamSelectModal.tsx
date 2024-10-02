@@ -61,7 +61,7 @@ const ObjectiveExamSelectModal: React.FC<ObjectiveExamSelectModalProps> = (
             setMode(e.target.value);
           }}
         >
-          <Radio.Button value={ObjectiveExamMode.AUTO}>자동모드</Radio.Button>
+          <Radio.Button value={ObjectiveExamMode.AUTO}>오토모드</Radio.Button>
           <Radio.Button value={ObjectiveExamMode.TEST}>시험모드</Radio.Button>
         </Radio.Group>
         <Button

@@ -82,7 +82,7 @@ const useQuestions = () => {
             res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
           )
         );
-        return res.data.readQuestionsByExamIds.questions;
+        return res.data.readQuestionsByExamIds.questions as MockExamQuestion[];
       }
     } catch (e) {
       handleError(e);

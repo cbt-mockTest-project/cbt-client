@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import ClearIcon from '@mui/icons-material/Clear';
-import { QuestionState } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
@@ -41,7 +41,7 @@ interface ExamReviewStateCheckboxGroupProps {
   fetchQuestions: (params: {
     ids: number[];
     states: QuestionState[];
-  }) => Promise<void>;
+  }) => Promise<MockExamQuestion[]>;
   examIds: string;
 }
 

@@ -17,7 +17,7 @@ const ObjectiveStudyHeaderWrapper: React.FC<
   const examIds = router.query.examIds as string;
   const title = useMemo(() => {
     let title = '학습페이지';
-    if (mode === ObjectiveExamMode.AUTO) title = `${examTitle}-자동모드`;
+    if (mode === ObjectiveExamMode.AUTO) title = `${examTitle}-오토모드`;
     if (mode === ObjectiveExamMode.TEST) title = `${examTitle}-시험모드`;
     if (order === 'random') title = title + '-랜덤';
     if (order === 'normal') title = title + '-순서대로';

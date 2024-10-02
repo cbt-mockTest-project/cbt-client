@@ -37,6 +37,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { LAST_VISITED_CATEGORY } from '@lib/constants/localStorage';
 import { LocalStorage } from '@lib/utils/localStorage';
 import ObjectiveStudyHistoryConfirm from './ObjectiveStudyHistoryConfirm';
+import { Shuffle, ShuffleOutlined } from '@mui/icons-material';
 
 const ObjectiveStudyComponentBlock = styled.div`
   height: 100vh;
@@ -64,6 +65,8 @@ const ObjectiveStudyComponentBlock = styled.div`
 
       .objective-study-header-close-button {
         font-size: 20px;
+        padding: 0;
+        padding: 10px;
         svg {
           color: ${({ theme }) => theme.color('colorTextSecondary')};
           font-size: 20px;
@@ -74,8 +77,7 @@ const ObjectiveStudyComponentBlock = styled.div`
         width: 100%;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding-right: 20px;
+        padding-right: 12px;
 
         .objective-study-header-title {
           font-size: 18px;
@@ -91,8 +93,21 @@ const ObjectiveStudyComponentBlock = styled.div`
           display: none;
           @media (max-width: ${responsive.medium}) {
             display: flex;
-            gap: 10px;
+            gap: 4px;
           }
+        }
+      }
+
+      .objective-study-header-shuffle-button {
+        margin-left: auto;
+        margin-right: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: ${({ theme }) => theme.color('colorTextSecondary')};
+        svg {
+          color: ${({ theme }) => theme.color('colorTextSecondary')};
+          font-size: 20px;
         }
       }
     }
@@ -126,8 +141,12 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
   const [isFetchedQuestions, setIsFetchedQuestions] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const { fetchQuestions, fetchBookmarkedQuestions, resetQuestions } =
-    useQuestions();
+  const {
+    fetchQuestions,
+    fetchBookmarkedQuestions,
+    resetQuestions,
+    shuffleQuestions,
+  } = useQuestions();
 
   const router = useRouter();
   const isOmrModalOpen = router.query.dialog === 'omr';
@@ -355,8 +374,15 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
             <div className="objective-study-header-title-wrapper">
               <div className="objective-study-header-title">
                 {mode === ObjectiveExamMode.TEST && '시험모드'}
-                {mode === ObjectiveExamMode.AUTO && '자동모드'}
+                {mode === ObjectiveExamMode.AUTO && '오토모드'}
               </div>
+              <Button
+                className="objective-study-header-shuffle-button"
+                icon={<ShuffleOutlined />}
+                onClick={shuffleQuestions}
+              >
+                순서
+              </Button>
               <div className="objective-study-header-title-right-wrapper">
                 <Button onClick={openOmrModal}>OMR</Button>
                 <Button onClick={submitAnswers}>제출</Button>

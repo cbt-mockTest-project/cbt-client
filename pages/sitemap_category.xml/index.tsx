@@ -4,7 +4,6 @@ import { initializeApollo } from '@modules/apollo';
 import {
   GetCategoryNamesAndSlugsQuery,
   GetCategoryNamesAndSlugsQueryVariables,
-  ReadMockExamCategoryNamesQuery,
 } from '@lib/graphql/query/examQuery.generated';
 import { GET_CATEGORY_NAMES_AND_SLUGS } from '@lib/graphql/query/examQuery';
 import { ExamType } from 'types';
