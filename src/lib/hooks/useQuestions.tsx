@@ -78,9 +78,11 @@ const useQuestions = () => {
 
       if (res.data?.readQuestionsByExamIds.questions) {
         dispatch(
-          mockExamActions.setQuestions(
-            res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
-          )
+          mockExamActions.setQuestions({
+            questions: res.data.readQuestionsByExamIds
+              .questions as MockExamQuestion[],
+            order: questionsQueryInput.order,
+          })
         );
         return res.data.readQuestionsByExamIds.questions as MockExamQuestion[];
       }
@@ -106,9 +108,11 @@ const useQuestions = () => {
       });
       if (res.data?.readBookmarkedQuestions.questions) {
         dispatch(
-          mockExamActions.setQuestions(
-            res.data.readBookmarkedQuestions.questions as MockExamQuestion[]
-          )
+          mockExamActions.setQuestions({
+            questions: res.data.readBookmarkedQuestions
+              .questions as MockExamQuestion[],
+            order: input.order,
+          })
         );
         return res.data.readBookmarkedQuestions.questions;
       }
@@ -324,14 +328,14 @@ const useQuestions = () => {
   };
 
   const resetQuestions = () => {
-    dispatch(mockExamActions.setQuestions([]));
+    dispatch(mockExamActions.setQuestions({ questions: [] }));
   };
 
   const filterQuestions = (states: QuestionState[]) => {
     dispatch(mockExamActions.filterQuestions(states));
   };
   const setQuestions = (questions: MockExamQuestion[]) => {
-    dispatch(mockExamActions.setQuestions(questions));
+    dispatch(mockExamActions.setQuestions({ questions }));
   };
 
   const setServerSideQuestions = (questions: MockExamQuestion[]) => {

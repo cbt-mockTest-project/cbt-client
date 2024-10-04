@@ -29,7 +29,7 @@ const useQuestionsScore = () => {
           myQuestionState: QuestionState.Core,
           myObjectiveAnswer: 0,
         }));
-        dispatch(mockExamActions.setQuestions(newQuestions));
+        dispatch(mockExamActions.setQuestions({ questions: newQuestions }));
         return;
       }
     } catch (e) {
