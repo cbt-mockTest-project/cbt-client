@@ -7,11 +7,13 @@ export interface MockExamState {
   questionsForScore: MockExamQuestion[];
   isAnswerAllHidden: boolean;
   mockExam: MockExam | null;
+  selectedBookmarkFolderId: number;
 }
 
 const mockExamState: MockExamState = {
   questions: [],
   questionsForScore: [],
+  selectedBookmarkFolderId: 0,
   isAnswerAllHidden: false,
   serverSideQuestions: null,
   mockExam: null,
@@ -26,6 +28,9 @@ const mockExamSlice = createSlice({
         state.questionsForScore = action.payload;
       }
       state.questions = action.payload;
+    },
+    setSelectedBookmarkFolderId: (state, action: PayloadAction<number>) => {
+      state.selectedBookmarkFolderId = action.payload;
     },
     filterQuestions: (state, action: PayloadAction<QuestionState[]>) => {
       const states = action.payload;
