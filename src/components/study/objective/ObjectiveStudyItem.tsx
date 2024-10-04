@@ -57,8 +57,15 @@ const ObjectiveStudyItemBlock = styled.div<{
 
   .objective-study-test-mode-item-question-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 10px;
+
+    @media (max-width: ${responsive.medium}) {
+      align-items: flex-end;
+      flex-direction: column-reverse;
+      gap: 0;
+    }
 
     .objective-study-test-mode-item-question-header-left {
       .objective-study-test-mode-item-question-title-wrapper {

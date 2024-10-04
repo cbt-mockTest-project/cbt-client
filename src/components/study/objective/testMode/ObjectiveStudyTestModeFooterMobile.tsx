@@ -12,13 +12,14 @@ const ObjectiveStudyTestModeFooterMobileBlock = styled.div`
   justify-content: center;
   align-items: center;
   border-top: 1px solid ${({ theme }) => theme.color('colorBorder')};
-  background-color: ${({ theme }) => theme.color('colorFillAlter')};
+  background-color: white;
   gap: 20px;
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   padding: 0 20px;
+
   .objective-study-footer-pagination {
     align-items: center !important;
     justify-content: center !important;
