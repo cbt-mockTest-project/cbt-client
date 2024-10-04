@@ -62,7 +62,6 @@ const ObjectiveStudyItemBlock = styled.div<{
     gap: 10px;
 
     @media (max-width: ${responsive.medium}) {
-      align-items: flex-end;
       flex-direction: column-reverse;
       gap: 0;
     }
