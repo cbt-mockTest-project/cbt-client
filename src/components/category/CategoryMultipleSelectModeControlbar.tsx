@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ExamMultipleSelectModal from './ExamMultipleSelectModal';
 import useAuth from '@lib/hooks/useAuth';
-import { MockExamCategory } from 'types';
+import { ExamType, MockExamCategory } from 'types';
 import { responsive } from '@lib/utils/responsive';
+import ObjectiveExamMultipleSelectModal from './objective/ObjectiveExamMultipleSelectModal';
 
 const CategoryMultipleSelectModeControlbarBlock = styled.div`
   border-top: 1px solid ${({ theme }) => theme.color('colorSplit')};
@@ -47,11 +48,15 @@ const CategoryMultipleSelectModeControlbar: React.FC<
   setPage,
   pageSize,
 }) => {
+  const isObjective = category.examType === ExamType.Objective;
   const { handleCheckLogin, user } = useAuth();
   const isMyCategory = category.user.id === user?.id;
   const [examMutipleSelectModalOpen, setExamMultipleSelectModalOpen] =
     useState(false);
 
+  const RandomSelectModal = isObjective
+    ? ObjectiveExamMultipleSelectModal
+    : ExamMultipleSelectModal;
   return (
     <CategoryMultipleSelectModeControlbarBlock>
       <div className="category-multiple-select-mode-controlbar">
@@ -87,7 +92,7 @@ const CategoryMultipleSelectModeControlbar: React.FC<
         />
       )}
       {examMutipleSelectModalOpen && (
-        <ExamMultipleSelectModal
+        <RandomSelectModal
           categoryId={category.id}
           open={examMutipleSelectModalOpen}
           exams={category.mockExam}

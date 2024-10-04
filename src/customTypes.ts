@@ -71,7 +71,7 @@ export interface SetQuestionFeedbacksPayload {
 
 export interface ExamSettingType {
   categoryId: number;
-  mode?: ExamMode;
+  mode?: ExamMode | ObjectiveExamMode;
   isRandom?: boolean;
   questionStates?: QuestionState[];
   limit?: number | null;

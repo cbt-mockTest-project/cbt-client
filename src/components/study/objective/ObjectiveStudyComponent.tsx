@@ -374,7 +374,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
             <div className="objective-study-header-title-wrapper">
               <div className="objective-study-header-title">
                 {mode === ObjectiveExamMode.TEST && '시험모드'}
-                {mode === ObjectiveExamMode.AUTO && '오토모드'}
+                {mode === ObjectiveExamMode.AUTO && '연습모드'}
               </div>
               <Button
                 className="objective-study-header-shuffle-button"

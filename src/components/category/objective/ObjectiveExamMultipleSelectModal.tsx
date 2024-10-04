@@ -11,8 +11,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import ClearIcon from '@mui/icons-material/Clear';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import { ExamMode, ExamSettingType } from 'customTypes';
+import { ExamMode, ExamSettingType, ObjectiveExamMode } from 'customTypes';
 import { MockExam, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { useEditProfileMutation, useMeQuery } from '@lib/graphql/hook/useUser';
@@ -27,9 +26,8 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 import { SessionStorage } from '@lib/utils/sessionStorage';
 import { PUBLIC_CATEGORY_ID } from '@lib/constants/sessionStorage';
 import useExamSetting from '@lib/hooks/useExamSetting';
-import { isDesktop } from 'react-device-detect';
 
-const ExamMultipleSelectModalBlock = styled(Modal)`
+const ObjectiveExamMultipleSelectModalBlock = styled(Modal)`
   .exam-multiple-select-random-checkbox-wrapper,
   .exam-multiple-select-card-limit-wrapper,
   .exam-multiple-select-score-checkbox-wrapper,
@@ -59,14 +57,15 @@ const ExamMultipleSelectModalBlock = styled(Modal)`
   }
 `;
 
-interface ExamMultipleSelectModalProps extends Omit<ModalProps, 'children'> {
+interface ObjectiveExamMultipleSelectModalProps
+  extends Omit<ModalProps, 'children'> {
   categoryId: number;
   exams: MockExam[];
 }
 
-const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
-  props
-) => {
+const ObjectiveExamMultipleSelectModal: React.FC<
+  ObjectiveExamMultipleSelectModalProps
+> = (props) => {
   const selectRef = useRef<HTMLDivElement>(null);
   const sessionStorage = new SessionStorage();
   const examIds = useAppSelector(
@@ -78,13 +77,12 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     useState(false);
   const [editProfileMutation] = useEditProfileMutation();
   const { categoryId, exams, ...modalProps } = props;
-  const { handleAllExamsSelect, handleExamSelect, handleSetExamsSelect } =
-    useExamSetting({
-      categoryId,
-      exams,
-    });
+  const { handleAllExamsSelect, handleSetExamsSelect } = useExamSetting({
+    categoryId,
+    exams,
+  });
   const router = useRouter();
-  const [mode, setMode] = useState<ExamMode>(ExamMode.SOLUTION);
+  const [mode, setMode] = useState<ObjectiveExamMode>(ObjectiveExamMode.TEST);
   const [isRandom, setIsRandom] = useState<boolean>(true);
   const [questionStates, setQuestionStates] = useState<QuestionState[]>([]);
   const [limit, setLimit] = useState<number | null>(14);
@@ -143,10 +141,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
         examIds,
       };
       setExamSettingHistory(currentExamSettings);
-      let pathname = '/study';
-      if (mode === ExamMode.PRINT) {
-        pathname = '/exams/pdf';
-      }
+      let pathname = '/mcq/study';
       sessionStorage.set(PUBLIC_CATEGORY_ID, categoryId);
       router.push({
         pathname,
@@ -168,7 +163,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     const examSetting = getExamSettingHistory(categoryId);
     if (!examSetting) return;
     const { mode, isRandom, questionStates, limit } = examSetting;
-    if (mode) setMode(mode as ExamMode);
+    if (mode) setMode(mode as ObjectiveExamMode);
     if (isRandom) setIsRandom(isRandom);
     if (questionStates) setQuestionStates(questionStates);
     if (limit) setLimit(limit);
@@ -203,7 +198,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
   };
 
   return (
-    <ExamMultipleSelectModalBlock
+    <ObjectiveExamMultipleSelectModalBlock
       {...modalProps}
       title="랜덤 모의고사"
       footer={false}
@@ -234,11 +229,8 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
               setMode(e.target.value);
             }}
           >
-            <Radio.Button value={ExamMode.SOLUTION}>해설모드</Radio.Button>
-            <Radio.Button value={ExamMode.TYPYING}>풀이모드</Radio.Button>
-            {!checkIsEhsMasterExam(examIds) && (
-              <Radio.Button value={ExamMode.PRINT}>출력모드</Radio.Button>
-            )}
+            <Radio.Button value={ObjectiveExamMode.TEST}>시험모드</Radio.Button>
+            <Radio.Button value={ObjectiveExamMode.AUTO}>연습모드</Radio.Button>
           </Radio.Group>
         </div>
         <div className="exam-multiple-select-random-checkbox-wrapper">
@@ -268,12 +260,6 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
               <PanoramaFishEyeIcon className="exam-multiple-select-score-icon" />
             </Checkbox>
             <Checkbox
-              checked={questionStates.includes(QuestionState.Middle)}
-              onClick={() => handleQuestionStateChange(QuestionState.Middle)}
-            >
-              <ChangeHistoryIcon className="exam-multiple-select-score-icon" />
-            </Checkbox>
-            <Checkbox
               checked={questionStates.includes(QuestionState.Row)}
               onClick={() => handleQuestionStateChange(QuestionState.Row)}
             >
@@ -286,7 +272,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
               무
             </Checkbox>
           </div>
-          <p className="exam-multiple-select-description">{`"무"는 점수가 체크 되지 않은 문항입니다.`}</p>
+          <p className="exam-multiple-select-description">{`"무"는 풀지 않은 문항입니다.`}</p>
         </div>
         <div className="exam-multiple-select-card-limit-wrapper">
           <label className="exam-multiple-select-label">* 문항수</label>
@@ -314,8 +300,8 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
           onCancel={() => setIsRandomExamLimitModalOpen(false)}
         />
       )}
-    </ExamMultipleSelectModalBlock>
+    </ObjectiveExamMultipleSelectModalBlock>
   );
 };
 
-export default ExamMultipleSelectModal;
+export default ObjectiveExamMultipleSelectModal;

@@ -25,11 +25,13 @@ const QuestionStudyOmrCardHeaderBlock = styled.div`
   }
 `;
 
-interface QuestionStudyOmrCardHeaderProps {}
+interface QuestionStudyOmrCardHeaderProps {
+  hasToolbox?: boolean;
+}
 
-const QuestionStudyOmrCardHeader: React.FC<
-  QuestionStudyOmrCardHeaderProps
-> = () => {
+const QuestionStudyOmrCardHeader: React.FC<QuestionStudyOmrCardHeaderProps> = ({
+  hasToolbox = true,
+}) => {
   const { submitAnswers, resetAnswers } = useObjectiveStudyHandler();
 
   return (
@@ -37,8 +39,12 @@ const QuestionStudyOmrCardHeader: React.FC<
       <div className="objective-study-omr-card-header-title">
         <span>답안지</span>
         <div className="objective-study-omr-card-header-title-right-wrapper">
-          <Button onClick={resetAnswers}>초기화</Button>
-          <Button onClick={submitAnswers}>제출</Button>
+          {hasToolbox && (
+            <>
+              <Button onClick={resetAnswers}>초기화</Button>
+              <Button onClick={submitAnswers}>제출</Button>
+            </>
+          )}
         </div>
       </div>
     </QuestionStudyOmrCardHeaderBlock>

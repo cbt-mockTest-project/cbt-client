@@ -3,8 +3,10 @@ import { handleError } from '@lib/utils/utils';
 import { Button } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import ObjectiveStudyOmrCard from './testMode/ObjectiveStudyOmrCard';
 
 const ObjectiveStudyHistoryConfirmBlock = styled.div`
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,12 +55,13 @@ const ObjectiveStudyHistoryConfirm: React.FC<
 
   return (
     <ObjectiveStudyHistoryConfirmBlock>
+      <ObjectiveStudyOmrCard hasToolbox={false} />
       <div className="objective-study-history-confirm-text">
-        {`이전 풀이기록이 남아있습니다.\n 기록을 삭제하시겠습니까?`}
+        {`이전 풀이기록을 삭제후\n다시 풀이를 시작하시겠습니까?`}
       </div>
       <div className="objective-study-history-confirm-button-wrapper">
         <Button size="large" onClick={onClickCloseButton}>
-          유지하기
+          유지하고 시작
         </Button>
         <Button
           size="large"
@@ -66,7 +69,7 @@ const ObjectiveStudyHistoryConfirm: React.FC<
           onClick={onClickDeleteButton}
           loading={isLoading}
         >
-          삭제하기
+          삭제하고 시작
         </Button>
       </div>
     </ObjectiveStudyHistoryConfirmBlock>

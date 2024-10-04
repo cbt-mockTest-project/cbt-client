@@ -18,15 +18,19 @@ const ObjectiveStudyOmrCardBlock = styled.div`
   }
 `;
 
-interface ObjectiveStudyOmrCardProps {}
+interface ObjectiveStudyOmrCardProps {
+  hasToolbox?: boolean;
+}
 
-const ObjectiveStudyOmrCard: React.FC<ObjectiveStudyOmrCardProps> = () => {
+const ObjectiveStudyOmrCard: React.FC<ObjectiveStudyOmrCardProps> = ({
+  hasToolbox = true,
+}) => {
   const questionIds = useAppSelector((state) =>
     state.mockExam.questions.map((question) => question.id)
   );
   return (
     <ObjectiveStudyOmrCardBlock>
-      <QuestionStudyOmrCardHeader />
+      <QuestionStudyOmrCardHeader hasToolbox={hasToolbox} />
       {questionIds.map((questionId, index) => (
         <ObjectiveStudyOmrCardItem
           key={questionId}
