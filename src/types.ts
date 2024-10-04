@@ -3585,6 +3585,7 @@ export type QuestionNumber = {
 
 export enum QuestionState {
   Core = 'CORE',
+  Exclude = 'EXCLUDE',
   High = 'HIGH',
   Middle = 'MIDDLE',
   Row = 'ROW'

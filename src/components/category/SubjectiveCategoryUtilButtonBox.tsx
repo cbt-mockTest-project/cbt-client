@@ -79,14 +79,14 @@ const SubjectiveCategoryUtilButtonBox: React.FC<
     },
     {
       title: '△ 또는 ✕ 를 체크한 문제들을 모아 볼 수 있어요.',
-      label: '오답 모음',
+      label: '오답',
       url: '/exams/review',
       needLogin: true,
     },
 
     {
       title: '형광펜으로 체크한 문제들을 모아 볼 수 있어요.',
-      label: '형광펜 문제',
+      label: '형광펜',
       url: '/exams/highlight',
       needLogin: true,
     },
@@ -98,7 +98,7 @@ const SubjectiveCategoryUtilButtonBox: React.FC<
     },
     {
       title: '답안에 메모한 문제들을 모아 볼 수 있어요.',
-      label: '답안메모 모음',
+      label: '메모',
       url: '/exams/memo',
       needLogin: true,
     },

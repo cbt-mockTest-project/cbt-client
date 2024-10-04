@@ -64,6 +64,39 @@ const useQuestions = () => {
     handleUpdateFeedbackRecommendation,
   } = useQuestionFeedback();
 
+  const undoExcludeObjectiveQuestion = async (questionId: number) => {
+    try {
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId,
+            state: QuestionState.Core,
+          },
+        },
+      });
+      dispatch(mockExamActions.setUndoExcludeQuestion(questionId));
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const excludeObjectiveQuestion = async (questionId: number) => {
+    try {
+      // 객관식에서는 middle을 제외 상태로 사용한다.
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId,
+            state: QuestionState.Exclude,
+          },
+        },
+      });
+      dispatch(mockExamActions.setExcludeQuestion(questionId));
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const fetchQuestions = async (
     questionsQueryInput: ReadQuestionsByExamIdsInput,
     fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
@@ -291,6 +324,7 @@ const useQuestions = () => {
         dispatch(mockExamActions.setQuestion(question)),
     });
   };
+
   const updateFeedbackRecommendation = async ({
     type,
     myRecommendationStatus,
@@ -405,6 +439,8 @@ const useQuestions = () => {
     insertTextHighlight,
     removeTextHighlight,
     saveQuestionStateAndObjectiveAnswer,
+    excludeObjectiveQuestion,
+    undoExcludeObjectiveQuestion,
   };
 };
 

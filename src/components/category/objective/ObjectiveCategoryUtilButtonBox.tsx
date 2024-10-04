@@ -79,8 +79,8 @@ const ObjectiveCategoryUtilButtonBox: React.FC<
       url: '/search',
     },
     {
-      title: '△ 또는 ✕ 를 체크한 문제들을 모아 볼 수 있어요.',
-      label: '오답 모음',
+      title: '틀린 문제들을 모아 볼 수 있어요.',
+      label: '오답',
       url: '/exams/review',
       needLogin: true,
     },
@@ -92,8 +92,14 @@ const ObjectiveCategoryUtilButtonBox: React.FC<
     },
     {
       title: '답안에 메모한 문제들을 모아 볼 수 있어요.',
-      label: '답안메모 모음',
+      label: '메모',
       url: '/exams/memo',
+      needLogin: true,
+    },
+    {
+      title: '제외한 문제들을 모아 볼 수 있어요.',
+      label: '제외',
+      url: '/exams/exclude',
       needLogin: true,
     },
   ];

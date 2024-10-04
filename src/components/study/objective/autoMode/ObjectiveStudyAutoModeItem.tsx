@@ -7,11 +7,13 @@ import ObjectiveStudyItem from '../ObjectiveStudyItem';
 interface ObjectiveStudyAutoModeItemProps {
   questionId?: number;
   index: number;
+  readOnly?: boolean;
 }
 
 const ObjectiveStudyAutoModeItem: React.FC<ObjectiveStudyAutoModeItemProps> = ({
   questionId,
   index,
+  readOnly = false,
 }) => {
   const { saveBookmark, deleteBookmark } = useQuestions();
   const question = useAppSelector((state) =>
@@ -21,6 +23,7 @@ const ObjectiveStudyAutoModeItem: React.FC<ObjectiveStudyAutoModeItemProps> = ({
   if (!question) return null;
   return (
     <ObjectiveStudyItem
+      readOnly={readOnly}
       question={question}
       index={index}
       handleSaveBookmark={saveBookmark}

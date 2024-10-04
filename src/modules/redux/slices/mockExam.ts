@@ -107,6 +107,22 @@ const mockExamSlice = createSlice({
     setIsAnswerAllHidden: (state, action: PayloadAction<boolean>) => {
       state.isAnswerAllHidden = action.payload;
     },
+    setExcludeQuestion: (state, action: PayloadAction<number>) => {
+      state.questions = state.questions.map((question) => {
+        if (question.id === action.payload) {
+          return { ...question, myQuestionState: QuestionState.Exclude };
+        }
+        return question;
+      });
+    },
+    setUndoExcludeQuestion: (state, action: PayloadAction<number>) => {
+      state.questions = state.questions.map((question) => {
+        if (question.id === action.payload) {
+          return { ...question, myQuestionState: QuestionState.Core };
+        }
+        return question;
+      });
+    },
   },
 });
 

@@ -199,6 +199,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
       const input: ReadQuestionsByExamIdsInput = {
         order: 'normal',
         ids: [Number(examId)],
+        states: [QuestionState.Core, QuestionState.High, QuestionState.Row],
       };
       fetchQuestions(input).then((data) => {
         setIsFetchedQuestions(true);
@@ -218,6 +219,7 @@ const ObjectiveStudyComponent: React.FC<ObjectiveStudyComponentProps> = () => {
         ids: String(examIds)
           .split(',')
           .map((id) => Number(id)),
+        states: [QuestionState.Core, QuestionState.High, QuestionState.Row],
       };
       if (bookmarked && bookmarked === 'true') {
         input.bookmarked = true;

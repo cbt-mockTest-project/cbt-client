@@ -94,14 +94,13 @@ const ObjectiveExamMultipleSelectModal: React.FC<
     }
   };
   const hadleScoreAllChange = () => {
-    if (questionStates.length === 4) {
+    if (questionStates.length === 3) {
       setQuestionStates([]);
     } else {
       setQuestionStates([
         QuestionState.High,
         QuestionState.Row,
         QuestionState.Core,
-        QuestionState.Middle,
       ]);
     }
   };
@@ -248,7 +247,7 @@ const ObjectiveExamMultipleSelectModal: React.FC<
           <label className="exam-multiple-select-label">* 점수별 필터링</label>
           <div>
             <Checkbox
-              checked={questionStates.length === 4}
+              checked={questionStates.length === 3}
               onClick={hadleScoreAllChange}
             >
               전체

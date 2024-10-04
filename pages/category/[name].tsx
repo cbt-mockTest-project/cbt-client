@@ -135,6 +135,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
 
   resetServerContext();
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

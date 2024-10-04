@@ -65,11 +65,12 @@ interface ObjectiveStudyTestModeObjectiveItemProps {
   question?: MockExamQuestion;
   index: number;
   autoMode?: boolean;
+  readOnly?: boolean;
 }
 
 const ObjectiveStudyTestModeObjectiveItem: React.FC<
   ObjectiveStudyTestModeObjectiveItemProps
-> = ({ status, question, index, autoMode }) => {
+> = ({ status, question, index, autoMode, readOnly }) => {
   const { saveQuestionStateAndObjectiveAnswer } = useQuestions();
 
   const objective = question.objectiveData.content[index];
@@ -88,6 +89,7 @@ const ObjectiveStudyTestModeObjectiveItem: React.FC<
   };
 
   const onClickObjective = (index: number) => {
+    if (readOnly) return;
     if (status !== 'default' && !autoMode) return;
     if (question.myObjectiveAnswer === index + 1) {
       saveQuestionStateAndObjectiveAnswer(question, 0);

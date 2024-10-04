@@ -1,9 +1,8 @@
-import { useAppSelector } from '@modules/redux/store/configureStore';
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import parse from 'html-react-parser';
 import EditorStyle from '@styles/editorStyle';
-import { Button, Image } from 'antd';
+import { App, Button, Image } from 'antd';
 import useQuestions, {
   HandleDeleteBookmark,
   HandleSaveBookmark,
@@ -12,28 +11,54 @@ import { responsive } from '@lib/utils/responsive';
 import SolutionModeFeedbackList from '@components/solutionMode/SolutionModeFeedbackList';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import QuestionFeedbackModal from '@components/solutionMode/QuestionFeedbackModal';
-import { MockExamQuestion } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import Bookmark, {
   BookmarkChangeHandler,
 } from '@components/common/bookmark/Bookmark';
 import ObjectiveStudyTestModeObjectiveItem from './testMode/ObjectiveStudyTestModeObjectiveItem';
+import { DeleteOutlined, UndoOutlined } from '@ant-design/icons';
 
 const ObjectiveStudyItemBlock = styled.div<{
   status: ObjectiveStudyItemStatus;
+  isExcluded: boolean;
 }>`
   padding: 0px 20px;
   font-size: 16px;
+  position: relative;
+  height: 100%;
+  .objective-study-test-mode-item-x-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: black;
+    z-index: 10;
+  }
 
   .objective-study-test-mode-item-question-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .objective-study-test-mode-item-question-header-left {
       .objective-study-test-mode-item-question-title-wrapper {
         .objective-study-test-mode-item-question-title {
           font-size: 14px;
           color: ${({ theme }) => theme.color('colorTextTertiary')};
         }
+      }
+    }
+
+    .objective-study-test-mode-item-question-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .objective-study-test-mode-item-question-header-right-button {
+        z-index: 11;
+        color: ${({ theme }) => theme.color('colorTextTertiary')};
       }
     }
   }
@@ -151,6 +176,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
   handleSaveBookmark,
   handleDeleteBookmark,
 }) => {
+  const { modal } = App.useApp();
   const { data: meQuery } = useMeQuery();
   const myFeedbackList = question?.mockExamQuestionFeedback?.filter(
     (feedback) => feedback.user?.id === meQuery?.me?.user?.id
@@ -165,6 +191,8 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
     deleteFeedback,
     editFeedback,
     updateFeedbackRecommendation,
+    excludeObjectiveQuestion,
+    undoExcludeObjectiveQuestion,
   } = useQuestions();
 
   const status = () => {
@@ -191,9 +219,35 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
     }
   };
 
+  const handleExcludeQuestion = () => {
+    modal.confirm({
+      title: '문제를 제외 하시겠습니까?',
+      content: '제외된 문제는 앞으로 출제되지 않습니다.',
+      onOk: async () => {
+        await excludeObjectiveQuestion(question.id);
+      },
+      okText: '제외',
+      cancelText: '취소',
+    });
+  };
+
+  const handleUndoExcludeQuestion = () => {
+    modal.confirm({
+      title: '문제를 복구 하시겠습니까?',
+      content: '복구된 문제는 앞으로 출제됩니다.',
+      onOk: async () => {
+        await undoExcludeObjectiveQuestion(question.id);
+      },
+    });
+  };
+
   if (!question) return null;
+
+  const isExcluded = question.myQuestionState === QuestionState.Exclude;
+
   return (
-    <ObjectiveStudyItemBlock status={status()}>
+    <ObjectiveStudyItemBlock status={status()} isExcluded={isExcluded}>
+      {isExcluded && <div className="objective-study-test-mode-item-x-box" />}
       <div className="objective-study-test-mode-item-question-header">
         <div className="objective-study-test-mode-item-question-header-left">
           <div className="objective-study-test-mode-item-question-title-wrapper">
@@ -206,10 +260,21 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
             {parse(question.question)}
           </pre>
         </div>
-        <Bookmark
-          isActive={question.isBookmarked}
-          onChangeBookmark={onChangeBookmark}
-        />
+        <div className="objective-study-test-mode-item-question-header-right">
+          <Button
+            className="objective-study-test-mode-item-question-header-right-button"
+            shape="circle"
+            onClick={
+              isExcluded ? handleUndoExcludeQuestion : handleExcludeQuestion
+            }
+          >
+            {isExcluded ? <UndoOutlined /> : <DeleteOutlined />}
+          </Button>
+          <Bookmark
+            isActive={question.isBookmarked}
+            onChangeBookmark={onChangeBookmark}
+          />
+        </div>
       </div>
       {question.question_img && question.question_img.length > 0 && (
         <Image
@@ -226,6 +291,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
             index={index}
             question={question}
             autoMode={autoMode}
+            readOnly={readOnly}
           />
         ))}
       </div>
