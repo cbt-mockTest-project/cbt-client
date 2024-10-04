@@ -55,9 +55,13 @@ const ObjectiveStudyHistoryConfirm: React.FC<
 
   return (
     <ObjectiveStudyHistoryConfirmBlock>
-      <ObjectiveStudyOmrCard hasToolbox={false} />
+      <ObjectiveStudyOmrCard
+        hasToolbox={false}
+        title="이전 풀이기록"
+        readonly
+      />
       <div className="objective-study-history-confirm-text">
-        {`이전 풀이기록을 삭제후\n다시 풀이를 시작하시겠습니까?`}
+        {`이전 풀이기록을 초기화 후\n풀이를 시작하시겠습니까?`}
       </div>
       <div className="objective-study-history-confirm-button-wrapper">
         <Button size="large" onClick={onClickCloseButton}>
@@ -69,7 +73,7 @@ const ObjectiveStudyHistoryConfirm: React.FC<
           onClick={onClickDeleteButton}
           loading={isLoading}
         >
-          삭제하고 시작
+          초기화하고 시작
         </Button>
       </div>
     </ObjectiveStudyHistoryConfirmBlock>

@@ -20,22 +20,27 @@ const ObjectiveStudyOmrCardBlock = styled.div`
 
 interface ObjectiveStudyOmrCardProps {
   hasToolbox?: boolean;
+  title?: string;
+  readonly?: boolean;
 }
 
 const ObjectiveStudyOmrCard: React.FC<ObjectiveStudyOmrCardProps> = ({
   hasToolbox = true,
+  title,
+  readonly = false,
 }) => {
   const questionIds = useAppSelector((state) =>
     state.mockExam.questions.map((question) => question.id)
   );
   return (
     <ObjectiveStudyOmrCardBlock>
-      <QuestionStudyOmrCardHeader hasToolbox={hasToolbox} />
+      <QuestionStudyOmrCardHeader hasToolbox={hasToolbox} title={title} />
       {questionIds.map((questionId, index) => (
         <ObjectiveStudyOmrCardItem
           key={questionId}
           questionId={questionId}
           index={index + 1}
+          readonly={readonly}
         />
       ))}
     </ObjectiveStudyOmrCardBlock>

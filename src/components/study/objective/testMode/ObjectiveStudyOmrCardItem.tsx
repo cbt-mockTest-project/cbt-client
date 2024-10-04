@@ -33,11 +33,13 @@ const ObjectiveStudyOmrCardItemBlock = styled.div`
 interface ObjectiveStudyOmrCardItemProps {
   index: number;
   questionId: number;
+  readonly?: boolean;
 }
 
 const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
   index,
   questionId,
+  readonly = false,
 }) => {
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -46,6 +48,7 @@ const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
   );
   const { saveQuestionStateAndObjectiveAnswer } = useQuestions();
   const movePage = () => {
+    if (readonly) return;
     if (isMobile) {
       if (index === Number(router.query.p)) return;
       router.push({
@@ -65,6 +68,7 @@ const ObjectiveStudyOmrCardItem: React.FC<ObjectiveStudyOmrCardItemProps> = ({
     });
   };
   const handleClickAnswer = (value: number) => {
+    if (readonly) return;
     if (!currentQuestion) return;
     movePage();
     if (currentQuestion.myObjectiveAnswer === value) {

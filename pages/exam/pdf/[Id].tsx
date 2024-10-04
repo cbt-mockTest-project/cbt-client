@@ -72,7 +72,9 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     const questions = (res?.data.readQuestionsByExamIds.questions ||
       []) as MockExamQuestion[];
     store.dispatch(
-      mockExamActions.setQuestions(questions as MockExamQuestion[])
+      mockExamActions.setQuestions({
+        questions: questions,
+      })
     );
     const title = questions[0]?.mockExam?.title || '';
     const approved = questions[0]?.mockExam?.approved || false;

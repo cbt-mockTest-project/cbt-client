@@ -27,17 +27,19 @@ const QuestionStudyOmrCardHeaderBlock = styled.div`
 
 interface QuestionStudyOmrCardHeaderProps {
   hasToolbox?: boolean;
+  title?: string;
 }
 
 const QuestionStudyOmrCardHeader: React.FC<QuestionStudyOmrCardHeaderProps> = ({
   hasToolbox = true,
+  title = '답안지',
 }) => {
   const { submitAnswers, resetAnswers } = useObjectiveStudyHandler();
 
   return (
     <QuestionStudyOmrCardHeaderBlock>
       <div className="objective-study-omr-card-header-title">
-        <span>답안지</span>
+        <span>{title}</span>
         <div className="objective-study-omr-card-header-title-right-wrapper">
           {hasToolbox && (
             <>
