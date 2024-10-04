@@ -1,6 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { circleIcon } from '@lib/constants';
-import { message } from 'antd';
 import { checkboxOption } from 'customTypes';
 import { QuestionState, User } from '../../types';
 import { clearIcon, triangleIcon } from '../constants/index';
@@ -17,6 +16,8 @@ import {
   EHS_SAFE_INDUSTRIAL_EXAM_IDS,
 } from '@lib/constants/ehsMaster';
 import { ko } from 'date-fns/locale';
+import parse from 'html-react-parser';
+import { InlineMath } from 'react-katex';
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -265,5 +266,16 @@ export const checkIsEhsMasterExam = (examIds: number[]) => {
       ...EHS_HUMAN_EXAM_IDS,
       ...EHS_SAFETY_EXAM_IDS,
     ].includes(examId);
+  });
+};
+
+export const renderContentWithKatex = (content: string) => {
+  return parse(content, {
+    replace: (domNode: any) => {
+      if (domNode.type === 'tag' && domNode.name === 'tex') {
+        const texContent = domNode.children[0].data;
+        return <InlineMath math={texContent} />;
+      }
+    },
   });
 };

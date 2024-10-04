@@ -6,6 +6,7 @@ import {
   ReadAllMockExamQueryVariables,
 } from '@lib/graphql/query/examQuery.generated';
 import { READ_ALL_MOCK_EXAM } from '@lib/graphql/query/examQuery';
+import { ExamType } from 'types';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const res = await apolloClient.query<
@@ -19,6 +20,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         query: '',
         all: true,
         approved: true,
+        examType: ExamType.Subjective,
       },
     },
   });

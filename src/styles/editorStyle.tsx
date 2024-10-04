@@ -285,6 +285,9 @@ const EditorStyle = css`
     vertical-align: super;
     font-size: smaller;
   }
+  .katex {
+    font-size: 16px;
+  }
 `;
 
 export default EditorStyle;

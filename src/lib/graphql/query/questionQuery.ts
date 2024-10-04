@@ -166,6 +166,7 @@ export const READ_QUESTION = gql`
           id
           title
           approved
+          examType
         }
         user {
           id
@@ -213,6 +214,7 @@ export const READ_QUESTION = gql`
           created_at
         }
       }
+      categorySlug
       error
       ok
     }

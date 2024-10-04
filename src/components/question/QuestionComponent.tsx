@@ -29,15 +29,16 @@ const QuestionComponent: React.FC<QuestionComponentProps> = ({
     handleDeleteFeedback,
     handleUpdateFeedbackRecommendation,
   } = useQuestion(questionQueryInput);
-  const { data: question } = useQuery(
+  const { data: questionResponse } = useQuery(
     getQuestionQueryOption({
       queryKey: getQuestionKey(questionQueryInput.questionId) as string[],
       input: questionQueryInput,
     })
   );
+  const question = questionResponse?.mockExamQusetion;
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
   const isAdmin = [UserRole.Admin, UserRole.Partner].includes(
-    question.user.role
+    question?.user?.role
   );
 
   if (
@@ -104,6 +105,7 @@ const QuestionComponentBlock = styled.div`
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+  display: flex;
   .question-detail-question-card {
     background-color: ${({ theme }) => theme.color('colorFillAlter')};
   }

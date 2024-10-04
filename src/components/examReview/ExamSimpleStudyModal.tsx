@@ -67,6 +67,8 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
         const isEhsExam = checkIsEhsMasterExam(examIds);
         const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
         if (
+          // todo: 추후 유료화
+          !isObjectiveExam &&
           meQuery.me.user.randomExamLimit <= 0 &&
           !isEhsExam &&
           !isBasicPlanUser

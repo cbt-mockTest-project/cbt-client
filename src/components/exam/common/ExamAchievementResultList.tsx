@@ -54,6 +54,10 @@ const ExamAchievementResultList: React.FC<ExamAchievementResultProps> = ({
           questionList?.filter(
             (question) => question.state[0].state === QuestionState.Row
           ).length || 0,
+        [QuestionState.Exclude]:
+          questionList?.filter(
+            (question) => question.state[0].state === QuestionState.Exclude
+          ).length || 0,
       };
       setQuestionStateCount(questionStateCount);
     }

@@ -32,7 +32,7 @@ export type ReadMockExamQuestionQueryVariables = Types.Exact<{
 }>;
 
 
-export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', linkedQuestionIds?: Array<number> | null, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, myObjectiveAnswer?: number | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean } | null, user: { __typename?: 'User', id: number, role: Types.UserRole }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> } } };
+export type ReadMockExamQuestionQuery = { __typename?: 'Query', readMockExamQuestion: { __typename?: 'ReadMockExamQuestionOutput', isCoAuthor: boolean, categorySlug?: string | null, error?: string | null, ok: boolean, mockExamQusetion: { __typename?: 'MockExamQuestion', linkedQuestionIds?: Array<number> | null, id: number, isBookmarked?: boolean | null, myQuestionState?: Types.QuestionState | null, myObjectiveAnswer?: number | null, commentCount?: number | null, number: number, question?: string | null, solution?: string | null, mockExam?: { __typename?: 'MockExam', id: number, title: string, approved: boolean, examType: Types.ExamType } | null, user: { __typename?: 'User', id: number, role: Types.UserRole }, question_img?: Array<{ __typename?: 'MockExamImageType', url: string, uid: string }> | null, objectiveData?: { __typename?: 'ObjectiveData', answer: number, content: Array<{ __typename?: 'ObjectiveContent', content: string, url: string }> } | null, solution_img?: Array<{ __typename?: 'MockExamImageType', uid: string, url: string }> | null, mockExamQuestionFeedback: Array<{ __typename?: 'MockExamQuestionFeedback', id: number, type: Types.QuestionFeedbackType, content: string, created_at: any, recommendationCount: { __typename?: 'RecommendationCount', bad: number, good: number }, myRecommedationStatus: { __typename?: 'MyRecommedationStatus', isBad: boolean, isGood: boolean }, user?: { __typename?: 'User', id: number, nickname: string } | null }> } } };
 
 export type EditMockExamQuestionMutationVariables = Types.Exact<{
   input: Types.EditMockExamQuestionInput;
@@ -255,6 +255,7 @@ export const ReadMockExamQuestionDocument = gql`
         id
         title
         approved
+        examType
       }
       user {
         id
@@ -302,6 +303,7 @@ export const ReadMockExamQuestionDocument = gql`
         created_at
       }
     }
+    categorySlug
     error
     ok
   }

@@ -3,7 +3,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
 import { removeHtmlTag } from '@lib/utils/utils';
-import { ReadMockExamQuestionInput } from 'types';
+import { ExamType, ReadMockExamQuestionInput } from 'types';
 import { QUESTION_PAGE } from '@lib/constants/displayName';
 import GoogleAd from '@components/common/ad/GoogleAd';
 import {
@@ -11,11 +11,14 @@ import {
   DehydratedState,
   HydrationBoundary,
   QueryClient,
+  useQuery,
 } from '@tanstack/react-query';
 import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
+import ObjectiveStudyItem from '@components/study/objective/ObjectiveStudyItem';
+import ObjectiveQuestionComponent from '@components/question/ObjectiveQuestionComponent';
 
 interface QuestionProps {
   title: string;
@@ -31,6 +34,14 @@ const Question: NextPage<QuestionProps> = ({
   description,
   dehydratedState,
 }) => {
+  const { data: questionResponse } = useQuery(
+    getQuestionQueryOption({
+      queryKey: getQuestionKey(questionQueryInput.questionId) as string[],
+      input: questionQueryInput,
+    })
+  );
+  const question = questionResponse?.mockExamQusetion;
+  const isObjective = question?.mockExam.examType === ExamType.Objective;
   return (
     <HydrationBoundary state={dehydratedState}>
       <WithHead
@@ -39,7 +50,11 @@ const Question: NextPage<QuestionProps> = ({
         description={description}
       />
       <GoogleAd />
-      <QuestionComponent questionQueryInput={questionQueryInput} />
+      {isObjective ? (
+        <ObjectiveQuestionComponent questionResponse={questionResponse} />
+      ) : (
+        <QuestionComponent questionQueryInput={questionQueryInput} />
+      )}
     </HydrationBoundary>
   );
 };
@@ -72,12 +87,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   const queryClient = new QueryClient();
   const queryKey = getQuestionKey(questionQueryInput.questionId);
-  const question = await queryClient.fetchQuery(
+  const questionResponse = await queryClient.fetchQuery(
     getQuestionQueryOption({
       queryKey: queryKey as string[],
       input: questionQueryInput,
     })
   );
+  const question = questionResponse?.mockExamQusetion;
   const title = removeHtmlTag((question.question || '').slice(0, 50));
 
   const description = removeHtmlTag(

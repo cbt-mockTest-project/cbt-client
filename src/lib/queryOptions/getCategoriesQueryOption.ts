@@ -13,6 +13,7 @@ import {
 } from 'types';
 
 export const GetCategoriesQueryKey = {
+  objective: ['objectiveCategories'],
   premium: ['premiumCategories'],
   bookmarked: ['bookmarkedCategories'],
   popular: ['popularCategories'],

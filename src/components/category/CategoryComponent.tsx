@@ -213,6 +213,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
       {saveCategoryModalOpen && (
         <SaveCategoryModal
           open={saveCategoryModalOpen}
+          defaultStep={1}
           onCancel={() => setSaveCategoryModalOpen(false)}
           onClose={() => setSaveCategoryModalOpen(false)}
           storageType={storageType()}
@@ -222,6 +223,7 @@ const CategoryComponent: React.FC<CategoryComponentProps> = ({
             name: category.name,
             description: category.description,
             isPublic: category.isPublic,
+            examType: category.examType,
           }}
         />
       )}

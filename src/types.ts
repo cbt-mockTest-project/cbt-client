@@ -3678,6 +3678,7 @@ export type ReadAllMockExamsInput = {
   all?: Scalars['Boolean'];
   approved?: Scalars['Boolean'];
   category?: Scalars['String'];
+  examType?: ExamType;
   query?: Scalars['String'];
 };
 
@@ -3849,6 +3850,7 @@ export type ReadMockExamQuestionNumbersOutput = {
 
 export type ReadMockExamQuestionOutput = {
   __typename?: 'ReadMockExamQuestionOutput';
+  categorySlug?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   isCoAuthor: Scalars['Boolean'];
   mockExamQusetion: MockExamQuestion;

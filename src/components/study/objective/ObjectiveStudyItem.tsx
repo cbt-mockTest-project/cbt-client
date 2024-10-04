@@ -17,6 +17,24 @@ import Bookmark, {
 } from '@components/common/bookmark/Bookmark';
 import ObjectiveStudyTestModeObjectiveItem from './testMode/ObjectiveStudyTestModeObjectiveItem';
 import { DeleteOutlined, UndoOutlined } from '@ant-design/icons';
+import { InlineMath } from 'react-katex';
+import { renderContentWithKatex } from '@lib/utils/utils';
+
+function transformHtmlString(htmlStr: string) {
+  const regex = /<p>(.*?)<\/p>/g;
+  const texRegex = /<tex>(.*?)<\/tex>/g;
+
+  const transformedStr = htmlStr
+    .replace(regex, (match, p1) => {
+      const withoutTags = p1.replace(/<[^>]+>/g, '');
+      return withoutTags + '\n';
+    })
+    .replace(texRegex, (match, p1) => {
+      return `<InlineMath math="${p1}" />`;
+    });
+
+  return transformedStr;
+}
 
 const ObjectiveStudyItemBlock = styled.div<{
   status: ObjectiveStudyItemStatus;
@@ -164,6 +182,7 @@ interface ObjectiveStudyItemProps {
   hasAddMemoButton?: boolean;
   handleSaveBookmark?: HandleSaveBookmark;
   handleDeleteBookmark?: HandleDeleteBookmark;
+  hasInteraction?: boolean;
 }
 
 const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
@@ -175,6 +194,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
   hasAddMemoButton = true,
   handleSaveBookmark,
   handleDeleteBookmark,
+  hasInteraction = true,
 }) => {
   const { modal } = App.useApp();
   const { data: meQuery } = useMeQuery();
@@ -257,24 +277,26 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
             </span>
           </div>
           <pre className="objective-study-test-mode-item-question">
-            {parse(question.question)}
+            {renderContentWithKatex(question.question)}
           </pre>
         </div>
-        <div className="objective-study-test-mode-item-question-header-right">
-          <Button
-            className="objective-study-test-mode-item-question-header-right-button"
-            shape="circle"
-            onClick={
-              isExcluded ? handleUndoExcludeQuestion : handleExcludeQuestion
-            }
-          >
-            {isExcluded ? <UndoOutlined /> : <DeleteOutlined />}
-          </Button>
-          <Bookmark
-            isActive={question.isBookmarked}
-            onChangeBookmark={onChangeBookmark}
-          />
-        </div>
+        {hasInteraction && (
+          <div className="objective-study-test-mode-item-question-header-right">
+            <Button
+              className="objective-study-test-mode-item-question-header-right-button"
+              shape="circle"
+              onClick={
+                isExcluded ? handleUndoExcludeQuestion : handleExcludeQuestion
+              }
+            >
+              {isExcluded ? <UndoOutlined /> : <DeleteOutlined />}
+            </Button>
+            <Bookmark
+              isActive={question.isBookmarked}
+              onChangeBookmark={onChangeBookmark}
+            />
+          </div>
+        )}
       </div>
       {question.question_img && question.question_img.length > 0 && (
         <Image
@@ -297,12 +319,16 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
       </div>
       {(readOnly || !!(isSolutionVisible && question.myObjectiveAnswer)) && (
         <div className="objective-study-test-mode-item-answer-wrapper">
-          <div className="objective-study-test-mode-item-answer-title">
-            해설
-          </div>
-          <pre className="objective-study-test-mode-item-question">
-            {parse(question.solution)}
-          </pre>
+          {question.solution && (
+            <>
+              <div className="objective-study-test-mode-item-answer-title">
+                해설
+              </div>
+              <pre className="objective-study-test-mode-item-question">
+                {renderContentWithKatex(question.solution)}
+              </pre>
+            </>
+          )}
           {question.solution_img && question.solution_img.length > 0 && (
             <Image
               className="objective-study-test-mode-item-question-image"
@@ -311,7 +337,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
             />
           )}
           <div>
-            {!!myFeedbackList?.length && (
+            {!!myFeedbackList?.length && hasInteraction && (
               <div className="objective-study-test-mode-item-answer-feedback-list-wrapper">
                 <SolutionModeFeedbackList
                   question={question}
@@ -324,7 +350,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
                 />
               </div>
             )}
-            {!!feedbackListExceptMe?.length && (
+            {!!feedbackListExceptMe?.length && hasInteraction && (
               <SolutionModeFeedbackList
                 title="추가 해설"
                 question={question}
@@ -336,7 +362,7 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
               />
             )}
           </div>
-          {hasAddMemoButton && (
+          {hasAddMemoButton && hasInteraction && (
             <div
               className="objective-study-test-mode-item-answer-add-button-wrapper"
               onClick={() => setIsFeedbackModalOpen(true)}

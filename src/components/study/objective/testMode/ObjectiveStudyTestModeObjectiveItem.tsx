@@ -8,6 +8,7 @@ import styled, { css } from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
 import { MockExamQuestion } from 'types';
 import { ObjectiveStudyItemStatus } from '../ObjectiveStudyItem';
+import { renderContentWithKatex } from '@lib/utils/utils';
 
 const ObjectiveStudyTestModeObjectiveItemBlock = styled.div<{
   status: ObjectiveStudyItemStatus;
@@ -116,7 +117,7 @@ const ObjectiveStudyTestModeObjectiveItem: React.FC<
           {index + 1}
         </Button>
         <pre className="objective-study-test-mode-item-objective-content">
-          {parse(objective.content)}
+          {renderContentWithKatex(objective.content)}
         </pre>
       </div>
 

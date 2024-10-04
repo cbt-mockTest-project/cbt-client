@@ -60,6 +60,7 @@ const SaveCategoryModalBlock = styled(Modal)`
 
 interface SaveCategoryModalProps extends Omit<ModalProps, 'children'> {
   defaultValues?: CreateMockExamCategoryInput;
+  defaultStep?: number;
   storageType: StorageType;
   categoryId?: number;
   onClose: () => void;
@@ -73,8 +74,14 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
     props.storageType
   );
   const { editCategoryMutation } = useCategoryMutation(props.urlSlug);
-  const { onClose, categoryId, defaultValues, urlSlug, ...modalProps } = props;
-
+  const {
+    onClose,
+    categoryId,
+    defaultValues,
+    urlSlug,
+    defaultStep,
+    ...modalProps
+  } = props;
   const isEditMode = !!categoryId;
   const [isPublic, setIsPublic] = React.useState<boolean>(
     defaultValues ? defaultValues.isPublic : true
@@ -82,7 +89,7 @@ const SaveCategoryModal: React.FC<SaveCategoryModalProps> = (props) => {
   const [examType, setExamType] = React.useState<ExamType | null>(
     isEditMode ? defaultValues.examType : null
   );
-  const [step, setStep] = React.useState<number>(0);
+  const [step, setStep] = React.useState<number>(defaultStep || 0);
 
   const [name, setName] = React.useState<string>(
     defaultValues ? defaultValues.name : ''

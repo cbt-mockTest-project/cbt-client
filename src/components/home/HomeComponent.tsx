@@ -9,6 +9,7 @@ import HomeSearchBanner from './HomeSearchBanner';
 import { useRouter } from 'next/router';
 import HomeSearchResult from './HomeSearchResult';
 import PopularFolderList from './folderList/PopularFolderList';
+import BetaFolderList from './folderList/BetaFolderList';
 
 const BookmarkedFolderList = dynamic(
   () => import('./folderList/BookmarkedFolderList'),
@@ -48,6 +49,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       ) : (
         <div className="home-wrapper">
           <PopularFolderList />
+          <BetaFolderList />
           <EhsFolderList />
           <BookmarkedFolderList />
         </div>

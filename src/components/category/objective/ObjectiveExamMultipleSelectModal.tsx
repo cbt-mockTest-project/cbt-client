@@ -111,24 +111,25 @@ const ObjectiveExamMultipleSelectModal: React.FC<
       if (meQuery.me) {
         const isEhsExam = checkIsEhsMasterExam(examIds);
         const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
-        if (
-          Number(meQuery.me.user.randomExamLimit) <= 0 &&
-          !isEhsExam &&
-          !isBasicPlanUser
-        ) {
-          setIsRandomExamLimitModalOpen(true);
-          return;
-        }
-        editProfileMutation({
-          variables: {
-            input: {
-              randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
-            },
-          },
-        });
-        handleUpdateUserCache({
-          randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
-        });
+        // todo: 추후 유료화
+        // if (
+        //   Number(meQuery.me.user.randomExamLimit) <= 0 &&
+        //   !isEhsExam &&
+        //   !isBasicPlanUser
+        // ) {
+        //   setIsRandomExamLimitModalOpen(true);
+        //   return;
+        // }
+        // editProfileMutation({
+        //   variables: {
+        //     input: {
+        //       randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
+        //     },
+        //   },
+        // });
+        // handleUpdateUserCache({
+        //   randomExamLimit: Number(meQuery.me.user.randomExamLimit) - 1,
+        // });
       }
 
       const currentExamSettings: ExamSettingType = {

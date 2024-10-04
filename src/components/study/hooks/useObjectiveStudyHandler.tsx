@@ -32,9 +32,9 @@ const useObjectiveStudyHandler = () => {
         content: '풀지 않은 문제가 있습니다. 제출하시겠습니까?',
         cancelText: '계속 풀기',
         okText: '제출',
-        onOk: () => {
+        onOk: async () => {
           delete router.query.dialog;
-          router.push({
+          await router.push({
             query: { ...router.query, step: 'end' },
           });
         },
@@ -43,8 +43,8 @@ const useObjectiveStudyHandler = () => {
       modal.confirm({
         title: '알림',
         content: '제출하시겠습니까?',
-        onOk: () => {
-          router.push({
+        onOk: async () => {
+          await router.push({
             query: { ...router.query, step: 'end' },
           });
         },
