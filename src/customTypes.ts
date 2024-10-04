@@ -4,6 +4,7 @@ import {
   MockExamQuestionComment,
   MockExamQuestionFeedback,
   MockExamQuestionImageInputType,
+  ObjectiveData,
 } from './types';
 import { QuestionState } from 'types';
 import { ReadMockExamQuestionsByMockExamIdQuery } from './lib/graphql/query/questionQuery.generated';
@@ -52,6 +53,12 @@ export enum ExamMode {
   PRINT = 'print',
 }
 
+export enum ObjectiveExamMode {
+  AUTO = 'auto',
+  TEST = 'test',
+  RESULT = 'result',
+}
+
 export interface SetQuestionFeedbackPayload {
   questionId: number;
   feedback: MockExamQuestionFeedback;
@@ -64,7 +71,7 @@ export interface SetQuestionFeedbacksPayload {
 
 export interface ExamSettingType {
   categoryId: number;
-  mode?: ExamMode;
+  mode?: ExamMode | ObjectiveExamMode;
   isRandom?: boolean;
   questionStates?: QuestionState[];
   limit?: number | null;
@@ -140,6 +147,7 @@ export interface CreateQuestionForm {
   question_img?: MockExamQuestionImageInputType[];
   solution_img?: MockExamQuestionImageInputType[];
   linkedQuestionIds?: number[];
+  objectiveData?: ObjectiveData;
   orderId: string;
 }
 

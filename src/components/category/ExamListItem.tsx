@@ -7,13 +7,14 @@ import { App, Dropdown, MenuProps, Tag } from 'antd';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { MockExam, MockExamCategory } from 'types';
+import { ExamType, MockExam, MockExamCategory } from 'types';
 import ExamSelecModal from './ExamSelecModal';
 import { useRouter } from 'next/router';
 import useAuth from '@lib/hooks/useAuth';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import useCatgegoryExams from './hooks/useCategoryExamList';
+import ObjectiveExamSelectModal from './objective/ObjectiveExamSelectModal';
 
 const ExamListItemBlock = styled.div<{ hasRecentlyMark: boolean }>`
   width: 100%;
@@ -158,9 +159,12 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
 }) => {
   const { modal } = App.useApp();
   const router = useRouter();
+  const isObjective = exam.examType === ExamType.Objective;
   const { handleRemoveExamFromCategory } = useCatgegoryExams();
   const { handleToggleExamBookmark } = useExamCategory();
   const [isExamSelectModalOpen, setIsExamSelectModalOpen] = useState(false);
+  const [isObjectiveExamSelectModalOpen, setIsObjectiveExamSelectModalOpen] =
+    useState(false);
   const { user, handleCheckLogin } = useAuth();
   const isMyExam = useMemo(
     () => user && exam.user.id === user.id,
@@ -180,7 +184,11 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
     });
   };
   const handleExamClick = () => {
-    setIsExamSelectModalOpen(true);
+    if (isObjective) {
+      setIsObjectiveExamSelectModalOpen(true);
+    } else {
+      setIsExamSelectModalOpen(true);
+    }
   };
 
   const examSettingDropdownItems: MenuProps['items'] = [
@@ -204,7 +212,7 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           onClick={(e) => {
             e.stopPropagation();
             router.push({
-              pathname: '/exam/create',
+              pathname: isObjective ? '/mcq/exam/create' : '/exam/create',
               query: {
                 examId: exam.id,
                 categoryId: category.id,
@@ -288,7 +296,9 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
         {hasRecentlyMark && (
           <div className="absolute bottom-[-8px] left-[50%] -translate-x-[50%]">
             <Tag color="blue">{`최근 학습${
-              recentlyStudyQuestionNumber !== 0
+              exam.examType === ExamType.Objective
+                ? ''
+                : recentlyStudyQuestionNumber !== 0
                 ? `- ${recentlyStudyQuestionNumber}번 문제`
                 : '- 해설모드'
             }`}</Tag>
@@ -306,6 +316,16 @@ const ExamListItem: React.FC<ExamListItemProps> = ({
           examTitle={exam.title}
           open={isExamSelectModalOpen}
           onCancel={() => setIsExamSelectModalOpen(false)}
+          categoryId={category.id}
+          isPublicCategory={category.isPublic}
+        />
+      )}
+      {isObjectiveExamSelectModalOpen && (
+        <ObjectiveExamSelectModal
+          examId={exam.id}
+          examTitle={exam.title}
+          open={isObjectiveExamSelectModalOpen}
+          onCancel={() => setIsObjectiveExamSelectModalOpen(false)}
           categoryId={category.id}
           isPublicCategory={category.isPublic}
         />

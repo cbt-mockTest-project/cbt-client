@@ -21,6 +21,7 @@ export const APPROVE_CATEGORY_INVITATION_LINK = gql`
       ok
       categoryName
       urlSlug
+      examType
     }
   }
 `;

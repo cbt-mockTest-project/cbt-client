@@ -10,10 +10,16 @@ import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDefer
 import { isUndefined } from 'lodash';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import ExamMemoHeader from './ExamMemoHeader';
+import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
 
 const ExamMemoComponentBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  .objective-study-mode-item-wrapper {
+    padding: 16px 10px;
+    border-radius: 16px;
+    border: 1px solid ${({ theme }) => theme.color('colorBorder')};
+  }
   .exam-memo-header {
     padding: 10px 10px 0px 10px;
     position: sticky;
@@ -52,16 +58,31 @@ const ExamMemoComponent: React.FC<ExamMemoComponentProps> = () => {
     shallowEqual
   );
   const questionIds = useAppSelector(
-    (state) => state.mockExam.questions.map((question) => question.id),
-    shallowEqual
+    (state) =>
+      state.mockExam.questions.map((question) => ({
+        id: question.id,
+        isObjective: question.objectiveData ? true : false,
+      })),
+    (left, right) =>
+      left.length === right.length &&
+      left.every((item, index) => item.id === right[index].id)
   );
   const AsyncItemList = useDeferredRederingForPaginationItemList(
     questionIds,
     page,
     LIMIT,
-    (questionId, index) => (
-      <SolutionModeCardItem key={questionId} index={index} />
-    )
+    (questionId, index) =>
+      questionId.isObjective ? (
+        <div className="objective-study-mode-item-wrapper">
+          <ObjectiveStudyAutoModeItem
+            key={questionId.id}
+            index={index}
+            questionId={questionId.id}
+          />
+        </div>
+      ) : (
+        <SolutionModeCardItem key={questionId.id} index={index} />
+      )
   );
 
   useEffect(() => {

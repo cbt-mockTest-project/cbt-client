@@ -15,7 +15,6 @@ const HomeFolderListBlock = styled.div`
   flex-direction: column;
   gap: 5px;
   position: relative;
-  height: 175px;
   justify-content: flex-end;
   .home-folder-list-swiper {
     width: 100%;
@@ -63,7 +62,6 @@ const HomeFolderListBlock = styled.div`
   }
   .home-folder-list {
     display: flex;
-    height: 120px;
     overflow-x: scroll;
     opacity: 0.99;
     transform: translate3d(0, 0, 0);

@@ -51,7 +51,7 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
   const { questionStates, highlighted, feedbacked, ...modalProps } = props;
   const router = useRouter();
   const { data: meQuery } = useMeQuery();
-
+  const isObjectiveExam = router.query.type === 'objective';
   const categoryId = Number(router.query.categoryId);
   const examIds = String(router.query.examIds).split(',').map(Number);
 
@@ -67,6 +67,8 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
         const isEhsExam = checkIsEhsMasterExam(examIds);
         const isBasicPlanUser = checkRole({ roleIds: [1, 2, 3], meQuery });
         if (
+          // todo: 추후 유료화
+          !isObjectiveExam &&
           meQuery.me.user.randomExamLimit <= 0 &&
           !isEhsExam &&
           !isBasicPlanUser
@@ -77,7 +79,7 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
       }
       sessionStorage.set(PUBLIC_CATEGORY_ID, categoryId);
       router.push({
-        pathname: '/study',
+        pathname: isObjectiveExam ? '/mcq/study' : '/study',
         query: {
           ...(categoryId ? { categoryId } : {}),
           ...(questionStates?.length
@@ -88,7 +90,7 @@ const ExamSimpleStudyModal: React.FC<ExamSimpleStudyModalProps> = (props) => {
           order: isRandom ? 'random' : 'normal',
           limit: limit ? limit.toString() : '',
           examIds: examIds.join(','),
-          mode: ExamMode.TYPYING,
+          mode: isObjectiveExam ? 'auto' : ExamMode.TYPYING,
         },
       });
     } catch (e) {

@@ -40,12 +40,20 @@ export const READ_BOOKMARKED_QUESTIONS = gql`
         isBookmarked
 
         myQuestionState
+        myObjectiveAnswer
         commentCount
         number
         question
         question_img {
           url
           uid
+        }
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
         }
         solution
         solution_img {
@@ -158,6 +166,7 @@ export const READ_QUESTION = gql`
           id
           title
           approved
+          examType
         }
         user {
           id
@@ -166,12 +175,20 @@ export const READ_QUESTION = gql`
         id
         isBookmarked
         myQuestionState
+        myObjectiveAnswer
         commentCount
         number
         question
         question_img {
           url
           uid
+        }
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
         }
         solution
         solution_img {
@@ -197,6 +214,7 @@ export const READ_QUESTION = gql`
           created_at
         }
       }
+      categorySlug
       error
       ok
     }
@@ -291,6 +309,13 @@ export const SEARCH_QEUSTIONS = gql`
         solution
         number
         isBookmarked
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
+        }
         myBookmark {
           id
           bookmarkFolder {
@@ -338,7 +363,7 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         }
         id
         isBookmarked
-
+        myObjectiveAnswer
         myQuestionState
         commentCount
         number
@@ -351,6 +376,13 @@ export const READ_QUESTIONS_BY_EXAM_IDS = gql`
         solution_img {
           uid
           url
+        }
+        objectiveData {
+          answer
+          content {
+            content
+            url
+          }
         }
         myBookmark {
           id

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import ClearIcon from '@mui/icons-material/Clear';
-import { QuestionState } from 'types';
+import { MockExamQuestion, QuestionState } from 'types';
 import { useRouter } from 'next/router';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import { isUndefined } from 'lodash';
@@ -41,7 +41,7 @@ interface ExamReviewStateCheckboxGroupProps {
   fetchQuestions: (params: {
     ids: number[];
     states: QuestionState[];
-  }) => Promise<void>;
+  }) => Promise<MockExamQuestion[]>;
   examIds: string;
 }
 
@@ -52,6 +52,8 @@ const ExamReviewStateCheckboxGroup: React.FC<
   const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
   const { data: meQuery } = useMeQuery();
   const router = useRouter();
+  const isObjectiveExam = router.query.type === 'objective';
+
   const [checkedStates, setCheckedStates] = useState<QuestionState[]>([
     QuestionState.Row,
   ]);
@@ -98,12 +100,14 @@ const ExamReviewStateCheckboxGroup: React.FC<
       <Button size="large" type="text" onClick={() => router.back()}>
         <LeftOutlined />
       </Button>
-      <Checkbox.Group
-        className="exam-review-state-checkbox-group"
-        options={ScoreCheckboxOptions}
-        value={checkedStates}
-        onChange={handleStateCheck}
-      />
+      {!isObjectiveExam && (
+        <Checkbox.Group
+          className="exam-review-state-checkbox-group"
+          options={ScoreCheckboxOptions}
+          value={checkedStates}
+          onChange={handleStateCheck}
+        />
+      )}
       <Button onClick={() => setIsStudyModalOpen(true)}>풀이모드 전환</Button>
 
       {isStudyModalOpen && (

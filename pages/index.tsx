@@ -13,7 +13,7 @@ import {
 } from '@tanstack/react-query';
 import { NextPage } from 'next';
 import React from 'react';
-import { ExamSource } from 'types';
+import { ExamSource, ExamType } from 'types';
 
 interface Props {
   dehydratedState: DehydratedState;
@@ -44,6 +44,16 @@ export const getStaticProps = async () => {
       queryKey: GetCategoriesQueryKey.popular,
       input: {
         examSources: [ExamSource.MoudCbt, ExamSource.User],
+        limit: 30,
+      },
+    })
+  );
+  await queryClient.prefetchQuery(
+    getCategoriesQueryOption({
+      queryKey: GetCategoriesQueryKey.objective,
+      input: {
+        examSources: [ExamSource.MoudCbt, ExamSource.User],
+        examType: ExamType.Objective,
         limit: 30,
       },
     })

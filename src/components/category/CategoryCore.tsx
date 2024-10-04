@@ -14,12 +14,14 @@ import { ExamSettingType } from 'customTypes';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import {
+  ExamType,
   MockExam,
   MockExamCategory,
   ReadMockExamCategoryByCategoryIdInput,
 } from 'types';
 import { queryClient } from '../../../pages/_app';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
+import { message } from 'antd';
 
 interface CategoryCoreProps {
   categoryQueryInput: ReadMockExamCategoryByCategoryIdInput;
@@ -68,6 +70,26 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
   }, [meQuery?.me.user?.id, router.query.name]);
 
   useEffect(() => {
+    if (!category) return;
+
+    if (
+      category.examType === ExamType.Objective &&
+      !router.asPath.includes('mcq')
+    ) {
+      message.error('잘못된 접근입니다.');
+      router.back();
+      return;
+    }
+
+    if (
+      category.examType === ExamType.Subjective &&
+      router.asPath.includes('mcq')
+    ) {
+      message.error('잘못된 접근입니다.');
+      router.back();
+      return;
+    }
+
     const setCategoryExams = (
       exams: MockExam[],
       shouldUpdateOriginal = true

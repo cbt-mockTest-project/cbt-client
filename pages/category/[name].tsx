@@ -1,8 +1,11 @@
 import CategoryComponent from '@components/category/CategoryComponent';
 import CategoryCore from '@components/category/CategoryCore';
 import WithHead from '@components/common/head/WithHead';
-import { READ_EXAM_CATEGORY_NAMES } from '@lib/graphql/query/examQuery';
-import { ReadMockExamCategoryNamesQuery } from '@lib/graphql/query/examQuery.generated';
+import { GET_CATEGORY_NAMES_AND_SLUGS } from '@lib/graphql/query/examQuery';
+import {
+  GetCategoryNamesAndSlugsQuery,
+  GetCategoryNamesAndSlugsQueryVariables,
+} from '@lib/graphql/query/examQuery.generated';
 import {
   getCategoryKey,
   getCategoryQueryOption,
@@ -19,8 +22,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
+import {
+  ExamType,
+  MockExamCategory,
+  ReadMockExamCategoryByCategoryIdInput,
+} from 'types';
 import styled from 'styled-components';
-import { MockExamCategory, ReadMockExamCategoryByCategoryIdInput } from 'types';
 
 const CategoryPageBlock = styled.div`
   width: 100%;
@@ -83,11 +90,19 @@ export default CategoryPage;
 export const getStaticPaths: GetStaticPaths = async () => {
   let paths: { params: { name: string } }[] = [];
   try {
-    const res = await apolloClient.query<ReadMockExamCategoryNamesQuery>({
-      query: READ_EXAM_CATEGORY_NAMES,
+    const res = await apolloClient.query<
+      GetCategoryNamesAndSlugsQuery,
+      GetCategoryNamesAndSlugsQueryVariables
+    >({
+      query: GET_CATEGORY_NAMES_AND_SLUGS,
+      variables: {
+        input: {
+          examType: ExamType.Subjective,
+        },
+      },
     });
-    if (res.data.readMockExamCategoryNames.urlSlugs) {
-      paths = res.data.readMockExamCategoryNames.urlSlugs.map((el) => ({
+    if (res.data.getCategoryNamesAndSlugs.urlSlugs) {
+      paths = res.data.getCategoryNamesAndSlugs.urlSlugs.map((el) => ({
         params: { name: String(el) },
       }));
     }
@@ -120,6 +135,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
 
   resetServerContext();
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  }
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

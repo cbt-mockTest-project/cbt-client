@@ -55,6 +55,7 @@ interface ExamCreateComponentProps {}
 const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
   const { message } = App.useApp();
   const router = useRouter();
+  const isObjective = router.pathname.includes('mcq');
   const { handleSaveExam, handleDeleteExam, saveExamLoading } =
     useSaveExamHandler();
   const [isExamApproved, setIsExamApproved] = useState(false);
@@ -69,6 +70,29 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     uuid: uuidv4(),
     questions: [
       {
+        objectiveData: isObjective
+          ? {
+              answer: 1,
+              content: [
+                {
+                  content: '',
+                  url: '',
+                },
+                {
+                  content: '',
+                  url: '',
+                },
+                {
+                  content: '',
+                  url: '',
+                },
+                {
+                  content: '',
+                  url: '',
+                },
+              ],
+            }
+          : null,
         orderId: uuidv4(),
         question_img: [],
         solution_img: [],
@@ -111,15 +135,25 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
               ? [pick(v.solution_img[0], ['url', 'name', 'uid'])]
               : [],
           };
-          return pick(newQuestion, [
-            'orderId',
-            'question',
-            'question_img',
-            'solution',
-            'solution_img',
-            'linkedQuestionIds',
-            'id',
-          ]);
+          return {
+            ...pick(newQuestion, [
+              'orderId',
+              'question',
+              'question_img',
+              'solution',
+              'solution_img',
+              'linkedQuestionIds',
+              'id',
+            ]),
+            objectiveData: isObjective
+              ? {
+                  answer: newQuestion.objectiveData.answer,
+                  content: newQuestion.objectiveData.content.map((v) =>
+                    pick(v, ['content', 'url'])
+                  ),
+                }
+              : null,
+          };
         }) as CreateQuestionForm[];
         if (
           isEqual(getValues('questions'), newQuestions) &&
@@ -139,11 +173,6 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
     }
   }, [router.query.examId]);
 
-  // useEffect(() => {
-  //   watch(() => {
-  //     debouncedSaveExam(getValues());
-  //   });
-  // }, []);
   return (
     <FormProvider {...methods}>
       <ExamCreateComponentBlock>

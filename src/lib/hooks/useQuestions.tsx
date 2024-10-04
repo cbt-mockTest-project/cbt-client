@@ -64,6 +64,39 @@ const useQuestions = () => {
     handleUpdateFeedbackRecommendation,
   } = useQuestionFeedback();
 
+  const undoExcludeObjectiveQuestion = async (questionId: number) => {
+    try {
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId,
+            state: QuestionState.Core,
+          },
+        },
+      });
+      dispatch(mockExamActions.setUndoExcludeQuestion(questionId));
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const excludeObjectiveQuestion = async (questionId: number) => {
+    try {
+      // 객관식에서는 middle을 제외 상태로 사용한다.
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId,
+            state: QuestionState.Exclude,
+          },
+        },
+      });
+      dispatch(mockExamActions.setExcludeQuestion(questionId));
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
   const fetchQuestions = async (
     questionsQueryInput: ReadQuestionsByExamIdsInput,
     fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
@@ -78,10 +111,13 @@ const useQuestions = () => {
 
       if (res.data?.readQuestionsByExamIds.questions) {
         dispatch(
-          mockExamActions.setQuestions(
-            res.data.readQuestionsByExamIds.questions as MockExamQuestion[]
-          )
+          mockExamActions.setQuestions({
+            questions: res.data.readQuestionsByExamIds
+              .questions as MockExamQuestion[],
+            order: questionsQueryInput.order,
+          })
         );
+        return res.data.readQuestionsByExamIds.questions as MockExamQuestion[];
       }
     } catch (e) {
       handleError(e);
@@ -105,10 +141,13 @@ const useQuestions = () => {
       });
       if (res.data?.readBookmarkedQuestions.questions) {
         dispatch(
-          mockExamActions.setQuestions(
-            res.data.readBookmarkedQuestions.questions as MockExamQuestion[]
-          )
+          mockExamActions.setQuestions({
+            questions: res.data.readBookmarkedQuestions
+              .questions as MockExamQuestion[],
+            order: input.order,
+          })
         );
+        return res.data.readBookmarkedQuestions.questions;
       }
     } catch (e) {
       handleError(e);
@@ -204,8 +243,7 @@ const useQuestions = () => {
 
   const saveQuestionState = async (
     question: MockExamQuestion,
-    state: QuestionState,
-    updateCacheDelay?: number
+    state: QuestionState
   ) => {
     try {
       if (!meQuery?.me.user) {
@@ -217,17 +255,50 @@ const useQuestions = () => {
         myQuestionState: state,
       };
 
-      if (updateCacheDelay) {
-        setTimeout(() => {
-          dispatch(mockExamActions.setQuestion(newQuestion));
-        }, updateCacheDelay);
-      } else {
-        dispatch(mockExamActions.setQuestion(newQuestion));
-      }
+      dispatch(mockExamActions.setQuestion(newQuestion));
       await changeQuestionState({
         variables: {
           input: {
             questionId: question.id,
+            state,
+          },
+        },
+      });
+    } catch {
+      dispatch(mockExamActions.setQuestion(question));
+      message.error('문제 상태 저장에 실패했습니다.');
+    }
+  };
+
+  const saveQuestionStateAndObjectiveAnswer = async (
+    question: MockExamQuestion,
+    selectedAnswer: number
+  ) => {
+    try {
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
+      const currentMyObjectiveAnswer = question.myObjectiveAnswer;
+      if (currentMyObjectiveAnswer === selectedAnswer) {
+        return;
+      }
+      const currentQuestionAnswer = question.objectiveData.answer;
+      const state =
+        currentQuestionAnswer === selectedAnswer
+          ? QuestionState.High
+          : QuestionState.Row;
+      const newQuestion: MockExamQuestion = {
+        ...question,
+        myQuestionState: state,
+        myObjectiveAnswer: selectedAnswer,
+      };
+      dispatch(mockExamActions.setQuestion(newQuestion));
+      await changeQuestionState({
+        variables: {
+          input: {
+            questionId: question.id,
+            answer: selectedAnswer,
             state,
           },
         },
@@ -253,6 +324,7 @@ const useQuestions = () => {
         dispatch(mockExamActions.setQuestion(question)),
     });
   };
+
   const updateFeedbackRecommendation = async ({
     type,
     myRecommendationStatus,
@@ -290,14 +362,14 @@ const useQuestions = () => {
   };
 
   const resetQuestions = () => {
-    dispatch(mockExamActions.setQuestions([]));
+    dispatch(mockExamActions.setQuestions({ questions: [] }));
   };
 
   const filterQuestions = (states: QuestionState[]) => {
     dispatch(mockExamActions.filterQuestions(states));
   };
   const setQuestions = (questions: MockExamQuestion[]) => {
-    dispatch(mockExamActions.setQuestions(questions));
+    dispatch(mockExamActions.setQuestions({ questions }));
   };
 
   const setServerSideQuestions = (questions: MockExamQuestion[]) => {
@@ -366,6 +438,9 @@ const useQuestions = () => {
     fetchBookmarkedQuestions,
     insertTextHighlight,
     removeTextHighlight,
+    saveQuestionStateAndObjectiveAnswer,
+    excludeObjectiveQuestion,
+    undoExcludeObjectiveQuestion,
   };
 };
 

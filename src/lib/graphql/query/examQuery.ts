@@ -91,6 +91,7 @@ export const CREATE_MOCK_EXAM_CATEGORY = gql`
         description
         isPublic
         urlSlug
+        examType
       }
       error
       ok
@@ -258,13 +259,13 @@ export const READ_EXAM_CATEGORY_IDS = gql`
   }
 `;
 
-export const READ_EXAM_CATEGORY_NAMES = gql`
-  query ReadMockExamCategoryNames {
-    readMockExamCategoryNames {
+export const GET_CATEGORY_NAMES_AND_SLUGS = gql`
+  query GetCategoryNamesAndSlugs($input: GetCategoryNamesAndSlugsInput!) {
+    getCategoryNamesAndSlugs(input: $input) {
       urlSlugs
-      error
-      names
       ok
+      names
+      error
     }
   }
 `;
@@ -275,6 +276,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
   ) {
     readMockExamCategoryByCategoryId(input: $input) {
       category {
+        examType
         hasAccess
         isBookmarked
         id
@@ -288,6 +290,7 @@ export const READ_EXAM_CATEGORY_BY_ID = gql`
           reason
         }
         mockExam {
+          examType
           slug
           title
           id
@@ -413,6 +416,7 @@ export const GET_MY_EXAMS = gql`
         id
         slug
         title
+        examType
         isBookmarked
         mockExamQuestion {
           id
@@ -491,6 +495,13 @@ export const READ_MOCK_EXAM = gql`
           }
           question
           solution
+          objectiveData {
+            answer
+            content {
+              content
+              url
+            }
+          }
         }
       }
     }

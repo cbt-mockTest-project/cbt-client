@@ -32,9 +32,7 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   const selectedFolderId = useAppSelector(
     (state) => state.mockExam.selectedBookmarkFolderId
   );
-  // const [selectedFolderId, setSelectedFolderId] = useState<number>(
-  //   isActive ? defaultFolderId || 0 : localStorage.get(BOOKMARK_FOLDER_ID) || 0
-  // );
+
   const onConfirm = () => {
     onChangeBookmark?.(true, selectedFolderId);
   };

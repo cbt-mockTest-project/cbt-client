@@ -2,7 +2,11 @@ import { READ_QUESTION } from '@lib/graphql/query/questionQuery';
 import { ReadMockExamQuestionQuery } from '@lib/graphql/query/questionQuery.generated';
 import { apolloClient } from '@modules/apollo';
 import { queryOptions } from '@tanstack/react-query';
-import { MockExamQuestion, ReadMockExamQuestionInput } from 'types';
+import {
+  MockExamQuestion,
+  ReadMockExamQuestionInput,
+  ReadMockExamQuestionOutput,
+} from 'types';
 
 export const getQuestionKey = (questionId: number) => [
   'getQuestion',
@@ -11,16 +15,23 @@ export const getQuestionKey = (questionId: number) => [
 
 export const getQuestion = async (
   input: ReadMockExamQuestionInput
-): Promise<MockExamQuestion> => {
-  const response = await apolloClient.query<ReadMockExamQuestionQuery>({
-    query: READ_QUESTION,
-    variables: {
-      input,
-    },
-    fetchPolicy: 'network-only',
-  });
-  const question = response.data?.readMockExamQuestion.mockExamQusetion;
-  return question as MockExamQuestion;
+): Promise<ReadMockExamQuestionOutput> => {
+  try {
+    const response = await apolloClient.query<ReadMockExamQuestionQuery>({
+      query: READ_QUESTION,
+      variables: {
+        input,
+      },
+      fetchPolicy: 'network-only',
+    });
+    if (!response.data?.readMockExamQuestion) {
+      return null;
+    }
+    return response.data?.readMockExamQuestion as ReadMockExamQuestionOutput;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export interface GetQuestionQueryOptionProps {

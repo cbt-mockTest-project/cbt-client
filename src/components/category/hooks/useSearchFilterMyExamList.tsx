@@ -4,8 +4,9 @@ import { handleError } from '@lib/utils/utils';
 import { examCategoryActions } from '@modules/redux/slices/examCategory';
 import { useAppDispatch } from '@modules/redux/store/configureStore';
 import { debounce } from 'lodash';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { MockExam } from 'types';
+import { ExamType, MockExam } from 'types';
 
 interface useCategoryExamListProps {
   meData: MockExam[];
@@ -16,13 +17,14 @@ const useSearchFilterMyExamList = ({
   meData,
   bookmarkedData,
 }: useCategoryExamListProps) => {
+  const router = useRouter();
   const { data: meQuery } = useMeQuery();
   const [getMyExams] = useLazyGetMyExams();
   const dispatch = useAppDispatch();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [type, setType] = useState<'me' | 'bookmarked'>('me');
   const data = type === 'me' ? meData : bookmarkedData;
-
+  const isObjective = router.pathname.includes('mcq');
   const fetchMyExams = async ({
     isBookmarked = false,
   }: {
@@ -33,6 +35,7 @@ const useSearchFilterMyExamList = ({
         variables: {
           input: {
             isBookmarked,
+            examType: isObjective ? ExamType.Objective : ExamType.Subjective,
           },
         },
       });

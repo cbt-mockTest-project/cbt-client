@@ -13,7 +13,7 @@ import { apolloClient } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
+import { ExamType, MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
   questionsQueryInput: ReadQuestionsByExamIdsInput;
@@ -58,6 +58,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       query: READ_ALL_MOCK_EXAM,
       variables: {
         input: {
+          examType: ExamType.Subjective,
           category: '',
           query: '',
           all: true,
@@ -101,7 +102,11 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     }
     const questions = (res?.data.readQuestionsByExamIds.questions ||
       []) as MockExamQuestion[];
-    store.dispatch(mockExamActions.setQuestions([]));
+    store.dispatch(
+      mockExamActions.setQuestions({
+        questions: [],
+      })
+    );
     store.dispatch(
       mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
     );

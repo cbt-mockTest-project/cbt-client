@@ -1,14 +1,8 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -48,6 +42,7 @@ export type ApproveCategoryInvitationLinkOutput = {
   __typename?: 'ApproveCategoryInvitationLinkOutput';
   categoryName?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
+  examType?: Maybe<ExamType>;
   ok: Scalars['Boolean'];
   urlSlug?: Maybe<Scalars['String']>;
 };
@@ -322,6 +317,7 @@ export type CreateFreeTrialRoleOutput = {
 
 export type CreateMockExamCategoryInput = {
   description?: InputMaybe<Scalars['String']>;
+  examType?: InputMaybe<ExamType>;
   isPublic?: InputMaybe<Scalars['Boolean']>;
   name: Scalars['String'];
 };
@@ -424,6 +420,7 @@ export type CreateNoticeOutput = {
 };
 
 export type CreateOrUpdateMockExamQuestionStateInput = {
+  answer?: InputMaybe<Scalars['Float']>;
   questionId: Scalars['Float'];
   state: QuestionState;
 };
@@ -876,12 +873,12 @@ export type DiscountCode = {
 export enum DiscountCodeStatus {
   Pending = 'PENDING',
   Unused = 'UNUSED',
-  Used = 'USED',
+  Used = 'USED'
 }
 
 export enum DiscountCodeType {
   EhsMaster = 'EHS_MASTER',
-  MoudCbt = 'MOUD_CBT',
+  MoudCbt = 'MOUD_CBT'
 }
 
 export type Discountcode = {
@@ -1145,14 +1142,14 @@ export type ExamOrder = {
 export enum ExamSource {
   EhsMaster = 'EHS_MASTER',
   MoudCbt = 'MOUD_CBT',
-  User = 'USER',
+  User = 'USER'
 }
 
 export enum ExamStatus {
   Approved = 'APPROVED',
   Rejected = 'REJECTED',
   Request = 'REQUEST',
-  Unset = 'UNSET',
+  Unset = 'UNSET'
 }
 
 export type ExamTitleAndId = {
@@ -1172,7 +1169,7 @@ export type ExamTitleAndIdByQuestionComment = {
 
 export enum ExamType {
   Objective = 'OBJECTIVE',
-  Subjective = 'SUBJECTIVE',
+  Subjective = 'SUBJECTIVE'
 }
 
 export type ExamViewer = {
@@ -1279,6 +1276,18 @@ export type GetCategoryEvaluationOutput = {
   error?: Maybe<Scalars['String']>;
   isEvaluated?: Maybe<Scalars['Boolean']>;
   ok: Scalars['Boolean'];
+};
+
+export type GetCategoryNamesAndSlugsInput = {
+  examType: ExamType;
+};
+
+export type GetCategoryNamesAndSlugsOutput = {
+  __typename?: 'GetCategoryNamesAndSlugsOutput';
+  error?: Maybe<Scalars['String']>;
+  names?: Maybe<Array<Scalars['String']>>;
+  ok: Scalars['Boolean'];
+  urlSlugs?: Maybe<Array<Scalars['String']>>;
 };
 
 export type GetCategoryPointHistoriesInput = {
@@ -1471,6 +1480,7 @@ export type GetMyExamCategoriesOutput = {
 };
 
 export type GetMyExamsInput = {
+  examType?: InputMaybe<ExamType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1671,7 +1681,7 @@ export enum LoginType {
   Email = 'EMAIL',
   Google = 'GOOGLE',
   Kakao = 'KAKAO',
-  Naver = 'NAVER',
+  Naver = 'NAVER'
 }
 
 export type MeOutput = {
@@ -1690,6 +1700,7 @@ export type MockExam = {
   examBookmarks: Array<MockExamBookmark>;
   examCoAuthor?: Maybe<Array<ExamCoAuthor>>;
   examLikes: Array<ExamLike>;
+  examType: ExamType;
   examViewer?: Maybe<Array<ExamViewer>>;
   history: Array<MockExamHistory>;
   id: Scalars['Float'];
@@ -1797,7 +1808,7 @@ export type MockExamCategoryInputType = {
 
 export enum MockExamCategoryTypes {
   Practical = 'practical',
-  Written = 'written',
+  Written = 'written'
 }
 
 export type MockExamHistory = {
@@ -1827,6 +1838,7 @@ export type MockExamInputType = {
   examBookmarks: Array<MockExamBookmarkInputType>;
   examCoAuthor?: InputMaybe<Array<ExamCoAuthorInputType>>;
   examLikes: Array<ExamLikeInputType>;
+  examType: ExamType;
   examViewer?: InputMaybe<Array<ExamViewerInput>>;
   history: Array<MockExamHistoryInputType>;
   isBookmarked?: InputMaybe<Scalars['Boolean']>;
@@ -1872,6 +1884,7 @@ export type MockExamQuestion = {
   mockExamQuestionFeedback: Array<MockExamQuestionFeedback>;
   multipleChoice: Array<MockExamQuestionMultipleChoice>;
   myBookmark?: Maybe<MockExamQuestionBookmark>;
+  myObjectiveAnswer?: Maybe<Scalars['Float']>;
   myQuestionState?: Maybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: Maybe<ObjectiveData>;
@@ -2017,6 +2030,7 @@ export type MockExamQuestionInputType = {
   mockExamQuestionFeedback: Array<MockExamQuestionFeedbackInputType>;
   multipleChoice: Array<MockExamQuestionMultipleChoiceInputType>;
   myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
+  myObjectiveAnswer?: InputMaybe<Scalars['Float']>;
   myQuestionState?: InputMaybe<QuestionState>;
   number: Scalars['Float'];
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -2066,7 +2080,7 @@ export type MockExamQuestionObjectiveInputType = {
 
 export type MockExamQuestionState = {
   __typename?: 'MockExamQuestionState';
-  answer: Scalars['String'];
+  answer: Scalars['Float'];
   created_at: Scalars['DateTime'];
   exam: MockExam;
   id: Scalars['Float'];
@@ -2077,7 +2091,7 @@ export type MockExamQuestionState = {
 };
 
 export type MockExamQuestionStateInputType = {
-  answer: Scalars['String'];
+  answer: Scalars['Float'];
   exam: MockExamInputType;
   question: MockExamQuestionInputType;
   state: QuestionState;
@@ -2244,465 +2258,581 @@ export type Mutation = {
   viewPost: ViewPostOutput;
 };
 
+
 export type MutationAcceptExamCategoryInvitationArgs = {
   input: AcceptExamCategoryInvitationInput;
 };
+
 
 export type MutationAddExamToCategoryArgs = {
   input: AddExamToCategoryInput;
 };
 
+
 export type MutationApproveCategoryInvitationLinkArgs = {
   input: ApproveCategoryInvitationLinkInput;
 };
+
 
 export type MutationChangeClientRoleArgs = {
   input: ChangeClientRoleInput;
 };
 
+
 export type MutationChangeClientRoleAndCreatePaymentArgs = {
   input: ChangeClientRoleAndCreatePaymentInput;
 };
+
 
 export type MutationChangePasswordAfterVerifyingArgs = {
   input: ChangePasswordAfterVerifyingInput;
 };
 
+
 export type MutationCheckDiscountCodeArgs = {
   input: CheckDiscountCodeInput;
 };
+
 
 export type MutationCheckHasCategoryAccessArgs = {
   input: CheckHasCategoryAccessInput;
 };
 
+
 export type MutationCheckIfCategoryEvaluatedArgs = {
   input: CheckIfCategoryEvaluatedInput;
 };
+
 
 export type MutationCheckIsAccessibleCategoryArgs = {
   input: CheckIsAccessibleCategoryInput;
 };
 
+
 export type MutationCheckPasswordArgs = {
   input: CheckPasswordInput;
 };
+
 
 export type MutationCheckUserRoleArgs = {
   input: CheckUserRoleInput;
 };
 
+
 export type MutationCreateAttendanceArgs = {
   input: CreateAttendanceInput;
 };
+
 
 export type MutationCreateCategoryEvaluationArgs = {
   input: CreateCategoryEvaluationInput;
 };
 
+
 export type MutationCreateCategoryInvitationLinkArgs = {
   input: CreateCategoryInvitationLinkInput;
 };
+
 
 export type MutationCreateExamCategoryInvitationArgs = {
   input: CreateExamCategoryInvitationInput;
 };
 
+
 export type MutationCreateExamCategoryViewerArgs = {
   input: CreateExamCategoryViewerInput;
 };
+
 
 export type MutationCreateFeedbackArgs = {
   input: CreateFeedbackInput;
 };
 
+
 export type MutationCreateMockExamArgs = {
   input: CreateMockExamInput;
 };
+
 
 export type MutationCreateMockExamCategoryArgs = {
   input: CreateMockExamCategoryInput;
 };
 
+
 export type MutationCreateMockExamHistoryArgs = {
   input: CreateMockExamHistoryInput;
 };
+
 
 export type MutationCreateMockExamQuestionArgs = {
   input: CreateMockExamQuestionInput;
 };
 
+
 export type MutationCreateMockExamQuestionCommentArgs = {
   input: CreateMockExamQuestionCommentInput;
 };
+
 
 export type MutationCreateMockExamQuestionFeedbackArgs = {
   input: CreateMockExamQuestionFeedbackInput;
 };
 
+
 export type MutationCreateMutipleChoiceArgs = {
   input: CreateMockExamQuestionMultipleChoiceInput;
 };
+
 
 export type MutationCreateNoticeArgs = {
   input: CreateNoticeInput;
 };
 
+
 export type MutationCreateOrUpdateMockExamQuestionStateArgs = {
   input: CreateOrUpdateMockExamQuestionStateInput;
 };
+
 
 export type MutationCreateOrUpdateTodoArgs = {
   input: CreateOrUpdateTodoInput;
 };
 
+
 export type MutationCreatePaymentArgs = {
   input: CreatePaymentInput;
 };
+
 
 export type MutationCreatePointTransactionArgs = {
   input: CreatePointTransactionInput;
 };
 
+
 export type MutationCreatePointTransactionForAdminArgs = {
   input: CreatePointTransactionForAdminInput;
 };
+
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
 };
 
+
 export type MutationCreatePostCommentArgs = {
   input: CreatePostCommentInput;
 };
+
 
 export type MutationCreateQuestionBookmarkArgs = {
   input: CreateQuestionBookmarkInput;
 };
 
+
 export type MutationCreateQuestionBookmarkFolderArgs = {
   input: CreateQuestionBookmarkFolderInput;
 };
+
 
 export type MutationCreateQuestionCardArgs = {
   input: CreateQuestionCardInput;
 };
 
+
 export type MutationCreateQuestionCardCategoryArgs = {
   input: CreateQuestionCardCategoryInput;
 };
+
 
 export type MutationCreateQuizArgs = {
   input: CreateQuizInput;
 };
 
+
 export type MutationCreateQuizCommentArgs = {
   input: CreateQuizCommentInput;
 };
+
 
 export type MutationCreateRevenueRequestFormArgs = {
   input: CreateRevenueRequestFormInput;
 };
 
+
 export type MutationCreateSettlementRequestArgs = {
   input: CreateSettlementRequestInput;
 };
+
 
 export type MutationCreateUserRoleArgs = {
   input: CreateUserRoleInput;
 };
 
+
 export type MutationCreateVideoArgs = {
   input: CreateVideoInput;
 };
+
 
 export type MutationDeleteAttendanceArgs = {
   input: DeleteAttendanceInput;
 };
 
+
 export type MutationDeleteCategoryEvaluationArgs = {
   input: DeleteCategoryEvaluationInput;
 };
+
 
 export type MutationDeleteExamCategoryBookmarkArgs = {
   input: DeleteExamCategoryBookmarkInput;
 };
 
+
 export type MutationDeleteExamCategoryInvitationArgs = {
   input: DeleteExamCategoryInvitationInput;
 };
+
 
 export type MutationDeleteExamCategoryViewerArgs = {
   input: DeleteExamCategoryViewerInput;
 };
 
+
 export type MutationDeleteMockExamArgs = {
   input: DeleteMockExamInput;
 };
+
 
 export type MutationDeleteMockExamCategoryArgs = {
   input: DeleteMockExamCategoryInput;
 };
 
+
 export type MutationDeleteMockExamQuestionArgs = {
   input: DeleteMockExamQuestionInput;
 };
+
 
 export type MutationDeleteMockExamQuestionCommentArgs = {
   input: DeleteMockExamQuestionCommentInput;
 };
 
+
 export type MutationDeleteMockExamQuestionFeedbackArgs = {
   input: DeleteMockExamQuestionFeedbackInput;
 };
+
 
 export type MutationDeleteNoticeArgs = {
   input: DeleteNoticeInput;
 };
 
+
 export type MutationDeletePaymentArgs = {
   input: DeletePaymentInput;
 };
+
 
 export type MutationDeletePostArgs = {
   input: DeletePostInput;
 };
 
+
 export type MutationDeletePostCommentArgs = {
   input: DeletePostCommentInput;
 };
+
 
 export type MutationDeleteQuestionBookmarkArgs = {
   input: DeleteQuestionBookmarkInput;
 };
 
+
 export type MutationDeleteQuestionBookmarkFolderArgs = {
   input: DeleteQuestionBookmarkFolderInput;
 };
+
 
 export type MutationDeleteQuestionCardCategoryArgs = {
   input: DeleteQuestionCardCategoryInput;
 };
 
+
 export type MutationDeleteQuestionCardsArgs = {
   input: DeleteQuestionCardsInput;
 };
+
 
 export type MutationDeleteQuizCommentArgs = {
   input: DeleteQuizCommentInput;
 };
 
+
 export type MutationDeleteTextHighlightArgs = {
   input: DeleteTextHighlightInput;
 };
+
 
 export type MutationDeleteTextHighlightsArgs = {
   input: DeleteTextHighlightsInput;
 };
 
+
 export type MutationDeleteUserRoleArgs = {
   input: DeleteUserRoleInput;
 };
+
 
 export type MutationEditMockExamArgs = {
   input: EditMockExamInput;
 };
 
+
 export type MutationEditMockExamCategoryArgs = {
   input: EditMockExamCategoryInput;
 };
+
 
 export type MutationEditMockExamQuestionArgs = {
   input: EditMockExamQuestionInput;
 };
 
+
 export type MutationEditMockExamQuestionBookmarkArgs = {
   input: EditMockExamQuestionBookmarkInput;
 };
+
 
 export type MutationEditMockExamQuestionCommentArgs = {
   input: EditMockExamQuestionCommentInput;
 };
 
+
 export type MutationEditMockExamQuestionCommentLikeArgs = {
   input: EditMockExamQuestionCommentLikeInput;
 };
+
 
 export type MutationEditMockExamQuestionFeedbackArgs = {
   input: EditMockExamQuestionFeedbackInput;
 };
 
+
 export type MutationEditNoticeArgs = {
   input: EditNoticeInput;
 };
+
 
 export type MutationEditPostArgs = {
   input: EditPostInput;
 };
 
+
 export type MutationEditPostCommentArgs = {
   input: EditPostCommentInput;
 };
+
 
 export type MutationEditPostCommentLikeArgs = {
   input: EditPostCommentLikeInput;
 };
 
+
 export type MutationEditPostLikeArgs = {
   input: EditPostLikeInput;
 };
+
 
 export type MutationEditProfileArgs = {
   input: EditProfileInput;
 };
 
+
 export type MutationEditQuizCommentArgs = {
   input: EditQuizCommentInput;
 };
+
 
 export type MutationEditQuizCommentLikeArgs = {
   input: EditQuizCommentLikeInput;
 };
 
+
 export type MutationEmailVerificationArgs = {
   input: EmailVerificationInput;
 };
+
 
 export type MutationInsertTextHighlightArgs = {
   input: InsertTextHighlightInput;
 };
 
+
 export type MutationLoginArgs = {
   input: LoginInput;
 };
+
 
 export type MutationMoveExamOrderArgs = {
   input: MoveExamOrderInput;
 };
 
+
 export type MutationMoveQuestionBookmarkArgs = {
   input: MoveQuestionBookmarkInput;
 };
+
 
 export type MutationNaverBlogViewMacroArgs = {
   input: NaverBlogViewMacroInput;
 };
 
+
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
+
 
 export type MutationRemoveExamFromCategoryArgs = {
   input: RemoveExamFromCategoryInput;
 };
 
+
 export type MutationResetMyExamQuestionStateArgs = {
   input: ResetMyExamQuestionStateInput;
 };
+
 
 export type MutationResetMyQuestionBookmarksArgs = {
   input: ResetMyQuestionBookmarksInput;
 };
 
+
 export type MutationResetQuestionBookmarkArgs = {
   input: ResetQuestionBookmarkInput;
 };
+
 
 export type MutationRestoreUserArgs = {
   input: RestoreUserInput;
 };
 
+
 export type MutationRevalidateArgs = {
   input: RevalidateInput;
 };
+
 
 export type MutationSaveExamArgs = {
   input: SaveExamInput;
 };
 
+
 export type MutationSendFindPasswordMailArgs = {
   input: SendFindPasswordMailInput;
 };
+
 
 export type MutationSendMessageToAlramChannelOfTelegramArgs = {
   input: SendMessageToAlramChannelOfTelegramInput;
 };
 
+
 export type MutationSendMessageToTelegramArgs = {
   input: SendMessageToTelegramInput;
 };
+
 
 export type MutationSendVerificationMailArgs = {
   input: SendVerificationMailInput;
 };
 
+
 export type MutationToggleExamBookmarkArgs = {
   input: ToggleExamBookmarkInput;
 };
+
 
 export type MutationToggleExamCategorieBookmarkArgs = {
   input: ToggleExamCategoryBookmarkInput;
 };
 
+
 export type MutationUpdateAdBlockPermissionArgs = {
   input: UpdateAdblockPermissionInput;
 };
+
 
 export type MutationUpdateApprovedStateOfMockExamQuestionArgs = {
   input: UpdateApprovedStateOfMockExamQuestionInput;
 };
 
+
 export type MutationUpdateCategoryEvaluationArgs = {
   input: UpdateCategoryEvaluationInput;
 };
+
 
 export type MutationUpdateDiscountCodeArgs = {
   input: UpdateDiscountCodeInput;
 };
 
+
 export type MutationUpdateExamOrderArgs = {
   input: UpdateExamOrderInput;
 };
+
 
 export type MutationUpdateExamViewerApproveStateArgs = {
   input: UpdateExamViewerApproveStateInput;
 };
 
+
 export type MutationUpdateMockExamQuestionFeedbackRecommendationArgs = {
   input: UpdateMockExamQuestionFeedbackRecommendationInput;
 };
+
 
 export type MutationUpdatePaymentArgs = {
   input: UpdatePaymentInput;
 };
 
+
 export type MutationUpdateQuestionBookmarkFolderArgs = {
   input: UpdateQuestionBookmarkFolderInput;
 };
+
 
 export type MutationUpdateQuestionCardArgs = {
   input: UpdateQuestionCardInput;
 };
 
+
 export type MutationUpdateQuestionCardCategoryArgs = {
   input: UpdateQuestionCardCategoryInput;
 };
+
 
 export type MutationUpdateRecentlyStudiedCategoryArgs = {
   input: UpdateRecentlyStudiedCategoryInput;
 };
 
+
 export type MutationUpdateRevenueRequestFormArgs = {
   input: UpdateRevenueRequestFormInput;
 };
+
 
 export type MutationUpdateSettlementRequestArgs = {
   input: UpdateSettlementRequestInput;
 };
 
+
 export type MutationUpsertRecentlyStudiedExamsArgs = {
   input: UpsertRecentlyStudiedExamsInput;
 };
+
 
 export type MutationViewPostArgs = {
   input: ViewPostInput;
@@ -2792,15 +2922,12 @@ export type PartialMockExamQuestionInput = {
   lowScore?: InputMaybe<Scalars['Float']>;
   middleScore?: InputMaybe<Scalars['Float']>;
   mockExam?: InputMaybe<MockExamInputType>;
-  mockExamQuestionBookmark?: InputMaybe<
-    Array<MockExamQuestionBookmarkInputType>
-  >;
+  mockExamQuestionBookmark?: InputMaybe<Array<MockExamQuestionBookmarkInputType>>;
   mockExamQuestionComment?: InputMaybe<Array<MockExamQuestionCommentInputType>>;
-  mockExamQuestionFeedback?: InputMaybe<
-    Array<MockExamQuestionFeedbackInputType>
-  >;
+  mockExamQuestionFeedback?: InputMaybe<Array<MockExamQuestionFeedbackInputType>>;
   multipleChoice?: InputMaybe<Array<MockExamQuestionMultipleChoiceInputType>>;
   myBookmark?: InputMaybe<MockExamQuestionBookmarkInputType>;
+  myObjectiveAnswer?: InputMaybe<Scalars['Float']>;
   myQuestionState?: InputMaybe<QuestionState>;
   number?: InputMaybe<Scalars['Float']>;
   objectiveData?: InputMaybe<MockExamQuestionObjectiveInputType>;
@@ -2914,7 +3041,7 @@ export enum PostCategory {
   Notice = 'NOTICE',
   Recovery = 'RECOVERY',
   Review = 'REVIEW',
-  Suggenstion = 'SUGGENSTION',
+  Suggenstion = 'SUGGENSTION'
 }
 
 export type PostComment = {
@@ -3041,7 +3168,7 @@ export type PostLikeInputType = {
 /** Order by criteria for posts */
 export enum PostOrderType {
   CreatedAt = 'createdAt',
-  Like = 'like',
+  Like = 'like'
 }
 
 export type Query = {
@@ -3052,6 +3179,7 @@ export type Query = {
   getBlogPostDetail: GetBlogPostDetailOutput;
   getBuyers: GetBuyersOutput;
   getCategoryEvaluation: GetCategoryEvaluationOutput;
+  getCategoryNamesAndSlugs: GetCategoryNamesAndSlugsOutput;
   getCategoryPointHistories: GetCategoryPointHistoriesOutput;
   getExamCategories: GetExamCategoriesOutput;
   getExamCategoriesForAdmin: GetExamCategoriesOutput;
@@ -3134,213 +3262,271 @@ export type Query = {
   userProfile: UserProfileOutput;
 };
 
+
 export type QueryFindMyExamHistoryArgs = {
   input: FindMyExamHistoryInput;
 };
+
 
 export type QueryGetBlogCategoryListArgs = {
   input: GetBlogCategoryListInput;
 };
 
+
 export type QueryGetBlogInfoArgs = {
   input: GetBlogInfoInput;
 };
+
 
 export type QueryGetBlogPostDetailArgs = {
   input: GetBlogPostDetailInput;
 };
 
+
 export type QueryGetCategoryEvaluationArgs = {
   input: GetCategoryEvaluationInput;
 };
+
+
+export type QueryGetCategoryNamesAndSlugsArgs = {
+  input: GetCategoryNamesAndSlugsInput;
+};
+
 
 export type QueryGetCategoryPointHistoriesArgs = {
   input: GetCategoryPointHistoriesInput;
 };
 
+
 export type QueryGetExamCategoriesArgs = {
   input: GetExamCategoriesInput;
 };
+
 
 export type QueryGetExamCategoriesV2Args = {
   input: GetExamCategoriesInputV2;
 };
 
+
 export type QueryGetExamCategoryLearningProgressArgs = {
   input: GetExamCategoryLearningProgressInput;
 };
+
 
 export type QueryGetExamCategorySubscribersArgs = {
   input: GetExamCategorySubscribersInput;
 };
 
+
 export type QueryGetExamCategoryViewersArgs = {
   input: GetExamCategoryViewrsInput;
 };
+
 
 export type QueryGetFeedbacksByRecommendationCountArgs = {
   input: GetFeedbacksByRecommendationCountInput;
 };
 
+
 export type QueryGetFeedbacksWithFilterArgs = {
   input: GetFeedbacksWithFilterInput;
 };
+
 
 export type QueryGetKeywordSearchCountArgs = {
   input: GetKeywordSearchCountInput;
 };
 
+
 export type QueryGetMyBlogPostRankArgs = {
   input: GetMyBlogPostRankInput;
 };
+
 
 export type QueryGetMyExamsArgs = {
   input: GetMyExamsInput;
 };
 
+
 export type QueryGetPointTransactionsForAdminArgs = {
   input: GetPointTransactionsForAdminInput;
 };
+
 
 export type QueryGetQuizsArgs = {
   input: GetQuizsInput;
 };
 
+
 export type QueryGetRoleCountArgs = {
   input: GetRoleCountInput;
 };
+
 
 export type QueryGetRolesCountArgs = {
   input: GetRolesCountInput;
 };
 
+
 export type QueryGetSearchAvailabilityArgs = {
   input: GetSearchAvailabilityInput;
 };
+
 
 export type QueryGetSearchRankArgs = {
   input: GetSearchRankInput;
 };
 
+
 export type QueryGetTodoArgs = {
   input: GetTodoInput;
 };
+
 
 export type QueryGetUserByNicknameOrEmailArgs = {
   input: GetUserByNicknameOrEmailInput;
 };
 
+
 export type QueryReadAllMockExamArgs = {
   input: ReadAllMockExamsInput;
 };
+
 
 export type QueryReadAllMockExamCategoriesArgs = {
   input?: InputMaybe<ReadAllMockExamCategoriesInput>;
 };
 
+
 export type QueryReadAllQuestionsArgs = {
   input: ReadAllQuestionsInput;
 };
+
 
 export type QueryReadBookmarkedQuestionsArgs = {
   input: ReadBookmarkedQuestionsInput;
 };
 
+
 export type QueryReadMockExamArgs = {
   input: ReadMockExamInput;
 };
+
 
 export type QueryReadMockExamCategoriesArgs = {
   input: ReadMockExamCategoriesInput;
 };
 
+
 export type QueryReadMockExamCategoryByCategoryIdArgs = {
   input: ReadMockExamCategoryByCategoryIdInput;
 };
+
 
 export type QueryReadMockExamCategoryByExamIdArgs = {
   input: ReadMockExamCategoryByExamIdInput;
 };
 
+
 export type QueryReadMockExamQuestionArgs = {
   input: ReadMockExamQuestionInput;
 };
+
 
 export type QueryReadMockExamQuestionBookmarkArgs = {
   input: ReadMockExamQuestionBookmarkInput;
 };
 
+
 export type QueryReadMockExamQuestionCommentLikesByQuestinIdArgs = {
   input: ReadMockExamQuestionCommentLikesByQuestinIdInput;
 };
+
 
 export type QueryReadMockExamQuestionCommentsByQuestionIdArgs = {
   input: ReadMockExamQuestionCommentsByQuestionIdInput;
 };
 
+
 export type QueryReadMockExamQuestionNumbersArgs = {
   input: ReadMockExamQuestionNumbersInput;
 };
+
 
 export type QueryReadMockExamQuestionsByMockExamIdArgs = {
   input: ReadMockExamQuestionsByMockExamIdInput;
 };
 
+
 export type QueryReadMockExamQuestionsByStateArgs = {
   input: ReadMockExamQuestionsByStateInput;
 };
+
 
 export type QueryReadMockExamTitlesByCateoryArgs = {
   input: ReadMockExamTitlesByCateoryInput;
 };
 
+
 export type QueryReadMyExamQuestionStateArgs = {
   input: ReadMyExamQuestionStateInput;
 };
+
 
 export type QueryReadMyMockExamCategoriesArgs = {
   input?: InputMaybe<ReadMyMockExamCategoriesInput>;
 };
 
+
 export type QueryReadMyQuestionCardsArgs = {
   input: ReadMyQuestionCardsInput;
 };
+
 
 export type QueryReadMyQuestionCommentsArgs = {
   input: ReadMyQuestionCommentsInput;
 };
 
+
 export type QueryReadPostArgs = {
   input: ReadPostInput;
 };
+
 
 export type QueryReadPostsArgs = {
   input: ReadPostsInput;
 };
 
+
 export type QueryReadQuestionCardArgs = {
   input: ReadQuestionCardInput;
 };
+
 
 export type QueryReadQuestionsByExamIdsArgs = {
   input: ReadQuestionsByExamIdsInput;
 };
 
+
 export type QuerySearchMockExamArgs = {
   input: SearchMockExamInput;
 };
+
 
 export type QuerySearchMockExamCategoriesArgs = {
   input: SearchMockExamCategoriesInput;
 };
 
+
 export type QuerySearchQuestionsByKeywordArgs = {
   input: SearchQuestionsByKeywordInput;
 };
 
+
 export type QuerySearchUserArgs = {
   input: SearchUserInput;
 };
+
 
 export type QueryUserProfileArgs = {
   input: UserProfileInput;
@@ -3382,13 +3568,13 @@ export type QuestionCardInputType = {
 
 export enum QuestionFeedbackRecommendationType {
   Bad = 'BAD',
-  Good = 'GOOD',
+  Good = 'GOOD'
 }
 
 export enum QuestionFeedbackType {
   Private = 'PRIVATE',
   Public = 'PUBLIC',
-  Report = 'REPORT',
+  Report = 'REPORT'
 }
 
 export type QuestionNumber = {
@@ -3399,9 +3585,10 @@ export type QuestionNumber = {
 
 export enum QuestionState {
   Core = 'CORE',
+  Exclude = 'EXCLUDE',
   High = 'HIGH',
   Middle = 'MIDDLE',
-  Row = 'ROW',
+  Row = 'ROW'
 }
 
 export type Quiz = {
@@ -3491,6 +3678,7 @@ export type ReadAllMockExamsInput = {
   all?: Scalars['Boolean'];
   approved?: Scalars['Boolean'];
   category?: Scalars['String'];
+  examType?: ExamType;
   query?: Scalars['String'];
 };
 
@@ -3559,6 +3747,7 @@ export type ReadMockExamCategoriesOutput = {
 };
 
 export type ReadMockExamCategoryByCategoryIdInput = {
+  examType?: InputMaybe<ExamType>;
   id?: InputMaybe<Scalars['Float']>;
   name?: InputMaybe<Scalars['String']>;
   urlSlug?: InputMaybe<Scalars['String']>;
@@ -3661,6 +3850,7 @@ export type ReadMockExamQuestionNumbersOutput = {
 
 export type ReadMockExamQuestionOutput = {
   __typename?: 'ReadMockExamQuestionOutput';
+  categorySlug?: Maybe<Scalars['String']>;
   error?: Maybe<Scalars['String']>;
   isCoAuthor: Scalars['Boolean'];
   mockExamQusetion: MockExamQuestion;
@@ -3963,7 +4153,7 @@ export type RevenueRequestFormInputType = {
 export enum RevenueRequestFormStatus {
   Approved = 'APPROVED',
   Pending = 'PENDING',
-  Rejected = 'REJECTED',
+  Rejected = 'REJECTED'
 }
 
 export type Role = {
@@ -3990,6 +4180,7 @@ export type RoleInputType = {
 
 export type SaveExamInput = {
   categoryId?: InputMaybe<Scalars['Float']>;
+  examType?: InputMaybe<ExamType>;
   questionOrderIds: Array<Scalars['String']>;
   questions?: InputMaybe<Array<PartialMockExamQuestionInput>>;
   title: Scalars['String'];
@@ -4140,7 +4331,7 @@ export type SettlementRequestInputType = {
 export enum SettlementRequestStatus {
   Approved = 'Approved',
   Pending = 'Pending',
-  Rejected = 'Rejected',
+  Rejected = 'Rejected'
 }
 
 export type TextHighlight = {
@@ -4241,7 +4432,7 @@ export type ToggleExamCategoryBookmarkOutput = {
 export enum TransactionType {
   Accumulation = 'ACCUMULATION',
   Use = 'USE',
-  Withdraw = 'WITHDRAW',
+  Withdraw = 'WITHDRAW'
 }
 
 export type UniqueMorpheme = {
@@ -4581,7 +4772,7 @@ export enum UserRole {
   ClientSafePremium = 'CLIENT_SAFE_PREMIUM',
   Partner = 'PARTNER',
   PaymentTest = 'PAYMENT_TEST',
-  Seller = 'SELLER',
+  Seller = 'SELLER'
 }
 
 export type UserRoleInputType = {
@@ -4649,7 +4840,7 @@ export enum ZepPostCategory {
   Free = 'FREE',
   Notice = 'NOTICE',
   Project = 'PROJECT',
-  Study = 'STUDY',
+  Study = 'STUDY'
 }
 
 export type ZepStudyTime = {

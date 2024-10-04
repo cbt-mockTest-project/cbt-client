@@ -168,7 +168,7 @@ const ExamMultipleSelectModal: React.FC<ExamMultipleSelectModalProps> = (
     const examSetting = getExamSettingHistory(categoryId);
     if (!examSetting) return;
     const { mode, isRandom, questionStates, limit } = examSetting;
-    if (mode) setMode(mode);
+    if (mode) setMode(mode as ExamMode);
     if (isRandom) setIsRandom(isRandom);
     if (questionStates) setQuestionStates(questionStates);
     if (limit) setLimit(limit);
