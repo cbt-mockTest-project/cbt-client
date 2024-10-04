@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import palette from '@styles/palette';
 import { BookmarkOutlined } from '@mui/icons-material';
@@ -7,9 +7,13 @@ import BookmarkFolderSelect from './BookmarkFolderSelect';
 import { LocalStorage } from '@lib/utils/localStorage';
 import { BOOKMARK_FOLDER_ID } from '@lib/constants/localStorage';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
-import { useAppDispatch } from '@modules/redux/store/configureStore';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@modules/redux/store/configureStore';
 import { coreActions } from '@modules/redux/slices/core';
 import { loginModal } from '@lib/constants';
+import { mockExamActions } from '@modules/redux/slices/mockExam';
 
 export type BookmarkChangeHandler = (active: boolean, folderId: number) => void;
 
@@ -25,9 +29,12 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   const dispatch = useAppDispatch();
   const { isActive, onChangeBookmark, defaultFolderId, ...divProps } = props;
   const localStorage = new LocalStorage();
-  const [selectedFolderId, setSelectedFolderId] = useState<number>(
-    isActive ? defaultFolderId || 0 : localStorage.get(BOOKMARK_FOLDER_ID) || 0
+  const selectedFolderId = useAppSelector(
+    (state) => state.mockExam.selectedBookmarkFolderId
   );
+  // const [selectedFolderId, setSelectedFolderId] = useState<number>(
+  //   isActive ? defaultFolderId || 0 : localStorage.get(BOOKMARK_FOLDER_ID) || 0
+  // );
   const onConfirm = () => {
     onChangeBookmark?.(true, selectedFolderId);
   };
@@ -39,9 +46,20 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
   };
 
   const onChangeFolder = (folderId: number) => {
-    setSelectedFolderId(folderId);
+    dispatch(mockExamActions.setSelectedBookmarkFolderId(folderId));
     localStorage.set(BOOKMARK_FOLDER_ID, folderId);
   };
+
+  useEffect(() => {
+    if (localStorage.get(BOOKMARK_FOLDER_ID)) {
+      dispatch(
+        mockExamActions.setSelectedBookmarkFolderId(
+          localStorage.get(BOOKMARK_FOLDER_ID)
+        )
+      );
+    }
+  }, []);
+
   if (!meQuery?.me?.user)
     return (
       <BookmarkBlock
@@ -52,6 +70,7 @@ const Bookmark: React.FC<BookmarkProps> = (props) => {
         <BookmarkOutlined className="star-icon" />
       </BookmarkBlock>
     );
+
   return (
     <Popconfirm
       title={isActive ? '북마크 수정' : '북마크 추가'}
