@@ -24,7 +24,6 @@ const Globalstyles = createGlobalStyle`
     padding: 0;
     border: 0;
     font-size: 100%;
-    font-family: 'Noto Sans KR', sans-serif;
     vertical-align: baseline;
   }
 
@@ -33,10 +32,7 @@ const Globalstyles = createGlobalStyle`
   footer, header, hgroup, main, menu, nav, section {
     display: block;
   }
-  *{
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  /* HTML5 hidden-attribute fix for newer browsers */
+
   *[hidden] {
       display: none;
   }

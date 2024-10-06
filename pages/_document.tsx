@@ -60,14 +60,6 @@ class MainDocument extends Document {
             crossOrigin="anonymous"
           />
           <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=optional"
-            rel="stylesheet"
-          />
-          <link
             href="/icons/favicon-16x16.png"
             rel="icon"
             type="image/png"

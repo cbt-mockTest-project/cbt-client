@@ -6,17 +6,27 @@ import { CustomStyleProvider } from './CustomStyleProvider';
 import useThemeControl from '@lib/hooks/useThemeControl';
 import { ThemeValue } from 'customTypes';
 import { themes } from './themes';
+import {
+  EXAMS_PDF_PAGE,
+  EXAM_CREATE_PAGE,
+  EXAM_PDF_PAGE,
+  EXAM_SOLUTION_PAGE,
+  QUESTION_EDIT_PAGE,
+} from '@lib/constants/displayName';
 
 interface ThemeProviderWrapperProps {
-  isOnlyLightMode: boolean;
   children: React.ReactNode;
+  displayName: string;
 }
 
 const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
   children,
-  isOnlyLightMode,
+  displayName,
 }) => {
+  const isOnlyLightMode = isOnlyLightModePage.includes(String(displayName));
+
   const { theme: mode, setTheme } = useThemeControl();
+
   useEffect(() => {
     if (['light', 'dark'].includes(getCookie('theme') as ThemeValue)) {
       setTheme(getCookie('theme') as ThemeValue);
@@ -45,3 +55,11 @@ const ThemeProviderWrapper: React.FC<ThemeProviderWrapperProps> = ({
 };
 
 export default ThemeProviderWrapper;
+
+const isOnlyLightModePage = [
+  EXAM_SOLUTION_PAGE,
+  EXAM_CREATE_PAGE,
+  QUESTION_EDIT_PAGE,
+  EXAM_PDF_PAGE,
+  EXAMS_PDF_PAGE,
+];

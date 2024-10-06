@@ -33,7 +33,6 @@ const EditorStyle = css`
     line-height: 170%;
   }
   p {
-    font-family: Noto Sans, Noto Sans KR, sans-serif;
     font-size: 16px;
     display: block;
     word-break: break-word;

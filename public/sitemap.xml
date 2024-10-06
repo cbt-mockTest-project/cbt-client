@@ -7,6 +7,12 @@
 <sitemap><loc>http://localhost:3000/sitemap_question_04.xml</loc></sitemap>
 <sitemap><loc>http://localhost:3000/sitemap_question_05.xml</loc></sitemap>
 <sitemap><loc>http://localhost:3000/sitemap_question_06.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_07.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_08.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_09.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_10.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_11.xml</loc></sitemap>
+<sitemap><loc>http://localhost:3000/sitemap_question_12.xml</loc></sitemap>
 <sitemap><loc>http://localhost:3000/sitemap_category.xml</loc></sitemap>
 <sitemap><loc>http://localhost:3000/sitemap_exam.xml</loc></sitemap>
 </sitemapindex>
