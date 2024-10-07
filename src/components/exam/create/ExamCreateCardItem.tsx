@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
-import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox copy';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox';
 
 const ExamCreateCardItemBlock = styled.div`
   border-radius: 10px;

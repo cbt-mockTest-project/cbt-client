@@ -4,14 +4,14 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styled, { css } from 'styled-components';
 import { responsive } from '@lib/utils/responsive';
-import palette from '@styles/palette';
-import { Button, Radio } from 'antd';
+import { Button } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import { useFormContext } from 'react-hook-form';
 import { CreateExamForm, CreateQuestionForm } from 'customTypes';
 import ExamCreateObjectiveCardItemEditor from './ExamCreateObjectiveCardItemEditor';
 import ExamCreateEditor from '../ExamCreateEditor';
+import ExamObjectiveConvertorForAdmin from './ExamObjectiveConvertorForAdmin';
 
 const ExamCreateObjectiveCardItemBlock = styled.div<{ isFolded: boolean }>`
   .exam-create-objective-item-wrapper {
@@ -112,6 +112,7 @@ const ExamCreateObjectiveCardItem: React.FC<
 > = ({ dragHandleProps, setQuestions, question, index }) => {
   const [isFolded, setIsFolded] = useState<boolean>(false);
   const { setValue, getValues } = useFormContext<CreateExamForm>();
+  const [isCoverted, setIsCoverted] = useState<boolean>(false);
   const handleEditorTextChange = (
     value: string,
     type: 'question' | 'solution'
@@ -228,6 +229,11 @@ const ExamCreateObjectiveCardItem: React.FC<
             )}
           </div>
         </div>
+        <ExamObjectiveConvertorForAdmin
+          setIsCoverted={setIsCoverted}
+          handleEditorTextChange={handleEditorTextChange}
+          question={question}
+        />
         <div className="exam-create-objective-editor-wrapper">
           <div
             style={{
@@ -244,7 +250,13 @@ const ExamCreateObjectiveCardItem: React.FC<
               onChangeText={(value) =>
                 handleEditorTextChange(value, 'question')
               }
-              defaultValue={question.question}
+              defaultValue={
+                isCoverted
+                  ? getValues(`questions`).find(
+                      (v) => v.orderId === question.orderId
+                    )?.question
+                  : question.question
+              }
               defaultImgUrl={question.question_img[0]?.url}
               editorPlaceholder="문제를 입력해주세요."
             />
@@ -255,13 +267,18 @@ const ExamCreateObjectiveCardItem: React.FC<
               onChangeText={(value) =>
                 handleEditorTextChange(value, 'solution')
               }
-              defaultValue={question.question}
-              defaultImgUrl={question.question_img[0]?.url}
+              defaultValue={
+                isCoverted
+                  ? getValues(`questions.${index}.solution`)
+                  : question.solution
+              }
+              defaultImgUrl={question.solution_img[0]?.url}
               editorPlaceholder="해설을 입력해주세요."
             />
           </div>
           <ExamCreateObjectiveCardItemEditor
-            question={question}
+            key={isCoverted.toString()}
+            question={isCoverted ? getValues(`questions.${index}`) : question}
             handleEditorTextChange={handleEditorTextChange}
             handleEditorImageChange={handleEditorImageChange}
           />

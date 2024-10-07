@@ -11,7 +11,7 @@ import Bookmark, {
   BookmarkChangeHandler,
 } from '@components/common/bookmark/Bookmark';
 import Link from 'next/link';
-import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox copy';
+import LinkedQuestionIdsBox from '@components/question/LinkedQuestionIdsBox';
 import useSearchQuestions from '@lib/hooks/useSearchQuestions';
 
 const SearchQuestionListItemBlock = styled.div`

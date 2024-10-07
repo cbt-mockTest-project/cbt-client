@@ -142,6 +142,7 @@ const ExamCreateEditor: React.FC<ExamCreateEditorProps> = ({
   return (
     <ExamCreateEditorBlock>
       <CustomEditor
+        key={defaultValue}
         defaultValue={defaultValue}
         onChangeText={onChangeText}
         placeholder={editorPlaceholder}

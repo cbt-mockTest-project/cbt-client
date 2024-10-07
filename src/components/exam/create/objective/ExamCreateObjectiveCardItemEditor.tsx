@@ -203,53 +203,61 @@ const ExamCreateObjectiveCardItemEditor: React.FC<
       })
     );
   };
+
   return (
     <ExamCreateObjectiveCardItemEditorBlock>
-      {question.objectiveData?.content.map((v, i) => (
-        <div
-          key={question.orderId + v.content + i + v.url}
-          className="exam-create-objective-card-item-editor-wrapper"
-        >
-          <div className="exam-create-objective-card-item-editor-top-wrapper">
-            <ExamCreateEditor
-              onChangeImage={(value) =>
-                handleObjectiveEditorImageChange(value, i)
-              }
-              key={question.orderId + v.content + i + v.url}
-              onChangeText={(value) =>
-                handleObjectiveEditorTextChange(value, i)
-              }
-              defaultValue={v.content}
-              defaultImgUrl={v.url}
-              editorPlaceholder={`${i + 1}번 선택지를 입력해주세요.`}
-            />
-            {i !== 0 ? (
-              <div
-                role="button"
-                className="exam-create-objective-card-item-editor-clear-button"
-                onClick={() => handleDeleteContent(i)}
+      {question.objectiveData?.content.map((v, i) => {
+        console.log(
+          'question.orderId + v.content + i + v.url',
+          question.orderId + v.content + i + v.url
+        );
+        return (
+          <div
+            key={question.orderId + v.content + i + v.url}
+            className="exam-create-objective-card-item-editor-wrapper"
+          >
+            <div className="exam-create-objective-card-item-editor-top-wrapper">
+              <ExamCreateEditor
+                onChangeImage={(value) =>
+                  handleObjectiveEditorImageChange(value, i)
+                }
+                key={question.orderId + v.content + i + v.url}
+                onChangeText={(value) =>
+                  handleObjectiveEditorTextChange(value, i)
+                }
+                defaultValue={v.content}
+                defaultImgUrl={v.url}
+                editorPlaceholder={`${i + 1}번 선택지를 입력해주세요.`}
+              />
+              {i !== 0 ? (
+                <div
+                  role="button"
+                  className="exam-create-objective-card-item-editor-clear-button"
+                  onClick={() => handleDeleteContent(i)}
+                >
+                  <Clear />
+                </div>
+              ) : (
+                <div style={{ width: 20, height: 20 }} />
+              )}
+            </div>
+            {i === question.objectiveData.content.length - 1 && i < 4 && (
+              <Button
+                type="dashed"
+                shape="circle"
+                className="exam-create-objective-card-item-editor-add-button"
+                onClick={handleAddContent}
               >
-                <Clear />
-              </div>
-            ) : (
-              <div style={{ width: 20, height: 20 }} />
+                <PlusOutlined />
+              </Button>
             )}
           </div>
-          {i === question.objectiveData.content.length - 1 && i < 4 && (
-            <Button
-              type="dashed"
-              shape="circle"
-              className="exam-create-objective-card-item-editor-add-button"
-              onClick={handleAddContent}
-            >
-              <PlusOutlined />
-            </Button>
-          )}
-        </div>
-      ))}
+        );
+      })}
       <div className="exam-create-objective-card-item-editor-answer-wrapper">
         <div>정답을 선택해주세요.</div>
         <Radio.Group
+          key={question.objectiveData?.answer}
           defaultValue={question.objectiveData?.answer}
           onChange={(e) => handleSelectAnswer(e.target.value)}
         >
