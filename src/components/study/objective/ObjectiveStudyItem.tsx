@@ -93,6 +93,11 @@ const ObjectiveStudyItemBlock = styled.div<{
     white-space: pre-line;
   }
 
+  .objective-study-test-mode-item-answer-no-solution {
+    color: ${({ theme }) => theme.color('colorTextTertiary')};
+    font-size: 14px;
+  }
+
   .objective-study-test-mode-item-question-image {
     max-width: 730px !important;
     object-fit: contain;
@@ -325,15 +330,16 @@ const ObjectiveStudyItem: React.FC<ObjectiveStudyItemProps> = ({
       </div>
       {(readOnly || !!(isSolutionVisible && question.myObjectiveAnswer)) && (
         <div className="objective-study-test-mode-item-answer-wrapper">
-          {question.solution && (
-            <>
-              <div className="objective-study-test-mode-item-answer-title">
-                해설
-              </div>
-              <pre className="objective-study-test-mode-item-question">
-                {renderContentWithKatex(question.solution)}
-              </pre>
-            </>
+          <div className="objective-study-test-mode-item-answer-title">
+            해설
+          </div>
+          <pre className="objective-study-test-mode-item-question">
+            {renderContentWithKatex(question.solution)}
+          </pre>
+          {!question.solution && question.solution_img.length === 0 && (
+            <div className="objective-study-test-mode-item-answer-no-solution">
+              등록된 해설이 없습니다.
+            </div>
           )}
           {question.solution_img && question.solution_img.length > 0 && (
             <Image

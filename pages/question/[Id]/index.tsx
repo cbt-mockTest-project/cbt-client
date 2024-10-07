@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import WithHead from '@components/common/head/WithHead';
 import QuestionComponent from '@components/question/QuestionComponent';
@@ -17,7 +17,6 @@ import {
   getQuestionKey,
   getQuestionQueryOption,
 } from '@lib/queryOptions/getQuestionQueryOption';
-import ObjectiveStudyItem from '@components/study/objective/ObjectiveStudyItem';
 import ObjectiveQuestionComponent from '@components/question/ObjectiveQuestionComponent';
 
 interface QuestionProps {
