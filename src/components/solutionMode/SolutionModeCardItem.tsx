@@ -29,14 +29,12 @@ interface SolutionModeCardItemProps
   index: number;
   hasScoreTable?: boolean;
   filterStates?: QuestionState[];
-  isStaticPage?: boolean;
 }
 
 const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   index,
   hasScoreTable = true,
   filterStates = [],
-  isStaticPage,
 }) => {
   const {
     addFeedback,
@@ -50,24 +48,15 @@ const SolutionModeCardItem: React.FC<SolutionModeCardItemProps> = ({
   const isAnswerAllHidden = useAppSelector(
     (state) => state.mockExam.isAnswerAllHidden
   );
-  const serverQuestion = useAppSelector((state) =>
-    state.mockExam.serverSideQuestions &&
-    state.mockExam.serverSideQuestions.length
-      ? state.mockExam.serverSideQuestions[index]
-      : null
-  );
-  const clientQuestion = useAppSelector((state) =>
+
+  const question = useAppSelector((state) =>
     state.mockExam.questions && state.mockExam.questions.length
       ? state.mockExam.questions[index]
       : null
   );
 
-  const question = useMemo(
-    () => (isStaticPage ? clientQuestion || serverQuestion : clientQuestion),
-    [clientQuestion, isStaticPage, serverQuestion]
-  );
-
   const [isAnswerHidden, setIsAnswerHidden] = useState(false);
+
   useEffect(() => {
     setIsAnswerHidden(isAnswerAllHidden);
   }, [isAnswerAllHidden]);

@@ -9,6 +9,8 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 import { shallowEqual } from 'react-redux';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import SolutionModeControlButtons from './SolutionModeControlButtons';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { isUndefined } from 'lodash';
 
 const SolutionModeCompoForStaticPagenentBlock = styled.div`
   margin: 20px 0;
@@ -38,71 +40,41 @@ const SolutionModeCompoForStaticPagenentBlock = styled.div`
 `;
 
 interface SolutionModeCompoForStaticPagenentProps {
-  questionsQueryInput?: ReadQuestionsByExamIdsInput;
+  questionsQueryInput: ReadQuestionsByExamIdsInput;
 }
 
 const SolutionModeForStaticPageComponent: React.FC<
   SolutionModeCompoForStaticPagenentProps
 > = ({ questionsQueryInput }) => {
-  const { fetchQuestions, setServerSideQuestions } = useQuestions();
-
-  const serverSideQuestionIds = useAppSelector(
-    (state) =>
-      state.mockExam.serverSideQuestions?.length
-        ? state.mockExam.serverSideQuestions.map((question) => question.id)
-        : [],
-    shallowEqual
-  );
-  const clientSideQuestionIds = useAppSelector(
-    (state) =>
-      state.mockExam.questions?.length
-        ? state.mockExam.questions.map((question) => question.id)
-        : [],
-    shallowEqual
-  );
-  const questionIds = useMemo(() => {
-    if (clientSideQuestionIds.length > 0) {
-      return clientSideQuestionIds;
-    }
-    if (serverSideQuestionIds.length > 0) {
-      return serverSideQuestionIds;
-    }
-    return [];
-  }, [serverSideQuestionIds, clientSideQuestionIds]);
   const router = useRouter();
-  const examIdsQuery = router.query.examIds;
+  const { data: meQuery } = useMeQuery();
+  const examId = router.query.Id;
+  const { fetchQuestions } = useQuestions();
 
-  const examIds = useMemo(() => {
-    if (questionsQueryInput) return questionsQueryInput.ids;
-    if (typeof examIdsQuery === 'string') {
-      return examIdsQuery.split(',').map((id) => parseInt(id));
-    }
-    return null;
-  }, [questionsQueryInput, examIdsQuery]);
+  const questionIds = useAppSelector(
+    (state) => state.mockExam.questions.map((question) => question.id),
+    shallowEqual
+  );
 
   useEffect(() => {
-    if (questionsQueryInput) {
-      fetchQuestions(questionsQueryInput, 'network-only').then(() => {
-        setServerSideQuestions(null);
-      });
+    if (isUndefined(meQuery)) return;
+    if (meQuery.me.user) {
+      fetchQuestions(questionsQueryInput, 'network-only');
     }
-  }, []);
+  }, [meQuery]);
+
   return (
     <SolutionModeCompoForStaticPagenentBlock>
       <div className="solution-mode-body">
         <SolutionModeControlButtons />
         <ul className="solution-mode-solution-card-list">
           {questionIds.map((questionId, index) => (
-            <SolutionModeCardItem
-              key={questionId}
-              index={index}
-              isStaticPage={true}
-            />
+            <SolutionModeCardItem key={questionId} index={index} />
           ))}
         </ul>
       </div>
 
-      {examIds && <StudyPaymentGuard examIds={examIds} />}
+      {examId && <StudyPaymentGuard examId={Number(examId)} />}
     </SolutionModeCompoForStaticPagenentBlock>
   );
 };

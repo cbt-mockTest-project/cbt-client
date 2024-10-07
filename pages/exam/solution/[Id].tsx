@@ -12,7 +12,10 @@ import { convertExamTitle, removeHtmlTag } from '@lib/utils/utils';
 import { apolloClient } from '@modules/apollo';
 import { mockExamActions } from '@modules/redux/slices/mockExam';
 import wrapper from '@modules/redux/store/configureStore';
+import { Spin } from 'antd';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { ExamType, MockExamQuestion, ReadQuestionsByExamIdsInput } from 'types';
 
 interface ExamSolutionPageProps {
@@ -30,6 +33,14 @@ const ExamSolutionPage: React.FC<ExamSolutionPageProps> = ({
   description,
   isNoIndex,
 }) => {
+  const router = useRouter();
+  if (isNoIndex) {
+    setTimeout(() => {
+      router.replace('/');
+    }, 2000);
+  }
+  if (isNoIndex) return <Spin fullscreen />;
+
   return (
     <>
       <WithHead
@@ -104,12 +115,10 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
       []) as MockExamQuestion[];
     store.dispatch(
       mockExamActions.setQuestions({
-        questions: [],
+        questions,
       })
     );
-    store.dispatch(
-      mockExamActions.setServerSideQuestions(questions as MockExamQuestion[])
-    );
+
     const title = questions[0]?.mockExam?.title || '';
     const isNoIndex =
       !questions[0]?.mockExam?.approved || questions[0]?.mockExam?.isPrivate;

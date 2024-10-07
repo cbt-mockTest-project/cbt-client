@@ -45,12 +45,12 @@ function App({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <ApolloProvider client={apolloClient}>
-            <CoreContainer />
             <ThemeProviderWrapper displayName={Component.displayName}>
               <Globalstyles />
               <BasicTemplate displayName={Component.displayName}>
                 <Component {...pageProps} />
               </BasicTemplate>
+              <CoreContainer />
             </ThemeProviderWrapper>
           </ApolloProvider>
         </QueryClientProvider>
