@@ -1,4 +1,4 @@
-import { HeartTwoTone } from '@ant-design/icons';
+import { FileOutlined, HeartOutlined } from '@ant-design/icons';
 import BasicCard from '@components/common/card/BasicCard';
 import { responsive } from '@lib/utils/responsive';
 import { Tag } from 'antd';
@@ -6,19 +6,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import {
-  ExamSource,
-  ExamType,
-  MockExamCategory,
-  MockExamCategoryTypes,
-} from 'types';
+import { ExamSource, ExamType, MockExamCategory } from 'types';
 
 const CategoryFolderListItemBlock = styled(Link)`
   width: calc(50% - 10px);
   position: relative;
-  /* .category-card {
-    padding: 0;
-  } */
 
   .category-folder-list-item-pc-skeletion,
   .category-folder-list-item-mobile-skeletion {
@@ -95,12 +87,12 @@ const CategoryFolderListItemBlock = styled(Link)`
   }
   .category-bottom-wrapper {
     display: flex;
-    gap: 10px;
+    gap: 5px;
     width: 100%;
-    justify-content: flex-end;
     align-items: center;
     .ant-tag {
       margin: 0;
+      display: flex;
     }
   }
 
@@ -138,17 +130,6 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
       {category && !isLoading && (
         <BasicCard hoverEffect type="primary" className="category-card">
           <div className="category-wrapper">
-            <div className="category-header-wrapper">
-              <div className="category-name">
-                <span>{category.isNew && <Tag color="green">NEW</Tag>}</span>
-                <span>{category.name}</span>
-              </div>
-            </div>
-            <div className="category-bottom-wrapper">
-              {category.examType === ExamType.Objective && <Tag>객관식</Tag>}
-              {category.examType === ExamType.Subjective && <Tag>주관식</Tag>}
-              {/* {category.source === ExamSource.EhsMaster && <Tag>유료</Tag>} */}
-            </div>
             <div className="category-middle-wrapper">
               <div className="category-user-info">
                 <Image
@@ -165,12 +146,33 @@ const CategoryFolderListItem: React.FC<CategoryFolderListItemProps> = ({
                   {category.user.nickname}
                 </div>
               </div>
-              <div className="category-middle-right-wrapper">
-                <div className="category-like-count">
-                  <HeartTwoTone twoToneColor="#eb2f96" />
-                  {category.evaluationCount}
-                </div>
+            </div>
+            <div className="category-header-wrapper">
+              <div className="category-name">
+                <span>{category.isNew && <Tag color="green">NEW</Tag>}</span>
+                <span>{category.name}</span>
               </div>
+            </div>
+            <div className="category-bottom-wrapper">
+              {category.examType === ExamType.Objective && (
+                <Tag color="green">객관식</Tag>
+              )}
+              {category.examType === ExamType.Subjective && (
+                <Tag color="green">주관식</Tag>
+              )}
+              {!!category.examCount && (
+                <Tag color="blue" icon={<FileOutlined />}>
+                  {category.examCount}
+                </Tag>
+              )}
+              {!!category.evaluationCount && (
+                <Tag color="pink" icon={<HeartOutlined />}>
+                  {category.evaluationCount}
+                </Tag>
+              )}
+              {category.source === ExamSource.EhsMaster && (
+                <Tag color="gold">유료</Tag>
+              )}
             </div>
           </div>
         </BasicCard>
