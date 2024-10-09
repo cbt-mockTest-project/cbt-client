@@ -29,7 +29,11 @@ const HomeSearch: React.FC<HomeSearchProps> = () => {
     });
     setOptions(
       result.categories.map((item) => ({
-        value: item.urlSlug,
+        // value:
+        //   item.examType === ExamType.Objective
+        //     ? `/mcq/category/${item.urlSlug}`
+        //     : `/category/${item.urlSlug}`,
+        value: item.name,
         label: <HomeSearchOption mockExamCategory={item as MockExamCategory} />,
       }))
     );
@@ -41,33 +45,19 @@ const HomeSearch: React.FC<HomeSearchProps> = () => {
       <AutoComplete
         className="home-search-banner-input"
         options={options}
-        onSelect={(value) => router.push(`/category/${value}`)}
+        backfill
         onDropdownVisibleChange={setIsDropdownVisible}
         onChange={debouncedSearch}
         placeholder="암기장을 검색해보세요"
       >
         <Input.Search
           size="large"
-          onSearch={(value, event) => {
-            if (event.target instanceof HTMLInputElement) {
-              if (
-                value.trim() &&
-                (!isDropdownVisible || options.length === 0)
-              ) {
-                router.push({
-                  query: {
-                    q: value,
-                  },
-                });
-                return;
-              }
-            } else {
-              router.push({
-                query: {
-                  q: value,
-                },
-              });
-            }
+          onSearch={(value) => {
+            router.push({
+              query: {
+                q: value,
+              },
+            });
           }}
         />
       </AutoComplete>
