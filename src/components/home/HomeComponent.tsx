@@ -49,8 +49,8 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
       ) : (
         <div className="home-wrapper">
           <PopularFolderList />
-          <BetaFolderList />
           <EhsFolderList />
+          <BetaFolderList />
           <BookmarkedFolderList />
         </div>
       )}

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import CategoryReportModal from '../CatogoryReportModal';
 
 const ObjectiveCategoryUtilButtonBoxBlock = styled.div`
-  width: 100vw;
+  width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   .objective-category-util-button-box {

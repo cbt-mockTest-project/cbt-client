@@ -12,7 +12,7 @@ import CategoryReportModal from './CatogoryReportModal';
 import Link from 'next/link';
 
 const SubjectiveCategoryUtilButtonBoxBlock = styled.div`
-  width: 100vw;
+  width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   .subjective-category-util-button-box {

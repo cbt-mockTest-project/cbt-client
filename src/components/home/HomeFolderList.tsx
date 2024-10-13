@@ -78,7 +78,7 @@ const HomeFolderListBlock = styled.div`
       display: none;
     }
     .home-folder-item {
-      width: 220px;
+      width: 240px;
       flex-shrink: 0;
       display: inline-block;
     }
