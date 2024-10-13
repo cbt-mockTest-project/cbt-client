@@ -117,6 +117,7 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
             id: Number(router.query.examId),
           },
         },
+        fetchPolicy: 'network-only',
       }).then((res) => {
         if (res.data?.readMockExam.error) {
           return message.error(res.data.readMockExam.error);
@@ -125,9 +126,11 @@ const ExamCreateComponent: React.FC<ExamCreateComponentProps> = () => {
         const { title, mockExamQuestion, uuid, approved } =
           res.data.readMockExam.mockExam;
         setIsExamApproved(approved);
+        console.log('origin', mockExamQuestion[0].question);
         const newQuestions: CreateQuestionForm[] = mockExamQuestion.map((v) => {
           const newQuestion = {
             ...v,
+
             question_img: v.question_img?.[0]
               ? [pick(v.question_img[0], ['url', 'name', 'uid'])]
               : [],
