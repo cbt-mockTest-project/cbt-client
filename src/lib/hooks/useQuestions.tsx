@@ -66,6 +66,10 @@ const useQuestions = () => {
 
   const undoExcludeObjectiveQuestion = async (questionId: number) => {
     try {
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
       await changeQuestionState({
         variables: {
           input: {
@@ -82,6 +86,10 @@ const useQuestions = () => {
 
   const excludeObjectiveQuestion = async (questionId: number) => {
     try {
+      if (!meQuery?.me.user) {
+        dispatch(coreActions.openModal(loginModal));
+        return;
+      }
       // 객관식에서는 middle을 제외 상태로 사용한다.
       await changeQuestionState({
         variables: {
