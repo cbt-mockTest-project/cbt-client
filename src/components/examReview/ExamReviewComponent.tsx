@@ -9,6 +9,7 @@ import { useAppSelector } from '@modules/redux/store/configureStore';
 import { shallowEqual } from 'react-redux';
 import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDeferredRederingForPaginationItemList';
 import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const ExamReviewComponentBlock = styled.div`
   max-width: 1200px;
@@ -77,7 +78,10 @@ const ExamReviewComponent: React.FC<ExamReviewComponentProps> = () => {
           />
         </div>
       ) : (
-        <SolutionModeCardItem key={questionId.id} index={index} />
+        <>
+          <SolutionModeCardItem key={questionId.id} index={index} />
+          {index % 4 === 0 && <GoogleAd />}
+        </>
       )
   );
 

@@ -7,6 +7,7 @@ import useAuth from '@lib/hooks/useAuth';
 import { Empty, Skeleton } from 'antd';
 import ObjectiveStudyTestModeItem from '@components/study/objective/testMode/ObjectiveStudyTestModeItem';
 import ObjectiveStudyItem from '@components/study/objective/ObjectiveStudyItem';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const SearchQuestionListBlock = styled.div`
   margin-top: 20px;
@@ -55,10 +56,13 @@ const SearchQuestionList: React.FC<SearchQuestionListProps> = () => {
       )}
       {isLoading && <Skeleton active />}
       {!isLoading && questions.length === 0 && (
-        <Empty
-          description="검색 결과가 없습니다."
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <>
+          <GoogleAd />
+          <Empty
+            description="검색 결과가 없습니다."
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        </>
       )}
     </SearchQuestionListBlock>
   );

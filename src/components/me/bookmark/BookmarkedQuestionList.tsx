@@ -14,6 +14,7 @@ import {
 } from '@lib/graphql/query/questionBookmarkQuery.generated';
 import useQuestions from '@lib/hooks/useQuestions';
 import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const BookmarkedQuestionListBlock = styled.div`
   .objective-study-mode-item-wrapper {
@@ -97,7 +98,10 @@ const BookmarkedQuestionList: React.FC<BookmarkedQuestionListProps> = () => {
                 <ObjectiveStudyAutoModeItem questionId={id} index={index + 1} />
               </div>
             ) : (
-              <SolutionModeCardItem key={id} index={index} />
+              <>
+                <SolutionModeCardItem key={id} index={index} />
+                {index % 4 === 0 && <GoogleAd />}
+              </>
             )
           )}
           {questionIds.length === 0 && (

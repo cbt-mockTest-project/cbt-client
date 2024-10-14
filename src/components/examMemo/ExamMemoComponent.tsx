@@ -11,6 +11,7 @@ import { isUndefined } from 'lodash';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import ExamMemoHeader from './ExamMemoHeader';
 import ObjectiveStudyAutoModeItem from '@components/study/objective/autoMode/ObjectiveStudyAutoModeItem';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const ExamMemoComponentBlock = styled.div`
   max-width: 1200px;
@@ -81,7 +82,10 @@ const ExamMemoComponent: React.FC<ExamMemoComponentProps> = () => {
           />
         </div>
       ) : (
-        <SolutionModeCardItem key={questionId.id} index={index} />
+        <>
+          <SolutionModeCardItem key={questionId.id} index={index} />
+          {index % 4 === 0 && <GoogleAd />}
+        </>
       )
   );
 

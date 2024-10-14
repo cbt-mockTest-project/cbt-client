@@ -10,6 +10,7 @@ import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDefer
 import { isUndefined } from 'lodash';
 import { useMeQuery } from '@lib/graphql/hook/useUser';
 import ExamHighlightHeader from './ExamHighlightHeader';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const ExamHighlightComponentBlock = styled.div`
   max-width: 1200px;
@@ -60,7 +61,10 @@ const ExamHighlightComponent: React.FC<ExamHighlightComponentProps> = () => {
     page,
     LIMIT,
     (questionId, index) => (
-      <SolutionModeCardItem key={questionId} index={index} />
+      <>
+        <SolutionModeCardItem key={questionId} index={index} />
+        {index % 4 === 0 && <GoogleAd />}
+      </>
     )
   );
 
