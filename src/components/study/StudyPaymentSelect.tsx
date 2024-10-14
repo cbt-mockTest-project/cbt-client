@@ -6,6 +6,10 @@ import AttachMoneyIcon from '@assets/svg/won_sign.svg';
 import { Button, Input, Select, App } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useMeQuery } from '@lib/graphql/hook/useUser';
+import { useAppDispatch } from '@modules/redux/store/configureStore';
+import { coreActions } from '@modules/redux/slices/core';
+import { loginModal } from '@lib/constants';
 
 const StudyPaymentSelectBlock = styled.div`
   width: 100%;
@@ -71,6 +75,8 @@ interface StudyPaymentSelectProps {}
 
 const StudyPaymentSelect: React.FC<StudyPaymentSelectProps> = ({}) => {
   const { message } = App.useApp();
+  const dispatch = useAppDispatch();
+  const { data: meQuery } = useMeQuery();
   const [price, setPrice] = useState(0);
   const { handlePayment } = usePayment();
   const { value: discountCode, onChange: onChangeDiscountCode } = useInput('');
@@ -92,6 +98,10 @@ const StudyPaymentSelect: React.FC<StudyPaymentSelectProps> = ({}) => {
   };
 
   const handleApplyDiscount = async () => {
+    if (!meQuery?.me.user) {
+      dispatch(coreActions.openModal(loginModal));
+      return;
+    }
     const res = await checkDiscountCode({
       variables: {
         input: {
