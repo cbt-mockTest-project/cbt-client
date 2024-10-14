@@ -137,6 +137,7 @@ const useQuestions = () => {
     fetchPolicy: FetchPolicy = 'network-only'
   ) => {
     try {
+      if (!meQuery?.me.user) return;
       const res = await apolloClient.query<
         ReadBookmarkedQuestionsQuery,
         ReadBookmarkedQuestionsQueryVariables

@@ -38,7 +38,7 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
   const category = queryClient.getQueryData<MockExamCategory>(queryKey);
 
   const dispatch = useAppDispatch();
-  const { data: meQuery, refetch: refetchMeQuery } = useMeQuery();
+  const { data: meQuery } = useMeQuery();
   const localStorage = new LocalStorage();
   const [updateRecentlyStudiedCategory] = useUpdateRecentlyStudiedCategory();
   const setExamSetting = (examSetting: Partial<ExamSettingType>) =>
@@ -47,14 +47,14 @@ const CategoryCore: React.FC<CategoryCoreProps> = ({
   useEffect(() => {
     if (!meQuery) return;
     if (meQuery.me.user) {
-      queryClient
-        .refetchQueries({
-          queryKey,
-        })
-        .then(() => {
-          setIsRefetched(true);
-        });
-      refetchMeQuery();
+      // queryClient
+      //   .refetchQueries({
+      //     queryKey,
+      //   })
+      //   .then(() => {
+      //     setIsRefetched(true);
+      //   });
+      // refetchMeQuery();
       updateRecentlyStudiedCategory({
         variables: {
           input: {
