@@ -10,6 +10,7 @@ import { shallowEqual } from 'react-redux';
 import SolutionModeCardItem from './SolutionModeCardItem';
 import useDeferredRederingForPaginationItemList from '@lib/graphql/hook/useDeferredRederingForPaginationItemList';
 import SolutionModeControlButtons from './SolutionModeControlButtons';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const pageSize = 20;
 
@@ -69,7 +70,10 @@ const SolutionModeComponent: React.FC<SolutionModeComponentProps> = () => {
     page,
     pageSize,
     (questionId, index) => (
-      <SolutionModeCardItem key={questionId} index={index} />
+      <>
+        <SolutionModeCardItem key={questionId} index={index} />
+        {index % 4 === 0 && <GoogleAd />}
+      </>
     )
   );
 

@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import HomeSearchResult from './HomeSearchResult';
 import PopularFolderList from './folderList/PopularFolderList';
 import BetaFolderList from './folderList/BetaFolderList';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const BookmarkedFolderList = dynamic(
   () => import('./folderList/BookmarkedFolderList'),
@@ -27,7 +28,7 @@ const HomeComponentBlock = styled.div`
     flex-direction: column;
     gap: 40px;
     padding: 30px 30px 30px 30px;
-    height: 900px;
+    min-height: 900px;
   }
   @media (max-width: ${responsive.medium}) {
     .home-wrapper {
@@ -50,6 +51,7 @@ const HomeComponent: React.FC<HomeComponentProps> = () => {
         <div className="home-wrapper">
           <PopularFolderList />
           <EhsFolderList />
+          <GoogleAd />
           <BetaFolderList />
           <BookmarkedFolderList />
         </div>

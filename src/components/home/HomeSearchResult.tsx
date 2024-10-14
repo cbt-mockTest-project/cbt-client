@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import CategoryFolderListItem from '@components/common/category/CategoryFolderListItem';
 import { searchCategoriesQueryOption } from '@lib/queryOptions/searchCategoriesQueryOption';
 import { responsive } from '@lib/utils/responsive';
@@ -103,6 +104,7 @@ const HomeSearchResult: React.FC<HomeSearchResultProps> = () => {
           ]}
         />
       </div>
+      <GoogleAd />
       <div className="home-search-result-categories">
         {searchResult?.categories.map((category) => (
           <CategoryFolderListItem

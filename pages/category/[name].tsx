@@ -28,6 +28,7 @@ import {
   ReadMockExamCategoryByCategoryIdInput,
 } from 'types';
 import styled from 'styled-components';
+import GoogleAd from '@components/common/ad/GoogleAd';
 
 const CategoryPageBlock = styled.div`
   width: 100%;
@@ -70,6 +71,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({
         description={category.description}
         noIndex={category.isPublic ? false : true}
       />
+      <GoogleAd />
       <CategoryPageBlock>
         <CategoryComponent
           queryKey={queryKey}

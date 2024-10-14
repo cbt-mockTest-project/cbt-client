@@ -1,3 +1,4 @@
+import GoogleAd from '@components/common/ad/GoogleAd';
 import BasicCard from '@components/common/card/BasicCard';
 import StudyAnswerBox from '@components/study/StudyAnswerBox';
 import StudyControlBox from '@components/study/StudyControlBox';
@@ -159,21 +160,20 @@ const TypingModeItem: React.FC<TypingModeItemProps> = ({
           </Button>
         </Tooltip>
       </div>
-      <div
-        className={clsx('typing-mode-answer-box', {
-          'opacity-0 transition-opacity': !isAnswerVisible,
-        })}
-      >
-        <BasicCard>
-          <StudyAnswerBox
-            question={question}
-            deleteFeedback={handleDeleteFeedback}
-            updateFeedbackRecommendation={handleUpdateFeedbackRecommendation}
-            editFeedback={handleEditFeedback}
-            addFeedback={handleAddFeedback}
-          />
-        </BasicCard>
+      <div className="typing-mode-answer-box">
+        {isAnswerVisible && (
+          <BasicCard>
+            <StudyAnswerBox
+              question={question}
+              deleteFeedback={handleDeleteFeedback}
+              updateFeedbackRecommendation={handleUpdateFeedbackRecommendation}
+              editFeedback={handleEditFeedback}
+              addFeedback={handleAddFeedback}
+            />
+          </BasicCard>
+        )}
       </div>
+      <GoogleAd />
     </TypingModeItemBlock>
   );
 };
