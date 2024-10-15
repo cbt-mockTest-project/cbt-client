@@ -29,14 +29,16 @@ const GoogleAdComp: React.FC<GoogleAdCompProps> = ({ meQuery }) => {
     <>
       {isProd ? (
         isAdVisible ? (
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-9145855450425143"
-            data-ad-slot="2844801903"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
+          <div className="w-full my-2">
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client="ca-pub-9145855450425143"
+              data-ad-slot="2844801903"
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </div>
         ) : null
       ) : (
         <div

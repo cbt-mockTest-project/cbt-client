@@ -6,19 +6,10 @@ import { isUndefined } from 'lodash';
 
 interface GoogleAdProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const GoogleAd: React.FC<GoogleAdProps> = (props) => {
+const GoogleAd: React.FC<GoogleAdProps> = () => {
   const { data: meQuery } = useMeQuery();
-
-  return (
-    <GoogleAdContainer {...props}>
-      {isUndefined(meQuery) ? null : <GoogleAdComp meQuery={meQuery} />}
-    </GoogleAdContainer>
-  );
+  if (isUndefined(meQuery)) return null;
+  return <GoogleAdComp meQuery={meQuery} />;
 };
 
 export default React.memo(GoogleAd);
-
-const GoogleAdContainer = styled.div`
-  margin: 10px 0;
-  width: 100%;
-`;
